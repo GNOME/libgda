@@ -5,11 +5,12 @@ AM_CPPFLAGS = \
 	$(COREDEPS_CFLAGS) \
 	$(COREDEPS_WFLAGS) \
 	-DCHECK_FILES=\""$(top_srcdir)"\" \
-	-DROOT_DIR=\""$(top_srcdir)"\"
+	-DROOT_DIR=\""$(top_srcdir)"\" \
+	-DBUILD_DIR=\""$(builddir)"\"
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
-TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot
+check_PROGRAMS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot check_data_select_iter
+TESTS = check_model_import check_virtual check_data_proxy check_model_copy check_pmodel check_empty_rs check_model_errors check_vcnc check_pivot check_data_select_iter
 
 common_sources = \
 	../test-errors.h \
