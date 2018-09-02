@@ -38,7 +38,7 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-util.h>
 
-struct _GdaDataModelArrayPrivate {
+typedef struct  {
 	gboolean       notify_changes;
         GHashTable    *column_spec;
 
@@ -49,7 +49,8 @@ struct _GdaDataModelArrayPrivate {
 
 	/* the array of rows, each item is a GdaRow */
 	GArray        *rows;
-};
+} GdaDataModelArrayPrivate;
+#define gda_data_model_array_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_MODEL_ARRAY, GdaDataModelArrayPrivate)
 
 enum {
 	PROP_0,
@@ -58,8 +59,7 @@ enum {
 };
 
 static void gda_data_model_array_class_init   (GdaDataModelArrayClass *klass);
-static void gda_data_model_array_init         (GdaDataModelArray *model,
-					       GdaDataModelArrayClass *klass);
+static void gda_data_model_array_init         (GdaDataModelArray *model);
 static void gda_data_model_array_finalize     (GObject *object);
 static void gda_data_model_array_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
@@ -159,6 +159,7 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+	g_type_class_add_private (object_class, sizeof (GdaDataModelArrayPrivate));
 
 	object_class->finalize = gda_data_model_array_finalize;
 	object_class->set_property = gda_data_model_array_set_property;
@@ -181,17 +182,17 @@ gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 }
 
 static void
-gda_data_model_array_init (GdaDataModelArray *model, G_GNUC_UNUSED GdaDataModelArrayClass *klass)
+gda_data_model_array_init (GdaDataModelArray *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
 	/* allocate internal structure */
-	model->priv = g_new0 (GdaDataModelArrayPrivate, 1);
-	model->priv->notify_changes = TRUE;
-        model->priv->column_spec = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
-        model->priv->read_only = FALSE;
-	model->priv->number_of_columns = 0;
-	model->priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
+	priv->notify_changes = TRUE;
+	priv->column_spec = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
+	priv->read_only = FALSE;
+	priv->number_of_columns = 0;
+	priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
 }
 
 static void column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model);
@@ -208,19 +209,17 @@ static void
 gda_data_model_array_finalize (GObject *object)
 {
 	GdaDataModelArray *model = (GdaDataModelArray *) object;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
 
 	/* free memory */
 	gda_data_model_freeze (GDA_DATA_MODEL(model));
 	gda_data_model_array_clear (model);
-	g_array_free (model->priv->rows, TRUE);
-	g_hash_table_foreach (model->priv->column_spec, (GHFunc) hash_free_column, model);
-        g_hash_table_destroy (model->priv->column_spec);
-        model->priv->column_spec = NULL;
-
-	g_free (model->priv);
-	model->priv = NULL;
+	g_array_free (priv->rows, TRUE);
+	g_hash_table_foreach (priv->column_spec, (GHFunc) hash_free_column, model);
+        g_hash_table_destroy (priv->column_spec);
+        priv->column_spec = NULL;
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -233,10 +232,11 @@ gda_data_model_array_set_property (GObject *object, guint prop_id, const GValue 
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (object));
 	model = GDA_DATA_MODEL_ARRAY (object);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
 	switch (prop_id) {
 	case PROP_READ_ONLY:
-		model->priv->read_only = g_value_get_boolean (value);
+		priv->read_only = g_value_get_boolean (value);
 		break;
 	case PROP_N_COLUMNS:
 		gda_data_model_array_set_n_columns (model, g_value_get_uint (value));
@@ -254,13 +254,14 @@ gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (object));
 	model = GDA_DATA_MODEL_ARRAY (object);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
 	switch (prop_id) {
 	case PROP_READ_ONLY:
-		g_value_set_boolean (value, model->priv->read_only);
+		g_value_set_boolean (value, priv->read_only);
 		break;
 	case PROP_N_COLUMNS:
-		g_value_set_uint (value, model->priv->number_of_columns);
+		g_value_set_uint (value, priv->number_of_columns);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -497,19 +498,20 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), NULL);
 	g_return_val_if_fail (row >= 0, NULL);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
-	if ((guint)row >= model->priv->rows->len) {
-		if (model->priv->rows->len > 0)
+	if ((guint)row >= priv->rows->len) {
+		if (priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d out of range (0-%d)"), row,
-				     model->priv->rows->len - 1);
+				     priv->rows->len - 1);
 		else
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 
-	return g_array_index (model->priv->rows, GdaRow*, row);
+	return g_array_index (priv->rows, GdaRow*, row);
 }
 
 /**
@@ -526,9 +528,10 @@ void
 gda_data_model_array_set_n_columns (GdaDataModelArray *model, gint cols)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
 	gda_data_model_array_clear (model);
-	model->priv->number_of_columns = cols;
+	priv->number_of_columns = cols;
 
 	g_object_notify (G_OBJECT (model), "n-columns");
 }
@@ -543,8 +546,9 @@ void
 gda_data_model_array_clear (GdaDataModelArray *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_ARRAY (model));
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
-	while (model->priv->rows->len > 0) 
+	while (priv->rows->len > 0)
 		gda_data_model_array_remove_row ((GdaDataModel*) model, 0, NULL);
 }
 
@@ -556,20 +560,23 @@ static gint
 gda_data_model_array_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
-	return GDA_DATA_MODEL_ARRAY (model)->priv->rows->len;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	return priv->rows->len;
 }
 
 static gint
 gda_data_model_array_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
-	return GDA_DATA_MODEL_ARRAY (model)->priv->number_of_columns;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	return priv->number_of_columns;
 }
 
 static GdaColumn *
 gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 {
         GdaColumn *column;
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
         if (col >= gda_data_model_get_n_columns (model)) {
                 g_warning ("Column %d out of range (0-%d)", col, gda_data_model_get_n_columns (model) - 1);
@@ -578,7 +585,7 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 
 	gint tmp;
 	tmp = col;
-        column = g_hash_table_lookup (((GdaDataModelArray*) model)->priv->column_spec, &tmp);
+        column = g_hash_table_lookup (priv->column_spec, &tmp);
         if (!column) {
                 column = gda_column_new ();
                 g_signal_connect (G_OBJECT (column), "g-type-changed",
@@ -588,7 +595,7 @@ gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 		gint *ptr;
 		ptr = g_new (gint, 1);
 		*ptr = col;
-                g_hash_table_insert (((GdaDataModelArray*) model)->priv->column_spec, ptr, column);
+                g_hash_table_insert (priv->column_spec, ptr, column);
         }
 
         return column;
@@ -603,12 +610,13 @@ column_g_type_changed_cb (GdaColumn *column, G_GNUC_UNUSED GType old, GType new,
         gchar *str;
         gint nb_warnings = 0;
 	const gint max_warnings = 5;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
         if ((new == G_TYPE_INVALID) || (new == GDA_TYPE_NULL))
                 return;
 
         col = gda_column_get_position (column);
-	nrows = model->priv->rows->len;
+	nrows = priv->rows->len;
         for (i = 0; (i < nrows) && (nb_warnings < max_warnings); i++) {
                 GType vtype;
 
@@ -641,32 +649,33 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GErr
 {
 	GdaRow *fields;
 	GdaDataModelArray *amodel = (GdaDataModelArray*) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
 	g_return_val_if_fail(row >= 0, NULL);
 
-	if (amodel->priv->rows->len == 0) {
+	if (priv->rows->len == 0) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_NOT_FOUND_ERROR,
 			      "%s", _("No row in data model"));
 		return NULL;
 	}
 
-	if ((guint)row >= amodel->priv->rows->len) {
-		if (amodel->priv->rows->len > 0)
+	if ((guint)row >= priv->rows->len) {
+		if (priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
-				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
+				     _("Row %d out of range (0-%d)"), row, priv->rows->len - 1);
 		else
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d not found (empty data model)"), row);
 		return NULL;
 	}
 
-	if (col >= amodel->priv->number_of_columns) {
+	if (col >= priv->number_of_columns) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     _("Column %d out of range (0-%d)"), col, amodel->priv->number_of_columns - 1);
+			     _("Column %d out of range (0-%d)"), col, priv->number_of_columns - 1);
 		return NULL;
 	}
 
-	fields = g_array_index (amodel->priv->rows, GdaRow*, row);
+	fields = g_array_index (priv->rows, GdaRow*, row);
 	if (fields) {
 		GValue *field;
 
@@ -689,6 +698,7 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
         const GValue *gdavalue;
         GdaValueAttribute flags = 0;
         GdaColumn *column;
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
 
         column = gda_data_model_array_describe_column (model, col);
         if (gda_column_get_allow_null (column))
@@ -702,7 +712,7 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
                         flags |= GDA_VALUE_ATTR_IS_NULL;
         }
 
-        if (((GdaDataModelArray *)model)->priv->read_only)
+        if (priv->read_only)
                 flags |= GDA_VALUE_ATTR_NO_MODIF;
 
         return flags;
@@ -712,11 +722,12 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
 static GdaDataModelAccessFlags
 gda_data_model_array_get_access_flags (GdaDataModel *model)
 {
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
         GdaDataModelAccessFlags flags = GDA_DATA_MODEL_ACCESS_RANDOM |
                 GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
                 GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 
-        if (! ((GdaDataModelArray *)model)->priv->read_only)
+        if (!priv->read_only)
                 flags |= GDA_DATA_MODEL_ACCESS_WRITE;
 
         return flags;
@@ -728,19 +739,20 @@ gda_data_model_array_set_value_at (GdaDataModel *model, gint col, gint row,
 {
         GdaRow *gdarow;
 	GdaDataModelArray *amodel = (GdaDataModelArray*) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
         g_return_val_if_fail (row >= 0, FALSE);
 
-	if (amodel->priv->read_only) {
+	if (priv->read_only) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                               "%s", _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
-	if ((guint)row > amodel->priv->rows->len) {
-		if (amodel->priv->rows->len > 0)
+	if ((guint)row > priv->rows->len) {
+		if (priv->rows->len > 0)
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
-				     _("Row %d out of range (0-%d)"), row, amodel->priv->rows->len - 1);
+				     _("Row %d out of range (0-%d)"), row, priv->rows->len - 1);
 		else
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ROW_OUT_OF_RANGE_ERROR,
 				     _("Row %d not found (empty data model)"), row);
@@ -769,13 +781,14 @@ gda_data_model_array_set_values (GdaDataModel *model, gint row, GList *values, G
 {
         GdaRow *gdarow;
 	GdaDataModelArray *amodel = (GdaDataModelArray*) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
         g_return_val_if_fail (row >= 0, FALSE);
 
         if (!values)
                 return TRUE;
 
-	if (amodel->priv->read_only) {
+	if (priv->read_only) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                               "%s", _("Attempting to modify a read-only data model"));
                 return FALSE;
@@ -813,20 +826,21 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
 	const GList *list;
 	gint i;
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 	
-        if (amodel->priv->read_only) {
+        if (priv->read_only) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                               "%s", _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
-	if (g_list_length ((GList *) values) > (guint)amodel->priv->number_of_columns) {
+	if (g_list_length ((GList *) values) > (guint)priv->number_of_columns) {
                 g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUES_LIST_ERROR,
                               "%s", _("Too many values in list"));
                 return FALSE;
         }
 
-	row = gda_row_new (amodel->priv->number_of_columns);
+	row = gda_row_new (priv->number_of_columns);
 	for (i = 0, list = values; list; i++, list = list->next) {
 		GValue *dest;
 		dest = gda_row_get_value (row, i);
@@ -838,9 +852,9 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
 			gda_value_set_null (dest);
 	}
 
-	g_array_append_val (amodel->priv->rows, row);
-	gda_data_model_row_inserted (model, amodel->priv->rows->len - 1);
-	return amodel->priv->rows->len - 1;
+	g_array_append_val (priv->rows, row);
+	gda_data_model_row_inserted (model, priv->rows->len - 1);
+	return priv->rows->len - 1;
 }
 
 static gint
@@ -848,17 +862,18 @@ gda_data_model_array_append_row (GdaDataModel *model, GError **error)
 {
 	GdaRow *row;
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
-	if (amodel->priv->read_only) {
+	if (priv->read_only) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
                               "%s", _("Attempting to modify a read-only data model"));
                 return FALSE;
         }
 
-	row = gda_row_new (amodel->priv->number_of_columns);
-	g_array_append_val (amodel->priv->rows, row);
-	gda_data_model_row_inserted (model, amodel->priv->rows->len - 1);
-	return amodel->priv->rows->len - 1;
+	row = gda_row_new (priv->number_of_columns);
+	g_array_append_val (priv->rows, row);
+	gda_data_model_row_inserted (model, priv->rows->len - 1);
+	return priv->rows->len - 1;
 }
 
 static gboolean
@@ -866,10 +881,11 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 {
 	GdaRow *gdarow;
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
-	gdarow = g_array_index (amodel->priv->rows, GdaRow*, row);
+	gdarow = g_array_index (priv->rows, GdaRow*, row);
 	if (gdarow) {
-		amodel->priv->rows = g_array_remove_index (amodel->priv->rows, row);
+		priv->rows = g_array_remove_index (priv->rows, row);
 		gda_data_model_row_removed ((GdaDataModel *) model, row);
 		g_object_unref (gdarow);
 		return TRUE;
@@ -883,17 +899,20 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 static void
 gda_data_model_array_freeze (GdaDataModel *model)
 {
-	((GdaDataModelArray *) model)->priv->notify_changes = FALSE;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	priv->notify_changes = FALSE;
 }
 
 static void
 gda_data_model_array_thaw (GdaDataModel *model)
 {
-	((GdaDataModelArray *) model)->priv->notify_changes = TRUE;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	priv->notify_changes = TRUE;
 }
 
 static gboolean
 gda_data_model_array_get_notify (GdaDataModel *model)
 {
-	return ((GdaDataModelArray *) model)->priv->notify_changes;
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	return priv->notify_changes;
 }

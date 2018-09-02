@@ -29,20 +29,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_MODEL_ARRAY            (gda_data_model_array_get_type())
-#define GDA_DATA_MODEL_ARRAY(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL_ARRAY, GdaDataModelArray))
-#define GDA_DATA_MODEL_ARRAY_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL_ARRAY, GdaDataModelArrayClass))
-#define GDA_IS_DATA_MODEL_ARRAY(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL_ARRAY))
-#define GDA_IS_DATA_MODEL_ARRAY_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_DATA_MODEL_ARRAY))
-
-typedef struct _GdaDataModelArray        GdaDataModelArray;
-typedef struct _GdaDataModelArrayClass   GdaDataModelArrayClass;
-typedef struct _GdaDataModelArrayPrivate GdaDataModelArrayPrivate;
-
-struct _GdaDataModelArray {
-	GObject                   object;
-	GdaDataModelArrayPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaDataModelArray, gda_data_model_array, GDA, DATA_MODEL_ARRAY, GObject)
 struct _GdaDataModelArrayClass {
 	GObjectClass              parent_class;
 
@@ -68,7 +55,6 @@ struct _GdaDataModelArrayClass {
  * at any time without the need for an iterator).
  */
 
-GType              gda_data_model_array_get_type          (void) G_GNUC_CONST;
 GdaDataModel      *gda_data_model_array_new_with_g_types  (gint cols, ...);
 GdaDataModel      *gda_data_model_array_new_with_g_types_v (gint cols, GType *types);
 GdaDataModel      *gda_data_model_array_new               (gint cols);
