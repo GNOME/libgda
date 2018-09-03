@@ -54,7 +54,8 @@ typedef enum {
     GDA_DDL_FKEY_SET_NULL,
     GDA_DDL_FKEY_RESTRICT,
     GDA_DDL_FKEY_SET_DEFAULT,
-    GDA_DDL_FKEY_CASCADE
+    GDA_DDL_FKEY_CASCADE,
+    GDA_DDL_FKEY_ERROR
 } GdaDdlFkeyReferenceAction;
 
 

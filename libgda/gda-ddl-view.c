@@ -216,6 +216,8 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
                          xmlNodePtr node,
                          GError **error)
 {
+  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
   GdaDdlView *self = GDA_DDL_VIEW (buildable);
   g_return_val_if_fail (node, FALSE);
 
@@ -277,6 +279,7 @@ gda_ddl_view_write_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlView *self = GDA_DDL_VIEW (buildable);
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
@@ -468,6 +471,7 @@ gda_ddl_view_create (GdaDdlView *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
   g_return_val_if_fail (gda_connection_is_opened(cnc),FALSE); 
 
   gda_lockable_lock((GdaLockable*)cnc);
@@ -518,6 +522,7 @@ gda_ddl_view_prepare_create (GdaDdlView *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (op,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
 
@@ -565,6 +570,8 @@ gda_ddl_view_prepare_create (GdaDdlView *self,
 GdaDdlView*
 gda_ddl_view_new_from_meta (GdaMetaView *view)
 {
+  g_return_val_if_fail (view,NULL);
+
   if (!view)
     return gda_ddl_view_new();
 

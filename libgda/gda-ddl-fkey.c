@@ -102,21 +102,23 @@ gda_ddl_fkey_new (void)
 /**
  * gda_ddl_fkey_new_from_meta:
  * @metafkey: a #GdaMetaTableForeignKey instance
- * 
- * Create a new instance from the corresponding meta object. If @metafkey is %NULL, 
+ *
+ * Create a new instance from the corresponding meta object. If @metafkey is %NULL,
  * this function is identical to gda_ddl_fkey_new()
  *
  */
 GdaDdlFkey*
 gda_ddl_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
 {
+  g_return_val_if_fail (metafkey,NULL);
+
   if (!metafkey)
     return gda_ddl_fkey_new();
 
   GdaMetaDbObject *refobject = GDA_META_DB_OBJECT (metafkey->meta_table);
 
   GdaDdlFkey *fkey = gda_ddl_fkey_new ();
-  
+
   gda_ddl_fkey_set_ref_table (fkey,refobject->obj_full_name);
 
   for (gint i = 0; i < metafkey->cols_nb; i++)
@@ -143,7 +145,7 @@ gda_ddl_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
     default:
       break;
     }
-  
+
   policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(metafkey);
   switch (policy)
     {
@@ -235,7 +237,8 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node, FALSE);
-  
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
+
   /*
    *    <fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
    *        <fk_field name="column_name" reffield="column_name"/>
@@ -336,6 +339,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 {
   g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (rootnode,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlFkey *self = GDA_DDL_FKEY (buildable);
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
@@ -345,7 +349,7 @@ gda_ddl_fkey_write_node (GdaDdlBuildable  *buildable,
 
   xmlNewProp (node,BAD_CAST gdaddlfkeynodes[GDA_DDL_FKEY_REFTABLE],
               BAD_CAST priv->mp_ref_table);
-  
+
   xmlNewProp (node,BAD_CAST gdaddlfkeynodes[GDA_DDL_FKEY_ONUPDATE],
               BAD_CAST priv->m_onupdate);
 
@@ -382,7 +386,7 @@ gda_ddl_fkey_buildable_interface_init (GdaDdlBuildableInterface *iface)
  * @self: An object #GdaDdlFkey
  *
  * Return: ON DELETE action as a string. If the action is not set then the string corresponding to
- * NO_ACTION is returned. 
+ * NO_ACTION is returned.
  *
  * Since: 6.0
  */
@@ -399,16 +403,19 @@ gda_ddl_fkey_get_ondelete (GdaDdlFkey *self)
 /**
  * gda_ddl_fkey_get_ondelete_id:
  * @self: a #GdaDdlFkey object
- * 
+ *
  * The default value is %NO_ACTION
  *
- * Return: ON DELETE action as a #GdaDdlFkeyReferenceAction.
+ * Return: ON DELETE action as a #GdaDdlFkeyReferenceAction. If %NULL is passed as argument then
+ * a special value %GDA_DDL_FKEY_ERROR is returned.
  *
  * Since: 6.0
  */
 GdaDdlFkeyReferenceAction
 gda_ddl_fkey_get_ondelete_id (GdaDdlFkey *self)
 {
+  g_return_val_if_fail (self,GDA_DDL_FKEY_ERROR);
+
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
   return priv->m_ondelete;
@@ -483,6 +490,8 @@ gda_ddl_fkey_get_onupdate (GdaDdlFkey *self)
 GdaDdlFkeyReferenceAction
 gda_ddl_fkey_get_onupdate_id (GdaDdlFkey *self)
 {
+  g_return_val_if_fail (self,GDA_DDL_FKEY_ERROR);
+
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
   return priv->m_onupdate;
@@ -597,7 +606,7 @@ gda_ddl_fkey_set_field (GdaDdlFkey  *self,
  * @op: a #GdaServerOperation to populate
  * @error: error container
  *
- * Prepare @op object for execution by populating with information stored in @self. 
+ * Prepare @op object for execution by populating with information stored in @self.
  *
  * Returns: %TRUE if no error or %FALSE otherwise.
  *
@@ -608,6 +617,10 @@ gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                               GdaServerOperation *op,
                               GError **error)
 {
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (op,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
+
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at(op,

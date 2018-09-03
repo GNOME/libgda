@@ -176,6 +176,7 @@ _gda_ddl_creator_validate_doc (xmlDocPtr doc,
                                GError **error)
 {
   g_return_val_if_fail (doc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   xmlValidCtxtPtr  ctx = NULL;
 
@@ -227,6 +228,7 @@ _gda_ddl_creator_parse_doc (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (doc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   xmlChar         *schema_name = NULL;
   xmlNodePtr       node        = NULL;
@@ -359,6 +361,7 @@ gda_ddl_creator_parse_file_from_path (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (xmlfile,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
   g_return_val_if_fail (_gda_ddl_creator_dtd,FALSE);
 
   xmlDocPtr doc = NULL;
@@ -413,6 +416,7 @@ gda_ddl_creator_validate_file_from_path (const gchar *xmlfile,
 {
   g_return_val_if_fail (xmlfile,FALSE);
   g_return_val_if_fail (_gda_ddl_creator_dtd,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   xmlDocPtr doc = NULL;
 
@@ -523,6 +527,9 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
                           const gchar *schema,
                           const gchar *name)
 {
+  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (name,NULL);
+
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
   GList *it = NULL;
@@ -534,7 +541,7 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
     if (!gda_ddl_base_compare (iobj,GDA_DDL_BASE(it)))
       {
         gda_ddl_base_free (iobj);
-      return GDA_DDL_VIEW(it);
+        return GDA_DDL_VIEW(it);
       }
 
   gda_ddl_base_free (iobj);
@@ -558,6 +565,7 @@ gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   if (!gda_connection_is_opened (cnc))
     return FALSE;
@@ -630,6 +638,7 @@ gda_ddl_creator_append_table (GdaDdlCreator *self,
                               const GdaDdlTable *table)
 {
   g_return_if_fail (self);
+  g_return_if_fail (table);
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
@@ -650,6 +659,7 @@ gda_ddl_creator_append_view (GdaDdlCreator *self,
                              const GdaDdlView *view)
 {
   g_return_if_fail (self);
+  g_return_if_fail (view);
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
@@ -689,6 +699,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   if (!gda_connection_is_opened (cnc))
     {
@@ -731,7 +742,8 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       g_value_set_string (schema ,gda_ddl_base_get_schema (it->data));
       g_value_set_string (name   ,gda_ddl_base_get_name   (it->data));
 
-      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,error);
+      /* We need to ignore error in the following call */
+      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,NULL);
 
       if (mobj)
         {
@@ -791,6 +803,7 @@ gda_ddl_creator_write_to_file (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (file,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
   
   gchar *filepath = g_file_get_path (file);
   gboolean res = gda_ddl_creator_write_to_path (self,filepath,error);
@@ -817,6 +830,7 @@ gda_ddl_creator_write_to_path (GdaDdlCreator *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (path,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
  
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
@@ -873,6 +887,7 @@ gda_ddl_creator_parse_file (GdaDdlCreator *self,
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (xmlfile,FALSE);
   g_return_val_if_fail (_gda_ddl_creator_dtd,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GFileInputStream *istream = NULL;
   xmlDocPtr doc = NULL;

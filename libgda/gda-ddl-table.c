@@ -212,6 +212,7 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node, FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlTable *self = GDA_DDL_TABLE (buildable);
 
@@ -277,6 +278,7 @@ gda_ddl_table_write_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlTable *self = GDA_DDL_TABLE (buildable);
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
@@ -477,6 +479,10 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
                               GdaServerOperation *op,
                               GError **error)
 {
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (op,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
+
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at(op,
@@ -554,6 +560,7 @@ gda_ddl_table_update (GdaDdlTable *self,
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (obj,FALSE);
   g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
  
   if (!gda_connection_is_opened(cnc))
     return FALSE;
@@ -645,6 +652,7 @@ gda_ddl_table_create (GdaDdlTable *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   if (!gda_connection_is_opened(cnc))
     return FALSE;
@@ -745,6 +753,7 @@ gda_ddl_table_append_column (GdaDdlTable *self,
                              GdaDdlColumn *column)
 {
   g_return_if_fail (self);
+  g_return_if_fail (column);
 
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
@@ -765,6 +774,7 @@ gda_ddl_table_append_fkey (GdaDdlTable *self,
                            GdaDdlFkey *fkey)
 {
   g_return_if_fail (self);
+  g_return_if_fail (fkey);
 
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 

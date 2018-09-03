@@ -336,6 +336,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   /*TODO: Appropriate error should be set an returned. 
    * It should be added to the header file first 
@@ -448,6 +449,7 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
 
@@ -548,7 +550,8 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
 {
   g_return_if_fail (self);
   g_return_if_fail (type);
-  //	g_return_if_fail (!*error);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
+
   GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
   GType ttype = gda_g_type_from_string (type);
   if (ttype != G_TYPE_INVALID){
@@ -997,6 +1000,7 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
 {
   g_return_val_if_fail(self,FALSE);
   g_return_val_if_fail(op,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
   GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
 
@@ -1082,6 +1086,10 @@ gda_ddl_column_prepare_add (GdaDdlColumn *self,
                             GdaServerOperation *op,
                             GError **error)
 {
+  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (op,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
+
   GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
 
   if(!gda_server_operation_set_value_at(op,priv->mp_name,error,
