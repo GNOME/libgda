@@ -33,7 +33,6 @@
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-holder.h>
-#include <libgda/gda-connection.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-data-model-import.h>
@@ -48,7 +47,7 @@
 
 extern gchar *gda_lang_locale;
 
-struct _GdaServerOperationPrivate {
+typedef struct {
 	GdaServerOperationType  op_type;
 	gboolean                cnc_set;
 	GdaConnection          *cnc;
@@ -61,7 +60,7 @@ struct _GdaServerOperationPrivate {
 	GSList                 *allnodes; /* list of all the Node structures, referenced here only */
 	GSList                 *topnodes; /* list of the "/(*)" named nodes, not referenced here  */
 	GHashTable             *info_hash; /* key = path, value = a GdaServerOperationNode */
-};
+} GdaServerOperationPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaServerOperation, gda_server_operation, G_TYPE_OBJECT)
 
