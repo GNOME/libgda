@@ -295,6 +295,10 @@ gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_fiel
 G_DEPRECATED_FOR(gda_server_operation_create_table_arg_fkey_ref_field_get_type)
 GType   gda_server_operation_create_table_arg_get_fkey_ref_field_get_type (void) G_GNUC_CONST;
 
+GdaServerOperation *gda_server_operation_prepare_create_database   (const gchar *provider, const gchar *db_name, GError **error);
+gboolean            gda_server_operation_perform_create_database   (GdaServerOperation *op, const gchar *provider, GError **error);
+GdaServerOperation *gda_server_operation_prepare_drop_database     (const gchar *provider, const gchar *db_name, GError **error);
+gboolean            gda_server_operation_perform_drop_database     (GdaServerOperation *op, const gchar *provider, GError **error);
 
 GdaServerOperation *gda_server_operation_prepare_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
 GdaServerOperation* gda_server_operation_prepare_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
