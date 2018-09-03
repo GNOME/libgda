@@ -300,12 +300,6 @@ gboolean            gda_server_operation_perform_create_database   (GdaServerOpe
 GdaServerOperation *gda_server_operation_prepare_drop_database     (const gchar *provider, const gchar *db_name, GError **error);
 gboolean            gda_server_operation_perform_drop_database     (GdaServerOperation *op, const gchar *provider, GError **error);
 
-GdaServerOperation *gda_server_operation_prepare_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
-GdaServerOperation* gda_server_operation_prepare_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
-gboolean            gda_server_operation_perform_create_table          (GdaServerOperation *op, GError **error);
-GdaServerOperation *gda_server_operation_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
-gboolean            gda_server_operation_perform_drop_table            (GdaServerOperation *op, GError **error);
-
 G_END_DECLS
 
 #endif
