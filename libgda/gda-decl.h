@@ -58,12 +58,6 @@ typedef struct _GdaHolder GdaHolder;
 typedef struct _GdaHolderClass GdaHolderClass;
 typedef struct _GdaHolderPrivate GdaHolderPrivate;
 
-typedef struct _GdaSet GdaSet;
-typedef struct _GdaSetClass GdaSetClass;
-typedef struct _GdaSetNode GdaSetNode;
-typedef struct _GdaSetGroup GdaSetGroup;
-typedef struct _GdaSetSource GdaSetSource;
-
 typedef struct _GdaBlobOp GdaBlobOp;
 typedef struct _GdaBlobOpClass GdaBlobOpClass;
 

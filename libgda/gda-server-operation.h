@@ -26,6 +26,7 @@
 
 #include <glib-object.h>
 #include <libgda/gda-decl.h>
+#include <libgda/gda-set.h>
 #include <libxml/tree.h>
 
 G_BEGIN_DECLS

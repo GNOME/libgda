@@ -41,6 +41,8 @@ typedef enum
 } GdaSetError;
 
 typedef struct _GdaSetNode GdaSetNode;
+typedef struct _GdaSetGroup GdaSetGroup;
+typedef struct _GdaSetSource GdaSetSource;
 
 #define GDA_TYPE_SET_NODE (gda_set_node_get_type ())
 #define GDA_SET_NODE(x) ((GdaSetNode *)(x))
@@ -55,8 +57,6 @@ void          gda_set_node_set_data_model    (GdaSetNode *node, GdaDataModel *mo
 gint          gda_set_node_get_source_column (GdaSetNode *node);
 void          gda_set_node_set_source_column (GdaSetNode *node, gint column);
 
-typedef struct _GdaSetGroup GdaSetGroup;
-
 #define GDA_TYPE_SET_GROUP (gda_set_group_get_type ())
 #define GDA_SET_GROUP(x) ((GdaSetGroup *)(x))
 GType         gda_set_group_get_type        (void) G_GNUC_CONST;
@@ -69,8 +69,6 @@ GSList       *gda_set_group_get_nodes       (GdaSetGroup *sg);
 gint          gda_set_group_get_n_nodes     (GdaSetGroup *sg);
 void          gda_set_group_set_source      (GdaSetGroup *sg, GdaSetSource *source);
 GdaSetSource *gda_set_group_get_source      (GdaSetGroup *sg);
-
-typedef struct _GdaSetSource GdaSetSource;
 
 #define GDA_TYPE_SET_SOURCE (gda_set_source_get_type ())
 #define GDA_SET_SOURCE(x) ((GdaSetSource *)(x))
