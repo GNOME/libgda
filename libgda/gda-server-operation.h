@@ -206,11 +206,9 @@ GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServ
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
 const GValue              *gda_server_operation_get_value_at_path       (GdaServerOperation *op, const gchar *path);
 gchar                     *gda_server_operation_get_sql_identifier_at   (GdaServerOperation *op,
-									 GdaConnection *cnc, GdaServerProvider *prov,
 									 const gchar *path_format, GError **error,
-									 ...);    
+									 ...);
 gchar                     *gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, 
-									    GdaConnection *cnc, GdaServerProvider *prov,
 									    const gchar *path, GError **error);
 gboolean                   gda_server_operation_set_value_at            (GdaServerOperation *op, const gchar *value, 
 									 GError **error, const gchar *path_format, ...);
@@ -244,11 +242,6 @@ gboolean                   gda_server_operation_is_valid_from_resource  (GdaServ
 /*
  * Database creation and destruction
  */
-GdaServerOperation *gda_server_operation_prepare_create_database       (const gchar *provider, const gchar *db_name, GError **error);
-gboolean            gda_server_operation_perform_create_database       (GdaServerOperation *op, const gchar *provider, GError **error);
-GdaServerOperation *gda_server_operation_prepare_drop_database         (const gchar *provider, const gchar *db_name, GError **error);
-gboolean            gda_server_operation_perform_drop_database         (GdaServerOperation *op, const gchar *provider, GError **error);
-gboolean            gda_server_operation_perform                       (GdaServerOperation *op, GError **error);
 gchar              *gda_server_operation_render                        (GdaServerOperation *op, GError **error);
 
 /*
