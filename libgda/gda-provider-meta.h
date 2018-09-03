@@ -21,6 +21,7 @@
 #define __GDA_PROVIDER_META_H__
 
 #include <glib-object.h>
+#include <libgda/gda-set.h>
 #include <libgda/gda-row.h>
 
 G_BEGIN_DECLS
