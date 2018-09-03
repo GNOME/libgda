@@ -160,7 +160,7 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      G_SIGNAL_RUN_FIRST,
 			      G_STRUCT_OFFSET (GdaStatementClass, checked),
 			      NULL, NULL,
-			      _gda_marshal_VOID__OBJECT_BOOLEAN, G_TYPE_NONE,
+			      _gda_marshal_VOID__BOOLEAN, G_TYPE_NONE,
 			      2, GDA_TYPE_CONNECTION, G_TYPE_BOOLEAN);
 
 	klass->reset = NULL;
@@ -404,13 +404,21 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
 }
 
 /**
+ * gda_statement_get_sql_statement:
+ * @stmt: a #GdaStatement
+ *
+ * Returns: internal #GdaSqlStatement structure
+ * Since: 6.0
+ */
+GdaSqlStatement*
+gda_statement_get_sql_statement (GdaStatement *stmt) {
+  return stmt->priv->internal_struct;
+}
+
+/**
  * gda_statement_check_validity:
  * @stmt: a #GdaStatement object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
- *
- * If @cnc is not %NULL then checks that every object (table, field, function) used in @stmt 
- * actually exists in @cnc's database
  *
  * If @cnc is %NULL, then cleans anything related to @cnc in @stmt.
  *
@@ -419,15 +427,14 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
  * Returns: TRUE if every object actually exists in @cnc's database
  */
 gboolean
-gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **error)
+gda_statement_check_validity (GdaStatement *stmt, GError **error)
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 	g_return_val_if_fail (stmt->priv, FALSE);
-	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	retval = gda_sql_statement_check_validity (stmt->priv->internal_struct, cnc, error);
-	g_signal_emit (stmt, gda_statement_signals [CHECKED], 0, cnc, retval);
+	retval = gda_sql_statement_check_validity (stmt->priv->internal_struct, error);
+	g_signal_emit (stmt, gda_statement_signals [CHECKED], 0, retval);
 
 	return retval;
 }
@@ -444,13 +451,12 @@ gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **e
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_statement_normalize (GdaStatement *stmt, GdaConnection *cnc, GError **error)
+gda_statement_normalize (GdaStatement *stmt, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 	g_return_val_if_fail (stmt->priv, FALSE);
-	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	return gda_sql_statement_normalize (stmt->priv->internal_struct, cnc, error);
+	return gda_sql_statement_normalize (stmt->priv->internal_struct, error);
 }
 
 /**
@@ -784,10 +790,7 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 {
 	if (value && !gda_value_is_null (value)) {
 		GdaDataHandler *dh;
-		if (context->provider)
-			dh = gda_server_provider_get_data_handler_g_type (context->provider, context->cnc, G_VALUE_TYPE (value));
-		else  			
-			dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
+		dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 
 		if (!dh) {
 			if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_DEFAULT))
@@ -841,45 +844,50 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 		return g_strdup ("NULL");
 }
 
-/**
- * gda_statement_to_sql_extended:
- * @stmt: a #GdaStatement object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
- * @params: (allow-none): parameters contained in a single #GdaSet object, or %NULL
- * @flags: a set of flags to control the rendering
- * @params_used: (element-type GdaHolder) (out) (transfer container) (allow-none):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
- * @error: a place to store errors, or %NULL
- *
- * Renders @stmt as an SQL statement, with some control on how it is rendered.
- *
- * If @cnc is not %NULL, then the rendered SQL will better be suited to be used by @cnc (in particular
- * it may include some SQL tweaks and/or proprietary extensions specific to the database engine used by @cnc):
- * in this case the result is similar to calling gda_connection_statement_to_sql().
- *
- * Returns: (transfer full): a new string if no error occurred
- */
-gchar *
-gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *params,
-			       GdaStatementSqlFlag flags, 
+
+GdaSqlRenderingContext *
+gda_statement_to_sql_prepare (GdaStatement *stmt, GdaSet *params,
+			       GdaStatementSqlFlag flags,
 			       GSList **params_used, GError **error)
 {
 	gchar *str;
 	GdaSqlRenderingContext context;
 
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	g_return_val_if_fail (stmt->priv, NULL);
 
 	memset (&context, 0, sizeof (context));
 	context.params = params;
 	context.flags = flags;
-	if (cnc) {
-		if (gda_connection_is_opened (cnc))
-			return _gda_server_provider_statement_to_sql (gda_connection_get_provider (cnc), cnc,
-								      stmt, params, flags,
-								      params_used, error);
-		else
-			context.provider = gda_connection_get_provider (cnc);
-	}
+	return context;
+}
+
+/**
+ * gda_statement_to_sql_extended:
+ * @stmt: a #GdaStatement object
+ * @params: (nullable): parameters contained in a single #GdaSet object, or %NULL
+ * @flags: a set of flags to control the rendering
+ * @params_used: (element-type GdaHolder) (out) (transfer container) (nullable):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
+ * @error: a place to store errors, or %NULL
+ *
+ * Renders @stmt as an SQL statement, default internal representation. See gda_connection_statement_to_sql()
+ *
+ * Returns: (transfer full): a new string if no error occurred
+ * Since: 6.0
+ */
+gchar *
+gda_statement_to_sql_extended (GdaStatement *stmt, GdaSet *params,
+			       GdaStatementSqlFlag flags,
+			       GSList **params_used, GError **error)
+{
+	gchar *str;
+	GdaSqlRenderingContext context;
+	GdaDataHandler *dh;
+
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+
+	memset (&context, 0, sizeof (context));
+	context.params = params;
+	context.flags = flags;
 
 	str = gda_statement_to_sql_real (stmt, &context, error);
 
@@ -894,6 +902,7 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 			*params_used = NULL;
 		g_slist_free (context.params_used);
 	}
+	g_object_unref (dh);
 	return str;
 }
 

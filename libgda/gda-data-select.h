@@ -173,7 +173,6 @@ gboolean       gda_data_select_compute_modification_statements_ext (GdaDataSelec
 								    GError **error);
 
 gboolean       gda_data_select_compute_columns_attributes      (GdaDataSelect *model, GError **error);
-GdaConnection *gda_data_select_get_connection                  (GdaDataSelect *model);
 
 gboolean       gda_data_select_rerun                           (GdaDataSelect *model, GError **error);
 gboolean       gda_data_select_prepare_for_offline             (GdaDataSelect *model, GError **error);

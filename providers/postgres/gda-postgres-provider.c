@@ -1564,7 +1564,7 @@ gda_postgres_provider_statement_to_sql (GdaServerProvider *provider, GdaConnecti
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
 	}
 
-	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
+	return gda_statement_to_sql_extended (stmt, params, flags, params_used, error);
 }
 
 static gboolean

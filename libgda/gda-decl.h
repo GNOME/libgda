@@ -27,10 +27,6 @@
 typedef struct _GdaConfig GdaConfig;
 typedef struct _GdaConfigClass GdaConfigClass;
 
-typedef struct _GdaConnection        GdaConnection;
-typedef struct _GdaConnectionClass   GdaConnectionClass;
-typedef struct _GdaConnectionPrivate GdaConnectionPrivate;
-
 typedef struct _GdaConnectionEvent        GdaConnectionEvent;
 typedef struct _GdaConnectionEventClass   GdaConnectionEventClass;
 typedef struct _GdaConnectionEventPrivate GdaConnectionEventPrivate;

@@ -2154,25 +2154,22 @@ gda_server_operation_get_value_at (GdaServerOperation *op, const gchar *path_for
 /**
  * gda_server_operation_get_sql_identifier_at:
  * @op: a #GdaServerOperation object
- * @cnc: (nullable): a #GdaConnection, or %NULL
  * @prov: (nullable): a #GdaServerProvider, or %NULL
  * @path_format: a complete path to a node (starting with "/")
  * @error: (nullable): a place to store errors, or %NULL
  * @...: arguments to use with @path_format to make a complete path
  *
  * This method is similar to gda_server_operation_get_value_at(), but for SQL identifiers: a new string
- * is returned instead of a #GValue. Also the returned string is assumed to represents an SQL identifier
- * and will correctly be quoted to be used with @cnc, or @prov if @cnc is %NULL (a generic quoting rule
- * will be applied if both are %NULL).
+ * is returned instead of a #GValue.
  *
- * Returns: (transfer full): a new string, or %NULL if the value is undefined or
+ * Returns: (transfer full) (nullable): a new string, or %NULL if the value is undefined or
  * if the @path is not defined or @path does not hold any value, or if the value held is not a string
  * (in that last case a warning is shown).
  *
  * Since: 4.0.3
  */
 gchar *
-gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
+gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaServerProvider *prov,
 					    const gchar *path_format, GError **error, ...)
 {
 	gchar *path, *ret;
@@ -2185,7 +2182,7 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 	path = g_strdup_vprintf (path_format, args);
 	va_end (args);
 
-	ret = gda_server_operation_get_sql_identifier_at_path (op, cnc, prov, path, error);
+	ret = gda_server_operation_get_sql_identifier_at_path (op, prov, path, error);
 	g_free (path);
 
 	return ret;
@@ -2194,8 +2191,6 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
 /**
  * gda_server_operation_get_sql_identifier_at_path: (rename-to gda_server_operation_get_sql_identifier_at)
  * @op: a #GdaServerOperation object
- * @cnc: (nullable): a #GdaConnection, or %NULL
- * @prov: (nullable): a #GdaServerProvider, or %NULL
  * @path: a complete path to a node (starting with "/")
  * @error: (nullable): a place to store errors, or %NULL
  *
@@ -2208,14 +2203,13 @@ gda_server_operation_get_sql_identifier_at (GdaServerOperation *op, GdaConnectio
  * if the @path is not defined or @path does not hold any value, or if the value held is not a string or
  * a valid SQL identifier.
  *
- * Since: 4.2.6
+ * Since: 6.0
  */
 gchar *
-gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConnection *cnc, GdaServerProvider *prov,
+gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op,
 						 const gchar *path, GError **error)
 {
 	const GValue *value = NULL;
-	GdaConnectionOptions cncoptions = 0;
 
 	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), NULL);
 
@@ -2237,10 +2231,8 @@ gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, GdaConn
 		return NULL;
 	}
 
-	if (cnc)
-		g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
-	return gda_sql_identifier_quote (str, cnc, prov, FALSE,
-					 cncoptions & GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
+	return gda_sql_identifier_quote (str, NULL, NULL, FALSE,
+					 GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE);
 }
 
 /**
@@ -3131,395 +3123,6 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
 {
 	g_return_val_if_fail (arg != NULL, NULL);
 	return arg->fkey_fields;
-}
-
-
-/**
- * gda_server_operation_prepare_create_table_v:
- * @cnc: an opened connection
- * @table_name: name of the table to create
- * @error: a place to store errors, or %NULL
- * @...: group of three arguments for column's name, column's #GType
- * and a #GdaServerOperationCreateTableFlag flag, finished with %NULL
- *
- * Convenient funtion for table creation.
- *
- * For details about arguments see #gda_server_operation_prepare_create_table_v().
- *
- * Returns: (transfer full) (nullable): a #GdaServerOperation if no errors; NULL and set @error otherwise
- *
- * Since: 4.2.3
- */
-G_GNUC_NULL_TERMINATED
-GdaServerOperation*
-gda_server_operation_prepare_create_table_v (GdaConnection *cnc, const gchar *table_name, GError **error, ...)
-{
-	GdaServerOperation *op;
-
-	g_return_val_if_fail (gda_connection_is_opened (cnc), NULL);
-
-	va_list  args;
-	gchar   *arg;
-	GType    type;
-	GdaServerOperationCreateTableFlag flag;
-	gint refs;
-	GList *arguments = NULL;
-	GdaServerOperationCreateTableArg* argument;
-
-	va_start (args, error);
-	type = 0;
-	arg = NULL;
-	refs = -1;
-
-	while ((arg = va_arg (args, gchar*))) {
-		argument = gda_server_operation_create_table_arg_new ();
-		/* First argument for Column's name */
-		gda_server_operation_create_table_arg_set_column_name (argument, (const gchar*) arg);
-
-		/* Second to Define column's type */
-		type = va_arg (args, GType);
-		gda_server_operation_create_table_arg_set_column_type (argument, type);
-
-		/* Third for column's flags */
-		flag = va_arg (args, GdaServerOperationCreateTableFlag);
-		gda_server_operation_create_table_arg_set_flags (argument, flag);
-		if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG) {
-			gint j;
-			gint fields;
-			gchar *fkey_table;
-			gchar *fkey_ondelete;
-			gchar *fkey_onupdate;
-
-			refs++;
-			GList *lfields = NULL;
-
-			fkey_table = va_arg (args, gchar*);
-			gda_server_operation_create_table_arg_set_fkey_table (argument, fkey_table);
-			/* Get number of referenced fields */
-			fields = va_arg (args, gint);
-
-			for (j = 0; j < fields; j++) {
-				gchar *field;
-				GdaServerOperationCreateTableArgFKeyRefField *rfields;
-
-				/* First pair arguments give local field and referenced field */
-				field = va_arg (args, gchar*);
-				rfields = gda_server_operation_create_table_arg_fkey_ref_field_new ();
-				gda_server_operation_create_table_arg_fkey_ref_field_set_local_field (rfields, field);
-				gda_server_operation_create_table_arg_fkey_ref_field_set_referenced_field (rfields, field);
-				lfields = g_list_append (lfields, rfields);
-			}
-			gda_server_operation_create_table_arg_set_fkey_refs (argument, lfields);
-
-			/* ON DELETE and ON UPDATE events constraints */
-			fkey_ondelete = va_arg (args, gchar*);
-			gda_server_operation_create_table_arg_set_fkey_ondelete (argument, fkey_ondelete);
-
-			fkey_onupdate = va_arg (args, gchar*);
-			gda_server_operation_create_table_arg_set_fkey_ondupdate (argument, fkey_onupdate);
-		}
-
-		arguments = g_list_append (arguments, argument);
-	}
-
-	va_end (args);
-
-	op = gda_server_operation_prepare_create_table (cnc, table_name, arguments, error);
-	g_list_free_full (arguments, (GDestroyNotify) gda_server_operation_create_table_arg_free);
-	return op;
-}
-
-/**
- * gda_server_operation_prepare_create_table:
- * @cnc: an opened connection
- * @table_name: name of the table to create
- * @arguments: (element-type GdaServerOperationCreateTableArg): list of arguments as #GdaServerOperationPrepareCreateTableArg containing column's name,
- * column's #GType and a #GdaServerOperationCreateTableFlag flag
- * @error: a place to store errors, or %NULL
- *
- * Add more arguments if the flag needs them:
- *
- * GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG:
- * <itemizedlist>
- *   <listitem><para>string with the table's name referenced</para></listitem>
- *   <listitem><para>an integer with the number pairs "local_field", "referenced_field"
- *   used in the reference</para></listitem>
- *   <listitem><para>Pairs of "local_field", "referenced_field" to use, must match
- *    the number specified above.</para></listitem>
- *   <listitem><para>a string with the action for ON DELETE; can be: "RESTRICT", "CASCADE",
- *    "NO ACTION", "SET NULL" and "SET DEFAULT". Example: "ON UPDATE CASCADE".</para></listitem>
- *   <listitem><para>a string with the action for ON UPDATE (see above).</para></listitem>
- * </itemizedlist>
- *
- * Create a #GdaServerOperation object using an opened connection, taking three
- * arguments, a column's name the column's GType and #GdaServerOperationCreateTableFlag
- * flag, you need to finish the list using %NULL.
- *
- * You'll be able to modify the #GdaServerOperation object to add custom options
- * to the operation. When finished call #gda_server_operation_perform_create_table
- * or #gda_server_provider_perform_operation
- * in order to execute the operation.
- *
- * Returns: (transfer full) (nullable): a #GdaServerOperation if no errors; NULL and set @error otherwise
- *
- * Since: 6.0.0
- */
-GdaServerOperation*
-gda_server_operation_prepare_create_table (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error)
-{
-	GdaServerOperation *op;
-	GdaServerProvider *server;
-
-	g_return_val_if_fail (gda_connection_is_opened (cnc), NULL);
-
-	server = gda_connection_get_provider (cnc);
-
-	if (!table_name) {
-		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
-			     "%s", _("Unspecified table name"));
-		return NULL;
-	}
-
-	if (gda_server_provider_supports_operation (server, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL)) {
-		gchar   *cname;
-		GType    type;
-		gchar   *dbms_type;
-		GdaServerOperationCreateTableFlag flag;
-		gint i;
-		gint refs;
-
-		op = gda_server_provider_create_operation (server, cnc,
-							   GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
-		if (!GDA_IS_SERVER_OPERATION(op))
-			return NULL;
-		if(!gda_server_operation_set_value_at (op, table_name, error, "/TABLE_DEF_P/TABLE_NAME")) {
-			g_object_unref (op);
-			return NULL;
-		}
-
-		type = 0;
-		cname = NULL;
-		i = 0;
-		refs = -1;
-
-		GList *l = arguments;
-		while (l != NULL) {
-			GdaServerOperationCreateTableArg *argument;
-			argument = (GdaServerOperationCreateTableArg*) l->data;
-			cname = gda_server_operation_create_table_arg_get_column_name (argument);
-			/* First argument for Column's name */
-			if(!gda_server_operation_set_value_at (op, cname, error, "/FIELDS_A/@COLUMN_NAME/%d", i)) {
-				g_object_unref (op);
-				return NULL;
-			}
-			g_free (cname);
-
-			/* Second to Define column's type */
-			type = gda_server_operation_create_table_arg_get_column_type (argument);
-			if (type == 0) {
-				g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
-					     "%s", _("Invalid type"));
-				g_object_unref (op);
-				return NULL;
-			}
-			dbms_type = (gchar *) gda_server_provider_get_default_dbms_type (server,
-											 cnc, type);
-			if (!gda_server_operation_set_value_at (op, dbms_type, error, "/FIELDS_A/@COLUMN_TYPE/%d", i)){
-				g_object_unref (op);
-				return NULL;
-			}
-
-			/* Third for column's flags */
-			flag = gda_server_operation_create_table_arg_get_flags (argument);
-			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_PKEY_FLAG)
-				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_PKEY/%d", i)){
-					g_object_unref (op);
-					return NULL;
-				}
-			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_NOT_NULL_FLAG)
-				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_NNUL/%d", i)){
-					g_object_unref (op);
-					return NULL;
-				}
-			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_AUTOINC_FLAG)
-				if (!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)){
-					g_object_unref (op);
-					return NULL;
-				}
-			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_UNIQUE_FLAG)
-				if(!gda_server_operation_set_value_at (op, "TRUE", error, "/FIELDS_A/@COLUMN_UNIQUE/%d", i)){
-					g_object_unref (op);
-					return NULL;
-				}
-			if (flag & GDA_SERVER_OPERATION_CREATE_TABLE_FKEY_FLAG) {
-				gint j;
-				gchar *fkey_table;
-				gchar *fkey_ondelete;
-				gchar *fkey_onupdate;
-
-				fkey_table = gda_server_operation_create_table_arg_get_column_name (argument);
-				if (!gda_server_operation_set_value_at (op, fkey_table, error,
-								   "/FKEY_S/%d/FKEY_REF_TABLE", refs)){
-					g_object_unref (op);
-					return NULL;
-				}
-
-				refs++;
-				GList* lr = gda_server_operation_create_table_arg_get_fkey_refs (argument);
-				j = 0;
-
-				while (lr) {
-					gchar *field, *rfield;
-					GdaServerOperationCreateTableArgFKeyRefField *ref;
-					ref = (GdaServerOperationCreateTableArgFKeyRefField*) l->data;
-
-					field = gda_server_operation_create_table_arg_fkey_ref_field_get_local_field (ref);
-					if(!gda_server_operation_set_value_at (op, field, error,
-									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d", refs, j)){
-						g_object_unref (op);
-						return NULL;
-					}
-
-					rfield = gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_field (ref);
-					if(!gda_server_operation_set_value_at (op, rfield, error,
-									   "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d", refs, j)){
-						g_object_unref (op);
-						return NULL;
-					}
-					j++;
-					lr = g_list_next (lr);
-				}
-
-				fkey_ondelete = gda_server_operation_create_table_arg_get_fkey_ondelete (argument);
-				if (!gda_server_operation_set_value_at (op, fkey_ondelete, error,
-								   "/FKEY_S/%d/FKEY_ONDELETE", refs)){
-					g_object_unref (op);
-					return NULL;
-				}
-				fkey_onupdate = gda_server_operation_create_table_arg_get_fkey_onupdate (argument);
-				if(!gda_server_operation_set_value_at (op, fkey_onupdate, error,
-								   "/FKEY_S/%d/FKEY_ONUPDATE", refs)){
-					g_object_unref (op);
-					return NULL;
-				}
-			}
-
-			l = g_list_next (l);
-			i++;
-		}
-
-		g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
-
-		return op;
-	}
-	else {
-		g_set_error (error, GDA_SERVER_OPERATION_ERROR, GDA_SERVER_OPERATION_OBJECT_NAME_ERROR,
-			     "%s", _("CREATE TABLE operation is not supported by the database server"));
-		return NULL;
-	}
-}
-
-
-/**
- * gda_server_operation_perform_create_table:
- * @op: a valid #GdaServerOperation
- * @error: a place to store errors, or %NULL
- *
- * Performs a prepared #GdaServerOperation to create a table. This could perform
- * an operation created by #gda_server_operation_prepare_create_table or any other using the
- * the #GdaServerOperation API.
- *
- * Returns: TRUE if the table was created; FALSE and set @error otherwise
- *
- * Since: 4.2.3
- */
-gboolean
-gda_server_operation_perform_create_table (GdaServerOperation *op, GError **error)
-{
-	GdaConnection *cnc;
-
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_CREATE_TABLE, FALSE);
-
-	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
-	if (cnc)
-		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
-	else {
-		g_warning ("Could not find operation's associated connection, "
-			   "did you use gda_connection_prepare_create_table() ?");
-		return FALSE;
-	}
-}
-
-/**
- * gda_server_operation_prepare_drop_table:
- * @cnc: an opened connection
- * @table_name: name of the table to drop
- * @error: a place to store errors, or %NULL
- *
- * This is just a convenient function to create a #GdaServerOperation to drop a
- * table in an opened connection.
- *
- * Returns: (transfer full) (nullable): a new #GdaServerOperation or %NULL if couldn't create the opereration.
- *
- * Since: 4.2.3
- */
-GdaServerOperation*
-gda_server_operation_prepare_drop_table (GdaConnection *cnc, const gchar *table_name, GError **error)
-{
-	GdaServerOperation *op;
-	GdaServerProvider *server;
-
-	server = gda_connection_get_provider (cnc);
-
-	op = gda_server_provider_create_operation (server, cnc,
-						   GDA_SERVER_OPERATION_DROP_TABLE, NULL, error);
-
-	if (GDA_IS_SERVER_OPERATION (op)) {
-		g_return_val_if_fail (table_name != NULL
-				      || GDA_IS_CONNECTION (cnc)
-				      || !gda_connection_is_opened (cnc), NULL);
-
-		if (gda_server_operation_set_value_at (op, table_name,
-						       error, "/TABLE_DESC_P/TABLE_NAME")) {
-			g_object_set_data_full (G_OBJECT (op), "_gda_connection", g_object_ref (cnc), g_object_unref);
-			return op;
-		}
-		else
-			return NULL;
-	}
-	else
-		return NULL;
-}
-
-
-/**
- * gda_server_operation_perform_drop_table:
- * @op: a #GdaServerOperation object
- * @error: a place to store errors, or %NULL
- *
- * This is just a convenient function to perform a drop a table operation.
- *
- * Returns: TRUE if the table was dropped
- *
- * Since: 4.2.3
- */
-gboolean
-gda_server_operation_perform_drop_table (GdaServerOperation *op, GError **error)
-{
-	GdaConnection *cnc;
-
-	g_return_val_if_fail (GDA_IS_SERVER_OPERATION (op), FALSE);
-	g_return_val_if_fail (gda_server_operation_get_op_type (op) == GDA_SERVER_OPERATION_DROP_TABLE, FALSE);
-
-	cnc = g_object_get_data (G_OBJECT (op), "_gda_connection");
-	if (cnc)
-		return gda_server_provider_perform_operation (gda_connection_get_provider (cnc), cnc, op, error);
-	else {
-		g_warning ("Could not find operation's associated connection, "
-			   "did you use gda_server_operation_prepare_drop_table() ?");
-		return FALSE;
-	}
 }
 
 /**

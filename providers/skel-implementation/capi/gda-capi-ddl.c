@@ -43,7 +43,7 @@ gda_capi_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	/* CREATE TABLE */
 	string = g_string_new ("CREATE TABLE ");
 
-	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME", error);
+	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/TABLE_DEF_P/TABLE_NAME", error);
 	if (!tmp) {
 		g_string_free (string, TRUE);
 		return NULL;

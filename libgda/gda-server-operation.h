@@ -206,11 +206,9 @@ GdaServerOperationNode    *gda_server_operation_get_node_info           (GdaServ
 const GValue              *gda_server_operation_get_value_at            (GdaServerOperation *op, const gchar *path_format, ...);
 const GValue              *gda_server_operation_get_value_at_path       (GdaServerOperation *op, const gchar *path);
 gchar                     *gda_server_operation_get_sql_identifier_at   (GdaServerOperation *op,
-									 GdaConnection *cnc, GdaServerProvider *prov,
 									 const gchar *path_format, GError **error,
 									 ...);    
 gchar                     *gda_server_operation_get_sql_identifier_at_path (GdaServerOperation *op, 
-									    GdaConnection *cnc, GdaServerProvider *prov,
 									    const gchar *path, GError **error);
 gboolean                   gda_server_operation_set_value_at            (GdaServerOperation *op, const gchar *value, 
 									 GError **error, const gchar *path_format, ...);
@@ -301,13 +299,6 @@ gchar*  gda_server_operation_create_table_arg_fkey_ref_field_get_referenced_fiel
 
 G_DEPRECATED_FOR(gda_server_operation_create_table_arg_fkey_ref_field_get_type)
 GType   gda_server_operation_create_table_arg_get_fkey_ref_field_get_type (void) G_GNUC_CONST;
-
-
-GdaServerOperation *gda_server_operation_prepare_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
-GdaServerOperation* gda_server_operation_prepare_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
-gboolean            gda_server_operation_perform_create_table          (GdaServerOperation *op, GError **error);
-GdaServerOperation *gda_server_operation_prepare_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
-gboolean            gda_server_operation_perform_drop_table            (GdaServerOperation *op, GError **error);
 
 G_END_DECLS
 

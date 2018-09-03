@@ -36,18 +36,63 @@
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-connection-event.h>
 #include <libgda/gda-transaction-status.h>
-#include <libgda/gda-statement.h>
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-server-operation.h>
+#include <libgda/gda-statement.h>
+#include <sql-parser/gda-statement-struct.h>
 #include <libgda/gda-batch.h>
 
 G_BEGIN_DECLS
 
+/**
+ * GdaConnectionStatus:
+ * @GDA_CONNECTION_STATUS_CLOSED: the connection is closed (default status upon creation)
+ * @GDA_CONNECTION_STATUS_OPENING: the connection is currently being opened
+ * @GDA_CONNECTION_STATUS_IDLE: the connection is opened but not currently used
+ * @GDA_CONNECTION_STATUS_BUSY: the connection is opened and currently being used
+ *
+ * Indicates the current status of a connection. The possible status and the transitions between those status
+ * are indicated in the diagram below:
+ *  <mediaobject>
+ *    <imageobject role="html">
+ *      <imagedata fileref="connection-status.png" format="PNG" contentwidth="50mm"/>
+ *    </imageobject>
+ *    <textobject>
+ *      <phrase>GdaConnection's status and transitions between different status</phrase>
+ *    </textobject>
+ *  </mediaobject>
+ */
+typedef enum {
+	GDA_CONNECTION_STATUS_CLOSED,
+	GDA_CONNECTION_STATUS_OPENING,
+	GDA_CONNECTION_STATUS_IDLE,
+	GDA_CONNECTION_STATUS_BUSY
+} GdaConnectionStatus;
+
+
 #define GDA_TYPE_CONNECTION            (gda_connection_get_type())
-#define GDA_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, GdaConnection))
-#define GDA_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION, GdaConnectionClass))
-#define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
-#define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+G_DECLARE_DERIVABLE_TYPE(GdaConnection, gda_connection, GDA, CONNECTION, GObject)
+
+
+struct _GdaConnectionClass {
+	GObjectClass          object_class;
+
+	/* signals */
+	void   (*status_changed)            (GdaConnection *obj, GdaConnectionStatus status);
+	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
+	void   (*opened)                    (GdaConnection *obj);
+	void   (*closed)                    (GdaConnection *obj);
+	void   (*dsn_changed)               (GdaConnection *obj);
+	void   (*transaction_status_changed)(GdaConnection *obj);
+
+
+	/*< private >*/
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
+};
 
 /* error reporting */
 extern GQuark gda_connection_error_quark (void);
@@ -95,56 +140,6 @@ typedef enum {
  * specified using gda_connection_set_main_context(), then the events will continue to be processed while the
  * lock on the connection is being acquired.
  */
-
-struct _GdaConnection {
-	GObject               object;
-	GdaConnectionPrivate *priv;
-};
-
-/**
- * GdaConnectionStatus:
- * @GDA_CONNECTION_STATUS_CLOSED: the connection is closed (default status upon creation)
- * @GDA_CONNECTION_STATUS_OPENING: the connection is currently being opened
- * @GDA_CONNECTION_STATUS_IDLE: the connection is opened but not currently used
- * @GDA_CONNECTION_STATUS_BUSY: the connection is opened and currently being used
- *
- * Indicates the current status of a connection. The possible status and the transitions between those status
- * are indicated in the diagram below:
- *  <mediaobject>
- *    <imageobject role="html">
- *      <imagedata fileref="connection-status.png" format="PNG" contentwidth="50mm"/>
- *    </imageobject>
- *    <textobject>
- *      <phrase>GdaConnection's status and transitions between different status</phrase>
- *    </textobject>
- *  </mediaobject>
- */
-typedef enum {
-	GDA_CONNECTION_STATUS_CLOSED,
-	GDA_CONNECTION_STATUS_OPENING,
-	GDA_CONNECTION_STATUS_IDLE,
-	GDA_CONNECTION_STATUS_BUSY
-} GdaConnectionStatus;
-
-struct _GdaConnectionClass {
-	GObjectClass          object_class;
-
-	/* signals */
-	void   (*status_changed)            (GdaConnection *obj, GdaConnectionStatus status);
-	void   (*error)                     (GdaConnection *cnc, GdaConnectionEvent *error);
-        void   (*opened)                    (GdaConnection *obj);
-        void   (*closed)                    (GdaConnection *obj);
-	void   (*dsn_changed)               (GdaConnection *obj);
-	void   (*transaction_status_changed)(GdaConnection *obj);
-
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-	void (*_gda_reserved3) (void);
-	void (*_gda_reserved4) (void);
-};
 
 /**
  * GdaConnectionOptions:
@@ -263,7 +258,25 @@ typedef enum {
 } GdaConnectionMetaType;
 
 
-GType                gda_connection_get_type             (void) G_GNUC_CONST;
+/**
+ * GdaSqlStatementCheckValidityData:
+ *
+ * Validation against a dictionary
+ */
+typedef struct {
+	GdaConnection *cnc;
+	GdaMetaStore  *store;
+	GdaMetaStruct *mstruct;
+
+	/*< private >*/
+	/* Padding for future expansion */
+	gpointer         _gda_reserved1;
+	gpointer         _gda_reserved2;
+	gpointer         _gda_reserved3;
+	gpointer         _gda_reserved4;
+} GdaSqlStatementCheckValidityData;
+
+
 GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
 GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name,
@@ -295,7 +308,14 @@ GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, Gd
                                                           GdaSet *options, GError **error);
 
 gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
-                                                          
+GdaServerOperation  *gda_connection_prepare_operation_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+GdaServerOperation  *gda_connection_prepare_operation_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
+GdaServerOperation  *gda_connection_prepare_operation_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
+gchar               *gda_connection_operation_get_sql_identifier_at (GdaConnection *cnc,
+              GdaServerOperation *op, const gchar *path_format, GError **error, ...);
+gchar               *gda_connection_operation_get_sql_identifier_at_path (GdaConnection *cnc, GdaServerOperation *op,
+						 const gchar *path, GError **error);
+
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
@@ -386,9 +406,19 @@ GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, Gd
 							  GError **error, gint nb_filters, ...);
 GdaDataModel        *gda_connection_get_meta_store_data_v(GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GList* filters, GError **error);
+void                 gda_connection_meta_context_set_column (GdaConnection *cnc,
+                GdaMetaContext *ctx, const gchar* column, const GValue* value);
+void                 gda_connection_meta_context_set_columns (GdaConnection *cnc,
+                GdaMetaContext *ctx, GHashTable *columns);
 
-//void                 gda_connection_lock_with_context (GdaConnection *cnc, GMainContext *context);
-//void                 gda_connection_unlock (GdaConnection *cnc);
+
+gchar *              gda_connection_statement_to_sql_extended (GdaConnection *cnc,
+                GdaStatement *stmt, GdaSet *params,
+                GdaStatementSqlFlag flags,
+                GSList **params_used, GError **error);
+
+
+GdaDataHandler      *gda_connection_new_handler_string (GdaConnection *cnc);
 
 G_END_DECLS
 

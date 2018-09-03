@@ -1103,7 +1103,7 @@ gda_postgres_render_DROP_USER (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, " IF EXISTS");
 
-	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, provider,
 							  "/USER_DESC_P/USER_NAME", error);
 	if (!tmp) {
 		g_string_free (string, TRUE);

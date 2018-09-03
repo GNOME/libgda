@@ -270,24 +270,6 @@ typedef struct {
 #define GDA_TYPE_SQL_STATEMENT_CONTENTS_INFO gda_sql_statement_contents_info_get_type()
 GType gda_sql_statement_contents_info_get_type (void) G_GNUC_CONST;
 
-/**
- * GdaSqlStatementCheckValidityData:
- *
- * Validation against a dictionary
- */
-typedef struct {
-	GdaConnection *cnc;
-	GdaMetaStore  *store;
-	GdaMetaStruct *mstruct;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer         _gda_reserved1;
-	gpointer         _gda_reserved2;
-	gpointer         _gda_reserved3;
-	gpointer         _gda_reserved4;
-} GdaSqlStatementCheckValidityData;
-
 G_END_DECLS
 
 #endif

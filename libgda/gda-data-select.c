@@ -975,24 +975,6 @@ gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
 }
 
 /**
- * gda_data_select_get_connection:
- * @model: a #GdaDataSelect data model
- *
- * Get a pointer to the #GdaConnection object which was used when @model was created
- * (and which may be used internally by @model).
- *
- * Returns: (transfer none): a pointer to the #GdaConnection, or %NULL
- */
-GdaConnection *
-gda_data_select_get_connection (GdaDataSelect *model)
-{
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
-	g_return_val_if_fail (model->priv, NULL);
-
-	return model->priv->cnc;
-}
-
-/**
  * gda_data_select_set_columns:
  * @model: a #GdaDataSelect data model
  * @columns: (transfer full): a lis of #GdaColumn objects

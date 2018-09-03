@@ -359,24 +359,23 @@ gda_meta_context_get_table (GdaMetaContext *ctx)
  * @ctx: a #GdaMetaContext struct to add column/value pais to
  * @column: (transfer none): the column's name
  * @value: (transfer none): the column's value
- * @cnc: (allow-none): a #GdaConnection to be used when identifier are normalized, or NULL
- * 
+ *
  * Sets a new column/value pair to the given context @ctx. Column, must be a column in the given table's
  * name setted by #gda_meta_context_set_table () (a table in the <link linkend="information_schema">database
  * schema</link>). If the given @column already exists it's value is overwrited.
  *
  * Column's name and value is copied and destroyed when #gda_meta_context_free is called.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
-gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GValue* value, GdaConnection *cnc)
+gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GValue* value)
 {
 	g_return_if_fail (ctx && column && value);
 	GValue *v;
 	if (G_VALUE_HOLDS_STRING((GValue*)value)) {
 		v = gda_value_new (G_TYPE_STRING);
-		g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), cnc, NULL,
+		g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), NULL, NULL,
 										TRUE, FALSE));
 		g_hash_table_insert (ctx->columns, (gpointer) g_strdup (column), (gpointer) v);
 	}
@@ -389,20 +388,17 @@ gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GVa
  * @ctx: a #GdaMetaContext struct to set colums to
  * @columns: (element-type utf8 GObject.Value): a #GHashTable with the table's columns' name and their values
  * to use in context.
- * @cnc: (allow-none): a #GdaConnection to used to normalize identifiers quoting, or NULL
- * 
+ *
  * Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
  * to represent its value.
  * 
  * @columns incements its reference counting. Is recommended to use #gda_meta_context_free in order to free them.
  *
- * Since: 5.2
+ * Since: 6.0
  */
 void
-gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConnection *cnc)
+gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns)
 {
-	g_return_if_fail (ctx && columns && cnc);
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_hash_table_unref (ctx->columns);
 	ctx->columns = g_hash_table_ref (columns);
 	// FIXME: Old but necesary initialization
@@ -422,7 +418,7 @@ gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConne
 		// Normalize identifier quote
 		if (G_VALUE_HOLDS_STRING((GValue*)value)) {
 			GValue *v = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), cnc, NULL,
+			g_value_take_string (v, gda_sql_identifier_quote (g_value_get_string ((GValue*)value), NULL, NULL,
 											TRUE, FALSE));
 			g_hash_table_insert (ctx->columns, key, (gpointer) v);
 		}
@@ -2922,7 +2918,9 @@ gchar *
 gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
 {
 	GdaConnectionOptions cncoptions;
+	GdaConnection *cnc;
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+	cnc = gda_meta_store_get_internal_connection ()
 
 	g_object_get (G_OBJECT (cnc), "options", &cncoptions, NULL);
 	return gda_sql_identifier_quote (id, cnc, NULL, TRUE,
