@@ -28,9 +28,10 @@
 #include <unistd.h>
 #include <glib/gstdio.h>
 
-struct _GdaDirBlobOpPrivate {
+typedef struct  {
 	gchar *complete_filename;
-};
+} GdaDirBlobOpPrivate;
+#define gda_dir_blob_op_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DIR_BLOB_OP, GdaDirBlobOpPrivate)
 
 static void gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass);
 static void gda_dir_blob_op_init       (GdaDirBlobOp *blob,
@@ -47,7 +48,7 @@ static GObjectClass *parent_class = NULL;
  * Object init and finalize
  */
 GType
-_gda_dir_blob_op_get_type (void)
+gda_dir_blob_op_get_type (void)
 {
 	static GType type = 0;
 
@@ -78,9 +79,9 @@ gda_dir_blob_op_init (GdaDirBlobOp *op,
 		      G_GNUC_UNUSED GdaDirBlobOpClass *klass)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (op));
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (op);
 
-	op->priv = g_new0 (GdaDirBlobOpPrivate, 1);
-	op->priv->complete_filename = NULL;
+	priv->complete_filename = NULL;
 }
 
 static void
@@ -88,28 +89,13 @@ gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
+	g_type_class_add_private (object_class, sizeof (GdaDirBlobOpPrivate));
 
 	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_dir_blob_op_finalize;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_dir_blob_op_get_length;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_dir_blob_op_read;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_dir_blob_op_write;
-}
-
-
-static void
-gda_dir_blob_op_finalize (GObject * object)
-{
-	GdaDirBlobOp *pgop = (GdaDirBlobOp *) object;
-
-	g_return_if_fail (GDA_IS_DIR_BLOB_OP (pgop));
-
-	g_free (pgop->priv->complete_filename);
-	g_free (pgop->priv);
-	pgop->priv = NULL;
-
-	parent_class->finalize (object);
 }
 
 /**
@@ -123,7 +109,8 @@ _gda_dir_blob_op_new (const gchar *complete_filename)
 	g_return_val_if_fail (complete_filename, NULL);
 
 	pgop = g_object_new (GDA_TYPE_DIR_BLOB_OP, NULL);
-	pgop->priv->complete_filename = g_strdup (complete_filename);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (pgop);
+	priv->complete_filename = g_strdup (complete_filename);
 	
 	return GDA_BLOB_OP (pgop);
 }
@@ -135,11 +122,11 @@ void
 _gda_dir_blob_set_filename (GdaDirBlobOp *blob, const gchar *complete_filename)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (blob));
-	g_return_if_fail (blob->priv);
 	g_return_if_fail (complete_filename);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (blob);
 
-	g_free (blob->priv->complete_filename);
-	blob->priv->complete_filename = g_strdup (complete_filename);
+	g_free (priv->complete_filename);
+	priv->complete_filename = g_strdup (complete_filename);
 }
 
 /**
@@ -149,9 +136,9 @@ const gchar *
 _gda_dir_blob_get_filename (GdaDirBlobOp *blob)
 {
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (blob), NULL);
-	g_return_val_if_fail (blob->priv, NULL);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (blob);
 
-	return blob->priv->complete_filename;
+	return priv->complete_filename;
 }
 
 /*
@@ -165,12 +152,11 @@ gda_dir_blob_op_get_length (GdaBlobOp *op)
 
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (op), -1);
 	dirop = GDA_DIR_BLOB_OP (op);
-	g_return_val_if_fail (dirop->priv, -1);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (dirop);
 
-	if (! g_stat (dirop->priv->complete_filename, &filestat)) 
+	if (! g_stat (priv->complete_filename, &filestat))
 		return filestat.st_size;
-	else
-		return -1;
+	return -1;
 }
 
 static glong
@@ -184,13 +170,13 @@ gda_dir_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (op), -1);
 	dirop = GDA_DIR_BLOB_OP (op);
-	g_return_val_if_fail (dirop->priv, -1);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (dirop);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
 	/* open file */
-	file = fopen (dirop->priv->complete_filename, "rb"); /* Flawfinder: ignore */
+	file = fopen (priv->complete_filename, "rb"); /* Flawfinder: ignore */
 	if (!file)
 		return -1;
 	
@@ -220,13 +206,13 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (op), -1);
 	dirop = GDA_DIR_BLOB_OP (op);
-	g_return_val_if_fail (dirop->priv, -1);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (blob);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
 
 	/* open file */
-	file = fopen (dirop->priv->complete_filename, "w+b"); /* Flawfinder: ignore */
+	file = fopen (priv->complete_filename, "w+b"); /* Flawfinder: ignore */
 	if (!file)
 		return -1;
 	
