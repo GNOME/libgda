@@ -31,9 +31,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_META_STORE          (gda_meta_store_get_type())
-#define GDA_META_STORE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_meta_store_get_type(), GdaMetaStore)
-#define GDA_META_STORE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_meta_store_get_type (), GdaMetaStoreClass)
-#define GDA_IS_META_STORE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_meta_store_get_type ())
+G_DECLARE_DERIVABLE_TYPE(GdaMetaStore, gda_meta_store, GDA, META_STORE, GObject)
 
 /* error reporting */
 extern GQuark gda_meta_store_error_quark (void);
@@ -116,12 +114,7 @@ typedef struct {
 	GHashTable             *columns;/* Added since 5.2 */
 } GdaMetaContext;
 
-/* struct for the object's data */
-struct _GdaMetaStore
-{
-	GObject               object;
-	GdaMetaStorePrivate  *priv;
-};
+typedef struct _GdaMetaStoreClassPrivate GdaMetaStoreClassPrivate;
 
 /* struct for the object's class */
 struct _GdaMetaStoreClass
@@ -163,7 +156,6 @@ struct _GdaMetaStoreClass
  * The #GdaMetaStore object is thread safe.
  */
 
-GType             gda_meta_store_get_type                 (void) G_GNUC_CONST;
 GdaMetaStore     *gda_meta_store_new_with_file            (const gchar *file_name);
 GdaMetaStore     *gda_meta_store_new                      (const gchar *cnc_string);
 gint              gda_meta_store_get_version              (GdaMetaStore *store);

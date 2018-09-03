@@ -85,11 +85,6 @@ typedef struct _GdaSqlParserPrivate GdaSqlParserPrivate;
 /*
  * Meta data
  */
-typedef struct _GdaMetaStore        GdaMetaStore;
-typedef struct _GdaMetaStoreClass   GdaMetaStoreClass;
-typedef struct _GdaMetaStorePrivate GdaMetaStorePrivate;
-typedef struct _GdaMetaStoreClassPrivate GdaMetaStoreClassPrivate;
-
 typedef struct _GdaMetaStruct        GdaMetaStruct;
 typedef struct _GdaMetaStructClass   GdaMetaStructClass;
 typedef struct _GdaMetaStructPrivate GdaMetaStructPrivate;

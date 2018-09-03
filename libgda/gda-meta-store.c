@@ -620,7 +620,7 @@ typedef struct {
 static guint ProviderSpecific_hash (gconstpointer key);
 static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
 
-struct _GdaMetaStorePrivate {
+typedef struct {
 	GdaConnection *cnc;
 	GdaSqlIdentifierStyle ident_style;
 	GdaSqlReservedKeywordsFunc reserved_keyword_func;
@@ -642,7 +642,8 @@ struct _GdaMetaStorePrivate {
 	GHashTable    *extract_stmt_hash; /* key = a SQL string, value = a #GdaStatement */
 
 	GRecMutex      mutex;
-};
+} GdaMetaStorePrivate;
+#define gda_meta_store_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_META_STORE, GdaMetaStorePrivate)
 
 static void db_object_free    (DbObject *dbobj);
 static void create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store);
@@ -764,6 +765,7 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	MUTEX_LOCK();
+	g_type_class_add_private (object_class, sizeof (GdaMetaStorePrivate));
 	parent_class = g_type_class_peek_parent (klass);
 
 	/**
@@ -918,28 +920,28 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 static void
 gda_meta_store_init (GdaMetaStore *store)
 {
-	store->priv = g_new0 (GdaMetaStorePrivate, 1);
-	store->priv->cnc = NULL;
-	store->priv->ident_style = GDA_SQL_IDENTIFIERS_LOWER_CASE;
-	store->priv->reserved_keyword_func = NULL;
-	store->priv->schema_ok = FALSE;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	priv->cnc = NULL;
+	priv->ident_style = GDA_SQL_IDENTIFIERS_LOWER_CASE;
+	priv->reserved_keyword_func = NULL;
+	priv->schema_ok = FALSE;
 
-	store->priv->init_error = NULL;
-	store->priv->version = 0;
+	priv->init_error = NULL;
+	priv->version = 0;
 
-	store->priv->catalog = NULL;
-	store->priv->schema = NULL;
+	priv->catalog = NULL;
+	priv->schema = NULL;
 
-	store->priv->p_db_objects = NULL;
-	store->priv->p_db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
+	priv->p_db_objects = NULL;
+	priv->p_db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
-	store->priv->override_mode = FALSE;
+	priv->override_mode = FALSE;
 
-	store->priv->max_extract_stmt = 10;
-	store->priv->current_extract_stmt = 0;
-	store->priv->extract_stmt_hash = NULL;
+	priv->max_extract_stmt = 10;
+	priv->current_extract_stmt = 0;
+	priv->extract_stmt_hash = NULL;
 
-	g_rec_mutex_init (& (store->priv->mutex));
+	g_rec_mutex_init (& (priv->mutex));
 }
 
 static GObject *
@@ -968,36 +970,37 @@ gda_meta_store_constructor (GType type,
 		}
 	}
 	store = (GdaMetaStore *) object;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (!store->priv->cnc && !been_specified)
+	if (!priv->cnc && !been_specified)
 		/* in memory DB */
 		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=__gda_tmp", NULL);
 
-	if (store->priv->cnc) {
-		gda_lockable_lock (GDA_LOCKABLE (store->priv->cnc));
-		gda_connection_increase_usage (store->priv->cnc); /* USAGE ++ */
-		store->priv->schema_ok = initialize_cnc_struct (store, &(store->priv->init_error));
-		gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
-		gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
+	if (priv->cnc) {
+		gda_lockable_lock (GDA_LOCKABLE (priv->cnc));
+		gda_connection_increase_usage (priv->cnc); /* USAGE ++ */
+		priv->schema_ok = initialize_cnc_struct (store, &(priv->init_error));
+		gda_connection_decrease_usage (priv->cnc); /* USAGE -- */
+		gda_lockable_unlock (GDA_LOCKABLE (priv->cnc));
 	}
 
 	/* create a local copy of all the DbObject structures defined in klass->cpriv */
-	if (store->priv->catalog && !store->priv->schema) {
-		if (! store->priv->init_error)
-			g_set_error (&(store->priv->init_error), GDA_META_STORE_ERROR,
+	if (priv->catalog && !priv->schema) {
+		if (! priv->init_error)
+			g_set_error (&(priv->init_error), GDA_META_STORE_ERROR,
 				     GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
 				     "%s",
 				     _("Catalog specified but no schema specified, store will not be usable"));
-		store->priv->schema_ok = FALSE;
+		priv->schema_ok = FALSE;
 	}
 	else {
 		GdaMetaStoreClass *klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 		GSList *list;
-		if (!store->priv->schema) {
-			/* uses all the klass->cpriv->db_objects AS IS in store->priv->p_db_objects */
-			store->priv->p_db_objects = g_slist_copy (klass->cpriv->db_objects);
-			for (list = store->priv->p_db_objects; list; list = list->next)
-				g_hash_table_insert (store->priv->p_db_objects_hash, DB_OBJECT (list->data)->obj_name,
+		if (!priv->schema) {
+			/* uses all the klass->cpriv->db_objects AS IS in priv->p_db_objects */
+			priv->p_db_objects = g_slist_copy (klass->cpriv->db_objects);
+			for (list = priv->p_db_objects; list; list = list->next)
+				g_hash_table_insert (priv->p_db_objects_hash, DB_OBJECT (list->data)->obj_name,
 						     list->data);
 		}
 		else
@@ -1067,13 +1070,14 @@ gda_meta_store_new (const gchar *cnc_string)
 	g_timer_destroy (timer);
 #endif
 	store = GDA_META_STORE (obj);
-	if (!store->priv->cnc) {
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	if (!priv->cnc) {
 		g_object_unref (store);
 		store = NULL;
 	}
 	else {
-		if (gda_lockable_trylock (GDA_LOCKABLE (store->priv->cnc)))
-			gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
+		if (gda_lockable_trylock (GDA_LOCKABLE (priv->cnc)))
+			gda_lockable_unlock (GDA_LOCKABLE (priv->cnc));
 		else {
 			g_warning (_("Can't obtain connection lock"));
 			g_object_unref (store);
@@ -1092,35 +1096,36 @@ gda_meta_store_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_META_STORE (object));
 
 	store = GDA_META_STORE (object);
-	if (store->priv) {
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	if (priv) {
 		GSList *list;
 
-		if (store->priv->extract_stmt_hash) {
-			g_hash_table_destroy (store->priv->extract_stmt_hash);
-			store->priv->extract_stmt_hash = NULL;
+		if (priv->extract_stmt_hash) {
+			g_hash_table_destroy (priv->extract_stmt_hash);
+			priv->extract_stmt_hash = NULL;
 		}
 
-		if (store->priv->override_mode)
+		if (priv->override_mode)
 			_gda_meta_store_cancel_data_reset (store, NULL);
 
-		g_free (store->priv->catalog);
-		g_free (store->priv->schema);
+		g_free (priv->catalog);
+		g_free (priv->schema);
 
 		/* custom db objects */
-		g_hash_table_destroy (store->priv->p_db_objects_hash);
-		for (list = store->priv->p_db_objects; list; list = list->next) {
+		g_hash_table_destroy (priv->p_db_objects_hash);
+		for (list = priv->p_db_objects; list; list = list->next) {
 			if (DB_OBJECT (list->data)->store == store)
 				db_object_free (DB_OBJECT (list->data));
 		}
-		g_slist_free (store->priv->p_db_objects);
+		g_slist_free (priv->p_db_objects);
 
 		/* internal connection */
-		if (store->priv->cnc) {
-			g_object_unref (G_OBJECT (store->priv->cnc));
-			store->priv->cnc = NULL;
+		if (priv->cnc) {
+			g_object_unref (G_OBJECT (priv->cnc));
+			priv->cnc = NULL;
 		}
 
-		g_rec_mutex_clear (& (store->priv->mutex));
+		g_rec_mutex_clear (& (priv->mutex));
 	}
 
 	/* parent class */
@@ -1136,13 +1141,9 @@ gda_meta_store_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_META_STORE (object));
 
 	store = GDA_META_STORE (object);
-	if (store->priv) {
-		if (store->priv->init_error)
-			g_error_free (store->priv->init_error);
-
-		g_free (store->priv);
-		store->priv = NULL;
-	}
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	if (priv->init_error)
+		g_error_free (priv->init_error);
 
 	/* parent class */
 	parent_class->finalize (object);
@@ -1158,62 +1159,61 @@ gda_meta_store_set_property (GObject *object,
 	const gchar *cnc_string;
 
 	store = GDA_META_STORE (object);
-	if (store->priv) {
-		switch (param_id) {
-		case PROP_CNC_STRING:
-			if (!store->priv->cnc) {
-				cnc_string = g_value_get_string (value);
-				if (cnc_string) {
-					GdaConnection *cnc;
-					GError *error = NULL;
-					cnc = gda_connection_new_from_string (NULL, cnc_string, NULL,
-									      GDA_CONNECTION_OPTIONS_NONE,
-									      &error);
-					if (cnc) {
-						if (!gda_connection_open (cnc, &error)) {
-							g_object_unref (cnc);
-							cnc = NULL;
-						}
-					}
-					else {
-						if (g_ascii_strcasecmp (cnc_string, "sqlite")) {
-							/* use _gda_config_sqlite_provider */
-							g_clear_error (&error);
-							cnc = _gda_open_internal_sqlite_connection (cnc_string);
-						}
-					}
-					store->priv->cnc = cnc;
-					if (!cnc) {
-						g_warning ("Could not create internal GdaMetaStore connection:%s\n"
-							   "GdaMetaStore object will not work as expected",
-							   error && error->message ? error->message : _("No detail"));
-						g_clear_error (&error);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	switch (param_id) {
+	case PROP_CNC_STRING:
+		if (!priv->cnc) {
+			cnc_string = g_value_get_string (value);
+			if (cnc_string) {
+				GdaConnection *cnc;
+				GError *error = NULL;
+				cnc = gda_connection_new_from_string (NULL, cnc_string, NULL,
+								      GDA_CONNECTION_OPTIONS_NONE,
+								      &error);
+				if (cnc) {
+					if (!gda_connection_open (cnc, &error)) {
+						g_object_unref (cnc);
+						cnc = NULL;
 					}
 				}
+				else {
+					if (g_ascii_strcasecmp (cnc_string, "sqlite")) {
+						/* use _gda_config_sqlite_provider */
+						g_clear_error (&error);
+						cnc = _gda_open_internal_sqlite_connection (cnc_string);
+					}
+				}
+				priv->cnc = cnc;
+				if (!cnc) {
+					g_warning ("Could not create internal GdaMetaStore connection:%s\n"
+						   "GdaMetaStore object will not work as expected",
+						   error && error->message ? error->message : _("No detail"));
+					g_clear_error (&error);
+				}
 			}
-			break;
-		case PROP_CNC_OBJECT:
-			if (!store->priv->cnc)
-				store->priv->cnc = g_value_dup_object (value);
-			break;
-		case PROP_CATALOG:
-			g_free (store->priv->catalog);
-			if (g_value_get_string (value) && *g_value_get_string (value))
-				store->priv->catalog = g_strdup (g_value_get_string (value));
-			else
-				store->priv->catalog = NULL;
-			break;
-		case PROP_SCHEMA:
-			g_free (store->priv->schema);
-			if (g_value_get_string (value) && *g_value_get_string (value))
-				store->priv->schema = g_strdup (g_value_get_string (value));
-			else
-				store->priv->schema = NULL;
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
 		}
+		break;
+	case PROP_CNC_OBJECT:
+		if (!priv->cnc)
+			priv->cnc = g_value_dup_object (value);
+		break;
+	case PROP_CATALOG:
+		g_free (priv->catalog);
+		if (g_value_get_string (value) && *g_value_get_string (value))
+			priv->catalog = g_strdup (g_value_get_string (value));
+		else
+			priv->catalog = NULL;
+		break;
+	case PROP_SCHEMA:
+		g_free (priv->schema);
+		if (g_value_get_string (value) && *g_value_get_string (value))
+			priv->schema = g_strdup (g_value_get_string (value));
+		else
+			priv->schema = NULL;
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -1225,25 +1225,24 @@ gda_meta_store_get_property (GObject *object,
 {
 	GdaMetaStore *store;
 	store = GDA_META_STORE (object);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv) {
-		switch (param_id) {
-		case PROP_CNC_STRING:
-			g_assert_not_reached ();
-			break;
-		case PROP_CNC_OBJECT:
-			g_value_set_object (value, (GObject *) store->priv->cnc);
-			break;
-		case PROP_CATALOG:
-			g_value_set_string (value, store->priv->catalog);
-			break;
-		case PROP_SCHEMA:
-			g_value_set_string (value, store->priv->schema);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	switch (param_id) {
+	case PROP_CNC_STRING:
+		g_assert_not_reached ();
+		break;
+	case PROP_CNC_OBJECT:
+		g_value_set_object (value, (GObject *) priv->cnc);
+		break;
+	case PROP_CATALOG:
+		g_value_set_string (value, priv->catalog);
+		break;
+	case PROP_SCHEMA:
+		g_value_set_string (value, priv->schema);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -1261,7 +1260,8 @@ void
 gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle style)
 {
 	g_return_if_fail (GDA_IS_META_STORE (store));
-	store->priv->ident_style = style;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	priv->ident_style = style;
 }
 
 /**
@@ -1280,11 +1280,12 @@ void
 gda_meta_store_set_reserved_keywords_func(GdaMetaStore *store, GdaSqlReservedKeywordsFunc func)
 {
 	g_return_if_fail (GDA_IS_META_STORE (store));
-	store->priv->reserved_keyword_func = func;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	priv->reserved_keyword_func = func;
 }
 
 /*
- * Checks the structure of @store->priv->cnc and update it if necessary
+ * Checks the structure of @priv->cnc and update it if necessary
  */
 static gboolean prepare_server_operations (GdaMetaStore *store, GError **error);
 static gboolean handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **error);
@@ -1293,8 +1294,9 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 {
 	gboolean schema_present;
 	GdaMetaStoreClass *klass;
-	g_return_val_if_fail (GDA_IS_CONNECTION (store->priv->cnc), FALSE);
-	g_return_val_if_fail (gda_connection_is_opened (store->priv->cnc), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), FALSE);
+	g_return_val_if_fail (gda_connection_is_opened (priv->cnc), FALSE);
 
 	if (handle_schema_version (store, &schema_present, error))
 		return TRUE;
@@ -1314,12 +1316,12 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	if (!prepare_server_operations (store, error))
 		return FALSE;
 
-	prov = gda_connection_get_provider (store->priv->cnc);
+	prov = gda_connection_get_provider (priv->cnc);
 	for (list = klass->cpriv->db_objects; list; list = list->next) {
 		DbObject *dbo = DB_OBJECT (list->data);
 		/*g_print ("Creating object: %s\n", dbo->obj_name);*/
 		if (dbo->create_op) {
-			if (!gda_server_provider_perform_operation (prov, store->priv->cnc, dbo->create_op, error)) {
+			if (!gda_server_provider_perform_operation (prov, priv->cnc, dbo->create_op, error)) {
 				allok = FALSE;
 				break;
 			}
@@ -1338,7 +1340,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 		return FALSE;
 	}
 	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
-	if (gda_connection_statement_execute_non_select (store->priv->cnc,
+	if (gda_connection_statement_execute_non_select (priv->cnc,
 							 klass->cpriv->prep_stmts[STMT_SET_VERSION],
 							 params, NULL, NULL) == -1) {
 		g_object_unref (params);
@@ -1365,12 +1367,13 @@ prepare_server_operations (GdaMetaStore *store, GError **error)
 {
 	GSList *objects;
 	GdaMetaStoreClass *klass;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 
 	for (objects = klass->cpriv->db_objects; objects; objects = objects->next) {
 		DbObject *dbo = DB_OBJECT (objects->data);
-		if (! prepare_dbo_server_operation (klass, store, gda_connection_get_provider (store->priv->cnc),
+		if (! prepare_dbo_server_operation (klass, store, gda_connection_get_provider (priv->cnc),
 						    dbo, error))
 			return FALSE;
 	}
@@ -1386,17 +1389,18 @@ prepare_dbo_server_operation (GdaMetaStoreClass *klass, GdaMetaStore *store, Gda
 		g_object_unref (dbo->create_op);
 		dbo->create_op = NULL;
 	}
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	switch (dbo->obj_type) {
 	case GDA_SERVER_OPERATION_CREATE_TABLE:
 		dbo->create_op = create_server_operation_for_table (klass->cpriv->provider_specifics,
-								    prov, store->priv->cnc, dbo, error);
+								    prov, priv->cnc, dbo, error);
 		if (!dbo->create_op)
 			return FALSE;
 		break;
 	case GDA_SERVER_OPERATION_CREATE_VIEW:
 		dbo->create_op = create_server_operation_for_view (klass->cpriv->provider_specifics,
-								   prov, store->priv->cnc, dbo, error);
+								   prov, priv->cnc, dbo, error);
 		if (!dbo->create_op)
 			return FALSE;
 		break;
@@ -1520,10 +1524,10 @@ static GSList *reorder_db_objects (GSList *objects, GHashTable *hash);
 static gboolean complement_db_objects (GSList *objects, GHashTable *hash, GError **error);
 
 /*
- * Creates all DbObject structures and place them into klass->cpriv->db_objects or store->priv->p_db_objects
+ * Creates all DbObject structures and place them into klass->cpriv->db_objects or priv->p_db_objects
  *
  * If @store is %NULL, then all the DB objects created are attached to klass->cpriv->db_objects, otherwise
- * they are placed in store->priv->p_db_objects
+ * they are placed in priv->p_db_objects
  */
 static void
 create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
@@ -1533,6 +1537,7 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	GError **error = &lerror;
 	gchar *file;
 	xmlDocPtr doc = NULL;
+	GdaMetaStorePrivate *priv;
 
 	/* load information schema's structure XML file */
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "information_schema.xml", NULL);
@@ -1557,9 +1562,10 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	g_free (file);
 
 	/* walk through the xmlDoc */
-	if (store)
-		store->priv->p_db_objects = NULL;
-	else
+	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
+		priv->p_db_objects = NULL;
+	} else
 		klass->cpriv->db_objects = NULL;
 	for (node = node->children; node; node = node->next) {
 		/* <specifics> tag to allow for provider specific transformations */
@@ -1624,8 +1630,9 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	xmlFreeDoc (doc);
 
 	if (store) {
-		store->priv->p_db_objects = reorder_db_objects (store->priv->p_db_objects, store->priv->p_db_objects_hash);
-		if (!complement_db_objects (store->priv->p_db_objects, store->priv->p_db_objects_hash, error))
+		priv = gda_meta_store_get_instance_private (store);
+		priv->p_db_objects = reorder_db_objects (priv->p_db_objects, priv->p_db_objects_hash);
+		if (!complement_db_objects (priv->p_db_objects, priv->p_db_objects_hash, error))
 			g_error ("Information schema structure error: %s",
 				 lerror && lerror->message ? lerror->message : "No detail");
 	}
@@ -1708,6 +1715,7 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 	DbObject *dbobj = NULL;
 	xmlChar *view_name;
 	gchar *complete_obj_name = NULL;
+	GdaMetaStorePrivate *priv;
 
 	view_name = xmlGetProp (node, BAD_CAST "name");
 	if (!view_name) {
@@ -1717,23 +1725,28 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 	}
 
 	/* determine object's complete name */
-	if (store && store->priv->schema)
-		complete_obj_name = g_strdup_printf ("%s.%s", store->priv->schema, (gchar *) view_name);
-	else
+	if (store) {
+		if (priv->schema) {
+			priv = gda_meta_store_get_instance_private (store);
+			complete_obj_name = g_strdup_printf ("%s.%s", priv->schema, (gchar *) view_name);
+		}
+	} else
 		complete_obj_name = g_strdup ((gchar *) view_name);
 
 	/* DbObject structure */
-	if (store)
-		dbobj = g_hash_table_lookup (store->priv->p_db_objects_hash, view_name);
-	else
+	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
+		dbobj = g_hash_table_lookup (priv->p_db_objects_hash, view_name);
+	} else
 		dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, view_name);
 	if (!dbobj) {
 		dbobj = g_new0 (DbObject, 1);
 		dbobj->store = store;
 		dbobj->obj_name = g_strdup ((gchar *) view_name);
 		if (store) {
-			store->priv->p_db_objects = g_slist_prepend (store->priv->p_db_objects, dbobj);
-			g_hash_table_insert (store->priv->p_db_objects_hash, dbobj->obj_name, dbobj);
+			priv = gda_meta_store_get_instance_private (store);
+			priv->p_db_objects = g_slist_prepend (priv->p_db_objects, dbobj);
+			g_hash_table_insert (priv->p_db_objects_hash, dbobj->obj_name, dbobj);
 		}
 		else {
 			klass->cpriv->db_objects = g_slist_prepend (klass->cpriv->db_objects, dbobj);
@@ -1816,6 +1829,7 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	DbObject *dbobj;
 	xmlChar *table_name;
 	gchar *complete_obj_name;
+	GdaMetaStorePrivate *priv;
 
 	table_name = xmlGetProp (node, BAD_CAST "name");
 	if (!table_name) {
@@ -1825,23 +1839,27 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	}
 
 	/* determine object's complete name */
-	if (store && store->priv->schema)
-		complete_obj_name = g_strdup_printf ("%s.%s", store->priv->schema, (gchar *) table_name);
-	else
+	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
+		if (priv->schema) {
+			complete_obj_name = g_strdup_printf ("%s.%s", priv->schema, (gchar *) table_name);
+		}
+	} else
 		complete_obj_name = g_strdup ((gchar *) table_name);
 
 	/* DbObject structure */
-	if (store)
-		dbobj = g_hash_table_lookup (store->priv->p_db_objects_hash, table_name);
-	else
+	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
+		dbobj = g_hash_table_lookup (priv->p_db_objects_hash, table_name);
+	} else
 		dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, table_name);
 	if (!dbobj) {
 		dbobj = g_new0 (DbObject, 1);
 		dbobj->store = store;
 		dbobj->obj_name = g_strdup ((gchar *) table_name);
 		if (store) {
-			store->priv->p_db_objects = g_slist_prepend (store->priv->p_db_objects, dbobj);
-			g_hash_table_insert (store->priv->p_db_objects_hash, dbobj->obj_name, dbobj);
+			priv->p_db_objects = g_slist_prepend (priv->p_db_objects, dbobj);
+			g_hash_table_insert (priv->p_db_objects_hash, dbobj->obj_name, dbobj);
 		}
 		else {
 			klass->cpriv->db_objects = g_slist_prepend (klass->cpriv->db_objects, dbobj);
@@ -2098,18 +2116,20 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 
 			/* referenced DbObject */
 			DbObject *ref_obj;
-			if (store)
-				ref_obj = g_hash_table_lookup (store->priv->p_db_objects_hash, ref_table);
-			else
+			if (store) {
+				priv = gda_meta_store_get_instance_private (store);
+				ref_obj = g_hash_table_lookup (priv->p_db_objects_hash, ref_table);
+			} else
 				ref_obj = g_hash_table_lookup (klass->cpriv->db_objects_hash, ref_table);
 			if (!ref_obj) {
 				ref_obj = g_new0 (DbObject, 1);
 				ref_obj->store = store;
 				ref_obj->obj_name = g_strdup ((gchar *) ref_table);
 				if (store) {
-					store->priv->p_db_objects = g_slist_prepend (store->priv->p_db_objects,
+					priv = gda_meta_store_get_instance_private (store);
+					priv->p_db_objects = g_slist_prepend (priv->p_db_objects,
 											  ref_obj);
-					g_hash_table_insert (store->priv->p_db_objects_hash, ref_obj->obj_name,
+					g_hash_table_insert (priv->p_db_objects_hash, ref_obj->obj_name,
 							     ref_obj);
 				}
 				else {
@@ -2222,9 +2242,10 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	g_object_unref (params);
 
 	/* insert DbObject */
-	if (store)
-		g_hash_table_insert (store->priv->p_db_objects_hash, dbobj->obj_name, dbobj);
-	else
+	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
+		g_hash_table_insert (priv->p_db_objects_hash, dbobj->obj_name, dbobj);
+	} else
 		g_hash_table_insert (klass->cpriv->db_objects_hash, dbobj->obj_name, dbobj);
 
 	g_free (complete_obj_name);
@@ -2283,7 +2304,9 @@ make_expr_EQUAL (GdaSqlAnyPart *parent, xmlChar *cname, G_GNUC_UNUSED xmlChar *t
 
 static void
 compute_view_dependencies (GdaMetaStoreClass *klass, GdaMetaStore *store,
-			   DbObject *view_dbobj, GdaSqlStatement *sqlst) {
+			   DbObject *view_dbobj, GdaSqlStatement *sqlst)
+{
+	GdaMetaStorePrivate *priv;
 	if (sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) {
 		GdaSqlStatementSelect *selst;
 		selst = (GdaSqlStatementSelect*) (sqlst->contents);
@@ -2294,9 +2317,10 @@ compute_view_dependencies (GdaMetaStoreClass *klass, GdaMetaStore *store,
 			if (!t->table_name)
 				continue;
 			DbObject *ref_obj = NULL;
-			if (store)
-				ref_obj = g_hash_table_lookup (store->priv->p_db_objects_hash, t->table_name);
-			else
+			if (store) {
+				priv = gda_meta_store_get_instance_private (store);
+				ref_obj = g_hash_table_lookup (priv->p_db_objects_hash, t->table_name);
+			} else
 				ref_obj = g_hash_table_lookup (klass->cpriv->db_objects_hash, t->table_name);
 
 			if (!ref_obj) {
@@ -2304,9 +2328,10 @@ compute_view_dependencies (GdaMetaStoreClass *klass, GdaMetaStore *store,
 				ref_obj->store = store;
 				ref_obj->obj_name = g_strdup (t->table_name);
 				if (store) {
-					store->priv->p_db_objects = g_slist_prepend (store->priv->p_db_objects,
+					priv = gda_meta_store_get_instance_private (store);
+					priv->p_db_objects = g_slist_prepend (priv->p_db_objects,
 											  ref_obj);
-					g_hash_table_insert (store->priv->p_db_objects_hash, ref_obj->obj_name,
+					g_hash_table_insert (priv->p_db_objects_hash, ref_obj->obj_name,
 							     ref_obj);
 				}
 				else {
@@ -2534,6 +2559,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 	GdaSet *params;
 	GdaMetaStoreClass *klass;
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_UPD_VERSION], &params, NULL)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
@@ -2541,7 +2567,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 		return FALSE;
 	}
 	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
-	if (gda_connection_statement_execute_non_select (store->priv->cnc,
+	if (gda_connection_statement_execute_non_select (priv->cnc,
 							 klass->cpriv->prep_stmts[STMT_UPD_VERSION],
 							 params, NULL, NULL) == -1) {
 		g_object_unref (params);
@@ -2553,7 +2579,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 
 
 	/* update version */
-	store->priv->version = atoi (CURRENT_SCHEMA_VERSION); /* Flawfinder: ignore */
+	priv->version = atoi (CURRENT_SCHEMA_VERSION); /* Flawfinder: ignore */
 	return TRUE;
 }
 
@@ -2589,6 +2615,7 @@ create_a_dbobj (GdaMetaStore *store, const gchar *obj_name, GError **error)
 	DbObject *dbobj;
 	GdaMetaStoreClass *klass;
 	GdaServerProvider *prov;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, obj_name);
@@ -2598,13 +2625,13 @@ create_a_dbobj (GdaMetaStore *store, const gchar *obj_name, GError **error)
 			     obj_name);
 		return FALSE;
 	}
-	prov = gda_connection_get_provider (store->priv->cnc);
+	prov = gda_connection_get_provider (priv->cnc);
 	if (! prepare_dbo_server_operation (klass, store, prov, dbobj, error))
 		return FALSE;
 	g_assert (dbobj->create_op);
 
 	gboolean retval;
-	retval = gda_server_provider_perform_operation (prov, store->priv->cnc, dbobj->create_op, error);
+	retval = gda_server_provider_perform_operation (prov, priv->cnc, dbobj->create_op, error);
 	g_object_unref (dbobj->create_op);
 	dbobj->create_op = NULL;
 	return retval;
@@ -2621,6 +2648,7 @@ add_a_column (GdaMetaStore *store, const gchar *table_name, const gchar *column_
 	GdaMetaStoreClass *klass;
 	GdaServerProvider *prov;
 	gboolean retval = FALSE;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	dbobj = g_hash_table_lookup (klass->cpriv->db_objects_hash, table_name);
@@ -2630,10 +2658,10 @@ add_a_column (GdaMetaStore *store, const gchar *table_name, const gchar *column_
 			     table_name);
 		return FALSE;
 	}
-	prov = gda_connection_get_provider (store->priv->cnc);
+	prov = gda_connection_get_provider (priv->cnc);
 	
 	GdaServerOperation *op;
-	op = gda_server_provider_create_operation (prov, store->priv->cnc, GDA_SERVER_OPERATION_ADD_COLUMN, NULL, error);
+	op = gda_server_provider_create_operation (prov, priv->cnc, GDA_SERVER_OPERATION_ADD_COLUMN, NULL, error);
 	if (!op)
 		return FALSE;
 
@@ -2669,7 +2697,7 @@ add_a_column (GdaMetaStore *store, const gchar *table_name, const gchar *column_
 		goto out;
 	}
 
-	retval = gda_server_provider_perform_operation (prov, store->priv->cnc, op, error);
+	retval = gda_server_provider_perform_operation (prov, priv->cnc, op, error);
 
  out:
 	g_object_unref (op);
@@ -2680,12 +2708,13 @@ add_a_column (GdaMetaStore *store, const gchar *table_name, const gchar *column_
 static void
 migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
 {
-	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
-	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	g_return_if_fail (GDA_IS_CONNECTION (priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (priv->cnc));
 
 	/* begin a transaction if possible */
 	gboolean transaction_started = FALSE;
-	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+	if (! check_transaction_started (priv->cnc, &transaction_started))
 		return;
 
 	/* create tables for this migration */
@@ -2700,10 +2729,10 @@ migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
  out:
 	if (transaction_started) {
 		/* handle transaction started if necessary */
-		if (store->priv->version != 2)
-			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		if (priv->version != 2)
+			gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
 		else
-			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+			gda_connection_commit_transaction (priv->cnc, NULL, NULL);
 	}
 }
 
@@ -2711,12 +2740,13 @@ migrate_schema_from_v1_to_v2 (GdaMetaStore *store, GError **error)
 static void
 migrate_schema_from_v2_to_v3 (GdaMetaStore *store, GError **error)
 {
-	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
-	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	g_return_if_fail (GDA_IS_CONNECTION (priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (priv->cnc));
 
 	/* begin a transaction if possible */
 	gboolean transaction_started = FALSE;
-	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+	if (! check_transaction_started (priv->cnc, &transaction_started))
 		return;
 
 	/* create tables for this migration */
@@ -2729,10 +2759,10 @@ migrate_schema_from_v2_to_v3 (GdaMetaStore *store, GError **error)
  out:
 	if (transaction_started) {
 		/* handle transaction started if necessary */
-		if (store->priv->version != 3)
-			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		if (priv->version != 3)
+			gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
 		else
-			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+			gda_connection_commit_transaction (priv->cnc, NULL, NULL);
 	}
 }
 
@@ -2740,12 +2770,13 @@ migrate_schema_from_v2_to_v3 (GdaMetaStore *store, GError **error)
 static void
 migrate_schema_from_v3_to_v4 (GdaMetaStore *store, GError **error)
 {
-	g_return_if_fail (GDA_IS_CONNECTION (store->priv->cnc));
-	g_return_if_fail (gda_connection_is_opened (store->priv->cnc));
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	g_return_if_fail (GDA_IS_CONNECTION (priv->cnc));
+	g_return_if_fail (gda_connection_is_opened (priv->cnc));
 
 	/* begin a transaction if possible */
 	gboolean transaction_started = FALSE;
-	if (! check_transaction_started (store->priv->cnc, &transaction_started))
+	if (! check_transaction_started (priv->cnc, &transaction_started))
 		return;
 
 	if (! add_a_column (store, "_schemata", "schema_default", error))
@@ -2757,10 +2788,10 @@ migrate_schema_from_v3_to_v4 (GdaMetaStore *store, GError **error)
  out:
 	if (transaction_started) {
 		/* handle transaction started if necessary */
-		if (store->priv->version != 4)
-			gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		if (priv->version != 4)
+			gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
 		else
-			gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+			gda_connection_commit_transaction (priv->cnc, NULL, NULL);
 	}
 }
 
@@ -2769,8 +2800,9 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 {
 	GdaDataModel *model;
 	GdaMetaStoreClass *klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	model = gda_connection_statement_execute_select_fullv (store->priv->cnc,
+	model = gda_connection_statement_execute_select_fullv (priv->cnc,
 							       klass->cpriv->prep_stmts[STMT_GET_VERSION],
 							       NULL, GDA_STATEMENT_MODEL_RANDOM_ACCESS, NULL,
 							       0, G_TYPE_STRING, -1);
@@ -2795,11 +2827,11 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 			g_object_unref (model);
 			return FALSE;
 		}
-		store->priv->version = atoi (g_value_get_string (version)); /* Flawfinder: ignore */
-		if (store->priv->version < 1)
-			store->priv->version = 1;
-		if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
-			switch (store->priv->version) {
+		priv->version = atoi (g_value_get_string (version)); /* Flawfinder: ignore */
+		if (priv->version < 1)
+			priv->version = 1;
+		if (priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
+			switch (priv->version) {
 			case 1:
 				migrate_schema_from_v1_to_v2 (store, error);
                                 /* fallthrough */
@@ -2817,7 +2849,7 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 				break;
 			}
 
-			if (store->priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
+			if (priv->version != atoi (CURRENT_SCHEMA_VERSION)) { /* Flawfinder: ignore */
 				/* it's an error */
 				g_object_unref (model);
 				return FALSE;
@@ -2844,9 +2876,9 @@ handle_schema_version (GdaMetaStore *store, gboolean *schema_present, GError **e
 gint
 gda_meta_store_get_version (GdaMetaStore *store) {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), 0);
-	g_return_val_if_fail (store->priv, 0);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	return store->priv->version;
+	return priv->version;
 }
 
 /**
@@ -2865,9 +2897,9 @@ gda_meta_store_get_version (GdaMetaStore *store) {
 GdaConnection *
 gda_meta_store_get_internal_connection (GdaMetaStore *store) {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), 0);
-	g_return_val_if_fail (store->priv, 0);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	return store->priv->cnc;
+	return priv->cnc;
 }
 
 /**
@@ -2924,20 +2956,21 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (select_sql, NULL);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return NULL;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
-	if ((store->priv->max_extract_stmt > 0) && !store->priv->extract_stmt_hash)
-		store->priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+	if ((priv->max_extract_stmt > 0) && !priv->extract_stmt_hash)
+		priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 
 	/* statement creation */
-	if (store->priv->extract_stmt_hash)
-		stmt = g_hash_table_lookup (store->priv->extract_stmt_hash, select_sql);
+	if (priv->extract_stmt_hash)
+		stmt = g_hash_table_lookup (priv->extract_stmt_hash, select_sql);
 	if (stmt)
 		g_object_ref (stmt);
 	else {
@@ -2947,27 +2980,27 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 		klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 		stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
 		if (!stmt) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 		if (remain) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
 				     "%s", _("More than one SQL statement"));
 			g_object_unref (stmt);
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 
-		if (store->priv->current_extract_stmt < store->priv->max_extract_stmt) {
-			g_hash_table_insert (store->priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
-			store->priv->current_extract_stmt++;
+		if (priv->current_extract_stmt < priv->max_extract_stmt) {
+			g_hash_table_insert (priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
+			priv->current_extract_stmt++;
 		}
 	}
 
 	/* parameters */
 	if (!gda_statement_get_parameters (stmt, &params, error)) {
 		g_object_unref (stmt);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 	if (params) {
@@ -2988,7 +3021,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 					g_object_unref (params);
 					va_end (ap);
 					g_slist_free (params_set);
-					g_rec_mutex_unlock (& (store->priv->mutex));
+					g_rec_mutex_unlock (& (priv->mutex));
 					return NULL;
 				}
 				params_set = g_slist_prepend (params_set, h);
@@ -3005,12 +3038,12 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 	}
 
 	/* execution */
-	model = gda_connection_statement_execute_select (store->priv->cnc, stmt, params, error);
+	model = gda_connection_statement_execute_select (priv->cnc, stmt, params, error);
 	g_object_unref (stmt);
 	if (params)
 		g_object_unref (params);
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return model;
 }
 
@@ -3044,20 +3077,21 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (select_sql, NULL);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return NULL;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
-	if ((store->priv->max_extract_stmt > 0) && !store->priv->extract_stmt_hash)
-		store->priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+	if ((priv->max_extract_stmt > 0) && !priv->extract_stmt_hash)
+		priv->extract_stmt_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
 
 	/* statement creation */
-	if (store->priv->extract_stmt_hash)
-		stmt = g_hash_table_lookup (store->priv->extract_stmt_hash, select_sql);
+	if (priv->extract_stmt_hash)
+		stmt = g_hash_table_lookup (priv->extract_stmt_hash, select_sql);
 	if (stmt)
 		g_object_ref (stmt);
 	else {
@@ -3067,27 +3101,27 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 		klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 		stmt = gda_sql_parser_parse_string (klass->cpriv->parser, select_sql, &remain, error);
 		if (!stmt) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 		if (remain) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
 				     "%s", _("More than one SQL statement"));
 			g_object_unref (stmt);
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 
-		if (store->priv->current_extract_stmt < store->priv->max_extract_stmt) {
-			g_hash_table_insert (store->priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
-			store->priv->current_extract_stmt++;
+		if (priv->current_extract_stmt < priv->max_extract_stmt) {
+			g_hash_table_insert (priv->extract_stmt_hash, g_strdup (select_sql), g_object_ref (stmt));
+			priv->current_extract_stmt++;
 		}
 	}
 
 	/* parameters */
 	if (!gda_statement_get_parameters (stmt, &params, error)) {
 		g_object_unref (stmt);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 	if (params) {
@@ -3105,7 +3139,7 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 				if (!gda_holder_set_value (h, value, error)) {
 					g_object_unref (stmt);
 					g_object_unref (params);
-					g_rec_mutex_unlock (& (store->priv->mutex));
+					g_rec_mutex_unlock (& (priv->mutex));
 					return NULL;
 				}
 				params_set = g_slist_prepend (params_set, h);
@@ -3121,12 +3155,12 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 	}
 
 	/* execution */
-	model = gda_connection_statement_execute_select (store->priv->cnc, stmt, params, error);
+	model = gda_connection_statement_execute_select (priv->cnc, stmt, params, error);
 	g_object_unref (stmt);
 	if (params)
 		g_object_unref (params);
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return model;
 }
 
@@ -3174,9 +3208,10 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (table_name, FALSE);
 	g_return_val_if_fail (!new_data || GDA_IS_DATA_MODEL (new_data), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
@@ -3225,6 +3260,7 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 	gboolean retval;
 
 	g_return_val_if_fail (context, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	for (i = 0; i < context->size; i++) {
 		if (i == 0)
@@ -3236,8 +3272,8 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
 					g_type_name (G_VALUE_TYPE (context->column_values [i])));
 	}
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		if (cond)
 			g_string_free (cond, TRUE);
 		return FALSE;
@@ -3286,18 +3322,18 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gboolean started_transaction = FALSE;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
-	g_return_val_if_fail (store->priv, FALSE);
-	g_return_val_if_fail (store->priv->cnc, FALSE);
-	g_return_val_if_fail (gda_connection_is_opened (store->priv->cnc), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	g_return_val_if_fail (priv->cnc, FALSE);
+	g_return_val_if_fail (gda_connection_is_opened (priv->cnc), FALSE);
 	g_return_val_if_fail (!new_data || GDA_IS_DATA_MODEL (new_data), FALSE);
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	/* get the correct TableInfo */
 	prep = prepare_tables_infos (store, &schema_set, &custom_set, &with_cond, table_name,
 				     condition, error, nvalues, value_names, values);
 	if (!prep) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 	}
 
@@ -3306,16 +3342,16 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	gint current_n_rows = 0, i;
 	gint current_n_cols = 0;
 
-	if (! store->priv->override_mode) {
+	if (! priv->override_mode) {
 		/* get current data */
-		current = gda_connection_statement_execute_select_full (store->priv->cnc,
+		current = gda_connection_statement_execute_select_full (priv->cnc,
 									with_cond ? custom_set->select :
 									schema_set->current_all,
 									with_cond ? custom_set->params : NULL,
 									GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 									schema_set->type_cols_array, error);
 		if (!current) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 		current_n_rows = gda_data_model_get_n_rows (current);
@@ -3328,8 +3364,8 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 #endif
 
 		/* start a transaction if possible */
-		if (! gda_connection_get_transaction_status (store->priv->cnc)) {
-			started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
+		if (! gda_connection_get_transaction_status (priv->cnc)) {
+			started_transaction = gda_connection_begin_transaction (priv->cnc, NULL,
 										GDA_TRANSACTION_ISOLATION_UNKNOWN,
 										NULL);
 #ifdef DEBUG_STORE_MODIFY
@@ -3339,11 +3375,11 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 	}
 	else {
 		/* remove everything from table */
-		if (gda_connection_statement_execute_non_select (store->priv->cnc,
+		if (gda_connection_statement_execute_non_select (priv->cnc,
 								 schema_set->delete_all, NULL,
 								 NULL, error) == -1) {
 			/*g_print ("may be error: %s\n", error && *error && (*error)->message ? (*error)->message : "Nope");*/
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 	}
@@ -3354,10 +3390,10 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		gint new_n_rows, new_n_cols;
 
 		if (schema_set->ident_cols)
-			wrapped_data = _gda_data_meta_wrapper_new (new_data, !store->priv->override_mode,
+			wrapped_data = _gda_data_meta_wrapper_new (new_data, !priv->override_mode,
 								   schema_set->ident_cols, schema_set->ident_cols_size,
-								   store->priv->ident_style,
-								   store->priv->reserved_keyword_func);
+								   priv->ident_style,
+								   priv->reserved_keyword_func);
 		else
 			wrapped_data = g_object_ref (new_data);
 
@@ -3379,7 +3415,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 			gboolean has_changed = FALSE;
 			GdaMetaStoreChange *change = NULL;
 
-			if (!store->priv->override_mode) {
+			if (!priv->override_mode) {
 				if (current) {
 					erow = find_row_in_model (current, wrapped_data, i,
 								  schema_set->pk_cols_array,
@@ -3450,7 +3486,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 #ifdef DEBUG_STORE_MODIFY
 				g_print ("Insert new row %d into table %s\n", i, table_name);
 #endif
-				if (gda_connection_statement_execute_non_select (store->priv->cnc,
+				if (gda_connection_statement_execute_non_select (priv->cnc,
 										 schema_set->insert, schema_set->params,
 										 NULL, error) == -1) {
 					retval = FALSE;
@@ -3493,7 +3529,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 #ifdef DEBUG_STORE_MODIFY
 				g_print ("Update for row %d (old row was %d) into table %s\n", i, erow, table_name);
 #endif
-				if (gda_connection_statement_execute_non_select (store->priv->cnc,
+				if (gda_connection_statement_execute_non_select (priv->cnc,
 										 schema_set->update, schema_set->params,
 										 NULL, error) == -1) {
 					retval = FALSE;
@@ -3508,7 +3544,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				/* row has not changed */
 				rows_to_del [erow] = FALSE;
 
-			if (!store->priv->override_mode) {
+			if (!priv->override_mode) {
 				/* Dependencies update: reverse_fk_list */
 				GSList *list;
 				for (list = schema_set->reverse_fk_list; list; list = list->next) {
@@ -3563,7 +3599,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		g_object_unref (wrapped_data);
 	}
 
-	if (!store->priv->override_mode) {
+	if (!priv->override_mode) {
 		/* treat rows to delete */
 		for (i = 0; i < current_n_rows; i++) {
 			if (rows_to_del [i]) {
@@ -3627,7 +3663,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					g_free (values);
 				}
 
-				if (gda_connection_statement_execute_non_select (store->priv->cnc,
+				if (gda_connection_statement_execute_non_select (priv->cnc,
 										 schema_set->delete, schema_set->params,
 										 NULL, error) == -1) {
 					retval = FALSE;
@@ -3637,7 +3673,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 		}
 
 		if (retval && started_transaction) {
-			retval = gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
+			retval = gda_connection_commit_transaction (priv->cnc, NULL, NULL);
 #ifdef DEBUG_STORE_MODIFY
 			g_print ("------- COMMIT\n");
 #endif
@@ -3655,13 +3691,13 @@ out:
 	if (current)
 		g_object_unref (current);
 	if (!retval && started_transaction) {
-		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
+		gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
 #ifdef DEBUG_STORE_MODIFY
 		g_print ("------- ROLLBACK\n");
 #endif
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return retval;
 }
 
@@ -3731,6 +3767,7 @@ prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, TableCon
 		      gint nvalues, const gchar **value_names, const GValue **values)
 {
 	GdaMetaStoreClass *klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	g_assert (out_table_infos);
 	g_assert (out_cond_infos);
@@ -3771,8 +3808,8 @@ prepare_tables_infos (GdaMetaStore *store, TableInfo **out_table_infos, TableCon
 		GdaHolder *h;
 		GValue *wvalue;
 
-		wvalue = _gda_data_meta_wrapper_compute_value (values [i], store->priv->ident_style,
-							       store->priv->reserved_keyword_func);
+		wvalue = _gda_data_meta_wrapper_compute_value (values [i], priv->ident_style,
+							       priv->reserved_keyword_func);
 		h = gda_set_get_holder ((*out_cond_infos)->params, value_names [i]);
 		if (!h || !gda_holder_set_value (h, wvalue ? wvalue : values[i], NULL)) {
 			g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INTERNAL_ERROR,
@@ -3851,32 +3888,33 @@ gboolean
 _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
-	if (store->priv->override_mode)
+	if (priv->override_mode)
 		return TRUE;
 
-	g_rec_mutex_lock (& (store->priv->mutex));
-	if (! gda_connection_get_transaction_status (store->priv->cnc)) {
-		if (!gda_connection_begin_transaction (store->priv->cnc, NULL,
+	g_rec_mutex_lock (& (priv->mutex));
+	if (! gda_connection_get_transaction_status (priv->cnc)) {
+		if (!gda_connection_begin_transaction (priv->cnc, NULL,
 						       GDA_TRANSACTION_ISOLATION_UNKNOWN, error)) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 	}
 	else {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_TRANSACTION_ALREADY_STARTED_ERROR,
 			     "%s", _("A transaction has already been started"));
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 
 	}
-	store->priv->override_mode = TRUE;
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	priv->override_mode = TRUE;
+	g_rec_mutex_unlock (& (priv->mutex));
 	return TRUE;
 }
 
@@ -3894,21 +3932,22 @@ _gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error)
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
-	if (!store->priv->override_mode) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
+	if (!priv->override_mode) {
+		g_rec_mutex_unlock (& (priv->mutex));
 		return TRUE;
 	}
 
-	store->priv->override_mode = FALSE;
-	retval = gda_connection_rollback_transaction (store->priv->cnc, NULL, error);
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	priv->override_mode = FALSE;
+	retval = gda_connection_rollback_transaction (priv->cnc, NULL, error);
+	g_rec_mutex_unlock (& (priv->mutex));
 	return retval;
 }
 
@@ -3925,26 +3964,27 @@ gboolean
 _gda_meta_store_finish_data_reset (GdaMetaStore *store, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
-	if (!store->priv->override_mode) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
+	if (!priv->override_mode) {
+		g_rec_mutex_unlock (& (priv->mutex));
 		return TRUE;
 	}
 
-	store->priv->override_mode = FALSE;
-	if (!gda_connection_commit_transaction (store->priv->cnc, NULL, error)) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+	priv->override_mode = FALSE;
+	if (!gda_connection_commit_transaction (priv->cnc, NULL, error)) {
+		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 	}
 	else {
 		g_signal_emit (store, gda_meta_store_signals[META_RESET], 0);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return TRUE;
 	}
 }
@@ -3974,18 +4014,19 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
-	dbobj = g_hash_table_lookup (store->priv->p_db_objects_hash, table_name);
+	dbobj = g_hash_table_lookup (priv->p_db_objects_hash, table_name);
 	if (!dbobj) {
 		g_warning ("Table '%s' is not known by the GdaMetaStore", table_name);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 	if (dbobj->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE) {
 		g_warning ("Table '%s' is not a database table in the GdaMetaStore", table_name);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
@@ -4000,7 +4041,7 @@ gda_meta_store_create_modify_data_model (GdaMetaStore *store, const gchar *table
 		gda_column_set_name (col, tcol->column_name);
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return model;
 }
 
@@ -4021,8 +4062,9 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
 	GdaMetaStoreClass *klass;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	for (ret = NULL, list = klass->cpriv->db_objects; list; list = list->next) {
@@ -4030,13 +4072,13 @@ gda_meta_store_schema_get_all_tables (GdaMetaStore *store)
 		if (dbobj->obj_type == GDA_SERVER_OPERATION_CREATE_TABLE)
 			ret = g_slist_prepend (ret, dbobj->obj_name);
 	}
-	for (ret = NULL, list = store->priv->p_db_objects; list; list = list->next) {
+	for (ret = NULL, list = priv->p_db_objects; list; list = list->next) {
 		DbObject *dbobj = DB_OBJECT (list->data);
 		if (dbobj->obj_type == GDA_SERVER_OPERATION_CREATE_TABLE)
 			ret = g_slist_prepend (ret, dbobj->obj_name);
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return g_slist_reverse (ret);
 }
@@ -4062,11 +4104,12 @@ gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
 	g_return_val_if_fail (table_name && *table_name, NULL);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	g_rec_mutex_lock (& (store->priv->mutex));
-	dbo = g_hash_table_lookup (store->priv->p_db_objects_hash, table_name);
+	g_rec_mutex_lock (& (priv->mutex));
+	dbo = g_hash_table_lookup (priv->p_db_objects_hash, table_name);
 	if (!dbo) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
@@ -4076,7 +4119,7 @@ gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table
 			ret = g_slist_prepend (ret, dbobj->obj_name);
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return g_slist_reverse (ret);
 }
@@ -4100,26 +4143,28 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	GdaMetaStore *real_store;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return NULL;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	/* make sure the private connection's meta store is up to date */
-	if (! gda_connection_update_meta_store (store->priv->cnc, NULL, error)) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+	if (! gda_connection_update_meta_store (priv->cnc, NULL, error)) {
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
 	/* create a GdaMetaStruct */
-	real_store = gda_connection_get_meta_store (store->priv->cnc);
+	real_store = gda_connection_get_meta_store (priv->cnc);
+	GdaMetaStorePrivate *real_priv = gda_meta_store_get_instance_private (real_store);
 	model = gda_meta_store_extract (real_store,
 					"SELECT table_catalog, table_schema, table_name FROM _tables",
 					error, NULL);
 	if (!model) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
@@ -4130,23 +4175,23 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 		const GValue *cv0, *cv1, *cv2;
 		cv0 = gda_data_model_get_value_at (model, 0, i, error);
 		if (!cv0) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 		cv1 = gda_data_model_get_value_at (model, 1, i, error);
 		if (!cv1) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 		cv2 = gda_data_model_get_value_at (model, 2, i, error);
 		if (!cv2) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 		if (!gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, cv0, cv1, cv2, error)) {
 			g_object_unref (mstruct);
 			g_object_unref (model);
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return NULL;
 		}
 	}
@@ -4158,9 +4203,9 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	all_db_obj_list = g_slist_copy (klass->cpriv->db_objects);
-	if (real_store->priv->p_db_objects)
+	if (real_priv->p_db_objects)
 		all_db_obj_list = g_slist_concat (all_db_obj_list,
-						  g_slist_copy (real_store->priv->p_db_objects));
+						  g_slist_copy (real_priv->p_db_objects));
 
 	for (list = all_db_obj_list; list; list = list->next) {
 		DbObject *dbobj = DB_OBJECT (list->data);
@@ -4189,7 +4234,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 	}
 	g_slist_free (all_db_obj_list);
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return mstruct;
 }
@@ -4222,13 +4267,14 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (att_name && *att_name, FALSE);
 	g_return_val_if_fail (att_value, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	*att_value = NULL;
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), att_name);
@@ -4236,7 +4282,7 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 					"n", value, NULL);
 	gda_value_free (value);
 	if (!model) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 	}
 	nrows = gda_data_model_get_n_rows (model);
@@ -4250,7 +4296,7 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 	else {
 		value = (GValue*) gda_data_model_get_value_at (model, 0, 0, error);
 		if (!value) {
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 		if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
@@ -4259,10 +4305,10 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
 			if (val)
 				*att_value = g_strdup (val);
 		}
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return TRUE;
 	}
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return FALSE;
 }
 
@@ -4289,6 +4335,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (att_name && *att_name, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
 	if (*att_name == '_') {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_ATTRIBUTE_ERROR,
@@ -4296,29 +4343,29 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 		return FALSE;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 	g_mutex_lock (&set_mutex);
 	if (!set) {
 		if (!gda_statement_get_parameters (klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], &set, error)) {
 			g_mutex_unlock (&set_mutex);
-			g_rec_mutex_unlock (& (store->priv->mutex));
+			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 	}
 	g_mutex_unlock (&set_mutex);
 
 	if (!gda_set_set_holder_value (set, error, "name", att_name)) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 	}
 
 	/* start a transaction if possible */
-	gda_lockable_lock (GDA_LOCKABLE (store->priv->cnc));
-	gda_connection_increase_usage (store->priv->cnc); /* USAGE ++ */
-	if (! gda_connection_get_transaction_status (store->priv->cnc))
-		started_transaction = gda_connection_begin_transaction (store->priv->cnc, NULL,
+	gda_lockable_lock (GDA_LOCKABLE (priv->cnc));
+	gda_connection_increase_usage (priv->cnc); /* USAGE ++ */
+	if (! gda_connection_get_transaction_status (priv->cnc))
+		started_transaction = gda_connection_begin_transaction (priv->cnc, NULL,
 									GDA_TRANSACTION_ISOLATION_UNKNOWN,
 									NULL);
 	else
@@ -4326,7 +4373,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 			     "attributes problems"));
 
 	/* delete existing attribute */
-	if (gda_connection_statement_execute_non_select (store->priv->cnc,
+	if (gda_connection_statement_execute_non_select (priv->cnc,
 							 klass->cpriv->prep_stmts [STMT_DEL_ATT_VALUE], set,
 							 NULL, error) == -1)
 		goto onerror;
@@ -4336,24 +4383,24 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 		if (!gda_set_set_holder_value (set, error, "value", att_value))
 			goto onerror;
 
-		if (gda_connection_statement_execute_non_select (store->priv->cnc,
+		if (gda_connection_statement_execute_non_select (priv->cnc,
 								 klass->cpriv->prep_stmts [STMT_SET_ATT_VALUE], set,
 								 NULL, error) == -1)
 			goto onerror;
 	}
 	if (started_transaction)
-		gda_connection_commit_transaction (store->priv->cnc, NULL, NULL);
-	gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
-	gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
-	g_rec_mutex_unlock (& (store->priv->mutex));
+		gda_connection_commit_transaction (priv->cnc, NULL, NULL);
+	gda_connection_decrease_usage (priv->cnc); /* USAGE -- */
+	gda_lockable_unlock (GDA_LOCKABLE (priv->cnc));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return TRUE;
 
  onerror:
 	if (started_transaction)
-		gda_connection_rollback_transaction (store->priv->cnc, NULL, NULL);
-	gda_connection_decrease_usage (store->priv->cnc); /* USAGE -- */
-	gda_lockable_unlock (GDA_LOCKABLE (store->priv->cnc));
-	g_rec_mutex_unlock (& (store->priv->mutex));
+		gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
+	gda_connection_decrease_usage (priv->cnc); /* USAGE -- */
+	gda_lockable_unlock (GDA_LOCKABLE (priv->cnc));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return FALSE;
 }
 
@@ -4429,9 +4476,10 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (xml_description && *xml_description, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
@@ -4444,7 +4492,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	}
 	node = xmlDocGetRootElement (doc);
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
 
@@ -4464,7 +4512,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 
 	/* keep a list of custom DB objects _before_ adding the new one(s) (more than
 	 * one if there are dependencies) */
-	pre_p_db_objects = g_slist_copy (store->priv->p_db_objects);
+	pre_p_db_objects = g_slist_copy (priv->p_db_objects);
 
 	/* create DbObject structure from XML description, stored in @store's custom db objects */
 	if (!strcmp ((gchar *) node->name, "table"))
@@ -4493,7 +4541,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 		context.column_values = g_new0 (GValue *, 3);
 		context.column_names[0] = "table_name";
 		g_value_set_string ((context.column_values[0] = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
-		upd_ok = gda_connection_update_meta_store (store->priv->cnc, &context, error);
+		upd_ok = gda_connection_update_meta_store (priv->cnc, &context, error);
 		g_free (context.column_names);
 		gda_value_free (context.column_values[0]);
 		g_free (context.column_values);
@@ -4508,7 +4556,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	/* create a GdaMetaStruct */
 	GdaMetaDbObject *eobj;
 	gboolean needs_creation = TRUE;
-	pstore = gda_connection_get_meta_store (store->priv->cnc);
+	pstore = gda_connection_get_meta_store (priv->cnc);
 	mstruct = gda_meta_struct_new (pstore, GDA_META_STRUCT_FEATURE_ALL);
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
 	if (!(eobj = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN,
@@ -4567,21 +4615,21 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	if (needs_creation) {
 		/* prepare the create operation */
 		GdaServerProvider *prov;
-		prov = gda_connection_get_provider (store->priv->cnc);
+		prov = gda_connection_get_provider (priv->cnc);
 		if (! prepare_dbo_server_operation (klass, store, prov, dbo, error))
 			goto onerror;
 
 		/* actually create the object in database */
 		/*g_print ("Creating object: %s\n", dbo->obj_name);*/
 		if (dbo->create_op) {
-			if (!gda_server_provider_perform_operation (prov, store->priv->cnc, dbo->create_op, error))
+			if (!gda_server_provider_perform_operation (prov, priv->cnc, dbo->create_op, error))
 				goto onerror;
 			g_object_unref (dbo->create_op);
 			dbo->create_op = NULL;
 		}
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return TRUE;
 
  onerror:
@@ -4589,19 +4637,19 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 		xmlFreeDoc (doc);
 	if (dbo) {
 		GSList *current_objects, *list;
-		current_objects = g_slist_copy (store->priv->p_db_objects);
+		current_objects = g_slist_copy (priv->p_db_objects);
 		for (list = current_objects; list; list = list->next) {
 			dbo = DB_OBJECT (list->data);
 			if (!g_slist_find (pre_p_db_objects, dbo)) {
 				/* remove the DbObject */
-				store->priv->p_db_objects = g_slist_remove (store->priv->p_db_objects, dbo);
-				g_hash_table_remove (store->priv->p_db_objects_hash, dbo->obj_name);
+				priv->p_db_objects = g_slist_remove (priv->p_db_objects, dbo);
+				g_hash_table_remove (priv->p_db_objects_hash, dbo->obj_name);
 				db_object_free (dbo);
 			}
 		}
 		g_slist_free (current_objects);
 	}
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	g_slist_free (pre_p_db_objects);
 	if (pstore)
 		g_object_unref (pstore);
@@ -4626,15 +4674,16 @@ gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *ob
 {
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
 	g_return_val_if_fail (obj_name && *obj_name, FALSE);
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 	TO_IMPLEMENT;
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return FALSE;
 }
@@ -4650,9 +4699,10 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 {
 	GdaMetaStoreClass *klass;
 	gint i;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return FALSE;
 	}
 
@@ -4708,7 +4758,7 @@ _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, 
 								gchar *id;
 								id = g_value_dup_string (context->column_values [i]);
 								gda_sql_identifier_prepare_for_compare (id);
-								if (store->priv->ident_style == GDA_SQL_IDENTIFIERS_UPPER_CASE) {
+								if (priv->ident_style == GDA_SQL_IDENTIFIERS_UPPER_CASE) {
 									/* move to upper case */
 									gchar *ptr;
 									for (ptr = id; *ptr; ptr++) {
@@ -4784,31 +4834,32 @@ _gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContex
 	DbObject *dbo;
 	GSList *list, *retlist = NULL;
 	TableInfo *tinfo;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return NULL;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	/* find the associated DbObject */
-	dbo = g_hash_table_lookup (store->priv->p_db_objects_hash, context->table_name);
+	dbo = g_hash_table_lookup (priv->p_db_objects_hash, context->table_name);
 	if (!dbo) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 			     _("Unknown database object '%s'"), context->table_name);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 	if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
 	tinfo = TABLE_INFO (dbo);
 	if (!tinfo->fk_list) {
 		/* this is not an error, just that there are no dependency */
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
@@ -4869,7 +4920,7 @@ _gda_meta_store_schema_get_upstream_contexts (GdaMetaStore *store, GdaMetaContex
 		}
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return g_slist_reverse (retlist);
 }
 
@@ -4887,31 +4938,32 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 	DbObject *dbo;
 	GSList *list, *retlist = NULL;
 	TableInfo *tinfo;
+	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (store->priv->init_error) {
-		g_propagate_error (error, g_error_copy (store->priv->init_error));
+	if (priv->init_error) {
+		g_propagate_error (error, g_error_copy (priv->init_error));
 		return NULL;
 	}
 
-	g_rec_mutex_lock (& (store->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	/* find the associated DbObject */
-	dbo = g_hash_table_lookup (store->priv->p_db_objects_hash, context->table_name);
+	dbo = g_hash_table_lookup (priv->p_db_objects_hash, context->table_name);
 	if (!dbo) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_SCHEMA_OBJECT_NOT_FOUND_ERROR,
 			     _("Unknown database object '%s'"), context->table_name);
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 	if (dbo->obj_type != GDA_SERVER_OPERATION_CREATE_TABLE) {
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
 	tinfo = TABLE_INFO (dbo);
 	if (!tinfo->reverse_fk_list) {
 		/* this is not an error, just that there are no dependency */
-		g_rec_mutex_unlock (& (store->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 		return NULL;
 	}
 
@@ -4927,7 +4979,7 @@ _gda_meta_store_schema_get_downstream_contexts (GdaMetaStore *store, GdaMetaCont
 		retlist = g_slist_prepend (retlist, ct);
 	}
 
-	g_rec_mutex_unlock (& (store->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 	return g_slist_reverse (retlist);
 }
 
