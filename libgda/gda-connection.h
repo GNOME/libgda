@@ -12,6 +12,7 @@
  * Copyright (C) 2007 Leonardo Boshell <lb@kmc.com.co>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2015 Gergely Polonkai <gergely@polonkai.eu>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -296,6 +297,13 @@ GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, Gd
 
 gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
                                                           
+GdaServerOperation  *gda_connection_prepare_operation_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
+GdaServerOperation  *gda_connection_prepare_operation_create_table        (GdaConnection *cnc, const gchar *table_name, GList *arguments, GError **error);
+GdaServerOperation  *gda_connection_prepare_operation_drop_table            (GdaConnection *cnc, const gchar *table_name, GError **error);
+gchar               *gda_connection_operation_get_sql_identifier_at (GdaConnection *cnc,
+              GdaServerOperation *op, const gchar *path_format, GError **error, ...);
+gchar               *gda_connection_operation_get_sql_identifier_at_path (GdaConnection *cnc, GdaServerOperation *op,
+						 const gchar *path, GError **error);
 const gchar         *gda_connection_get_dsn              (GdaConnection *cnc);
 const gchar         *gda_connection_get_cnc_string       (GdaConnection *cnc);
 const gchar         *gda_connection_get_authentication   (GdaConnection *cnc);
@@ -386,9 +394,6 @@ GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, Gd
 							  GError **error, gint nb_filters, ...);
 GdaDataModel        *gda_connection_get_meta_store_data_v(GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GList* filters, GError **error);
-
-//void                 gda_connection_lock_with_context (GdaConnection *cnc, GMainContext *context);
-//void                 gda_connection_unlock (GdaConnection *cnc);
 
 G_END_DECLS
 
