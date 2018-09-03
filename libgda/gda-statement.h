@@ -115,7 +115,7 @@ struct _GdaStatementClass
 	GObjectClass         parent_class;
 
 	/* signals */
-	void   (*checked)   (GdaStatement *stmt, gboolean checked);
+	void   (*checked)   (GdaStatement *stmt, GdaConnection *cnc, gboolean checked);
 	void   (*reset)     (GdaStatement *stmt);
 
 	/*< private >*/
@@ -156,17 +156,16 @@ GdaStatement       *gda_statement_copy                   (GdaStatement *orig);
 gchar              *gda_statement_serialize              (GdaStatement *stmt);
 
 gboolean            gda_statement_get_parameters         (GdaStatement *stmt, GdaSet **out_params, GError **error);
-#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), (params), GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, (error))
-gchar              *gda_statement_to_sql_extended       (GdaStatement *stmt,
+#define             gda_statement_to_sql(stmt,params,error) gda_statement_to_sql_extended ((stmt), NULL, (params), GDA_STATEMENT_SQL_PARAMS_SHORT, NULL, (error))
+gchar              *gda_statement_to_sql_extended        (GdaStatement *stmt, GdaConnection *cnc, 
 							  GdaSet *params, GdaStatementSqlFlag flags, 
 							  GSList **params_used, GError **error);
 
 GdaSqlStatementType gda_statement_get_statement_type     (GdaStatement *stmt);
-GdaSqlStatement    *gda_statement_get_sql_statement      (GdaStatement *stmt);
 gboolean            gda_statement_is_useless             (GdaStatement *stmt);
 gboolean            gda_statement_check_structure        (GdaStatement *stmt, GError **error);
-gboolean            gda_statement_check_validity         (GdaStatement *stmt, GError **error);
-gboolean            gda_statement_normalize              (GdaStatement *stmt, GError **error);
+gboolean            gda_statement_check_validity         (GdaStatement *stmt, GdaConnection *cnc, GError **error);
+gboolean            gda_statement_normalize              (GdaStatement *stmt, GdaConnection *cnc, GError **error);
 
 G_END_DECLS
 

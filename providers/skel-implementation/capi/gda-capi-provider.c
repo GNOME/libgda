@@ -994,7 +994,7 @@ gda_capi_provider_statement_to_sql (GdaServerProvider *provider, GdaConnection *
 
 	TO_IMPLEMENT;
 
-	return gda_statement_to_sql_extended (stmt, params, flags, params_used, error);
+	return gda_statement_to_sql_extended (stmt, NULL, params, flags, params_used, error);
 }
 
 /*

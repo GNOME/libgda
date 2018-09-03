@@ -42,6 +42,7 @@ G_DECLARE_FINAL_TYPE (GdaHandlerString, gda_handler_string, GDA, HANDLER_STRING,
  */
 
 GdaDataHandler *gda_handler_string_new               (void);
+GdaDataHandler *gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cnc);
 
 G_END_DECLS
 

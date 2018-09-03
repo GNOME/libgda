@@ -1,11 +1,4 @@
 libgda 5.91.0
- - Removing private structs from public API
- - Removed gda_meta_store_sql_identifier_quote(), use gda_connection_quote_sql_identifier() instead
- - Removed gda_meta_store_get_internal_connection() from public API
- - Added API for GdaConnection for GdaMetaContext requiring it
- - Removed API for GdaMetaContext using GdaConnection objects
- - Added gda_connection_statement_to_sql() replacing gda_statement_to_sql_extended()
- - Changed API for gda_statement_to_sql() and removed gda_statement_to_sql_extended()
  - GdaSet ported to use g_autoptr() and remove public private struct
  - Fixed segfaults
  - Fixed open connections to SQLite, PostgreSQL and MySQL providers

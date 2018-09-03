@@ -2601,7 +2601,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 									GdaServerProvider *prov;
 									cnc = g_object_get_data (G_OBJECT (model), "cnc");
 									if (!cnc && GDA_IS_DATA_SELECT (model))
-										g_object_get (G_OBJECT (model), "connection", &cnc, NULL);
+										cnc = gda_data_select_get_connection (GDA_DATA_SELECT (model));
 									if (cnc) {
 										prov = gda_connection_get_provider (cnc);
 										dh = gda_server_provider_get_data_handler_g_type (prov, cnc,

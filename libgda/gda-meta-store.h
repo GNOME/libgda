@@ -160,6 +160,8 @@ GdaMetaStore     *gda_meta_store_new_with_file            (const gchar *file_nam
 GdaMetaStore     *gda_meta_store_new                      (const gchar *cnc_string);
 gint              gda_meta_store_get_version              (GdaMetaStore *store);
 
+GdaConnection    *gda_meta_store_get_internal_connection  (GdaMetaStore *store);
+gchar            *gda_meta_store_sql_identifier_quote     (const gchar *id, GdaConnection *cnc);
 GdaDataModel     *gda_meta_store_extract                  (GdaMetaStore *store, const gchar *select_sql, GError **error, ...);
 GdaDataModel     *gda_meta_store_extract_v                (GdaMetaStore *store, const gchar *select_sql, GHashTable *vars, 
 							   GError **error);
@@ -210,8 +212,9 @@ GdaMetaContext*   gda_meta_context_copy                   (GdaMetaContext *ctx);
 void              gda_meta_context_set_table              (GdaMetaContext *ctx, const gchar *table);
 const gchar*      gda_meta_context_get_table              (GdaMetaContext *ctx);
 void              gda_meta_context_set_column             (GdaMetaContext *ctx, const gchar* column, 
-							   const GValue* value);
-void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns);
+							   const GValue* value, GdaConnection *cnc);
+void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns,
+							   GdaConnection *cnc);
 void              gda_meta_context_free                   (GdaMetaContext *ctx);
 
 G_END_DECLS

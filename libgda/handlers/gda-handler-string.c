@@ -58,6 +58,39 @@ gda_handler_string_new (void)
 	return (GdaDataHandler *) obj;
 }
 
+/**
+ * gda_handler_string_new_with_provider:
+ * @prov: a #GdaServerProvider object
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ *
+ * Creates a data handler for strings, which will use some specific methods implemented
+ * by the @prov object (possibly also @cnc).
+ *
+ * Returns: (type GdaHandlerString) (transfer full): the new object
+ */
+GdaDataHandler *
+gda_handler_string_new_with_provider (GdaServerProvider *prov, GdaConnection *cnc)
+{
+	GObject *obj;
+	GdaHandlerString *dh;
+
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), NULL);
+
+	obj = g_object_new (GDA_TYPE_HANDLER_STRING, NULL);
+	dh = (GdaHandlerString*) obj;
+
+	dh->prov = prov;
+	if (cnc)
+		dh->cnc = cnc;
+
+	g_object_add_weak_pointer (G_OBJECT (prov), (gpointer) &(dh->prov));
+	if (cnc)
+		g_object_add_weak_pointer (G_OBJECT (cnc), (gpointer) &(dh->cnc));
+
+	return (GdaDataHandler *) obj;
+}
+
 static gchar *
 gda_handler_string_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 {

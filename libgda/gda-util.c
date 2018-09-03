@@ -2364,8 +2364,8 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
 /**
  * gda_sql_identifier_quote:
  * @id: an SQL identifier
- * @cnc: (nullable): a #GdaConnection object, or %NULL
- * @prov: (nullable): a #GdaServerProvider object, or %NULL
+ * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @prov: (allow-none): a #GdaServerProvider object, or %NULL
  * @for_meta_store set to %TRUE if the returned string will be used in a #GdaMetaStore
  * @force_quotes: set to %TRUE to force the returned string to be quoted
  *

@@ -330,12 +330,15 @@ static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target
 /**
  * gda_sql_statement_check_validity:
  * @stmt: a #GdaSqlStatement pointer
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
- * Checks statement structure.
+ * If @cnc is not %NULL, then checks that all the database objects referenced in the statement actually
+ * exist in the connection's database (for example the table being updated in a UPDATE statement must exist in the
+ * connection's database for the check to succeed). This method fills the @stmt-&gt;validity_meta_struct attribute.
  *
- * Remove any information from a previous call to this method stored in @stmt.
- * The @stmt-&gt;validity_meta_struct attribute is cleared.
+ * If @cnc is %NULL, then remove any information from a previous call to this method stored in @stmt. In this case,
+ * the @stmt-&gt;validity_meta_struct attribute is cleared.
  *
  * Also note that some parts of @stmt may be modified: for example leading and trailing spaces in aliases or
  * objects names will be removed.
@@ -343,9 +346,10 @@ static gboolean gda_sql_select_target_check_validity (GdaSqlSelectTarget *target
  * Returns: TRUE if no error occurred
  */
 gboolean
-gda_sql_statement_check_validity (GdaSqlStatement *stmt, GError **error)
+gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
 {
 	g_return_val_if_fail (stmt, FALSE);
+	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
 	/* check the structure first */
 	if (!gda_sql_statement_check_structure (stmt, error))
@@ -354,11 +358,27 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GError **error)
 	/* clear any previous setting */
 	gda_sql_statement_check_clean (stmt);
 
-	return TRUE;
+	if (cnc) {
+		GdaSqlStatementCheckValidityData data;
+		gboolean retval;
+
+		/* prepare data */
+		data.cnc = cnc;
+		data.store = gda_connection_get_meta_store (cnc);
+		data.mstruct = gda_meta_struct_new (data.store, GDA_META_STRUCT_FEATURE_NONE);
+
+		/* attach the GdaMetaStruct to @stmt */
+		stmt->validity_meta_struct = data.mstruct;
+		retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
+						   (GdaSqlForeachFunc) foreach_check_validity, &data, error);
+		return retval;
+	}
+	else
+		return TRUE;
 }
 
 /**
- * gda_sql_statement_check_validity_m:
+ * gda_sql_statement_check_validity_m
  * @stmt: a #GdaSqlStatement pointer
  * @mstruct: (nullable): a #GdaMetaStruct object, or %NULL
  * @error: a place to store errors, or %NULL
@@ -1387,11 +1407,12 @@ gda_sql_any_part_foreach (GdaSqlAnyPart *node, GdaSqlForeachFunc func, gpointer 
 }
 
 
-static gboolean foreach_normalize (GdaSqlAnyPart *node, gpointer data, GError **error);
+static gboolean foreach_normalize (GdaSqlAnyPart *node, GdaConnection *cnc, GError **error);
 
 /**
  * gda_sql_statement_normalize:
  * @stmt: a pointer to a #GdaSqlStatement structure
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * "Normalizes" (in place) some parts of @stmt, which means @stmt may be modified.
@@ -1399,22 +1420,32 @@ static gboolean foreach_normalize (GdaSqlAnyPart *node, gpointer data, GError **
  * #GdaSqlSelectField structure for each field in the referenced table.
  *
  * Returns: TRUE if no error occurred
- * Since: 6.0
  */
 gboolean
-gda_sql_statement_normalize (GdaSqlStatement *stmt, GError **error)
+gda_sql_statement_normalize (GdaSqlStatement *stmt, GdaConnection *cnc, GError **error)
 {
+	gboolean retval;
 	g_return_val_if_fail (stmt, FALSE);
 
-	if (!stmt->validity_meta_struct && !gda_sql_statement_check_validity (stmt, error))
+	if (!stmt->validity_meta_struct && !gda_sql_statement_check_validity (stmt, cnc, error))
 		return FALSE;
 
-	return gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
-					   (GdaSqlForeachFunc) foreach_normalize, NULL, error);
+	retval = gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->contents),
+					   (GdaSqlForeachFunc) foreach_normalize, cnc, error);
+#ifdef GDA_DEBUG
+	GError *lerror = NULL;
+	if (retval && !gda_sql_statement_check_validity (stmt, cnc, &lerror)) {
+		g_warning ("Internal error in %s(): statement is not valid anymore after: %s", __FUNCTION__,
+			   lerror && lerror->message ? lerror->message :  "No detail");
+		if (lerror)
+			g_error_free (lerror);
+	}
+#endif
+	return retval;
 }
 
 static gboolean
-foreach_normalize (GdaSqlAnyPart *node, gpointer data, GError **error)
+foreach_normalize (GdaSqlAnyPart *node, G_GNUC_UNUSED GdaConnection *cnc, GError **error)
 {
 	if (!node) return TRUE;
 
