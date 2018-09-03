@@ -33,7 +33,7 @@
 #include <libgda/gda-debug-macros.h>
 
 static void gda_xa_transaction_class_init (GdaXaTransactionClass *klass);
-static void gda_xa_transaction_init       (GdaXaTransaction *xa_trans, GdaXaTransactionClass *klass);
+static void gda_xa_transaction_init       (GdaXaTransaction *xa_trans);
 static void gda_xa_transaction_dispose   (GObject *object);
 
 static void gda_xa_transaction_set_property (GObject *object,
@@ -48,18 +48,19 @@ static void gda_xa_transaction_get_property (GObject *object,
 
 static GObjectClass* parent_class = NULL;
 
-struct _GdaXaTransactionPrivate {
+typedef struct  {
 	GdaXaTransactionId  xid;
 	GHashTable         *cnc_hash; /* key = cnc, value = branch qualifier as a GdaBinary */
 	GList              *cnc_list;
 	GdaConnection      *non_xa_cnc; /* connection which does not support distributed transaction (also in @cnc_list) */
-};
+} GdaXaTransactionPrivate;
+#define gda_xa_transaction_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_XA_TRANSACTION, GdaXaTransactionPrivate)
 
 /* properties */
 enum
 {
-        PROP_0,
-        PROP_FORMAT_ID,
+	PROP_0,
+	PROP_FORMAT_ID,
 	PROP_TRANSACT_ID
 };
 
@@ -74,7 +75,11 @@ gda_xa_transaction_class_init (GdaXaTransactionClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	g_type_class_add_private (object_class, sizeof(GdaXaTransactionPrivate));
+
 	object_class->dispose = gda_xa_transaction_dispose;
+
 
 	/* Properties */
         object_class->set_property = gda_xa_transaction_set_property;
@@ -92,16 +97,16 @@ gda_xa_transaction_class_init (GdaXaTransactionClass *klass)
 }
 
 static void
-gda_xa_transaction_init (GdaXaTransaction *xa_trans, G_GNUC_UNUSED GdaXaTransactionClass *klass)
+gda_xa_transaction_init (GdaXaTransaction *xa_trans)
 {
-	xa_trans->priv = g_new0 (GdaXaTransactionPrivate, 1);
-	xa_trans->priv->xid.format = 1;
-	xa_trans->priv->xid.gtrid_length = 0;
-	xa_trans->priv->xid.bqual_length = 0;
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
+	priv->xid.format = 1;
+	priv->xid.gtrid_length = 0;
+	priv->xid.bqual_length = 0;
 
-	xa_trans->priv->cnc_hash = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify)gda_binary_free);
-	xa_trans->priv->cnc_list = NULL;
-	xa_trans->priv->non_xa_cnc = NULL;
+	priv->cnc_hash = g_hash_table_new_full (NULL, NULL, NULL, (GDestroyNotify)gda_binary_free);
+	priv->cnc_list = NULL;
+	priv->non_xa_cnc = NULL;
 }
 
 static void
@@ -110,19 +115,20 @@ gda_xa_transaction_dispose (GObject *object)
 	GdaXaTransaction *xa_trans = (GdaXaTransaction *) object;
 
 	g_return_if_fail (GDA_IS_XA_TRANSACTION (xa_trans));
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 
-	if (xa_trans->priv->cnc_list) {
+	if (priv->cnc_list) {
 		GList *list;
-		for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+		for (list = priv->cnc_list; list; list = list->next) {
 			g_object_set_data (G_OBJECT (list->data), "_gda_xa_transaction", NULL);
 			g_object_unref (G_OBJECT (list->data));
 		}
-		g_list_free (xa_trans->priv->cnc_list);
-		xa_trans->priv->cnc_list = NULL;
+		g_list_free (priv->cnc_list);
+		priv->cnc_list = NULL;
 	}
-	if (xa_trans->priv->cnc_hash) {
-		g_hash_table_destroy (xa_trans->priv->cnc_hash);
-		xa_trans->priv->cnc_hash = NULL;
+	if (priv->cnc_hash) {
+		g_hash_table_destroy (priv->cnc_hash);
+		priv->cnc_hash = NULL;
 	}
 
 	/* chain to parent class */
@@ -136,12 +142,13 @@ gda_xa_transaction_set_property (GObject *object,
 				 GParamSpec *pspec)
 {
         GdaXaTransaction *xa_trans;
+        GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 
         xa_trans = GDA_XA_TRANSACTION (object);
-        if (xa_trans->priv) {
+        if (priv) {
                 switch (param_id) {
                 case PROP_FORMAT_ID:
-			xa_trans->priv->xid.format = g_value_get_uint (value);
+			priv->xid.format = g_value_get_uint (value);
                         break;
                 case PROP_TRANSACT_ID: {
 			const gchar *tmp;
@@ -153,8 +160,8 @@ gda_xa_transaction_set_property (GObject *object,
 				dtmp = g_strdup_printf ("gda_global_transaction_%p", xa_trans);
 				len = strlen (dtmp);
 				g_assert (len <= 64);
-				xa_trans->priv->xid.gtrid_length = len;
-				memcpy (xa_trans->priv->xid.data, dtmp, len); /* Flawfinder: ignore */
+				priv->xid.gtrid_length = len;
+				memcpy (priv->xid.data, dtmp, len); /* Flawfinder: ignore */
 				g_free (dtmp);
 			}
 			else {
@@ -162,8 +169,8 @@ gda_xa_transaction_set_property (GObject *object,
 				if (len > 64)
 					g_warning (_("Global transaction ID can not have more than 64 bytes"));
 				else {
-					xa_trans->priv->xid.gtrid_length = len;
-					memcpy (xa_trans->priv->xid.data, tmp, len); /* Flawfinder: ignore */
+					priv->xid.gtrid_length = len;
+					memcpy (priv->xid.data, tmp, len); /* Flawfinder: ignore */
 				}
 			}
                         break;
@@ -181,20 +188,21 @@ gda_xa_transaction_get_property (GObject *object,
 				 GValue *value,
 				 GParamSpec *pspec)
 {
-	GdaXaTransaction *xa_trans;
+        GdaXaTransaction *xa_trans;
 
         xa_trans = GDA_XA_TRANSACTION (object);
-        if (xa_trans->priv) {
+        GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
+        if (priv) {
                 switch (param_id) {
                 case PROP_FORMAT_ID:
-			g_value_set_uint (value, xa_trans->priv->xid.format);
+			g_value_set_uint (value, priv->xid.format);
                         break;
                 case PROP_TRANSACT_ID: {
 			gchar *tmp;
 
-			tmp = g_new (gchar, xa_trans->priv->xid.gtrid_length + 1);
-			memcpy (tmp, xa_trans->priv->xid.data, xa_trans->priv->xid.gtrid_length); /* Flawfinder: ignore */
-			tmp [xa_trans->priv->xid.gtrid_length] = 0;
+			tmp = g_new (gchar, priv->xid.gtrid_length + 1);
+			memcpy (tmp, priv->xid.data, priv->xid.gtrid_length); /* Flawfinder: ignore */
+			tmp [priv->xid.gtrid_length] = 0;
 			g_value_take_string (value, tmp);
                         break;
 		}
@@ -284,6 +292,7 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (branch && *branch, FALSE);
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 	if (strlen (branch) >= 64) {
 		g_set_error (error, GDA_XA_TRANSACTION_ERROR,
 			     GDA_XA_TRANSACTION_CONNECTION_BRANCH_LENGTH_ERROR,
@@ -291,11 +300,11 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 		return FALSE;
 	}
 
-	const GdaBinary *ebranch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
+	const GdaBinary *ebranch = g_hash_table_lookup (priv->cnc_hash, cnc);
 	if (ebranch) {
 		bin = gda_binary_new ();
 		gda_binary_set_data (bin, (const guchar *)branch, strlen (branch) + 1);
-		g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
+		g_hash_table_insert (priv->cnc_hash, cnc, bin);
 		return TRUE;
 	}
 
@@ -314,20 +323,20 @@ gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnecti
 
 	if (!gda_server_provider_supports_feature (prov, cnc, GDA_CONNECTION_FEATURE_XA_TRANSACTIONS)) {
 		/* if another connection does not support distributed transaction, then there is an error */
-		if (xa_trans->priv->non_xa_cnc) {
+		if (priv->non_xa_cnc) {
 			g_set_error (error, GDA_XA_TRANSACTION_ERROR,
 				     GDA_XA_TRANSACTION_DTP_NOT_SUPPORTED_ERROR,
 				     "%s", _("Connection does not support distributed transaction"));
 			return FALSE;
 		}
 		else
-			xa_trans->priv->non_xa_cnc = cnc;
+			priv->non_xa_cnc = cnc;
 	}
 
 	bin = gda_binary_new ();
 	gda_binary_set_data (bin, (const guchar *)branch, strlen (branch) + 1);
-	xa_trans->priv->cnc_list = g_list_prepend (xa_trans->priv->cnc_list, cnc);
-	g_hash_table_insert (xa_trans->priv->cnc_hash, cnc, bin);
+	priv->cnc_list = g_list_prepend (priv->cnc_list, cnc);
+	g_hash_table_insert (priv->cnc_hash, cnc, bin);
 	g_object_ref (cnc);
 	g_object_set_data (G_OBJECT (cnc), "_gda_xa_transaction", xa_trans);
 
@@ -347,13 +356,14 @@ gda_xa_transaction_unregister_connection (GdaXaTransaction *xa_trans, GdaConnect
 {
 	g_return_if_fail (GDA_IS_XA_TRANSACTION (xa_trans));
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 
-	if (!g_list_find (xa_trans->priv->cnc_list, cnc)) {
+	if (!g_list_find (priv->cnc_list, cnc)) {
 		g_warning (_("Cannot unregister connection not registered with GdaXaTransaction object"));
 		return;
 	}
-	xa_trans->priv->cnc_list = g_list_remove (xa_trans->priv->cnc_list, cnc);
-	g_hash_table_remove (xa_trans->priv->cnc_hash, cnc);
+	priv->cnc_list = g_list_remove (priv->cnc_list, cnc);
+	g_hash_table_remove (priv->cnc_hash, cnc);
 	g_object_set_data (G_OBJECT (cnc), "_gda_xa_transaction", NULL);
 	g_object_unref (cnc);
 }
@@ -375,19 +385,20 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 {
 	GList *list;
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 	
-	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+	for (list = priv->cnc_list; list; list = list->next) {
 		GdaConnection *cnc;
 		GdaServerProvider *prov;
 		
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
-		if (cnc != xa_trans->priv->non_xa_cnc) {
+		if (cnc != priv->non_xa_cnc) {
 			GdaBinary *branch;
-			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+			branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+			memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 				gda_binary_get_data (branch), gda_binary_get_size (branch));
-			if (! _gda_server_provider_xa_start (prov, cnc, &(xa_trans->priv->xid), error))
+			if (! _gda_server_provider_xa_start (prov, cnc, &(priv->xid), error))
 				break;
 		}
 		else {
@@ -406,12 +417,12 @@ gda_xa_transaction_begin  (GdaXaTransaction *xa_trans, GError **error)
 			
 			cnc = GDA_CONNECTION (list->data);
 			prov = gda_connection_get_provider (cnc);
-			if (cnc != xa_trans->priv->non_xa_cnc) {
+			if (cnc != priv->non_xa_cnc) {
 				GdaBinary *branch;
-				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+				memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 					gda_binary_get_data (branch), gda_binary_get_size (branch));
-				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
+				_gda_server_provider_xa_rollback (prov, cnc, &(priv->xid), NULL);
 			}
 			else {
 				/* do a simple ROLLBACK */
@@ -450,29 +461,30 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 		*cnc_to_recover = NULL;
 
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 	
 	/* 
 	 * PREPARE phase 
 	 */
-	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+	for (list = priv->cnc_list; list; list = list->next) {
 		GdaConnection *cnc = NULL;
 		GdaServerProvider *prov;
 		GdaBinary *branch;
 		
-		if (cnc == xa_trans->priv->non_xa_cnc)
+		if (cnc == priv->non_xa_cnc)
 			continue;
 
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 
-		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+		branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+		memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 			gda_binary_get_data (branch), gda_binary_get_size (branch));
 
-		if (!_gda_server_provider_xa_end (prov, cnc, &(xa_trans->priv->xid), error))
+		if (!_gda_server_provider_xa_end (prov, cnc, &(priv->xid), error))
 			break;
 
-		if (!_gda_server_provider_xa_prepare (prov, cnc, &(xa_trans->priv->xid), error))
+		if (!_gda_server_provider_xa_prepare (prov, cnc, &(priv->xid), error))
 			break;
 	}
 	if (list) {
@@ -481,16 +493,16 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 			GdaConnection *cnc = NULL;
 			GdaServerProvider *prov;
 			
-			if (cnc == xa_trans->priv->non_xa_cnc) 
+			if (cnc == priv->non_xa_cnc)
 				gda_connection_rollback_transaction (cnc, NULL, NULL);
 			else {
 				GdaBinary *branch;
 				cnc = GDA_CONNECTION (list->data);
 				prov = gda_connection_get_provider (cnc);
-				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+				memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 					gda_binary_get_data (branch), gda_binary_get_size (branch));
-				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
+				_gda_server_provider_xa_rollback (prov, cnc, &(priv->xid), NULL);
 			}
 		}
 		return FALSE;
@@ -499,42 +511,42 @@ gda_xa_transaction_commit (GdaXaTransaction *xa_trans, GSList **cnc_to_recover, 
 	/*
 	 * COMMIT phase 
 	 */
-	if (xa_trans->priv->non_xa_cnc &&
-	    ! gda_connection_commit_transaction (xa_trans->priv->non_xa_cnc, NULL, error)) {
+	if (priv->non_xa_cnc &&
+	    ! gda_connection_commit_transaction (priv->non_xa_cnc, NULL, error)) {
 		/* something went wrong => rollback everything */
-		for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+		for (list = priv->cnc_list; list; list = list->next) {
 			GdaConnection *cnc = NULL;
 			GdaServerProvider *prov;
 			
-			if (cnc == xa_trans->priv->non_xa_cnc)
+			if (cnc == priv->non_xa_cnc)
 				gda_connection_rollback_transaction (cnc, NULL, NULL);
 			else {
 				GdaBinary *branch;
 				cnc = GDA_CONNECTION (list->data);
 				prov = gda_connection_get_provider (cnc);
-				branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-				memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+				branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+				memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 					gda_binary_get_data (branch), gda_binary_get_size (branch));
-				_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), NULL);
+				_gda_server_provider_xa_rollback (prov, cnc, &(priv->xid), NULL);
 			}
 		}
 		return FALSE;
 	}
 
-	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+	for (list = priv->cnc_list; list; list = list->next) {
 		GdaConnection *cnc = NULL;
 		GdaServerProvider *prov;
 		GdaBinary *branch;
 		
-		if (cnc == xa_trans->priv->non_xa_cnc)
+		if (cnc == priv->non_xa_cnc)
 			continue;
 
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
-		branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-		memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+		branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+		memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 			gda_binary_get_data (branch), gda_binary_get_size (branch));
-		if (! _gda_server_provider_xa_commit (prov, cnc, &(xa_trans->priv->xid), error) &&
+		if (! _gda_server_provider_xa_commit (prov, cnc, &(priv->xid), error) &&
 		    cnc_to_recover)
 			*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);
 	}
@@ -556,23 +568,24 @@ gda_xa_transaction_rollback (GdaXaTransaction *xa_trans, GError **error)
 {
 	GList *list;
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 	
-	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+	for (list = priv->cnc_list; list; list = list->next) {
 		GdaConnection *cnc;
 		GdaServerProvider *prov;
 
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 		
-		if (cnc == xa_trans->priv->non_xa_cnc) 
+		if (cnc == priv->non_xa_cnc)
 			gda_connection_rollback_transaction (cnc, NULL, NULL);
 		else {
 			GdaBinary *branch;
-			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+			branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+			memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 				gda_binary_get_data (branch), gda_binary_get_size (branch));
 			GError *lerror = NULL;
-			_gda_server_provider_xa_rollback (prov, cnc, &(xa_trans->priv->xid), &lerror);
+			_gda_server_provider_xa_rollback (prov, cnc, &(priv->xid), &lerror);
 			if (error && !*error)
 				g_propagate_error (error, lerror);
 			else
@@ -603,15 +616,16 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 	if (cnc_to_recover)
 		*cnc_to_recover = NULL;
 	g_return_val_if_fail (GDA_IS_XA_TRANSACTION (xa_trans), FALSE);
+	GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 	
-	for (list = xa_trans->priv->cnc_list; list; list = list->next) {
+	for (list = priv->cnc_list; list; list = list->next) {
 		GdaConnection *cnc;
 		GdaServerProvider *prov;
 
 		cnc = GDA_CONNECTION (list->data);
 		prov = gda_connection_get_provider (cnc);
 		
-		if (cnc == xa_trans->priv->non_xa_cnc) 
+		if (cnc == priv->non_xa_cnc)
 			continue;
 		else {
 			GList *recov_xid_list;
@@ -624,8 +638,8 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 			if (!recov_xid_list)
 				continue;
 
-			branch = g_hash_table_lookup (xa_trans->priv->cnc_hash, cnc);
-			memcpy (xa_trans->priv->xid.data + xa_trans->priv->xid.gtrid_length, /* Flawfinder: ignore */
+			branch = g_hash_table_lookup (priv->cnc_hash, cnc);
+			memcpy (priv->xid.data + priv->xid.gtrid_length, /* Flawfinder: ignore */
 				gda_binary_get_data (branch), gda_binary_get_size (branch));
 			for (xlist = recov_xid_list; xlist; xlist = xlist->next) {
 				GdaXaTransactionId *xid = (GdaXaTransactionId*) xlist->data;
@@ -634,10 +648,10 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 					continue;
 
 				if (!commit_needed &&
-				    (xid->format == xa_trans->priv->xid.format) &&
-				    (xid->gtrid_length == xa_trans->priv->xid.gtrid_length) &&
-				    (xid->bqual_length == xa_trans->priv->xid.bqual_length) &&
-				    ! memcmp (xa_trans->priv->xid.data, xid->data, xid->bqual_length + xid->bqual_length)) 
+				    (xid->format == priv->xid.format) &&
+				    (xid->gtrid_length == priv->xid.gtrid_length) &&
+				    (xid->bqual_length == priv->xid.bqual_length) &&
+				    ! memcmp (priv->xid.data, xid->data, xid->bqual_length + xid->bqual_length))
 					/* found a transaction to commit */
 					commit_needed = TRUE;
 				
@@ -646,7 +660,7 @@ gda_xa_transaction_commit_recovered (GdaXaTransaction *xa_trans, GSList **cnc_to
 			g_list_free (recov_xid_list);
 
 			if (commit_needed) {
-				retval = _gda_server_provider_xa_commit (prov, cnc, &(xa_trans->priv->xid), error);
+				retval = _gda_server_provider_xa_commit (prov, cnc, &(priv->xid), error);
 				if (!retval)
 					if (cnc_to_recover)
 						*cnc_to_recover = g_slist_prepend (*cnc_to_recover, cnc);

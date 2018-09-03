@@ -28,32 +28,18 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_XA_TRANSACTION            (gda_xa_transaction_get_type())
-#define GDA_XA_TRANSACTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_XA_TRANSACTION, GdaXaTransaction))
-#define GDA_XA_TRANSACTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_XA_TRANSACTION, GdaXaTransactionClass))
-#define GDA_IS_XA_TRANSACTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_XA_TRANSACTION))
-#define GDA_IS_XA_TRANSACTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_XA_TRANSACTION))
-#define GDA_TYPE_XA_TRANSACTION_ID            (gda_xa_transaction_id_get_type())
 
-typedef struct _GdaXaTransaction        GdaXaTransaction;
-typedef struct _GdaXaTransactionClass   GdaXaTransactionClass;
-typedef struct _GdaXaTransactionPrivate GdaXaTransactionPrivate;
-typedef struct _GdaXaTransactionId      GdaXaTransactionId;
-
+G_DECLARE_DERIVABLE_TYPE(GdaXaTransaction, gda_xa_transaction, GDA, XA_TRANSACTION, GObject)
 /* error reporting */
 extern GQuark gda_xa_transaction_error_quark (void);
 #define GDA_XA_TRANSACTION_ERROR gda_xa_transaction_error_quark ()
 
 typedef enum
 {
-        GDA_XA_TRANSACTION_ALREADY_REGISTERED_ERROR,
+	GDA_XA_TRANSACTION_ALREADY_REGISTERED_ERROR,
 	GDA_XA_TRANSACTION_DTP_NOT_SUPPORTED_ERROR,
 	GDA_XA_TRANSACTION_CONNECTION_BRANCH_LENGTH_ERROR
 } GdaXaTransactionError;
-
-struct _GdaXaTransaction {
-	GObject                  object;
-	GdaXaTransactionPrivate *priv;
-};
 
 struct _GdaXaTransactionClass {
 	GObjectClass             parent_class;
@@ -80,6 +66,8 @@ struct _GdaXaTransactionId {
 	gushort  bqual_length;
 	char     data [128];
 };
+
+typedef struct _GdaXaTransactionId      GdaXaTransactionId;
 
 /**
  * SECTION:gda-xa-transaction
@@ -113,7 +101,6 @@ struct _GdaXaTransactionId {
  * </orderedlist>
  */
 
-GType                     gda_xa_transaction_get_type             (void) G_GNUC_CONST;
 GdaXaTransaction         *gda_xa_transaction_new                  (guint32 format, const gchar *global_transaction_id);
 
 gboolean                  gda_xa_transaction_register_connection  (GdaXaTransaction *xa_trans, GdaConnection *cnc, 
