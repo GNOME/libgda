@@ -111,22 +111,22 @@ GdaSqlBuilderId gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, GdaDataH
 GdaSqlBuilderId gda_sql_builder_add_param (GdaSqlBuilder *builder, const gchar *param_name, GType type, gboolean nullok);
 
 GdaSqlBuilderId gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op,
-					    GdaSqlBuilderId op1, GdaSqlBuilderId op2, GdaSqlBuilderId op3);
+                                          GdaSqlBuilderId op1, GdaSqlBuilderId op2, GdaSqlBuilderId op3);
 GdaSqlBuilderId gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, GdaSqlOperatorType op,
-					      const GdaSqlBuilderId *op_ids, gint op_ids_size);
+                                            const GdaSqlBuilderId *op_ids, gint op_ids_size);
 GdaSqlBuilderId gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ...);
 GdaSqlBuilderId gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
-						  const GdaSqlBuilderId *args, gint args_size);
+                                                const GdaSqlBuilderId *args, gint args_size);
 GdaSqlBuilderId gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst);
 GdaSqlBuilderId gda_sql_builder_add_case (GdaSqlBuilder *builder, GdaSqlBuilderId test_expr, GdaSqlBuilderId else_expr, ...);
 GdaSqlBuilderId gda_sql_builder_add_case_v (GdaSqlBuilder *builder, GdaSqlBuilderId test_expr, GdaSqlBuilderId else_expr,
-					      const GdaSqlBuilderId *when_array, const GdaSqlBuilderId *then_array, gint args_size);
+                                            const GdaSqlBuilderId *when_array, const GdaSqlBuilderId *then_array, gint args_size);
 
 
 /* General Statement API */
 void              gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name, GType type, ...);
 void              gda_sql_builder_add_field_value_as_gvalue (GdaSqlBuilder *builder, const gchar *field_name,
-						   const GValue *value);
+                                                             const GValue *value);
 void              gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId field_id, GdaSqlBuilderId value_id);
 
 void              gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name);
@@ -134,20 +134,20 @@ void              gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuild
 
 /* SELECT Statement API */
 GdaSqlBuilderId gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_name,
-						    const gchar *table_name, const gchar *alias);
+                                                  const gchar *table_name, const gchar *alias);
 GdaSqlBuilderId gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_name, const gchar *alias);
 GdaSqlBuilderId gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, GdaSqlBuilderId table_id, const gchar *alias);
 GdaSqlBuilderId gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
-						       GdaSqlBuilderId left_target_id, GdaSqlBuilderId right_target_id,
-						       GdaSqlSelectJoinType join_type,
-						       GdaSqlBuilderId join_expr);
+                                                     GdaSqlBuilderId left_target_id, GdaSqlBuilderId right_target_id,
+                                                     GdaSqlSelectJoinType join_type,
+                                                     GdaSqlBuilderId join_expr);
 void              gda_sql_builder_join_add_field (GdaSqlBuilder *builder, GdaSqlBuilderId join_id, const gchar *field_name);
 void              gda_sql_builder_select_order_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id,
-						   gboolean asc, const gchar *collation_name);
+                                                   gboolean asc, const gchar *collation_name);
 void              gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder,
-						       gboolean distinct, GdaSqlBuilderId expr_id);
+                                                       gboolean distinct, GdaSqlBuilderId expr_id);
 void              gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
-						    GdaSqlBuilderId limit_count_expr_id, GdaSqlBuilderId limit_offset_expr_id);
+                                                    GdaSqlBuilderId limit_count_expr_id, GdaSqlBuilderId limit_offset_expr_id);
 
 void              gda_sql_builder_select_set_having (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id);
 void              gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id);

@@ -42,13 +42,14 @@ static void gda_sql_builder_dispose (GObject *object);
 static void gda_sql_builder_finalize (GObject *object);
 
 static void gda_sql_builder_set_property (GObject *object,
-           guint param_id,
-           const GValue *value,
-           GParamSpec *pspec);
+                                          guint param_id,
+                                          const GValue *value,
+                                          GParamSpec *pspec);
+
 static void gda_sql_builder_get_property (GObject *object,
-           guint param_id,
-           GValue *value,
-           GParamSpec *pspec);
+                                          guint param_id,
+                                          GValue *value,
+                                          GParamSpec *pspec);
 
 
 typedef struct {
@@ -59,7 +60,7 @@ typedef struct {
   GdaSqlStatement *main_stmt;
   GHashTable *parts_hash; /* key = part ID as an GdaSqlBuilderId, value = SqlPart */
   GdaSqlBuilderId next_assigned_id;
-}GdaSqlBuilderPrivate;
+} GdaSqlBuilderPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaSqlBuilder,gda_sql_builder,G_TYPE_OBJECT)
 
@@ -85,7 +86,6 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
   /* Properties */
   object_class->set_property = gda_sql_builder_set_property;
   object_class->get_property = gda_sql_builder_get_property;
-  object_class->dispose = gda_sql_builder_dispose;
   object_class->finalize = gda_sql_builder_finalize;
 
   /**
@@ -96,22 +96,23 @@ gda_sql_builder_class_init (GdaSqlBuilderClass *klass)
    * or GDA_SQL_STATEMENT_DELETE
    */
   g_object_class_install_property (object_class, PROP_TYPE,
-           g_param_spec_enum ("stmt-type", NULL, "Statement Type",
-                  GDA_TYPE_SQL_STATEMENT_TYPE,
-                  GDA_SQL_STATEMENT_UNKNOWN,
-                  (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
+                                   g_param_spec_enum ("stmt-type", NULL, "Statement Type",
+                                                      GDA_TYPE_SQL_STATEMENT_TYPE,
+                                                      GDA_SQL_STATEMENT_UNKNOWN,
+                                                      (G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 }
 
 static void
 any_part_free (SqlPart *part)
 {
-  switch (part->part->type) {
-  case GDA_SQL_ANY_EXPR:
-    gda_sql_expr_free ((GdaSqlExpr*) part->part);
-    break;
-  default:
-    TO_IMPLEMENT;
-  }
+  switch (part->part->type)
+    {
+    case GDA_SQL_ANY_EXPR:
+      gda_sql_expr_free ((GdaSqlExpr*) part->part);
+      break;
+    default:
+      TO_IMPLEMENT;
+    }
 
   g_free (part);
 }
@@ -122,7 +123,7 @@ gda_sql_builder_init (GdaSqlBuilder *builder)
   GdaSqlBuilderPrivate *priv= gda_sql_builder_get_instance_private (builder);
   priv->main_stmt = NULL;
   priv->parts_hash = g_hash_table_new_full (g_int_hash, g_int_equal,
-                 g_free, (GDestroyNotify) any_part_free);
+                                            g_free, (GDestroyNotify) any_part_free);
   priv->next_assigned_id = G_MAXUINT;
 }
 
@@ -142,21 +143,15 @@ gda_sql_builder_init (GdaSqlBuilder *builder)
 GdaSqlBuilder *
 gda_sql_builder_new (GdaSqlStatementType stmt_type)
 {
-  GdaSqlBuilder *builder;
-
-  builder = (GdaSqlBuilder*) g_object_new (GDA_TYPE_SQL_BUILDER, "stmt-type", stmt_type, NULL);
-  return builder;
+  return g_object_new (GDA_TYPE_SQL_BUILDER, "stmt-type", stmt_type, NULL);
 }
 
-
 static void
-gda_sql_builder_dispose (GObject *object)
+gda_sql_builder_finalize (GObject *object)
 {
-  g_return_if_fail (GDA_IS_SQL_BUILDER (object));
-
   GdaSqlBuilder *builder = GDA_SQL_BUILDER (object);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
-  
+
   if (priv->main_stmt)
     {
       gda_sql_statement_free (priv->main_stmt);
@@ -167,16 +162,6 @@ gda_sql_builder_dispose (GObject *object)
       g_hash_table_destroy (priv->parts_hash);
       priv->parts_hash = NULL;
     }
-
-  /* parent class */
-  G_OBJECT_CLASS(gda_sql_builder_parent_class)->dispose (object);
-}
-
-static void
-gda_sql_builder_finalize (GObject *object)
-{
-  g_return_if_fail (object != NULL);
-  g_return_if_fail (GDA_IS_SQL_BUILDER (object));
 
   /* parent class */
   G_OBJECT_CLASS(gda_sql_builder_parent_class)->dispose (object);
@@ -216,9 +201,9 @@ gda_sql_builder_set_property (GObject *object,
 
 static void
 gda_sql_builder_get_property (GObject *object,
-           guint param_id,
-           G_GNUC_UNUSED GValue *value,
-           GParamSpec *pspec)
+                              guint param_id,
+                              G_GNUC_UNUSED GValue *value,
+                              GParamSpec *pspec)
 {
   switch (param_id)
     {
@@ -234,7 +219,7 @@ add_part (GdaSqlBuilder *builder, GdaSqlAnyPart *part)
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
   SqlPart *p;
   GdaSqlBuilderId *realid = g_new0 (GdaSqlBuilderId, 1);
-  const GdaSqlBuilderId id = priv->next_assigned_id --;
+  const GdaSqlBuilderId id = priv->next_assigned_id--;
   *realid = id;
   p = g_new0 (SqlPart, 1);
   p->part = part;
@@ -251,14 +236,16 @@ get_part (GdaSqlBuilder *builder, GdaSqlBuilderId id, GdaSqlAnyPartType req_type
   if (id == 0)
     return NULL;
   p = g_hash_table_lookup (priv->parts_hash, &lid);
-  if (!p) {
-    g_warning (_("Unknown part ID %u"), id);
-    return NULL;
-  }
-  if (p->part->type != req_type) {
-    g_warning (_("Unknown part type"));
-    return NULL;
-  }
+  if (!p)
+    {
+      g_warning (_("Unknown part ID %u"), id);
+      return NULL;
+    }
+  if (p->part->type != req_type)
+    {
+      g_warning (_("Unknown part type"));
+      return NULL;
+    }
   return p;
 }
 
@@ -270,14 +257,15 @@ use_part (SqlPart *p, GdaSqlAnyPart *parent)
 
   /* copy */
   GdaSqlAnyPart *anyp = NULL;
-  switch (p->part->type) {
-  case GDA_SQL_ANY_EXPR:
-    anyp = (GdaSqlAnyPart*) gda_sql_expr_copy ((GdaSqlExpr*) p->part);
-    break;
-  default:
-    TO_IMPLEMENT;
-    return NULL;
-  }
+  switch (p->part->type)
+    {
+    case GDA_SQL_ANY_EXPR:
+      anyp = (GdaSqlAnyPart*) gda_sql_expr_copy ((GdaSqlExpr*) p->part);
+      break;
+    default:
+      TO_IMPLEMENT;
+      return NULL;
+    }
   if (anyp)
     anyp->parent = parent;
   return anyp;
@@ -298,16 +286,19 @@ GdaStatement *
 gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
 {
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL,NULL);
+
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
-  if (!priv->main_stmt) {
-    g_set_error (error, GDA_SQL_BUILDER_ERROR, GDA_SQL_BUILDER_MISUSE_ERROR,
-           "%s", _("SqlBuilder is empty"));
-    return NULL;
-  }
+
+  if (!priv->main_stmt)
+    {
+      g_set_error (error, GDA_SQL_BUILDER_ERROR, GDA_SQL_BUILDER_MISUSE_ERROR,
+                   "%s", _("SqlBuilder is empty"));
+      return NULL;
+    }
   if (!gda_sql_statement_check_structure (priv->main_stmt, error))
     return NULL;
 
-  g_print ("At %s:%d in %s\n",__FILE__,__LINE__,__FUNCTION__);
   return (GdaStatement*) g_object_new (GDA_TYPE_STATEMENT, "structure", priv->main_stmt, NULL);
 }
 
@@ -358,7 +349,7 @@ gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name)
 
   switch (priv->main_stmt->stmt_type)
     {
-    case GDA_SQL_STATEMENT_DELETE: 
+    case GDA_SQL_STATEMENT_DELETE:
         {
           GdaSqlStatementDelete *del = (GdaSqlStatementDelete*) priv->main_stmt->contents;
           if (!del->table)
@@ -366,7 +357,7 @@ gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name)
           table = del->table;
           break;
         }
-    case GDA_SQL_STATEMENT_UPDATE: 
+    case GDA_SQL_STATEMENT_UPDATE:
         {
           GdaSqlStatementUpdate *upd = (GdaSqlStatementUpdate*) priv->main_stmt->contents;
           if (!upd->table)
@@ -386,7 +377,7 @@ gda_sql_builder_set_table (GdaSqlBuilder *builder, const gchar *table_name)
       g_warning (_("Wrong statement type"));
       break;
     }
-  
+
   g_assert (table);
   if (table->table_name)
     g_free (table->table_name);
@@ -412,11 +403,12 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
   g_return_if_fail (priv->main_stmt);
 
   SqlPart *p = NULL;
-  if (cond_id > 0) {
-    p = get_part (builder, cond_id, GDA_SQL_ANY_EXPR);
-    if (!p)
-      return;
-  }
+  if (cond_id > 0)
+    {
+      p = get_part (builder, cond_id, GDA_SQL_ANY_EXPR);
+      if (!p)
+        return;
+    }
 
   switch (priv->main_stmt->stmt_type)
     {
@@ -499,7 +491,7 @@ gda_sql_builder_select_add_field (GdaSqlBuilder *builder, const gchar *field_nam
     gda_sql_builder_add_field_value_id (builder,
                                         field_id,
                                         0);
-  
+
   if (tmp_is_allocated)
     g_free (tmp);
 
@@ -522,7 +514,7 @@ create_typed_value (GType type, va_list *ap)
     g_value_set_int ((v = gda_value_new (G_TYPE_INT)), va_arg (*ap, gint));
   else if (type == G_TYPE_UINT)
     g_value_set_uint ((v = gda_value_new (G_TYPE_UINT)), va_arg (*ap, guint));
-  else if (type == GDA_TYPE_SHORT) 
+  else if (type == GDA_TYPE_SHORT)
     gda_value_set_short ((v = gda_value_new (GDA_TYPE_SHORT)), va_arg (*ap, gint));
   else if (type == GDA_TYPE_USHORT)
     gda_value_set_ushort ((v = gda_value_new (GDA_TYPE_USHORT)), va_arg (*ap, guint));
@@ -755,11 +747,11 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
                   if (! ins->values_list)
                     ins->values_list = g_slist_append (NULL,
                                                        g_slist_append (NULL,
-                                                                       use_part (value_part, 
+                                                                       use_part (value_part,
                                                                                  GDA_SQL_ANY_PART (ins))));
                   else
                     ins->values_list->data = g_slist_append ((GSList*) ins->values_list->data,
-                                                             use_part (value_part, 
+                                                             use_part (value_part,
                                                                        GDA_SQL_ANY_PART (ins)));
                 }
             }
@@ -933,11 +925,12 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *str)
 
   GdaSqlExpr *expr;
   expr = gda_sql_expr_new (NULL);
-  if (str) {
-    expr->value = gda_value_new (G_TYPE_STRING);
-    g_value_set_string (expr->value, str);
-    expr->value_is_ident = TRUE;
-  }
+  if (str)
+    {
+      expr->value = gda_value_new (G_TYPE_STRING);
+      g_value_set_string (expr->value, str);
+      expr->value_is_ident = TRUE;
+    }
 
   return add_part (builder, (GdaSqlAnyPart *) expr);
 }
@@ -966,10 +959,11 @@ gda_sql_builder_add_field_id (GdaSqlBuilder *builder, const gchar *field_name, c
 {
   gchar* tmp = 0;
   gboolean tmp_is_allocated = FALSE;
-  if (table_name && *table_name) {
-    tmp = g_strdup_printf ("%s.%s", table_name, field_name);
-    tmp_is_allocated = TRUE;
-        }
+  if (table_name && *table_name)
+    {
+      tmp = g_strdup_printf ("%s.%s", table_name, field_name);
+      tmp_is_allocated = TRUE;
+    }
   else
     tmp = (gchar*) field_name;
 
@@ -1057,15 +1051,16 @@ gda_sql_builder_add_cond (GdaSqlBuilder *builder, GdaSqlOperatorType op, GdaSqlB
   expr->cond = gda_sql_operation_new (GDA_SQL_ANY_PART (expr));
   expr->cond->operator_type = op;
   expr->cond->operands = g_slist_append (NULL, use_part (p1, GDA_SQL_ANY_PART (expr->cond)));
-  if (p2) {
-    SqlPart *p3;
-    expr->cond->operands = g_slist_append (expr->cond->operands,
-                   use_part (p2, GDA_SQL_ANY_PART (expr->cond)));
-    p3 = get_part (builder, op3, GDA_SQL_ANY_EXPR);
-    if (p3)
+  if (p2)
+    {
+      SqlPart *p3;
       expr->cond->operands = g_slist_append (expr->cond->operands,
-                     use_part (p3, GDA_SQL_ANY_PART (expr->cond)));
-  }
+                                             use_part (p2, GDA_SQL_ANY_PART (expr->cond)));
+      p3 = get_part (builder, op3, GDA_SQL_ANY_EXPR);
+      if (p3)
+        expr->cond->operands = g_slist_append (expr->cond->operands,
+                                               use_part (p3, GDA_SQL_ANY_PART (expr->cond)));
+    }
 
   return add_part (builder, (GdaSqlAnyPart *) expr);
 }
@@ -1101,13 +1096,15 @@ gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, GdaSqlOperatorType op,
   g_return_val_if_fail (op_ids_size > 0, 0);
 
   parts = g_new (SqlPart *, op_ids_size);
-  for (i = 0; i < op_ids_size; i++) {
-    parts [i] = get_part (builder, op_ids [i], GDA_SQL_ANY_EXPR);
-    if (!parts [i]) {
-      g_free (parts);
-      return 0;
+  for (i = 0; i < op_ids_size; i++)
+    {
+      parts [i] = get_part (builder, op_ids [i], GDA_SQL_ANY_EXPR);
+      if (!parts [i])
+        {
+          g_free (parts);
+          return 0;
+        }
     }
-  }
 
   if (op_ids_size == 1) {
     g_free (parts);
@@ -1121,8 +1118,8 @@ gda_sql_builder_add_cond_v (GdaSqlBuilder *builder, GdaSqlOperatorType op,
   expr->cond->operands = NULL;
   for (i = 0; i < op_ids_size; i++)
     expr->cond->operands = g_slist_append (expr->cond->operands,
-                   use_part (parts [i],
-                 GDA_SQL_ANY_PART (expr->cond)));
+                                           use_part (parts [i],
+                                                     GDA_SQL_ANY_PART (expr->cond)));
   g_free (parts);
 
   return add_part (builder, (GdaSqlAnyPart *) expr);
@@ -1155,10 +1152,11 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, GdaSqlBuilderId ta
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
   g_return_val_if_fail (priv->main_stmt, 0);
 
-  if (priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
-    g_warning (_("Wrong statement type"));
-    return 0;
-  }
+  if (priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT)
+    {
+      g_warning (_("Wrong statement type"));
+      return 0;
+    }
 
   SqlPart *p;
   p = get_part (builder, table_id, GDA_SQL_ANY_EXPR);
@@ -1167,40 +1165,43 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, GdaSqlBuilderId ta
 
   /* check for an already existing target with the same characteristics */
   GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) priv->main_stmt->contents;
-  if (sel->from) {
-    gchar *ser;
-    GSList *list;
+  if (sel->from)
+    {
+      gchar *ser;
+      GSList *list;
 
-    g_assert (p->part->type == GDA_SQL_ANY_EXPR);
-    ser = gda_sql_expr_serialize ((GdaSqlExpr*) p->part);
-    for (list = sel->from->targets; list; list = list->next) {
-      BuildTarget *bt = (BuildTarget*) list->data;
-      GdaSqlSelectTarget *t = (GdaSqlSelectTarget*) list->data;
-      gboolean idalias = FALSE;
-      if (alias && t->as && !strcmp (t->as, alias))
-        idalias = TRUE;
-      else if (!alias && ! t->as)
-        idalias = TRUE;
+      g_assert (p->part->type == GDA_SQL_ANY_EXPR);
+      ser = gda_sql_expr_serialize ((GdaSqlExpr*) p->part);
+      for (list = sel->from->targets; list; list = list->next)
+        {
+          BuildTarget *bt = (BuildTarget*) list->data;
+          GdaSqlSelectTarget *t = (GdaSqlSelectTarget*) list->data;
+          gboolean idalias = FALSE;
+          if (alias && t->as && !strcmp (t->as, alias))
+            idalias = TRUE;
+          else if (!alias && ! t->as)
+            idalias = TRUE;
 
-      gchar *tmp;
-      tmp = gda_sql_expr_serialize (t->expr);
-      if (! strcmp (ser, tmp)) {
-        if (idalias) {
+          gchar *tmp;
+          tmp = gda_sql_expr_serialize (t->expr);
+          if (! strcmp (ser, tmp))
+            {
+              if (idalias) {
+                  g_free (tmp);
+                  g_free (ser);
+                  return bt->part_id;
+              }
+            }
           g_free (tmp);
-          g_free (ser);
-          return bt->part_id;
         }
-      }
-      g_free (tmp);
+      g_free (ser);
     }
-    g_free (ser);
-  }
 
   BuildTarget *btarget;
   GdaSqlSelectTarget *target;
   btarget = g_new0 (BuildTarget, 1);
-        GDA_SQL_ANY_PART (btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
-        GDA_SQL_ANY_PART (btarget)->parent = GDA_SQL_ANY_PART (sel->from);
+  GDA_SQL_ANY_PART (btarget)->type = GDA_SQL_ANY_SQL_SELECT_TARGET;
+  GDA_SQL_ANY_PART (btarget)->parent = GDA_SQL_ANY_PART (sel->from);
   btarget->part_id = priv->next_assigned_id --;
 
   target = (GdaSqlSelectTarget*) btarget;
@@ -1240,10 +1241,11 @@ gda_sql_builder_select_add_target (GdaSqlBuilder *builder, const gchar *table_na
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
   g_return_val_if_fail (priv->main_stmt, 0);
 
-  if (priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT) {
-    g_warning (_("Wrong statement type"));
-    return 0;
-  }
+  if (priv->main_stmt->stmt_type != GDA_SQL_STATEMENT_SELECT)
+    {
+      g_warning (_("Wrong statement type"));
+      return 0;
+    }
   g_return_val_if_fail (table_name && *table_name, 0);
 
   id = gda_sql_builder_select_add_target_id (builder,
@@ -1278,9 +1280,10 @@ typedef struct {
  */
 GdaSqlBuilderId
 gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
-             GdaSqlBuilderId left_target_id, GdaSqlBuilderId right_target_id,
-             GdaSqlSelectJoinType join_type,
-             GdaSqlBuilderId join_expr)
+                                     GdaSqlBuilderId left_target_id,
+                                     GdaSqlBuilderId right_target_id,
+                                     GdaSqlSelectJoinType join_type,
+                                     GdaSqlBuilderId join_expr)
 {
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
@@ -1296,17 +1299,16 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
   GSList *list;
   gint left_pos = -1, right_pos = -1;
   gint pos;
-  for (pos = 0, list = sel->from ? sel->from->targets : NULL;
-       list;
-       pos++, list = list->next) {
-    BuildTarget *btarget = (BuildTarget*) list->data;
-    if (btarget->part_id == left_target_id)
-      left_pos = pos;
-    else if (btarget->part_id == right_target_id)
-      right_pos = pos;
-    if ((left_pos != -1) && (right_pos != -1))
-      break;
-  }
+  for (pos = 0, list = sel->from ? sel->from->targets : NULL; list; pos++, list = list->next)
+    {
+      BuildTarget *btarget = (BuildTarget*) list->data;
+      if (btarget->part_id == left_target_id)
+        left_pos = pos;
+      else if (btarget->part_id == right_target_id)
+        right_pos = pos;
+      if ((left_pos != -1) && (right_pos != -1))
+        break;
+    }
 
   if (left_pos == -1) {
     g_warning (_("Unknown left part target ID %u"), left_target_id);
@@ -1318,21 +1320,22 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
     return 0;
   }
 
-  if (left_pos > right_pos) {
-    GdaSqlSelectJoinType jt;
-    switch (join_type) {
-    case GDA_SQL_SELECT_JOIN_LEFT:
-      jt = GDA_SQL_SELECT_JOIN_RIGHT;
-      break;
-    case GDA_SQL_SELECT_JOIN_RIGHT:
-      jt = GDA_SQL_SELECT_JOIN_LEFT;
-      break;
-    default:
-      jt = join_type;
-      break;
-    }
-    return gda_sql_builder_select_join_targets (builder, right_target_id,
-                  left_target_id, jt, join_expr);
+  if (left_pos > right_pos)
+    {
+      GdaSqlSelectJoinType jt;
+      switch (join_type) {
+        case GDA_SQL_SELECT_JOIN_LEFT:
+          jt = GDA_SQL_SELECT_JOIN_RIGHT;
+          break;
+        case GDA_SQL_SELECT_JOIN_RIGHT:
+          jt = GDA_SQL_SELECT_JOIN_LEFT;
+          break;
+        default:
+          jt = join_type;
+          break;
+      }
+      return gda_sql_builder_select_join_targets (builder, right_target_id,
+                                                  left_target_id, jt, join_expr);
   }
 
   /* create join */
@@ -1341,7 +1344,7 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
 
   bjoin = g_new0 (BuilderJoin, 1);
   GDA_SQL_ANY_PART (bjoin)->type = GDA_SQL_ANY_SQL_SELECT_JOIN;
-        GDA_SQL_ANY_PART (bjoin)->parent = GDA_SQL_ANY_PART (sel->from);
+  GDA_SQL_ANY_PART (bjoin)->parent = GDA_SQL_ANY_PART (sel->from);
   bjoin->part_id = priv->next_assigned_id --;
   join = (GdaSqlSelectJoin*) bjoin;
   join->type = join_type;
@@ -1363,7 +1366,7 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
  * @join_id: the ID of the join to modify (not %0)
  * @field_name: the name of the field to use in the join condition (not %NULL)
  *
- * Alter a join in a SELECT statement to make its condition use equal field 
+ * Alter a join in a SELECT statement to make its condition use equal field
  * values in the fields named @field_name in both tables, via the USING keyword.
  *
  * Since: 4.2
@@ -1385,15 +1388,15 @@ gda_sql_builder_join_add_field (GdaSqlBuilder *builder, GdaSqlBuilderId join_id,
   GdaSqlStatementSelect *sel = (GdaSqlStatementSelect*) priv->main_stmt->contents;
   GdaSqlSelectJoin *join = NULL;
   GSList *list;
-  for (list = sel->from ? sel->from->joins : NULL;
-       list;
-       list = list->next) {
-    BuilderJoin *bjoin = (BuilderJoin*) list->data;
-    if (bjoin->part_id == join_id) {
-      join = (GdaSqlSelectJoin*) bjoin;
-      break;
+  for (list = sel->from ? sel->from->joins : NULL; list; list = list->next)
+    {
+      BuilderJoin *bjoin = (BuilderJoin*) list->data;
+      if (bjoin->part_id == join_id)
+        {
+          join = (GdaSqlSelectJoin*) bjoin;
+          break;
+        }
     }
-  }
   if (!join) {
     g_warning (_("Unknown part ID %u"), join_id);
     return;
@@ -1476,17 +1479,19 @@ gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder, gboolean distinct, 
     return;
   }
 
-  if (expr_id) {
-    part = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
-    if (!part)
-      return;
-  }
+  if (expr_id)
+    {
+      part = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
+      if (!part)
+        return;
+    }
 
   sel = (GdaSqlStatementSelect*) priv->main_stmt->contents;
-  if (sel->distinct_expr) {
-    gda_sql_expr_free (sel->distinct_expr);
-    sel->distinct_expr = NULL;
-  }
+  if (sel->distinct_expr)
+    {
+      gda_sql_expr_free (sel->distinct_expr);
+      sel->distinct_expr = NULL;
+    }
 
   if (distinct && part)
     sel->distinct_expr = (GdaSqlExpr*) use_part (part, GDA_SQL_ANY_PART (sel));
@@ -1511,7 +1516,8 @@ gda_sql_builder_select_set_distinct (GdaSqlBuilder *builder, gboolean distinct, 
  */
 void
 gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
-          GdaSqlBuilderId limit_count_expr_id, GdaSqlBuilderId limit_offset_expr_id)
+                                  GdaSqlBuilderId limit_count_expr_id,
+                                  GdaSqlBuilderId limit_offset_expr_id)
 {
   GdaSqlStatementSelect *sel;
   SqlPart *part1 = NULL, *part2 = NULL;
@@ -1524,27 +1530,31 @@ gda_sql_builder_select_set_limit (GdaSqlBuilder *builder,
     return;
   }
 
-  if (limit_count_expr_id) {
-    part1 = get_part (builder, limit_count_expr_id, GDA_SQL_ANY_EXPR);
-    if (!part1)
-      return;
-  }
-  if (limit_offset_expr_id) {
-    part2 = get_part (builder, limit_offset_expr_id, GDA_SQL_ANY_EXPR);
-    if (!part2)
-      return;
-  }
+  if (limit_count_expr_id)
+    {
+      part1 = get_part (builder, limit_count_expr_id, GDA_SQL_ANY_EXPR);
+      if (!part1)
+        return;
+    }
+  if (limit_offset_expr_id)
+    {
+      part2 = get_part (builder, limit_offset_expr_id, GDA_SQL_ANY_EXPR);
+      if (!part2)
+        return;
+    }
 
   sel = (GdaSqlStatementSelect*) priv->main_stmt->contents;
 
-  if (sel->limit_count) {
-    gda_sql_expr_free (sel->limit_count);
-    sel->limit_count = NULL;
-  }
-  if (sel->limit_offset) {
-    gda_sql_expr_free (sel->limit_offset);
-    sel->limit_offset = NULL;
-  }
+  if (sel->limit_count)
+    {
+      gda_sql_expr_free (sel->limit_count);
+      sel->limit_count = NULL;
+    }
+  if (sel->limit_offset)
+    {
+      gda_sql_expr_free (sel->limit_offset);
+      sel->limit_offset = NULL;
+    }
   if (part1)
     sel->limit_count = (GdaSqlExpr*) use_part (part1, GDA_SQL_ANY_PART (sel));
   if (part2)
@@ -1613,21 +1623,23 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
   }
 
   SqlPart *p = NULL;
-  if (expr_id > 0) {
-    p = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
-    if (!p)
-      return;
-  }
+  if (expr_id > 0)
+    {
+      p = get_part (builder, expr_id, GDA_SQL_ANY_EXPR);
+      if (!p)
+        return;
+    }
 
   sel = (GdaSqlStatementSelect*) priv->main_stmt->contents;
   if (p)
     sel->group_by = g_slist_append (sel->group_by,
-            (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (sel)));
-  else if (sel->group_by) {
-    g_slist_foreach (sel->group_by, (GFunc) gda_sql_expr_free, NULL);
-    g_slist_free (sel->group_by);
-    sel->group_by = NULL;
-  }
+                                    (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (sel)));
+  else if (sel->group_by)
+    {
+      g_slist_foreach (sel->group_by, (GFunc) gda_sql_expr_free, NULL);
+      g_slist_free (sel->group_by);
+      sel->group_by = NULL;
+    }
 }
 
 /**
@@ -1661,16 +1673,18 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
   expr->func->function_name = g_strdup (func_name);
 
   va_start (ap, func_name);
-  for (aid = va_arg (ap, GdaSqlBuilderId); aid; aid = va_arg (ap, GdaSqlBuilderId)) {
-    part = get_part (builder, aid, GDA_SQL_ANY_EXPR);
-    if (!part) {
-      expr->func->args_list = list;
-      gda_sql_expr_free (expr);
-      va_end (ap);
-      return 0;
+  for (aid = va_arg (ap, GdaSqlBuilderId); aid; aid = va_arg (ap, GdaSqlBuilderId))
+    {
+      part = get_part (builder, aid, GDA_SQL_ANY_EXPR);
+      if (!part)
+        {
+          expr->func->args_list = list;
+          gda_sql_expr_free (expr);
+          va_end (ap);
+          return 0;
+        }
+      list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
     }
-    list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
-  }
   va_end (ap);
   expr->func->args_list = g_slist_reverse (list);
 
@@ -1691,8 +1705,10 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
-        const GdaSqlBuilderId *args, gint args_size)
+gda_sql_builder_add_function_v (GdaSqlBuilder *builder,
+                                const gchar *func_name,
+                                const GdaSqlBuilderId *args,
+                                gint args_size)
 {
   gint i;
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
@@ -1706,16 +1722,18 @@ gda_sql_builder_add_function_v (GdaSqlBuilder *builder, const gchar *func_name,
   expr->func = gda_sql_function_new (GDA_SQL_ANY_PART (expr));
   expr->func->function_name = g_strdup (func_name);
 
-  for (i = 0; i < args_size; i++) {
-    SqlPart *part;
-    part = get_part (builder, args[i], GDA_SQL_ANY_EXPR);
-    if (!part) {
-      expr->func->args_list = list;
-      gda_sql_expr_free (expr);
-      return 0;
+  for (i = 0; i < args_size; i++)
+    {
+      SqlPart *part;
+      part = get_part (builder, args[i], GDA_SQL_ANY_EXPR);
+      if (!part)
+        {
+          expr->func->args_list = list;
+          gda_sql_expr_free (expr);
+          return 0;
+        }
+      list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
     }
-    list = g_slist_prepend (list, use_part (part, GDA_SQL_ANY_PART (expr->func)));
-  }
   expr->func->args_list = g_slist_reverse (list);
 
   return add_part (builder, (GdaSqlAnyPart *) expr);
@@ -1745,16 +1763,17 @@ gda_sql_builder_add_sub_select (GdaSqlBuilder *builder, GdaSqlStatement *sqlst)
   GdaSqlExpr *expr;
   expr = gda_sql_expr_new (NULL);
 
-  switch (sqlst->stmt_type) {
-  case GDA_SQL_STATEMENT_SELECT:
-    expr->select = _gda_sql_statement_select_copy (sqlst->contents);
-    break;
-  case GDA_SQL_STATEMENT_COMPOUND:
-    expr->select = _gda_sql_statement_compound_copy (sqlst->contents);
-    break;
-  default:
-    g_assert_not_reached ();
-  }
+  switch (sqlst->stmt_type)
+    {
+    case GDA_SQL_STATEMENT_SELECT:
+      expr->select = _gda_sql_statement_select_copy (sqlst->contents);
+      break;
+    case GDA_SQL_STATEMENT_COMPOUND:
+      expr->select = _gda_sql_statement_compound_copy (sqlst->contents);
+      break;
+    default:
+      g_assert_not_reached ();
+    }
 
   GDA_SQL_ANY_PART (expr->select)->parent = GDA_SQL_ANY_PART (expr);
 
@@ -1847,7 +1866,7 @@ gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, Gd
   sqlst = gda_sql_builder_get_sql_statement(subselect);
   g_return_if_fail (sqlst);
   g_return_if_fail ((sqlst->stmt_type == GDA_SQL_STATEMENT_SELECT) ||
-        (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND));
+                    (sqlst->stmt_type == GDA_SQL_STATEMENT_COMPOUND));
 
   cstmt = (GdaSqlStatementCompound*) priv->main_stmt->contents;
   sub = gda_sql_statement_copy (sqlst);
@@ -1871,7 +1890,8 @@ gda_sql_builder_compound_add_sub_select_from_builder (GdaSqlBuilder *builder, Gd
  */
 GdaSqlBuilderId
 gda_sql_builder_add_case (GdaSqlBuilder *builder,
-        GdaSqlBuilderId test_expr, GdaSqlBuilderId else_expr, ...)
+                          GdaSqlBuilderId test_expr,
+                          GdaSqlBuilderId else_expr, ...)
 {
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
@@ -1893,23 +1913,24 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
   va_list ap;
   GdaSqlBuilderId id1;
   va_start (ap, else_expr);
-  for (id1 = va_arg (ap, GdaSqlBuilderId); id1; id1 = va_arg (ap, GdaSqlBuilderId)) {
-    GdaSqlBuilderId id2;
-    SqlPart *pwhen, *pthen;
-    id2 = va_arg (ap, GdaSqlBuilderId);
-    if (!id2)
-      goto cleanups;
-    pwhen = get_part (builder, id1, GDA_SQL_ANY_EXPR);
-    if (!pwhen)
-      goto cleanups;
-    pthen = get_part (builder, id2, GDA_SQL_ANY_EXPR);
-    if (!pthen)
-      goto cleanups;
-    expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
-                use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
-    expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
-                use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
-  }
+  for (id1 = va_arg (ap, GdaSqlBuilderId); id1; id1 = va_arg (ap, GdaSqlBuilderId))
+    {
+      GdaSqlBuilderId id2;
+      SqlPart *pwhen, *pthen;
+      id2 = va_arg (ap, GdaSqlBuilderId);
+      if (!id2)
+        goto cleanups;
+      pwhen = get_part (builder, id1, GDA_SQL_ANY_EXPR);
+      if (!pwhen)
+        goto cleanups;
+      pthen = get_part (builder, id2, GDA_SQL_ANY_EXPR);
+      if (!pthen)
+        goto cleanups;
+      expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
+                                                      use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
+      expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
+                                                      use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
+    }
   va_end (ap);
   expr->case_s->when_expr_list = g_slist_reverse (expr->case_s->when_expr_list);
   expr->case_s->then_expr_list = g_slist_reverse (expr->case_s->then_expr_list);
@@ -1940,8 +1961,11 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
  */
 GdaSqlBuilderId
 gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
-          GdaSqlBuilderId test_expr, GdaSqlBuilderId else_expr,
-          const GdaSqlBuilderId *when_array, const GdaSqlBuilderId *then_array, gint args_size)
+                            GdaSqlBuilderId test_expr,
+                            GdaSqlBuilderId else_expr,
+                            const GdaSqlBuilderId *when_array,
+                            const GdaSqlBuilderId *then_array,
+                            gint args_size)
 {
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
@@ -1961,19 +1985,20 @@ gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
     expr->case_s->else_expr = (GdaSqlExpr*) use_part (pelse, GDA_SQL_ANY_PART (expr->case_s));
 
   gint i;
-  for (i = 0; i < args_size; i++) {
-    SqlPart *pwhen, *pthen;
-    pwhen = get_part (builder, when_array[i], GDA_SQL_ANY_EXPR);
-    if (!pwhen)
-      goto cleanups;
-    pthen = get_part (builder, then_array[i], GDA_SQL_ANY_EXPR);
-    if (!pthen)
-      goto cleanups;
-    expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
-                use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
-    expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
-                use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
-  }
+  for (i = 0; i < args_size; i++)
+    {
+      SqlPart *pwhen, *pthen;
+      pwhen = get_part (builder, when_array[i], GDA_SQL_ANY_EXPR);
+      if (!pwhen)
+        goto cleanups;
+      pthen = get_part (builder, then_array[i], GDA_SQL_ANY_EXPR);
+      if (!pthen)
+        goto cleanups;
+      expr->case_s->when_expr_list = g_slist_prepend (expr->case_s->when_expr_list,
+                                                      use_part (pwhen, GDA_SQL_ANY_PART (expr->case_s)));
+      expr->case_s->then_expr_list = g_slist_prepend (expr->case_s->then_expr_list,
+                                                      use_part (pthen, GDA_SQL_ANY_PART (expr->case_s)));
+    }
   expr->case_s->when_expr_list = g_slist_reverse (expr->case_s->when_expr_list);
   expr->case_s->then_expr_list = g_slist_reverse (expr->case_s->then_expr_list);
   return add_part (builder, (GdaSqlAnyPart *) expr);
@@ -2048,16 +2073,18 @@ gda_sql_builder_import_expression (GdaSqlBuilder *builder, GdaSqlExpr *expr)
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder, GdaSqlBuilder *query, GdaSqlBuilderId expr_id)
+gda_sql_builder_import_expression_from_builder (GdaSqlBuilder *builder,
+                                                GdaSqlBuilder *query,
+                                                GdaSqlBuilderId expr_id)
 {
   GdaSqlExpr *expr;
-  
+
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
   g_return_val_if_fail (priv->main_stmt, 0);
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (query), 0);
   g_return_val_if_fail (expr_id, 0);
-  
+
   expr = gda_sql_builder_export_expression (query, expr_id);
   g_return_val_if_fail (GDA_SQL_ANY_PART (expr)->type == GDA_SQL_ANY_EXPR, 0);
   return add_part (builder, (GdaSqlAnyPart *) gda_sql_expr_copy (expr));
