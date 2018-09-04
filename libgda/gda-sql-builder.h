@@ -29,14 +29,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_SQL_BUILDER          (gda_sql_builder_get_type())
-#define GDA_SQL_BUILDER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_sql_builder_get_type(), GdaSqlBuilder)
-#define GDA_SQL_BUILDER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_sql_builder_get_type (), GdaSqlBuilderClass)
-#define GDA_IS_SQL_BUILDER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sql_builder_get_type ())
-#define GDA_SQL_BUILDER_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_SQL_BUILDER, GdaSqlBuilderClass))
-
-typedef struct _GdaSqlBuilder        GdaSqlBuilder;
-typedef struct _GdaSqlBuilderClass   GdaSqlBuilderClass;
-typedef struct _GdaSqlBuilderPrivate GdaSqlBuilderPrivate;
+G_DECLARE_DERIVABLE_TYPE (GdaSqlBuilder,gda_sql_builder,GDA,SQL_BUILDER,GObject)
 
 /* error reporting */
 extern GQuark gda_sql_builder_error_quark (void);
@@ -49,12 +42,12 @@ typedef enum {
 
 
 /* struct for the object's data */
-struct _GdaSqlBuilder
+/*struct _GdaSqlBuilder
 {
 	GObject               object;
 	GdaSqlBuilderPrivate  *priv;
 };
-
+*/
 /* struct for the object's class */
 struct _GdaSqlBuilderClass
 {
@@ -106,7 +99,6 @@ typedef guint GdaSqlBuilderId;
  * For more examples, see the <link linkend="howto-sqlbuilder">Build statements without using a parser</link> section.
  */
 
-GType             gda_sql_builder_get_type       (void) G_GNUC_CONST;
 GdaSqlBuilder    *gda_sql_builder_new            (GdaSqlStatementType stmt_type);
 GdaStatement     *gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error);
 GdaSqlStatement  *gda_sql_builder_get_sql_statement (GdaSqlBuilder *builder);
