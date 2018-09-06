@@ -108,7 +108,7 @@ gda_ddl_table_finalize (GObject *object)
   if (priv->mp_fkeys)
     g_list_free_full (priv->mp_fkeys, (GDestroyNotify) g_object_unref);
   if (priv->mp_columns)
-    g_list_free_full (priv->mp_columns, (GDestroyNotify)gda_ddl_column_free);
+    g_list_free_full (priv->mp_columns, (GDestroyNotify)g_object_unref);
 
   g_free (priv->mp_comment);
 
@@ -249,7 +249,7 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
           if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
                                             it, error))
             {
-              gda_ddl_column_free (column);
+              g_object_unref(column);
               return FALSE;
             }
           else
