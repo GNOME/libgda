@@ -58,7 +58,6 @@ typedef struct _GdaBlobOpClass GdaBlobOpClass;
 
 typedef struct _GdaStatement GdaStatement;
 typedef struct _GdaStatementClass GdaStatementClass;
-typedef struct _GdaStatementPrivate GdaStatementPrivate;
 
 typedef struct _GdaRepetitiveStatement GdaRepetitiveStatement;
 typedef struct _GdaRepetitiveStatementClass GdaRepetitiveStatementClass;

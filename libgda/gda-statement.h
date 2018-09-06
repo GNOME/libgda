@@ -106,7 +106,6 @@ typedef enum {
 struct _GdaStatement
 {
 	GObject              object;
-	GdaStatementPrivate *priv;
 };
 
 /* struct for the object's class */

@@ -4,7 +4,7 @@
  * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017-2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,6 @@
 static void gda_statement_class_init (GdaStatementClass *klass);
 static void gda_statement_init (GdaStatement *stmt);
 static void gda_statement_dispose (GObject *object);
-static void gda_statement_finalize (GObject *object);
 
 static void gda_statement_set_property (GObject *object,
 					guint param_id,
@@ -65,11 +64,11 @@ static void gda_statement_get_property (GObject *object,
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
-struct _GdaStatementPrivate {
+typedef struct {
 	GdaSqlStatement *internal_struct;
 	GType           *requested_types;
-};
-
+} GdaStatementPrivate;
+#define gda_statement_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_STATEMENT, GdaStatementPrivate)
 /* signals */
 enum
 {
@@ -131,6 +130,8 @@ gda_statement_class_init (GdaStatementClass * klass)
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	g_type_class_add_private (object_class, sizeof (GdaStatementPrivate));
+
 	/**
 	 * GdaStatement::reset:
 	 * @stmt: the #GdaStatement object
@@ -167,7 +168,6 @@ gda_statement_class_init (GdaStatementClass * klass)
 	klass->checked = NULL;
 
 	object_class->dispose = gda_statement_dispose;
-	object_class->finalize = gda_statement_finalize;
 
 	/* Properties */
 	object_class->set_property = gda_statement_set_property;
@@ -180,9 +180,9 @@ gda_statement_class_init (GdaStatementClass * klass)
 static void
 gda_statement_init (GdaStatement * stmt)
 {
-	stmt->priv = g_new0 (GdaStatementPrivate, 1);
-	stmt->priv->internal_struct = NULL;
-	stmt->priv->requested_types = NULL;
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	priv->internal_struct = NULL;
+	priv->requested_types = NULL;
 }
 
 /**
@@ -204,7 +204,9 @@ gda_statement_new (void)
 GdaSqlStatement *
 _gda_statement_get_internal_struct (GdaStatement *stmt)
 {
-	return stmt->priv->internal_struct;
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	return priv->internal_struct;
 }
 
 /**
@@ -221,8 +223,9 @@ gda_statement_copy (GdaStatement *orig)
 	GObject *obj;
 
 	g_return_val_if_fail (GDA_IS_STATEMENT (orig), NULL);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (orig);
 
-	obj = g_object_new (GDA_TYPE_STATEMENT, "structure", orig->priv->internal_struct, NULL);
+	obj = g_object_new (GDA_TYPE_STATEMENT, "structure", priv->internal_struct, NULL);
 	return GDA_STATEMENT (obj);
 }
 
@@ -233,17 +236,16 @@ gda_statement_dispose (GObject *object)
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_STATEMENT (object));
-
 	stmt = GDA_STATEMENT (object);
-	if (stmt->priv) {
-		if (stmt->priv->requested_types) {
-			g_free (stmt->priv->requested_types);
-			stmt->priv->requested_types = NULL;
-		}
-		if (stmt->priv->internal_struct) {
-			gda_sql_statement_free (stmt->priv->internal_struct);
-			stmt->priv->internal_struct = NULL;
-		}
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+
+	if (priv->requested_types) {
+		g_free (priv->requested_types);
+		priv->requested_types = NULL;
+	}
+	if (priv->internal_struct) {
+		gda_sql_statement_free (priv->internal_struct);
+		priv->internal_struct = NULL;
 	}
 
 	/* parent class */
@@ -251,25 +253,6 @@ gda_statement_dispose (GObject *object)
 }
 
 static void
-gda_statement_finalize (GObject *object)
-{
-	GdaStatement *stmt;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_STATEMENT (object));
-
-	stmt = GDA_STATEMENT (object);
-	if (stmt->priv) {
-		g_free (stmt->priv);
-		stmt->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
-}
-
-
-static void 
 gda_statement_set_property (GObject *object,
 			     guint param_id,
 			     const GValue *value,
@@ -278,18 +261,19 @@ gda_statement_set_property (GObject *object,
 	GdaStatement *stmt;
 
 	stmt = GDA_STATEMENT (object);
-	if (stmt->priv) {
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	if (priv) {
 		switch (param_id) {
 		case PROP_STRUCTURE:
-			if (stmt->priv->internal_struct) {
-				gda_sql_statement_free (stmt->priv->internal_struct);
-				stmt->priv->internal_struct = NULL;
+			if (priv->internal_struct) {
+				gda_sql_statement_free (priv->internal_struct);
+				priv->internal_struct = NULL;
 			}
-			if (stmt->priv->requested_types) {
-				g_free (stmt->priv->requested_types);
-				stmt->priv->requested_types = NULL;
+			if (priv->requested_types) {
+				g_free (priv->requested_types);
+				priv->requested_types = NULL;
 			}
-			stmt->priv->internal_struct = gda_sql_statement_copy (g_value_get_pointer (value));
+			priv->internal_struct = gda_sql_statement_copy (g_value_get_pointer (value));
 			g_signal_emit (stmt, gda_statement_signals [RESET], 0);
 			break;
 		default:
@@ -307,11 +291,12 @@ gda_statement_get_property (GObject *object,
 {
 	GdaStatement *stmt;
 	stmt = GDA_STATEMENT (object);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 	
-	if (stmt->priv) {
+	if (priv) {
 		switch (param_id) {
 		case PROP_STRUCTURE:
-			g_value_set_pointer (value, gda_sql_statement_copy (stmt->priv->internal_struct));
+			g_value_set_pointer (value, gda_sql_statement_copy (priv->internal_struct));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -332,13 +317,15 @@ gda_statement_get_property (GObject *object,
 GdaSqlStatementType
 gda_statement_get_statement_type (GdaStatement *stmt)
 {
+	g_return_val_if_fail (stmt != NULL, GDA_SQL_STATEMENT_NONE);
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), GDA_SQL_STATEMENT_NONE);
-	g_return_val_if_fail (stmt->priv, GDA_SQL_STATEMENT_NONE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	g_return_val_if_fail (priv, GDA_SQL_STATEMENT_NONE);
 
-	if (stmt->priv->internal_struct)
-		return stmt->priv->internal_struct->stmt_type;
-	else
-		return GDA_SQL_STATEMENT_NONE;
+	if (priv->internal_struct)
+		return priv->internal_struct->stmt_type;
+
+	return GDA_SQL_STATEMENT_NONE;
 }
 
 /**
@@ -354,13 +341,14 @@ gboolean
 gda_statement_is_useless (GdaStatement *stmt)
 {
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (stmt->priv, FALSE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	g_return_val_if_fail (priv, FALSE);
 
-	if (stmt->priv->internal_struct &&
-	    stmt->priv->internal_struct->stmt_type == GDA_SQL_STATEMENT_UNKNOWN) {
+	if (priv->internal_struct &&
+	    priv->internal_struct->stmt_type == GDA_SQL_STATEMENT_UNKNOWN) {
 		GSList *list;
 		GdaSqlStatementUnknown *unknown;
-		unknown = (GdaSqlStatementUnknown*) stmt->priv->internal_struct->contents;
+		unknown = (GdaSqlStatementUnknown*) priv->internal_struct->contents;
 		for (list = unknown->expressions; list; list = list->next) {
 			GdaSqlExpr *expr = (GdaSqlExpr *) list->data;
 			if (expr->param_spec)
@@ -398,9 +386,9 @@ gboolean
 gda_statement_check_structure (GdaStatement *stmt, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (stmt->priv, FALSE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
-	return gda_sql_statement_check_structure (stmt->priv->internal_struct, error);
+	return gda_sql_statement_check_structure (priv->internal_struct, error);
 }
 
 /**
@@ -423,10 +411,10 @@ gda_statement_check_validity (GdaStatement *stmt, GdaConnection *cnc, GError **e
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (stmt->priv, FALSE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 	g_return_val_if_fail (!cnc || GDA_IS_CONNECTION (cnc), FALSE);
 
-	retval = gda_sql_statement_check_validity (stmt->priv->internal_struct, cnc, error);
+	retval = gda_sql_statement_check_validity (priv->internal_struct, cnc, error);
 	g_signal_emit (stmt, gda_statement_signals [CHECKED], 0, cnc, retval);
 
 	return retval;
@@ -447,10 +435,10 @@ gboolean
 gda_statement_normalize (GdaStatement *stmt, GdaConnection *cnc, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (stmt->priv, FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
-	return gda_sql_statement_normalize (stmt->priv->internal_struct, cnc, error);
+	return gda_sql_statement_normalize (priv->internal_struct, cnc, error);
 }
 
 /**
@@ -467,11 +455,11 @@ gda_statement_serialize (GdaStatement *stmt)
 	gchar *str;
 	GString *string;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	g_return_val_if_fail (stmt->priv, NULL);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
 	string = g_string_new ("{");
 	g_string_append (string, "\"statement\":");
-	str = gda_sql_statement_serialize (stmt->priv->internal_struct);
+	str = gda_sql_statement_serialize (priv->internal_struct);
 	if (str) {
 		g_string_append (string, str);
 		g_free (str);
@@ -558,12 +546,12 @@ gda_statement_get_parameters (GdaStatement *stmt, GdaSet **out_params, GError **
 {
 	GdaSet *set = NULL;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
-	g_return_val_if_fail (stmt->priv, FALSE);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
 	if (out_params)
 		*out_params = NULL;
 
-	if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents),
+	if (!gda_sql_any_part_foreach (GDA_SQL_ANY_PART (priv->internal_struct->contents),
 				       (GdaSqlForeachFunc) get_params_foreach_func, &set, error)) {
 		if (set) {
 			g_object_unref (set);
@@ -588,18 +576,20 @@ gda_statement_get_parameters (GdaStatement *stmt, GdaSet **out_params, GError **
 const GType *
 _gda_statement_get_requested_types (GdaStatement *stmt)
 {
-	if (! stmt->priv || ! stmt->priv->internal_struct)
+	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
+	if (! priv->internal_struct)
 		return NULL;
-	if (stmt->priv->requested_types)
-		return stmt->priv->requested_types;
-	if (stmt->priv->internal_struct->stmt_type != GDA_SQL_STATEMENT_SELECT)
+	if (priv->requested_types)
+		return priv->requested_types;
+	if (priv->internal_struct->stmt_type != GDA_SQL_STATEMENT_SELECT)
 		return NULL;
 
 	GdaSqlStatementSelect *selst;
 	GSList *list;
 	GArray *array = NULL;
  rewind:
-	selst = (GdaSqlStatementSelect*) stmt->priv->internal_struct->contents;
+	selst = (GdaSqlStatementSelect*) priv->internal_struct->contents;
 	for (list = selst->expr_list; list; list = list->next) {
 		GdaSqlExpr *expr;
 		GType type = G_TYPE_INVALID;
@@ -622,7 +612,7 @@ _gda_statement_get_requested_types (GdaStatement *stmt)
 		len = array->len;
 		retval = (GType*) g_array_free (array, FALSE);
 		retval [len] = G_TYPE_NONE;
-		stmt->priv->requested_types = retval;
+		priv->requested_types = retval;
 		return retval;
 	}
 	else
@@ -676,7 +666,7 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 {
 	GdaSqlStatementContentsInfo *cinfo;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	g_return_val_if_fail (stmt->priv, NULL);
+	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
 	if (!context->render_value) 
 		context->render_value = default_render_value;
@@ -721,57 +711,57 @@ gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, 
 	if (!context->render_distinct)
 		context->render_distinct = (GdaSqlRenderingFunc) default_render_distinct;
 
-	cinfo = gda_sql_statement_get_contents_infos (stmt->priv->internal_struct->stmt_type);
-	if (cinfo->check_structure_func && !cinfo->check_structure_func (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), 
+	cinfo = gda_sql_statement_get_contents_infos (priv->internal_struct->stmt_type);
+	if (cinfo->check_structure_func && !cinfo->check_structure_func (GDA_SQL_ANY_PART (priv->internal_struct->contents),
 									 NULL, error))
 		return NULL;
 
-	switch (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents)->type) {
+	switch (GDA_SQL_ANY_PART (priv->internal_struct->contents)->type) {
 	case GDA_SQL_ANY_STMT_UNKNOWN:
-		return context->render_unknown (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_unknown (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	case GDA_SQL_ANY_STMT_BEGIN:
 		if (context->render_begin)
-			return context->render_begin (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_begin (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
 	case GDA_SQL_ANY_STMT_ROLLBACK:
 		if (context->render_rollback)
-			return context->render_rollback (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_rollback (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
         case GDA_SQL_ANY_STMT_COMMIT:
 		if (context->render_commit)
-			return context->render_commit (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_commit (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
         case GDA_SQL_ANY_STMT_SAVEPOINT:
 		if (context->render_savepoint)
-			return context->render_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_savepoint (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
         case GDA_SQL_ANY_STMT_ROLLBACK_SAVEPOINT:
 		if (context->render_rollback_savepoint)
-			return context->render_rollback_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_rollback_savepoint (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
         case GDA_SQL_ANY_STMT_DELETE_SAVEPOINT:
 		if (context->render_delete_savepoint)
-			return context->render_delete_savepoint (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+			return context->render_delete_savepoint (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 		break;
 	case GDA_SQL_ANY_STMT_SELECT:
-		return context->render_select (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_select (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	case GDA_SQL_ANY_STMT_INSERT:
-		return context->render_insert (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_insert (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	case GDA_SQL_ANY_STMT_DELETE:
-		return context->render_delete (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_delete (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	case GDA_SQL_ANY_STMT_UPDATE:
-		return context->render_update (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_update (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	case GDA_SQL_ANY_STMT_COMPOUND:
-		return context->render_compound (GDA_SQL_ANY_PART (stmt->priv->internal_struct->contents), context, error);
+		return context->render_compound (GDA_SQL_ANY_PART (priv->internal_struct->contents), context, error);
 	default:
 		TO_IMPLEMENT;
 		return NULL;
 		break;
 	}
 
-	/* default action is to use stmt->priv->internal_struct->sql */
-	if (stmt->priv->internal_struct->sql)
-		return g_strdup (stmt->priv->internal_struct->sql);
+	/* default action is to use priv->internal_struct->sql */
+	if (priv->internal_struct->sql)
+		return g_strdup (priv->internal_struct->sql);
 	else {
 		g_set_error (error, GDA_SQL_ERROR, GDA_SQL_STRUCTURE_CONTENTS_ERROR,
 			     "%s", _("Missing SQL code"));
@@ -867,7 +857,6 @@ gda_statement_to_sql_extended (GdaStatement *stmt, GdaConnection *cnc, GdaSet *p
 	GdaSqlRenderingContext context;
 
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), NULL);
-	g_return_val_if_fail (stmt->priv, NULL);
 
 	memset (&context, 0, sizeof (context));
 	context.params = params;
