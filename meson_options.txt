@@ -11,4 +11,5 @@ option('with-libsecret', type : 'boolean', value : false, description : 'Enable 
 option('with-gnome-keyring', type : 'boolean', value : false, description : 'Enable gnome-keyring support')
 option('enable-debug', type : 'boolean', value : false, description : 'Enable debug mode')
 option('system-sqlite', type : 'boolean', value : false, description : 'Use SQLite installed on the system [default=false')
+option('with-examples', type : 'boolean', value : false, description : 'Compile examples [default=false')
 
