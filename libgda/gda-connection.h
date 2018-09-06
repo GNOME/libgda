@@ -99,7 +99,6 @@ typedef enum {
 
 struct _GdaConnection {
 	GObject               object;
-	GdaConnectionPrivate *priv;
 };
 
 /**
