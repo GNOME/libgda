@@ -185,10 +185,10 @@ gda_batch_copy (GdaBatch *orig)
 
 	g_return_val_if_fail (GDA_IS_BATCH (orig), NULL);
 	GdaBatchPrivate *opriv = gda_batch_get_instance_private (orig);
-	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	obj = g_object_new (GDA_TYPE_BATCH, NULL);
 	batch = (GdaBatch *) obj;
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 	for (list = opriv->statements; list; list = list->next) {
 		GdaStatement *copy;
 
@@ -207,9 +207,9 @@ gda_batch_dispose (GObject *object)
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_BATCH (object));
-	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 
 	batch = GDA_BATCH (object);
+	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 	if (priv->statements) {
 		g_slist_foreach (priv->statements, (GFunc) g_object_unref, NULL);
 		g_slist_free (priv->statements);
