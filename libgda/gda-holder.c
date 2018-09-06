@@ -100,8 +100,7 @@ enum
 };
 
 
-struct _GdaHolderPrivate
-{
+typedef struct {
 	gchar           *id;
 
 	GType            g_type;
@@ -125,8 +124,8 @@ struct _GdaHolderPrivate
 	GRecMutex        mutex;
 
 	gboolean         validate_changes;
-};
-
+} GdaHolderPrivate;
+#define gda_holder_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_HOLDER, GdaHolderPrivate)
 /* module error */
 GQuark gda_holder_error_quark (void)
 {
@@ -206,6 +205,8 @@ gda_holder_class_init (GdaHolderClass *class)
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
 	parent_class = g_type_class_peek_parent (class);
+
+	g_type_class_add_private (object_class, sizeof (GdaHolderPrivate));
 
 	/**
 	 * GdaHolder::source-changed:
@@ -345,30 +346,30 @@ gda_holder_lockable_init (GdaLockableIface *iface)
 static void
 gda_holder_init (GdaHolder *holder)
 {
-	holder->priv = g_new0 (GdaHolderPrivate, 1);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	holder->priv->id = NULL;
+	priv->id = NULL;
 
-	holder->priv->g_type = GDA_TYPE_NULL;
-	holder->priv->full_bind = NULL;
-	holder->priv->simple_bind = NULL;
-	holder->priv->simple_bind_type_changed_id = 0;
+	priv->g_type = GDA_TYPE_NULL;
+	priv->full_bind = NULL;
+	priv->simple_bind = NULL;
+	priv->simple_bind_type_changed_id = 0;
 
-	holder->priv->invalid_forced = FALSE;
-	holder->priv->invalid_error = NULL;
-	holder->priv->valid = TRUE;
-	holder->priv->default_forced = FALSE;
-	holder->priv->is_freeable = TRUE;
-	holder->priv->value = NULL;
-	holder->priv->default_value = NULL;
+	priv->invalid_forced = FALSE;
+	priv->invalid_error = NULL;
+	priv->valid = TRUE;
+	priv->default_forced = FALSE;
+	priv->is_freeable = TRUE;
+	priv->value = NULL;
+	priv->default_value = NULL;
 
-	holder->priv->not_null = FALSE;
-	holder->priv->source_model = NULL;
-	holder->priv->source_col = 0;
+	priv->not_null = FALSE;
+	priv->source_model = NULL;
+	priv->source_col = 0;
 
-	g_rec_mutex_init (& (holder->priv->mutex));
+	g_rec_mutex_init (& (priv->mutex));
 
-	holder->priv->validate_changes = TRUE;
+	priv->validate_changes = TRUE;
 }
 
 /**
@@ -404,43 +405,44 @@ gda_holder_copy (GdaHolder *orig)
 	gboolean allok = TRUE;
 
 	g_return_val_if_fail (orig && GDA_IS_HOLDER (orig), NULL);
-	g_return_val_if_fail (orig->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (orig);
 
 	gda_holder_lock ((GdaLockable*) orig);
-	obj = g_object_new (GDA_TYPE_HOLDER, "g-type", orig->priv->g_type, NULL);
+	obj = g_object_new (GDA_TYPE_HOLDER, "g-type", priv->g_type, NULL);
 	holder = GDA_HOLDER (obj);
+	GdaHolderPrivate *cpriv = gda_holder_get_instance_private (holder);
 
-	if (orig->priv->id)
-		holder->priv->id = g_strdup (orig->priv->id);
+	if (priv->id)
+		cpriv->id = g_strdup (priv->id);
 
-	if (orig->priv->full_bind)
-		gda_holder_set_full_bind (holder, orig->priv->full_bind);
-	if (orig->priv->simple_bind) 
-		allok = gda_holder_set_bind (holder, orig->priv->simple_bind, NULL);
+	if (priv->full_bind)
+		gda_holder_set_full_bind (holder, priv->full_bind);
+	if (priv->simple_bind)
+		allok = gda_holder_set_bind (holder, priv->simple_bind, NULL);
 	
-	if (allok && orig->priv->source_model) {
+	if (allok && priv->source_model) {
 		/*g_print ("Source holder %p\n", holder);*/
-		allok = gda_holder_set_source_model (holder, orig->priv->source_model, orig->priv->source_col,
+		allok = gda_holder_set_source_model (holder, priv->source_model, priv->source_col,
 						     NULL);
 	}
 
 	if (allok) {
 		/* direct settings */
-		holder->priv->invalid_forced = orig->priv->invalid_forced;
-		if (orig->priv->invalid_error)
-			holder->priv->invalid_error = g_error_copy (orig->priv->invalid_error);
-		holder->priv->valid = orig->priv->valid;
-		holder->priv->is_freeable = TRUE;
-		holder->priv->default_forced = orig->priv->default_forced;	
-		if (orig->priv->value)
-			holder->priv->value = gda_value_copy (orig->priv->value);
-		if (orig->priv->default_value)
-			holder->priv->default_value = gda_value_copy (orig->priv->default_value);
-		holder->priv->not_null = orig->priv->not_null;
+		cpriv->invalid_forced = priv->invalid_forced;
+		if (priv->invalid_error)
+			cpriv->invalid_error = g_error_copy (priv->invalid_error);
+		cpriv->valid = priv->valid;
+		cpriv->is_freeable = TRUE;
+		cpriv->default_forced = priv->default_forced;
+		if (priv->value)
+			cpriv->value = gda_value_copy (priv->value);
+		if (priv->default_value)
+			cpriv->default_value = gda_value_copy (priv->default_value);
+		cpriv->not_null = priv->not_null;
 		gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) orig, gda_holder_attributes_manager, (gpointer) holder);
 
 		GValue *att_value;
-		g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+		g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), cpriv->default_forced);
 		gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 		gda_value_free (att_value);
 
@@ -480,16 +482,17 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 	static guint serial = 0;
 
 	holder = gda_holder_new (type);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	if (holder) {
 		GValue *value;
 		va_list ap;
 		GError *lerror = NULL;
 
 		if (id)
-			holder->priv->id = g_strdup (id);
+			priv->id = g_strdup (id);
 		else {
 			g_mutex_lock (&serial_mutex);
-			holder->priv->id = g_strdup_printf ("%d", serial++);
+			priv->id = g_strdup_printf ("%d", serial++);
 			g_mutex_unlock (&serial_mutex);
 		}
 
@@ -561,31 +564,32 @@ gda_holder_dispose (GObject *object)
 	GdaHolder *holder;
 
 	holder = GDA_HOLDER (object);
-	if (holder->priv) {
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	if (priv) {
 		gda_holder_set_bind (holder, NULL, NULL);
 		gda_holder_set_full_bind (holder, NULL);
 
-		if (holder->priv->source_model) {
-			g_object_unref (holder->priv->source_model);
-			holder->priv->source_model = NULL;
+		if (priv->source_model) {
+			g_object_unref (priv->source_model);
+			priv->source_model = NULL;
 		}
 
-		holder->priv->g_type = G_TYPE_INVALID;
+		priv->g_type = G_TYPE_INVALID;
 
-		if (holder->priv->value) {			
-			if (holder->priv->is_freeable)
-				gda_value_free (holder->priv->value);
-			holder->priv->value = NULL;
+		if (priv->value) {
+			if (priv->is_freeable)
+				gda_value_free (priv->value);
+			priv->value = NULL;
 		}
 
-		if (holder->priv->default_value) {
-			gda_value_free (holder->priv->default_value);
-			holder->priv->default_value = NULL;
+		if (priv->default_value) {
+			gda_value_free (priv->default_value);
+			priv->default_value = NULL;
 		}
 
-		if (holder->priv->invalid_error) {
-			g_error_free (holder->priv->invalid_error);
-			holder->priv->invalid_error = NULL;
+		if (priv->invalid_error) {
+			g_error_free (priv->invalid_error);
+			priv->invalid_error = NULL;
 		}
 	}
 
@@ -602,13 +606,9 @@ gda_holder_finalize (GObject   * object)
 	g_return_if_fail (GDA_IS_HOLDER (object));
 
 	holder = GDA_HOLDER (object);
-	if (holder->priv) {
-		g_free (holder->priv->id);
-		g_rec_mutex_clear (& (holder->priv->mutex));
-
-		g_free (holder->priv);
-		holder->priv = NULL;
-	}
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	g_free (priv->id);
+	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
 	parent_class->finalize (object);
@@ -624,11 +624,12 @@ gda_holder_set_property (GObject *object,
 	GdaHolder *holder;
 
 	holder = GDA_HOLDER (object);
-	if (holder->priv) {
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	if (priv) {
 		switch (param_id) {
 		case PROP_ID:
-			g_free (holder->priv->id);
-			holder->priv->id = g_value_dup_string (value);
+			g_free (priv->id);
+			priv->id = g_value_dup_string (value);
 			break;
 		case PROP_NAME:
 			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_NAME, value);
@@ -637,8 +638,8 @@ gda_holder_set_property (GObject *object,
 			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
 			break;
 		case PROP_GDA_TYPE:
-			if (holder->priv->g_type == GDA_TYPE_NULL) {
-				holder->priv->g_type = g_value_get_gtype (value);
+			if (priv->g_type == GDA_TYPE_NULL) {
+				priv->g_type = g_value_get_gtype (value);
 				g_object_notify ((GObject*) holder, "g-type");
 			}
 			else
@@ -646,17 +647,17 @@ gda_holder_set_property (GObject *object,
 			break;
 		case PROP_NOT_NULL: {
 			gboolean not_null = g_value_get_boolean (value);
-			if (not_null != holder->priv->not_null) {
-				holder->priv->not_null = not_null;
+			if (not_null != priv->not_null) {
+				priv->not_null = not_null;
 				
 				/* updating the holder's validity regarding the NULL value */
 				if (!not_null && 
-				    (!holder->priv->value || GDA_VALUE_HOLDS_NULL (holder->priv->value)))
-					holder->priv->valid = TRUE;
+				    (!priv->value || GDA_VALUE_HOLDS_NULL (priv->value)))
+					priv->valid = TRUE;
 				
 				if (not_null && 
-				    (!holder->priv->value || GDA_VALUE_HOLDS_NULL (holder->priv->value)))
-					holder->priv->valid = FALSE;
+				    (!priv->value || GDA_VALUE_HOLDS_NULL (priv->value)))
+					priv->valid = FALSE;
 				
 				g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 			}
@@ -676,10 +677,10 @@ gda_holder_set_property (GObject *object,
 			break;
                 }
 		case PROP_SOURCE_COLUMN:
-			holder->priv->source_col = g_value_get_int (value);
+			priv->source_col = g_value_get_int (value);
 			break;
 		case PROP_VALIDATE_CHANGES:
-			holder->priv->validate_changes = g_value_get_boolean (value);
+			priv->validate_changes = g_value_get_boolean (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -698,17 +699,18 @@ gda_holder_get_property (GObject *object,
 	const GValue *cvalue;
 
 	holder = GDA_HOLDER (object);
-	if (holder->priv) {
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	if (priv) {
 		switch (param_id) {
 		case PROP_ID:
-			g_value_set_string (value, holder->priv->id);
+			g_value_set_string (value, priv->id);
 			break;
 		case PROP_NAME:
 			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_NAME);
 			if (cvalue)
 				g_value_set_string (value, g_value_get_string (cvalue));
 			else
-				g_value_set_string (value, holder->priv->id);
+				g_value_set_string (value, priv->id);
 			break;
 		case PROP_DESCR:
 			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION);
@@ -718,25 +720,25 @@ gda_holder_get_property (GObject *object,
 				g_value_set_string (value, NULL);
 			break;
 		case PROP_GDA_TYPE:
-			g_value_set_gtype (value, holder->priv->g_type);
+			g_value_set_gtype (value, priv->g_type);
 			break;
 		case PROP_NOT_NULL:
 			g_value_set_boolean (value, gda_holder_get_not_null (holder));
 			break;
 		case PROP_SIMPLE_BIND:
-			g_value_set_object (value, (GObject*) holder->priv->simple_bind);
+			g_value_set_object (value, (GObject*) priv->simple_bind);
 			break;
 		case PROP_FULL_BIND:
-			g_value_set_object (value, (GObject*) holder->priv->full_bind);
+			g_value_set_object (value, (GObject*) priv->full_bind);
 			break;
 		case PROP_SOURCE_MODEL:
-			g_value_set_object (value, (GObject*) holder->priv->source_model);
+			g_value_set_object (value, (GObject*) priv->source_model);
 			break;
 		case PROP_SOURCE_COLUMN:
-			g_value_set_int (value, holder->priv->source_col);
+			g_value_set_int (value, priv->source_col);
 			break;
 		case PROP_VALIDATE_CHANGES:
-			g_value_set_boolean (value, holder->priv->validate_changes);
+			g_value_set_boolean (value, priv->validate_changes);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -757,9 +759,9 @@ GType
 gda_holder_get_g_type (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), G_TYPE_INVALID);
-	g_return_val_if_fail (holder->priv, G_TYPE_INVALID);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->g_type;
+	return priv->g_type;
 }
 
 /**
@@ -774,9 +776,9 @@ const gchar *
 gda_holder_get_id (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->id;
+	return priv->id;
 }
 
 
@@ -797,24 +799,24 @@ const GValue *
 gda_holder_get_value (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	if (holder->priv->full_bind)
-		return gda_holder_get_value (holder->priv->full_bind);
+	if (priv->full_bind)
+		return gda_holder_get_value (priv->full_bind);
 	else {
-		if (holder->priv->valid) {
+		if (priv->valid) {
 			/* return default value if possible */
-			if (holder->priv->default_forced) {
-				g_assert (holder->priv->default_value);
-				if (G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) 
-					return holder->priv->default_value;
+			if (priv->default_forced) {
+				g_assert (priv->default_value);
+				if (G_VALUE_TYPE (priv->default_value) == priv->g_type)
+					return priv->default_value;
 				else
 					return NULL;
 			}
 			
-			if (!holder->priv->value)
-				holder->priv->value = gda_value_new_null ();
-			return holder->priv->value;
+			if (!priv->value)
+				priv->value = gda_value_new_null ();
+			return priv->value;
 		}
 		else
 			return NULL;
@@ -837,7 +839,7 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
 	const GValue *current_val;
 
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
 	current_val = gda_holder_get_value (holder);
@@ -848,7 +850,7 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
         else {
 		gchar *retval = NULL;
                 if (!dh)
-			dh = gda_data_handler_get_default (holder->priv->g_type);
+			dh = gda_data_handler_get_default (priv->g_type);
 		if (dh)
                         retval = gda_data_handler_get_str_from_value (dh, current_val);
 		gda_holder_unlock ((GdaLockable*) holder);
@@ -888,7 +890,7 @@ gboolean
 gda_holder_set_value (GdaHolder *holder, const GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	return real_gda_holder_set_value (holder, (GValue*) value, TRUE, error);
 }
@@ -914,8 +916,8 @@ gboolean
 gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
 	g_return_val_if_fail (!dh || GDA_IS_DATA_HANDLER (dh), FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	if (!value || !g_ascii_strcasecmp (value, "NULL")) 
                 return gda_holder_set_value (holder, NULL, error);
@@ -925,16 +927,16 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 
 		gda_holder_lock ((GdaLockable*) holder);
 		if (!dh)
-			dh = gda_data_handler_get_default (holder->priv->g_type);
+			dh = gda_data_handler_get_default (priv->g_type);
 		if (dh)
-			gdaval = gda_data_handler_get_value_from_str (dh, value, holder->priv->g_type);
+			gdaval = gda_data_handler_get_value_from_str (dh, value, priv->g_type);
 		
 		if (gdaval)
 			retval = real_gda_holder_set_value (holder, gdaval, FALSE, error);
 		else
 			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_STRING_CONVERSION_ERROR,
 				     _("Unable to convert string to '%s' type"), 
-				     gda_g_type_to_string (holder->priv->g_type));
+				     gda_g_type_to_string (priv->g_type));
 		gda_holder_unlock ((GdaLockable*) holder);
 		return retval;
 	}
@@ -975,7 +977,6 @@ gboolean
 gda_holder_take_value (GdaHolder *holder, GValue *value, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
 
 	return real_gda_holder_set_value (holder, (GValue*) value, FALSE, error);
 }
@@ -983,6 +984,7 @@ gda_holder_take_value (GdaHolder *holder, GValue *value, GError **error)
 static gboolean
 real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, GError **error)
 {
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	gboolean changed = TRUE;
 	gboolean newvalid;
 	const GValue *current_val;
@@ -997,7 +999,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	/* if the value has been set with gda_holder_take_static_value () you'll be able
 	 * to change the value only with another call to real_gda_holder_set_value 
 	 */
-	if (!holder->priv->is_freeable) {
+	if (!priv->is_freeable) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		g_warning (_("Can't use this method to set value because there is already a static value"));
 		return FALSE;
@@ -1016,18 +1018,18 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		
 	/* holder's validity */
 	newvalid = TRUE;
-	if (newnull && holder->priv->not_null) {
+	if (newnull && priv->not_null) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
 			     _("(%s): Holder does not allow NULL values"),
-			     holder->priv->id);
+			     priv->id);
 		newvalid = FALSE;
 		changed = TRUE;
 	}
-	else if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) {
+	else if (!newnull && (G_VALUE_TYPE (value) != priv->g_type)) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 			     _("(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"),
-			     holder->priv->id,
-			     gda_g_type_to_string (holder->priv->g_type),
+			     priv->id,
+			     gda_g_type_to_string (priv->g_type),
 			     gda_g_type_to_string (G_VALUE_TYPE (value)));
 		newvalid = FALSE;
 		changed = TRUE;
@@ -1038,7 +1040,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 
 #ifdef DEBUG_HOLDER
 	g_print ("Holder to change %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
-		 holder, holder->priv->id,
+		 holder, priv->id,
 		 gda_value_stringify ((GValue *)current_val),
 		 gda_value_stringify ((value)),
 		 current_val ? G_VALUE_TYPE ((GValue *)current_val) : 0,
@@ -1050,18 +1052,18 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	if (!changed) {
 		if (!do_copy && value)
 			gda_value_free (value);
-		holder->priv->invalid_forced = FALSE;
-		if (holder->priv->invalid_error) {
-			g_error_free (holder->priv->invalid_error);
-			holder->priv->invalid_error = NULL;
+		priv->invalid_forced = FALSE;
+		if (priv->invalid_error) {
+			g_error_free (priv->invalid_error);
+			priv->invalid_error = NULL;
 		}
-		holder->priv->valid = newvalid;
+		priv->valid = newvalid;
 		gda_holder_unlock ((GdaLockable*) holder);
 		return TRUE;
 	}
 
 	/* check if we are allowed to change value */
-	if (holder->priv->validate_changes) {
+	if (priv->validate_changes) {
 		GError *lerror = NULL;
 		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
 		if (lerror) {
@@ -1079,50 +1081,50 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	}
 
 	/* new valid status */
-	holder->priv->invalid_forced = FALSE;
-	if (holder->priv->invalid_error) {
-		g_error_free (holder->priv->invalid_error);
-		holder->priv->invalid_error = NULL;
+	priv->invalid_forced = FALSE;
+	if (priv->invalid_error) {
+		g_error_free (priv->invalid_error);
+		priv->invalid_error = NULL;
 	}
-	holder->priv->valid = newvalid;
+	priv->valid = newvalid;
 	/* we're setting a non-static value, so be sure to flag is as freeable */
-	holder->priv->is_freeable = TRUE;
+	priv->is_freeable = TRUE;
 
 	/* check is the new value is the default one */
-	holder->priv->default_forced = FALSE;
-	if (holder->priv->default_value) {
-		if ((G_VALUE_TYPE (holder->priv->default_value) == GDA_TYPE_NULL) && newnull)
-			holder->priv->default_forced = TRUE;
-		else if ((G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) &&
-			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
-			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
+	priv->default_forced = FALSE;
+	if (priv->default_value) {
+		if ((G_VALUE_TYPE (priv->default_value) == GDA_TYPE_NULL) && newnull)
+			priv->default_forced = TRUE;
+		else if ((G_VALUE_TYPE (priv->default_value) == priv->g_type) &&
+			 value && (G_VALUE_TYPE (value) == priv->g_type))
+			priv->default_forced = !gda_value_compare (priv->default_value, value);
 	}
 	GValue att_value = {0};
 	g_value_init (&att_value, G_TYPE_BOOLEAN);
-	g_value_set_boolean (&att_value, holder->priv->default_forced);
+	g_value_set_boolean (&att_value, priv->default_forced);
 	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, &att_value);
 
 	/* real setting of the value */
-	if (holder->priv->full_bind) {
+	if (priv->full_bind) {
 #ifdef DEBUG_HOLDER
 		g_print ("Holder %p is alias of holder %p => propagating changes to holder %p\n",
-			 holder, holder->priv->full_bind, holder->priv->full_bind);
+			 holder, priv->full_bind, priv->full_bind);
 #endif
 		gda_holder_unlock ((GdaLockable*) holder);
-		return real_gda_holder_set_value (holder->priv->full_bind, value, do_copy, error);
+		return real_gda_holder_set_value (priv->full_bind, value, do_copy, error);
 	}
 	else {
-		if (holder->priv->value) {
-			gda_value_free (holder->priv->value);
-			holder->priv->value = NULL;
+		if (priv->value) {
+			gda_value_free (priv->value);
+			priv->value = NULL;
 		}
 
 		if (value) {
 			if (newvalid) {
 				if (do_copy)
-					holder->priv->value = gda_value_copy (value);
+					priv->value = gda_value_copy (value);
 				else
-					holder->priv->value = value;
+					priv->value = value;
 			}
 			else if (!do_copy) 
 				gda_value_free (value);
@@ -1139,6 +1141,9 @@ static GValue *
 real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value, 
 								 gboolean *value_changed, GError **error)
 {
+	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
+
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	gboolean changed = TRUE;
 	gboolean newvalid;
 	const GValue *current_val;
@@ -1164,18 +1169,18 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 		
 	/* holder's validity */
 	newvalid = TRUE;
-	if (newnull && holder->priv->not_null) {
+	if (newnull && priv->not_null) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
 			     _("(%s): Holder does not allow NULL values"),
-			     holder->priv->id);
+			     priv->id);
 		newvalid = FALSE;
 		changed = TRUE;
 	}
-	else if (!newnull && (G_VALUE_TYPE (value) != holder->priv->g_type)) {
+	else if (!newnull && (G_VALUE_TYPE (value) != priv->g_type)) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 			     _("(%s): Wrong value type: expected type '%s' when value's type is '%s'"),
-			     holder->priv->id,
-			     gda_g_type_to_string (holder->priv->g_type),
+			     priv->id,
+			     gda_g_type_to_string (priv->g_type),
 			     gda_g_type_to_string (G_VALUE_TYPE (value)));
 		newvalid = FALSE;
 		changed = TRUE;
@@ -1183,7 +1188,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 
 #ifdef DEBUG_HOLDER
 	g_print ("Changed holder %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
-		 holder, holder->priv->id,
+		 holder, priv->id,
 		 current_val ? gda_value_stringify ((GValue *)current_val) : "_NULL_",
 		 value ? gda_value_stringify ((value)) : "_NULL_",
 		 current_val ? G_VALUE_TYPE ((GValue *)current_val) : 0,
@@ -1194,12 +1199,12 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 
 	/* end of procedure if the value has not been changed, after calculating the holder's validity */
 	if (!changed) {
-		holder->priv->invalid_forced = FALSE;
-		if (holder->priv->invalid_error) {
-			g_error_free (holder->priv->invalid_error);
-			holder->priv->invalid_error = NULL;
+		priv->invalid_forced = FALSE;
+		if (priv->invalid_error) {
+			g_error_free (priv->invalid_error);
+			priv->invalid_error = NULL;
 		}
-		holder->priv->valid = newvalid;
+		priv->valid = newvalid;
 #ifdef DEBUG_HOLDER		
 		g_print ("Holder is not changed");
 #endif		
@@ -1211,7 +1216,7 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	}
 
 	/* check if we are allowed to change value */
-	if (holder->priv->validate_changes) {
+	if (priv->validate_changes) {
 		GError *lerror = NULL;
 		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
 		if (lerror) {
@@ -1222,50 +1227,50 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 	}
 
 	/* new valid status */
-	holder->priv->invalid_forced = FALSE;
-	if (holder->priv->invalid_error) {
-		g_error_free (holder->priv->invalid_error);
-		holder->priv->invalid_error = NULL;
+	priv->invalid_forced = FALSE;
+	if (priv->invalid_error) {
+		g_error_free (priv->invalid_error);
+		priv->invalid_error = NULL;
 	}
-	holder->priv->valid = newvalid;
+	priv->valid = newvalid;
 	/* we're setting a static value, so be sure to flag is as unfreeable */
-	holder->priv->is_freeable = FALSE;
+	priv->is_freeable = FALSE;
 
 	/* check is the new value is the default one */
-	holder->priv->default_forced = FALSE;
-	if (holder->priv->default_value) {
-		if ((G_VALUE_TYPE (holder->priv->default_value) == GDA_TYPE_NULL) && newnull)
-			holder->priv->default_forced = TRUE;
-		else if ((G_VALUE_TYPE (holder->priv->default_value) == holder->priv->g_type) &&
-			 value && (G_VALUE_TYPE (value) == holder->priv->g_type))
-			holder->priv->default_forced = !gda_value_compare (holder->priv->default_value, value);
+	priv->default_forced = FALSE;
+	if (priv->default_value) {
+		if ((G_VALUE_TYPE (priv->default_value) == GDA_TYPE_NULL) && newnull)
+			priv->default_forced = TRUE;
+		else if ((G_VALUE_TYPE (priv->default_value) == priv->g_type) &&
+			 value && (G_VALUE_TYPE (value) == priv->g_type))
+			priv->default_forced = !gda_value_compare (priv->default_value, value);
 	}
 	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), priv->default_forced);
 	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 
 	/* real setting of the value */
-	if (holder->priv->full_bind) {
+	if (priv->full_bind) {
 #ifdef DEBUG_HOLDER
 		g_print ("Holder %p is alias of holder %p => propagating changes to holder %p\n",
-			 holder, holder->priv->full_bind, holder->priv->full_bind);
+			 holder, priv->full_bind, priv->full_bind);
 #endif
-		return real_gda_holder_set_const_value (holder->priv->full_bind, value, 
+		return real_gda_holder_set_const_value (priv->full_bind, value,
 												value_changed, error);
 	}
 	else {
-		if (holder->priv->value) {
-			if (G_IS_VALUE (holder->priv->value))
-				value_to_return = holder->priv->value;
+		if (priv->value) {
+			if (G_IS_VALUE (priv->value))
+				value_to_return = priv->value;
 			else
 				value_to_return = NULL;
-			holder->priv->value = NULL;			
+			priv->value = NULL;
 		}
 
 		if (value) {
 			if (newvalid) {
-				holder->priv->value = (GValue*)value;
+				priv->value = (GValue*)value;
 			}
 		}
 
@@ -1312,7 +1317,6 @@ gda_holder_take_static_value (GdaHolder *holder, const GValue *value, gboolean *
 {
 	GValue *retvalue;
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
 
 	gda_holder_lock ((GdaLockable*) holder);
 	retvalue = real_gda_holder_set_const_value (holder, value, value_changed, error);
@@ -1353,33 +1357,33 @@ void
 gda_holder_force_invalid_e (GdaHolder *holder, GError *error)
 {
 	g_return_if_fail (GDA_IS_HOLDER (holder));
-	g_return_if_fail (holder->priv);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 #ifdef GDA_DEBUG_NO
-	g_print ("Holder %p (%s): declare invalid\n", holder, holder->priv->id);
+	g_print ("Holder %p (%s): declare invalid\n", holder, priv->id);
 #endif
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->invalid_error)
-		g_error_free (holder->priv->invalid_error);
-	holder->priv->invalid_error = error;
+	if (priv->invalid_error)
+		g_error_free (priv->invalid_error);
+	priv->invalid_error = error;
 
-	if (holder->priv->invalid_forced) {
+	if (priv->invalid_forced) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		return;
 	}
 
-	holder->priv->invalid_forced = TRUE;
-	holder->priv->valid = FALSE;
-	if (holder->priv->value) {
-		if (holder->priv->is_freeable)
-			gda_value_free (holder->priv->value);
-		holder->priv->value = NULL;
+	priv->invalid_forced = TRUE;
+	priv->valid = FALSE;
+	if (priv->value) {
+		if (priv->is_freeable)
+			gda_value_free (priv->value);
+		priv->value = NULL;
 	}
 
 	/* if we are an alias, then we forward the value setting to the master */
-	if (holder->priv->full_bind) {
-		gda_holder_force_invalid (holder->priv->full_bind);
+	if (priv->full_bind) {
+		gda_holder_force_invalid (priv->full_bind);
 		gda_holder_unlock ((GdaLockable*) holder);
 	}
 	else {
@@ -1419,22 +1423,22 @@ gda_holder_is_valid_e (GdaHolder *holder, GError **error)
 {
 	gboolean retval;
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->full_bind)
-		retval = gda_holder_is_valid_e (holder->priv->full_bind, error);
+	if (priv->full_bind)
+		retval = gda_holder_is_valid_e (priv->full_bind, error);
 	else {
-		if (holder->priv->invalid_forced) 
+		if (priv->invalid_forced)
 			retval = FALSE;
 		else {
-			if (holder->priv->default_forced) 
-				retval = holder->priv->default_value ? TRUE : FALSE;
+			if (priv->default_forced)
+				retval = priv->default_value ? TRUE : FALSE;
 			else 
-				retval = holder->priv->valid;
+				retval = priv->valid;
 		}
-		if (!retval && holder->priv->invalid_error)
-			g_propagate_error (error,  g_error_copy (holder->priv->invalid_error));
+		if (!retval && priv->invalid_error)
+			g_propagate_error (error,  g_error_copy (priv->invalid_error));
 	}
 	gda_holder_unlock ((GdaLockable*) holder);
 	return retval;
@@ -1452,30 +1456,30 @@ gboolean
 gda_holder_set_value_to_default (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->default_forced) {
+	if (priv->default_forced) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		return TRUE;
 	}
 
-	if (!holder->priv->default_value) {
+	if (!priv->default_value) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		return FALSE;
 	}
 	else {
-		holder->priv->default_forced = TRUE;
-		holder->priv->invalid_forced = FALSE;
-		if (holder->priv->invalid_error) {
-			g_error_free (holder->priv->invalid_error);
-			holder->priv->invalid_error = NULL;
+		priv->default_forced = TRUE;
+		priv->invalid_forced = FALSE;
+		if (priv->invalid_error) {
+			g_error_free (priv->invalid_error);
+			priv->invalid_error = NULL;
 		}
 
-		if (holder->priv->value) {
-			if (holder->priv->is_freeable)
-				gda_value_free (holder->priv->value);
-			holder->priv->value = NULL;
+		if (priv->value) {
+			if (priv->is_freeable)
+				gda_value_free (priv->value);
+			priv->value = NULL;
 		}
 	}
 
@@ -1501,9 +1505,9 @@ gboolean
 gda_holder_value_is_default (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->default_forced;
+	return priv->default_forced;
 }
 
 
@@ -1520,9 +1524,9 @@ const GValue *
 gda_holder_get_default_value (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->default_value;
+	return priv->default_value;
 }
 
 
@@ -1541,38 +1545,38 @@ void
 gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 {
 	g_return_if_fail (GDA_IS_HOLDER (holder));
-	g_return_if_fail (holder->priv);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->default_value) {
-		if (holder->priv->default_forced) {
-			gda_holder_take_value (holder, holder->priv->default_value, NULL);
-			holder->priv->default_forced = FALSE;
-			holder->priv->default_value = NULL;
+	if (priv->default_value) {
+		if (priv->default_forced) {
+			gda_holder_take_value (holder, priv->default_value, NULL);
+			priv->default_forced = FALSE;
+			priv->default_value = NULL;
 		}
 		else {
-			gda_value_free (holder->priv->default_value);
-			holder->priv->default_value = NULL;
+			gda_value_free (priv->default_value);
+			priv->default_value = NULL;
 		}
 	}
 
-	holder->priv->default_forced = FALSE;
+	priv->default_forced = FALSE;
 	if (value) {
 		const GValue *current = gda_holder_get_value (holder);
 
 		/* check if default is equal to current value */
 		if (GDA_VALUE_HOLDS_NULL (value) &&
 		    (!current || GDA_VALUE_HOLDS_NULL (current)))
-			holder->priv->default_forced = TRUE;
-		else if ((G_VALUE_TYPE (value) == holder->priv->g_type) &&
+			priv->default_forced = TRUE;
+		else if ((G_VALUE_TYPE (value) == priv->g_type) &&
 			 current && !gda_value_compare (value, current))
-			holder->priv->default_forced = TRUE;
+			priv->default_forced = TRUE;
 
-		holder->priv->default_value = gda_value_copy ((GValue *)value);
+		priv->default_value = gda_value_copy ((GValue *)value);
 	}
 	
 	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), holder->priv->default_forced);
+	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), priv->default_forced);
 	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
 	gda_value_free (att_value);
 
@@ -1591,7 +1595,6 @@ void
 gda_holder_set_not_null (GdaHolder *holder, gboolean not_null)
 {
 	g_return_if_fail (GDA_IS_HOLDER (holder));
-	g_return_if_fail (holder->priv);
 
 	g_object_set (G_OBJECT (holder), "not-null", not_null, NULL);
 }
@@ -1608,9 +1611,9 @@ gboolean
 gda_holder_get_not_null (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->not_null;
+	return priv->not_null;
 }
 
 /**
@@ -1634,7 +1637,7 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 			     gint col, GError **error)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
   if (model != NULL) {
 	  g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	  g_return_val_if_fail (col >= 0 && col < gda_data_model_get_n_columns (model), FALSE);
@@ -1665,19 +1668,19 @@ gda_holder_set_source_model (GdaHolder *holder, GdaDataModel *model,
 	}
 
 	if (col >= 0)
-		holder->priv->source_col = col;
+		priv->source_col = col;
 
-	if (holder->priv->source_model != model) {
-		if (holder->priv->source_model) {
-			g_object_unref (holder->priv->source_model);
-			holder->priv->source_model = NULL;
+	if (priv->source_model != model) {
+		if (priv->source_model) {
+			g_object_unref (priv->source_model);
+			priv->source_model = NULL;
 		}
 		
-		holder->priv->source_model = model;
+		priv->source_model = model;
 		if (model)
 			g_object_ref (model);
 		else
-			holder->priv->source_col = 0;
+			priv->source_col = 0;
 	}
 
 #ifdef GDA_DEBUG_signal
@@ -1712,34 +1715,37 @@ gda_holder_get_source_model (GdaHolder *holder, gint *col)
 {
 	GdaDataModel *model;
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
 	if (col)
-		*col = holder->priv->source_col;
-	model = holder->priv->source_model;
+		*col = priv->source_col;
+	model = priv->source_model;
 	gda_holder_unlock ((GdaLockable*) holder);
 	return model;
 }
 
 /*
- * This callback is called when @holder->priv->simple_bind's GType was GDA_TYPE_NULL at the time
- * gda_holder_set_bind() was called, and it makes sure @holder's GType is the same as @holder->priv->simple_bind's
+ * This callback is called when @priv->simple_bind's GType was GDA_TYPE_NULL at the time
+ * gda_holder_set_bind() was called, and it makes sure @holder's GType is the same as @priv->simple_bind's
  */
 static void
 bind_to_notify_cb (GdaHolder *bind_to, G_GNUC_UNUSED GParamSpec *pspec, GdaHolder *holder)
 {
+	g_return_if_fail (GDA_IS_HOLDER (bind_to));
 	gda_holder_lock ((GdaLockable*) holder);
 	gda_holder_lock ((GdaLockable*) bind_to);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	GdaHolderPrivate *bpriv = gda_holder_get_instance_private (bind_to);
 
-	g_signal_handler_disconnect (holder->priv->simple_bind,
-				     holder->priv->simple_bind_type_changed_id);
-	holder->priv->simple_bind_type_changed_id = 0;
-	if (holder->priv->g_type == GDA_TYPE_NULL) {
-		holder->priv->g_type = bind_to->priv->g_type;
+	g_signal_handler_disconnect (priv->simple_bind,
+				     priv->simple_bind_type_changed_id);
+	priv->simple_bind_type_changed_id = 0;
+	if (priv->g_type == GDA_TYPE_NULL) {
+		priv->g_type = bpriv->g_type;
 		g_object_notify ((GObject*) holder, "g-type");
 	}
-	else if (holder->priv->g_type != bind_to->priv->g_type) {
+	else if (priv->g_type != bpriv->g_type) {
 		/* break holder's binding because type differ */
 		g_warning (_("Cannot bind holders if their type is not the same, "
 			     "breaking existing bind where '%s' was bound to '%s'"),
@@ -1772,13 +1778,14 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	const GValue *cvalue;
 	GValue *value1 = NULL;
 	const GValue *value2 = NULL;
+	GdaHolderPrivate *priv, *bpriv;
 
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
-	g_return_val_if_fail (holder->priv, FALSE);
+	priv = gda_holder_get_instance_private (holder);
 	g_return_val_if_fail (holder != bind_to, FALSE);
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->simple_bind == bind_to) {
+	if (priv->simple_bind == bind_to) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		return TRUE;
 	}
@@ -1786,11 +1793,13 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	/* get a copy of the current values of @holder and @bind_to */
 	if (bind_to) {
 		g_return_val_if_fail (GDA_IS_HOLDER (bind_to), FALSE);
-		g_return_val_if_fail (bind_to->priv, FALSE);
-		
-		if ((holder->priv->g_type != GDA_TYPE_NULL) &&
-		    (bind_to->priv->g_type != GDA_TYPE_NULL) &&
-		    (holder->priv->g_type != bind_to->priv->g_type)) {
+		g_return_val_if_fail (bpriv, FALSE);
+
+		bpriv = gda_holder_get_instance_private (bind_to);
+
+		if ((priv->g_type != GDA_TYPE_NULL) &&
+		    (bpriv->g_type != GDA_TYPE_NULL) &&
+		    (priv->g_type != bpriv->g_type)) {
 			g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 				     "%s", _("Cannot bind holders if their type is not the same"));
 			gda_holder_unlock ((GdaLockable*) holder);
@@ -1804,32 +1813,32 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 		value1 = gda_value_copy ((GValue*)cvalue);
 
 	/* get rid of the old alias */
-	if (holder->priv->simple_bind) {
-		g_signal_handlers_disconnect_by_func (holder->priv->simple_bind,
+	if (priv->simple_bind) {
+		g_signal_handlers_disconnect_by_func (priv->simple_bind,
 						      G_CALLBACK (bound_holder_changed_cb), holder);
 
-		if (holder->priv->simple_bind_type_changed_id) {
-			g_signal_handler_disconnect (holder->priv->simple_bind,
-						     holder->priv->simple_bind_type_changed_id);
-			holder->priv->simple_bind_type_changed_id = 0;
+		if (priv->simple_bind_type_changed_id) {
+			g_signal_handler_disconnect (priv->simple_bind,
+						     priv->simple_bind_type_changed_id);
+			priv->simple_bind_type_changed_id = 0;
 		}
-		g_object_unref (holder->priv->simple_bind);
-		holder->priv->simple_bind = NULL;
+		g_object_unref (priv->simple_bind);
+		priv->simple_bind = NULL;
 	}
 
 	/* setting the new alias or reseting the value if there is no new alias */
 	gboolean retval;
 	if (bind_to) {
-		holder->priv->simple_bind = g_object_ref (bind_to);
-		g_signal_connect (holder->priv->simple_bind, "changed",
+		priv->simple_bind = g_object_ref (bind_to);
+		g_signal_connect (priv->simple_bind, "changed",
 				  G_CALLBACK (bound_holder_changed_cb), holder);
 
-		if (bind_to->priv->g_type == GDA_TYPE_NULL)
-			holder->priv->simple_bind_type_changed_id = g_signal_connect (bind_to, "notify::g-type",
+		if (bpriv->g_type == GDA_TYPE_NULL)
+			priv->simple_bind_type_changed_id = g_signal_connect (bind_to, "notify::g-type",
 										      G_CALLBACK (bind_to_notify_cb),
 										      holder);
-		else if (holder->priv->g_type == GDA_TYPE_NULL)
-			g_object_set ((GObject*) holder, "g-type", bind_to->priv->g_type , NULL);
+		else if (priv->g_type == GDA_TYPE_NULL)
+			g_object_set ((GObject*) holder, "g-type", bpriv->g_type , NULL);
 
 		/* if bind_to has a different value than holder, then we set holder to the new value */
 		if (value1)
@@ -1855,14 +1864,15 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 static void
 gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 {
+	g_return_if_fail (GDA_IS_HOLDER (holder));
 	const GValue *cvalue;
 	GValue *value1 = NULL, *value2 = NULL;
 
 	g_return_if_fail (GDA_IS_HOLDER (holder));
-	g_return_if_fail (holder->priv);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
 	gda_holder_lock ((GdaLockable*) holder);
-	if (holder->priv->full_bind == alias_of) {
+	if (priv->full_bind == alias_of) {
 		gda_holder_unlock ((GdaLockable*) holder);
 		return;
 	}
@@ -1870,8 +1880,8 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 	/* get a copy of the current values of @holder and @alias_of */
 	if (alias_of) {
 		g_return_if_fail (GDA_IS_HOLDER (alias_of));
-		g_return_if_fail (alias_of->priv);
-		g_return_if_fail (holder->priv->g_type == alias_of->priv->g_type);
+		GdaHolderPrivate *apriv = gda_holder_get_instance_private (alias_of);
+		g_return_if_fail (priv->g_type == apriv->g_type);
 		cvalue = gda_holder_get_value (alias_of);
 		if (cvalue && !GDA_VALUE_HOLDS_NULL ((GValue*)cvalue))
 			value2 = gda_value_copy ((GValue*)cvalue);
@@ -1882,11 +1892,11 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 		value1 = gda_value_copy ((GValue*)cvalue);
 	
 	/* get rid of the old alias */
-	if (holder->priv->full_bind) {
-		g_signal_handlers_disconnect_by_func (holder->priv->full_bind,
+	if (priv->full_bind) {
+		g_signal_handlers_disconnect_by_func (priv->full_bind,
 						      G_CALLBACK (full_bound_holder_changed_cb), holder);
-		g_object_unref (holder->priv->full_bind);
-		holder->priv->full_bind = NULL;
+		g_object_unref (priv->full_bind);
+		priv->full_bind = NULL;
 	}
 
 	/* setting the new alias or reseting the value if there is no new alias */
@@ -1894,14 +1904,14 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 		gboolean equal = FALSE;
 
 		/* get rid of the internal holder's value */
-		if (holder->priv->value) {
-			if (holder->priv->is_freeable)
-				gda_value_free (holder->priv->value);
-			holder->priv->value = NULL;
+		if (priv->value) {
+			if (priv->is_freeable)
+				gda_value_free (priv->value);
+			priv->value = NULL;
 		}
 
-		holder->priv->full_bind = g_object_ref (alias_of);
-		g_signal_connect (holder->priv->full_bind, "changed",
+		priv->full_bind = g_object_ref (alias_of);
+		g_signal_connect (priv->full_bind, "changed",
 				  G_CALLBACK (full_bound_holder_changed_cb), holder);
 
 		/* if alias_of has a different value than holder, then we emit a CHANGED signal */
@@ -1919,9 +1929,9 @@ gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of)
 	else {
 		/* restore the value that was in the previous alias holder, 
 		 * if there was such a value, and don't emit a signal */
-		g_assert (! holder->priv->value);
+		g_assert (! priv->value);
 		if (value1)
-			holder->priv->value = value1;
+			priv->value = value1;
 		value1 = NULL;
 	}
 
@@ -1935,8 +1945,9 @@ full_bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder)
 {
 	gda_holder_lock ((GdaLockable*) holder);
 	gda_holder_lock ((GdaLockable*) alias_of);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	g_assert (alias_of == holder->priv->full_bind);
+	g_assert (alias_of == priv->full_bind);
 	g_signal_emit (holder, gda_holder_signals [CHANGED], 0);
 
 	gda_holder_unlock ((GdaLockable*) holder);
@@ -1948,8 +1959,9 @@ bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder)
 {
 	gda_holder_lock ((GdaLockable*) holder);
 	gda_holder_lock ((GdaLockable*) alias_of);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	g_assert (alias_of == holder->priv->simple_bind);
+	g_assert (alias_of == priv->simple_bind);
 	const GValue *cvalue;
 	GError *lerror = NULL;
 	cvalue = gda_holder_get_value (alias_of);
@@ -1975,9 +1987,9 @@ GdaHolder *
 gda_holder_get_bind (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	return holder->priv->simple_bind;
+	return priv->simple_bind;
 }
 
 /**
@@ -1996,8 +2008,8 @@ gchar *
 gda_holder_get_alphanum_id (GdaHolder *holder)
 {
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	g_return_val_if_fail (holder->priv, NULL);
-	return gda_text_to_alphanum (holder->priv->id);
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	return gda_text_to_alphanum (priv->id);
 }
 
 /**
@@ -2065,19 +2077,22 @@ static void
 gda_holder_lock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	g_rec_mutex_lock (& (holder->priv->mutex));
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	g_rec_mutex_lock (& (priv->mutex));
 }
 
 static gboolean
 gda_holder_trylock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	return g_rec_mutex_trylock (& (holder->priv->mutex));
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	return g_rec_mutex_trylock (& (priv->mutex));
 }
 
 static void
 gda_holder_unlock (GdaLockable *lockable)
 {
 	GdaHolder *holder = (GdaHolder *) lockable;
-	g_rec_mutex_unlock (& (holder->priv->mutex));
+	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
+	g_rec_mutex_unlock (& (priv->mutex));
 }

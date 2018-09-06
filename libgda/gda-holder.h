@@ -46,7 +46,6 @@ typedef enum {
 struct _GdaHolder
 {
 	GObject                 object;
-	GdaHolderPrivate       *priv;
 };
 
 
