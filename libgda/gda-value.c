@@ -1948,7 +1948,31 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
 }
 
 /**
- * gda_value_new_date_time_from_timet:
+ * gda_value_new_date_time:
+ *
+ * Makes a new #GValue of type #G_TYPE_DATE_TIME 
+ *
+ * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
+ *
+ * Free-function: gda_value_free
+ */
+GValue *
+gda_value_new_date_time (GDateTime *dt)
+{
+  if (!dt)
+    return NULL;
+
+  GValue *value;
+
+  value = g_new0 (GValue, 1);
+  g_value_init (value, G_TYPE_DATE_TIME);
+  g_value_set_boxed (value, dt);
+
+	return value;
+}
+
+/**
+ * gda_value_new_date_time:
  * @val: value to set for the new #GValue.
  *
  * Makes a new #GValue of type #G_TYPE_DATE_TIME with value @val
@@ -1964,8 +1988,6 @@ compute_tz_offset (struct tm *gmttm, struct tm *loctm)
  * Returns: (transfer full): the newly created #GValue, or %NULL in case of error
  *
  * Free-function: gda_value_free
- *
- * Deprecated: 6.0: Use gda_value_new_date_time_from_timet() instead
  */
 GValue *
 gda_value_new_date_time_from_timet (time_t val)
@@ -1980,7 +2002,6 @@ gda_value_new_date_time_from_timet (time_t val)
 
 	return value;
 }
-
 /**
  * gda_value_new_time_from_timet:
  * @val: value to set for the new #GValue.
