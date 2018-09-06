@@ -54,12 +54,12 @@
 /*
  * provider's private information
  */
-struct _GdaServerProviderPrivate {
+typedef struct {
 	GHashTable    *data_handlers; /* key = a GdaServerProviderHandlerInfo pointer, value = a GdaDataHandler */
 	GdaSqlParser  *parser;
 
 	GHashTable    *jobs_hash; /* key = a job ID, value = a # */
-};
+} GdaServerProviderPrivate;
 
 G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(GdaServerProvider, gda_server_provider, G_TYPE_OBJECT)
 

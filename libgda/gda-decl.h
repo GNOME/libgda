@@ -38,7 +38,6 @@ typedef struct _GdaDataHandlerIface GdaDataHandlerIface;
 
 typedef struct _GdaServerProvider        GdaServerProvider; 
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;
-typedef struct _GdaServerProviderPrivate GdaServerProviderPrivate;
 typedef struct _GdaServerProviderInfo    GdaServerProviderInfo;
 
 typedef struct _GdaDataModelIface   GdaDataModelIface;
