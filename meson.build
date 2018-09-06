@@ -358,4 +358,6 @@ endif
 subdir('tools')
 subdir('tests')
 subdir('testing')
-
+if get_option('with-examples')
+  subdir('examples')
+endif

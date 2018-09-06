@@ -31,9 +31,11 @@ void run_sql_non_select (GdaConnection *cnc, const gchar *sql);
 int
 main (int argc, char *argv[])
 {
-        gda_init ();
+  gda_init ();
 
-        GdaConnection *cnc;
+  GdaConnection *cnc;
+
+  GError *error = NULL;
 
 	/* open connections */
 	cnc = open_connection ();
@@ -48,10 +50,15 @@ main (int argc, char *argv[])
 	delete_data (cnc);
 	display_products_contents (cnc);
 
-        gda_connection_close (cnc);
+  if (!gda_connection_close (cnc,&error))
+    {
+      g_print ("Could not close connection: %s\n",
+               error && error->message ? error->message : "No detail");
+    }
+
 	g_object_unref (cnc);
 
-        return 0;
+  return 0;
 }
 
 /*
