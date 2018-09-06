@@ -250,7 +250,7 @@ test_ddl_column_cleanup (CheckDdlObject *self,
                          gconstpointer user_data)
 {
   g_free (self->xmlfile);
-  gda_ddl_column_free (self->column);
+  g_object_unref (self->column);
   xmlFreeDoc (self->doc);
 }
 

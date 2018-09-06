@@ -54,7 +54,6 @@ GQuark gda_ddl_column_error_quark (void);
 GdaDdlColumn*   gda_ddl_column_new              (void);
 GdaDdlColumn*   gda_ddl_column_new_from_meta    (GdaMetaTableColumn *column);
 
-void            gda_ddl_column_free             (GdaDdlColumn *self);
 const gchar*    gda_ddl_column_get_name         (GdaDdlColumn *self);
 void            gda_ddl_column_set_name         (GdaDdlColumn *self, const gchar *name);
 

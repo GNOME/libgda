@@ -90,7 +90,7 @@ test_ddl_fkey_run1 (void)
   g_print ("Run 1 start\n");
   GdaDdlFkey *self = gda_ddl_fkey_new ();
 
-  gda_ddl_fkey_free (self);
+  g_object_unref (self);
   g_print ("Run 1 end\n");
 }
 

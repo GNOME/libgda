@@ -305,19 +305,6 @@ gda_ddl_column_init (GdaDdlColumn *self)
 }
 
 /**
- * gda_ddl_column_free:
- * @self: a #GdaDdlColumn instance
- *
- * Convenient function to free the object
- *
- * Since: 6.0
- */
-void gda_ddl_column_free (GdaDdlColumn *self)
-{
-  g_clear_object (&self);
-}
-
-/**
  * gda_ddl_column_parse_node: (skip)
  * @self: #GdaDdlColumn object to store parsed data
  * @node: instance of #xmlNodePtr to parse
