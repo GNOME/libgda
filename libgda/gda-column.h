@@ -37,7 +37,6 @@ G_BEGIN_DECLS
 
 struct _GdaColumn {
 	GObject           object;
-	GdaColumnPrivate *priv;
 };
 
 struct _GdaColumnClass {

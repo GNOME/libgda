@@ -46,7 +46,6 @@ typedef struct _GdaDataModel        GdaDataModel;
 
 typedef struct _GdaColumn        GdaColumn;
 typedef struct _GdaColumnClass   GdaColumnClass;
-typedef struct _GdaColumnPrivate GdaColumnPrivate;
 
 typedef struct _GdaHolder GdaHolder;
 typedef struct _GdaHolderClass GdaHolderClass;

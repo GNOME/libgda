@@ -32,7 +32,7 @@
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
-struct _GdaColumnPrivate {
+typedef struct {
 	gint         defined_size;
 	gchar       *id;
 
@@ -46,7 +46,8 @@ struct _GdaColumnPrivate {
 	glong        auto_increment_step;
 	gint         position;
 	GValue      *default_value;
-};
+} GdaColumnPrivate;
+#define gda_column_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_COLUMN, GdaColumnPrivate)
 
 static void gda_column_class_init (GdaColumnClass *klass);
 static void gda_column_init       (GdaColumn *column, GdaColumnClass *klass);
@@ -87,6 +88,7 @@ gda_column_class_init (GdaColumnClass *klass)
 	
 	parent_class = g_type_class_peek_parent (klass);
 	
+	g_type_class_add_private (object_class, sizeof (GdaColumnPrivate));
 	/* signals */
 	/**
 	 * GdaColumn::name-changed:
@@ -142,17 +144,17 @@ static void
 gda_column_init (GdaColumn *column, G_GNUC_UNUSED GdaColumnClass *klass)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	
-	column->priv = g_new0 (GdaColumnPrivate, 1);
-	column->priv->defined_size = 0;
-	column->priv->id = NULL;
-	column->priv->g_type = GDA_TYPE_NULL;
-	column->priv->allow_null = TRUE;
-	column->priv->auto_increment = FALSE;
-	column->priv->auto_increment_start = 0;
-	column->priv->auto_increment_step = 0;
-	column->priv->position = -1;
-	column->priv->default_value = NULL;
+
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	priv->defined_size = 0;
+	priv->id = NULL;
+	priv->g_type = GDA_TYPE_NULL;
+	priv->allow_null = TRUE;
+	priv->auto_increment = FALSE;
+	priv->auto_increment_start = 0;
+	priv->auto_increment_step = 0;
+	priv->position = -1;
+	priv->default_value = NULL;
 }
 
 static void
@@ -161,16 +163,12 @@ gda_column_finalize (GObject *object)
 	GdaColumn *column = (GdaColumn *) object;
 	
 	g_return_if_fail (GDA_IS_COLUMN (column));
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
 	
-	if (column->priv) {
-		gda_value_free (column->priv->default_value);
-	
-		g_free (column->priv->id);
-		g_free (column->priv->dbms_type);
+	gda_value_free (priv->default_value);
 
-		g_free (column->priv);
-		column->priv = NULL;
-	}
+	g_free (priv->id);
+	g_free (priv->dbms_type);
 	
 	parent_class->finalize (object);
 }
@@ -209,22 +207,22 @@ gda_column_set_property (GObject *object,
                                    const GValue *value,
                                    GParamSpec *pspec)
 {
-        GdaColumn *col;
+	GdaColumn *col;
 
-        col = GDA_COLUMN (object);
-	if (col->priv) {
-		switch (param_id) {
-                case PROP_ID:
-			g_free (col->priv->id);
-			if (g_value_get_string (value))
-				col->priv->id = g_strdup (g_value_get_string (value));
-			else
-				col->priv->id = NULL;
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	col = GDA_COLUMN (object);
+
+	GdaColumnPrivate *priv = gda_column_get_instance_private (col);
+	switch (param_id) {
+	case PROP_ID:
+		g_free (priv->id);
+		if (g_value_get_string (value))
+			priv->id = g_strdup (g_value_get_string (value));
+		else
+			priv->id = NULL;
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -236,17 +234,16 @@ gda_column_get_property (GObject *object,
 {
 	GdaColumn *col;
 
-        col = GDA_COLUMN (object);
-	if (col->priv) {
-		switch (param_id) {
-                case PROP_ID:
-			g_value_set_string (value, col->priv->id);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+	col = GDA_COLUMN (object);
+	GdaColumnPrivate *priv = gda_column_get_instance_private (col);
+	switch (param_id) {
+	case PROP_ID:
+		g_value_set_string (value, priv->id);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 		}
-	}
 }
 
 /**
@@ -278,20 +275,22 @@ gda_column_copy (GdaColumn *column)
 { 	 
 	GdaColumn *column_copy; 	 
   	
-	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL); 	 
+	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
   	
-	column_copy = gda_column_new (); 	 
-	column_copy->priv->defined_size = column->priv->defined_size;
-	if (column->priv->id)
-		column_copy->priv->id = g_strdup (column->priv->id);
-	column_copy->priv->g_type = column->priv->g_type;
-	column_copy->priv->allow_null = column->priv->allow_null;
-	column_copy->priv->auto_increment = column->priv->auto_increment;
-	column_copy->priv->auto_increment_start = column->priv->auto_increment_start;
-	column_copy->priv->auto_increment_step = column->priv->auto_increment_step;
-	column_copy->priv->position = column->priv->position;
-	if (column->priv->default_value)
-		column_copy->priv->default_value = gda_value_copy (column->priv->default_value);
+	column_copy = gda_column_new ();
+	GdaColumnPrivate *cpriv = gda_column_get_instance_private (column_copy);
+	cpriv->defined_size = priv->defined_size;
+	if (priv->id)
+		cpriv->id = g_strdup (priv->id);
+	cpriv->g_type = priv->g_type;
+	cpriv->allow_null = priv->allow_null;
+	cpriv->auto_increment = priv->auto_increment;
+	cpriv->auto_increment_start = priv->auto_increment_start;
+	cpriv->auto_increment_step = priv->auto_increment_step;
+	cpriv->position = priv->position;
+	if (priv->default_value)
+		cpriv->default_value = gda_value_copy (priv->default_value);
 	gda_attributes_manager_copy (_gda_column_attributes_manager, (gpointer) column, _gda_column_attributes_manager, (gpointer) column_copy);
 
 	return column_copy; 	 
@@ -396,7 +395,8 @@ const gchar*
 gda_column_get_dbms_type (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const gchar *) column->priv->dbms_type;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return (const gchar *) priv->dbms_type;
 }
 
 /**
@@ -410,14 +410,15 @@ void
 gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
 	
-	if (column->priv->dbms_type != NULL) {
-		g_free (column->priv->dbms_type);
-		column->priv->dbms_type = NULL;
+	if (priv->dbms_type != NULL) {
+		g_free (priv->dbms_type);
+		priv->dbms_type = NULL;
 	}
 	
 	if (dbms_type)
-		column->priv->dbms_type = g_strdup (dbms_type);
+		priv->dbms_type = g_strdup (dbms_type);
 }
 
 /**
@@ -430,7 +431,8 @@ GType
 gda_column_get_g_type (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), GDA_TYPE_NULL);
-	return column->priv->g_type;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return priv->g_type;
 }
 
 /**
@@ -446,9 +448,10 @@ gda_column_set_g_type (GdaColumn *column, GType type)
 	GType old_type;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
 
-	old_type = column->priv->g_type;
-	column->priv->g_type = type;
+	old_type = priv->g_type;
+	priv->g_type = type;
 
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[GDA_TYPE_CHANGED],
@@ -467,7 +470,8 @@ gboolean
 gda_column_get_allow_null (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), FALSE);
-	return column->priv->allow_null;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return priv->allow_null;
 }
 
 /**
@@ -481,7 +485,8 @@ void
 gda_column_set_allow_null (GdaColumn *column, gboolean allow)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->allow_null = allow;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	priv->allow_null = allow;
 }
 
 /**
@@ -494,7 +499,8 @@ gboolean
 gda_column_get_auto_increment (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), FALSE);
-	return column->priv->auto_increment;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return priv->auto_increment;
 }
 
 /**
@@ -509,7 +515,8 @@ gda_column_set_auto_increment (GdaColumn *column,
 			       gboolean is_auto)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
-	column->priv->auto_increment = is_auto;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	priv->auto_increment = is_auto;
 }
 
 /**
@@ -523,7 +530,8 @@ gint
 gda_column_get_position (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), -1);
-	return column->priv->position;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return priv->position;
 }
 
 /**
@@ -538,7 +546,8 @@ void
 gda_column_set_position (GdaColumn *column, gint position)
 {
 	g_return_if_fail (column != NULL);
-	column->priv->position = position;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	priv->position = position;
 }
 
 
@@ -552,7 +561,8 @@ const GValue *
 gda_column_get_default_value (GdaColumn *column)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return (const GValue *) column->priv->default_value;
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
+	return (const GValue *) priv->default_value;
 }
 
 /**
@@ -566,12 +576,13 @@ void
 gda_column_set_default_value (GdaColumn *column, const GValue *default_value)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
+	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
 
-	gda_value_free (column->priv->default_value);
+	gda_value_free (priv->default_value);
 	if (default_value)
-		column->priv->default_value = gda_value_copy ( (GValue*)default_value);
+		priv->default_value = gda_value_copy ( (GValue*)default_value);
 	else
-		column->priv->default_value = NULL;
+		priv->default_value = NULL;
 }
 
 /**
