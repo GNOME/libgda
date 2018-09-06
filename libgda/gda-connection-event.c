@@ -22,14 +22,15 @@
 #include <libgda/gda-connection-event.h>
 #include <glib/gi18n-lib.h>
 
-struct _GdaConnectionEventPrivate {
+typedef struct {
 	gchar                  *description;
 	glong                   provider_code;
 	GdaConnectionEventCode  gda_code;
 	gchar                  *source;
 	gchar                  *sqlstate;
 	GdaConnectionEventType  type; /* default is GDA_CONNECTION_EVENT_ERROR */
-};
+} GdaConnectionEventPrivate;
+#define gda_connection_event_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEventPrivate)
 
 enum {
 	PROP_0,
@@ -84,6 +85,8 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	g_type_class_add_private (object_class, sizeof (GdaConnectionEventPrivate));
+
 	object_class->finalize = gda_connection_event_finalize;
 	object_class->set_property = gda_connection_event_set_property;
 	object_class->get_property = gda_connection_event_get_property;
@@ -102,9 +105,9 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 static void
 gda_connection_event_init (GdaConnectionEvent *event, G_GNUC_UNUSED GdaConnectionEventClass *klass)
 {
-	event->priv = g_new0 (GdaConnectionEventPrivate, 1);
-	event->priv->type = GDA_CONNECTION_EVENT_ERROR;
-	event->priv->gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	priv->type = GDA_CONNECTION_EVENT_ERROR;
+	priv->gda_code = GDA_CONNECTION_EVENT_CODE_UNKNOWN;
 }
 
 static void
@@ -113,17 +116,15 @@ gda_connection_event_finalize (GObject *object)
 	GdaConnectionEvent *event = (GdaConnectionEvent *) object;
 
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
 	/* free memory */
-	if (event->priv->description)
-		g_free (event->priv->description);
-	if (event->priv->source)
-		g_free (event->priv->source);
-	if (event->priv->sqlstate)
-		g_free (event->priv->sqlstate);
-
-	g_free (event->priv);
-	event->priv = NULL;
+	if (priv->description)
+		g_free (priv->description);
+	if (priv->source)
+		g_free (priv->source);
+	if (priv->sqlstate)
+		g_free (priv->sqlstate);
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -152,10 +153,11 @@ static void gda_connection_event_get_property (GObject *object, guint prop_id, G
 
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (object));
 	event = GDA_CONNECTION_EVENT (object);
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
 	switch(prop_id) {
 	case PROP_TYPE:
-		g_value_set_int (value, event->priv->type);
+		g_value_set_int (value, priv->type);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -175,17 +177,17 @@ void
 gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
-	g_return_if_fail (event->priv);
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
-	if (event->priv->type == type)
+	if (priv->type == type)
 		return;
 
-	event->priv->type = type;
-	if (!event->priv->sqlstate && (event->priv->type == GDA_CONNECTION_EVENT_ERROR)) 
+	priv->type = type;
+	if (!priv->sqlstate && (priv->type == GDA_CONNECTION_EVENT_ERROR))
 		gda_connection_event_set_sqlstate (event, GDA_SQLSTATE_GENERAL_ERROR);
-	else if (((event->priv->type == GDA_CONNECTION_EVENT_NOTICE) || 
-		  (event->priv->type == GDA_CONNECTION_EVENT_COMMAND)) &&
-		 event->priv->sqlstate)
+	else if (((priv->type == GDA_CONNECTION_EVENT_NOTICE) ||
+		  (priv->type == GDA_CONNECTION_EVENT_COMMAND)) &&
+		 priv->sqlstate)
 		gda_connection_event_set_sqlstate (event, NULL);
 }
 
@@ -201,9 +203,10 @@ GdaConnectionEventType
 gda_connection_event_get_event_type (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), GDA_CONNECTION_EVENT_ERROR);
-	g_return_val_if_fail (event->priv, GDA_CONNECTION_EVENT_ERROR);
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	g_return_val_if_fail (priv, GDA_CONNECTION_EVENT_ERROR);
 
-	return event->priv->type;
+	return priv->type;
 }
 
 /**
@@ -219,7 +222,8 @@ const gchar *
 gda_connection_event_get_description (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), NULL);
-	return event->priv->description;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	return priv->description;
 }
 
 /**
@@ -233,13 +237,14 @@ void
 gda_connection_event_set_description (GdaConnectionEvent *event, const gchar *description)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
-	if (event->priv->description)
-		g_free (event->priv->description);
+	if (priv->description)
+		g_free (priv->description);
 	if (description)
-		event->priv->description = g_strdup (description);
+		priv->description = g_strdup (description);
 	else
-		event->priv->description = NULL;
+		priv->description = NULL;
 }
 
 /**
@@ -252,7 +257,8 @@ glong
 gda_connection_event_get_code (GdaConnectionEvent * event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), -1);
-	return event->priv->provider_code;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	return priv->provider_code;
 }
 
 /**
@@ -270,7 +276,8 @@ void
 gda_connection_event_set_code (GdaConnectionEvent *event, glong code)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
-	event->priv->provider_code = code;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	priv->provider_code = code;
 }
 
 /**
@@ -285,7 +292,8 @@ GdaConnectionEventCode
 gda_connection_event_get_gda_code (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), GDA_CONNECTION_EVENT_CODE_UNKNOWN);
-	return event->priv->gda_code;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	return priv->gda_code;
 }
 
 /**
@@ -303,7 +311,8 @@ void
 gda_connection_event_set_gda_code (GdaConnectionEvent *event, GdaConnectionEventCode code)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
-	event->priv->gda_code = code;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	priv->gda_code = code;
 }
 
 
@@ -317,7 +326,8 @@ const gchar *
 gda_connection_event_get_source (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), 0);
-	return event->priv->source;
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
+	return priv->source;
 }
 
 /**
@@ -331,10 +341,11 @@ void
 gda_connection_event_set_source (GdaConnectionEvent *event, const gchar *source)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
-	if (event->priv->source)
-		g_free (event->priv->source);
-	event->priv->source = g_strdup (source);
+	if (priv->source)
+		g_free (priv->source);
+	priv->source = g_strdup (source);
 }
 
 /**
@@ -351,8 +362,9 @@ const gchar *
 gda_connection_event_get_sqlstate (GdaConnectionEvent *event)
 {
 	g_return_val_if_fail (GDA_IS_CONNECTION_EVENT (event), NULL);
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
-	return event->priv->sqlstate ? event->priv->sqlstate : GDA_SQLSTATE_NO_ERROR;
+	return priv->sqlstate ? priv->sqlstate : GDA_SQLSTATE_NO_ERROR;
 }
 
 /**
@@ -368,16 +380,17 @@ void
 gda_connection_event_set_sqlstate (GdaConnectionEvent *event, const gchar *sqlstate)
 {
 	g_return_if_fail (GDA_IS_CONNECTION_EVENT (event));
+	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
-	if (event->priv->sqlstate)
-		g_free (event->priv->sqlstate);
+	if (priv->sqlstate)
+		g_free (priv->sqlstate);
 
 	if (sqlstate) 
-		event->priv->sqlstate = g_strdup (sqlstate);
+		priv->sqlstate = g_strdup (sqlstate);
 	else {
-		event->priv->sqlstate = NULL;
-		if (event->priv->type == GDA_CONNECTION_EVENT_ERROR)
-			event->priv->sqlstate = g_strdup (GDA_SQLSTATE_GENERAL_ERROR);
+		priv->sqlstate = NULL;
+		if (priv->type == GDA_CONNECTION_EVENT_ERROR)
+			priv->sqlstate = g_strdup (GDA_SQLSTATE_GENERAL_ERROR);
 	}
 }
 

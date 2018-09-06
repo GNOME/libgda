@@ -33,7 +33,6 @@ G_BEGIN_DECLS
 
 struct _GdaConnectionEvent {
 	GObject object;
-	GdaConnectionEventPrivate *priv;
 };
 
 struct _GdaConnectionEventClass {
