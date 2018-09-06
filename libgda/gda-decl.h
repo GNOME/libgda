@@ -64,7 +64,6 @@ typedef struct _GdaRepetitiveStatementClass GdaRepetitiveStatementClass;
 
 typedef struct _GdaSqlParser GdaSqlParser;
 typedef struct _GdaSqlParserClass GdaSqlParserClass;
-typedef struct _GdaSqlParserPrivate GdaSqlParserPrivate;
 
 /*
  * Meta data

@@ -41,7 +41,7 @@ typedef struct {
 	gpointer _gda_reserved2;
 } TokenizerContext;
 
-struct _GdaSqlParserPrivate {
+typedef struct {
 	GRecMutex  mutex;
 	gchar     *sql;
 	GSList    *parsed_statements;
@@ -69,7 +69,8 @@ struct _GdaSqlParserPrivate {
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
 	gpointer _gda_reserved2;
-};
+} GdaSqlParserPrivate;
+#define gda_sql_parser_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_SQL_PARSER, GdaSqlParserPrivate)
 
 G_END_DECLS
 

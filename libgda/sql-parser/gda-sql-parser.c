@@ -153,6 +153,8 @@ gda_sql_parser_class_init (GdaSqlParserClass * klass)
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 	parent_class = g_type_class_peek_parent (klass);
 
+	g_type_class_add_private (object_class, sizeof (GdaSqlParserPrivate));
+
 	object_class->dispose = gda_sql_parser_dispose;
 	object_class->finalize = gda_sql_parser_finalize;
 
@@ -198,33 +200,34 @@ gda_sql_parser_lockable_init (GdaLockableIface *iface)
 static void
 gda_sql_parser_reset (GdaSqlParser *parser)
 {
-	g_free (parser->priv->sql);
-	parser->priv->sql = NULL;
-	g_array_free (parser->priv->passed_tokens, TRUE);
-	parser->priv->passed_tokens = g_array_new (FALSE, FALSE, sizeof (gint));
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	g_free (priv->sql);
+	priv->sql = NULL;
+	g_array_free (priv->passed_tokens, TRUE);
+	priv->passed_tokens = g_array_new (FALSE, FALSE, sizeof (gint));
 
-	g_free (parser->priv->error_msg);
-	parser->priv->error_msg = NULL;
-	parser->priv->error_line = 0;
-	parser->priv->error_col = 0;
-	parser->priv->error_pos = 0;
+	g_free (priv->error_msg);
+	priv->error_msg = NULL;
+	priv->error_line = 0;
+	priv->error_col = 0;
+	priv->error_pos = 0;
 
-	if (parser->priv->parsed_statements) {
-		g_slist_foreach (parser->priv->parsed_statements, (GFunc) gda_sql_statement_free, NULL);
-		g_slist_free (parser->priv->parsed_statements);
-		parser->priv->parsed_statements = NULL;
+	if (priv->parsed_statements) {
+		g_slist_foreach (priv->parsed_statements, (GFunc) gda_sql_statement_free, NULL);
+		g_slist_free (priv->parsed_statements);
+		priv->parsed_statements = NULL;
 	}
 
-	if (parser->priv->pushed_contexts) {
-		g_slist_foreach (parser->priv->pushed_contexts, (GFunc) g_free, NULL);
-		g_slist_free (parser->priv->pushed_contexts);
-		parser->priv->pushed_contexts = NULL;
+	if (priv->pushed_contexts) {
+		g_slist_foreach (priv->pushed_contexts, (GFunc) g_free, NULL);
+		g_slist_free (priv->pushed_contexts);
+		priv->pushed_contexts = NULL;
 	}
 
-	parser->priv->context->next_token_start = NULL;
-	parser->priv->context->in_param_spec = FALSE;
-	parser->priv->context->block_level = 0;
-	parser->priv->context->last_token_start = NULL;
+	priv->context->next_token_start = NULL;
+	priv->context->in_param_spec = FALSE;
+	priv->context->block_level = 0;
+	priv->context->last_token_start = NULL;
 }
 
 static void
@@ -234,34 +237,34 @@ gda_sql_parser_init (GdaSqlParser *parser)
 
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 
-	parser->priv = g_new0 (GdaSqlParserPrivate, 1);
-	g_rec_mutex_init (& (parser->priv->mutex));
-	parser->priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	g_rec_mutex_init (& (priv->mutex));
+	priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
 	if (klass->delim_alloc)
-		parser->priv->lemon_delimiter = klass->delim_alloc ((void*(*)(size_t)) g_malloc);
+		priv->lemon_delimiter = klass->delim_alloc ((void*(*)(size_t)) g_malloc);
 	else
-		parser->priv->lemon_delimiter = priv_gda_sql_delimiterAlloc ((void*(*)(size_t)) g_malloc);
+		priv->lemon_delimiter = priv_gda_sql_delimiterAlloc ((void*(*)(size_t)) g_malloc);
 	if (klass->parser_alloc)
-		parser->priv->lemon_parser = klass->parser_alloc ((void*(*)(size_t)) g_malloc);
+		priv->lemon_parser = klass->parser_alloc ((void*(*)(size_t)) g_malloc);
 	else
-		parser->priv->lemon_parser = priv_gda_sql_parserAlloc ((void*(*)(size_t)) g_malloc);
-	parser->priv->mode = GDA_SQL_PARSER_MODE_PARSE;
-	parser->priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
+		priv->lemon_parser = priv_gda_sql_parserAlloc ((void*(*)(size_t)) g_malloc);
+	priv->mode = GDA_SQL_PARSER_MODE_PARSE;
+	priv->flavour = GDA_SQL_PARSER_FLAVOUR_STANDARD;
 
-	parser->priv->sql = NULL;
-	parser->priv->passed_tokens = g_array_new (FALSE, FALSE, sizeof (gint));
+	priv->sql = NULL;
+	priv->passed_tokens = g_array_new (FALSE, FALSE, sizeof (gint));
 
-	parser->priv->context = g_new0 (TokenizerContext, 1);
-	parser->priv->context->delimiter = ';';
-	parser->priv->context->in_param_spec = FALSE;
-	parser->priv->context->block_level = 0;
-	parser->priv->context->next_token_start = NULL;
-	parser->priv->context->last_token_start = NULL;
+	priv->context = g_new0 (TokenizerContext, 1);
+	priv->context->delimiter = ';';
+	priv->context->in_param_spec = FALSE;
+	priv->context->block_level = 0;
+	priv->context->next_token_start = NULL;
+	priv->context->last_token_start = NULL;
 
-	parser->priv->error_msg = NULL;
-	parser->priv->error_line = 0;
-	parser->priv->error_col = 0;
-	parser->priv->error_pos = 0;
+	priv->error_msg = NULL;
+	priv->error_line = 0;
+	priv->error_col = 0;
+	priv->error_pos = 0;
 }
 
 /**
@@ -287,10 +290,9 @@ gda_sql_parser_dispose (GObject *object)
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_SQL_PARSER (object));
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	parser = GDA_SQL_PARSER (object);
-	if (parser->priv) {
-	}
 
 	/* parent class */
 	parent_class->dispose (object);
@@ -305,32 +307,30 @@ gda_sql_parser_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_SQL_PARSER (object));
 
 	parser = GDA_SQL_PARSER (object);
-	if (parser->priv) {
-		GdaSqlParserClass *klass;
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
-		klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
-		gda_sql_parser_reset (parser);
-		g_free (parser->priv->context);
+	GdaSqlParserClass *klass;
 
-		if (klass->delim_alloc) {
-			g_assert (klass->delim_free);
-			klass->delim_free (parser->priv->lemon_delimiter, g_free);
-		}
-		else
-			priv_gda_sql_delimiterFree (parser->priv->lemon_delimiter, g_free);
-		if (klass->parser_alloc) {
-			g_assert (klass->parser_free);
-			klass->parser_free (parser->priv->lemon_parser, g_free);
-		}
-		else
-			priv_gda_sql_parserFree (parser->priv->lemon_parser, g_free);
+	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
+	gda_sql_parser_reset (parser);
+	g_free (priv->context);
 
-		g_array_free (parser->priv->passed_tokens, TRUE);
-
-		g_rec_mutex_clear (& (parser->priv->mutex));
-		g_free (parser->priv);
-		parser->priv = NULL;
+	if (klass->delim_alloc) {
+		g_assert (klass->delim_free);
+		klass->delim_free (priv->lemon_delimiter, g_free);
 	}
+	else
+		priv_gda_sql_delimiterFree (priv->lemon_delimiter, g_free);
+	if (klass->parser_alloc) {
+		g_assert (klass->parser_free);
+		klass->parser_free (priv->lemon_parser, g_free);
+	}
+	else
+		priv_gda_sql_parserFree (priv->lemon_parser, g_free);
+
+	g_array_free (priv->passed_tokens, TRUE);
+
+	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
 	parent_class->finalize (object);
@@ -346,14 +346,15 @@ gda_sql_parser_set_property (GObject *object,
 	GdaSqlParser *parser;
 
 	parser = GDA_SQL_PARSER (object);
-	if (parser->priv) {
-		g_rec_mutex_lock (& (parser->priv->mutex));
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	if (priv) {
+		g_rec_mutex_lock (& (priv->mutex));
 		switch (param_id) {
 		case PROP_FLAVOUR:
-			parser->priv->flavour = g_value_get_int (value);
+			priv->flavour = g_value_get_int (value);
 			break;
 		case PROP_MODE:
-			parser->priv->mode = g_value_get_int (value);
+			priv->mode = g_value_get_int (value);
 			break;
 #ifdef GDA_DEBUG
 		case PROP_DEBUG: {
@@ -363,19 +364,19 @@ gda_sql_parser_set_property (GObject *object,
 			klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 			if (klass->delim_alloc) {
 				g_assert (klass->delim_trace);
-				klass->delim_trace ((parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
+				klass->delim_trace ((priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
 						    stdout : NULL, ".......DELIMITER DEBUG:");
 			}
 			else
-				priv_gda_sql_delimiterTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
+				priv_gda_sql_delimiterTrace ((priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) && debug ?
 							stdout : NULL, ".......DELIMITER DEBUG:");
 			if (klass->parser_alloc) {
 				g_assert (klass->parser_trace);
-				klass->parser_trace ((parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
+				klass->parser_trace ((priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
 						     stdout : NULL, ".......PARSE DEBUG:");
 			}
 			else
-				priv_gda_sql_parserTrace ((parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
+				priv_gda_sql_parserTrace ((priv->mode == GDA_SQL_PARSER_MODE_PARSE) && debug ?
 						     stdout : NULL, ".......PARSE DEBUG:");
 			break;
 		}
@@ -384,7 +385,7 @@ gda_sql_parser_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-		g_rec_mutex_unlock (& (parser->priv->mutex));
+		g_rec_mutex_unlock (& (priv->mutex));
 	}
 }
 
@@ -396,20 +397,21 @@ gda_sql_parser_get_property (GObject *object,
 {
 	GdaSqlParser *parser;
 	parser = GDA_SQL_PARSER (object);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
-	if (parser->priv) {
+	if (priv) {
 		switch (param_id) {
 		case PROP_FLAVOUR:
-			g_value_set_int (value, parser->priv->flavour);
+			g_value_set_int (value, priv->flavour);
 			break;
 		case PROP_MODE:
-			g_value_set_int (value, parser->priv->mode);
+			g_value_set_int (value, priv->mode);
 			break;
 		case PROP_LINE_ERROR:
-			g_value_set_int (value, parser->priv->error_line);
+			g_value_set_int (value, priv->error_line);
 			break;
 		case PROP_COL_ERROR:
-			g_value_set_int (value, parser->priv->error_col);
+			g_value_set_int (value, priv->error_col);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -452,12 +454,12 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		*remain = NULL;
 
 	g_return_val_if_fail (GDA_IS_SQL_PARSER (parser), NULL);
-	g_return_val_if_fail (parser->priv, NULL);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	if (!sql)
 		return NULL;
 
-	g_rec_mutex_lock (& (parser->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
 	if (klass->delim_alloc) {
@@ -475,77 +477,77 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 
 	/* re-init parser */
 	gda_sql_parser_reset (parser);
-	parser->priv->sql = g_strdup (sql);
-	parser->priv->context->next_token_start = parser->priv->sql;
+	priv->sql = g_strdup (sql);
+	priv->context->next_token_start = priv->sql;
 
-	parse_mode = parser->priv->mode; /* save current mode */
+	parse_mode = priv->mode; /* save current mode */
 	/*g_print ("\t\t===== %s MODE =====\n",
 	  parse_mode == GDA_SQL_PARSER_MODE_PARSE ? "PARSE" : "DELIMIT");*/
 	piface.parser = parser;
 	piface.parsed_statement = NULL;
 
 	for (value = tokenizer_get_next_token (parser);
-	     parser->priv->context->token_type != L_ILLEGAL;
+	     priv->context->token_type != L_ILLEGAL;
 	     value = tokenizer_get_next_token (parser)) {
-		switch (parser->priv->context->token_type) {
+		switch (priv->context->token_type) {
 		case L_SQLCOMMENT:
 			gda_value_free (value);
 			value = NULL;
 			break;
 		case L_SPACE:
-			if (parser->priv->context->in_param_spec ||
-			    (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
+			if (priv->context->in_param_spec ||
+			    (priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
 				/* ignore space */
 				gda_value_free (value);
 				value = NULL;
 				break;
 			}
 		default:
-			if (parser->priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
-				if ((parser->priv->context->token_type == L_BEGIN) &&
-				    (parser->priv->passed_tokens->len != 0) &&
+			if (priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
+				if ((priv->context->token_type == L_BEGIN) &&
+				    (priv->passed_tokens->len != 0) &&
 				    !g_ascii_strcasecmp (g_value_get_string (value), "BEGIN")) {
 					/* a BEGIN command increments the block level only if it's not the
 					 * first word of statement */
-					parser->priv->context->block_level ++;
+					priv->context->block_level ++;
 				}
-				if (parser->priv->context->token_type == L_LOOP) {
-					parser->priv->context->block_level ++;
+				if (priv->context->token_type == L_LOOP) {
+					priv->context->block_level ++;
 				}
-				else if ((parser->priv->context->token_type == L_END) &&
-					 (parser->priv->passed_tokens->len != 0)) {
+				else if ((priv->context->token_type == L_END) &&
+					 (priv->passed_tokens->len != 0)) {
 					/* a END command decrements the block level only if it's not the
 					 * first word of statement */
-					parser->priv->context->block_level --;
-					if (parser->priv->context->block_level == 0)
-						parser->priv->context->ignore_semi = FALSE;
+					priv->context->block_level --;
+					if (priv->context->block_level == 0)
+						priv->context->ignore_semi = FALSE;
 				}
-				else if (parser->priv->context->token_type == L_ENDLOOP) {
-					parser->priv->context->block_level --;
+				else if (priv->context->token_type == L_ENDLOOP) {
+					priv->context->block_level --;
 				}
-				else if (parser->priv->context->token_type == L_DECLARE)
-					parser->priv->context->ignore_semi = TRUE;
-				else if ((parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_ORACLE) &&
-					 ((parser->priv->context->token_type == L_AS) ||
-					  (parser->priv->context->token_type == L_IS))) {
+				else if (priv->context->token_type == L_DECLARE)
+					priv->context->ignore_semi = TRUE;
+				else if ((priv->flavour == GDA_SQL_PARSER_FLAVOUR_ORACLE) &&
+					 ((priv->context->token_type == L_AS) ||
+					  (priv->context->token_type == L_IS))) {
 					/* examine tokens history to see if we have somewhere a CREATE FUNCTION or
 					 * CREATE PROCEDURE */
 					gint i;
-					for (i = parser->priv->passed_tokens->len - 1; i >= 0; i --) {
+					for (i = priv->passed_tokens->len - 1; i >= 0; i --) {
 						gint ttype;
-						ttype = g_array_index (parser->priv->passed_tokens, gint, i);
+						ttype = g_array_index (priv->passed_tokens, gint, i);
 						if (ttype == L_CREATE)
 							break;
 					}
 					if (i >= 0)
-						parser->priv->context->ignore_semi = TRUE;
+						priv->context->ignore_semi = TRUE;
 				}
-				else if ((parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_MYSQL) &&
-					 (parser->priv->context->token_type == L_DELIMITER)) {
+				else if ((priv->flavour == GDA_SQL_PARSER_FLAVOUR_MYSQL) &&
+					 (priv->context->token_type == L_DELIMITER)) {
 					GValue *v;
 					push_tokenizer_context (parser);
 					v = tokenizer_get_next_token (parser);
-					if (parser->priv->context->token_type == L_SPACE) {
+					if (priv->context->token_type == L_SPACE) {
 						push_tokenizer_context (parser);
 						g_value_reset (v);
 						g_free (v);
@@ -558,7 +560,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 							const gchar *str;
 							str = g_value_get_string (v);
 							if (str)
-								parser->priv->context->delimiter = *str;
+								priv->context->delimiter = *str;
 						}
 						else
 							TO_IMPLEMENT;
@@ -569,19 +571,19 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 			}
 
 			/* send found tokens until end of buffer */
-			g_array_append_val (parser->priv->passed_tokens, parser->priv->context->token_type);
+			g_array_append_val (priv->passed_tokens, priv->context->token_type);
 
-			switch (parser->priv->mode) {
+			switch (priv->mode) {
 			case GDA_SQL_PARSER_MODE_PARSE:
-				/*g_print ("TRANS %d => %d\n", parser->priv->context->token_type,
-				  parser_trans [parser->priv->context->token_type]);*/
-				_parse (parser->priv->lemon_parser,
-					parser_trans [parser->priv->context->token_type], value, &piface);
+				/*g_print ("TRANS %d => %d\n", priv->context->token_type,
+				  parser_trans [priv->context->token_type]);*/
+				_parse (priv->lemon_parser,
+					parser_trans [priv->context->token_type], value, &piface);
 				value = NULL;
 				break;
 			case GDA_SQL_PARSER_MODE_DELIMIT:
-				_delimit (parser->priv->lemon_delimiter,
-					  delim_trans [parser->priv->context->token_type], value, &piface);
+				_delimit (priv->lemon_delimiter,
+					  delim_trans [priv->context->token_type], value, &piface);
 				value = NULL;
 				break;
 			default:
@@ -591,33 +593,33 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 			ntokens++;
 			break;
 		}
-		if ((parser->priv->context->token_type == L_END_OF_FILE) || (parser->priv->context->token_type == L_SEMI)) {
+		if ((priv->context->token_type == L_END_OF_FILE) || (priv->context->token_type == L_SEMI)) {
 			/* end of statement */
 			break;
 		}
-		if (parser->priv->error_pos != 0)
+		if (priv->error_pos != 0)
 			break;
 	}
-	if (parser->priv->context->token_type == L_ILLEGAL) {
+	if (priv->context->token_type == L_ILLEGAL) {
 		if (value)
 			gda_value_free (value);
 		gda_sql_parser_set_syntax_error (parser);
 	}
 
 	/* send the EOF token to the LEMON parser */
-	switch (parser->priv->mode) {
+	switch (priv->mode) {
 	case GDA_SQL_PARSER_MODE_PARSE:
-		_parse (parser->priv->lemon_parser, 0, NULL, &piface);
+		_parse (priv->lemon_parser, 0, NULL, &piface);
 		break;
 	case GDA_SQL_PARSER_MODE_DELIMIT:
-		_delimit (parser->priv->lemon_delimiter, 0, NULL, &piface);
+		_delimit (priv->lemon_delimiter, 0, NULL, &piface);
 		break;
 	default:
 		TO_IMPLEMENT;
 	}
 	if (remain) {
-		if (* parser->priv->context->next_token_start) {
-			gint i = parser->priv->context->next_token_start - parser->priv->sql;
+		if (* priv->context->next_token_start) {
+			gint i = priv->context->next_token_start - priv->sql;
 			*remain = sql + i;
 		}
 	}
@@ -625,34 +627,34 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 	if (piface.parsed_statement) {
 		gchar hold;
 
-		hold = *parser->priv->context->next_token_start;
-		*parser->priv->context->next_token_start = 0;
-		piface.parsed_statement->sql = g_strdup (parser->priv->sql);
-		*parser->priv->context->next_token_start = hold;
+		hold = *priv->context->next_token_start;
+		*priv->context->next_token_start = 0;
+		piface.parsed_statement->sql = g_strdup (priv->sql);
+		*priv->context->next_token_start = hold;
 
 		stmt = g_object_new (GDA_TYPE_STATEMENT,
 				     "structure", piface.parsed_statement, NULL);
 		gda_sql_statement_free (piface.parsed_statement);
 	}
 	else {
-		if (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE) {
+		if (priv->mode == GDA_SQL_PARSER_MODE_PARSE) {
 			/* try to create a statement using the delimiter mode */
-			parser->priv->mode = GDA_SQL_PARSER_MODE_DELIMIT;
+			priv->mode = GDA_SQL_PARSER_MODE_DELIMIT;
 			stmt = gda_sql_parser_parse_string (parser, sql, remain, error);
 		}
 		else if (error) {
-			if ((ntokens <= 1) && (parser->priv->context->token_type != L_ILLEGAL))
+			if ((ntokens <= 1) && (priv->context->token_type != L_ILLEGAL))
 				g_set_error (error, GDA_SQL_PARSER_ERROR, GDA_SQL_PARSER_EMPTY_SQL_ERROR,
 					 "%s", _("SQL code does not contain any statement"));
 			else
-				g_set_error (error, GDA_SQL_PARSER_ERROR, parser->priv->error_type,
-					 "%s", parser->priv->error_msg);
+				g_set_error (error, GDA_SQL_PARSER_ERROR, priv->error_type,
+					 "%s", priv->error_msg);
 		}
 	}
 
-	parser->priv->mode = parse_mode;
+	priv->mode = parse_mode;
 
-	g_rec_mutex_unlock (& (parser->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return stmt;
 }
@@ -690,7 +692,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	gint n_empty = 0;
 
 	g_return_val_if_fail (GDA_IS_SQL_PARSER (parser), NULL);
-	g_return_val_if_fail (parser->priv, NULL);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	if (remain)
 		*remain = NULL;
@@ -699,7 +701,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 	if (!sql)
 		return batch;
 
-	g_rec_mutex_lock (& (parser->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 
 	int_sql = sql;
 	while (int_sql && allok) {
@@ -743,7 +745,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
 		batch = NULL;
 	}
 
-	g_rec_mutex_unlock (& (parser->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 
 	return batch;
 }
@@ -770,7 +772,6 @@ gda_sql_parser_parse_file_as_batch (GdaSqlParser *parser, const gchar *filename,
 	gchar *contents;
 
 	g_return_val_if_fail (GDA_IS_SQL_PARSER (parser), NULL);
-	g_return_val_if_fail (parser->priv, NULL);
 	g_return_val_if_fail (filename, NULL);
 
 	if (!g_file_get_contents (filename, &contents, NULL, error))
@@ -792,11 +793,12 @@ gda_sql_parser_parse_file_as_batch (GdaSqlParser *parser, const gchar *filename,
 static gint
 get_position (GdaSqlParser *parser)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	gint total;
-	gchar *z = parser->priv->sql;
+	gchar *z = priv->sql;
 	gint i, l, c;
 
-	total = parser->priv->context->last_token_start - parser->priv->sql;
+	total = priv->context->last_token_start - priv->sql;
 	for (i = 0, l = 0, c = 0; i < total; i++) {
 		if (z[i] == '\n') {
 			l++;
@@ -805,8 +807,8 @@ get_position (GdaSqlParser *parser)
 		else
 			c++;
 	}
-	parser->priv->error_line = l + 1;
-	parser->priv->error_col = c + 1;
+	priv->error_line = l + 1;
+	priv->error_col = c + 1;
 
 	return total + 1;
 }
@@ -814,26 +816,28 @@ get_position (GdaSqlParser *parser)
 void
 gda_sql_parser_set_syntax_error (GdaSqlParser *parser)
 {
-	if (!parser->priv->error_msg) {
-		parser->priv->error_type = GDA_SQL_PARSER_SYNTAX_ERROR;
-		parser->priv->error_pos = get_position (parser);
-		parser->priv->error_msg = g_strdup_printf (_("Syntax error at line %d, column %d"),
-							   parser->priv->error_line, parser->priv->error_col);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	if (!priv->error_msg) {
+		priv->error_type = GDA_SQL_PARSER_SYNTAX_ERROR;
+		priv->error_pos = get_position (parser);
+		priv->error_msg = g_strdup_printf (_("Syntax error at line %d, column %d"),
+							   priv->error_line, priv->error_col);
 		/*g_print ("@syntax error at line %d, col %d\n",
-		  parser->priv->error_line, parser->priv->error_col);*/
+		  priv->error_line, priv->error_col);*/
 	}
 }
 
 void
 gda_sql_parser_set_overflow_error (GdaSqlParser *parser)
 {
-	if (!parser->priv->error_msg) {
-		parser->priv->error_type = GDA_SQL_PARSER_OVERFLOW_ERROR;
-		parser->priv->error_pos = get_position (parser);
-		parser->priv->error_msg = g_strdup_printf (_("Overflow error at line %d, column %d"),
-							   parser->priv->error_line, parser->priv->error_col);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	if (!priv->error_msg) {
+		priv->error_type = GDA_SQL_PARSER_OVERFLOW_ERROR;
+		priv->error_pos = get_position (parser);
+		priv->error_msg = g_strdup_printf (_("Overflow error at line %d, column %d"),
+							   priv->error_line, priv->error_col);
 		/*g_print ("@overflow error at line %d, col %d\n",
-		  parser->priv->error_line, parser->priv->error_col);*/
+		  priv->error_line, priv->error_col);*/
 	}
 }
 
@@ -911,6 +915,7 @@ keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 	static GHashTable *keywords = NULL;
 	gint type;
 	gchar oldc;
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	g_mutex_lock (&mutex);
 	if (!keywords) {
@@ -1005,11 +1010,11 @@ keywordCode (GdaSqlParser *parser, gchar *str, gint len)
 	if (type == 0) {
 		/* try prepending the current flavour */
 		gchar *tmp;
-		tmp = g_strdup_printf ("%d%s", parser->priv->flavour, str);
+		tmp = g_strdup_printf ("%d%s", priv->flavour, str);
 		type = GPOINTER_TO_INT (g_hash_table_lookup (keywords, tmp));
 		g_free (tmp);
 		if (type == 0) {
-			if (parser->priv->mode == GDA_SQL_PARSER_MODE_PARSE)
+			if (priv->mode == GDA_SQL_PARSER_MODE_PARSE)
 				type = L_ID;
 			else
 				type = L_RAWSTRING;
@@ -1052,16 +1057,17 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
 static GValue *
 getToken (GdaSqlParser *parser)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	int i, c;
-	gchar *z = parser->priv->context->next_token_start;
+	gchar *z = priv->context->next_token_start;
 	GValue *retval = NULL;
 	gint consumed_chars = 1;
 
 	/* init to capture non treaded cases */
-	parser->priv->context->token_type = G_MININT;
+	priv->context->token_type = G_MININT;
 
 	if (!*z) {
-		parser->priv->context->token_type = L_END_OF_FILE;
+		priv->context->token_type = L_END_OF_FILE;
 		consumed_chars = 0;
 		goto tok_end;
 	}
@@ -1075,18 +1081,18 @@ getToken (GdaSqlParser *parser)
 		z[50] = 0;
 	}
 
-	g_print ("TOK for `%s` (delim='%c') is: ", z, parser->priv->context->delimiter);
+	g_print ("TOK for `%s` (delim='%c') is: ", z, priv->context->delimiter);
 	if (debugcut)
 		z[50] = debug_hold;
 #endif
 
-	if (*z == parser->priv->context->delimiter) {
-		if (!parser->priv->context->ignore_semi && (parser->priv->context->block_level == 0))
-			parser->priv->context->token_type = L_SEMI;
+	if (*z == priv->context->delimiter) {
+		if (!priv->context->ignore_semi && (priv->context->block_level == 0))
+			priv->context->token_type = L_SEMI;
 		else
-			parser->priv->context->token_type = L_RAWSTRING;
+			priv->context->token_type = L_RAWSTRING;
 		consumed_chars = 1;
-		retval = token_as_string (parser->priv->context->next_token_start, 1);
+		retval = token_as_string (priv->context->next_token_start, 1);
 		goto tok_end;
 	}
 
@@ -1094,12 +1100,12 @@ getToken (GdaSqlParser *parser)
 	case ' ': case '\t': case '\n': case '\f': case '\r': {
 		for (i=1; isspace (z[i]); i++){}
 		if ((z[i] == '/') && (z[i+1] == '*')) {
-			parser->priv->context->token_type = L_LSBRACKET;
+			priv->context->token_type = L_LSBRACKET;
 			consumed_chars = i + 2;
-			parser->priv->context->in_param_spec = TRUE;
+			priv->context->in_param_spec = TRUE;
 		}
 		else {
-			parser->priv->context->token_type = L_SPACE;
+			priv->context->token_type = L_SPACE;
 			consumed_chars = i;
 		}
 		break;
@@ -1107,152 +1113,152 @@ getToken (GdaSqlParser *parser)
 	case '-':
 		if ( z[1]=='-' ){
 			for (i=2;  (c=z[i])!=0 && c!='\n'; i++){}
-			parser->priv->context->token_type = L_SQLCOMMENT;
+			priv->context->token_type = L_SQLCOMMENT;
 			consumed_chars = i;
 		}
 		else {
-			parser->priv->context->token_type = L_MINUS;
+			priv->context->token_type = L_MINUS;
 			consumed_chars = 1;
 		}
 		break;
 
 	case '(':
-		parser->priv->context->token_type = L_LP;
+		priv->context->token_type = L_LP;
 		consumed_chars = 1;
 		break;
 	case ')':
-		parser->priv->context->token_type = L_RP;
+		priv->context->token_type = L_RP;
 		consumed_chars = 1;
 		break;
 	case '+':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			parser->priv->context->token_type = L_PLUS;
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+			priv->context->token_type = L_PLUS;
 			consumed_chars = 1;
 		}
 		break;
 	case '*':
 		if (z[1] == '/') {
-			parser->priv->context->token_type = L_RSBRACKET;
+			priv->context->token_type = L_RSBRACKET;
 			consumed_chars = 2;
-			parser->priv->context->in_param_spec = FALSE;
+			priv->context->in_param_spec = FALSE;
 		}
 		else {
-			parser->priv->context->token_type = L_STAR;
+			priv->context->token_type = L_STAR;
 			consumed_chars = 1;
 		}
 		break;
 	case '%':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			parser->priv->context->token_type = L_REM;
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+			priv->context->token_type = L_REM;
 			consumed_chars = 1;
 		}
 		break;
 	case '/':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (z[1] != '*' || z[2] == 0) {
-				parser->priv->context->token_type = L_SLASH;
+				priv->context->token_type = L_SLASH;
 				consumed_chars = 1;
 			}
 		}
 		else if (z[1] == '*') {
 			/* delimit mode */
-			parser->priv->context->token_type = L_LSBRACKET;
+			priv->context->token_type = L_LSBRACKET;
 			consumed_chars = 2;
-			parser->priv->context->in_param_spec = TRUE;
+			priv->context->in_param_spec = TRUE;
 		}
 		break;
 	case '=':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			parser->priv->context->token_type = L_EQ;
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+			priv->context->token_type = L_EQ;
 			consumed_chars = 1 + (z[1] == '=');
 		}
 		break;
 	case '<':
 		if ((c = z[1]) == '=') {
-			parser->priv->context->token_type = L_LEQ;
+			priv->context->token_type = L_LEQ;
 			consumed_chars = 2;
 		}
 		else if (c == '>') {
-			parser->priv->context->token_type = L_DIFF;
+			priv->context->token_type = L_DIFF;
 			consumed_chars = 2;
 		}
 		else if (c== '<') {
-			parser->priv->context->token_type = L_LSHIFT;
+			priv->context->token_type = L_LSHIFT;
 			consumed_chars = 2;
 		}
 		else {
-			parser->priv->context->token_type = L_LT;
+			priv->context->token_type = L_LT;
 			consumed_chars = 1;
 		}
 		break;
 	case '>':
 		if ((c = z[1]) == '=') {
-			parser->priv->context->token_type = L_GEQ;
+			priv->context->token_type = L_GEQ;
 			consumed_chars = 2;
 		}
 		else if (c == '>') {
-			parser->priv->context->token_type = L_RSHIFT;
+			priv->context->token_type = L_RSHIFT;
 			consumed_chars = 2;
 		}
 		else {
-			parser->priv->context->token_type = L_GT;
+			priv->context->token_type = L_GT;
 			consumed_chars = 1;
 		}
 		break;
 	case '!':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if ((c = z[1]) == '=') {
-				parser->priv->context->token_type = L_DIFF;
+				priv->context->token_type = L_DIFF;
 				consumed_chars = 2;
 			}
 			else if (c == '~') {
 				if (z[2] == '*') {
-					parser->priv->context->token_type = L_NOT_REGEXP_CI;
+					priv->context->token_type = L_NOT_REGEXP_CI;
 					consumed_chars = 3;
 				}
 				else {
-					parser->priv->context->token_type = L_NOT_REGEXP;
+					priv->context->token_type = L_NOT_REGEXP;
 					consumed_chars = 2;
 				}
 			}
 		}
 		break;
 	case '|':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (z[1] != '|') {
-				parser->priv->context->token_type = L_BITOR;
+				priv->context->token_type = L_BITOR;
 				consumed_chars = 1;
 			} else {
-				parser->priv->context->token_type = L_CONCAT;
+				priv->context->token_type = L_CONCAT;
 				consumed_chars = 2;
 			}
 		}
 		else {
-			parser->priv->context->token_type = L_RAWSTRING;
+			priv->context->token_type = L_RAWSTRING;
 			consumed_chars = 1;
 		}
 		break;
 	case ',':
-		parser->priv->context->token_type = L_COMMA;
+		priv->context->token_type = L_COMMA;
 		consumed_chars = 1;
 		break;
 	case '&':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			parser->priv->context->token_type = L_BITAND;
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+			priv->context->token_type = L_BITAND;
 			consumed_chars = 1;
 		}
 		break;
 	case '~':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (z[1] == '*') {
-				parser->priv->context->token_type = L_REGEXP_CI;
+				priv->context->token_type = L_REGEXP_CI;
 				consumed_chars = 2;
 			}
 			else {
-				if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL)
-					parser->priv->context->token_type = L_REGEXP;
+				if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL)
+					priv->context->token_type = L_REGEXP;
 				else
-					parser->priv->context->token_type = L_BITNOT;
+					priv->context->token_type = L_BITNOT;
 				consumed_chars = 1;
 			}
 		}
@@ -1272,21 +1278,21 @@ getToken (GdaSqlParser *parser)
 		}
 		if (c) {
 			if (delim == '"')
-				parser->priv->context->token_type = L_TEXTUAL;
+				priv->context->token_type = L_TEXTUAL;
 			else
-				parser->priv->context->token_type = L_STRING;
+				priv->context->token_type = L_STRING;
 			consumed_chars = i+1;
 		}
 		else {
-			parser->priv->context->token_type = L_ILLEGAL;
+			priv->context->token_type = L_ILLEGAL;
 			consumed_chars = 0;
 		}
 		break;
 	}
 	case '.':
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			if (! isdigit (z[1])) {
-				parser->priv->context->token_type = L_DOT;
+				priv->context->token_type = L_DOT;
 				consumed_chars = 1;
 				break;
 			}
@@ -1295,7 +1301,7 @@ getToken (GdaSqlParser *parser)
 		}
 	case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9': {
-		parser->priv->context->token_type = L_INTEGER;
+		priv->context->token_type = L_INTEGER;
 		if ((z[0] == '0') && ((z[1] == 'x') || (z[1] == 'X')) && (z[2] != 0)) {
 			/* hexadecimal */
 			for (i=2; isxdigit (z[i]); i++){}
@@ -1305,25 +1311,25 @@ getToken (GdaSqlParser *parser)
 			if (z[i] == '.') {
 				i++;
 				while (isdigit (z[i])) {i++;}
-				parser->priv->context->token_type = L_FLOAT;
+				priv->context->token_type = L_FLOAT;
 			}
 			if ((z[i]=='e' || z[i]=='E') &&
 			    (isdigit (z[i+1]) ||
 			     ((z[i+1]=='+' || z[i+1]=='-') && isdigit (z[i+2])))) {
 				i += 2;
 				while (isdigit (z[i])) {i++;}
-				parser->priv->context->token_type = L_FLOAT;
+				priv->context->token_type = L_FLOAT;
 			}
 		}
-		if (parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
 			while (IdChar (z[i])) {
-				parser->priv->context->token_type = L_ILLEGAL;
+				priv->context->token_type = L_ILLEGAL;
 				i++;
 			}
 		}
 		else {
 			while (IdChar (z[i])) {
-				parser->priv->context->token_type = L_RAWSTRING;
+				priv->context->token_type = L_RAWSTRING;
 				i++;
 			}
 		}
@@ -1331,10 +1337,10 @@ getToken (GdaSqlParser *parser)
 		break;
 	}
 	case '?':
-		if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
+		if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
 			for(i=1; isdigit(z[i]); i++){}
-			parser->priv->context->token_type = L_SIMPLEPARAM;
-			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
+			priv->context->token_type = L_SIMPLEPARAM;
+			retval = token_as_string (priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
 		}
 		break;
@@ -1344,31 +1350,31 @@ getToken (GdaSqlParser *parser)
 			for (i=2; (z[i]) &&
 				     (IdChar (z[i]) || (z[i] == '+') || (z[i] == '-') || (z[i] == '.') || (z[i] == ':') ||
 				      (z[i] == '|') || (z[i] == '@') || (z[i] == '?')) &&
-				     (z[i] != '/') && (z[i] != parser->priv->context->delimiter)
+				     (z[i] != '/') && (z[i] != priv->context->delimiter)
 				     /*(!isspace (z[i])) && (z[i] != '/') &&
-				       (z[i] != parser->priv->context->delimiter)*/; i++) {}
+				       (z[i] != priv->context->delimiter)*/; i++) {}
 			if (i > 2) {
-				parser->priv->context->token_type = L_SIMPLEPARAM;
-				retval = token_as_string (parser->priv->context->next_token_start + 2, i - 2);
+				priv->context->token_type = L_SIMPLEPARAM;
+				retval = token_as_string (priv->context->next_token_start + 2, i - 2);
 			}
 			else
-				parser->priv->context->token_type = L_UNSPECVAL;
+				priv->context->token_type = L_UNSPECVAL;
 			consumed_chars = i;
 		}
 		else {
-			if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_MYSQL) {
+			if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_MYSQL) {
 				/* comment */
 				for (i=1;  (c=z[i])!=0 && c!='\n'; i++){}
-				parser->priv->context->token_type = L_SQLCOMMENT;
+				priv->context->token_type = L_SQLCOMMENT;
 				consumed_chars = i;
 			}
 			else
-				parser->priv->context->token_type = L_ILLEGAL;
+				priv->context->token_type = L_ILLEGAL;
 		}
 		break;
 	}
 	case '$':
-		if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL) {
+		if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_POSTGRESQL) {
 			for(i=1; isalnum(z[i]) || (z[i] == '_'); i++){}
 			if (z[i] == '$') {
 				/* this is the start of the PostgreSQL's Dollar-Quoted strings */
@@ -1376,7 +1382,7 @@ getToken (GdaSqlParser *parser)
 				gint tag_len = i+1;
 
 				/* no matching tag found => error */
-				parser->priv->context->token_type = L_ILLEGAL;
+				priv->context->token_type = L_ILLEGAL;
 
 				i++;
 				while (z[i]) {
@@ -1389,10 +1395,10 @@ getToken (GdaSqlParser *parser)
 					}
 					if (j == tag_len) {
 						/* tags matched */
-						parser->priv->context->token_type = L_STRING;
+						priv->context->token_type = L_STRING;
 						consumed_chars = i;
 
-						retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
+						retval = token_as_string (priv->context->next_token_start, consumed_chars);
 						/* remove comments from returned string */
 						gchar *tmp, *ptr;
 						tmp = (gchar*) g_value_get_string (retval);
@@ -1411,23 +1417,23 @@ getToken (GdaSqlParser *parser)
 				}
 			}
 		}
-		else if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
+		else if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
 			for(i=1; isalnum(z[i]); i++){}
-			parser->priv->context->token_type = L_SIMPLEPARAM;
-			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
+			priv->context->token_type = L_SIMPLEPARAM;
+			retval = token_as_string (priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
 		}
 		break;
 	case '@':
 	case ':':
 		if (z[1] == ':') {
-			parser->priv->context->token_type = L_PGCAST;
+			priv->context->token_type = L_PGCAST;
 			consumed_chars = 2;
 		}
-		else if (parser->priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
+		else if (priv->flavour == GDA_SQL_PARSER_FLAVOUR_SQLITE) {
 			for(i=1; isalnum(z[i]) || (z[i] == '_'); i++){}
-			parser->priv->context->token_type = L_SIMPLEPARAM;
-			retval = token_as_string (parser->priv->context->next_token_start + 1, i - 1);
+			priv->context->token_type = L_SIMPLEPARAM;
+			retval = token_as_string (priv->context->next_token_start + 1, i - 1);
 			consumed_chars = i;
 		}
 		break;
@@ -1435,14 +1441,14 @@ getToken (GdaSqlParser *parser)
 	case 'x': case 'X': {
 		if (  (c=z[1])=='\'' || c=='"' ){
 			int delim = c;
-			parser->priv->context->token_type = L_BLOB;
+			priv->context->token_type = L_BLOB;
 			for (i=2;  (c=z[i])!=0; i++){
 				if ( c==delim ){
-					if ( i%2 ) parser->priv->context->token_type = L_ILLEGAL;
+					if ( i%2 ) priv->context->token_type = L_ILLEGAL;
 					break;
 				}
 				if ( !isxdigit (c) ){
-					parser->priv->context->token_type = L_ILLEGAL;
+					priv->context->token_type = L_ILLEGAL;
 					consumed_chars = i;
 					break;
 				}
@@ -1457,57 +1463,57 @@ getToken (GdaSqlParser *parser)
 		break;
 	}
 
-	if (parser->priv->context->token_type == G_MININT) {
+	if (priv->context->token_type == G_MININT) {
 		/* now treat non treated cases */
-		if ((parser->priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) && (! parser->priv->context->in_param_spec)) {
+		if ((priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) && (! priv->context->in_param_spec)) {
 			if (IdChar (*z)) {
 				for (i=1; IdChar (z[i]); i++){}
-				parser->priv->context->token_type = keywordCode (parser, (char*)z, i);
+				priv->context->token_type = keywordCode (parser, (char*)z, i);
 				consumed_chars = i;
 			}
 		}
 		else {
-			if ((! parser->priv->context->in_param_spec) && IdChar (*z)) {
+			if ((! priv->context->in_param_spec) && IdChar (*z)) {
 				gint ttype;
 
 				for (i=1; IdChar (z[i]); i++){}
 				ttype = keywordCode (parser, (char*)z, i);
 				if (ttype != L_RAWSTRING) {
-					parser->priv->context->token_type = ttype;
+					priv->context->token_type = ttype;
 					consumed_chars = i;
 				}
 			}
 
-			if (parser->priv->context->token_type == G_MININT) {
-				if (!strncmp (parser->priv->context->next_token_start, "name:", 5)) {
-					parser->priv->context->next_token_start += 5;
+			if (priv->context->token_type == G_MININT) {
+				if (!strncmp (priv->context->next_token_start, "name:", 5)) {
+					priv->context->next_token_start += 5;
 					retval = getToken (parser);
-					parser->priv->context->token_type = L_PNAME;
+					priv->context->token_type = L_PNAME;
 					consumed_chars = 0;
 				}
-				else if (!strncmp (parser->priv->context->next_token_start, "type:", 5)) {
-					parser->priv->context->next_token_start += 5;
+				else if (!strncmp (priv->context->next_token_start, "type:", 5)) {
+					priv->context->next_token_start += 5;
 					retval = getToken (parser);
-					parser->priv->context->token_type = L_PTYPE;
+					priv->context->token_type = L_PTYPE;
 					consumed_chars = 0;
 				}
-				else if (!strncmp (parser->priv->context->next_token_start, "descr:", 6)) {
-					parser->priv->context->next_token_start += 6;
+				else if (!strncmp (priv->context->next_token_start, "descr:", 6)) {
+					priv->context->next_token_start += 6;
 					retval = getToken (parser);
-					parser->priv->context->token_type = L_PDESCR;
+					priv->context->token_type = L_PDESCR;
 					consumed_chars = 0;
 				}
-				else if (!strncmp (parser->priv->context->next_token_start, "nullok:", 7)) {
-					parser->priv->context->next_token_start += 7;
+				else if (!strncmp (priv->context->next_token_start, "nullok:", 7)) {
+					priv->context->next_token_start += 7;
 					retval = getToken (parser);
-					parser->priv->context->token_type = L_PNULLOK;
+					priv->context->token_type = L_PNULLOK;
 					consumed_chars = 0;
 				}
 				else {
 					for (i=1; z[i] && (! isspace (z[i])) &&
-						     (z[i] != parser->priv->context->delimiter) && (z[i] != '*') &&
+						     (z[i] != priv->context->delimiter) && (z[i] != '*') &&
 						     (z[i] != '\'') && (z[i] != '"') && (z[i] != '#'); i++){}
-					parser->priv->context->token_type = L_RAWSTRING;
+					priv->context->token_type = L_RAWSTRING;
 					consumed_chars = i;
 				}
 			}
@@ -1515,37 +1521,37 @@ getToken (GdaSqlParser *parser)
 	}
 
 	/* fallback for the token type */
-	if (parser->priv->context->token_type == G_MININT)
-		parser->priv->context->token_type = L_ILLEGAL;
+	if (priv->context->token_type == G_MININT)
+		priv->context->token_type = L_ILLEGAL;
 
 	if (!retval)
-		retval = token_as_string (parser->priv->context->next_token_start, consumed_chars);
+		retval = token_as_string (priv->context->next_token_start, consumed_chars);
  tok_end:
-	parser->priv->context->last_token_start = parser->priv->context->next_token_start;
-	parser->priv->context->next_token_start += consumed_chars;
+	priv->context->last_token_start = priv->context->next_token_start;
+	priv->context->next_token_start += consumed_chars;
 
-	if (parser->priv->context->token_type == L_END)
+	if (priv->context->token_type == L_END)
 		handle_composed_2_keywords (parser, retval, L_LOOP, L_ENDLOOP);
-	else if (parser->priv->context->token_type == L_IS)
+	else if (priv->context->token_type == L_IS)
 		handle_composed_2_keywords (parser, retval, L_NULL, L_ISNULL);
-	else if (parser->priv->context->token_type == L_NOT) {
+	else if (priv->context->token_type == L_NOT) {
 		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL) ||
 			handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE) ||
 			handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
 	}
-	else if (parser->priv->context->token_type == L_SIMILAR)
+	else if (priv->context->token_type == L_SIMILAR)
 		handle_composed_2_keywords (parser, retval, L_TO, L_SIMILAR);
 
 #ifdef GDA_DEBUG_NO
 	if (retval) {
 		gchar *str = gda_sql_value_stringify (retval);
-		g_print ("%d (%s)\n", parser->priv->context->token_type, str);
+		g_print ("%d (%s)\n", priv->context->token_type, str);
 		g_free (str);
 	}
-	else if (parser->priv->context->token_type == L_END_OF_FILE)
-		g_print ("%d (END OF FILE)\n", parser->priv->context->token_type);
+	else if (priv->context->token_type == L_END_OF_FILE)
+		g_print ("%d (END OF FILE)\n", priv->context->token_type);
 	else
-		g_print ("%d\n", parser->priv->context->token_type);
+		g_print ("%d\n", priv->context->token_type);
 #endif
 	return retval;
 }
@@ -1553,6 +1559,7 @@ getToken (GdaSqlParser *parser)
 static gboolean
 handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, gint replacer)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	gint npushed, nmatched;
 	GValue *v = NULL;
 	gboolean match;
@@ -1561,7 +1568,7 @@ handle_composed_2_keywords (GdaSqlParser *parser, GValue *retval, gint second, g
 	if (match) {
 		gchar *newstr;
 		merge_tokenizer_contexts (parser, npushed);
-		parser->priv->context->token_type = replacer;
+		priv->context->token_type = replacer;
 
 		newstr = g_strdup_printf ("%s %s", g_value_get_string (retval), g_value_get_string (v));
 		g_value_reset (retval);
@@ -1583,12 +1590,13 @@ tokenizer_get_next_token (GdaSqlParser *parser)
 static void
 push_tokenizer_context (GdaSqlParser *parser)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	TokenizerContext *nc;
 
 	nc = g_new (TokenizerContext, 1);
-	*nc = *parser->priv->context;
-	parser->priv->pushed_contexts = g_slist_prepend (parser->priv->pushed_contexts, parser->priv->context);
-	parser->priv->context = nc;
+	*nc = *priv->context;
+	priv->pushed_contexts = g_slist_prepend (priv->pushed_contexts, priv->context);
+	priv->context = nc;
 #ifdef GDA_DEBUG_NO
 	g_print ("Push context\n");
 #endif
@@ -1597,10 +1605,11 @@ push_tokenizer_context (GdaSqlParser *parser)
 static void
 pop_tokenizer_context (GdaSqlParser *parser)
 {
-	g_return_if_fail (parser->priv->pushed_contexts);
-	g_free (parser->priv->context);
-	parser->priv->context = (TokenizerContext*) parser->priv->pushed_contexts->data;
-	parser->priv->pushed_contexts = g_slist_remove (parser->priv->pushed_contexts, parser->priv->context);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	g_return_if_fail (priv->pushed_contexts);
+	g_free (priv->context);
+	priv->context = (TokenizerContext*) priv->pushed_contexts->data;
+	priv->pushed_contexts = g_slist_remove (priv->pushed_contexts, priv->context);
 #ifdef GDA_DEBUG_NO
 	g_print ("Pop context\n");
 #endif
@@ -1615,6 +1624,7 @@ pop_tokenizer_context (GdaSqlParser *parser)
 static gint
 fetch_forward (GdaSqlParser *parser, gint *out_nb_pushed, ...)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	gint nmatched = 0;
 	gint npushed = 0;
 	va_list ap;
@@ -1633,12 +1643,12 @@ fetch_forward (GdaSqlParser *parser, gint *out_nb_pushed, ...)
 
 		push_tokenizer_context (parser); npushed++;
 		v1 = getToken (parser);
-		ttype = parser->priv->context->token_type;
+		ttype = priv->context->token_type;
 		if (ttype == L_SPACE) {
 			GValue *v2;
 			push_tokenizer_context (parser); npushed++;
 			v2 = getToken (parser);
-			ttype = parser->priv->context->token_type;
+			ttype = priv->context->token_type;
 			g_value_reset (v1);
 			g_free (v1);
 			v1 = v2;
@@ -1676,20 +1686,21 @@ fetch_forward (GdaSqlParser *parser, gint *out_nb_pushed, ...)
 static void
 merge_tokenizer_contexts (GdaSqlParser *parser, gint n_contexts)
 {
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 	TokenizerContext *c;
 	gint i;
 	g_return_if_fail (n_contexts > 0);
 
-	c = g_slist_nth_data (parser->priv->pushed_contexts, n_contexts - 1);
+	c = g_slist_nth_data (priv->pushed_contexts, n_contexts - 1);
 	g_return_if_fail (c);
 
-	parser->priv->context->token_type = c->token_type;
-	parser->priv->context->last_token_start = c->last_token_start;
-	parser->priv->context->delimiter = c->delimiter;
+	priv->context->token_type = c->token_type;
+	priv->context->last_token_start = c->last_token_start;
+	priv->context->delimiter = c->delimiter;
 	for (i = 0; i < n_contexts; i++) {
-		g_free (parser->priv->pushed_contexts->data);
-		parser->priv->pushed_contexts = g_slist_remove (parser->priv->pushed_contexts,
-								parser->priv->pushed_contexts->data);
+		g_free (priv->pushed_contexts->data);
+		priv->pushed_contexts = g_slist_remove (priv->pushed_contexts,
+								priv->pushed_contexts->data);
 	}
 }
 
@@ -1697,25 +1708,25 @@ static void
 gda_sql_parser_lock (GdaLockable *lockable)
 {
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
-	g_return_if_fail (parser->priv);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
-	g_rec_mutex_lock (& (parser->priv->mutex));
+	g_rec_mutex_lock (& (priv->mutex));
 }
 
 static gboolean
 gda_sql_parser_trylock (GdaLockable *lockable)
 {
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
-	g_return_val_if_fail (parser->priv, FALSE);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
-	return g_rec_mutex_trylock (& (parser->priv->mutex));
+	return g_rec_mutex_trylock (& (priv->mutex));
 }
 
 static void
 gda_sql_parser_unlock (GdaLockable *lockable)
 {
 	GdaSqlParser *parser = (GdaSqlParser *) lockable;
-	g_return_if_fail (parser->priv);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
-	g_rec_mutex_unlock (& (parser->priv->mutex));
+	g_rec_mutex_unlock (& (priv->mutex));
 }

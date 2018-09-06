@@ -63,7 +63,6 @@ typedef enum {
 struct _GdaSqlParser
 {
 	GObject              object;
-	GdaSqlParserPrivate *priv;
 };
 
 /* interface with the Lemon parser */
