@@ -82,7 +82,6 @@ typedef struct _GdaTreeManagerClass GdaTreeManagerClass;
 
 typedef struct _GdaTreeNode GdaTreeNode;
 typedef struct _GdaTreeNodeClass GdaTreeNodeClass;
-typedef struct _GdaTreeNodePrivate GdaTreeNodePrivate;
 
 /*
  * Win32 adaptations

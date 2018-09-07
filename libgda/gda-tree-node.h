@@ -42,7 +42,6 @@ typedef enum {
 
 struct _GdaTreeNode {
 	GObject             object;
-	GdaTreeNodePrivate *priv;
 };
 
 struct _GdaTreeNodeClass {
