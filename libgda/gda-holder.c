@@ -1793,7 +1793,6 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	/* get a copy of the current values of @holder and @bind_to */
 	if (bind_to) {
 		g_return_val_if_fail (GDA_IS_HOLDER (bind_to), FALSE);
-		g_return_val_if_fail (bpriv, FALSE);
 
 		bpriv = gda_holder_get_instance_private (bind_to);
 
