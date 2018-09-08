@@ -148,7 +148,7 @@ size_group_free (SizeGroup *sg)
 	g_free (sg);
 }
 
-struct _GdauiBasicFormPriv
+typedef struct
 {
 	GdaSet     *set;
 	GdauiSet   *set_info;
@@ -168,45 +168,18 @@ struct _GdauiBasicFormPriv
 	gdouble     green;
 	gdouble     blue;
 	gdouble     alpha;
-};
+} GdauiBasicFormPrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiBasicForm, gdaui_basic_form, GTK_TYPE_BOX)
 
 static guint gdaui_basic_form_signals[LAST_SIGNAL] = { 0, 0 };
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-gdaui_basic_form_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiBasicFormClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_basic_form_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiBasicForm),
-			0,
-			(GInstanceInitFunc) gdaui_basic_form_init,
-			0
-		};
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiBasicForm", &info, 0);
-	}
-
-	return type;
-}
 
 static void
 gdaui_basic_form_class_init (GdauiBasicFormClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
 	GTK_WIDGET_CLASS (klass)->grab_focus = gdaui_basic_form_widget_grab_focus;
 
 	/* signals */
@@ -318,6 +291,8 @@ do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 {
 	GtkWidget *menu, *submenu, *mitem;
 	GSList *list;
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	
 	menu = gtk_menu_new ();
 	mitem = gtk_menu_item_new_with_label (_("Shown data entries"));
@@ -328,7 +303,7 @@ do_popup_menu (GdauiBasicForm *form, GdkEventButton *event)
 	gtk_widget_show (submenu);
 	gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), submenu);
 	
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 		if (sentry->prog_hidden)
 			continue;
@@ -370,23 +345,23 @@ static void
 gdaui_basic_form_init (GdauiBasicForm *wid)
 {
 	GtkWidget *evbox;
-	wid->priv = g_new0 (GdauiBasicFormPriv, 1);
-	wid->priv->set = NULL;
-	wid->priv->s_entries = NULL;
-	wid->priv->place_holders = NULL;
-	wid->priv->top_container = NULL;
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (wid);
+	priv->set = NULL;
+	priv->s_entries = NULL;
+	priv->place_holders = NULL;
+	priv->top_container = NULL;
 
-	wid->priv->entries_auto_default = FALSE;
+	priv->entries_auto_default = FALSE;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 
 	evbox = gtk_event_box_new ();
 	gtk_widget_show (evbox);
 	gtk_box_pack_start (GTK_BOX (wid), evbox, TRUE, TRUE, 0);
-	wid->priv->mainbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	priv->mainbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	
-	gtk_widget_show (wid->priv->mainbox);
-	gtk_container_add (GTK_CONTAINER (evbox), wid->priv->mainbox);
+	gtk_widget_show (priv->mainbox);
+	gtk_container_add (GTK_CONTAINER (evbox), priv->mainbox);
 	g_object_set (evbox, "visible-window", FALSE, NULL);
 
 	g_signal_connect (evbox, "popup-menu",
@@ -394,10 +369,10 @@ gdaui_basic_form_init (GdauiBasicForm *wid)
 	g_signal_connect (evbox, "button-press-event",
 			  G_CALLBACK (button_press_event_cb), wid);
 
-	wid->priv->red = 0.;
-	wid->priv->green = 0.;
-	wid->priv->blue = 0.;
-	wid->priv->alpha = 0.;
+	priv->red = 0.;
+	priv->green = 0.;
+	priv->blue = 0.;
+	priv->alpha = 0.;
 }
 
 /**
@@ -434,28 +409,30 @@ widget_shown_cb (GtkWidget *wid, SingleEntry *sentry)
 static void
 get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	GSList *list;
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	g_assert (paramlist == form->priv->set);
+	g_assert (paramlist == priv->set);
 
 	/* unref the paramlist */
-	g_signal_handlers_disconnect_by_func (form->priv->set_info,
+	g_signal_handlers_disconnect_by_func (priv->set_info,
 					      G_CALLBACK (paramlist_public_data_changed_cb), form);
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_param_attr_changed_cb), form);
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_holder_type_set_cb), form);
 
-	g_object_unref (form->priv->set);
-	form->priv->set = NULL;
+	g_object_unref (priv->set);
+	priv->set = NULL;
 
-	if (form->priv->set_info) {
-		g_object_unref (form->priv->set_info);
-		form->priv->set_info = NULL;
+	if (priv->set_info) {
+		g_object_unref (priv->set_info);
+		priv->set_info = NULL;
 	}
 
 	/* render all the entries non sensitive */
-	for (list = form->priv->s_entries; list; list = list->next)
+	for (list = priv->s_entries; list; list = list->next)
 		gdaui_data_entry_set_editable (GDAUI_DATA_ENTRY (((SingleEntry*)list->data)->entry), FALSE);
 }
 
@@ -489,7 +466,9 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 				 const gchar *att_name, G_GNUC_UNUSED const GValue *att_value,
 				 GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	SingleEntry *sentry;
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	sentry = get_single_entry_for_holder (form, param);
 
@@ -532,7 +511,7 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 			gdaui_basic_form_entry_set_visible (form, param, !sentry->hidden);
 		}
 		else
-			paramlist_public_data_changed_cb (form->priv->set_info, form);
+			paramlist_public_data_changed_cb (priv->set_info, form);
 	}
 	else if (!strcmp (att_name, GDA_ATTRIBUTE_NAME) ||
 		 !strcmp (att_name, GDA_ATTRIBUTE_DESCRIPTION)) {
@@ -559,7 +538,7 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 			}
 		}
 		else
-			paramlist_public_data_changed_cb (form->priv->set_info, form);
+			paramlist_public_data_changed_cb (priv->set_info, form);
 	}
 }
 
@@ -571,26 +550,27 @@ gdaui_basic_form_dispose (GObject *object)
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (object));
 	form = GDAUI_BASIC_FORM (object);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	if (form->priv) {
+	if (priv) {
 		/* paramlist */
-		if (form->priv->set)
-			get_rid_of_set (form->priv->set, form);
+		if (priv->set)
+			get_rid_of_set (priv->set, form);
 
 		destroy_entries (form);
 
-		if (form->priv->size_groups) {
-			g_slist_foreach (form->priv->size_groups, (GFunc) size_group_free, NULL);
-			g_slist_free (form->priv->size_groups);
+		if (priv->size_groups) {
+			g_slist_foreach (priv->size_groups, (GFunc) size_group_free, NULL);
+			g_slist_free (priv->size_groups);
 		}
 
 		/* the private area itself */
-		g_free (form->priv);
-		form->priv = NULL;
+		g_free (priv);
+		priv = NULL;
 	}
 
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_basic_form_parent_class)->dispose (object);
 }
 
 
@@ -602,56 +582,55 @@ gdaui_basic_form_set_property (GObject *object,
 {
 	GdauiBasicForm *form;
 
-        form = GDAUI_BASIC_FORM (object);
-        if (form->priv) {
-                switch (param_id) {
-		case PROP_XML_LAYOUT: {
-			/* node should be a "gdaui_form" node */
-			xmlNodePtr node = g_value_get_pointer (value);
-			if (node) {
-				g_return_if_fail (node);
-				g_return_if_fail (!strcmp ((gchar*) node->name, "gdaui_form"));
-				
-				pack_entries_in_xml_layout (form, node);
-			}
-			else
-				pack_entries_in_table (form);
+	form = GDAUI_BASIC_FORM (object);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
+	switch (param_id) {
+	case PROP_XML_LAYOUT: {
+		/* node should be a "gdaui_form" node */
+		xmlNodePtr node = g_value_get_pointer (value);
+		if (node) {
+			g_return_if_fail (node);
+			g_return_if_fail (!strcmp ((gchar*) node->name, "gdaui_form"));
 
+			pack_entries_in_xml_layout (form, node);
+		}
+		else
+			pack_entries_in_table (form);
+
+		g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[LAYOUT_CHANGED], 0);
+		break;
+	}
+	case PROP_PARAMLIST:
+		if (priv->set) {
+			get_rid_of_set (priv->set, form);
+			destroy_entries (form);
+		}
+
+		priv->set = g_value_get_pointer (value);
+		if (priv->set) {
+			g_return_if_fail (GDA_IS_SET (priv->set));
+
+			g_object_ref (priv->set);
+			priv->set_info = gdaui_set_new (GDA_SET (priv->set));
+
+			g_signal_connect (priv->set_info, "public-data-changed",
+					  G_CALLBACK (paramlist_public_data_changed_cb), form);
+			g_signal_connect (priv->set, "holder-attr-changed",
+					  G_CALLBACK (paramlist_param_attr_changed_cb), form);
+			g_signal_connect (priv->set, "holder-type-set",
+					  G_CALLBACK (paramlist_holder_type_set_cb), form);
+
+			create_entries (form);
+			pack_entries_in_table (form);
 			g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[LAYOUT_CHANGED], 0);
-			break;
 		}
-		case PROP_PARAMLIST:
-			if (form->priv->set) {
-				get_rid_of_set (form->priv->set, form);
-				destroy_entries (form);
-			}
-
-			form->priv->set = g_value_get_pointer (value);
-			if (form->priv->set) {
-				g_return_if_fail (GDA_IS_SET (form->priv->set));
-
-				g_object_ref (form->priv->set);
-				form->priv->set_info = gdaui_set_new (GDA_SET (form->priv->set));
-
-				g_signal_connect (form->priv->set_info, "public-data-changed",
-						  G_CALLBACK (paramlist_public_data_changed_cb), form);
-				g_signal_connect (form->priv->set, "holder-attr-changed",
-						  G_CALLBACK (paramlist_param_attr_changed_cb), form);
-				g_signal_connect (form->priv->set, "holder-type-set",
-						  G_CALLBACK (paramlist_holder_type_set_cb), form);
-
-				create_entries (form);
-				pack_entries_in_table (form);
-				g_signal_emit (G_OBJECT (form), gdaui_basic_form_signals[LAYOUT_CHANGED], 0);
-			}
-			break;
-		case PROP_ENTRIES_AUTO_DEFAULT:
-			gdaui_basic_form_set_entries_auto_default (form, g_value_get_boolean (value));
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+		break;
+	case PROP_ENTRIES_AUTO_DEFAULT:
+		gdaui_basic_form_set_entries_auto_default (form, g_value_get_boolean (value));
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -663,14 +642,14 @@ gdaui_basic_form_get_property (GObject *object,
 {
 	GdauiBasicForm *form;
 
-        form = GDAUI_BASIC_FORM (object);
-        if (form->priv) {
-                switch (param_id) {
+	form = GDAUI_BASIC_FORM (object);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
+	switch (param_id) {
 		case PROP_PARAMLIST:
-			g_value_set_pointer (value, form->priv->set);
+			g_value_set_pointer (value, priv->set);
 			break;
 		case PROP_ENTRIES_AUTO_DEFAULT:
-			g_value_set_boolean (value, form->priv->entries_auto_default);
+			g_value_set_boolean (value, priv->entries_auto_default);
 			break;
 		case PROP_CAN_VEXPAND: {
 			gboolean can_expand = FALSE;
@@ -682,8 +661,7 @@ gdaui_basic_form_get_property (GObject *object,
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -725,8 +703,10 @@ disconnect_single_entry_signals (SingleEntry *sentry)
 static void
 unpack_entries (GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	GSList *list;
-	for (list = form->priv->s_entries; list; list = list->next) {
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry *) list->data;
 		if (sentry->entry) {
 			GtkWidget *parent;
@@ -746,10 +726,12 @@ unpack_entries (GdauiBasicForm *form)
 static void
 destroy_entries (GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	/* destroy all the widgets */
-	if (form->priv->s_entries) {
+	if (priv->s_entries) {
 		GSList *list;
-		for (list = form->priv->s_entries; list; list = list->next) {
+		for (list = priv->s_entries; list; list = list->next) {
 			SingleEntry *sentry = (SingleEntry *) list->data;
 
 			disconnect_single_entry_signals (sentry);
@@ -759,16 +741,16 @@ destroy_entries (GdauiBasicForm *form)
 			g_free (sentry->label_title);
 			g_free (sentry);
 		}
-		g_slist_free (form->priv->s_entries);
-		form->priv->s_entries = NULL;
+		g_slist_free (priv->s_entries);
+		priv->s_entries = NULL;
 	}
 
-	if (form->priv->top_container) {
-		gtk_widget_destroy (form->priv->top_container);
-		form->priv->top_container = NULL;
-		if (form->priv->place_holders) {
-			g_hash_table_destroy (form->priv->place_holders);
-			form->priv->place_holders = NULL;
+	if (priv->top_container) {
+		gtk_widget_destroy (priv->top_container);
+		priv->top_container = NULL;
+		if (priv->place_holders) {
+			g_hash_table_destroy (priv->place_holders);
+			priv->place_holders = NULL;
 		}
 	}
 }
@@ -875,6 +857,10 @@ create_entry_widget (SingleEntry *sentry)
 
 	group = sentry->group;
 	sg = gdaui_set_group_get_group (group);
+
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (sentry->form));
+	GdauiBasicFormPrivate *form_priv = gdaui_basic_form_get_instance_private (sentry->form);
+
 	if (! gda_set_group_get_source (sg)) {
 		/* there is only one non-constrained parameter */
 		GdaHolder *param;
@@ -962,8 +948,7 @@ create_entry_widget (SingleEntry *sentry)
 		/* several parameters depending on the values of a GdaDataModel object */
 		GSList *plist;
 		gboolean nullok = TRUE;
-			
-		entry = gdaui_entry_combo_new (sentry->form->priv->set_info, gdaui_set_group_get_source (group));
+		entry = gdaui_entry_combo_new (form_priv->set_info, gdaui_set_group_get_source (group));
 		sentry->entry = GDAUI_DATA_ENTRY (entry);
 
 		/* connect to the parameter's changes */
@@ -1010,13 +995,13 @@ create_entry_widget (SingleEntry *sentry)
 	gtk_widget_set_hexpand (sentry->label, FALSE);
 	g_object_set (G_OBJECT (sentry->label), "xalign", 1., NULL);
 	gdaui_data_entry_set_editable (sentry->entry, editable);
-	if (sentry->form->priv->alpha > 0.)
-		gdaui_data_entry_set_unknown_color (sentry->entry, sentry->form->priv->red,
-						    sentry->form->priv->green, sentry->form->priv->blue,
-						    sentry->form->priv->alpha);
+	if (form_priv->alpha > 0.)
+		gdaui_data_entry_set_unknown_color (sentry->entry, form_priv->red,
+						    form_priv->green, form_priv->blue,
+						    form_priv->alpha);
 
 	GSList *list;
-	for (list = sentry->form->priv->size_groups; list; list = list->next) {
+	for (list = form_priv->size_groups; list; list = list->next) {
 		SizeGroup *sg = (SizeGroup*) list->data;
 		switch (sg->part) {
 		case GDAUI_BASIC_FORM_LABELS:
@@ -1048,28 +1033,30 @@ create_entry_widget (SingleEntry *sentry)
 static void
 create_entries (GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GSList *list;
 
 	/* parameters list management */
-	if (!form->priv->set || !gdaui_set_get_groups (form->priv->set_info))
+	if (!priv->set || !gdaui_set_get_groups (priv->set_info))
 		/* nothing to do */
 		return;
 
-	/* creating all the data entries, and putting them into the form->priv->entries list */
-	for (list = gdaui_set_get_groups (form->priv->set_info); list; list = list->next) {
+	/* creating all the data entries, and putting them into the priv->entries list */
+	for (list = gdaui_set_get_groups (priv->set_info); list; list = list->next) {
 		SingleEntry *sentry;
 
 		sentry = g_new0 (SingleEntry, 1);
 		sentry->form = form;
 		sentry->forward_param_updates = TRUE;
-		form->priv->s_entries = g_slist_append (form->priv->s_entries, sentry);
+		priv->s_entries = g_slist_append (priv->s_entries, sentry);
 
 		sentry->group = GDAUI_SET_GROUP (list->data);
 		create_entry_widget (sentry);
 	}
  
 	/* Set the Auto entries default in the entries */
-	gdaui_basic_form_set_entries_auto_default (form, form->priv->entries_auto_default);
+	gdaui_basic_form_set_entries_auto_default (form, priv->entries_auto_default);
 
 	gdaui_basic_form_reset (form);
 }
@@ -1113,17 +1100,19 @@ pack_entry_widget (SingleEntry *sentry)
 static void
 pack_entries_in_table (GdauiBasicForm *form)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GtkWidget *grid;
 	gint i;
 	GSList *list;
 
 	unpack_entries (form);
-	if (form->priv->top_container) {
-		gtk_widget_destroy (form->priv->top_container);
-		form->priv->top_container = NULL;
-		if (form->priv->place_holders) {
-			g_hash_table_destroy (form->priv->place_holders);
-			form->priv->place_holders = NULL;
+	if (priv->top_container) {
+		gtk_widget_destroy (priv->top_container);
+		priv->top_container = NULL;
+		if (priv->place_holders) {
+			g_hash_table_destroy (priv->place_holders);
+			priv->place_holders = NULL;
 		}
 	}
 
@@ -1131,15 +1120,15 @@ pack_entries_in_table (GdauiBasicForm *form)
 	grid = gtk_grid_new ();
 	gtk_grid_set_row_spacing (GTK_GRID (grid), GDAUI_HIG_FORM_VSPACE);
 	gtk_grid_set_column_spacing (GTK_GRID (grid), GDAUI_HIG_FORM_HSPACE);
-	form->priv->top_container = grid;
-	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), grid, TRUE, TRUE, 0);
+	priv->top_container = grid;
+	gtk_box_pack_start (GTK_BOX (priv->mainbox), grid, TRUE, TRUE, 0);
 	g_object_set (G_OBJECT (grid),
 		      "margin-top", GDAUI_HIG_FORM_VBORDER,
 		      "margin-bottom", GDAUI_HIG_FORM_VBORDER,
 		      "margin-start", GDAUI_HIG_FORM_HBORDER,
 		      "margin-end", GDAUI_HIG_FORM_HBORDER, NULL);
 		      
-	for (list = form->priv->s_entries, i = 0;
+	for (list = priv->s_entries, i = 0;
 	     list;
 	     list = list->next, i++) {
 		SingleEntry *sentry = (SingleEntry *) list->data;
@@ -1161,20 +1150,22 @@ static GtkWidget *load_xml_layout_section (GdauiBasicForm *form, xmlNodePtr sect
 static void
 pack_entries_in_xml_layout (GdauiBasicForm *form, xmlNodePtr form_node)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GtkWidget *top;
 
 	unpack_entries (form);
-	if (form->priv->top_container) {
-		gtk_widget_destroy (form->priv->top_container);
-		form->priv->top_container = NULL;
-		if (form->priv->place_holders) {
-			g_hash_table_destroy (form->priv->place_holders);
-			form->priv->place_holders = NULL;
+	if (priv->top_container) {
+		gtk_widget_destroy (priv->top_container);
+		priv->top_container = NULL;
+		if (priv->place_holders) {
+			g_hash_table_destroy (priv->place_holders);
+			priv->place_holders = NULL;
 		}
 	}
 
 	top = load_xml_layout_children (form, form_node);
-	gtk_box_pack_start (GTK_BOX (form->priv->mainbox), top, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (priv->mainbox), top, TRUE, TRUE, 0);
 	gtk_widget_show_all (top);
 	mark_not_null_entry_labels (form, TRUE);
 }
@@ -1261,6 +1252,8 @@ load_xml_layout_children (GdauiBasicForm *form, xmlNodePtr parent_node)
 static GtkWidget *
 load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 {
+	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GtkWidget *grid;
 	grid = gtk_grid_new ();
 	
@@ -1334,11 +1327,11 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 					xmlFree (label);
 				}
 
-				if (! form->priv->place_holders)
-					form->priv->place_holders = g_hash_table_new_full (g_str_hash, g_str_equal,
+				if (! priv->place_holders)
+					priv->place_holders = g_hash_table_new_full (g_str_hash, g_str_equal,
 											   g_free, g_object_unref);
 				ph = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-				g_hash_table_insert (form->priv->place_holders, g_strdup ((gchar*) id),
+				g_hash_table_insert (priv->place_holders, g_strdup ((gchar*) id),
 						     g_object_ref_sink ((GObject*)ph));
 				gtk_grid_attach (GTK_GRID (grid), ph, 1, i, 1, 1);
 				xmlFree (id);
@@ -1397,9 +1390,11 @@ load_xml_layout_section (GdauiBasicForm *form, xmlNodePtr section_node)
 static void
 mark_not_null_entry_labels (GdauiBasicForm *form, gboolean show_mark)
 {
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GSList *list;
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 		if (show_mark && sentry->not_null) {
 			gchar *str;
@@ -1485,13 +1480,15 @@ entry_contents_modified (GdauiDataEntry *entry, SingleEntry *sentry)
 
 #ifdef PROXY_STORE_EXTRA_VALUES
 		/* updating the GdaDataProxy if there is one */
-		if (GDA_IS_DATA_MODEL_ITER (sentry->form->priv->set)) {
+		g_return_if_fail (GDAUI_IS_BASIC_FORM (sentry->form));
+		GdauiBasicFormPrivate *form_priv = gdaui_basic_form_get_instance_private (sentry->form);
+		if (GDA_IS_DATA_MODEL_ITER (form_priv->set)) {
 			GdaDataProxy *proxy;
 			gint proxy_row;
 
-			proxy_row = gda_data_model_iter_get_row ((GdaDataModelIter *) sentry->form->priv->set);
+			proxy_row = gda_data_model_iter_get_row ((GdaDataModelIter *) form_priv->set);
 
-			g_object_get (G_OBJECT (sentry->form->priv->set), "data-model", &proxy, NULL);
+			g_object_get (G_OBJECT (form_priv->set), "data-model", &proxy, NULL);
 			if (GDA_IS_DATA_PROXY (proxy)) {
 				GSList *all_new_values;
 				gint i, col;
@@ -1631,8 +1628,9 @@ gdaui_basic_form_set_as_reference (GdauiBasicForm *form)
 	GdaHolder *param;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 
 		if (sentry->single_param) {
@@ -1685,8 +1683,9 @@ gboolean
 gdaui_basic_form_is_valid (GdauiBasicForm *form)
 {
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), FALSE);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	return gda_set_is_valid (form->priv->set, NULL);
+	return gda_set_is_valid (priv->set, NULL);
 }
 
 /**
@@ -1704,8 +1703,9 @@ GdaSet *
 gdaui_basic_form_get_data_set (GdauiBasicForm *form)
 {
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	return form->priv->set;
+	return priv->set;
 }
 
 /**
@@ -1725,8 +1725,9 @@ gdaui_basic_form_has_changed (GdauiBasicForm *form)
 	GSList *list;
 
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), FALSE);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 		if (! (gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (sentry->entry)) &
 		       GDA_VALUE_ATTR_IS_UNCHANGED))
@@ -1750,8 +1751,9 @@ gdaui_basic_form_reset (GdauiBasicForm *form)
 	GSList *list;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 
 		if (!sentry->single_param) {
@@ -1858,15 +1860,16 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *holder)
 	GtkWidget *entry = NULL;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	if (holder) {
 		g_return_if_fail (GDA_IS_HOLDER (holder));
 		entry = gdaui_basic_form_get_entry_widget (form, holder);
 	}
 
-	if (!entry && form->priv->set) {
+	if (!entry && priv->set) {
 		GSList *list;
-		for (list = gda_set_get_holders (form->priv->set); list; list = list->next) {
+		for (list = gda_set_get_holders (priv->set); list; list = list->next) {
 			GdaHolder *holder;
 			holder = GDA_HOLDER (list->data);
 			if (!gda_holder_is_valid (holder)) {
@@ -1896,6 +1899,7 @@ void
 gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *holder, gboolean editable)
 {
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	if (holder) {
 		SingleEntry *sentry;
@@ -1905,7 +1909,7 @@ gdaui_basic_form_entry_set_editable (GdauiBasicForm *form, GdaHolder *holder, gb
 	}
 	else {
 		GSList *list;
-		for (list = form->priv->s_entries; list; list = list->next)
+		for (list = priv->s_entries; list; list = list->next)
 			gdaui_data_entry_set_editable (GDAUI_DATA_ENTRY (((SingleEntry*) list->data)->entry),
 						       editable);
 	}
@@ -1930,9 +1934,10 @@ gdaui_basic_form_set_entries_auto_default (GdauiBasicForm *form, gboolean auto_d
 	GSList *list;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	form->priv->entries_auto_default = auto_default;
-	for (list = form->priv->s_entries; list; list = list->next) {
+	priv->entries_auto_default = auto_default;
+	for (list = priv->s_entries; list; list = list->next) {
 		if (g_object_class_find_property (G_OBJECT_GET_CLASS (((SingleEntry*) list->data)->entry),
 						  "set-default-if-invalid"))
 			g_object_set (G_OBJECT (((SingleEntry*) list->data)->entry),
@@ -1955,8 +1960,9 @@ gdaui_basic_form_set_entries_to_default (GdauiBasicForm *form)
 	guint attrs;
 
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry*) list->data;
 		attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (sentry->entry));
 		if (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT)
@@ -1970,8 +1976,10 @@ static void form_holder_changed (GdauiBasicForm *form, GdaHolder *param, gboolea
 static SingleEntry *
 get_single_entry_for_holder (GdauiBasicForm *form, GdaHolder *param)
 {
+	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GSList *list;
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry *) list->data;
 		if (sentry->single_param && (sentry->single_param == param))
 			return sentry;
@@ -1992,10 +2000,12 @@ get_single_entry_for_holder (GdauiBasicForm *form, GdaHolder *param)
 static SingleEntry *
 get_single_entry_for_id (GdauiBasicForm *form, const gchar *id)
 {
+	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	GSList *list;
 	g_return_val_if_fail (id, NULL);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *sentry = (SingleEntry *) list->data;
 		if (sentry->label_title && !strcmp (sentry->label_title, id))
 			return sentry;
@@ -2233,10 +2243,11 @@ gdaui_basic_form_get_place_holder (GdauiBasicForm *form, const gchar *placeholde
 {
 	g_return_val_if_fail (GDAUI_IS_BASIC_FORM (form), NULL);
 	g_return_val_if_fail (placeholder_id, NULL);
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	if (! form->priv->place_holders)
+	if (! priv->place_holders)
 		return NULL;
-	return g_hash_table_lookup (form->priv->place_holders, placeholder_id);
+	return g_hash_table_lookup (priv->place_holders, placeholder_id);
 }
 
 /**
@@ -2256,14 +2267,15 @@ gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_gro
 	GSList *list;
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	SizeGroup *sg;
 	sg = g_new (SizeGroup, 1);
 	sg->size_group = g_object_ref (size_group);
 	sg->part = part;
-	form->priv->size_groups = g_slist_append (form->priv->size_groups, sg);
+	priv->size_groups = g_slist_append (priv->size_groups, sg);
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *se = (SingleEntry*) list->data;
 		switch (part) {
 		case GDAUI_BASIC_FORM_LABELS:
@@ -2297,12 +2309,13 @@ gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *siz
 	GSList *list;
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
 	g_return_if_fail (GTK_IS_SIZE_GROUP (size_group));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 	
 	SizeGroup *sg;
-	for (list = form->priv->size_groups; list; list = list->next) {
+	for (list = priv->size_groups; list; list = list->next) {
 		sg = (SizeGroup*) list->data;
 		if (sg->size_group == size_group) {
-			form->priv->size_groups = g_slist_remove (form->priv->size_groups, sg);
+			priv->size_groups = g_slist_remove (priv->size_groups, sg);
 			size_group_free (sg);
 			break;
 		}
@@ -2314,7 +2327,7 @@ gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *siz
 		return;
 	}
 
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *se = (SingleEntry*) list->data;
 		switch (part) {
 		case GDAUI_BASIC_FORM_LABELS:
@@ -2353,19 +2366,20 @@ gdaui_basic_form_set_unknown_color (GdauiBasicForm *form, gdouble red, gdouble g
 	g_return_if_fail ((green >= 0.) && (green <= 1.));
 	g_return_if_fail ((blue >= 0.) && (blue <= 1.));
 	g_return_if_fail ((alpha >= 0.) && (alpha <= 1.));
+	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	form->priv->red = red;
-	form->priv->green = green;
-	form->priv->blue = blue;
-	form->priv->alpha = alpha;
+	priv->red = red;
+	priv->green = green;
+	priv->blue = blue;
+	priv->alpha = alpha;
 
 	GSList *list;
-	for (list = form->priv->s_entries; list; list = list->next) {
+	for (list = priv->s_entries; list; list = list->next) {
 		SingleEntry *se;
 		se = (SingleEntry *) list->data;
-		gdaui_data_entry_set_unknown_color (se->entry, form->priv->red,
-						    form->priv->green, form->priv->blue,
-						    form->priv->alpha);
+		gdaui_data_entry_set_unknown_color (se->entry, priv->red,
+						    priv->green, priv->blue,
+						    priv->alpha);
 	}
 }
 

@@ -27,24 +27,8 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_BASIC_FORM          (gdaui_basic_form_get_type())
-#define GDAUI_BASIC_FORM(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_basic_form_get_type(), GdauiBasicForm)
-#define GDAUI_BASIC_FORM_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_basic_form_get_type (), GdauiBasicFormClass)
-#define GDAUI_IS_BASIC_FORM(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_basic_form_get_type ())
-#define GDAUI_IS_BASIC_FORM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_BASIC_FORM))
-#define GDAUI_BASIC_FORM_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), GDAUI_TYPE_BASIC_FORM, GdauiBasicFormClass))
+G_DECLARE_DERIVABLE_TYPE(GdauiBasicForm, gdaui_basic_form, GDAUI, BASIC_FORM, GtkBox)
 
-
-typedef struct _GdauiBasicForm      GdauiBasicForm;
-typedef struct _GdauiBasicFormClass GdauiBasicFormClass;
-typedef struct _GdauiBasicFormPriv  GdauiBasicFormPriv;
-
-/* struct for the object's data */
-struct _GdauiBasicForm
-{
-	GtkBox             object;
-
-	GdauiBasicFormPriv *priv;
-};
 
 /* struct for the object's class */
 struct _GdauiBasicFormClass
@@ -52,7 +36,7 @@ struct _GdauiBasicFormClass
 	GtkBoxClass        parent_class;
 
 	/* signals */
-        void       (*holder_changed) (GdauiBasicForm *form, GdaHolder *holder, gboolean is_user_action);
+	void       (*holder_changed) (GdauiBasicForm *form, GdaHolder *holder, gboolean is_user_action);
 	void       (*activated)      (GdauiBasicForm *form);
 	void       (*layout_changed) (GdauiBasicForm *form);
 };
@@ -151,7 +135,6 @@ struct _GdauiBasicFormClass
  * </example>
  */
 
-GType             gdaui_basic_form_get_type                 (void) G_GNUC_CONST;
 GtkWidget        *gdaui_basic_form_new                      (GdaSet *data_set);
 GtkWidget        *gdaui_basic_form_new_in_dialog            (GdaSet *data_set, GtkWindow *parent,
 							     const gchar *title, const gchar *header);
