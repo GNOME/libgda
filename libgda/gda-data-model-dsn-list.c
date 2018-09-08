@@ -273,8 +273,10 @@ gda_data_model_dsn_list_get_n_rows (GdaDataModel *model)
 static gint
 gda_data_model_dsn_list_get_n_columns (GdaDataModel *model)
 {
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	GdaDataModelDsnList *dmodel = GDA_DATA_MODEL_DSN_LIST (model);
 	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (dmodel);
+	g_return_val_if_fail (priv->columns != NULL, -1);
 
 	return g_slist_length (priv->columns);
 }

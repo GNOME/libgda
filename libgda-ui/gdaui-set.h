@@ -22,7 +22,7 @@
 #define __GDAUI_SET__
 
 #include <gtk/gtk.h>
-#include <libgda/gda-decl.h>
+#include <libgda/gda-set.h>
 
 G_BEGIN_DECLS
 
