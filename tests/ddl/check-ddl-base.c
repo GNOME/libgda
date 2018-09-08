@@ -42,7 +42,8 @@ static void
 test_ddl_base_finish (BaseFixture *self,
 		      gconstpointer user_data)
 {
-	gda_ddl_base_free (self->obj);
+	if (self->obj)
+		g_object_unref (self->obj);
 }
 
 static void
