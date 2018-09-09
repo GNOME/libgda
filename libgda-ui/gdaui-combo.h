@@ -27,22 +27,11 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_COMBO            (gdaui_combo_get_type())
-#define GDAUI_COMBO(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDAUI_TYPE_COMBO, GdauiCombo))
-#define GDAUI_COMBO_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDAUI_TYPE_COMBO, GdauiComboClass))
-#define GDAUI_IS_COMBO(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_COMBO))
-#define GDAUI_IS_COMBO_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_COMBO))
-
-typedef struct _GdauiCombo        GdauiCombo;
-typedef struct _GdauiComboClass   GdauiComboClass;
-typedef struct _GdauiComboPrivate GdauiComboPrivate;
-
-struct _GdauiCombo {
-	GtkComboBox          object;
-	GdauiComboPrivate   *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdauiCombo, gdaui_combo, GDAUI, COMBO, GtkComboBox)
 
 struct _GdauiComboClass {
 	GtkComboBoxClass     parent_class;
+	gpointer             padding[12];
 };
 
 /**
@@ -53,8 +42,6 @@ struct _GdauiComboClass {
  * @Image: vi-combo.png
  * @see_also:
  */
-
-GType         gdaui_combo_get_type         (void) G_GNUC_CONST;
 
 GtkWidget    *gdaui_combo_new              (void);
 GtkWidget    *gdaui_combo_new_with_model   (GdaDataModel *model, gint n_cols, gint *cols_index);

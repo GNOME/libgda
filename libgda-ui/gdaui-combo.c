@@ -26,7 +26,7 @@
 #include "gdaui-data-store.h"
 #include "gdaui-data-selector.h"
 
-struct _GdauiComboPrivate {
+typedef struct {
 	GdaDataModel     *model; /* proxied model (the one when _set_model() is called) */
 	GdaDataModelIter *iter; /* for @model, may be NULL */
 	GdauiDataStore   *store; /* model proxy */
@@ -39,11 +39,8 @@ struct _GdauiComboPrivate {
 	gint             *cols_width;
 
 	gulong            changed_id; /* signal handler ID for the "changed" signal */
-};
+} GdauiComboPrivate;
 
-static void gdaui_combo_class_init   (GdauiComboClass *klass);
-static void gdaui_combo_init         (GdauiCombo *combo,
-				      GdauiComboClass *klass);
 static void gdaui_combo_set_property (GObject *object,
 				      guint paramid,
 				      const GValue *value,
@@ -75,50 +72,15 @@ enum {
 	PROP_AS_LIST
 };
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
+G_DEFINE_TYPE_WITH_CODE(GdauiCombo, gdaui_combo, GTK_TYPE_COMBO_BOX,
+                        G_ADD_PRIVATE (GdauiCombo)
+                        G_IMPLEMENT_INTERFACE (GDAUI_TYPE_DATA_SELECTOR, gdaui_combo_selector_init))
 
-/*
- * GdauiCombo class implementation
- */
-
-GType
-gdaui_combo_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiComboClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_combo_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiCombo),
-			0,
-			(GInstanceInitFunc) gdaui_combo_init,
-			0
-		};
-
-		static const GInterfaceInfo selector_info = {
-                        (GInterfaceInitFunc) gdaui_combo_selector_init,
-                        NULL,
-                        NULL
-                };
-
-		type = g_type_register_static (GTK_TYPE_COMBO_BOX, "GdauiCombo", &info, 0);
-		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
-	}
-	return type;
-}
 
 static void
 gdaui_combo_class_init (GdauiComboClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->set_property = gdaui_combo_set_property;
 	object_class->get_property = gdaui_combo_get_property;
@@ -153,38 +115,39 @@ gdaui_combo_selector_init (GdauiDataSelectorIface *iface)
 static void selection_changed_cb (GtkComboBox *widget, gpointer data);
 
 static void
-gdaui_combo_init (GdauiCombo *combo, G_GNUC_UNUSED GdauiComboClass *klass)
+gdaui_combo_init (GdauiCombo *combo)
 {
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
-	/* allocate private structure */
-	combo->priv = g_new0 (GdauiComboPrivate, 1);
-	combo->priv->model = NULL;
-	combo->priv->store = NULL;
-	combo->priv->iter = NULL;
+	priv->model = NULL;
+	priv->store = NULL;
+	priv->iter = NULL;
 
 	gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (combo), 0);
-	combo->priv->changed_id = g_signal_connect (combo, "changed",
+	priv->changed_id = g_signal_connect (combo, "changed",
 						    G_CALLBACK (selection_changed_cb), NULL);
 }
 
 static void
 sync_iter_with_selection (GdauiCombo *combo)
 {
+	g_return_if_fail (GDAUI_IS_COMBO (combo));
 	gint selrow = -1;
 	GtkTreeIter iter;
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
-	if (! combo->priv->iter)
+	if (! priv->iter)
 		return;
 
 	/* there is at most one selected row */
 	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter))
-		selrow = gdaui_data_store_get_row_from_iter (combo->priv->store, &iter);
+		selrow = gdaui_data_store_get_row_from_iter (priv->store, &iter);
 	
 	/* update iter */
-	if ((selrow == -1) || !gda_data_model_iter_move_to_row (combo->priv->iter, selrow)) {
-		gda_data_model_iter_invalidate_contents (combo->priv->iter);
-		g_object_set (G_OBJECT (combo->priv->iter), "current-row", -1, NULL);
+	if ((selrow == -1) || !gda_data_model_iter_move_to_row (priv->iter, selrow)) {
+		gda_data_model_iter_invalidate_contents (priv->iter);
+		g_object_set (G_OBJECT (priv->iter), "current-row", -1, NULL);
 	}
 }
 
@@ -239,10 +202,11 @@ gdaui_combo_get_property (GObject *object,
 	GdauiCombo *combo = (GdauiCombo *) object;
 
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	switch (param_id) {
 	case PROP_MODEL :
-		g_value_set_object (value, G_OBJECT (combo->priv->model));
+		g_value_set_object (value, G_OBJECT (priv->model));
 		break;
 	case PROP_AS_LIST: {
 		const gchar *name;
@@ -262,7 +226,7 @@ gdaui_combo_get_preferred_width (GtkWidget *widget,
 				 gint *natural_size)
 {
 #define MINSIZE 50
-	GTK_WIDGET_CLASS (parent_class)->get_preferred_width (widget, minimum_size, natural_size);
+	GTK_WIDGET_CLASS (gdaui_combo_parent_class)->get_preferred_width (widget, minimum_size, natural_size);
 	if (minimum_size && (*minimum_size > MINSIZE))
 		*minimum_size = MINSIZE;
 	if (natural_size && (*natural_size > MINSIZE))
@@ -275,18 +239,18 @@ gdaui_combo_dispose (GObject *object)
 	GdauiCombo *combo = (GdauiCombo *) object;
 
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
-
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 	/* free objects references */
-	if (combo->priv->store) {
-		g_signal_handler_disconnect (combo, combo->priv->changed_id);
-		if (combo->priv->iter)
-			g_object_unref (combo->priv->iter);
-		g_object_unref (G_OBJECT (combo->priv->store));
-		combo->priv->store = NULL;
+	if (priv->store) {
+		g_signal_handler_disconnect (combo, priv->changed_id);
+		if (priv->iter)
+			g_object_unref (priv->iter);
+		g_object_unref (G_OBJECT (priv->store));
+		priv->store = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_combo_parent_class)->dispose (object);
 }
 
 static void
@@ -295,18 +259,16 @@ gdaui_combo_finalize (GObject *object)
 	GdauiCombo *combo = (GdauiCombo *) object;
 
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	/* free memory */
-	if (combo->priv->cols_index)
-		g_free (combo->priv->cols_index);
-	if (combo->priv->cols_width)
-		g_free (combo->priv->cols_width);
-
-	g_free (combo->priv);
-	combo->priv = NULL;
+	if (priv->cols_index)
+		g_free (priv->cols_index);
+	if (priv->cols_width)
+		g_free (priv->cols_width);
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_combo_parent_class)->finalize (object);
 }
 
 /**
@@ -381,42 +343,43 @@ gdaui_combo_set_data (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint 
 	
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
 	g_return_if_fail (model == NULL || GDA_IS_DATA_MODEL (model));
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	/* reset all */
-	if (combo->priv->store) {
-		g_object_unref (G_OBJECT (combo->priv->store));
-		combo->priv->store = NULL;
+	if (priv->store) {
+		g_object_unref (G_OBJECT (priv->store));
+		priv->store = NULL;
 		gtk_combo_box_set_model (GTK_COMBO_BOX (combo), NULL);
 		gtk_combo_box_set_active (GTK_COMBO_BOX (combo), -1);
 	}
-	if (combo->priv->model) {
-		g_object_unref (combo->priv->model);
-		combo->priv->model = NULL;
+	if (priv->model) {
+		g_object_unref (priv->model);
+		priv->model = NULL;
 	}
-	if (combo->priv->cols_index) {
-		g_free (combo->priv->cols_index);
-		combo->priv->cols_index = NULL;
+	if (priv->cols_index) {
+		g_free (priv->cols_index);
+		priv->cols_index = NULL;
 	}
-	combo->priv->n_cols = 0;
+	priv->n_cols = 0;
 	gtk_cell_layout_clear (GTK_CELL_LAYOUT (combo));
 
-	if (combo->priv->cols_width) {
-		g_free (combo->priv->cols_width);
-		combo->priv->cols_width = NULL;
+	if (priv->cols_width) {
+		g_free (priv->cols_width);
+		priv->cols_width = NULL;
 	}
 
 	/* set model */
 	if (model) {
-		combo->priv->model = model;
+		priv->model = model;
 		g_object_ref (model);
 		
-		combo->priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (combo->priv->model));
-		gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL (combo->priv->store));
+		priv->store = GDAUI_DATA_STORE (gdaui_data_store_new (priv->model));
+		gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL (priv->store));
 		model_ncols = gda_data_model_get_n_columns (model);
-		combo->priv->cols_width = g_new (gint, model_ncols);
+		priv->cols_width = g_new (gint, model_ncols);
 		gint i;
 		for (i = 0; i < model_ncols; i++)
-			combo->priv->cols_width [i] = -1;
+			priv->cols_width [i] = -1;
 	}
 	
 	if (!n_cols && model) {
@@ -438,9 +401,9 @@ gdaui_combo_set_data (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint 
 		GdaDataHandler *dh;
 
 		/* local copy */
-		combo->priv->cols_index = g_new0 (gint, ln_cols);
-		combo->priv->n_cols = ln_cols;
-		memcpy (combo->priv->cols_index, lcols_index, sizeof (gint) * ln_cols);
+		priv->cols_index = g_new0 (gint, ln_cols);
+		priv->n_cols = ln_cols;
+		memcpy (priv->cols_index, lcols_index, sizeof (gint) * ln_cols);
 
 		/* compute cell renderers' widths in chars */
 		gint j, nrows;
@@ -448,7 +411,7 @@ gdaui_combo_set_data (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint 
 		nrows = gda_data_model_get_n_rows (model);
 		for (j = 0; j < nrows; j++) {
 			for (i = 0; i < ln_cols; i++) {
-				cvalue = gda_data_model_get_value_at (model, combo->priv->cols_index [i], j, NULL);
+				cvalue = gda_data_model_get_value_at (model, priv->cols_index [i], j, NULL);
 				if (cvalue && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)) {
 					gchar *str;
 					gint len;
@@ -456,8 +419,8 @@ gdaui_combo_set_data (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint 
 					str = gda_data_handler_get_str_from_value (dh, cvalue);
 					len = strlen (str);
 					g_free (str);
-					if (len > combo->priv->cols_width [combo->priv->cols_index [i]])
-						combo->priv->cols_width [combo->priv->cols_index [i]] = len;
+					if (len > priv->cols_width [priv->cols_index [i]])
+						priv->cols_width [priv->cols_index [i]] = len;
 				}
 			}
 		}
@@ -467,7 +430,7 @@ gdaui_combo_set_data (GdauiCombo *combo, GdaDataModel *model, gint n_cols, gint 
 			GdaColumn *column;
 			GType type;
 
-			index = combo->priv->cols_index [i];
+			index = priv->cols_index [i];
 
 			column = gda_data_model_describe_column (model, index);
 			type = gda_column_get_g_type (column);
@@ -522,10 +485,11 @@ gboolean
 _gdaui_combo_set_selected (GdauiCombo *combo, const GSList *values)
 {
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), FALSE);
-	g_return_val_if_fail (combo->priv->cols_index, FALSE);
-	g_return_val_if_fail (g_slist_length ((GSList *) values) == (guint)combo->priv->n_cols, FALSE);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	g_return_val_if_fail (priv->cols_index, FALSE);
+	g_return_val_if_fail (g_slist_length ((GSList *) values) == (guint)priv->n_cols, FALSE);
 
-	return _gdaui_combo_set_selected_ext (combo, values, combo->priv->cols_index);
+	return _gdaui_combo_set_selected_ext (combo, values, priv->cols_index);
 }
 
 /*
@@ -546,12 +510,13 @@ GSList *
 _gdaui_combo_get_selected (GdauiCombo *combo)
 {
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), NULL);
-	if (!combo->priv->store)
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	if (!priv->store)
 		return NULL;
-	g_return_val_if_fail (combo->priv->n_cols, NULL);
-	g_return_val_if_fail (combo->priv->cols_index, NULL);
+	g_return_val_if_fail (priv->n_cols, NULL);
+	g_return_val_if_fail (priv->cols_index, NULL);
 	
-	return _gdaui_combo_get_selected_ext (combo, combo->priv->n_cols, combo->priv->cols_index);
+	return _gdaui_combo_get_selected_ext (combo, priv->n_cols, priv->cols_index);
 }
 
 /*
@@ -578,10 +543,11 @@ _gdaui_combo_set_selected_ext (GdauiCombo *combo, const GSList *values, gint *co
 	GdaDataProxy *proxy;
 
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), FALSE);
-	g_return_val_if_fail (combo->priv->store, FALSE);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	g_return_val_if_fail (priv->store, FALSE);
 	g_return_val_if_fail (values, FALSE);
 
-	proxy = gdaui_data_store_get_proxy (combo->priv->store);
+	proxy = gdaui_data_store_get_proxy (priv->store);
 	row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (proxy), (GSList *) values, cols_index);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), row);
 
@@ -612,13 +578,14 @@ _gdaui_combo_get_selected_ext (GdauiCombo *combo, gint n_cols, gint *cols_index)
 	GValue *value;
 
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), NULL);
-	if (! combo->priv->store)
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	if (! priv->store)
 		return NULL;
 	if (!n_cols) {
 		GdaDataProxy *proxy;
 
 		g_return_val_if_fail (!cols_index, NULL);
-		proxy = gdaui_data_store_get_proxy (combo->priv->store);
+		proxy = gdaui_data_store_get_proxy (priv->store);
 		nbcols = gda_data_model_get_n_columns ((GdaDataModel *) proxy);
 	}
 	else {
@@ -628,7 +595,7 @@ _gdaui_combo_get_selected_ext (GdauiCombo *combo, gint n_cols, gint *cols_index)
 
 	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter)) {
 		for (index = 0;	index < nbcols; index++) {
-			gtk_tree_model_get (GTK_TREE_MODEL (combo->priv->store), &iter, 
+			gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter,
 					    cols_index ? cols_index[index] : index, &value, -1);
 			retval = g_slist_append (retval, value);
 		}
@@ -651,8 +618,9 @@ void
 gdaui_combo_add_null (GdauiCombo *combo, gboolean add_null)
 {
 	g_return_if_fail (GDAUI_IS_COMBO (combo));
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
-	g_object_set (G_OBJECT (combo->priv->store), "prepend-null-entry", add_null, NULL);
+	g_object_set (G_OBJECT (priv->store), "prepend-null-entry", add_null, NULL);
 }
 
 /**
@@ -672,12 +640,13 @@ gdaui_combo_is_null_selected (GdauiCombo *combo)
 	gboolean has_undef_choice;
 
 	g_return_val_if_fail (GDAUI_IS_COMBO (combo), FALSE);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	active_row = gtk_combo_box_get_active (GTK_COMBO_BOX (combo));
 	if (active_row == -1)
 		return TRUE;
 	
-	g_object_get (G_OBJECT (combo->priv->store), "prepend-null-entry", &has_undef_choice, NULL);
+	g_object_get (G_OBJECT (priv->store), "prepend-null-entry", &has_undef_choice, NULL);
 	if (has_undef_choice && (active_row == 0))
 		return TRUE;
 
@@ -690,7 +659,8 @@ combo_selector_get_model (GdauiDataSelector *iface)
 {
 	GdauiCombo *combo;
 	combo = GDAUI_COMBO (iface);
-	return combo->priv->model;
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	return priv->model;
 }
 
 static void
@@ -707,11 +677,12 @@ combo_selector_get_selected_rows (GdauiDataSelector *iface)
 	GdauiCombo *combo;
 
 	combo = GDAUI_COMBO (iface);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	/* there is at most one selected row */
 	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter)) {
 		gint row;
-		row = gdaui_data_store_get_row_from_iter (combo->priv->store, &iter);
+		row = gdaui_data_store_get_row_from_iter (priv->store, &iter);
 		if (row >=0) {
 			if (!retval)
 				retval = g_array_new (FALSE, FALSE, sizeof (gint));
@@ -728,14 +699,15 @@ combo_selector_get_data_set (GdauiDataSelector *iface)
 	GdauiCombo *combo;
 
 	combo = GDAUI_COMBO (iface);
-	if (! combo->priv->iter && combo->priv->model) {
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
+	if (! priv->iter && priv->model) {
 		GdaDataModel *proxy;
-		proxy = (GdaDataModel*) gdaui_data_store_get_proxy (combo->priv->store);
-		combo->priv->iter = gda_data_model_create_iter (proxy);
+		proxy = (GdaDataModel*) gdaui_data_store_get_proxy (priv->store);
+		priv->iter = gda_data_model_create_iter (proxy);
 		sync_iter_with_selection (combo);
 	}
 
-	return combo->priv->iter;
+	return priv->iter;
 }
 
 static gboolean
@@ -745,10 +717,11 @@ combo_selector_select_row (GdauiDataSelector *iface, gint row)
 	GtkTreeIter iter;
 
 	combo = GDAUI_COMBO (iface);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 	gtk_combo_box_set_active (GTK_COMBO_BOX (combo), row);
 	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter)) {
 		gint srow;
-		srow = gdaui_data_store_get_row_from_iter (combo->priv->store, &iter);
+		srow = gdaui_data_store_get_row_from_iter (priv->store, &iter);
 		if (srow == row)
 			return TRUE;
 	}
@@ -762,9 +735,10 @@ combo_selector_unselect_row (GdauiDataSelector *iface, gint row)
 	GtkTreeIter iter;
 
 	combo = GDAUI_COMBO (iface);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 	if (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo), &iter)) {
 		gint srow;
-		srow = gdaui_data_store_get_row_from_iter (combo->priv->store, &iter);
+		srow = gdaui_data_store_get_row_from_iter (priv->store, &iter);
 		if (srow == row)
 			gtk_combo_box_set_active (GTK_COMBO_BOX (combo), -1);
 	}
@@ -775,6 +749,7 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 {
 	GdauiCombo *combo;
 	combo = GDAUI_COMBO (iface);
+	GdauiComboPrivate *priv = gdaui_combo_get_instance_private (combo);
 
 	/* analyse existing columns */
 	GList *cells, *list;
@@ -796,21 +771,21 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 	g_list_free (cells);
 
 	/* column does not exist at this point */
-	if (!visible || !combo->priv->model)
+	if (!visible || !priv->model)
 		return;
-	if ((column < 0) || (column >= gda_data_model_get_n_columns (combo->priv->model))) {
-		g_warning (_("Column %d out of range (0-%d)"), column, gda_data_model_get_n_columns (combo->priv->model)-1);
+	if ((column < 0) || (column >= gda_data_model_get_n_columns (priv->model))) {
+		g_warning (_("Column %d out of range (0-%d)"), column, gda_data_model_get_n_columns (priv->model)-1);
 		return;
 	}
 
 	GdaDataHandler *dh;
-	if (combo->priv->cols_width[column] == -1) {
+	if (priv->cols_width[column] == -1) {
 		/* compute column width in chars */
 		gint j, nrows;
 		const GValue *cvalue;
-		nrows = gda_data_model_get_n_rows (combo->priv->model);
+		nrows = gda_data_model_get_n_rows (priv->model);
 		for (j = 0; j < nrows; j++) {
-			cvalue = gda_data_model_get_value_at (combo->priv->model, column, j, NULL);
+			cvalue = gda_data_model_get_value_at (priv->model, column, j, NULL);
 			if (cvalue && (G_VALUE_TYPE (cvalue) != GDA_TYPE_NULL)) {
 				gchar *str;
 				gint len;
@@ -818,8 +793,8 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 				str = gda_data_handler_get_str_from_value (dh, cvalue);
 				len = strlen (str);
 				g_free (str);
-				if (len > combo->priv->cols_width [column])
-					combo->priv->cols_width [column] = len;
+				if (len > priv->cols_width [column])
+					priv->cols_width [column] = len;
 			}
 		}
 	}
@@ -829,7 +804,7 @@ combo_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboole
 	GType type;
 	GtkCellRenderer *renderer;
 
-	mcolumn = gda_data_model_describe_column (combo->priv->model, column);
+	mcolumn = gda_data_model_describe_column (priv->model, column);
 	type = gda_column_get_g_type (mcolumn);
 	dh = gda_data_handler_get_default (type);
 	
