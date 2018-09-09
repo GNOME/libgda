@@ -552,22 +552,17 @@ gdaui_basic_form_dispose (GObject *object)
 	form = GDAUI_BASIC_FORM (object);
 	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
-	if (priv) {
-		/* paramlist */
-		if (priv->set)
-			get_rid_of_set (priv->set, form);
+	/* paramlist */
+	if (priv->set)
+		get_rid_of_set (priv->set, form);
 
-		destroy_entries (form);
+	destroy_entries (form);
 
-		if (priv->size_groups) {
-			g_slist_foreach (priv->size_groups, (GFunc) size_group_free, NULL);
-			g_slist_free (priv->size_groups);
-		}
-
-		/* the private area itself */
-		g_free (priv);
-		priv = NULL;
+	if (priv->size_groups) {
+		g_slist_foreach (priv->size_groups, (GFunc) size_group_free, NULL);
+		g_slist_free (priv->size_groups);
 	}
+
 
 	/* for the parent class */
 	G_OBJECT_CLASS (gdaui_basic_form_parent_class)->dispose (object);
