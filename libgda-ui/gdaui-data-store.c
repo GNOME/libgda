@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,12 +46,12 @@ enum {
 	PROP_ADD_NULL_ENTRY
 };
 
-struct _GdauiDataStorePriv {
+typedef struct {
 	GdaDataProxy *proxy;
 	gint          nrows;
 	gint          stamp; /* Random integer to check whether an iter belongs to our model */
 	gboolean      resetting; /* TRUE when GdauiDataStore is handling proxy reset callback */
-};
+} GdauiDataStorePrivate;
 
 /*
  * GtkTreeModel interface
@@ -70,38 +71,10 @@ static gboolean          data_store_iter_nth_child  (GtkTreeModel *tree_model, G
 static gboolean          data_store_iter_parent     (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *child);
 
 /* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
 
-GType
-gdaui_data_store_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiDataStoreClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_data_store_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiDataStore),
-			0,
-			(GInstanceInitFunc) gdaui_data_store_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) data_store_tree_model_init,
-			NULL,
-			NULL
-		};
-
-		type = g_type_register_static (G_TYPE_OBJECT, "GdauiDataStore", &info, 0);
-		g_type_add_interface_static (type, GTK_TYPE_TREE_MODEL, &data_model_info);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_CODE(GdauiDataStore, gdaui_data_store, G_TYPE_OBJECT,
+                        G_ADD_PRIVATE (GdauiDataStore)
+                        G_IMPLEMENT_INTERFACE(GTK_TYPE_TREE_MODEL, data_store_tree_model_init))
 
 static void
 data_store_tree_model_init (GtkTreeModelIface *iface)
@@ -126,8 +99,6 @@ gdaui_data_store_class_init (GdauiDataStoreClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gdaui_data_store_dispose;
 
 	/* Properties */
@@ -141,7 +112,7 @@ gdaui_data_store_class_init (GdauiDataStoreClass * class)
         g_object_class_install_property (object_class, PROP_PROXY,
                                          g_param_spec_pointer ("proxy", _("Internal GdaDataProxy data model"), NULL,
                                                                (G_PARAM_READABLE)));
-	g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
+        g_object_class_install_property (object_class, PROP_ADD_NULL_ENTRY,
                                          g_param_spec_boolean ("prepend-null-entry", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
@@ -150,71 +121,79 @@ static void
 gdaui_data_store_init (GdauiDataStore *store)
 {
 	/* Private structure */
-	store->priv = g_new0 (GdauiDataStorePriv, 1);
-	store->priv->proxy = NULL;
-	store->priv->nrows = 0;
-	store->priv->stamp = g_random_int ();
-	store->priv->resetting = FALSE;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+	priv->proxy = NULL;
+	priv->nrows = 0;
+	priv->stamp = g_random_int ();
+	priv->resetting = FALSE;
 }
 
 static void
-row_inserted_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_inserted_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *model)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
+	GdauiDataStore *store = (GdauiDataStore*) model;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
 
-	((GdauiDataStore*) store)->priv->nrows ++;
-	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
+
+	priv->nrows ++;
+	priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
-        gtk_tree_path_append_index (path, row);
-	if (gtk_tree_model_get_iter (store, &iter, path))
-		gtk_tree_model_row_inserted (store, path, &iter);
+	gtk_tree_path_append_index (path, row);
+	if (gtk_tree_model_get_iter (model, &iter, path))
+		gtk_tree_model_row_inserted (model, path, &iter);
 	gtk_tree_path_free (path);
 }
 
 static void
-row_updated_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_updated_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *model)
 {
 	GtkTreePath *path;
 	GtkTreeIter iter;
+	GdauiDataStore *store = (GdauiDataStore*) model;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
 
-	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
+	priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
-        gtk_tree_path_append_index (path, row);
-	if (gtk_tree_model_get_iter (store, &iter, path))
-		gtk_tree_model_row_changed (store, path, &iter);
+	gtk_tree_path_append_index (path, row);
+	if (gtk_tree_model_get_iter (model, &iter, path))
+		gtk_tree_model_row_changed (model, path, &iter);
 	gtk_tree_path_free (path);
 }
 
 static void
-row_removed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *store)
+row_removed_cb (G_GNUC_UNUSED GdaDataProxy *proxy, gint row, GtkTreeModel *model)
 {
 	GtkTreePath *path;
+	GdauiDataStore *store = (GdauiDataStore*) model;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
 
-	((GdauiDataStore*) store)->priv->nrows --;
-	((GdauiDataStore*) store)->priv->stamp = g_random_int ();
+	priv->nrows --;
+	priv->stamp = g_random_int ();
 	path = gtk_tree_path_new ();
-        gtk_tree_path_append_index (path, row);
-	gtk_tree_model_row_deleted (store, path);
+	gtk_tree_path_append_index (path, row);
+	gtk_tree_model_row_deleted (model, path);
 	gtk_tree_path_free (path);
 }
 
 static void
-proxy_reset_cb (GdaDataProxy *proxy, GtkTreeModel *store)
+proxy_reset_cb (GdaDataProxy *proxy, GtkTreeModel *model)
 {
 	gint i, nrows;
-	GdauiDataStore *dstore = (GdauiDataStore*) store;
+	GdauiDataStore *store = (GdauiDataStore*) model;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
 
 	/* invalidate any existing iterator */
-	dstore->priv->resetting = TRUE;
-	while (dstore->priv->nrows > 0)
-		row_removed_cb (proxy, dstore->priv->nrows - 1, store);
-	dstore->priv->resetting = FALSE;
+	priv->resetting = TRUE;
+	while (priv->nrows > 0)
+		row_removed_cb (proxy, priv->nrows - 1, model);
+	priv->resetting = FALSE;
 
 	nrows = gda_data_model_get_n_rows ((GdaDataModel *) proxy);;
-	dstore->priv->nrows = 0;
+	priv->nrows = 0;
 	for (i = 0; i < nrows; i++)
-		row_inserted_cb (proxy, i, store);
+		row_inserted_cb (proxy, i, model);
 }
 
 static void
@@ -226,29 +205,25 @@ gdaui_data_store_dispose (GObject *object)
 	g_return_if_fail (GDAUI_IS_DATA_STORE (object));
 
 	store = GDAUI_DATA_STORE (object);
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
 
-	if (store->priv) {
-		if (store->priv->proxy) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (store->priv->proxy),
-							      G_CALLBACK (row_inserted_cb), store);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (store->priv->proxy),
-							      G_CALLBACK (row_updated_cb), store);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (store->priv->proxy),
-							      G_CALLBACK (row_removed_cb), store);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (store->priv->proxy),
-							      G_CALLBACK (proxy_reset_cb), store);
-			g_object_unref (store->priv->proxy);
-			store->priv->proxy = NULL;
-			store->priv->nrows = 0;
-			store->priv->stamp = g_random_int ();
-		}
-
-		g_free (store->priv);
-		store->priv = NULL;
+	if (priv->proxy) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->proxy),
+						      G_CALLBACK (row_inserted_cb), store);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->proxy),
+						      G_CALLBACK (row_updated_cb), store);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->proxy),
+						      G_CALLBACK (row_removed_cb), store);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->proxy),
+						      G_CALLBACK (proxy_reset_cb), store);
+		g_object_unref (priv->proxy);
+		priv->proxy = NULL;
+		priv->nrows = 0;
+		priv->stamp = g_random_int ();
 	}
 
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_data_store_parent_class)->dispose (object);
 }
 
 static void
@@ -260,47 +235,46 @@ gdaui_data_store_set_property (GObject *object,
 	GdauiDataStore *store;
 
 	store = GDAUI_DATA_STORE (object);
-	if (store->priv) {
-		GdaDataModel *model;
-		GdaDataProxy *proxy;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+	GdaDataModel *model;
+	GdaDataProxy *proxy;
 
-		switch (param_id) {
-                case PROP_MODEL:
-			g_assert (!store->priv->proxy);
-			model = (GdaDataModel*) g_value_get_pointer (value);
-			g_return_if_fail (GDA_IS_DATA_MODEL (model));
-			if (GDA_IS_DATA_PROXY (model)) {
-				proxy = (GdaDataProxy *) model;
-				g_object_ref (model);
-			}
-			else
-				proxy = (GdaDataProxy *) gda_data_proxy_new (model);
-			store->priv->proxy = proxy;
-			g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
-			store->priv->nrows = gda_data_model_get_n_rows (GDA_DATA_MODEL (store->priv->proxy));
-
-			/* connect to row changes */
-			g_signal_connect (G_OBJECT (proxy), "row-inserted",
-					  G_CALLBACK (row_inserted_cb), store);
-			g_signal_connect (G_OBJECT (proxy), "row-updated",
-					  G_CALLBACK (row_updated_cb), store);
-			g_signal_connect (G_OBJECT (proxy), "row-removed",
-					  G_CALLBACK (row_removed_cb), store);
-			g_signal_connect (G_OBJECT (proxy), "reset",
-					  G_CALLBACK (proxy_reset_cb), store);
-			store->priv->stamp = g_random_int ();
-			proxy_reset_cb (GDA_DATA_PROXY (proxy), (GtkTreeModel *) store);
-			break;
-		case PROP_ADD_NULL_ENTRY:
-			g_return_if_fail (store->priv->proxy);
-			g_object_set (store->priv->proxy, "prepend-null-entry",
-				      g_value_get_boolean (value), NULL);
-			store->priv->stamp = g_random_int ();
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+	switch (param_id) {
+	case PROP_MODEL:
+		g_assert (!priv->proxy);
+		model = (GdaDataModel*) g_value_get_pointer (value);
+		g_return_if_fail (GDA_IS_DATA_MODEL (model));
+		if (GDA_IS_DATA_PROXY (model)) {
+			proxy = (GdaDataProxy *) model;
+			g_object_ref (model);
 		}
+		else
+			proxy = (GdaDataProxy *) gda_data_proxy_new (model);
+		priv->proxy = proxy;
+		g_object_set (G_OBJECT (proxy), "defer-sync", FALSE, "sample-size", 0, NULL);
+		priv->nrows = gda_data_model_get_n_rows (GDA_DATA_MODEL (priv->proxy));
+
+		/* connect to row changes */
+		g_signal_connect (G_OBJECT (proxy), "row-inserted",
+				  G_CALLBACK (row_inserted_cb), store);
+		g_signal_connect (G_OBJECT (proxy), "row-updated",
+				  G_CALLBACK (row_updated_cb), store);
+		g_signal_connect (G_OBJECT (proxy), "row-removed",
+				  G_CALLBACK (row_removed_cb), store);
+		g_signal_connect (G_OBJECT (proxy), "reset",
+				  G_CALLBACK (proxy_reset_cb), store);
+		priv->stamp = g_random_int ();
+		proxy_reset_cb (GDA_DATA_PROXY (proxy), (GtkTreeModel *) store);
+		break;
+	case PROP_ADD_NULL_ENTRY:
+		g_return_if_fail (priv->proxy);
+		g_object_set (priv->proxy, "prepend-null-entry",
+			      g_value_get_boolean (value), NULL);
+		priv->stamp = g_random_int ();
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -313,27 +287,26 @@ gdaui_data_store_get_property (GObject *object,
 	GdauiDataStore *store;
 
 	store = GDAUI_DATA_STORE (object);
-	if (store->priv) {
-		switch (param_id) {
-		case PROP_MODEL:
-			/* FIXME: the requested model can be different than the proxy as
-			   the aim of this property is to retrieve the data model given to
-			   the new() function (which is the same as the one given to the PROP_MODEL
-			   property) */
-                case PROP_PROXY:
-			g_value_set_pointer (value, store->priv->proxy);
-			break;
-		case PROP_ADD_NULL_ENTRY: {
-			gboolean prop;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+	switch (param_id) {
+	case PROP_MODEL:
+		/* FIXME: the requested model can be different than the proxy as
+		   the aim of this property is to retrieve the data model given to
+		   the new() function (which is the same as the one given to the PROP_MODEL
+		   property) */
+              case PROP_PROXY:
+		g_value_set_pointer (value, priv->proxy);
+		break;
+	case PROP_ADD_NULL_ENTRY: {
+		gboolean prop;
 
-			g_object_get (store->priv->proxy, "prepend-null-entry", &prop, NULL);
-			g_value_set_boolean (value, prop);
-			break;
-		}
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+		g_object_get (priv->proxy, "prepend-null-entry", &prop, NULL);
+		g_value_set_boolean (value, prop);
+		break;
+	}
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -378,17 +351,18 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 	gint row, model_nb_cols;
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), FALSE);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
         g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
+        g_return_val_if_fail (iter->stamp == priv->stamp, FALSE);
 
-	if (store->priv->resetting) {
+	if (priv->resetting) {
 		g_warning (_("Can't modify row while data model is being reset"));
 		return FALSE;
 	}
 
-	model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
+	model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (priv->proxy);
         row = GPOINTER_TO_INT (iter->user_data);
 
 	/* Global attributes */
@@ -402,9 +376,9 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 			break;
 		case GDAUI_DATA_STORE_COL_TO_DELETE:
 			if (g_value_get_boolean (value))
-				gda_data_proxy_delete (store->priv->proxy, row);
+				gda_data_proxy_delete (priv->proxy, row);
 			else
-				gda_data_proxy_undelete (store->priv->proxy, row);
+				gda_data_proxy_undelete (priv->proxy, row);
 			break;
 		default:
 			g_assert_not_reached ();
@@ -417,13 +391,13 @@ gdaui_data_store_set_value (GdauiDataStore *store, GtkTreeIter *iter,
 		gint proxy_col;
 
 		proxy_col = (col < model_nb_cols) ? col : col - model_nb_cols;
-		return gda_data_model_set_value_at (GDA_DATA_MODEL (store->priv->proxy),
+		return gda_data_model_set_value_at (GDA_DATA_MODEL (priv->proxy),
 						    proxy_col, row, value, NULL);
 	}
 
 	/* value's attributes */
 	if ((col >= model_nb_cols) && (col < 2 * model_nb_cols)) {
-		gda_data_proxy_alter_value_attributes (store->priv->proxy, row, col - model_nb_cols,
+		gda_data_proxy_alter_value_attributes (priv->proxy, row, col - model_nb_cols,
 						       g_value_get_uint (value));
 		return TRUE;
 	}
@@ -445,18 +419,19 @@ gdaui_data_store_delete (GdauiDataStore *store, GtkTreeIter *iter)
 	gint row;
 
         g_return_if_fail (GDAUI_IS_DATA_STORE (store));
-        g_return_if_fail (store->priv);
-        g_return_if_fail (store->priv->proxy);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_if_fail (priv);
+        g_return_if_fail (priv->proxy);
         g_return_if_fail (iter);
-        g_return_if_fail (iter->stamp == store->priv->stamp);
+        g_return_if_fail (iter->stamp == priv->stamp);
 
-	if (store->priv->resetting) {
+	if (priv->resetting) {
 		g_warning (_("Can't modify row while data model is being reset"));
 		return;
 	}
 
         row = GPOINTER_TO_INT (iter->user_data);
-	gda_data_proxy_delete (store->priv->proxy, row);
+	gda_data_proxy_delete (priv->proxy, row);
 }
 
 
@@ -475,18 +450,19 @@ gdaui_data_store_undelete (GdauiDataStore *store, GtkTreeIter *iter)
 	gint row;
 
         g_return_if_fail (GDAUI_IS_DATA_STORE (store));
-        g_return_if_fail (store->priv);
-        g_return_if_fail (store->priv->proxy);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_if_fail (priv);
+        g_return_if_fail (priv->proxy);
         g_return_if_fail (iter);
-        g_return_if_fail (iter->stamp == store->priv->stamp);
+        g_return_if_fail (iter->stamp == priv->stamp);
 
-	if (store->priv->resetting) {
+	if (priv->resetting) {
 		g_warning (_("Can't modify row while data model is being reset"));
 		return;
 	}
 
         row = GPOINTER_TO_INT (iter->user_data);
-	gda_data_proxy_undelete (store->priv->proxy, row);
+	gda_data_proxy_undelete (priv->proxy, row);
 }
 
 
@@ -507,19 +483,20 @@ gdaui_data_store_append (GdauiDataStore *store, GtkTreeIter *iter)
 	gint row;
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), FALSE);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
 
-	if (store->priv->resetting) {
+	if (priv->resetting) {
 		g_warning (_("Can't modify row while data model is being reset"));
 		return FALSE;
 	}
 
-        row = gda_data_model_append_row (GDA_DATA_MODEL (store->priv->proxy), NULL);
+        row = gda_data_model_append_row (GDA_DATA_MODEL (priv->proxy), NULL);
 	if (row >= 0) {
 		if (iter) {
 			iter->user_data = GINT_TO_POINTER (row);
-			iter->stamp = store->priv->stamp;
+			iter->stamp = priv->stamp;
 		}
 		return TRUE;
 	}
@@ -539,9 +516,10 @@ GdaDataProxy *
 gdaui_data_store_get_proxy (GdauiDataStore *store)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), FALSE);
-        g_return_val_if_fail (store->priv, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
 
-	return store->priv->proxy;
+	return priv->proxy;
 }
 
 /**
@@ -559,9 +537,10 @@ gint
 gdaui_data_store_get_row_from_iter (GdauiDataStore *store, GtkTreeIter *iter)
 {
 	g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), -1);
-        g_return_val_if_fail (store->priv, -1);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, -1);
 	g_return_val_if_fail (iter, -1);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, -1);
+        g_return_val_if_fail (iter->stamp == priv->stamp, -1);
 
 	return GPOINTER_TO_INT (iter->user_data);
 }
@@ -589,19 +568,20 @@ gdaui_data_store_get_iter_from_values (GdauiDataStore *store, GtkTreeIter *iter,
 	gint row;
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (store), FALSE);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
 	g_return_val_if_fail (values, FALSE);
 
-	if (store->priv->resetting) {
+	if (priv->resetting) {
 		g_warning (_("Can't access row while data model is being reset"));
 		return FALSE;
 	}
 
-	row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (store->priv->proxy), values, cols_index);
+	row = gda_data_model_get_row_from_values (GDA_DATA_MODEL (priv->proxy), values, cols_index);
 	if (row >= 0) {
 		if (iter) {
-			iter->stamp = store->priv->stamp;
+			iter->stamp = priv->stamp;
 			iter->user_data = GINT_TO_POINTER (row);
 		}
 		return TRUE;
@@ -635,10 +615,11 @@ data_store_get_n_columns (GtkTreeModel *tree_model)
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), 0);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, 0);
-        g_return_val_if_fail (store->priv->proxy, 0);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, 0);
+        g_return_val_if_fail (priv->proxy, 0);
 
-        return gda_data_model_get_n_columns (GDA_DATA_MODEL (store->priv->proxy));
+        return gda_data_model_get_n_columns (GDA_DATA_MODEL (priv->proxy));
 }
 
 static GType
@@ -647,10 +628,11 @@ data_store_get_column_type (GtkTreeModel *tree_model, gint index)
 	GdauiDataStore *store;
 	GType retval = 0;
 
-        g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), 0);
-        store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, 0);
-	g_return_val_if_fail (store->priv->proxy, 0);
+	g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), 0);
+	store = (GdauiDataStore*) tree_model;
+	GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+	store = GDAUI_DATA_STORE (tree_model);
+	g_return_val_if_fail (priv->proxy, 0);
 
 	if (index < 0) {
 		switch (index) {
@@ -670,7 +652,7 @@ data_store_get_column_type (GtkTreeModel *tree_model, gint index)
 	else {
 		gint prox_nb_cols;
 
-		prox_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
+		prox_nb_cols = gda_data_proxy_get_proxied_model_n_cols (priv->proxy);
 		if ((index < prox_nb_cols) ||
 		    ((index >= 2 * prox_nb_cols) && (index < 3 * prox_nb_cols)))
 			retval = G_TYPE_POINTER;
@@ -693,8 +675,9 @@ data_store_get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *p
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), FALSE);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
         g_return_val_if_fail (path, FALSE);
         g_return_val_if_fail (iter, FALSE);
 
@@ -703,8 +686,8 @@ data_store_get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *p
         g_return_val_if_fail (depth == 1, FALSE);
 
         n = indices[0]; /* the n-th top level row */
-        if (n < store->priv->nrows) {
-                iter->stamp = store->priv->stamp;
+        if (n < priv->nrows) {
+                iter->stamp = priv->stamp;
                 iter->user_data = GINT_TO_POINTER (n);
                 return TRUE;
         }
@@ -720,9 +703,10 @@ data_store_get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), NULL);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, NULL);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, NULL);
         g_return_val_if_fail (iter, NULL);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, NULL);
+        g_return_val_if_fail (iter->stamp == priv->stamp, NULL);
 
         path = gtk_tree_path_new ();
         gtk_tree_path_append_index (path, GPOINTER_TO_INT (iter->user_data));
@@ -740,38 +724,39 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 
 	g_return_if_fail (GDAUI_IS_DATA_STORE (tree_model));
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_if_fail (store->priv);
-        g_return_if_fail (store->priv->proxy);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_if_fail (priv);
+        g_return_if_fail (priv->proxy);
         g_return_if_fail (iter);
-        g_return_if_fail (iter->stamp == store->priv->stamp);
+        g_return_if_fail (iter->stamp == priv->stamp);
         g_return_if_fail (value);
 
 	rettype = data_store_get_column_type (tree_model, column);
 	g_value_init (value, rettype);
 
-	if (store->priv->resetting)
+	if (priv->resetting)
 		return;
 
 	/* Global attributes */
 	if (column < 0) {
 		switch (column) {
 		case GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS:
-			model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
+			model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (priv->proxy);
 			g_value_set_int (value, model_nb_cols);
 			break;
 		case GDAUI_DATA_STORE_COL_MODEL_POINTER:
-			g_value_set_pointer (value, gda_data_proxy_get_proxied_model (store->priv->proxy));
+			g_value_set_pointer (value, gda_data_proxy_get_proxied_model (priv->proxy));
 			break;
 		case GDAUI_DATA_STORE_COL_MODEL_ROW:
-			g_value_set_int (value, gda_data_proxy_get_proxied_model_row (store->priv->proxy,
+			g_value_set_int (value, gda_data_proxy_get_proxied_model_row (priv->proxy,
 										      GPOINTER_TO_INT (iter->user_data)));
 			break;
 		case GDAUI_DATA_STORE_COL_MODIFIED:
-			g_value_set_boolean (value, gda_data_proxy_row_has_changed (store->priv->proxy,
+			g_value_set_boolean (value, gda_data_proxy_row_has_changed (priv->proxy,
 										    GPOINTER_TO_INT (iter->user_data)));
 			break;
 		case GDAUI_DATA_STORE_COL_TO_DELETE:
-			g_value_set_boolean (value, gda_data_proxy_row_is_deleted (store->priv->proxy,
+			g_value_set_boolean (value, gda_data_proxy_row_is_deleted (priv->proxy,
 										   GPOINTER_TO_INT (iter->user_data)));
 			break;
 		default:
@@ -780,7 +765,7 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	}
 
 	if (model_nb_cols == -10)
-		model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (store->priv->proxy);
+		model_nb_cols = gda_data_proxy_get_proxied_model_n_cols (priv->proxy);
 
 	/* current proxy values or original ones */
 	if (((column >= 0) && (column < model_nb_cols)) ||
@@ -788,7 +773,7 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 		gint proxy_col;
 
 		proxy_col = (column < model_nb_cols) ? column : column - model_nb_cols;
-		tmp = gda_data_model_get_value_at ((GdaDataModel*) store->priv->proxy,
+		tmp = gda_data_model_get_value_at ((GdaDataModel*) priv->proxy,
 						   proxy_col,
 						   GPOINTER_TO_INT (iter->user_data), NULL);
 
@@ -809,7 +794,7 @@ data_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	if ((column >= model_nb_cols) && (column < 2 * model_nb_cols)) {
 		guint attr;
 
-		attr = gda_data_proxy_get_value_attributes (store->priv->proxy,
+		attr = gda_data_proxy_get_value_attributes (priv->proxy,
 							    GPOINTER_TO_INT (iter->user_data), column - model_nb_cols);
 		g_value_set_uint (value, attr);
 	}
@@ -823,14 +808,15 @@ data_store_iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), FALSE);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, FALSE);
-	g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+	g_return_val_if_fail (priv->proxy, FALSE);
         g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
+        g_return_val_if_fail (iter->stamp == priv->stamp, FALSE);
 
         row = GPOINTER_TO_INT (iter->user_data);
         row++;
-        if (row >= store->priv->nrows)
+        if (row >= priv->nrows)
                 return FALSE;
         else {
                 iter->user_data = GINT_TO_POINTER (row);
@@ -845,12 +831,13 @@ data_store_iter_children (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), FALSE);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
         g_return_val_if_fail (iter, FALSE);
 
-        if (!parent && (store->priv->nrows > 0)) {
-                iter->stamp = store->priv->stamp;
+        if (!parent && (priv->nrows > 0)) {
+                iter->stamp = priv->stamp;
                 iter->user_data = GINT_TO_POINTER (0);
                 return TRUE;
         }
@@ -871,11 +858,12 @@ data_store_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), -1);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, 0);
-        g_return_val_if_fail (store->priv->proxy, 0);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, 0);
+        g_return_val_if_fail (priv->proxy, 0);
 
         if (!iter)
-                return store->priv->nrows;
+                return priv->nrows;
         else
                 return 0;
 }
@@ -887,12 +875,13 @@ data_store_iter_nth_child (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeI
 
         g_return_val_if_fail (GDAUI_IS_DATA_STORE (tree_model), FALSE);
         store = GDAUI_DATA_STORE (tree_model);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->proxy, FALSE);
+        GdauiDataStorePrivate *priv = gdaui_data_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->proxy, FALSE);
         g_return_val_if_fail (iter, FALSE);
 
-        if (!parent && (n < store->priv->nrows)) {
-                iter->stamp = store->priv->stamp;
+        if (!parent && (n < priv->nrows)) {
+                iter->stamp = priv->stamp;
                 iter->user_data = GINT_TO_POINTER (n);
                 return TRUE;
         }

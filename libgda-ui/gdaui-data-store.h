@@ -28,13 +28,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_STORE          (gdaui_data_store_get_type())
-#define GDAUI_DATA_STORE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_data_store_get_type(), GdauiDataStore)
-#define GDAUI_DATA_STORE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_data_store_get_type (), GdauiDataStoreClass)
-#define GDAUI_IS_DATA_STORE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_data_store_get_type ())
-
-typedef struct _GdauiDataStore GdauiDataStore;
-typedef struct _GdauiDataStoreClass GdauiDataStoreClass;
-typedef struct _GdauiDataStorePriv GdauiDataStorePriv;
+G_DECLARE_DERIVABLE_TYPE(GdauiDataStore, gdaui_data_store, GDAUI, DATA_STORE, GObject)
 
 enum {
 	GDAUI_DATA_STORE_COL_MODEL_N_COLUMNS = -2, /* number of columns in the GdaDataModel */
@@ -52,18 +46,11 @@ enum {
 #define DATA_STORE_COL_TO_DELETE GDAUI_DATA_STORE_COL_TO_DELETE
 #endif
 
-/* struct for the object's data */
-struct _GdauiDataStore
-{
-	GObject                object;
-
-	GdauiDataStorePriv  *priv;
-};
-
 /* struct for the object's class */
 struct _GdauiDataStoreClass
 {
-	GObjectClass           parent_class;
+	GObjectClass  parent_class;
+	gpointer      padding[12];
 };
 
 /**
@@ -111,7 +98,6 @@ struct _GdauiDataStoreClass
  * ]]></programlisting>
  */
 
-GType           gdaui_data_store_get_type             (void) G_GNUC_CONST;
 GtkTreeModel   *gdaui_data_store_new                  (GdaDataModel *model);
 
 GdaDataProxy   *gdaui_data_store_get_proxy            (GdauiDataStore *store);
