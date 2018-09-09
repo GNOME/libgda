@@ -88,11 +88,9 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model)
 {
 	GdaConfig *config;
 	GdaColumn *col;
+	GdaDataModelDsnList *dmodel = GDA_DATA_MODEL_DSN_LIST (model);
+	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (dmodel);
 
-	g_return_if_fail (GDA_IS_DATA_MODEL_DSN_LIST (model));
-	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (model);
-
-	priv = g_new0 (GdaDataModelDsnListPrivate, 1);
 	priv->nb_dsn = gda_config_get_nb_dsn ();
 	priv->row_to_remove = -1;
 	
@@ -156,6 +154,8 @@ gda_data_model_dsn_list_class_init (GdaDataModelDsnListClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	parent_class = g_type_class_peek_parent (klass);
+
+	g_type_class_add_private (object_class, sizeof (GdaDataModelDsnListPrivate));
 
 	object_class->dispose = gda_data_model_dsn_list_dispose;
 }
