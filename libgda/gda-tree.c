@@ -86,6 +86,8 @@ gda_tree_class_init (GdaTreeClass *klass)
 
 	parent_class = g_type_class_peek_parent (klass);
 
+	g_type_class_add_private (object_class, sizeof (GdaTreePrivate));
+
 	/* signals */
 	/**
 	 * GdaTree::node-changed:
@@ -261,9 +263,6 @@ gda_tree_set_property (GObject *object,
 			 G_GNUC_UNUSED const GValue *value,
 			 GParamSpec *pspec)
 {
-	GdaTree *tree;
-
-	tree = GDA_TREE (object);
 	switch (param_id) {
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
