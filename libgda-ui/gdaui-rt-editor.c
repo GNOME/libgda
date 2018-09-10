@@ -31,8 +31,6 @@
 GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};
 gchar     *lists_tokens[MAX_BULLETS] = {"- ", " - "};
 
-static void gdaui_rt_editor_class_init (GdauiRtEditorClass *klass);
-static void gdaui_rt_editor_init (GdauiRtEditor *wid);
 static void gdaui_rt_editor_dispose (GObject *object);
 
 static void gdaui_rt_editor_set_property (GObject *object,
@@ -68,7 +66,7 @@ typedef struct {
 	gchar      *action_name;
 } TagData;
 
-struct _GdauiRtEditorPriv
+typedef struct
 {
 	GtkTextView    *textview;
 	gdouble         vadj_value;
@@ -86,10 +84,10 @@ struct _GdauiRtEditorPriv
 
 	gboolean        contents_setting; /* TRUE if whole contents is being changed */
 	GtkWidget      *sw; /* swrolled window in which the contents is */
-};
+} GdauiRtEditorPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiRtEditor, gdaui_rt_editor, GTK_TYPE_BOX)
+
 static gchar *help_str=N_("\"\"\"= Title level 1 =\n"
 			  "== Title level 2 ==\n"
 			  "\"\"\"= Title level 1 =\n"
@@ -182,36 +180,10 @@ static const gchar *ui_actions_info =
         "  </toolbar>"
         "</ui>";
 
-GType
-gdaui_rt_editor_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiRtEditorClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_rt_editor_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiRtEditor),
-			0,
-			(GInstanceInitFunc) gdaui_rt_editor_init,
-			0
-		};
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiRtEditor", &info, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_rt_editor_class_init (GdauiRtEditorClass *klass)
 {
 	GObjectClass  *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gdaui_rt_editor_dispose;
 
@@ -281,7 +253,8 @@ gdaui_rt_editor_class_init (GdauiRtEditorClass *klass)
 static void
 text_view_realized_cb (GtkWidget *tv, GdauiRtEditor *rte)
 {
-	if (rte->priv->no_background && ! gtk_text_view_get_editable (GTK_TEXT_VIEW (tv))) {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
+	if (priv->no_background && ! gtk_text_view_get_editable (GTK_TEXT_VIEW (tv))) {
 		GdkWindow *win;
 		GtkStyleContext* style_context = gtk_widget_get_style_context (tv);
                 GdkRGBA color;
@@ -318,94 +291,94 @@ gdaui_rt_editor_init (GdauiRtEditor *rte)
 
 	gtk_widget_show_all (sw);
 
-	rte->priv = g_new0 (GdauiRtEditorPriv, 1);
-	rte->priv->sw = sw;
-	rte->priv->vadj_value = 0.;
-	rte->priv->saved_for_help = NULL;
-	rte->priv->enable_changed_signal = TRUE;
-	rte->priv->no_background = FALSE;
-	rte->priv->insert_offset = -1;
-	rte->priv->textview = GTK_TEXT_VIEW (textview);
-	rte->priv->textbuffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
-	rte->priv->contents_setting = FALSE;
-	g_signal_connect (rte->priv->textbuffer, "changed",
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
+	priv->sw = sw;
+	priv->vadj_value = 0.;
+	priv->saved_for_help = NULL;
+	priv->enable_changed_signal = TRUE;
+	priv->no_background = FALSE;
+	priv->insert_offset = -1;
+	priv->textview = GTK_TEXT_VIEW (textview);
+	priv->textbuffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+	priv->contents_setting = FALSE;
+	g_signal_connect (priv->textbuffer, "changed",
 			  G_CALLBACK (text_buffer_changed_cb), rte);
-	g_signal_connect (rte->priv->textbuffer, "mark-set",
+	g_signal_connect (priv->textbuffer, "mark-set",
 			  G_CALLBACK (mark_set_cb), rte);
-	g_signal_connect (rte->priv->textbuffer, "insert-text",
+	g_signal_connect (priv->textbuffer, "insert-text",
 			  G_CALLBACK (insert_text_cb), rte);
-	g_signal_connect_after (rte->priv->textbuffer, "insert-text",
+	g_signal_connect_after (priv->textbuffer, "insert-text",
 				G_CALLBACK (insert_text_after_cb), rte);
-	g_signal_connect (rte->priv->textview, "populate-popup",
+	g_signal_connect (priv->textview, "populate-popup",
 			  G_CALLBACK (populate_popup_cb), rte);
-	g_signal_connect (rte->priv->textview, "focus-in-event",
+	g_signal_connect (priv->textview, "focus-in-event",
 			  G_CALLBACK (focus_changed_cb), rte);
-	g_signal_connect (rte->priv->textview, "focus-out-event",
+	g_signal_connect (priv->textview, "focus-out-event",
 			  G_CALLBACK (focus_changed_cb), rte);
 
 	/* tags. REM: leave the LIST* and BULLET tags defined 1st as they will be with less priority
 	 * and it affects the result returned by gtk_text_iter_get_tags() */
-	rte->priv->show_markup = FALSE;
-	memset (rte->priv->tags, 0, sizeof (rte->priv->tags));
+	priv->show_markup = FALSE;
+	memset (priv->tags, 0, sizeof (priv->tags));
 
-	rte->priv->tags[TEXT_TAG_LIST1].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_LIST1].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									  "indent", -5,
 									  "left_margin", 15,
 									  /*"background", "#cbbcbc",*/
 									  NULL);
-	rte->priv->tags[TEXT_TAG_LIST2].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_LIST2].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									  "indent", -10,
 									  "left_margin", 25,
 									  /*"background", "#dcbcbc",*/
 									  NULL);
-	rte->priv->tags[TEXT_TAG_ITALIC].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_ITALIC].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									   "style", PANGO_STYLE_ITALIC, NULL);
-	rte->priv->tags[TEXT_TAG_ITALIC].action_name = "/ToolBar/ActionItalic";
+	priv->tags[TEXT_TAG_ITALIC].action_name = "/ToolBar/ActionItalic";
 
-	rte->priv->tags[TEXT_TAG_BOLD].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_BOLD].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									 "weight", PANGO_WEIGHT_BOLD, NULL);
-	rte->priv->tags[TEXT_TAG_BOLD].action_name = "/ToolBar/ActionBold";
+	priv->tags[TEXT_TAG_BOLD].action_name = "/ToolBar/ActionBold";
 
-	rte->priv->tags[TEXT_TAG_TT].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_TT].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 								       "family", "Monospace", NULL);
-	rte->priv->tags[TEXT_TAG_VERBATIM].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_VERBATIM].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									     "background", "#e5e2e2",
 									     NULL);
 	
-	rte->priv->tags[TEXT_TAG_UNDERLINE].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_UNDERLINE].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									      "underline", PANGO_UNDERLINE_SINGLE, NULL);
-	rte->priv->tags[TEXT_TAG_UNDERLINE].action_name = "/ToolBar/ActionUnderline";
+	priv->tags[TEXT_TAG_UNDERLINE].action_name = "/ToolBar/ActionUnderline";
 	
-	rte->priv->tags[TEXT_TAG_STRIKE].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_STRIKE].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									   "strikethrough", TRUE, NULL);
-	rte->priv->tags[TEXT_TAG_STRIKE].action_name = "/ToolBar/ActionStrike";
+	priv->tags[TEXT_TAG_STRIKE].action_name = "/ToolBar/ActionStrike";
 	
-	rte->priv->tags[TEXT_TAG_TITLE1].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_TITLE1].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									   "size", 15 * PANGO_SCALE,
 									   "weight", PANGO_WEIGHT_SEMIBOLD,
 									   NULL);
-	rte->priv->tags[TEXT_TAG_TITLE2].tag = gtk_text_buffer_create_tag (rte->priv->textbuffer, NULL,
+	priv->tags[TEXT_TAG_TITLE2].tag = gtk_text_buffer_create_tag (priv->textbuffer, NULL,
 									   "size", 13 * PANGO_SCALE,
 									   "weight", PANGO_WEIGHT_SEMIBOLD,
 									   NULL);
 
 	/* action group */
-	rte->priv->actions_group = gtk_action_group_new ("Actions");
-	gtk_action_group_set_translation_domain (rte->priv->actions_group, GETTEXT_PACKAGE);
-	gtk_action_group_add_toggle_actions (rte->priv->actions_group, ui_toggle_actions,
+	priv->actions_group = gtk_action_group_new ("Actions");
+	gtk_action_group_set_translation_domain (priv->actions_group, GETTEXT_PACKAGE);
+	gtk_action_group_add_toggle_actions (priv->actions_group, ui_toggle_actions,
 					     G_N_ELEMENTS (ui_toggle_actions), rte);
-        gtk_action_group_add_actions (rte->priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions),
+        gtk_action_group_add_actions (priv->actions_group, ui_actions, G_N_ELEMENTS (ui_actions),
 				      rte);
 
 	/* ui manager */
-	rte->priv->uimanager = gtk_ui_manager_new ();
-        gtk_ui_manager_insert_action_group (rte->priv->uimanager, rte->priv->actions_group, 0);
-        gtk_ui_manager_add_ui_from_string (rte->priv->uimanager, ui_actions_info, -1, NULL);
+	priv->uimanager = gtk_ui_manager_new ();
+        gtk_ui_manager_insert_action_group (priv->uimanager, priv->actions_group, 0);
+        gtk_ui_manager_add_ui_from_string (priv->uimanager, ui_actions_info, -1, NULL);
 
 	/* toolbar */
-	toolbar = gtk_ui_manager_get_widget (rte->priv->uimanager, "/ToolBar");
+	toolbar = gtk_ui_manager_get_widget (priv->uimanager, "/ToolBar");
 	gtk_toolbar_set_icon_size (GTK_TOOLBAR (toolbar), GTK_ICON_SIZE_MENU);
-	rte->priv->toolbar = toolbar;
+	priv->toolbar = toolbar;
 	gtk_box_pack_end (GTK_BOX (rte), toolbar, FALSE, FALSE, 0);
 
 	show_hide_toolbar (rte);
@@ -437,26 +410,27 @@ gdaui_rt_editor_dispose (GObject *object)
 
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (object));
 	rte = GDAUI_RT_EDITOR (object);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 
-	if (rte->priv) {
-		if (rte->priv->actions_group) {
-			g_object_unref (G_OBJECT (rte->priv->actions_group));
-			rte->priv->actions_group = NULL;
+	if (priv) {
+		if (priv->actions_group) {
+			g_object_unref (G_OBJECT (priv->actions_group));
+			priv->actions_group = NULL;
 		}
 
-		if (rte->priv->uimanager)
-			g_object_unref (rte->priv->uimanager);
+		if (priv->uimanager)
+			g_object_unref (priv->uimanager);
 
-		g_free (rte->priv->saved_for_help);
+		g_free (priv->saved_for_help);
 		/* NB: GtkTextTags are owned by the GtkTextBuffer's text tags table */
 
 		/* the private area itself */
-		g_free (rte->priv);
-		rte->priv = NULL;
+		g_free (priv);
+		priv = NULL;
 	}
 
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_rt_editor_parent_class)->dispose (object);
 }
 
 static void
@@ -464,7 +438,7 @@ gdaui_rt_editor_show_all (GtkWidget *widget)
 {
 	GdauiRtEditor *editor;
 	editor = GDAUI_RT_EDITOR (widget);
-	GTK_WIDGET_CLASS (parent_class)->show_all (widget);
+	GTK_WIDGET_CLASS (gdaui_rt_editor_parent_class)->show_all (widget);
 	show_hide_toolbar (editor);
 }
 
@@ -477,10 +451,11 @@ gdaui_rt_editor_set_property (GObject *object,
 	GdauiRtEditor *editor;
 
         editor = GDAUI_RT_EDITOR (object);
-        if (editor->priv) {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
+        if (priv) {
                 switch (param_id) {
 		case PROP_NO_BACKGROUND:
-			editor->priv->no_background = g_value_get_boolean (value);
+			priv->no_background = g_value_get_boolean (value);
 			break;
 		case PROP_SHOW_MARKUP:
 			_gdaui_rt_editor_set_show_markup (editor, g_value_get_boolean (value));
@@ -488,14 +463,14 @@ gdaui_rt_editor_set_property (GObject *object,
 		case PROP_SCROLLED_WINDOW: {
 			gboolean setting;
 			setting = g_value_get_boolean (value);
-			if ((editor->priv->sw && setting) ||
-			    (! editor->priv->sw && ! setting))
+			if ((priv->sw && setting) ||
+			    (! priv->sw && ! setting))
 				break; /* nothing to change */
-			if (editor->priv->sw) {
+			if (priv->sw) {
 				/* remove scrolled window */
-				gtk_widget_reparent (GTK_WIDGET (editor->priv->textview), GTK_WIDGET (editor));
-				gtk_widget_destroy (editor->priv->sw);
-				editor->priv->sw = NULL;
+				gtk_widget_reparent (GTK_WIDGET (priv->textview), GTK_WIDGET (editor));
+				gtk_widget_destroy (priv->sw);
+				priv->sw = NULL;
 			}
 			else {
 				/* add scrolled window */
@@ -504,9 +479,9 @@ gdaui_rt_editor_set_property (GObject *object,
 				gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 								GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 				gtk_box_pack_end (GTK_BOX (editor), sw, TRUE, TRUE, 0);
-				editor->priv->sw = sw;
+				priv->sw = sw;
 				gtk_widget_show (sw);
-				gtk_widget_reparent (GTK_WIDGET (editor->priv->textview), GTK_WIDGET (sw));
+				gtk_widget_reparent (GTK_WIDGET (priv->textview), GTK_WIDGET (sw));
 			}
 			break;
 		}
@@ -525,26 +500,25 @@ gdaui_rt_editor_get_property (GObject *object,
 {
 	GdauiRtEditor *editor;
 
-        editor = GDAUI_RT_EDITOR (object);
-        if (editor->priv) {
-                switch (param_id) {
+	editor = GDAUI_RT_EDITOR (object);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
+	switch (param_id) {
 		case PROP_NO_BACKGROUND:
-			g_value_set_boolean (value, editor->priv->no_background);
+			g_value_set_boolean (value, priv->no_background);
 			break;
 		case PROP_SHOW_MARKUP:
-			g_value_set_boolean (value, editor->priv->show_markup);
+			g_value_set_boolean (value, priv->show_markup);
 			break;
 		case PROP_TEXTBUFFER:
-			g_value_set_object (value, editor->priv->textbuffer);
+			g_value_set_object (value, priv->textbuffer);
 			break;
 		case PROP_SCROLLED_WINDOW:
-			g_value_set_boolean (value, editor->priv->sw ? TRUE : FALSE);
+			g_value_set_boolean (value, priv->sw ? TRUE : FALSE);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static GtkTextTag *
@@ -552,12 +526,13 @@ iter_begins_list (GdauiRtEditor *rte, GtkTextIter *iter, gint *out_list_level)
 {
 	gint idx = -1;
 	GtkTextTag *tag = NULL;
-	if (gtk_text_iter_has_tag (iter, rte->priv->tags[TEXT_TAG_LIST1].tag)) {
-		tag = rte->priv->tags[TEXT_TAG_LIST1].tag;
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
+	if (gtk_text_iter_has_tag (iter, priv->tags[TEXT_TAG_LIST1].tag)) {
+		tag = priv->tags[TEXT_TAG_LIST1].tag;
 		idx = 0;
 	}
-	else if (gtk_text_iter_has_tag (iter, rte->priv->tags[TEXT_TAG_LIST2].tag)) {
-		tag = rte->priv->tags[TEXT_TAG_LIST2].tag;
+	else if (gtk_text_iter_has_tag (iter, priv->tags[TEXT_TAG_LIST2].tag)) {
+		tag = priv->tags[TEXT_TAG_LIST2].tag;
 		idx = 1;
 	}
 	if (out_list_level)
@@ -571,18 +546,19 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 {
 	GtkTextIter start;
 	GtkTextIter end;
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 
-	g_return_if_fail (rte->priv->textbuffer);
+	g_return_if_fail (priv->textbuffer);
 
-	if (rte->priv->selection_changing)
+	if (priv->selection_changing)
 		return;
 
-	if (gtk_text_buffer_get_selection_bounds (rte->priv->textbuffer, &start, &end)) {
+	if (gtk_text_buffer_get_selection_bounds (priv->textbuffer, &start, &end)) {
 		if (tag) {
 			if (reverse)
-				gtk_text_buffer_remove_tag (rte->priv->textbuffer, tag, &start, &end);
+				gtk_text_buffer_remove_tag (priv->textbuffer, tag, &start, &end);
 			else {
-				gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &start, &end);
+				gtk_text_buffer_apply_tag (priv->textbuffer, tag, &start, &end);
 				/* if there are LIST tags, then remove the applied tag */
 				GtkTextIter iter;
 				for (iter = start; gtk_text_iter_compare (&iter, &end) < 0; ) {
@@ -594,7 +570,7 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 						liter = iter;
 						gtk_text_iter_forward_to_tag_toggle (&liter, ltag);
 						gtk_text_iter_backward_char (&iter);
-						gtk_text_buffer_remove_tag (rte->priv->textbuffer,
+						gtk_text_buffer_remove_tag (priv->textbuffer,
 									    tag, &iter, &liter);
 						gtk_text_iter_forward_char (&iter);
 					}
@@ -612,9 +588,9 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 				if (tags) {
 					for (list = tags; list; list = list->next) {
 						GtkTextTag *tag = (GtkTextTag *) list->data;
-						if ((tag != rte->priv->tags[TEXT_TAG_LIST1].tag) &&
-						    (tag != rte->priv->tags[TEXT_TAG_LIST2].tag))
-							gtk_text_buffer_remove_tag (rte->priv->textbuffer,
+						if ((tag != priv->tags[TEXT_TAG_LIST1].tag) &&
+						    (tag != priv->tags[TEXT_TAG_LIST2].tag))
+							gtk_text_buffer_remove_tag (priv->textbuffer,
 										    tag, &start, &end);
 					}
 					g_slist_free (tags);
@@ -625,7 +601,7 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 		}
 	}
 
-	if (rte->priv->enable_changed_signal)
+	if (priv->enable_changed_signal)
 		g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
 
 }
@@ -633,46 +609,51 @@ apply_tag (GdauiRtEditor *rte, gboolean reverse, GtkTextTag *tag)
 static void
 help_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	if (gtk_toggle_action_get_active (action)) {
-		rte->priv->enable_changed_signal = FALSE;
-		g_free (rte->priv->saved_for_help);
-		rte->priv->saved_for_help = gdaui_rt_editor_get_contents (rte);
+		priv->enable_changed_signal = FALSE;
+		g_free (priv->saved_for_help);
+		priv->saved_for_help = gdaui_rt_editor_get_contents (rte);
 		gdaui_rt_editor_set_contents (rte, help_str, -1);
 	}
 	else {
-		gdaui_rt_editor_set_contents (rte, rte->priv->saved_for_help, -1);
-		rte->priv->enable_changed_signal = TRUE;
-		g_free (rte->priv->saved_for_help);
-		rte->priv->saved_for_help = NULL;
+		gdaui_rt_editor_set_contents (rte, priv->saved_for_help, -1);
+		priv->enable_changed_signal = TRUE;
+		g_free (priv->saved_for_help);
+		priv->saved_for_help = NULL;
 	}
 }
 
 static void
 italic_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	apply_tag (rte, gtk_toggle_action_get_active (action) ? FALSE : TRUE,
-		   rte->priv->tags [TEXT_TAG_ITALIC].tag);
+		   priv->tags [TEXT_TAG_ITALIC].tag);
 }
 
 static void
 bold_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	apply_tag (rte, gtk_toggle_action_get_active (action) ? FALSE : TRUE,
-		   rte->priv->tags [TEXT_TAG_BOLD].tag);
+		   priv->tags [TEXT_TAG_BOLD].tag);
 }
 
 static void
 strike_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	apply_tag (rte, gtk_toggle_action_get_active (action) ? FALSE : TRUE,
-		   rte->priv->tags [TEXT_TAG_STRIKE].tag);
+		   priv->tags [TEXT_TAG_STRIKE].tag);
 }
 
 static void
 underline_cb (GtkToggleAction *action, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	apply_tag (rte, gtk_toggle_action_get_active (action) ? FALSE : TRUE,
-		   rte->priv->tags [TEXT_TAG_UNDERLINE].tag);
+		   priv->tags [TEXT_TAG_UNDERLINE].tag);
 }
 
 static void
@@ -693,6 +674,7 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
                                            _("_Cancel"), GTK_RESPONSE_CANCEL,
                                            _("_Open"), GTK_RESPONSE_ACCEPT,
                                            NULL);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg),
 					     gdaui_get_default_path ());
         filter = gtk_file_filter_new ();
@@ -713,13 +695,13 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
 			GtkTextIter end;
 			gboolean ret = FALSE;
 			
-			ret = gtk_text_buffer_get_selection_bounds (rte->priv->textbuffer, &start, &end);
+			ret = gtk_text_buffer_get_selection_bounds (priv->textbuffer, &start, &end);
 			if (ret)
-				gtk_text_buffer_delete (rte->priv->textbuffer, &start, &end);
+				gtk_text_buffer_delete (priv->textbuffer, &start, &end);
 			
-			gtk_text_buffer_get_iter_at_mark (rte->priv->textbuffer, &start,
-							  gtk_text_buffer_get_insert (rte->priv->textbuffer));
-			gtk_text_buffer_insert_pixbuf (rte->priv->textbuffer, &start, pixbuf);
+			gtk_text_buffer_get_iter_at_mark (priv->textbuffer, &start,
+							  gtk_text_buffer_get_insert (priv->textbuffer));
+			gtk_text_buffer_insert_pixbuf (priv->textbuffer, &start, pixbuf);
 			g_object_unref (pixbuf);
 		}
 		else {
@@ -748,33 +730,35 @@ add_image_cb (G_GNUC_UNUSED GtkAction *action, GdauiRtEditor *rte)
 static void
 mark_set_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, GtkTextMark *mark, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	if (mark == gtk_text_buffer_get_insert (textbuffer)) {
 		GtkAction *action;
 		gboolean act;
 		gint i;
 
-		rte->priv->selection_changing = TRUE;
+		priv->selection_changing = TRUE;
 
 		for (i = 0; i < TEXT_TAG_LAST; i++) {
-			if (! rte->priv->tags[i].action_name)
+			if (! priv->tags[i].action_name)
 				continue;
 
-			action = gtk_ui_manager_get_action (rte->priv->uimanager,
-							    rte->priv->tags[i].action_name);
+			action = gtk_ui_manager_get_action (priv->uimanager,
+							    priv->tags[i].action_name);
 			if (gtk_text_buffer_get_has_selection (textbuffer))
 				act = FALSE;
 			else
-				act = gtk_text_iter_has_tag (location, rte->priv->tags [i].tag);
+				act = gtk_text_iter_has_tag (location, priv->tags [i].tag);
 			gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), act);
 		}
 
-		rte->priv->selection_changing = FALSE;
+		priv->selection_changing = FALSE;
 	}
 }
 
 static void
 insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, G_GNUC_UNUSED gchar *text, G_GNUC_UNUSED gint len, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	/* if inserting is before a bullet, then insert right after */
 	GtkTextTag *tag;
 	tag = iter_begins_list (rte, location, NULL);
@@ -782,38 +766,39 @@ insert_text_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, G_GNUC_UNUSED 
 		gtk_text_iter_forward_char (location);
 		gtk_text_buffer_place_cursor (textbuffer, location);
 	}
-	rte->priv->insert_offset = gtk_text_iter_get_offset (location);
+	priv->insert_offset = gtk_text_iter_get_offset (location);
 }
 
 static void
 insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *text, G_GNUC_UNUSED gint len, GdauiRtEditor *rte)
 {
 	GtkTextIter start, end;
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 
-	if ((rte->priv->insert_offset < 0) || rte->priv->show_markup)
+	if ((priv->insert_offset < 0) || priv->show_markup)
 		return;
 
 	/* disable any extra modification while text is being set using gdaui_rt_editor_set_contents() */
-	if (rte->priv->contents_setting)
+	if (priv->contents_setting)
 		return;
 
 	/* apply selected tag in toolbar if any */
-	gtk_text_buffer_get_iter_at_offset (textbuffer, &start, rte->priv->insert_offset);
+	gtk_text_buffer_get_iter_at_offset (textbuffer, &start, priv->insert_offset);
 	end = *location;
 	if (gtk_text_iter_backward_chars (&end, g_utf8_strlen (text, -1))) {
 		gint i;
 		for (i = 0; i < TEXT_TAG_LAST; i++) {
 			GtkAction *action;
-			if (! rte->priv->tags[i].action_name)
+			if (! priv->tags[i].action_name)
 				continue;
-			action = gtk_ui_manager_get_action (rte->priv->uimanager,
-							    rte->priv->tags[i].action_name);
+			action = gtk_ui_manager_get_action (priv->uimanager,
+							    priv->tags[i].action_name);
 			if (gtk_toggle_action_get_active (GTK_TOGGLE_ACTION (action)))
-				gtk_text_buffer_apply_tag (rte->priv->textbuffer,
-							   rte->priv->tags[i].tag, location, &end);
+				gtk_text_buffer_apply_tag (priv->textbuffer,
+							   priv->tags[i].tag, location, &end);
 		}
 	}
-	rte->priv->insert_offset = -1;
+	priv->insert_offset = -1;
 
 	gtk_text_iter_set_line_offset (&start, 0);
 	/* add new bullet if already in list */
@@ -835,12 +820,12 @@ insert_text_after_cb (GtkTextBuffer *textbuffer, GtkTextIter *location, gchar *t
 		GtkTextTag *tag = NULL;
 		end = *location;
 		
-		if (gtk_text_iter_begins_tag (&start, rte->priv->tags[TEXT_TAG_TITLE1].tag))
-			tag = rte->priv->tags[TEXT_TAG_TITLE1].tag;
-		else if (gtk_text_iter_begins_tag (&start, rte->priv->tags[TEXT_TAG_TITLE2].tag))
-			tag = rte->priv->tags[TEXT_TAG_TITLE2].tag;
+		if (gtk_text_iter_begins_tag (&start, priv->tags[TEXT_TAG_TITLE1].tag))
+			tag = priv->tags[TEXT_TAG_TITLE1].tag;
+		else if (gtk_text_iter_begins_tag (&start, priv->tags[TEXT_TAG_TITLE2].tag))
+			tag = priv->tags[TEXT_TAG_TITLE2].tag;
 		if (tag)
-			gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &start, &end);
+			gtk_text_buffer_apply_tag (priv->textbuffer, tag, &start, &end);
 	}
 }
 
@@ -856,13 +841,14 @@ static void
 bigger_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 			      GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	PangoContext *pcontext;
 	PangoFontDescription *fd, *nfd;
-	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (rte->priv->textview));
+	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (priv->textview));
 	fd = pango_context_get_font_description (pcontext);
 	nfd = pango_font_description_copy_static (fd);
 	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) * 1.2);
-	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), nfd);
+	gtk_widget_override_font (GTK_WIDGET (priv->textview), nfd);
 	pango_font_description_free (nfd);
 }
 
@@ -870,13 +856,14 @@ static void
 smaller_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 			       GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	PangoContext *pcontext;
 	PangoFontDescription *fd, *nfd;
-	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (rte->priv->textview));
+	pcontext = gtk_widget_get_pango_context (GTK_WIDGET (priv->textview));
 	fd = pango_context_get_font_description (pcontext);
 	nfd = pango_font_description_copy_static (fd);
 	pango_font_description_set_size (nfd, pango_font_description_get_size (fd) / 1.2);
-	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), nfd);
+	gtk_widget_override_font (GTK_WIDGET (priv->textview), nfd);
 	pango_font_description_free (nfd);
 }
 
@@ -884,12 +871,14 @@ static void
 reset_font_item_activate_cb (G_GNUC_UNUSED GtkCheckMenuItem *checkmenuitem,
 			     GdauiRtEditor *rte)
 {
-	gtk_widget_override_font (GTK_WIDGET (rte->priv->textview), NULL);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
+	gtk_widget_override_font (GTK_WIDGET (priv->textview), NULL);
 }
 
 static void
 populate_popup_cb (G_GNUC_UNUSED GtkTextView *entry, GtkMenu *menu, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	GtkWidget *item;
 
 	item = gtk_separator_menu_item_new ();
@@ -916,7 +905,7 @@ populate_popup_cb (G_GNUC_UNUSED GtkTextView *entry, GtkMenu *menu, GdauiRtEdito
 
 	item = gtk_check_menu_item_new_with_label (_("Show source markup"));
         gtk_menu_shell_prepend (GTK_MENU_SHELL (menu), item);
-	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), rte->priv->show_markup);
+	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), priv->show_markup);
         g_signal_connect (G_OBJECT (item), "toggled",
                           G_CALLBACK (show_markup_item_activate_cb), rte);
         gtk_widget_show (item);
@@ -964,10 +953,11 @@ static gboolean markup_tag_match (MarkupTag tag1, gint tagline1, MarkupTag tag2,
 static void
 apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, GtkTextMark *mark_start, GtkTextMark *mark_end)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	gint ssol;
 	GtkTextIter start, end;
 
-	rte->priv->insert_offset = -1;
+	priv->insert_offset = -1;
 
 	gtk_text_buffer_get_iter_at_mark (textbuffer, &start, mark_start);
 	gtk_text_buffer_get_iter_at_mark (textbuffer, &end, mark_end);
@@ -978,42 +968,42 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 	switch (current->markup) {
 	case MARKUP_BOLD:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_BOLD].tag,
+					   priv->tags[TEXT_TAG_BOLD].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_VERBATIM:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_VERBATIM].tag,
+					   priv->tags[TEXT_TAG_VERBATIM].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_TT:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_TT].tag,
+					   priv->tags[TEXT_TAG_TT].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_ITALIC:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_ITALIC].tag,
+					   priv->tags[TEXT_TAG_ITALIC].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_STRIKE:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_STRIKE].tag,
+					   priv->tags[TEXT_TAG_STRIKE].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_UNDERLINE:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_UNDERLINE].tag,
+					   priv->tags[TEXT_TAG_UNDERLINE].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_TITLE1_S:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_TITLE1].tag,
+					   priv->tags[TEXT_TAG_TITLE1].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_TITLE2_S:
 		gtk_text_buffer_apply_tag (textbuffer,
-					   rte->priv->tags[TEXT_TAG_TITLE2].tag,
+					   priv->tags[TEXT_TAG_TITLE2].tag,
 					   &astart, &end);
 		break;
 	case MARKUP_LIST_S: {
@@ -1032,10 +1022,10 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_end);
 		if (ssol > 0) {
 			bindex = 1;
-			tag = rte->priv->tags[TEXT_TAG_LIST2].tag;
+			tag = priv->tags[TEXT_TAG_LIST2].tag;
 		}
 		else
-			tag = rte->priv->tags[TEXT_TAG_LIST1].tag;
+			tag = priv->tags[TEXT_TAG_LIST1].tag;
 
 		if (! bullet_pix[0]) {
 			bullet_pix[0] = gdk_pixbuf_new_from_inline (-1, bullet_pixdata,
@@ -1047,18 +1037,18 @@ apply_markup (GdauiRtEditor *rte, GtkTextBuffer *textbuffer, TextTag *current, G
 		gtk_text_buffer_get_iter_at_mark (textbuffer, &ps, current->m_end);
 		pe = ps;
 		gtk_text_iter_forward_char (&pe);
-		gtk_text_buffer_apply_tag (rte->priv->textbuffer, tag, &ps, &pe);
+		gtk_text_buffer_apply_tag (priv->textbuffer, tag, &ps, &pe);
 
 		/* remove all other tags */
 		gint i;
 		gtk_text_iter_set_line_index (&ps, 0);
 		gtk_text_iter_backward_char (&ps); /* to catch the previous line's '\n' */
 		for (i = 0; i < TEXT_TAG_LAST; i++) {
-			if (rte->priv->tags[i].tag == tag)
+			if (priv->tags[i].tag == tag)
 				continue;
 			else
-				gtk_text_buffer_remove_tag (rte->priv->textbuffer,
-							    rte->priv->tags[i].tag, &ps, &pe);
+				gtk_text_buffer_remove_tag (priv->textbuffer,
+							    priv->tags[i].tag, &ps, &pe);
 		}
 
 		break;
@@ -1109,9 +1099,10 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 	TextTag *current = NULL;
 	GtkTextIter start, end;
 	gint ssol;
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 
-	if (rte->priv->show_markup) {
-		if (rte->priv->enable_changed_signal)
+	if (priv->show_markup) {
+		if (priv->enable_changed_signal)
 			g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
 		return;
 	}
@@ -1199,7 +1190,7 @@ text_buffer_changed_cb (GtkTextBuffer *textbuffer, GdauiRtEditor *rte)
 	g_signal_handlers_unblock_by_func (textbuffer,
 					   G_CALLBACK (text_buffer_changed_cb), rte);
 
-	if (rte->priv->enable_changed_signal)
+	if (priv->enable_changed_signal)
 		g_signal_emit (rte, gdaui_rt_editor_signals[CHANGED], 0, NULL);
 }
 
@@ -1277,6 +1268,7 @@ static MarkupTag
 get_markup_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *out_end,
 		  TextTag *start_tag, GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	GtkTextIter inti;
 	gchar c;
 	gint ssol = -1; /* spaces since start of line */
@@ -1336,7 +1328,7 @@ get_markup_token (GtkTextIter *iter, gint *out_nb_spaces_before, GtkTextIter *ou
 		else
 			return MARKUP_NONE;
 	}
-	else if (gtk_text_iter_has_tag (&inti, rte->priv->tags[TEXT_TAG_VERBATIM].tag)) {
+	else if (gtk_text_iter_has_tag (&inti, priv->tags[TEXT_TAG_VERBATIM].tag)) {
 		if (!c)
 			return MARKUP_EOF;
 		else
@@ -1553,9 +1545,10 @@ gchar *
 gdaui_rt_editor_get_contents (GdauiRtEditor *editor)
 {
 	g_return_val_if_fail (GDAUI_IS_RT_EDITOR (editor), NULL);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
 
-	if (editor->priv->saved_for_help)
-		return g_strdup (editor->priv->saved_for_help);
+	if (priv->saved_for_help)
+		return g_strdup (priv->saved_for_help);
 	else
 		return real_gdaui_rt_editor_get_contents (editor);
 }
@@ -1564,19 +1557,20 @@ static gchar *
 real_gdaui_rt_editor_get_contents (GdauiRtEditor *editor)
 {
 	GtkTextIter start, end;
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
 
-	gtk_text_buffer_get_bounds (editor->priv->textbuffer, &start, &end);
+	gtk_text_buffer_get_bounds (priv->textbuffer, &start, &end);
 
-	if (editor->priv->show_markup)
-		return gtk_text_buffer_get_text (editor->priv->textbuffer, &start, &end, FALSE);
+	if (priv->show_markup)
+		return gtk_text_buffer_get_text (priv->textbuffer, &start, &end, FALSE);
 	else {
 		GdkAtom format;
 		guint8 *data;
 		gsize length;
-		format = gtk_text_buffer_register_serialize_format (editor->priv->textbuffer, "txt/rte",
+		format = gtk_text_buffer_register_serialize_format (priv->textbuffer, "txt/rte",
 								    (GtkTextBufferSerializeFunc) serialize_as_txt2tag,
 								    editor, NULL);
-		data = gtk_text_buffer_serialize (editor->priv->textbuffer, editor->priv->textbuffer, format,
+		data = gtk_text_buffer_serialize (priv->textbuffer, priv->textbuffer, format,
 						  &start, &end, &length);
 		return (gchar*) data;
 	}
@@ -1605,37 +1599,38 @@ typedef struct
 static const gchar *
 serialize_tag (GtkTextTag *tag, gboolean starting, GdauiRtEditor *editor)
 {
-	if (tag == editor->priv->tags[TEXT_TAG_ITALIC].tag)
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
+	if (tag == priv->tags[TEXT_TAG_ITALIC].tag)
 		return "//";
-	else if (tag == editor->priv->tags[TEXT_TAG_BOLD].tag)
+	else if (tag == priv->tags[TEXT_TAG_BOLD].tag)
 		return "**";
-	else if (tag == editor->priv->tags[TEXT_TAG_UNDERLINE].tag)
+	else if (tag == priv->tags[TEXT_TAG_UNDERLINE].tag)
 		return "__";
-	else if (tag == editor->priv->tags[TEXT_TAG_STRIKE].tag)
+	else if (tag == priv->tags[TEXT_TAG_STRIKE].tag)
 		return "--";
-	else if (tag == editor->priv->tags[TEXT_TAG_TT].tag)
+	else if (tag == priv->tags[TEXT_TAG_TT].tag)
 		return "``";
-	else if (tag == editor->priv->tags[TEXT_TAG_VERBATIM].tag)
+	else if (tag == priv->tags[TEXT_TAG_VERBATIM].tag)
 		return "\"\"\"";
-	else if (tag == editor->priv->tags[TEXT_TAG_TITLE1].tag) {
+	else if (tag == priv->tags[TEXT_TAG_TITLE1].tag) {
 		if (starting)
 			return "= ";
 		else
 			return " =";
 	}
-	else if (tag == editor->priv->tags[TEXT_TAG_TITLE2].tag) {
+	else if (tag == priv->tags[TEXT_TAG_TITLE2].tag) {
 		if (starting)
 			return "== ";
 		else
 			return " ==";
 	}
-	else if (tag == editor->priv->tags[TEXT_TAG_LIST1].tag) {
+	else if (tag == priv->tags[TEXT_TAG_LIST1].tag) {
 		if (starting)
 			return lists_tokens [0];
 		else
 			return "";
 	}
-	else if (tag == editor->priv->tags[TEXT_TAG_LIST2].tag) {
+	else if (tag == priv->tags[TEXT_TAG_LIST2].tag) {
 		if (starting)
 			return lists_tokens [1];
 		else
@@ -1909,10 +1904,11 @@ void
 gdaui_rt_editor_set_contents (GdauiRtEditor *editor, const gchar *markup, gint length)
 {
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (editor));
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
 
-	editor->priv->contents_setting = TRUE;
-	gtk_text_buffer_set_text (editor->priv->textbuffer, markup, length);
-	editor->priv->contents_setting = FALSE;
+	priv->contents_setting = TRUE;
+	gtk_text_buffer_set_text (priv->textbuffer, markup, length);
+	priv->contents_setting = FALSE;
 }
 
 /**
@@ -1928,8 +1924,9 @@ void
 gdaui_rt_editor_set_editable (GdauiRtEditor *editor, gboolean editable)
 {
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (editor));
-	gtk_text_view_set_editable (editor->priv->textview, editable);
-	gtk_text_view_set_cursor_visible (editor->priv->textview, editable);
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
+	gtk_text_view_set_editable (priv->textview, editable);
+	gtk_text_view_set_cursor_visible (priv->textview, editable);
 	show_hide_toolbar (editor);
 }
 
@@ -1951,65 +1948,67 @@ _gdaui_rt_editor_set_show_markup (GdauiRtEditor *editor, gboolean show_markup)
 	GtkTextIter iter;
 
 	g_return_if_fail (GDAUI_IS_RT_EDITOR (editor));
-	if (editor->priv->show_markup == show_markup)
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (editor);
+	if (priv->show_markup == show_markup)
 		return;
 
-	g_object_get (editor->priv->textbuffer, "cursor-position", &cursor_pos, NULL);
+	g_object_get (priv->textbuffer, "cursor-position", &cursor_pos, NULL);
 	data = real_gdaui_rt_editor_get_contents (editor);
-	editor->priv->show_markup = show_markup;
+	priv->show_markup = show_markup;
 	gdaui_rt_editor_set_contents (editor, data, -1);
 	g_free (data);
 
-	gtk_text_buffer_get_iter_at_offset (editor->priv->textbuffer, &iter, cursor_pos);
-	gtk_text_buffer_place_cursor (editor->priv->textbuffer, &iter);
+	gtk_text_buffer_get_iter_at_offset (priv->textbuffer, &iter, cursor_pos);
+	gtk_text_buffer_place_cursor (priv->textbuffer, &iter);
 
 	show_hide_toolbar (editor);
 }
 
 static void
-show_hide_toolbar (GdauiRtEditor *editor)
+show_hide_toolbar (GdauiRtEditor *rte)
 {
+	GdauiRtEditorPrivate *priv = gdaui_rt_editor_get_instance_private (rte);
 	gboolean enable_markup = TRUE;
 	GtkAction *action;
 	gboolean doshow = FALSE;
 
-	if (gtk_text_view_get_editable (editor->priv->textview) &&
-	    gtk_widget_has_focus (GTK_WIDGET (editor->priv->textview)))
+	if (gtk_text_view_get_editable (priv->textview) &&
+	    gtk_widget_has_focus (GTK_WIDGET (priv->textview)))
 		doshow = TRUE;
 
 	if (doshow) {
-		gtk_widget_show (editor->priv->toolbar);
-		if (editor->priv->sw && (editor->priv->vadj_value != 0.)) {
+		gtk_widget_show (priv->toolbar);
+		if (priv->sw && (priv->vadj_value != 0.)) {
 			GtkAdjustment *adj;	
-			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (editor->priv->sw));
+			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->sw));
 			while (gtk_events_pending ())
 				gtk_main_iteration ();
-			gtk_adjustment_set_value (adj, editor->priv->vadj_value);
+			gtk_adjustment_set_value (adj, priv->vadj_value);
 		}
 	}
 	else {
-		if (editor->priv->sw) {
+		if (priv->sw) {
 			GtkAdjustment *adj;
-			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (editor->priv->sw));
-			editor->priv->vadj_value = gtk_adjustment_get_value (adj);
+			adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (priv->sw));
+			priv->vadj_value = gtk_adjustment_get_value (adj);
 		}
-		gtk_widget_hide (editor->priv->toolbar);
+		gtk_widget_hide (priv->toolbar);
 	}
 
-	if (editor->priv->show_markup ||
-	    ! gtk_text_view_get_editable (editor->priv->textview))
+	if (priv->show_markup ||
+	    ! gtk_text_view_get_editable (priv->textview))
 		enable_markup = FALSE;
 
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionBold");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionBold");
 	gtk_action_set_sensitive (action, enable_markup);
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionItalic");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionItalic");
 	gtk_action_set_sensitive (action, enable_markup);
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionUnderline");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionUnderline");
 	gtk_action_set_sensitive (action, enable_markup);
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionStrike");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionStrike");
 	gtk_action_set_sensitive (action, enable_markup);
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionAddImage");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionAddImage");
 	gtk_action_set_sensitive (action, enable_markup);
-	action = gtk_ui_manager_get_action (editor->priv->uimanager, "/ToolBar/ActionReset");
+	action = gtk_ui_manager_get_action (priv->uimanager, "/ToolBar/ActionReset");
 	gtk_action_set_sensitive (action, enable_markup);
 }

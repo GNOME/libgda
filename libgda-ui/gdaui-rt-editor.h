@@ -26,30 +26,15 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_RT_EDITOR          (gdaui_rt_editor_get_type())
-#define GDAUI_RT_EDITOR(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_rt_editor_get_type(), GdauiRtEditor)
-#define GDAUI_RT_EDITOR_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_rt_editor_get_type (), GdauiRtEditorClass)
-#define GDAUI_IS_RT_EDITOR(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_rt_editor_get_type ())
-
-
-typedef struct _GdauiRtEditor      GdauiRtEditor;
-typedef struct _GdauiRtEditorClass GdauiRtEditorClass;
-typedef struct _GdauiRtEditorPriv  GdauiRtEditorPriv;
-
-/* struct for the object's data */
-struct _GdauiRtEditor
-{
-	GtkBox              object;
-
-	GdauiRtEditorPriv   *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiRtEditor, gdaui_rt_editor, GDAUI, RT_EDITOR, GtkBox)
 /* struct for the object's class */
 struct _GdauiRtEditorClass
 {
 	GtkBoxClass         parent_class;
 
 	/* signals */
-        void (* changed) (GdauiRtEditor *editor);
+	void             (* changed)     (GdauiRtEditor *editor);
+	gpointer            padding[12];
 };
 
 /**
@@ -77,8 +62,6 @@ struct _GdauiRtEditorClass
  * (between the [[[ and ]]] markers). Pictures are usually inserted using the incorporated
  * tollbar and not y hand (even though it's possible).
  */
-
-GType      gdaui_rt_editor_get_type              (void) G_GNUC_CONST;
 
 GtkWidget *gdaui_rt_editor_new                   (void);
 gchar     *gdaui_rt_editor_get_contents          (GdauiRtEditor *editor);
