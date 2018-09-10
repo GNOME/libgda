@@ -38,7 +38,7 @@ static void gdaui_cloud_get_property (GObject *object,
 				      GParamSpec *pspec);
 
 /* GdauiDataSelector interface */
-static void              gdaui_cloud_selector_init (GdauiDataSelectorIface *iface);
+static void              gdaui_cloud_selector_init (GdauiDataSelectorInterface *iface);
 static GdaDataModel     *cloud_selector_get_model (GdauiDataSelector *iface);
 static void              cloud_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *cloud_selector_get_selected_rows (GdauiDataSelector *iface);
@@ -137,7 +137,7 @@ gdaui_cloud_class_init (GdauiCloudClass *klass)
 }
 
 static void
-gdaui_cloud_selector_init (GdauiDataSelectorIface *iface)
+gdaui_cloud_selector_init (GdauiDataSelectorInterface *iface)
 {
 	iface->get_model = cloud_selector_get_model;
 	iface->set_model = cloud_selector_set_model;

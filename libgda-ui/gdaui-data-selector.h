@@ -29,15 +29,9 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_SELECTOR          (gdaui_data_selector_get_type())
-#define GDAUI_DATA_SELECTOR(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, GDAUI_TYPE_DATA_SELECTOR, GdauiDataSelector)
-#define GDAUI_IS_DATA_SELECTOR(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_DATA_SELECTOR)
-#define GDAUI_DATA_SELECTOR_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDAUI_TYPE_DATA_SELECTOR, GdauiDataSelectorIface))
-
-typedef struct _GdauiDataSelectorIface GdauiDataSelectorIface;
-typedef struct _GdauiDataSelector GdauiDataSelector;
-
+G_DECLARE_INTERFACE (GdauiDataSelector, gdaui_data_selector, GDAUI, DATA_SELECTOR, GObject)
 /* struct for the interface */
-struct _GdauiDataSelectorIface
+struct _GdauiDataSelectorInterface
 {
 	GTypeInterface           g_iface;
 
@@ -52,6 +46,7 @@ struct _GdauiDataSelectorIface
 
 	/* signals */
 	void              (* selection_changed)    (GdauiDataSelector *iface);
+	gpointer            padding[12];
 };
 
 /**
@@ -72,8 +67,6 @@ struct _GdauiDataSelectorIface
  * Please note that any row number in this interface is in reference to the #GdaDataModel returned by
  * the gdaui_data_selector_get_model() method.
  */
-
-GType             gdaui_data_selector_get_type              (void) G_GNUC_CONST;
 
 GdaDataModel     *gdaui_data_selector_get_model             (GdauiDataSelector *iface);
 void              gdaui_data_selector_set_model             (GdauiDataSelector *iface, GdaDataModel *model);

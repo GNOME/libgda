@@ -35,51 +35,20 @@ enum
 
 static gint gdaui_data_selector_signals[LAST_SIGNAL] = { 0 };
 
-static void gdaui_data_selector_iface_init (gpointer g_class);
-
-GType
-gdaui_data_selector_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiDataSelectorIface),
-			(GBaseInitFunc) gdaui_data_selector_iface_init,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) NULL,
-			NULL,
-			NULL,
-			0,
-			0,
-			(GInstanceInitFunc) NULL,
-			0
-		};
-		
-		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataSelector", &info, 0);
-		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
-	}
-	return type;
-}
-
+G_DEFINE_INTERFACE(GdauiDataSelector, gdaui_data_selector, G_TYPE_OBJECT)
 
 static void
-gdaui_data_selector_iface_init (G_GNUC_UNUSED gpointer g_class)
+gdaui_data_selector_default_init (GdauiDataSelectorInterface *iface)
 {
-	static gboolean initialized = FALSE;
-
-	if (! initialized) {
-		gdaui_data_selector_signals[SELECTION_CHANGED] = 
+		gdaui_data_selector_signals[SELECTION_CHANGED] =
 			g_signal_new ("selection-changed",
                                       GDAUI_TYPE_DATA_SELECTOR,
                                       G_SIGNAL_RUN_FIRST,
-                                      G_STRUCT_OFFSET (GdauiDataSelectorIface, selection_changed),
+                                      G_STRUCT_OFFSET (GdauiDataSelectorInterface, selection_changed),
                                       NULL, NULL,
                                       g_cclosure_marshal_VOID__VOID, G_TYPE_NONE,
                                       0);
 
-		initialized = TRUE;
-	}
 }
 
 /**

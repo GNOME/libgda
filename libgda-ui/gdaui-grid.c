@@ -51,7 +51,7 @@ static gboolean        gdaui_grid_widget_set_write_mode (GdauiDataProxy *iface, 
 static GdauiDataProxyWriteMode gdaui_grid_widget_get_write_mode (GdauiDataProxy *iface);
 
 /* GdauiDataSelector interface */
-static void              gdaui_grid_selector_init (GdauiDataSelectorIface *iface);
+static void              gdaui_grid_selector_init (GdauiDataSelectorInterface *iface);
 static GdaDataModel     *gdaui_grid_selector_get_model (GdauiDataSelector *iface);
 static void              gdaui_grid_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *gdaui_grid_selector_get_selected_rows (GdauiDataSelector *iface);
@@ -94,7 +94,7 @@ gdaui_grid_widget_init (GdauiDataProxyInterface *iface)
 }
 
 static void
-gdaui_grid_selector_init (GdauiDataSelectorIface *iface)
+gdaui_grid_selector_init (GdauiDataSelectorInterface *iface)
 {
 	iface->get_model = gdaui_grid_selector_get_model;
 	iface->set_model = gdaui_grid_selector_set_model;

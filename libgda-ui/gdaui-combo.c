@@ -57,7 +57,7 @@ static void gdaui_combo_get_preferred_width (GtkWidget *widget,
 					     gint *natural_size);
 
 /* GdauiDataSelector interface */
-static void              gdaui_combo_selector_init (GdauiDataSelectorIface *iface);
+static void              gdaui_combo_selector_init (GdauiDataSelectorInterface *iface);
 static GdaDataModel     *combo_selector_get_model (GdauiDataSelector *iface);
 static void              combo_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model);
 static GArray           *combo_selector_get_selected_rows (GdauiDataSelector *iface);
@@ -101,7 +101,7 @@ gdaui_combo_class_init (GdauiComboClass *klass)
 }
 
 static void
-gdaui_combo_selector_init (GdauiDataSelectorIface *iface)
+gdaui_combo_selector_init (GdauiDataSelectorInterface *iface)
 {
 	iface->get_model = combo_selector_get_model;
 	iface->set_model = combo_selector_set_model;
