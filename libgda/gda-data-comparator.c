@@ -32,7 +32,6 @@
 static void gda_data_comparator_class_init (GdaDataComparatorClass * class);
 static void gda_data_comparator_init (GdaDataComparator *srv);
 static void gda_data_comparator_dispose (GObject *object);
-static void gda_data_comparator_finalize (GObject *object);
 
 static void gda_data_comparator_set_property (GObject *object,
 					      guint param_id,
