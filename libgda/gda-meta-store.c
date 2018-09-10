@@ -1726,8 +1726,8 @@ create_view_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr no
 
 	/* determine object's complete name */
 	if (store) {
+		priv = gda_meta_store_get_instance_private (store);
 		if (priv->schema) {
-			priv = gda_meta_store_get_instance_private (store);
 			complete_obj_name = g_strdup_printf ("%s.%s", priv->schema, (gchar *) view_name);
 		}
 	} else
