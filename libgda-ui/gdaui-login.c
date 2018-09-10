@@ -33,7 +33,7 @@
 #include <string.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
-struct _GdauiLoginPrivate {
+typedef struct {
 	GdauiLoginMode mode;
 
 	GdaDsnInfo dsn_info;
@@ -47,10 +47,10 @@ struct _GdauiLoginPrivate {
 	GtkWidget *cnc_params_editor;
 
 	GtkWidget *auth_widget;
-};
+} GdauiLoginPrivate;
 
-static void gdaui_login_class_init   (GdauiLoginClass *klass);
-static void gdaui_login_init         (GdauiLogin *login, GdauiLoginClass *klass);
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiLogin, gdaui_login, GTK_TYPE_BOX)
+
 static void gdaui_login_set_property (GObject *object,
 				      guint paramid,
 				      const GValue *value,
@@ -67,8 +67,6 @@ enum {
 	PROP_MODE,
 	PROP_VALID
 };
-
-static GObjectClass *parent_class = NULL;
 
 /* signals */
 enum
@@ -95,9 +93,6 @@ static void
 gdaui_login_class_init (GdauiLoginClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkWidgetClass *widget_class = (GtkWidgetClass*) klass;
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	gdaui_login_signals[CHANGED] =
                 g_signal_new ("changed",
@@ -114,8 +109,6 @@ gdaui_login_class_init (GdauiLoginClass *klass)
 	object_class->get_property = gdaui_login_get_property;
 	object_class->finalize = gdaui_login_finalize;
 
-	widget_class->show_all = gtk_widget_show;
-	
 	/* add class properties */
 	g_object_class_install_property (object_class, PROP_DSN,
 					 g_param_spec_string ("dsn", NULL, NULL, NULL, G_PARAM_READWRITE));
@@ -130,12 +123,13 @@ gdaui_login_class_init (GdauiLoginClass *klass)
 static void
 config_dsn_changed_cb (G_GNUC_UNUSED GdaConfig *config, GdaDsnInfo *dsn, GdauiLogin *login)
 {
-	if (!login->priv->prov_selector)
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
+	if (!priv->prov_selector)
 		return;
 	gchar *sdsn;
-	sdsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector));
+	sdsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector));
 	if (dsn && dsn->name && sdsn && !strcmp (dsn->name, sdsn)) {
-		dsn_entry_changed_cb (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), login);
+		dsn_entry_changed_cb (GDAUI_DSN_SELECTOR (priv->dsn_selector), login);
 		g_print ("Update...\n");
 	}
 }
@@ -147,17 +141,17 @@ auth_data_changed_cb (GdauiProviderAuthEditor *auth, GdauiLogin *login)
 }
 
 static void
-gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
+gdaui_login_init (GdauiLogin *login)
 {
 	GtkWidget *grid;
 	GtkWidget *wid;
-	
+
 	/* allocate the internal structure */
-	login->priv = g_new0 (GdauiLoginPrivate, 1);
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	
 	/* Init the properties*/
-	login->priv->mode = GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE;
-	memset (&(login->priv->dsn_info), 0, sizeof (GdaDsnInfo));
+	priv->mode = GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE;
+	memset (&(priv->dsn_info), 0, sizeof (GdaDsnInfo));
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (login), GTK_ORIENTATION_VERTICAL);
 	
@@ -180,53 +174,53 @@ gdaui_login_init (GdauiLogin *login, G_GNUC_UNUSED GdauiLoginClass *klass)
 			  G_CALLBACK (radio_button_use_dsn_toggled_cb), login);
 	gtk_grid_attach (GTK_GRID (grid), wid, 0, 0, 1, 1);
 	gtk_widget_show (wid);
-	login->priv->rb_dsn = wid;
+	priv->rb_dsn = wid;
 
 	wid = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (wid),
 							   _("Specify connection:"));
 	gtk_grid_attach (GTK_GRID (grid), wid, 0, 1, 1, 1);
 	gtk_widget_show (wid);
-	login->priv->rb_prov = wid;
+	priv->rb_prov = wid;
 
 	/* widget to specify a DSN to use */
-	login->priv->dsn_selector = _gdaui_dsn_selector_new ();
-	gtk_widget_show (login->priv->dsn_selector); /* Show the DSN selector */
-	gtk_grid_attach (GTK_GRID (grid), login->priv->dsn_selector, 1, 0, 1, 1);
-	g_signal_connect (G_OBJECT (login->priv->dsn_selector), "changed",
+	priv->dsn_selector = _gdaui_dsn_selector_new ();
+	gtk_widget_show (priv->dsn_selector); /* Show the DSN selector */
+	gtk_grid_attach (GTK_GRID (grid), priv->dsn_selector, 1, 0, 1, 1);
+	g_signal_connect (G_OBJECT (priv->dsn_selector), "changed",
 			  G_CALLBACK (dsn_entry_changed_cb), login);
 			  
 	/* Create the DSN add button */
-	login->priv->cc_button = gtk_button_new_with_label (_("Data sources..."));
-	gtk_button_set_image (GTK_BUTTON (login->priv->cc_button),
+	priv->cc_button = gtk_button_new_with_label (_("Data sources..."));
+	gtk_button_set_image (GTK_BUTTON (priv->cc_button),
 			      gtk_image_new_from_icon_name ("preferences-system", GTK_ICON_SIZE_BUTTON));
-	g_signal_connect (G_OBJECT (login->priv->cc_button), "clicked",
+	g_signal_connect (G_OBJECT (priv->cc_button), "clicked",
 			  G_CALLBACK (run_cc_cb), login);
-	gtk_widget_show (login->priv->cc_button);
-	gtk_grid_attach (GTK_GRID (grid), login->priv->cc_button, 2, 0, 1, 1);
+	gtk_widget_show (priv->cc_button);
+	gtk_grid_attach (GTK_GRID (grid), priv->cc_button, 2, 0, 1, 1);
 		
 	/* widget to specify a direct connection */
-	login->priv->prov_selector = gdaui_provider_selector_new ();
-	gtk_grid_attach (GTK_GRID (grid),login->priv->prov_selector, 1, 1, 2, 1);
-	gtk_widget_show (login->priv->prov_selector);
-	gtk_widget_set_sensitive (login->priv->prov_selector, FALSE);
-	g_signal_connect (login->priv->prov_selector, "changed",
+	priv->prov_selector = gdaui_provider_selector_new ();
+	gtk_grid_attach (GTK_GRID (grid),priv->prov_selector, 1, 1, 2, 1);
+	gtk_widget_show (priv->prov_selector);
+	gtk_widget_set_sensitive (priv->prov_selector, FALSE);
+	g_signal_connect (priv->prov_selector, "changed",
 			  G_CALLBACK (prov_entry_changed_cb), login);
 
-	login->priv->cnc_params_editor = _gdaui_provider_spec_editor_new (NULL);
-	gtk_grid_attach (GTK_GRID (grid), login->priv->cnc_params_editor, 1, 2, 2, 1);
-	gtk_widget_show (login->priv->cnc_params_editor);
-	gtk_widget_set_sensitive (login->priv->cnc_params_editor, FALSE);
-	g_signal_connect (login->priv->cnc_params_editor, "changed",
+	priv->cnc_params_editor = _gdaui_provider_spec_editor_new (NULL);
+	gtk_grid_attach (GTK_GRID (grid), priv->cnc_params_editor, 1, 2, 2, 1);
+	gtk_widget_show (priv->cnc_params_editor);
+	gtk_widget_set_sensitive (priv->cnc_params_editor, FALSE);
+	g_signal_connect (priv->cnc_params_editor, "changed",
 			  G_CALLBACK (cnc_params_editor_changed_cb), login);
 	  
 	/* Create the authentication part */
-	login->priv->auth_widget = _gdaui_provider_auth_editor_new (NULL);
-	gtk_grid_attach (GTK_GRID (grid), login->priv->auth_widget, 1, 3, 2, 1);
-	gtk_widget_show (login->priv->auth_widget);
-	g_signal_connect (login->priv->auth_widget, "changed",
+	priv->auth_widget = _gdaui_provider_auth_editor_new (NULL);
+	gtk_grid_attach (GTK_GRID (grid), priv->auth_widget, 1, 3, 2, 1);
+	gtk_widget_show (priv->auth_widget);
+	g_signal_connect (priv->auth_widget, "changed",
 			  G_CALLBACK (auth_data_changed_cb), login);
 
-	prov_entry_changed_cb (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector), login);
+	prov_entry_changed_cb (GDAUI_PROVIDER_SELECTOR (priv->prov_selector), login);
 }
 
 static void
@@ -264,13 +258,14 @@ gdaui_login_get_property (GObject *object,
 	GdauiLogin *login = (GdauiLogin *) object;
 
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 
 	switch (param_id) {
 	case PROP_DSN :
-		g_value_set_string (value, login->priv->dsn_info.name);
+		g_value_set_string (value, priv->dsn_info.name);
 		break;
 	case PROP_MODE:
-		g_value_set_flags (value, login->priv->mode);
+		g_value_set_flags (value, priv->mode);
 		break;
 	case PROP_VALID:
 		g_value_set_boolean (value, settings_are_valid (login));
@@ -284,20 +279,21 @@ gdaui_login_get_property (GObject *object,
 static void
 clear_dsn_info (GdauiLogin *login)
 {
-	g_free (login->priv->dsn_info.name);
-	login->priv->dsn_info.name = NULL;
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
+	g_free (priv->dsn_info.name);
+	priv->dsn_info.name = NULL;
 
-	g_free (login->priv->dsn_info.provider);
-	login->priv->dsn_info.provider = NULL;
+	g_free (priv->dsn_info.provider);
+	priv->dsn_info.provider = NULL;
 
-	g_free (login->priv->dsn_info.description);
-	login->priv->dsn_info.description = NULL;
+	g_free (priv->dsn_info.description);
+	priv->dsn_info.description = NULL;
 
-	g_free (login->priv->dsn_info.cnc_string);
-	login->priv->dsn_info.cnc_string = NULL;
+	g_free (priv->dsn_info.cnc_string);
+	priv->dsn_info.cnc_string = NULL;
 
-	g_free (login->priv->dsn_info.auth_string);
-	login->priv->dsn_info.auth_string = NULL;
+	g_free (priv->dsn_info.auth_string);
+	priv->dsn_info.auth_string = NULL;
 }
 
 static void
@@ -306,51 +302,25 @@ gdaui_login_finalize (GObject *object)
 	GdauiLogin *login = (GdauiLogin *) object;
 
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 
 	GdaConfig *conf = gda_config_get ();
 	g_signal_handlers_disconnect_by_func (conf,
 					      G_CALLBACK (config_dsn_changed_cb), login);
 	g_object_unref (conf);
 
-	/* free memory */
-	clear_dsn_info (login);
-	g_free (login->priv);
-	login->priv = NULL;
-
-	parent_class->finalize (object);
-}
-
-GType
-gdaui_login_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiLoginClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_login_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiLogin),
-			0,
-			(GInstanceInitFunc) gdaui_login_init,
-			0
-		};
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiLogin", &info, 0);
-	}
-	return type;
+	G_OBJECT_CLASS (gdaui_login_parent_class)->finalize (object);
 }
 
 static gboolean
 settings_are_valid (GdauiLogin *login)
 {
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	/* validate cnc information */
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn))) {
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->rb_dsn))) {
 		/* using a DSN */
 		gchar *dsn;
-		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector));
+		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector));
 		if (dsn)
 			g_free (dsn);
 		else
@@ -359,16 +329,16 @@ settings_are_valid (GdauiLogin *login)
 	else {
 		/* using a direct CNC string */
 		const gchar *prov;
-		prov = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector));
+		prov = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (priv->prov_selector));
 		if (!prov)
 			return FALSE;
 
-		if (! _gdaui_provider_spec_editor_is_valid (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor)))
+		if (! _gdaui_provider_spec_editor_is_valid (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor)))
 			return FALSE;
 	}
 
 	/* validate authentication */
-	if (! _gdaui_provider_auth_editor_is_valid (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget)))
+	if (! _gdaui_provider_auth_editor_is_valid (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget)))
 		return FALSE;
 
 	return TRUE;
@@ -377,15 +347,16 @@ settings_are_valid (GdauiLogin *login)
 static void
 radio_button_use_dsn_toggled_cb (GtkToggleButton *button, GdauiLogin *login)
 {
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	gboolean use_dsn = gtk_toggle_button_get_active (button);
 
-	gtk_widget_set_sensitive (login->priv->dsn_selector, use_dsn);
-	gtk_widget_set_sensitive (login->priv->prov_selector, !use_dsn);
-	gtk_widget_set_sensitive (login->priv->cnc_params_editor, !use_dsn);
+	gtk_widget_set_sensitive (priv->dsn_selector, use_dsn);
+	gtk_widget_set_sensitive (priv->prov_selector, !use_dsn);
+	gtk_widget_set_sensitive (priv->cnc_params_editor, !use_dsn);
 	if (use_dsn)
-		dsn_entry_changed_cb (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), login);
+		dsn_entry_changed_cb (GDAUI_DSN_SELECTOR (priv->dsn_selector), login);
 	else
-		prov_entry_changed_cb (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector), login);
+		prov_entry_changed_cb (GDAUI_PROVIDER_SELECTOR (priv->prov_selector), login);
 }
 
 static void
@@ -458,6 +429,7 @@ run_cc_cb (G_GNUC_UNUSED GtkButton *button, GdauiLogin *login)
 static void
 dsn_entry_changed_cb (GdauiDsnSelector *sel, GdauiLogin *login)
 {
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	gchar *dsn;
         GdaDsnInfo *info = NULL;
         dsn = _gdaui_dsn_selector_get_dsn (sel);
@@ -468,25 +440,25 @@ dsn_entry_changed_cb (GdauiDsnSelector *sel, GdauiLogin *login)
 	}
 
 	/* update prov_selector */
-	g_signal_handlers_block_by_func (login->priv->prov_selector, G_CALLBACK (prov_entry_changed_cb), login);
-	gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector),
+	g_signal_handlers_block_by_func (priv->prov_selector, G_CALLBACK (prov_entry_changed_cb), login);
+	gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (priv->prov_selector),
 					      info ? info->provider : NULL);
-	g_signal_handlers_unblock_by_func (login->priv->prov_selector, G_CALLBACK (prov_entry_changed_cb), login);
+	g_signal_handlers_unblock_by_func (priv->prov_selector, G_CALLBACK (prov_entry_changed_cb), login);
 
 	/* update auth editor */
-	_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
+	_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget),
 						 info ? info->provider : NULL);
-	_gdaui_provider_auth_editor_set_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
+	_gdaui_provider_auth_editor_set_auth (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget),
 					     info && info->auth_string ? info->auth_string : NULL);
 
 	/* update spec editor */
-	_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
+	_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor),
 						  info ? info->provider : NULL);
-	_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
+	_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor),
 					       info ? info->cnc_string : NULL);
 
-	if (login->priv->auth_widget)
-		gtk_widget_grab_focus (login->priv->auth_widget);
+	if (priv->auth_widget)
+		gtk_widget_grab_focus (priv->auth_widget);
 
 	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
 }
@@ -494,21 +466,21 @@ dsn_entry_changed_cb (GdauiDsnSelector *sel, GdauiLogin *login)
 static void
 prov_entry_changed_cb (GdauiProviderSelector *sel, GdauiLogin *login)
 {
-
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	const gchar *prov;
         
-	g_signal_handlers_block_by_func (login->priv->dsn_selector, G_CALLBACK (dsn_entry_changed_cb), login);
-	_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), NULL);
-	g_signal_handlers_unblock_by_func (login->priv->dsn_selector, G_CALLBACK (dsn_entry_changed_cb), login);
+	g_signal_handlers_block_by_func (priv->dsn_selector, G_CALLBACK (dsn_entry_changed_cb), login);
+	_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector), NULL);
+	g_signal_handlers_unblock_by_func (priv->dsn_selector, G_CALLBACK (dsn_entry_changed_cb), login);
 
         prov = gdaui_provider_selector_get_provider (sel);
-	_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
+	_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor),
 						 prov);
-	_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
+	_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget),
 						 prov);
 
-	if (login->priv->auth_widget)
-		gtk_widget_grab_focus (login->priv->auth_widget);
+	if (priv->auth_widget)
+		gtk_widget_grab_focus (priv->auth_widget);
 
 	g_signal_emit (login, gdaui_login_signals [CHANGED], 0, settings_are_valid (login));
 }
@@ -552,44 +524,45 @@ void
 gdaui_login_set_mode (GdauiLogin *login, GdauiLoginMode mode)
 {
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
-	login->priv->mode = mode;
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
+	priv->mode = mode;
 
 	if (mode & (GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE | GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE)) {
-		gtk_widget_hide (login->priv->rb_dsn);
-		gtk_widget_hide (login->priv->rb_prov);
+		gtk_widget_hide (priv->rb_dsn);
+		gtk_widget_hide (priv->rb_prov);
 	}
 	else {
-		gtk_widget_show (login->priv->rb_dsn);
-		gtk_widget_show (login->priv->rb_prov);
+		gtk_widget_show (priv->rb_dsn);
+		gtk_widget_show (priv->rb_prov);
 	}
 
 	if (mode & GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE) {
-		gtk_widget_hide (login->priv->cc_button);
-		gtk_widget_hide (login->priv->dsn_selector);
+		gtk_widget_hide (priv->cc_button);
+		gtk_widget_hide (priv->dsn_selector);
 	}
 	else {
 		if (mode & GDA_UI_LOGIN_ENABLE_CONTROL_CENTRE_MODE)
-			gtk_widget_show (login->priv->cc_button);
+			gtk_widget_show (priv->cc_button);
 		else
-			gtk_widget_hide (login->priv->cc_button);
-		gtk_widget_show (login->priv->dsn_selector);
+			gtk_widget_hide (priv->cc_button);
+		gtk_widget_show (priv->dsn_selector);
 	}
 
 	if (mode & GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE) {
-		gtk_widget_hide (login->priv->prov_selector);
-		gtk_widget_hide (login->priv->cnc_params_editor);
+		gtk_widget_hide (priv->prov_selector);
+		gtk_widget_hide (priv->cnc_params_editor);
 	}
 	else {
-		gtk_widget_show (login->priv->prov_selector);
-		gtk_widget_show (login->priv->cnc_params_editor);
+		gtk_widget_show (priv->prov_selector);
+		gtk_widget_show (priv->cnc_params_editor);
 	}
 
 	if ((mode & GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE) &&
 	    !(mode & GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE))
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (login->priv->rb_prov), TRUE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->rb_prov), TRUE);
 	else if ((mode & GDA_UI_LOGIN_HIDE_DIRECT_CONNECTION_MODE) &&
 		 !(mode & GDA_UI_LOGIN_HIDE_DSN_SELECTION_MODE))
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn), TRUE);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->rb_dsn), TRUE);
 }
 
 /**
@@ -608,37 +581,38 @@ const GdaDsnInfo *
 gdaui_login_get_connection_information (GdauiLogin *login)
 {
 	g_return_val_if_fail (GDAUI_IS_LOGIN (login), NULL);
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 
 	clear_dsn_info (login);
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn))) {
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->rb_dsn))) {
 		GdaDsnInfo *info = NULL;
 		gchar *dsn;
-		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector));
+		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector));
 		if (dsn && *dsn)
 			info = gda_config_get_dsn_info (dsn);
 		g_free (dsn);
 		if (info) {
-			login->priv->dsn_info.name = g_strdup (info->name);
+			priv->dsn_info.name = g_strdup (info->name);
 			if (info->provider)
-				login->priv->dsn_info.provider = g_strdup (info->provider);
+				priv->dsn_info.provider = g_strdup (info->provider);
 			if (info->description)
-				login->priv->dsn_info.description = g_strdup (info->description);
+				priv->dsn_info.description = g_strdup (info->description);
 			if (info->cnc_string)
-				login->priv->dsn_info.cnc_string = g_strdup (info->cnc_string);
-			login->priv->dsn_info.is_system = info->is_system;
+				priv->dsn_info.cnc_string = g_strdup (info->cnc_string);
+			priv->dsn_info.is_system = info->is_system;
 		}
-		login->priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget));
+		priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget));
 	}
 	else {
 		const gchar *str;
-		str = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector));
+		str = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (priv->prov_selector));
 		if (str)
-			login->priv->dsn_info.provider = g_strdup (str);
-		login->priv->dsn_info.cnc_string = _gdaui_provider_spec_editor_get_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor));
-		login->priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget));
+			priv->dsn_info.provider = g_strdup (str);
+		priv->dsn_info.cnc_string = _gdaui_provider_spec_editor_get_specs (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor));
+		priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget));
 	}
 
-	return &(login->priv->dsn_info);
+	return &(priv->dsn_info);
 }
 
 /**
@@ -684,33 +658,34 @@ void
 gdaui_login_set_connection_information (GdauiLogin *login, const GdaDsnInfo *cinfo)
 {
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
+	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 	if (!cinfo) {
-		_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), NULL);
+		_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector), NULL);
 	}
 	else {
 		GdaDsnInfo *info = NULL;
 		if (cinfo->name)
 			info = gda_config_get_dsn_info (cinfo->name);
 		if (info)
-			_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (login->priv->dsn_selector), cinfo->name);
+			_gdaui_dsn_selector_set_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector), cinfo->name);
 		else {
 			/* force switch to */
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (login->priv->rb_dsn), FALSE);
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->rb_dsn), FALSE);
 		}
-		g_signal_handlers_block_by_func (login->priv->prov_selector,
+		g_signal_handlers_block_by_func (priv->prov_selector,
 						 G_CALLBACK (prov_entry_changed_cb), login);
-		gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (login->priv->prov_selector),
+		gdaui_provider_selector_set_provider (GDAUI_PROVIDER_SELECTOR (priv->prov_selector),
 		                                      cinfo->provider);
-		g_signal_handlers_unblock_by_func (login->priv->prov_selector,
+		g_signal_handlers_unblock_by_func (priv->prov_selector,
 						   G_CALLBACK (prov_entry_changed_cb), login);
 
-		_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
+		_gdaui_provider_spec_editor_set_provider (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor),
 							  cinfo->provider);
-		_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (login->priv->cnc_params_editor),
+		_gdaui_provider_spec_editor_set_specs (GDAUI_PROVIDER_SPEC_EDITOR (priv->cnc_params_editor),
 						       cinfo->cnc_string);
-		_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
+		_gdaui_provider_auth_editor_set_provider (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget),
 							  cinfo->provider);
-		_gdaui_provider_auth_editor_set_auth (GDAUI_PROVIDER_AUTH_EDITOR (login->priv->auth_widget),
+		_gdaui_provider_auth_editor_set_auth (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget),
 						      cinfo->auth_string);
 	}
 }
