@@ -29,31 +29,13 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_BLOB_OP            (gda_blob_op_get_type())
-#define GDA_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_BLOB_OP, GdaBlobOp))
-#define GDA_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_BLOB_OP, GdaBlobOpClass))
-#define GDA_IS_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_BLOB_OP))
-#define GDA_IS_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_BLOB_OP))
-
-typedef struct _GdaBlobOpPrivate GdaBlobOpPrivate;
-
-struct _GdaBlobOp {
-	GObject object;
-	GdaBlobOpPrivate *priv;
-
-	/* Padding for future expansion */
-	gpointer _gda_reserved1;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaBlobOp, gda_blob_op, GDA, BLOB_OP, GObject)
 struct _GdaBlobOpClass {
 	GObjectClass parent_class;
 	gpointer     functions;
 
-	/*< private >*/
 	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-	void (*_gda_reserved3) (void);
-	void (*_gda_reserved4) (void);
+	gpointer padding[12];
 };
 
 /**
@@ -123,8 +105,6 @@ struct _GdaBlobOpClass {
  *        about how to implement the virtual methods when creating a database provider</para></listitem>
  *  </itemizedlist>
  */
-
-GType    gda_blob_op_get_type  (void) G_GNUC_CONST;
 
 glong    gda_blob_op_get_length (GdaBlobOp *op);
 glong    gda_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);

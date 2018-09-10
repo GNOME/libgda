@@ -36,8 +36,6 @@
 #define PARENT_TYPE G_TYPE_OBJECT
 #define CLASS(blob) (GDA_BLOB_OP_CLASS (G_OBJECT_GET_CLASS (blob)))
 #define VFUNCTIONS(blob) (GDA_BLOB_OP_FUNCTIONS (CLASS(blob)->functions))
-static void gda_blob_op_class_init (GdaBlobOpClass *klass);
-static void gda_blob_op_init       (GdaBlobOp *op, GdaBlobOpClass *klass);
 static void gda_blob_op_dispose   (GObject *object);
 
 
@@ -50,12 +48,12 @@ static void gda_blob_op_get_property (GObject *object,
 				      GValue *value,
 				      GParamSpec *pspec);
 
-static GObjectClass *parent_class = NULL;
-
-struct _GdaBlobOpPrivate {
+typedef struct {
 	GdaConnection *cnc;
 	GdaWorker     *worker;
-};
+} GdaBlobOpPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaBlobOp, gda_blob_op, G_TYPE_OBJECT)
 
 /* properties */
 enum
@@ -65,40 +63,10 @@ enum
 };
 
 
-GType
-gda_blob_op_get_type (void)
-{
-        static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaBlobOpClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_blob_op_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaBlobOp),
-                        0,
-                        (GInstanceInitFunc) gda_blob_op_init,
-			0
-                };
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (PARENT_TYPE, "GdaBlobOp", &info, G_TYPE_FLAG_ABSTRACT);
-		g_mutex_unlock (&registering);
-        }
-        return type;
-}
-
 static void
 gda_blob_op_class_init (GdaBlobOpClass *klass)
 {
         GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-        parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
         object_class->set_property = gda_blob_op_set_property;
@@ -115,27 +83,27 @@ gda_blob_op_class_init (GdaBlobOpClass *klass)
 }
 
 static void
-gda_blob_op_init (GdaBlobOp *op, G_GNUC_UNUSED GdaBlobOpClass *klass)
+gda_blob_op_init (GdaBlobOp *op)
 {
-	op->priv = g_slice_new0 (GdaBlobOpPrivate);
 }
 
 static void
 gda_blob_op_dispose (GObject *object)
 {
 	GdaBlobOp *op = (GdaBlobOp *) object;
+	GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
 
-        if (op->priv) {
-                if (op->priv->worker)
-                        gda_worker_unref (op->priv->worker);
-                if (op->priv->cnc)
-                        g_object_unref (op->priv->cnc);
-		g_slice_free (GdaBlobOpPrivate, op->priv);
-                op->priv = NULL;
+	if (priv->worker) {
+		gda_worker_unref (priv->worker);
+		priv->worker = NULL;
+	}
+	if (priv->cnc) {
+		g_object_unref (priv->cnc);
+		priv->cnc = NULL;
 	}
 
 	/* chain to parent class */
-        parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_blob_op_parent_class)->dispose (object);
 }
 
 static void
@@ -145,23 +113,22 @@ gda_blob_op_set_property (GObject *object,
 			  GParamSpec *pspec)
 {
         GdaBlobOp *op = (GdaBlobOp *) object;
-        if (op->priv) {
-                switch (param_id) {
-                case PROP_CNC:
-                        op->priv->cnc = g_value_get_object (value);
-                        if (op->priv->cnc) {
-                                g_object_ref (op->priv->cnc);
-                                op->priv->worker = _gda_connection_get_worker (op->priv->cnc);
-                                g_assert (op->priv->worker);
-                                gda_worker_ref (op->priv->worker);
-                        }
-			else
-				g_warning ("GdaBlobOp created without any associated connection!");
-                        break;
-		default:
-                        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-		}
+        GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
+        switch (param_id) {
+        case PROP_CNC:
+                priv->cnc = g_value_get_object (value);
+                if (priv->cnc) {
+                        g_object_ref (priv->cnc);
+                        priv->worker = _gda_connection_get_worker (priv->cnc);
+                        g_assert (priv->worker);
+                        gda_worker_ref (priv->worker);
+                }
+		else
+			g_warning ("GdaBlobOp created without any associated connection!");
+                break;
+	default:
+                G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+                break;
 	}
 }
 
@@ -172,15 +139,14 @@ gda_blob_op_get_property (GObject *object,
 			  GParamSpec *pspec)
 {
 	GdaBlobOp *op = (GdaBlobOp *) object;
-        if (op->priv) {
-                switch (param_id) {
-                case PROP_CNC:
-			g_value_set_object (value, op->priv->cnc);
-                        break;
-		default:
-                        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-		}
+        GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
+        switch (param_id) {
+        case PROP_CNC:
+		g_value_set_object (value, priv->cnc);
+                break;
+	default:
+                G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+                break;
 	}
 }
 
@@ -214,28 +180,29 @@ glong
 gda_blob_op_get_length (GdaBlobOp *op)
 {
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
-	if (op->priv) {
-		if (! op->priv->cnc || !op->priv->worker) {
+	GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
+	if (priv) {
+		if (! priv->cnc || !priv->worker) {
 			g_warning ("Internal error: no connection of GdaWorker associated to blob operations object");
 			return -1;
 		}
 
-		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
+		gda_lockable_lock ((GdaLockable*) priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (priv->cnc);
 
 		WorkerData data;
 		data.op = op;
 		data.retval = -1;
 
 		gpointer callval;
-		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
+		gda_worker_do_job (priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_get_length, (gpointer) &data, NULL, NULL, NULL);
 		if (context)
 			g_main_context_unref (context);
 
-		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
+		gda_lockable_unlock ((GdaLockable*) priv->cnc); /* CNC UNLOCK */
 
 		if (callval == (gpointer) 0x01)
 			return data.retval;
@@ -276,17 +243,18 @@ glong
 gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 {
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
+	GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
 
-	if (op->priv) {
-		if (! op->priv->cnc || !op->priv->worker) {
+	if (priv) {
+		if (! priv->cnc || !priv->worker) {
 			g_warning ("Internal error: no connection of GdaWorker associated to blob operations object");
 			return -1;
 		}
 
-		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
+		gda_lockable_lock ((GdaLockable*) priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (priv->cnc);
 
 		WorkerData data;
 		data.op = op;
@@ -296,12 +264,12 @@ gda_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 		data.retval = -1;
 
 		gpointer callval;
-		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
+		gda_worker_do_job (priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_read, (gpointer) &data, NULL, NULL, NULL);
 		if (context)
 			g_main_context_unref (context);
 
-		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
+		gda_lockable_unlock ((GdaLockable*) priv->cnc); /* CNC UNLOCK */
 
 		if (callval == (gpointer) 0x01)
 			return data.retval;
@@ -368,17 +336,18 @@ glong
 gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 {
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), -1);
+	GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
 
-	if (op->priv) {
-		if (! op->priv->cnc || !op->priv->worker) {
+	if (priv) {
+		if (! priv->cnc || !priv->worker) {
 			g_warning ("Internal error: no connection of GdaWorker associated to blob operations object");
 			return -1;
 		}
 
-		gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
+		gda_lockable_lock ((GdaLockable*) priv->cnc); /* CNC LOCK */
 
 		GMainContext *context;
-		context = gda_server_provider_get_real_main_context (op->priv->cnc);
+		context = gda_server_provider_get_real_main_context (priv->cnc);
 
 		WorkerData data;
 		data.op = op;
@@ -387,12 +356,12 @@ gda_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		data.retval = -1;
 
 		gpointer callval;
-		gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
+		gda_worker_do_job (priv->worker, context, 0, &callval, NULL,
 				   (GdaWorkerFunc) worker_write, (gpointer) &data, NULL, NULL, NULL);
 		if (context)
 			g_main_context_unref (context);
 
-		gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
+		gda_lockable_unlock ((GdaLockable*) priv->cnc); /* CNC UNLOCK */
 
 		if (callval == (gpointer) 0x01)
 			return data.retval;
@@ -431,18 +400,19 @@ gboolean
 gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 {
 	g_return_val_if_fail (GDA_IS_BLOB_OP (op), FALSE);
+	GdaBlobOpPrivate *priv = gda_blob_op_get_instance_private (op);
 
 	if (VFUNCTIONS (op)->write_all != NULL) {
-		if (op->priv) {
-			if (! op->priv->cnc || !op->priv->worker) {
+		if (priv) {
+			if (! priv->cnc || !priv->worker) {
 				g_warning ("Internal error: no connection of GdaWorker associated to blob operations object");
 				return -1;
 			}
 
-			gda_lockable_lock ((GdaLockable*) op->priv->cnc); /* CNC LOCK */
+			gda_lockable_lock ((GdaLockable*) priv->cnc); /* CNC LOCK */
 
 			GMainContext *context;
-			context = gda_server_provider_get_real_main_context (op->priv->cnc);
+			context = gda_server_provider_get_real_main_context (priv->cnc);
 
 			WorkerData data;
 			data.op = op;
@@ -450,12 +420,12 @@ gda_blob_op_write_all (GdaBlobOp *op, GdaBlob *blob)
 			data.retval = -1;
 
 			gpointer callval;
-			gda_worker_do_job (op->priv->worker, context, 0, &callval, NULL,
+			gda_worker_do_job (priv->worker, context, 0, &callval, NULL,
 					   (GdaWorkerFunc) worker_write_all, (gpointer) &data, NULL, NULL, NULL);
 			if (context)
 				g_main_context_unref (context);
 
-			gda_lockable_unlock ((GdaLockable*) op->priv->cnc); /* CNC UNLOCK */
+			gda_lockable_unlock ((GdaLockable*) priv->cnc); /* CNC UNLOCK */
 
 			if (callval == (gpointer) 0x01)
 				return data.retval ? TRUE : FALSE;
