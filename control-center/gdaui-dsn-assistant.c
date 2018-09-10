@@ -335,9 +335,11 @@ dsn_name_changed_cb (GtkEntry *entry, GdauiDsnAssistant *assistant)
 		gchar *str = NULL;
 
 		do {
-			g_free (str);
+			if (str != NULL)
+				g_free (str);
 			str = g_strdup_printf ("%s_%d", name, i);
 			dsn_info = gda_config_get_dsn_info (str);
+			i++;
 		} while (dsn_info);
 
 		gtk_entry_set_text (entry, str);
