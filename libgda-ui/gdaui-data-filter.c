@@ -3,6 +3,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2012 Daniel Mustieles <daniel.mustieles@gmail.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,8 +27,6 @@
 #include "gdaui-data-proxy.h"
 #include "gdaui-data-filter.h"
 
-static void gdaui_data_filter_class_init (GdauiDataFilterClass * class);
-static void gdaui_data_filter_init (GdauiDataFilter *wid);
 static void gdaui_data_filter_dispose (GObject *object);
 
 static void gdaui_data_filter_set_property (GObject *object,
@@ -50,17 +49,16 @@ static void data_widget_proxy_changed_cb (GdauiDataProxy *data_widget,
 static void clear_filter_cb (GtkButton *button, GdauiDataFilter *filter);
 static void apply_filter_cb (GtkButton *button, GdauiDataFilter *filter);
 
-struct _GdauiDataFilterPriv
+typedef struct
 {
 	GdauiDataProxy    *data_widget;
 	GdaDataProxy      *proxy;
 
 	GtkWidget         *filter_entry;
 	GtkWidget         *notice;
-};
+} GdauiDataFilterPrivate;
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiDataFilter, gdaui_data_filter, GTK_TYPE_BOX)
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum {
@@ -68,46 +66,19 @@ enum {
 	PROP_DATA_WIDGET
 };
 
-GType
-gdaui_data_filter_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo filter = {
-			sizeof (GdauiDataFilterClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_data_filter_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiDataFilter),
-			0,
-			(GInstanceInitFunc) gdaui_data_filter_init,
-			0
-		};		
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiDataFilter", &filter, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_data_filter_class_init (GdauiDataFilterClass * class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-	
-	parent_class = g_type_class_peek_parent (class);
+  GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
-	object_class->dispose = gdaui_data_filter_dispose;
+  object_class->dispose = gdaui_data_filter_dispose;
 
-	/* Properties */
-        object_class->set_property = gdaui_data_filter_set_property;
-        object_class->get_property = gdaui_data_filter_get_property;
+  /* Properties */
+  object_class->set_property = gdaui_data_filter_set_property;
+  object_class->get_property = gdaui_data_filter_get_property;
 	g_object_class_install_property (object_class, PROP_DATA_WIDGET,
-                                         g_param_spec_object ("data-widget", NULL, NULL, GDAUI_TYPE_DATA_PROXY,
-							      G_PARAM_READABLE | G_PARAM_WRITABLE));
+                                   g_param_spec_object ("data-widget", NULL, NULL, GDAUI_TYPE_DATA_PROXY,
+                                                              G_PARAM_READABLE | G_PARAM_WRITABLE));
 }
 
 static void
@@ -134,24 +105,26 @@ unset_wait_cursor (GtkWidget *w)
 static void
 apply_filter_cb (G_GNUC_UNUSED GtkButton *button, GdauiDataFilter *filter)
 {
+	g_return_if_fail (GDAUI_IS_DATA_FILTER (filter));
 	const gchar *expr;
 	gchar *err = NULL;
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
 
-	expr = gtk_entry_get_text (GTK_ENTRY (filter->priv->filter_entry));
+	expr = gtk_entry_get_text (GTK_ENTRY (priv->filter_entry));
 	if (expr && !*expr)
 		expr = NULL;
 
-	gtk_widget_hide (filter->priv->notice);
-	if (filter->priv->proxy) {
+	gtk_widget_hide (priv->notice);
+	if (priv->proxy) {
 		GError *error = NULL;
 
-		g_signal_handlers_block_by_func (G_OBJECT (filter->priv->proxy),
+		g_signal_handlers_block_by_func (G_OBJECT (priv->proxy),
 						 G_CALLBACK (proxy_filter_changed_cb), filter);
 		set_wait_cursor ((GtkWidget*) filter);
 		while (g_main_context_pending (NULL))
 			g_main_context_iteration (NULL, FALSE);
 
-		if (!gda_data_proxy_set_filter_expr (filter->priv->proxy, expr, &error)) {
+		if (!gda_data_proxy_set_filter_expr (priv->proxy, expr, &error)) {
 			if (error && error->message)
 				err = g_strdup (error->message);
 			else
@@ -161,7 +134,7 @@ apply_filter_cb (G_GNUC_UNUSED GtkButton *button, GdauiDataFilter *filter)
 		}
 
 		unset_wait_cursor ((GtkWidget*) filter);
-		g_signal_handlers_unblock_by_func (G_OBJECT (filter->priv->proxy),
+		g_signal_handlers_unblock_by_func (G_OBJECT (priv->proxy),
 						   G_CALLBACK (proxy_filter_changed_cb), filter);
 	}
 
@@ -172,19 +145,21 @@ apply_filter_cb (G_GNUC_UNUSED GtkButton *button, GdauiDataFilter *filter)
 		markup = g_strdup_printf ("<small><span foreground=\"#FF0000\"><b>%s</b>: %s</span></small>", 
 					  _("Filter failed:"), esc);
 		g_free (esc);
-		gtk_label_set_line_wrap (GTK_LABEL (filter->priv->notice), TRUE);
-		gtk_label_set_line_wrap_mode (GTK_LABEL (filter->priv->notice), PANGO_WRAP_WORD);
-		gtk_label_set_selectable (GTK_LABEL (filter->priv->notice), TRUE);
-		gtk_label_set_markup (GTK_LABEL (filter->priv->notice), markup);
+		gtk_label_set_line_wrap (GTK_LABEL (priv->notice), TRUE);
+		gtk_label_set_line_wrap_mode (GTK_LABEL (priv->notice), PANGO_WRAP_WORD);
+		gtk_label_set_selectable (GTK_LABEL (priv->notice), TRUE);
+		gtk_label_set_markup (GTK_LABEL (priv->notice), markup);
 		g_free (markup);
-		gtk_widget_show (filter->priv->notice);
+		gtk_widget_show (priv->notice);
 	}
 }
 
 static void
 clear_filter_cb (GtkButton *button, GdauiDataFilter *filter)
 {
-	gtk_entry_set_text (GTK_ENTRY (filter->priv->filter_entry), "");
+	g_return_if_fail (GDAUI_IS_DATA_FILTER (filter));
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
+	gtk_entry_set_text (GTK_ENTRY (priv->filter_entry), "");
 	apply_filter_cb (button, filter);
 }
 
@@ -194,9 +169,9 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 	GtkWidget *grid, *label, *entry, *button, *bbox;
 	gchar *str;
 
-	wid->priv = g_new0 (GdauiDataFilterPriv, 1);
-	wid->priv->data_widget = NULL;
-	wid->priv->proxy = NULL;
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (wid);
+	priv->data_widget = NULL;
+	priv->proxy = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
 
@@ -220,7 +195,7 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 			  G_CALLBACK (apply_filter_cb), wid);
 
 	label = gtk_label_new ("");
-	wid->priv->notice = label;
+	priv->notice = label;
 	gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 2, 1);
 
 	bbox = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
@@ -236,9 +211,9 @@ gdaui_data_filter_init (GdauiDataFilter * wid)
 			  G_CALLBACK (clear_filter_cb), wid);
 
 	gtk_widget_show_all (grid);
-	gtk_widget_hide (wid->priv->notice);
+	gtk_widget_hide (priv->notice);
 
-	wid->priv->filter_entry = entry;
+	priv->filter_entry = entry;
 }
 
 /**
@@ -268,32 +243,40 @@ gdaui_data_filter_new (GdauiDataProxy *data_widget)
 static void
 data_widget_destroyed_cb (GdauiDataProxy *wid, GdauiDataFilter *filter)
 {
-	g_assert (wid == filter->priv->data_widget);
+	g_return_if_fail(GDAUI_DATA_PROXY (wid));
+	g_return_if_fail(GDAUI_IS_DATA_FILTER (filter));
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
+	g_assert (wid == priv->data_widget);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (wid),
 					      G_CALLBACK (data_widget_destroyed_cb), filter);
 	g_signal_handlers_disconnect_by_func (G_OBJECT (wid),
 					      G_CALLBACK (data_widget_proxy_changed_cb), filter);
 
-	filter->priv->data_widget = NULL;
+	priv->data_widget = NULL;
 }
 
 static void
 proxy_filter_changed_cb (GdaDataProxy *proxy, GdauiDataFilter *filter)
 {
+	g_return_if_fail (GDAUI_IS_DATA_FILTER (filter));
+	g_return_if_fail (GDAUI_IS_DATA_PROXY (proxy));
 	const gchar *expr;
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
 
-	g_assert (proxy == filter->priv->proxy);
+	g_assert (proxy == priv->proxy);
 	expr = gda_data_proxy_get_filter_expr (proxy);
-	gtk_entry_set_text (GTK_ENTRY (filter->priv->filter_entry), expr ? expr : "");
+	gtk_entry_set_text (GTK_ENTRY (priv->filter_entry), expr ? expr : "");
 }
 
 static void
 release_proxy (GdauiDataFilter *filter)
 {
-	g_signal_handlers_disconnect_by_func (G_OBJECT (filter->priv->proxy),
+	g_return_if_fail (GDAUI_IS_DATA_FILTER (filter));
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
+	g_signal_handlers_disconnect_by_func (G_OBJECT (priv->proxy),
 					      G_CALLBACK (proxy_filter_changed_cb), filter);
-	g_object_unref (filter->priv->proxy);
-	filter->priv->proxy = NULL;
+	g_object_unref (priv->proxy);
+	priv->proxy = NULL;
 }
 
 static void
@@ -307,23 +290,16 @@ gdaui_data_filter_dispose (GObject *object)
 {
 	GdauiDataFilter *filter;
 
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_DATA_FILTER (object));
 	filter = GDAUI_DATA_FILTER (object);
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
 
-	if (filter->priv) {
-		if (filter->priv->proxy)
-			release_proxy (filter);
-		if (filter->priv->data_widget)
-			data_widget_destroyed_cb (filter->priv->data_widget, filter);
-
-		/* the private area itself */
-		g_free (filter->priv);
-		filter->priv = NULL;
-	}
+	if (priv->proxy)
+		release_proxy (filter);
+	if (priv->data_widget)
+		data_widget_destroyed_cb (priv->data_widget, filter);
 
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_data_filter_parent_class)->dispose (object);
 }
 
 static void
@@ -334,41 +310,40 @@ gdaui_data_filter_set_property (GObject *object,
 {
 	GdauiDataFilter *filter;
 
-        filter = GDAUI_DATA_FILTER (object);
-        if (filter->priv) {
-                switch (param_id) {
-                case PROP_DATA_WIDGET:
-			if (filter->priv->data_widget)
-				data_widget_destroyed_cb (filter->priv->data_widget, filter);
-			if (filter->priv->proxy)
-				release_proxy (filter);
+	filter = GDAUI_DATA_FILTER (object);
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
+	switch (param_id) {
+	case PROP_DATA_WIDGET:
+		if (priv->data_widget)
+			data_widget_destroyed_cb (priv->data_widget, filter);
+		if (priv->proxy)
+			release_proxy (filter);
 
-			filter->priv->data_widget = GDAUI_DATA_PROXY (g_value_get_object (value));
-			if (filter->priv->data_widget) {
-				GdaDataProxy *proxy;
+		priv->data_widget = GDAUI_DATA_PROXY (g_value_get_object (value));
+		if (priv->data_widget) {
+			GdaDataProxy *proxy;
 
-				/* data widget */
-				g_signal_connect (filter->priv->data_widget, "destroy",
-						  G_CALLBACK (data_widget_destroyed_cb), filter);
-				g_signal_connect (filter->priv->data_widget, "proxy-changed",
-						  G_CALLBACK (data_widget_proxy_changed_cb), filter);
+			/* data widget */
+			g_signal_connect (priv->data_widget, "destroy",
+					  G_CALLBACK (data_widget_destroyed_cb), filter);
+			g_signal_connect (priv->data_widget, "proxy-changed",
+					  G_CALLBACK (data_widget_proxy_changed_cb), filter);
 
-				/* proxy */
-				proxy = gdaui_data_proxy_get_proxy (filter->priv->data_widget);
-				if (proxy) {
-					filter->priv->proxy = proxy;
-					g_object_ref (filter->priv->proxy);
-					g_signal_connect (G_OBJECT (proxy), "filter_changed",
-							  G_CALLBACK (proxy_filter_changed_cb), filter);
-					proxy_filter_changed_cb (proxy, filter);
-				}
+			/* proxy */
+			proxy = gdaui_data_proxy_get_proxy (priv->data_widget);
+			if (proxy) {
+				priv->proxy = proxy;
+				g_object_ref (priv->proxy);
+				g_signal_connect (G_OBJECT (proxy), "filter_changed",
+						  G_CALLBACK (proxy_filter_changed_cb), filter);
+				proxy_filter_changed_cb (proxy, filter);
 			}
-                        break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
+		}
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
 }
 
 static void
@@ -379,15 +354,14 @@ gdaui_data_filter_get_property (GObject *object,
 {
 	GdauiDataFilter *filter;
 
-        filter = GDAUI_DATA_FILTER (object);
-        if (filter->priv) {
-                switch (param_id) {
-		case PROP_DATA_WIDGET:
-			g_value_set_pointer (value, filter->priv->data_widget);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }	
+	filter = GDAUI_DATA_FILTER (object);
+	GdauiDataFilterPrivate *priv = gdaui_data_filter_get_instance_private (filter);
+	switch (param_id) {
+	case PROP_DATA_WIDGET:
+		g_value_set_pointer (value, priv->data_widget);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
 }

@@ -28,27 +28,12 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_FILTER          (gdaui_data_filter_get_type())
-#define GDAUI_DATA_FILTER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_data_filter_get_type(), GdauiDataFilter)
-#define GDAUI_DATA_FILTER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_data_filter_get_type (), GdauiDataFilterClass)
-#define GDAUI_IS_DATA_FILTER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_data_filter_get_type ())
-
-
-typedef struct _GdauiDataFilter      GdauiDataFilter;
-typedef struct _GdauiDataFilterClass GdauiDataFilterClass;
-typedef struct _GdauiDataFilterPriv  GdauiDataFilterPriv;
-
-/* struct for the object's data */
-struct _GdauiDataFilter
-{
-	GtkBox                      object;
-
-	GdauiDataFilterPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiDataFilter, gdaui_data_filter, GDAUI, DATA_FILTER, GtkBox)
 /* struct for the object's class */
 struct _GdauiDataFilterClass
 {
-	GtkBoxClass                 parent_class;
+	GtkBoxClass    parent_class;
+	gpointer       padding[12];
 };
 
 /**
@@ -63,7 +48,6 @@ struct _GdauiDataFilterClass
  * used internally by the #GdauiDataProxyInfo widget for its search option.
  */
 
-GType             gdaui_data_filter_get_type                  (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_data_filter_new                       (GdauiDataProxy *data_widget);
 
