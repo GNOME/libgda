@@ -144,8 +144,15 @@ typedef struct {
 static void
 size_group_free (SizeGroup *sg)
 {
-	g_object_unref (sg->size_group);
-	g_free (sg);
+	g_return_if_fail (sg != NULL);
+	if (sg->size_group != NULL) {
+		g_object_unref (sg->size_group);
+		sg->size_group = NULL;
+	}
+}
+static SizeGroup*
+size_group_new (void) {
+	return g_new0 (SizeGroup,1);
 }
 
 typedef struct
@@ -410,6 +417,7 @@ static void
 get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 {
 	g_return_if_fail (GDAUI_IS_BASIC_FORM (form));
+	g_return_if_fail (paramlist != NULL);
 	GSList *list;
 	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
@@ -423,8 +431,10 @@ get_rid_of_set (GdaSet *paramlist, GdauiBasicForm *form)
 	g_signal_handlers_disconnect_by_func (paramlist,
 					      G_CALLBACK (paramlist_holder_type_set_cb), form);
 
-	g_object_unref (priv->set);
-	priv->set = NULL;
+	if (priv->set) {
+		g_object_unref (priv->set);
+		priv->set = NULL;
+	}
 
 	if (priv->set_info) {
 		g_object_unref (priv->set_info);
@@ -553,14 +563,16 @@ gdaui_basic_form_dispose (GObject *object)
 	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	/* paramlist */
-	if (priv->set)
+	if (priv->set) {
 		get_rid_of_set (priv->set, form);
+		priv->set = NULL;
+	}
 
 	destroy_entries (form);
 
 	if (priv->size_groups) {
-		g_slist_foreach (priv->size_groups, (GFunc) size_group_free, NULL);
-		g_slist_free (priv->size_groups);
+		g_slist_free_full (priv->size_groups, (GDestroyNotify) size_group_free);
+		priv->size_groups = NULL;
 	}
 
 
@@ -727,13 +739,22 @@ destroy_entries (GdauiBasicForm *form)
 	if (priv->s_entries) {
 		GSList *list;
 		for (list = priv->s_entries; list; list = list->next) {
+			if (list->data == NULL) continue;
 			SingleEntry *sentry = (SingleEntry *) list->data;
 
 			disconnect_single_entry_signals (sentry);
-
-			g_object_unref ((GObject *) sentry->entry);
-			g_object_unref ((GObject *) sentry->label);
-			g_free (sentry->label_title);
+			if (sentry->entry != NULL) {
+				g_object_unref ((GObject *) sentry->entry);
+				sentry->entry = NULL;
+			}
+			if (sentry->label) {
+				g_object_unref ((GObject *) sentry->label);
+				sentry->label = NULL;
+			}
+			if (sentry->label_title != NULL) {
+				g_free (sentry->label_title);
+				sentry->label_title = NULL;
+			}
 			g_free (sentry);
 		}
 		g_slist_free (priv->s_entries);
@@ -2265,7 +2286,7 @@ gdaui_basic_form_add_to_size_group (GdauiBasicForm *form, GtkSizeGroup *size_gro
 	GdauiBasicFormPrivate *priv = gdaui_basic_form_get_instance_private (form);
 
 	SizeGroup *sg;
-	sg = g_new (SizeGroup, 1);
+	sg = size_group_new ();
 	sg->size_group = g_object_ref (size_group);
 	sg->part = part;
 	priv->size_groups = g_slist_append (priv->size_groups, sg);
@@ -2308,6 +2329,7 @@ gdaui_basic_form_remove_from_size_group (GdauiBasicForm *form, GtkSizeGroup *siz
 	
 	SizeGroup *sg;
 	for (list = priv->size_groups; list; list = list->next) {
+		if (list->data == NULL) continue;
 		sg = (SizeGroup*) list->data;
 		if (sg->size_group == size_group) {
 			priv->size_groups = g_slist_remove (priv->size_groups, sg);
