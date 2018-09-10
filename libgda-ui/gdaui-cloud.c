@@ -27,8 +27,6 @@
 #include "gdaui-data-selector.h"
 #include <libgda/gda-debug-macros.h>
 
-static void gdaui_cloud_class_init (GdauiCloudClass * class);
-static void gdaui_cloud_init (GdauiCloud *wid);
 static void gdaui_cloud_dispose (GObject *object);
 static void gdaui_cloud_set_property (GObject *object,
 				      guint param_id,
@@ -49,7 +47,7 @@ static gboolean          cloud_selector_select_row (GdauiDataSelector *iface, gi
 static void              cloud_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              cloud_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
 
-struct _GdauiCloudPriv
+typedef struct
 {
 	GdaDataModel        *model;
 	GdaDataModelIter    *iter;
@@ -67,7 +65,11 @@ struct _GdauiCloudPriv
 	GtkSelectionMode     selection_mode;
 
         gboolean             hovering_over_link;
-};
+} GdauiCloudPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdauiCloud, gdaui_cloud, GTK_TYPE_BOX,
+                         G_ADD_PRIVATE (GdauiCloud)
+                         G_IMPLEMENT_INTERFACE(GDAUI_TYPE_DATA_SELECTOR, gdaui_cloud_selector_init))
 
 enum {
 	ACTIVATE,
@@ -75,9 +77,6 @@ enum {
 };
 
 static guint objects_cloud_signals[LAST_SIGNAL] = { 0 };
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum
@@ -90,43 +89,11 @@ enum
 	PROP_MAX_SCALE,
 };
 
-GType
-gdaui_cloud_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiCloudClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_cloud_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiCloud),
-			0,
-			(GInstanceInitFunc) gdaui_cloud_init,
-			0
-		};
-
-		static const GInterfaceInfo selector_info = {
-                        (GInterfaceInitFunc) gdaui_cloud_selector_init,
-                        NULL,
-                        NULL
-                };
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiCloud", &info, 0);
-		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
-	}
-
-	return type;
-}
-
 static void
 cloud_map (GtkWidget *widget)
 {
-	if (GTK_WIDGET_CLASS (parent_class)->map)
-        	GTK_WIDGET_CLASS (parent_class)->map (widget);
+	if (GTK_WIDGET_CLASS (gdaui_cloud_parent_class)->map)
+        	GTK_WIDGET_CLASS (gdaui_cloud_parent_class)->map (widget);
 }
 
 static void
@@ -134,7 +101,6 @@ gdaui_cloud_class_init (GdauiCloudClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
-	parent_class = g_type_class_peek_parent (klass);
 	object_class->dispose = gdaui_cloud_dispose;
 	GTK_WIDGET_CLASS (object_class)->map = cloud_map;
 
@@ -187,12 +153,13 @@ sync_iter_with_selection (GdauiCloud *cloud)
 {
 	GSList *list;
 	gint selrow = -1;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
-	if (! cloud->priv->iter)
+	if (! priv->iter)
 		return;
 
 	/* locate selected row */
-	for (list = cloud->priv->selected_tags; list; list = list->next) {
+	for (list = priv->selected_tags; list; list = list->next) {
 		gint row;
 		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
 		if (row >= 0) {
@@ -206,9 +173,9 @@ sync_iter_with_selection (GdauiCloud *cloud)
 	}
 	
 	/* update iter */
-	if ((selrow == -1) || !gda_data_model_iter_move_to_row (cloud->priv->iter, selrow)) {
-		gda_data_model_iter_invalidate_contents (cloud->priv->iter);
-		g_object_set (G_OBJECT (cloud->priv->iter), "current-row", -1, NULL);
+	if ((selrow == -1) || !gda_data_model_iter_move_to_row (priv->iter, selrow)) {
+		gda_data_model_iter_invalidate_contents (priv->iter);
+		g_object_set (G_OBJECT (priv->iter), "current-row", -1, NULL);
 	}
 }
 
@@ -216,28 +183,29 @@ static void
 update_display (GdauiCloud *cloud)
 {
 	GtkTextBuffer *tbuffer;
-        GtkTextIter start, end;
+	GtkTextIter start, end;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
-        /* clean all */
-        tbuffer = cloud->priv->tbuffer;
-        gtk_text_buffer_get_start_iter (tbuffer, &start);
-        gtk_text_buffer_get_end_iter (tbuffer, &end);
-        gtk_text_buffer_delete (tbuffer, &start, &end);
-	if (cloud->priv->selected_tags) {
-		g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
-		g_slist_free (cloud->priv->selected_tags);
-		cloud->priv->selected_tags = NULL;
+	/* clean all */
+	tbuffer = priv->tbuffer;
+	gtk_text_buffer_get_start_iter (tbuffer, &start);
+	gtk_text_buffer_get_end_iter (tbuffer, &end);
+	gtk_text_buffer_delete (tbuffer, &start, &end);
+	if (priv->selected_tags) {
+		g_slist_foreach (priv->selected_tags, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->selected_tags);
+		priv->selected_tags = NULL;
 		sync_iter_with_selection (cloud);
 		g_signal_emit_by_name (cloud, "selection-changed");
 	}
 
-	if (!cloud->priv->model)
+	if (!priv->model)
 		return;
-	if (cloud->priv->label_column < 0)
+	if (priv->label_column < 0)
 		return;
 	/* check for the data model's column type */
 	GdaColumn *column;
-	column = gda_data_model_describe_column (cloud->priv->model, cloud->priv->label_column);
+	column = gda_data_model_describe_column (priv->model, priv->label_column);
 	if (!column || (gda_column_get_g_type (column) != G_TYPE_STRING)) {
 		g_warning (_("Wrong column type for label: expecting a string and got a %s"),
 			   gda_g_type_to_string (gda_column_get_g_type (column)));
@@ -245,23 +213,23 @@ update_display (GdauiCloud *cloud)
 	}
 
 	gint nrows, i;
-	nrows = gda_data_model_get_n_rows (cloud->priv->model);
+	nrows = gda_data_model_get_n_rows (priv->model);
 
 	/* compute scale range */
 	gdouble min_weight = G_MAXDOUBLE, max_weight = G_MINDOUBLE, wrange;
-	if ((cloud->priv->weight_column >= 0) || cloud->priv->weight_func) {
+	if ((priv->weight_column >= 0) || priv->weight_func) {
 		for (i = 0; i < nrows; i++) {
 			const GValue *cvalue;
 			gdouble weight = 1.;
-			if (cloud->priv->weight_func) {
-				weight = cloud->priv->weight_func (cloud->priv->model, i,
-								   cloud->priv->weight_func_data);
+			if (priv->weight_func) {
+				weight = priv->weight_func (priv->model, i,
+								   priv->weight_func_data);
 				min_weight = MIN (min_weight, weight);
 				max_weight = MAX (max_weight, weight);
 			}
 			else {
-				cvalue = gda_data_model_get_value_at (cloud->priv->model,
-								      cloud->priv->weight_column, i, NULL);
+				cvalue = gda_data_model_get_value_at (priv->model,
+								      priv->weight_column, i, NULL);
 				if (cvalue) {
 					weight = g_ascii_strtod (gda_value_stringify (cvalue), NULL);
 					min_weight = MIN (min_weight, weight);
@@ -272,7 +240,7 @@ update_display (GdauiCloud *cloud)
 	}
 
 	if (max_weight > min_weight)
-		wrange = (cloud->priv->max_scale - cloud->priv->min_scale) / (max_weight - min_weight);
+		wrange = (priv->max_scale - priv->min_scale) / (max_weight - min_weight);
 	else
 		wrange = 0.;
 	
@@ -282,7 +250,7 @@ update_display (GdauiCloud *cloud)
 		gdouble weight = 1.;
 		const gchar *ptr;
 		GString *string;
-		cvalue = gda_data_model_get_value_at (cloud->priv->model, cloud->priv->label_column, i, NULL);
+		cvalue = gda_data_model_get_value_at (priv->model, priv->label_column, i, NULL);
 		if (!cvalue) {
 			TO_IMPLEMENT;
 			continue;
@@ -301,32 +269,32 @@ update_display (GdauiCloud *cloud)
 				g_string_append_c (string, *ptr);
 		}
 
-		if ((cloud->priv->weight_column >= 0) || cloud->priv->weight_func) {
-			if (cloud->priv->weight_func) {
-				weight = cloud->priv->weight_func (cloud->priv->model, i,
-								   cloud->priv->weight_func_data);
-				weight = cloud->priv->min_scale + wrange * (weight - min_weight);
+		if ((priv->weight_column >= 0) || priv->weight_func) {
+			if (priv->weight_func) {
+				weight = priv->weight_func (priv->model, i,
+								   priv->weight_func_data);
+				weight = priv->min_scale + wrange * (weight - min_weight);
 			}
 			else {
-				cvalue = gda_data_model_get_value_at (cloud->priv->model,
-								      cloud->priv->weight_column, i, NULL);
+				cvalue = gda_data_model_get_value_at (priv->model,
+								      priv->weight_column, i, NULL);
 				if (cvalue) {
 					weight = g_ascii_strtod (gda_value_stringify (cvalue), NULL);
-					weight = cloud->priv->min_scale + wrange * (weight - min_weight);
+					weight = priv->min_scale + wrange * (weight - min_weight);
 				}
 			}
 		}
 
 		GtkTextTag *tag;
-		tag = gtk_text_buffer_create_tag (cloud->priv->tbuffer, NULL, 
+		tag = gtk_text_buffer_create_tag (priv->tbuffer, NULL,
 					  "foreground", "#6161F2", 
 					  "scale", weight,
 					  NULL);
 		g_object_set_data ((GObject*) tag, "row", GINT_TO_POINTER (i) + 1);
-		gtk_text_buffer_insert_with_tags (cloud->priv->tbuffer, &start, string->str, -1,
+		gtk_text_buffer_insert_with_tags (priv->tbuffer, &start, string->str, -1,
 						  tag, NULL);
 		g_string_free (string, TRUE);
-		gtk_text_buffer_insert (cloud->priv->tbuffer, &start, "   ", -1);
+		gtk_text_buffer_insert (priv->tbuffer, &start, "   ", -1);
 	}
 }
 
@@ -338,17 +306,17 @@ static gboolean visibility_notify_event (GtkWidget *text_view, GdkEventVisibilit
 static void
 gdaui_cloud_init (GdauiCloud *cloud)
 {
-	cloud->priv = g_new0 (GdauiCloudPriv, 1);
-	cloud->priv->min_scale = .8;
-	cloud->priv->max_scale = 2.;
-	cloud->priv->selected_tags = NULL;
-	cloud->priv->selection_mode = GTK_SELECTION_SINGLE;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	priv->min_scale = .8;
+	priv->max_scale = 2.;
+	priv->selected_tags = NULL;
+	priv->selection_mode = GTK_SELECTION_SINGLE;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (cloud), GTK_ORIENTATION_VERTICAL);
 
 	/* text buffer */
-        cloud->priv->tbuffer = gtk_text_buffer_new (NULL);
-        gtk_text_buffer_create_tag (cloud->priv->tbuffer, "section",
+        priv->tbuffer = gtk_text_buffer_new (NULL);
+        gtk_text_buffer_create_tag (priv->tbuffer, "section",
                                     "weight", PANGO_WEIGHT_BOLD,
                                     "foreground", "blue", NULL);
 
@@ -366,20 +334,20 @@ gdaui_cloud_init (GdauiCloud *cloud)
         gtk_container_add (GTK_CONTAINER (sw), vp);
 	gtk_container_add (GTK_CONTAINER (vp), vbox);
 
-        cloud->priv->tview = gtk_text_view_new_with_buffer (cloud->priv->tbuffer);
-        gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (cloud->priv->tview), GTK_WRAP_WORD);
-        gtk_text_view_set_editable (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
-        gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
-        gtk_box_pack_start (GTK_BOX (vbox), cloud->priv->tview, TRUE, TRUE, 0);
+        priv->tview = gtk_text_view_new_with_buffer (priv->tbuffer);
+        gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (priv->tview), GTK_WRAP_WORD);
+        gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->tview), FALSE);
+        gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (priv->tview), FALSE);
+        gtk_box_pack_start (GTK_BOX (vbox), priv->tview, TRUE, TRUE, 0);
         gtk_widget_show_all (sw);
 
-        g_signal_connect (cloud->priv->tview, "key-press-event",
+        g_signal_connect (priv->tview, "key-press-event",
                           G_CALLBACK (key_press_event), cloud);
-        g_signal_connect (cloud->priv->tview, "event-after",
+        g_signal_connect (priv->tview, "event-after",
                           G_CALLBACK (event_after), cloud);
-        g_signal_connect (cloud->priv->tview, "motion-notify-event",
+        g_signal_connect (priv->tview, "motion-notify-event",
                           G_CALLBACK (motion_notify_event), cloud);
-        g_signal_connect (cloud->priv->tview, "visibility-notify-event",
+        g_signal_connect (priv->tview, "visibility-notify-event",
                           G_CALLBACK (visibility_notify_event), cloud);
 }
 
@@ -414,30 +382,26 @@ gdaui_cloud_new (GdaDataModel *model, gint label_column, gint weight_column)
 static void
 gdaui_cloud_dispose (GObject *object)
 {
-        GdauiCloud *cloud;
+	GdauiCloud *cloud;
 
-        g_return_if_fail (GDAUI_IS_CLOUD (object));
+	g_return_if_fail (GDAUI_IS_CLOUD (object));
 
-        cloud = GDAUI_CLOUD (object);
+	cloud = GDAUI_CLOUD (object);
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
-        if (cloud->priv) {
-		if (cloud->priv->selected_tags) {
-			g_slist_foreach (cloud->priv->selected_tags, (GFunc) g_object_unref, NULL);
-			g_slist_free (cloud->priv->selected_tags);
-		}
-                if (cloud->priv->iter)
-                        g_object_unref (cloud->priv->iter);
-                if (cloud->priv->model)
-                        g_object_unref (cloud->priv->model);
-		if (cloud->priv->tbuffer)
-			g_object_unref (cloud->priv->tbuffer);
+	if (priv->selected_tags) {
+		g_slist_foreach (priv->selected_tags, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->selected_tags);
+	}
+	if (priv->iter)
+		g_object_unref (priv->iter);
+	if (priv->model)
+		g_object_unref (priv->model);
+	if (priv->tbuffer)
+		g_object_unref (priv->tbuffer);
 
-                g_free (cloud->priv);
-                cloud->priv = NULL;
-        }
-
-        /* for the parent class */
-        parent_class->dispose (object);
+	/* for the parent class */
+	G_OBJECT_CLASS (gdaui_cloud_parent_class)->dispose (object);
 }
 
 static void
@@ -456,21 +420,22 @@ gdaui_cloud_set_property (GObject *object,
 	GdaDataModel *model;
 	
 	cloud = GDAUI_CLOUD (object);
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 	
 	switch (param_id) {
 	case PROP_MODEL:
 		model = (GdaDataModel*) g_value_get_object (value);
-		if (cloud->priv->model != model) {
-			if (cloud->priv->iter) {
-				g_object_unref (cloud->priv->iter);
-				cloud->priv->iter = NULL;
+		if (priv->model != model) {
+			if (priv->iter) {
+				g_object_unref (priv->iter);
+				priv->iter = NULL;
 			}
-			if (cloud->priv->model) {
-				g_signal_handlers_disconnect_by_func (cloud->priv->model,
+			if (priv->model) {
+				g_signal_handlers_disconnect_by_func (priv->model,
 								      G_CALLBACK (model_reset_cb), cloud);
-				g_object_unref (cloud->priv->model);
+				g_object_unref (priv->model);
 			}
-			cloud->priv->model = model;
+			priv->model = model;
 			if (model) {
 				g_signal_connect (model, "reset",
 						  G_CALLBACK (model_reset_cb), cloud);
@@ -480,26 +445,26 @@ gdaui_cloud_set_property (GObject *object,
 		}
 		break;
 	case PROP_LABEL_COLUMN:
-		if (cloud->priv->label_column !=  g_value_get_int (value)) {
-			cloud->priv->label_column = g_value_get_int (value);
+		if (priv->label_column !=  g_value_get_int (value)) {
+			priv->label_column = g_value_get_int (value);
 			update_display (cloud);
 		}
 		break;
 	case PROP_WEIGHT_COLUMN:
-		if (cloud->priv->weight_column !=  g_value_get_int (value)) {
-			cloud->priv->weight_column = g_value_get_int (value);
+		if (priv->weight_column !=  g_value_get_int (value)) {
+			priv->weight_column = g_value_get_int (value);
 			update_display (cloud);
 		}
 		break;
 	case PROP_MIN_SCALE:
-		if (cloud->priv->min_scale !=  g_value_get_double (value)) {
-			cloud->priv->min_scale = g_value_get_double (value);
+		if (priv->min_scale !=  g_value_get_double (value)) {
+			priv->min_scale = g_value_get_double (value);
 			update_display (cloud);
 		}
 		break;
 	case PROP_MAX_SCALE:
-		if (cloud->priv->max_scale !=  g_value_get_double (value)) {
-			cloud->priv->max_scale = g_value_get_double (value);
+		if (priv->max_scale !=  g_value_get_double (value)) {
+			priv->max_scale = g_value_get_double (value);
 			update_display (cloud);
 		}
 		break;
@@ -518,16 +483,17 @@ gdaui_cloud_get_property (GObject *object,
 	GdauiCloud *cloud;
 
 	cloud = GDAUI_CLOUD (object);
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 	
 	switch (param_id) {
 	case PROP_MODEL:
-		g_value_set_object (value, cloud->priv->model);
+		g_value_set_object (value, priv->model);
 		break;
 	case PROP_LABEL_COLUMN:
-		g_value_set_int (value, cloud->priv->label_column);
+		g_value_set_int (value, priv->label_column);
 		break;
 	case PROP_WEIGHT_COLUMN:
-		g_value_set_int (value, cloud->priv->weight_column);
+		g_value_set_int (value, priv->weight_column);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -548,43 +514,44 @@ void
 gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
 {
 	g_return_if_fail (GDAUI_IS_CLOUD (cloud));
-	if (mode == cloud->priv->selection_mode)
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if (mode == priv->selection_mode)
 		return;
 	switch (mode) {
 	case GTK_SELECTION_NONE:
-		if (cloud->priv->selected_tags) {
+		if (priv->selected_tags) {
 			/* remove any selection */
 			GSList *list;
-			for (list = cloud->priv->selected_tags; list; list = list->next) {
+			for (list = priv->selected_tags; list; list = list->next) {
 				g_object_unref ((GObject*) list->data);
 				g_object_set ((GObject*) list->data,
 					      "background-set", FALSE,
 					      NULL);
 			}
 
-			g_slist_free (cloud->priv->selected_tags);
-			cloud->priv->selected_tags = NULL;
+			g_slist_free (priv->selected_tags);
+			priv->selected_tags = NULL;
 			sync_iter_with_selection (cloud);
 			g_signal_emit_by_name (cloud, "selection-changed");
 		}
 		break;
 	case GTK_SELECTION_SINGLE:
 	case GTK_SELECTION_BROWSE:
-		if (cloud->priv->selected_tags && cloud->priv->selected_tags->next) {
+		if (priv->selected_tags && priv->selected_tags->next) {
 			/* cut down to 1 selected node */
 			GSList *newsel;
-			newsel = cloud->priv->selected_tags;
-			cloud->priv->selected_tags = g_slist_remove_link (cloud->priv->selected_tags,
-									  cloud->priv->selected_tags);
+			newsel = priv->selected_tags;
+			priv->selected_tags = g_slist_remove_link (priv->selected_tags,
+									  priv->selected_tags);
 			GSList *list;
-			for (list = cloud->priv->selected_tags; list; list = list->next) {
+			for (list = priv->selected_tags; list; list = list->next) {
 				g_object_unref ((GObject*) list->data);
 				g_object_set ((GObject*) list->data,
 					      "background-set", FALSE,
 					      NULL);
 			}
-			g_slist_free (cloud->priv->selected_tags);
-			cloud->priv->selected_tags = newsel;
+			g_slist_free (priv->selected_tags);
+			priv->selected_tags = newsel;
 			sync_iter_with_selection (cloud);
 			g_signal_emit_by_name (cloud, "selection-changed");
 		}
@@ -595,28 +562,29 @@ gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode)
 		g_warning ("Unknown selection mode");
 		return;
 	}
-	cloud->priv->selection_mode = mode;
+	priv->selection_mode = mode;
 }
 
 static void
 row_clicked (GdauiCloud *cloud, gint row, GtkTextTag *tag)
 {
-	if (cloud->priv->selection_mode == GTK_SELECTION_NONE) {
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if (priv->selection_mode == GTK_SELECTION_NONE) {
 		/* emit "activate" signal */
 		g_signal_emit (cloud, objects_cloud_signals [ACTIVATE], 0, row);
 		return;
 	}
 
 	/* toggle @rows's selection */
-	if (g_slist_find (cloud->priv->selected_tags, tag)) {
-		cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag);
+	if (g_slist_find (priv->selected_tags, tag)) {
+		priv->selected_tags = g_slist_remove (priv->selected_tags, tag);
 		g_object_set ((GObject*) tag,
 			      "background-set", FALSE,
 			      NULL);
 		g_object_unref ((GObject*) tag);
 	}
 	else {
-		cloud->priv->selected_tags = g_slist_prepend (cloud->priv->selected_tags, tag);
+		priv->selected_tags = g_slist_prepend (priv->selected_tags, tag);
 		g_object_ref ((GObject*) tag);
 		g_object_set ((GObject*) tag,
 			      "background", "yellow",
@@ -624,8 +592,8 @@ row_clicked (GdauiCloud *cloud, gint row, GtkTextTag *tag)
 			      NULL);
 
 		GtkTextIter iter;
-		gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter,
-                                                  gtk_text_buffer_get_insert (cloud->priv->tbuffer));
+		gtk_text_buffer_get_iter_at_mark (priv->tbuffer, &iter,
+                                                  gtk_text_buffer_get_insert (priv->tbuffer));
 		while (1) {
 			gunichar guchar;
 			guchar = gtk_text_iter_get_char (&iter);
@@ -636,26 +604,26 @@ row_clicked (GdauiCloud *cloud, gint row, GtkTextTag *tag)
 			if (!gtk_text_iter_backward_char (&iter))
 				break;
 		}
-		gtk_text_buffer_place_cursor (cloud->priv->tbuffer, &iter);
+		gtk_text_buffer_place_cursor (priv->tbuffer, &iter);
 	}
 
-	if ((cloud->priv->selection_mode == GTK_SELECTION_SINGLE) ||
-	    (cloud->priv->selection_mode == GTK_SELECTION_BROWSE)) {
+	if ((priv->selection_mode == GTK_SELECTION_SINGLE) ||
+	    (priv->selection_mode == GTK_SELECTION_BROWSE)) {
 		/* no more than 1 element can be selected */
-		if (cloud->priv->selected_tags && cloud->priv->selected_tags->next) {
+		if (priv->selected_tags && priv->selected_tags->next) {
 			GtkTextTag *tag2;
-			tag2 = GTK_TEXT_TAG (cloud->priv->selected_tags->next->data);
-			cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag2);
+			tag2 = GTK_TEXT_TAG (priv->selected_tags->next->data);
+			priv->selected_tags = g_slist_remove (priv->selected_tags, tag2);
 			g_object_set ((GObject*) tag2,
 				      "background-set", FALSE,
 				      NULL);
 			g_object_unref ((GObject*) tag2);
 		}
 	}
-	if (cloud->priv->selection_mode == GTK_SELECTION_BROWSE) {
+	if (priv->selection_mode == GTK_SELECTION_BROWSE) {
 		/* one element is always selected */
-		if (! cloud->priv->selected_tags) {
-			cloud->priv->selected_tags = g_slist_prepend (cloud->priv->selected_tags, tag);
+		if (! priv->selected_tags) {
+			priv->selected_tags = g_slist_prepend (priv->selected_tags, tag);
 			g_object_ref ((GObject*) tag);
 			g_object_set ((GObject*) tag,
 				      "background", "yellow",
@@ -681,6 +649,7 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, GdauiCloud *c
 	GSList *tags = NULL, *tagp;
 	GtkTextIter iter;
 	gboolean hovering = FALSE;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 	
 	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
 	
@@ -695,10 +664,10 @@ set_cursor_if_appropriate (GtkTextView *text_view, gint x, gint y, GdauiCloud *c
 		}
 	}
 	
-	if (hovering != cloud->priv->hovering_over_link) {
-		cloud->priv->hovering_over_link = hovering;
+	if (hovering != priv->hovering_over_link) {
+		priv->hovering_over_link = hovering;
 		
-		if (cloud->priv->hovering_over_link) {
+		if (priv->hovering_over_link) {
 			if (! hand_cursor)
 				hand_cursor = gdk_cursor_new_for_display (
 							gtk_widget_get_display (GTK_WIDGET (text_view)),
@@ -831,6 +800,7 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 {
         GtkTextIter iter;
         GtkTextBuffer *buffer;
+        GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
         switch (event->keyval) {
         case GDK_KEY_Return:
@@ -845,32 +815,32 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 	case GDK_KEY_Down:
 	case GDK_KEY_Left:
 	case GDK_KEY_Right:
-		if ((cloud->priv->selection_mode == GTK_SELECTION_SINGLE) ||
-		    (cloud->priv->selection_mode == GTK_SELECTION_BROWSE)) {
+		if ((priv->selection_mode == GTK_SELECTION_SINGLE) ||
+		    (priv->selection_mode == GTK_SELECTION_BROWSE)) {
 			GtkTextIter iter;
-			if (cloud->priv->selected_tags) {
+			if (priv->selected_tags) {
 				GtkTextMark *mark;
-				mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-				gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
+				mark = gtk_text_buffer_get_insert (priv->tbuffer);
+				gtk_text_buffer_get_iter_at_mark (priv->tbuffer, &iter, mark);
 			}
 			else if ((event->keyval == GDK_KEY_Right) || (event->keyval == GDK_KEY_Down))
-				gtk_text_buffer_get_start_iter (cloud->priv->tbuffer, &iter);
+				gtk_text_buffer_get_start_iter (priv->tbuffer, &iter);
 			else
-				gtk_text_buffer_get_end_iter (cloud->priv->tbuffer, &iter);
+				gtk_text_buffer_get_end_iter (priv->tbuffer, &iter);
 			
-			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), TRUE);
+			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (priv->tview), TRUE);
 			while (1) { /* loop to move the cursor enough positions to change the selected item */
 				gboolean done = FALSE;
 				GtkMovementStep mvt_type;
 				gint mvt_amount;
 				switch (event->keyval) {
 				case GDK_KEY_Up:
-					done = ! gtk_text_view_backward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
+					done = ! gtk_text_view_backward_display_line ((GtkTextView*)priv->tview, &iter);
 					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
 					mvt_amount = -1;
 					break;
 				case GDK_KEY_Down:
-					done = ! gtk_text_view_forward_display_line ((GtkTextView*)cloud->priv->tview, &iter);
+					done = ! gtk_text_view_forward_display_line ((GtkTextView*)priv->tview, &iter);
 					mvt_type = GTK_MOVEMENT_DISPLAY_LINES;
 					mvt_amount = 1;
 					break;
@@ -888,12 +858,12 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 				}
 				if (done)
 					break; /* end of treatment as no movement possible */
-				g_signal_emit_by_name (cloud->priv->tview, "move-cursor",
+				g_signal_emit_by_name (priv->tview, "move-cursor",
 						       mvt_type, mvt_amount, FALSE);
 
 				GtkTextMark *mark;
-				mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-				gtk_text_buffer_get_iter_at_mark (cloud->priv->tbuffer, &iter, mark);
+				mark = gtk_text_buffer_get_insert (priv->tbuffer);
+				gtk_text_buffer_get_iter_at_mark (priv->tbuffer, &iter, mark);
 
 				GSList *tags, *tagp;
 				done = FALSE;
@@ -903,9 +873,9 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 					gint row;
 					row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (tag), "row")) - 1;
 					if (row >= 0) {
-						if ((cloud->priv->selected_tags &&
-						     (tag != cloud->priv->selected_tags->data)) ||
-						    !cloud->priv->selected_tags) {
+						if ((priv->selected_tags &&
+						     (tag != priv->selected_tags->data)) ||
+						    !priv->selected_tags) {
 							row_clicked (cloud, row, tag);
 							done = TRUE;
 							break;
@@ -917,12 +887,12 @@ key_press_event (GtkWidget *text_view, GdkEventKey *event, GdauiCloud *cloud)
 				if (done) {
 					GtkTextMark *mark;
 					    
-					mark = gtk_text_buffer_get_insert (cloud->priv->tbuffer);
-					gtk_text_view_scroll_mark_onscreen ((GtkTextView*)cloud->priv->tview, mark);
+					mark = gtk_text_buffer_get_insert (priv->tbuffer);
+					gtk_text_view_scroll_mark_onscreen ((GtkTextView*)priv->tview, mark);
 					break;
 				}
 			}
-			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (cloud->priv->tview), FALSE);
+			gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (priv->tview), FALSE);
 			return TRUE;
 		}
         default:
@@ -966,16 +936,17 @@ text_tag_table_foreach_cb (GtkTextTag *tag, FilterData *fdata)
 	const GValue *cvalue;
 	const gchar *label;
 	gint row;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (fdata->cloud);
 
-	if (! fdata->cloud->priv->model)
+	if (! priv->model)
 		return;
-	if (fdata->cloud->priv->label_column < 0)
+	if (priv->label_column < 0)
 		return;
 
 	/* check for the data model's column type */
 	GdaColumn *column;
-	column = gda_data_model_describe_column (fdata->cloud->priv->model,
-						 fdata->cloud->priv->label_column);
+	column = gda_data_model_describe_column (priv->model,
+						 priv->label_column);
 	if (!column || (gda_column_get_g_type (column) != G_TYPE_STRING)) {
 		g_warning (_("Wrong column type for label: expecting a string and got a %s"),
 			   gda_g_type_to_string (gda_column_get_g_type (column)));
@@ -986,8 +957,8 @@ text_tag_table_foreach_cb (GtkTextTag *tag, FilterData *fdata)
 	if (row < 0)
 		return;
 
-	cvalue = gda_data_model_get_value_at (fdata->cloud->priv->model,
-					      fdata->cloud->priv->label_column, row, NULL);
+	cvalue = gda_data_model_get_value_at (priv->model,
+					      priv->label_column, row, NULL);
 	if (!cvalue)
 		return;
 
@@ -1034,8 +1005,9 @@ void
 gdaui_cloud_filter (GdauiCloud *cloud, const gchar *filter)
 {
 	g_return_if_fail (GDAUI_IS_CLOUD (cloud));
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
-	GtkTextTagTable *tags_table = gtk_text_buffer_get_tag_table (cloud->priv->tbuffer);
+	GtkTextTagTable *tags_table = gtk_text_buffer_get_tag_table (priv->tbuffer);
 
 	FilterData fdata;
 	fdata.cloud = cloud;
@@ -1096,9 +1068,10 @@ void
 gdaui_cloud_set_weight_func (GdauiCloud *cloud, GdauiCloudWeightFunc func, gpointer data)
 {
 	g_return_if_fail (GDAUI_IS_CLOUD (cloud));
-	if ((cloud->priv->weight_func != func) || (cloud->priv->weight_func_data != data)) {
-		cloud->priv->weight_func = func;
-		cloud->priv->weight_func_data = data;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if ((priv->weight_func != func) || (priv->weight_func_data != data)) {
+		priv->weight_func = func;
+		priv->weight_func_data = data;
 		update_display (cloud);
 	}
 }
@@ -1109,7 +1082,8 @@ cloud_selector_get_model (GdauiDataSelector *iface)
 {
 	GdauiCloud *cloud;
 	cloud = GDAUI_CLOUD (iface);
-	return cloud->priv->model;
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	return priv->model;
 }
 
 static void
@@ -1126,7 +1100,8 @@ cloud_selector_get_selected_rows (GdauiDataSelector *iface)
 	GSList *list;
 
 	cloud = GDAUI_CLOUD (iface);
-	for (list = cloud->priv->selected_tags; list; list = list->next) {
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	for (list = priv->selected_tags; list; list = list->next) {
 		gint row;
 		row = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
 		if (row >= 0) {
@@ -1145,12 +1120,13 @@ cloud_selector_get_data_set (GdauiDataSelector *iface)
 	GdauiCloud *cloud;
 
 	cloud = GDAUI_CLOUD (iface);
-	if (! cloud->priv->iter && cloud->priv->model) {
-		cloud->priv->iter = gda_data_model_create_iter (cloud->priv->model);
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if (! priv->iter && priv->model) {
+		priv->iter = gda_data_model_create_iter (priv->model);
 		sync_iter_with_selection (cloud);
 	}
 
-	return cloud->priv->iter;
+	return priv->iter;
 }
 
 typedef struct {
@@ -1176,11 +1152,12 @@ cloud_selector_select_row (GdauiDataSelector *iface, gint row)
 	GSList *list;
 
 	cloud = GDAUI_CLOUD (iface);
-	if (cloud->priv->selection_mode == GTK_SELECTION_NONE)
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if (priv->selection_mode == GTK_SELECTION_NONE)
 		return FALSE;
 
 	/* test if row already selected */
-	for (list = cloud->priv->selected_tags; list; list = list->next) {
+	for (list = priv->selected_tags; list; list = list->next) {
 		gint srow;
 		srow = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
 		if (srow == row)
@@ -1191,12 +1168,12 @@ cloud_selector_select_row (GdauiDataSelector *iface, gint row)
 	RowLookup rl;
 	rl.row_to_find = row;
 	rl.tag = NULL;
-	gtk_text_tag_table_foreach (gtk_text_buffer_get_tag_table (cloud->priv->tbuffer),
+	gtk_text_tag_table_foreach (gtk_text_buffer_get_tag_table (priv->tbuffer),
 				    (GtkTextTagTableForeach) text_tag_table_foreach_cb2,
 				    (gpointer) &rl);
 	if (rl.tag) {
 		row_clicked (cloud, row, rl.tag);
-		for (list = cloud->priv->selected_tags; list; list = list->next) {
+		for (list = priv->selected_tags; list; list = list->next) {
 			gint srow;
 			srow = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (list->data), "row")) - 1;
 			if (srow == row)
@@ -1215,16 +1192,17 @@ cloud_selector_unselect_row (GdauiDataSelector *iface, gint row)
 	GSList *list;
 
 	cloud = GDAUI_CLOUD (iface);
-	if (cloud->priv->selection_mode == GTK_SELECTION_NONE)
+	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
+	if (priv->selection_mode == GTK_SELECTION_NONE)
 		return;
 
 	/* test if row already selected */
-	for (list = cloud->priv->selected_tags; list; list = list->next) {
+	for (list = priv->selected_tags; list; list = list->next) {
 		gint srow;
 		GtkTextTag *tag = (GtkTextTag*) list->data;
 		srow = GPOINTER_TO_INT (g_object_get_data ((GObject*) tag, "row")) - 1;
 		if (srow == row) {
-			cloud->priv->selected_tags = g_slist_remove (cloud->priv->selected_tags, tag);
+			priv->selected_tags = g_slist_remove (priv->selected_tags, tag);
 			g_object_set ((GObject*) tag,
 				      "background-set", FALSE,
 				      NULL);

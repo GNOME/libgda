@@ -26,28 +26,13 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_CLOUD          (gdaui_cloud_get_type())
-#define GDAUI_CLOUD(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_cloud_get_type(), GdauiCloud)
-#define GDAUI_CLOUD_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_cloud_get_type (), GdauiCloudClass)
-#define GDAUI_IS_CLOUD(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_cloud_get_type ())
-#define GDAUI_IS_CLOUD_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_CLOUD))
-
-typedef struct _GdauiCloud      GdauiCloud;
-typedef struct _GdauiCloudClass GdauiCloudClass;
-typedef struct _GdauiCloudPriv  GdauiCloudPriv;
-
-/* struct for the object's data */
-struct _GdauiCloud
-{
-	GtkBox             object;
-
-	GdauiCloudPriv     *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiCloud, gdaui_cloud, GDAUI, CLOUD, GtkBox)
 /* struct for the object's class */
 struct _GdauiCloudClass
 {
-	GtkBoxClass       parent_class;
+	GtkBoxClass        parent_class;
 	void            (* activate) (GdauiCloud *cloud, gint row);
+	gpointer           padding[12];
 };
 
 /**
@@ -65,8 +50,6 @@ struct _GdauiCloudClass
  * Depending on the selection mode of the widget, each string can be selected by the user and
  * the "selection-changed" signal is emitted.
  */
-
-GType             gdaui_cloud_get_type             (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_cloud_new                  (GdaDataModel *model, gint label_column, gint weight_column);
 void              gdaui_cloud_set_selection_mode   (GdauiCloud *cloud, GtkSelectionMode mode);
