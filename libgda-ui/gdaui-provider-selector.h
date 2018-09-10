@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,22 +26,11 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_PROVIDER_SELECTOR            (gdaui_provider_selector_get_type())
-#define GDAUI_PROVIDER_SELECTOR(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDAUI_TYPE_PROVIDER_SELECTOR, GdauiProviderSelector))
-#define GDAUI_PROVIDER_SELECTOR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDAUI_TYPE_PROVIDER_SELECTOR, GdauiProviderSelectorClass))
-#define GDAUI_IS_PROVIDER_SELECTOR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_PROVIDER_SELECTOR))
-#define GDAUI_IS_PROVIDER_SELECTOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_PROVIDER_SELECTOR))
-
-typedef struct _GdauiProviderSelector        GdauiProviderSelector;
-typedef struct _GdauiProviderSelectorClass   GdauiProviderSelectorClass;
-typedef struct _GdauiProviderSelectorPrivate GdauiProviderSelectorPrivate;
-
-struct _GdauiProviderSelector {
-	GdauiCombo                    parent;
-	GdauiProviderSelectorPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdauiProviderSelector, gdaui_provider_selector, GDAUI, PROVIDER_SELECTOR, GdauiCombo)
 
 struct _GdauiProviderSelectorClass {
-	GdauiComboClass               parent_class;
+	GdauiComboClass     parent_class;
+	gpointer            padding[12];
 };
 
 /**
@@ -52,7 +42,6 @@ struct _GdauiProviderSelectorClass {
  * @see_also:
  */
 
-GType              gdaui_provider_selector_get_type         (void) G_GNUC_CONST;
 GtkWidget         *gdaui_provider_selector_new              (void);
 
 GdaServerProvider *gdaui_provider_selector_get_provider_obj (GdauiProviderSelector *selector);

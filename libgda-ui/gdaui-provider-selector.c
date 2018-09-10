@@ -23,17 +23,14 @@
 #include <libgda-ui/gdaui-provider-selector.h>
 #include <libgda-ui/gdaui-combo.h>
 
-struct _GdauiProviderSelectorPrivate {
+typedef struct {
 	gint dummy;
-};
+} GdauiProviderSelectorPrivate;
 
-static void gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass);
-static void gdaui_provider_selector_init       (GdauiProviderSelector *selector,
-						GdauiProviderSelectorClass *klass);
-static void gdaui_provider_selector_finalize   (GObject *object);
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiProviderSelector, gdaui_provider_selector, GDAUI_TYPE_COMBO)
+
 static void gdaui_provider_selector_show       (GtkWidget *widget);
 
-static GObjectClass *parent_class = NULL;
 
 /* column to display */
 static gint cols[] = {0};
@@ -60,7 +57,7 @@ gdaui_provider_selector_show (GtkWidget *widget)
 	GdauiProviderSelector *selector;
 
 	selector = (GdauiProviderSelector *) widget;
-	GTK_WIDGET_CLASS (parent_class)->show (widget);
+	GTK_WIDGET_CLASS (gdaui_provider_selector_parent_class)->show (widget);
 	g_value_set_string (tmpval = gda_value_new (G_TYPE_STRING), "SQLite");
 	list = g_slist_append (NULL, tmpval);
 	_gdaui_combo_set_selected_ext (GDAUI_COMBO (selector), list, cols);
@@ -77,56 +74,13 @@ gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	object_class->finalize = gdaui_provider_selector_finalize;
 	GTK_WIDGET_CLASS (klass)->show = gdaui_provider_selector_show;
 }
 
 static void
-gdaui_provider_selector_init (GdauiProviderSelector *selector,
-			      G_GNUC_UNUSED GdauiProviderSelectorClass *klass)
+gdaui_provider_selector_init (GdauiProviderSelector *selector)
 {
-	g_return_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector));
-
-	selector->priv = g_new0 (GdauiProviderSelectorPrivate, 1);
 	show_providers (selector);
-}
-
-static void
-gdaui_provider_selector_finalize (GObject *object)
-{
-	GdauiProviderSelector *selector = (GdauiProviderSelector *) object;
-
-	g_return_if_fail (GDAUI_IS_PROVIDER_SELECTOR (selector));
-
-	g_free (selector->priv);
-	selector->priv = NULL;
-
-	parent_class->finalize (object);
-}
-
-GType
-gdaui_provider_selector_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiProviderSelectorClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_provider_selector_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiProviderSelector),
-			0,
-			(GInstanceInitFunc) gdaui_provider_selector_init,
-			0
-		};
-		type = g_type_register_static (GDAUI_TYPE_COMBO, "GdauiProviderSelector", &info, 0);
-	}
-	return type;
 }
 
 /**
