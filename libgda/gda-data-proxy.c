@@ -6,7 +6,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2012, 2018 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -101,8 +101,6 @@ static void fetch_current_cached_changes (GdaDataProxy *proxy);
 #define DEBUG_SYNC
 #undef DEBUG_SYNC
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 extern GdaAttributesManager *gda_holder_attributes_manager;
 
 static GMutex parser_mutex;
@@ -113,7 +111,7 @@ static GdaVirtualProvider *virtual_provider = NULL;
 /* signals */
 enum
 {
-        ROW_DELETE_CHANGED,
+	ROW_DELETE_CHANGED,
 	SAMPLE_SIZE_CHANGED,
 	SAMPLE_CHANGED,
 	VALIDATE_ROW_CHANGES,
@@ -247,8 +245,9 @@ typedef struct {
 	GSList            *cached_modifs;
 	GSList            *cached_inserts;
 } GdaDataProxyPrivate;
-#define gda_data_proxy_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_PROXY, GdaDataProxyPrivate)
-
+G_DEFINE_TYPE_WITH_CODE(GdaDataProxy, gda_data_proxy, G_TYPE_OBJECT,
+                        G_ADD_PRIVATE (GdaDataProxy)
+                        G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL, gda_data_proxy_data_model_init))
 
 /*
  * Row conversion functions
@@ -514,42 +513,6 @@ GQuark gda_data_proxy_error_quark (void)
 	return quark;
 }
 
-GType
-gda_data_proxy_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataProxyClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_proxy_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataProxy),
-			0,
-			(GInstanceInitFunc) gda_data_proxy_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) gda_data_proxy_data_model_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataProxy", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static gboolean
 validate_row_changes_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
 				  GValue *return_accu,
@@ -575,10 +538,6 @@ static void
 gda_data_proxy_class_init (GdaDataProxyClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaDataProxyPrivate));
 
 	/* signals */
 	/**
@@ -952,7 +911,7 @@ gda_data_proxy_dispose (GObject *object)
 	clean_cached_changes (proxy);
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_data_proxy_parent_class)->dispose (object);
 }
 
 static void
@@ -966,7 +925,7 @@ gda_data_proxy_finalize (GObject *object)
 	proxy = GDA_DATA_PROXY (object);
 	GdaDataProxyPrivate *priv = gda_data_proxy_get_instance_private (proxy);
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_data_proxy_parent_class)->finalize (object);
 }
 
 static void
