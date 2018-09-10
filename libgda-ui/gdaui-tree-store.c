@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2012 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2012,2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,8 +29,6 @@
 #include <gtk/gtk.h>
 #include "marshallers/gdaui-marshal.h"
 
-static void gdaui_tree_store_class_init (GdauiTreeStoreClass *klass);
-static void gdaui_tree_store_init (GdauiTreeStore *store);
 static void gdaui_tree_store_dispose (GObject *object);
 
 static void gdaui_tree_store_set_property (GObject *object,
@@ -41,6 +39,46 @@ static void gdaui_tree_store_get_property (GObject *object,
 					   guint param_id,
 					   GValue *value,
 					   GParamSpec *pspec);
+/*
+ * GtkTreeDragSource interface
+ */
+static void              tree_store_drag_source_init   (GtkTreeDragSourceIface *iface);
+static gboolean          tree_store_row_draggable      (GtkTreeDragSource *drag_dest,
+							GtkTreePath *dest);
+static gboolean          tree_store_drag_data_get      (GtkTreeDragSource *drag_dest,
+							GtkTreePath *dest_path,
+							GtkSelectionData *selection_data);
+static gboolean          tree_store_drag_data_delete   (GtkTreeDragSource *drag_dest,
+							GtkTreePath *dest_path);
+
+/*
+ * GtkTreeDragDest interface
+ */
+static void              tree_store_drag_dest_init     (GtkTreeDragDestIface *iface);
+static gboolean          tree_store_drag_data_received (GtkTreeDragDest *drag_dest,
+							GtkTreePath *dest,
+							GtkSelectionData *selection_data);
+static gboolean          tree_store_row_drop_possible  (GtkTreeDragDest *drag_dest,
+							GtkTreePath *dest_path,
+							GtkSelectionData *selection_data);
+
+/*
+ * GtkTreeModel interface
+ */
+static void              tree_store_tree_model_init (GtkTreeModelIface *iface);
+static GtkTreeModelFlags tree_store_get_flags       (GtkTreeModel *tree_model);
+static gint              tree_store_get_n_columns   (GtkTreeModel *tree_model);
+static GType             tree_store_get_column_type (GtkTreeModel *tree_model, gint index);
+static gboolean          tree_store_get_iter        (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *path);
+static GtkTreePath      *tree_store_get_path        (GtkTreeModel *tree_model, GtkTreeIter *iter);
+static void              tree_store_get_value       (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, GValue *value);
+static gboolean          tree_store_iter_next       (GtkTreeModel *tree_model, GtkTreeIter *iter);
+static gboolean          tree_store_iter_children   (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *parent);
+static gboolean          tree_store_iter_has_child  (GtkTreeModel *tree_model, GtkTreeIter *iter);
+static gint              tree_store_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter);
+static gboolean          tree_store_iter_nth_child  (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *parent, gint n);
+static gboolean          tree_store_iter_parent     (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *child);
+
 
 #define NOT_A_NODE ((GdaTreeNode*) 0x01)
 
@@ -74,108 +112,22 @@ column_spec_free (ColumnSpec *cs)
 	g_free (cs);
 }
 
-struct _GdauiTreeStorePriv {
+typedef struct {
 	GdaTree *tree;
 	GArray  *column_specs; /* array of ColumnSpec pointers, owned there */
-        gint     stamp; /* Random integer to check whether an iter belongs to our model */
-};
+	gint     stamp; /* Random integer to check whether an iter belongs to our model */
+} GdauiTreeStorePrivate;
+G_DEFINE_TYPE_WITH_CODE (GdauiTreeStore, gdaui_tree_store, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdauiTreeStore)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_MODEL, tree_store_tree_model_init)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_SOURCE, tree_store_drag_source_init)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_DRAG_DEST, tree_store_drag_dest_init))
 
 
 static void tree_node_changed_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore *store);
 static void tree_node_inserted_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore *store);
 static void tree_node_has_child_toggled_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore *store);
 static void tree_node_deleted_cb (GdaTree *tree, const gchar *node_path, GdauiTreeStore *store);
-
-/*
- * GtkTreeModel interface
- */
-static void              tree_store_tree_model_init (GtkTreeModelIface *iface);
-static GtkTreeModelFlags tree_store_get_flags       (GtkTreeModel *tree_model);
-static gint              tree_store_get_n_columns   (GtkTreeModel *tree_model);
-static GType             tree_store_get_column_type (GtkTreeModel *tree_model, gint index);
-static gboolean          tree_store_get_iter        (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *path);
-static GtkTreePath      *tree_store_get_path        (GtkTreeModel *tree_model, GtkTreeIter *iter);
-static void              tree_store_get_value       (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, GValue *value);
-static gboolean          tree_store_iter_next       (GtkTreeModel *tree_model, GtkTreeIter *iter);
-static gboolean          tree_store_iter_children   (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *parent);
-static gboolean          tree_store_iter_has_child  (GtkTreeModel *tree_model, GtkTreeIter *iter);
-static gint              tree_store_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter);
-static gboolean          tree_store_iter_nth_child  (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *parent, gint n);
-static gboolean          tree_store_iter_parent     (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *child);
-
-/*
- * GtkTreeDragSource interface
- */
-static void              tree_store_drag_source_init   (GtkTreeDragSourceIface *iface);
-static gboolean          tree_store_row_draggable      (GtkTreeDragSource *drag_dest,
-							GtkTreePath *dest);
-static gboolean          tree_store_drag_data_get      (GtkTreeDragSource *drag_dest,
-							GtkTreePath *dest_path,
-							GtkSelectionData *selection_data);
-static gboolean          tree_store_drag_data_delete   (GtkTreeDragSource *drag_dest,
-							GtkTreePath *dest_path);
-
-/*
- * GtkTreeDragDest interface
- */
-static void              tree_store_drag_dest_init     (GtkTreeDragDestIface *iface);
-static gboolean          tree_store_drag_data_received (GtkTreeDragDest *drag_dest,
-							GtkTreePath *dest,
-							GtkSelectionData *selection_data);
-static gboolean          tree_store_row_drop_possible  (GtkTreeDragDest *drag_dest,
-							GtkTreePath *dest_path,
-							GtkSelectionData *selection_data);
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-
-
-GType
-gdaui_tree_store_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiTreeStoreClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_tree_store_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiTreeStore),
-			0,
-			(GInstanceInitFunc) gdaui_tree_store_init,
-			0
-		};		
-
-		static const GInterfaceInfo tree_model_info = {
-			(GInterfaceInitFunc) tree_store_tree_model_init,
-			NULL,
-			NULL
-		};
-
-		static const GInterfaceInfo tree_drag_source_info = {
-			(GInterfaceInitFunc) tree_store_drag_source_init,
-			NULL,
-			NULL
-		};
-
-		static const GInterfaceInfo tree_drag_dest_info = {
-			(GInterfaceInitFunc) tree_store_drag_dest_init,
-			NULL,
-			NULL
-		};
-		
-
-		type = g_type_register_static (G_TYPE_OBJECT, "GdauiTreeStore", &info, 0);
-		g_type_add_interface_static (type, GTK_TYPE_TREE_MODEL, &tree_model_info);
-		g_type_add_interface_static (type, GTK_TYPE_TREE_DRAG_SOURCE, &tree_drag_source_info);
-		g_type_add_interface_static (type, GTK_TYPE_TREE_DRAG_DEST, &tree_drag_dest_info);
-	}
-	return type;
-}
 
 static void
 tree_store_tree_model_init (GtkTreeModelIface *iface)
@@ -213,8 +165,6 @@ static void
 gdaui_tree_store_class_init (GdauiTreeStoreClass *klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
-	
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gdaui_tree_store_dispose;
 
@@ -280,10 +230,10 @@ static void
 gdaui_tree_store_init (GdauiTreeStore *store)
 {
 	/* Private structure */
-	store->priv = g_new0 (GdauiTreeStorePriv, 1);
-	store->priv->tree = NULL;
-	store->priv->stamp = g_random_int_range (1, G_MAXINT);
-	store->priv->column_specs = g_array_new (FALSE, FALSE, sizeof (ColumnSpec*));
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+	priv->tree = NULL;
+	priv->stamp = g_random_int_range (1, G_MAXINT);
+	priv->column_specs = g_array_new (FALSE, FALSE, sizeof (ColumnSpec*));
 }
 
 
@@ -296,39 +246,35 @@ gdaui_tree_store_dispose (GObject *object)
 	g_return_if_fail (GDAUI_IS_TREE_STORE (object));
 
 	store = GDAUI_TREE_STORE (object);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
-	if (store->priv) {
-		if (store->priv->column_specs) {
+		if (priv->column_specs) {
 			gsize i;
-			for (i = 0; i < store->priv->column_specs->len; i++) {
+			for (i = 0; i < priv->column_specs->len; i++) {
 				ColumnSpec *cs;
-				cs = g_array_index (store->priv->column_specs, ColumnSpec*, i);
+				cs = g_array_index (priv->column_specs, ColumnSpec*, i);
 				column_spec_free (cs);
 			}
-			g_array_free (store->priv->column_specs, TRUE);
+			g_array_free (priv->column_specs, TRUE);
 		}
-		if (store->priv->tree) {
-			store->priv->stamp = g_random_int_range (1, G_MAXINT);
+		if (priv->tree) {
+			priv->stamp = g_random_int_range (1, G_MAXINT);
 
-			g_signal_handlers_disconnect_by_func (store->priv->tree,
+			g_signal_handlers_disconnect_by_func (priv->tree,
 							      G_CALLBACK (tree_node_changed_cb), store);
-			g_signal_handlers_disconnect_by_func (store->priv->tree,
+			g_signal_handlers_disconnect_by_func (priv->tree,
 							      G_CALLBACK (tree_node_inserted_cb), store);
-			g_signal_handlers_disconnect_by_func (store->priv->tree,
+			g_signal_handlers_disconnect_by_func (priv->tree,
 							      G_CALLBACK (tree_node_has_child_toggled_cb), store);
-			g_signal_handlers_disconnect_by_func (store->priv->tree,
+			g_signal_handlers_disconnect_by_func (priv->tree,
 							      G_CALLBACK (tree_node_deleted_cb), store);
 
-			g_object_unref (store->priv->tree);
-			store->priv->tree = NULL;
+			g_object_unref (priv->tree);
+			priv->tree = NULL;
 		}
 
-		g_free (store->priv);
-		store->priv = NULL;
-	}
-
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_tree_store_parent_class)->dispose (object);
 }
 
 static void
@@ -340,32 +286,31 @@ gdaui_tree_store_set_property (GObject *object,
 	GdauiTreeStore *store;
 
 	store = GDAUI_TREE_STORE (object);
-	if (store->priv) {
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 		GdaTree *tree;
 
-		switch (param_id) {
-                case PROP_TREE:
-			g_assert (!store->priv->tree);
-			tree = (GdaTree*) g_value_get_object (value);
-			g_return_if_fail (GDA_IS_TREE (tree));
-			store->priv->tree = g_object_ref (tree);
+	switch (param_id) {
+	case PROP_TREE:
+		g_assert (!priv->tree);
+		tree = (GdaTree*) g_value_get_object (value);
+		g_return_if_fail (GDA_IS_TREE (tree));
+		priv->tree = g_object_ref (tree);
 
-			g_signal_connect (store->priv->tree, "node-changed",
-					  G_CALLBACK (tree_node_changed_cb), store);
-			g_signal_connect (store->priv->tree, "node-inserted",
-					  G_CALLBACK (tree_node_inserted_cb), store);
-			g_signal_connect (store->priv->tree, "node-has-child-toggled",
-					  G_CALLBACK (tree_node_has_child_toggled_cb), store);
-			g_signal_connect (store->priv->tree, "node-deleted",
-					  G_CALLBACK (tree_node_deleted_cb), store);
+		g_signal_connect (priv->tree, "node-changed",
+				  G_CALLBACK (tree_node_changed_cb), store);
+		g_signal_connect (priv->tree, "node-inserted",
+				  G_CALLBACK (tree_node_inserted_cb), store);
+		g_signal_connect (priv->tree, "node-has-child-toggled",
+				  G_CALLBACK (tree_node_has_child_toggled_cb), store);
+		g_signal_connect (priv->tree, "node-deleted",
+				  G_CALLBACK (tree_node_deleted_cb), store);
 
-			/* connect to row changes */
-			store->priv->stamp = g_random_int_range (1, G_MAXINT);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+		/* connect to row changes */
+		priv->stamp = g_random_int_range (1, G_MAXINT);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -378,15 +323,14 @@ gdaui_tree_store_get_property (GObject *object,
 	GdauiTreeStore *store;
 
 	store = GDAUI_TREE_STORE (object);
-	if (store->priv) {
-		switch (param_id) {
-		case PROP_TREE:
-			g_value_set_object (value, store->priv->tree);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+	switch (param_id) {
+	case PROP_TREE:
+		g_value_set_object (value, priv->tree);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -420,6 +364,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
 	obj = g_object_new (GDAUI_TYPE_TREE_STORE, "tree", tree, NULL);
 	store = GDAUI_TREE_STORE (obj);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
 	va_start (args, n_columns);
 	for (i = 0; i < n_columns; i++) {
@@ -435,7 +380,7 @@ gdaui_tree_store_new (GdaTree *tree, guint n_columns, ...)
 		cs = g_new (ColumnSpec, 1);
 		cs->type = type;
 		cs->attribute_name = g_strdup (attname);
-		g_array_append_val (store->priv->column_specs, cs);
+		g_array_append_val (priv->column_specs, cs);
 	}
 	va_end (args);
 
@@ -467,6 +412,7 @@ gdaui_tree_store_newv (GdaTree *tree, guint n_columns, GType *types, const gchar
 	g_return_val_if_fail (GDA_IS_TREE (tree), NULL);
 	obj = g_object_new (GDAUI_TYPE_TREE_STORE, "tree", tree, NULL);
 	store = GDAUI_TREE_STORE (obj);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 	
 	for (i = 0; i < n_columns; i++) {
 		ColumnSpec *cs;
@@ -480,7 +426,7 @@ gdaui_tree_store_newv (GdaTree *tree, guint n_columns, GType *types, const gchar
 		cs = g_new (ColumnSpec, 1);
 		cs->type = type;
 		cs->attribute_name = g_strdup (attname);
-		g_array_append_val (store->priv->column_specs, cs);
+		g_array_append_val (priv->column_specs, cs);
 	}
 
 	return (GtkTreeModel *) obj;
@@ -510,8 +456,9 @@ GdaTreeNode *
 gdaui_tree_store_get_node (GdauiTreeStore *store, GtkTreeIter *iter)
 {
 	g_return_val_if_fail (GDAUI_IS_TREE_STORE (store), NULL);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 	g_return_val_if_fail (iter, NULL);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, NULL);
+	g_return_val_if_fail (iter->stamp == priv->stamp, NULL);
 
 	GdaTreeNode *node;
 	node = (GdaTreeNode*) iter->user_data;
@@ -537,11 +484,12 @@ gdaui_tree_store_get_iter_from_node (GdauiTreeStore *store, GtkTreeIter *iter, G
 {
 	g_return_val_if_fail (GDAUI_IS_TREE_STORE (store), FALSE);
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), FALSE);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
 	GdaTreeNode *parent = NULL;
 	GSList *rootnodes;
 
-	rootnodes = gda_tree_get_nodes_in_path (store->priv->tree, NULL, FALSE);
+	rootnodes = gda_tree_get_nodes_in_path (priv->tree, NULL, FALSE);
 	if (rootnodes) {
 		for (parent = node;
 		     parent;
@@ -554,7 +502,7 @@ gdaui_tree_store_get_iter_from_node (GdauiTreeStore *store, GtkTreeIter *iter, G
 
 	iter->user_data2 = NULL;
 	if (parent) {
-		iter->stamp = store->priv->stamp;
+		iter->stamp = priv->stamp;
 		iter->user_data = (gpointer) node;
 		return TRUE;
 	}
@@ -570,10 +518,11 @@ tree_store_get_flags (GtkTreeModel *tree_model)
 {
 	gboolean is_list;
 	GdauiTreeStore *store;
-        g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), 0);
+	g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), 0);
 	store = GDAUI_TREE_STORE (tree_model);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
-	g_object_get (G_OBJECT (store->priv->tree), "is-list", &is_list, NULL);
+	g_object_get (G_OBJECT (priv->tree), "is-list", &is_list, NULL);
 	if (is_list)
 		return GTK_TREE_MODEL_LIST_ONLY;
 	else
@@ -587,8 +536,9 @@ tree_store_get_n_columns (GtkTreeModel *tree_model)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), 0);
         store = GDAUI_TREE_STORE (tree_model);
-	
-        return store->priv->column_specs->len;
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+
+        return priv->column_specs->len;
 }
 
 static GType
@@ -599,8 +549,9 @@ tree_store_get_column_type (GtkTreeModel *tree_model, gint index)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), 0);
         store = GDAUI_TREE_STORE (tree_model);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
-	cs = g_array_index (store->priv->column_specs, ColumnSpec*, index);
+        cs = g_array_index (priv->column_specs, ColumnSpec*, index);
 	g_return_val_if_fail (cs, G_TYPE_STRING);
 	return cs->type;
 }
@@ -614,18 +565,19 @@ tree_store_get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *p
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
         store = GDAUI_TREE_STORE (tree_model);
-        g_return_val_if_fail (store->priv, FALSE);
-        g_return_val_if_fail (store->priv->tree, FALSE);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv, FALSE);
+        g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (path, FALSE);
         g_return_val_if_fail (iter, FALSE);
 
 	path_str = gtk_tree_path_to_string (path);
-	node = gda_tree_get_node (store->priv->tree, path_str, FALSE);
+	node = gda_tree_get_node (priv->tree, path_str, FALSE);
 	/*g_print ("Path %s => node %p\n", path_str, node);*/
 	g_free (path_str);
 
 	if (node) {
-		iter->stamp = store->priv->stamp;
+		iter->stamp = priv->stamp;
                 iter->user_data = (gpointer) node;
                 iter->user_data2 = NULL;
 		return TRUE;
@@ -635,7 +587,7 @@ tree_store_get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *p
 		path2 = gtk_tree_path_copy (path);
 		if (gtk_tree_path_up (path2)) {
 			path_str = gtk_tree_path_to_string (path2);
-			node = gda_tree_get_node (store->priv->tree, path_str, FALSE);
+			node = gda_tree_get_node (priv->tree, path_str, FALSE);
 			/*g_print ("Path2 %s => node %p\n", path_str, node);*/
 			g_free (path_str);
 		}
@@ -647,7 +599,7 @@ tree_store_get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *p
 							       GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN);
 			if (cv && (G_VALUE_TYPE (cv) == G_TYPE_BOOLEAN) &&
 			    g_value_get_boolean (cv)) {
-				iter->stamp = store->priv->stamp;
+				iter->stamp = priv->stamp;
 				iter->user_data = (gpointer) NOT_A_NODE;
 				iter->user_data2 = (gpointer) node;
 				return TRUE;
@@ -671,8 +623,9 @@ tree_store_get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), NULL);
         store = GDAUI_TREE_STORE (tree_model);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
         g_return_val_if_fail (iter, NULL);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, NULL);
+        g_return_val_if_fail (iter->stamp == priv->stamp, NULL);
 
 	node = (GdaTreeNode*) iter->user_data;
 	if (node == NOT_A_NODE) {
@@ -681,14 +634,14 @@ tree_store_get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
 		iter2 = *iter;
 		g_assert (gtk_tree_model_iter_parent (tree_model, &iter2, iter));
-		path_str = gda_tree_get_node_path (store->priv->tree,
+		path_str = gda_tree_get_node_path (priv->tree,
 						   (GdaTreeNode*) iter2.user_data);
 		tmp = g_strdup_printf ("%s:0", path_str);
 		g_free (path_str);
 		path_str = tmp;
 	}
 	else
-		path_str = gda_tree_get_node_path (store->priv->tree, node);
+		path_str = gda_tree_get_node_path (priv->tree, node);
 
 	/*g_print ("Node %p => path %s\n", iter->user_data, path_str);*/
 	path = gtk_tree_path_new_from_string (path_str);
@@ -707,12 +660,13 @@ tree_store_get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, 
 	
 	g_return_if_fail (GDAUI_IS_TREE_STORE (tree_model));
         store = GDAUI_TREE_STORE (tree_model);
-        g_return_if_fail (store->priv->tree);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_if_fail (priv->tree);
         g_return_if_fail (iter);
-        g_return_if_fail (iter->stamp == store->priv->stamp);
+        g_return_if_fail (iter->stamp == priv->stamp);
         g_return_if_fail (value);
 
-	cs = g_array_index (store->priv->column_specs, ColumnSpec*, column);
+	cs = g_array_index (priv->column_specs, ColumnSpec*, column);
 	g_return_if_fail (cs);
 
 	if (!cs) {
@@ -751,9 +705,10 @@ tree_store_iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
         store = GDAUI_TREE_STORE (tree_model);
-	g_return_val_if_fail (store->priv->tree, FALSE);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
+        g_return_val_if_fail (iter->stamp == priv->stamp, FALSE);
 
 	node = (GdaTreeNode*) iter->user_data;
 	if (node == NOT_A_NODE) {
@@ -768,7 +723,7 @@ tree_store_iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 		if (parent) 
 			list = gda_tree_node_get_children (parent);
 		else
-			list = gda_tree_get_nodes_in_path (store->priv->tree, NULL, FALSE);
+			list = gda_tree_get_nodes_in_path (priv->tree, NULL, FALSE);
 		
 		current = g_slist_find (list, iter->user_data);
 		g_assert (current);
@@ -805,20 +760,21 @@ tree_store_iter_children (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
         store = GDAUI_TREE_STORE (tree_model);
-        g_return_val_if_fail (store->priv->tree, FALSE);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (iter, FALSE);
 
 	if (parent) {
-		g_return_val_if_fail (parent->stamp == store->priv->stamp, FALSE);
+		g_return_val_if_fail (parent->stamp == priv->stamp, FALSE);
 		node = (GdaTreeNode*) parent->user_data;
 		if (node != NOT_A_NODE)
 			list = gda_tree_node_get_children (node);
 	}
 	else
-		list = gda_tree_get_nodes_in_path (store->priv->tree, NULL, FALSE);
+		list = gda_tree_get_nodes_in_path (priv->tree, NULL, FALSE);
 
 	if (list) {
-		iter->stamp = store->priv->stamp;
+		iter->stamp = priv->stamp;
 		iter->user_data = (gpointer) list->data;
                 iter->user_data2 = NULL;
 		g_slist_free (list);
@@ -830,7 +786,7 @@ tree_store_iter_children (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
 						       GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN);
 		if (cv && (G_VALUE_TYPE (cv) == G_TYPE_BOOLEAN) &&
 		    g_value_get_boolean (cv)) {
-			iter->stamp = store->priv->stamp;
+			iter->stamp = priv->stamp;
 			iter->user_data = (gpointer) NOT_A_NODE;
 			iter->user_data2 = (gpointer) node;
 			return TRUE;
@@ -851,9 +807,10 @@ tree_store_iter_has_child (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
         store = GDAUI_TREE_STORE (tree_model);
-        g_return_val_if_fail (store->priv->tree, FALSE);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (iter, FALSE);
-	g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
+	g_return_val_if_fail (iter->stamp == priv->stamp, FALSE);
 
 	node = (GdaTreeNode*) iter->user_data;
 	if (node == NOT_A_NODE)
@@ -881,16 +838,17 @@ tree_store_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), -1);
         store = GDAUI_TREE_STORE (tree_model);
-        g_return_val_if_fail (store->priv->tree, 0);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv->tree, 0);
 
         if (iter) {
-		g_return_val_if_fail (iter->stamp == store->priv->stamp, FALSE);
+		g_return_val_if_fail (iter->stamp == priv->stamp, FALSE);
 		node = (GdaTreeNode*) iter->user_data;
 		if (node != NOT_A_NODE)
 			list = gda_tree_node_get_children (GDA_TREE_NODE (iter->user_data));
 	}
 	else
-                list = gda_tree_get_nodes_in_path (store->priv->tree, NULL, FALSE);
+                list = gda_tree_get_nodes_in_path (priv->tree, NULL, FALSE);
 
 	if (list) {
 		gint retval;
@@ -916,24 +874,25 @@ tree_store_iter_nth_child (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeI
 	GSList *list = NULL;
 	GdaTreeNode *node = NULL;
 
-        g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
-        store = GDAUI_TREE_STORE (tree_model);
-	g_return_val_if_fail (store->priv->tree, FALSE);
+	g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
+	store = GDAUI_TREE_STORE (tree_model);
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+	g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (iter, FALSE);
 	if (parent) {
-		g_return_val_if_fail (parent->stamp == store->priv->stamp, FALSE);
+		g_return_val_if_fail (parent->stamp == priv->stamp, FALSE);
 		node = (GdaTreeNode*) parent->user_data;
 		if (node != NOT_A_NODE)
 			list = gda_tree_node_get_children (node);
 	}
 	else
-		list = gda_tree_get_nodes_in_path (store->priv->tree, NULL, FALSE);
+		list = gda_tree_get_nodes_in_path (priv->tree, NULL, FALSE);
 	
 	if (list) {
 		node = (GdaTreeNode*) g_slist_nth_data (list, n);
 		g_slist_free (list);
 		if (node) {
-			iter->stamp = store->priv->stamp;
+			iter->stamp = priv->stamp;
 			iter->user_data = (gpointer) node;
 			iter->user_data2 = NULL;
 			return TRUE;
@@ -945,7 +904,7 @@ tree_store_iter_nth_child (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeI
 						       GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN);
 		if (cv && (G_VALUE_TYPE (cv) == G_TYPE_BOOLEAN) &&
 		    g_value_get_boolean (cv)) {
-			iter->stamp = store->priv->stamp;
+			iter->stamp = priv->stamp;
 			iter->user_data = (gpointer) NOT_A_NODE;
 			iter->user_data2 = (gpointer) node;
 			return TRUE;
@@ -966,10 +925,11 @@ tree_store_iter_parent (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter
 
         g_return_val_if_fail (GDAUI_IS_TREE_STORE (tree_model), FALSE);
         store = GDAUI_TREE_STORE (tree_model);
-	g_return_val_if_fail (store->priv->tree, FALSE);
+        GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
+        g_return_val_if_fail (priv->tree, FALSE);
         g_return_val_if_fail (iter, FALSE);
         g_return_val_if_fail (child, FALSE);
-        g_return_val_if_fail (child->stamp == store->priv->stamp, FALSE);
+        g_return_val_if_fail (child->stamp == priv->stamp, FALSE);
 
 	node = (GdaTreeNode*) child->user_data;
 	if (node == NOT_A_NODE) {
@@ -980,7 +940,7 @@ tree_store_iter_parent (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter
 		parent = gda_tree_node_get_parent (node);
 
 	if (parent) {
-		iter->stamp = store->priv->stamp;
+		iter->stamp = priv->stamp;
 		iter->user_data = (gpointer) parent;
                 iter->user_data2 = NULL;
 		return TRUE;
@@ -999,15 +959,16 @@ tree_node_changed_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore *store)
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *path_str;
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 	
-	store->priv->stamp = g_random_int_range (1, G_MAXINT);
+	priv->stamp = g_random_int_range (1, G_MAXINT);
 
 	path_str = gda_tree_get_node_path (tree, node);
 	path = gtk_tree_path_new_from_string (path_str);
 	g_free (path_str);
 	
 	memset (&iter, 0, sizeof (GtkTreeIter));
-	iter.stamp = store->priv->stamp;
+	iter.stamp = priv->stamp;
 	iter.user_data = (gpointer) node;
 	iter.user_data2 = NULL;
 	
@@ -1022,15 +983,16 @@ tree_node_inserted_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore *store)
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *path_str;
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 	
-	store->priv->stamp = g_random_int_range (1, G_MAXINT);
+	priv->stamp = g_random_int_range (1, G_MAXINT);
 
 	path_str = gda_tree_get_node_path (tree, node);
 	path = gtk_tree_path_new_from_string (path_str);
 	g_free (path_str);
 	
 	memset (&iter, 0, sizeof (GtkTreeIter));
-	iter.stamp = store->priv->stamp;
+	iter.stamp = priv->stamp;
 	iter.user_data = (gpointer) node;
 	iter.user_data2 = NULL;
 	
@@ -1045,15 +1007,16 @@ tree_node_has_child_toggled_cb (GdaTree *tree, GdaTreeNode *node, GdauiTreeStore
 	GtkTreePath *path;
 	GtkTreeIter iter;
 	gchar *path_str;
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 	
-	store->priv->stamp = g_random_int_range (1, G_MAXINT);
+	priv->stamp = g_random_int_range (1, G_MAXINT);
 
 	path_str = gda_tree_get_node_path (tree, node);
 	path = gtk_tree_path_new_from_string (path_str);
 	g_free (path_str);
 	
 	memset (&iter, 0, sizeof (GtkTreeIter));
-	iter.stamp = store->priv->stamp;
+	iter.stamp = priv->stamp;
 	iter.user_data = (gpointer) node;
 	iter.user_data2 = NULL;
 	
@@ -1066,8 +1029,9 @@ static void
 tree_node_deleted_cb (G_GNUC_UNUSED GdaTree *tree, const gchar *node_path, GdauiTreeStore *store)
 {
 	GtkTreePath *path;
+	GdauiTreeStorePrivate *priv = gdaui_tree_store_get_instance_private (store);
 
-	store->priv->stamp = g_random_int_range (1, G_MAXINT);
+	priv->stamp = g_random_int_range (1, G_MAXINT);
 	
 	path = gtk_tree_path_new_from_string (node_path);
 	

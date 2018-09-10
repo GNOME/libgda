@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2012 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2012, 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,22 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_TREE_STORE          (gdaui_tree_store_get_type())
-#define GDAUI_TREE_STORE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_tree_store_get_type(), GdauiTreeStore)
-#define GDAUI_TREE_STORE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_tree_store_get_type (), GdauiTreeStoreClass)
-#define GDAUI_IS_TREE_STORE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_tree_store_get_type ())
-
-typedef struct _GdauiTreeStore GdauiTreeStore;
-typedef struct _GdauiTreeStoreClass GdauiTreeStoreClass;
-typedef struct _GdauiTreeStorePriv GdauiTreeStorePriv;
-
-
-/* struct for the object's tree */
-struct _GdauiTreeStore
-{
-	GObject              object;
-
-	GdauiTreeStorePriv  *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdauiTreeStore, gdaui_tree_store, GDAUI, TREE_STORE, GObject)
 
 /* struct for the object's class */
 struct _GdauiTreeStoreClass
@@ -55,6 +40,7 @@ struct _GdauiTreeStoreClass
 	gboolean           (*drag_can_drop) (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data);
 	gboolean           (*drag_drop)     (GdauiTreeStore *store, const gchar *path, GtkSelectionData *selection_data);
 	gboolean           (*drag_delete)   (GdauiTreeStore *store, const gchar *path);
+	gpointer           padding[12];
 };
 
 /**
@@ -74,8 +60,6 @@ struct _GdauiTreeStoreClass
  * can connect to the <link linkend="GtkTreeView-test-expand-row">GtkTreeView::test-expand-row</link>
  * signal and update the requested children.
  */
-
-GType           gdaui_tree_store_get_type 					(void) G_GNUC_CONST;
 
 GtkTreeModel   *gdaui_tree_store_new       					(GdaTree *tree, guint n_columns, ...);
 GtkTreeModel   *gdaui_tree_store_newv      					(GdaTree *tree, guint n_columns,
