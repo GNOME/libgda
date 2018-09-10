@@ -45,7 +45,7 @@ gda_ddl_buildable_default_init (GdaDdlBuildableInterface *iface)
  * gda_ddl_buildable_parse_node:
  * @self: an instance of #GdaDdlBuildable where parsed data should be storred
  * @node: a node to parse
- * @error: an object to store error
+ * @error: (nullable): an object to store error
  *
  * Parse xml node
  *
@@ -72,7 +72,7 @@ gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
  * gda_ddl_buildable_write_node:
  * @self: an instance of #GdaDdlBuildable where data should be taken 
  * @node: a node to write data in
- * @error: an object to store error
+ * @error: (nullable): an object to store error
  *
  * Write content from the @self to the @node 
  *

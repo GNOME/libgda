@@ -499,11 +499,11 @@ gda_ddl_creator_get_table (GdaDdlCreator *self,
   for (it = priv->mp_tables; it; it = it->next)
       if (!gda_ddl_base_compare (iobj,GDA_DDL_BASE(it->data)))
         {
-          gda_ddl_base_free (iobj);
+          g_object_unref (iobj);
           return GDA_DDL_TABLE(it->data);
         }
 
-  gda_ddl_base_free (iobj);
+  g_object_unref (iobj);
   return NULL;
 }
 
@@ -533,11 +533,11 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
   for (it = priv->mp_views; it; it = it->next)
     if (!gda_ddl_base_compare (iobj,GDA_DDL_BASE(it)))
       {
-        gda_ddl_base_free (iobj);
+        g_object_unref (iobj);
       return GDA_DDL_VIEW(it);
       }
 
-  gda_ddl_base_free (iobj);
+  g_object_unref (iobj);
   return NULL;
 }
 

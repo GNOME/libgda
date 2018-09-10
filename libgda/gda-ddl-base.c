@@ -90,8 +90,8 @@ gda_ddl_base_init (GdaDdlBase *self)
 /**
  * gda_ddl_base_set_names:
  * @self: a #GdaDdlBase object
- * @catalog: a catalog name associated with the table
- * @schema: a schema name associated with the table
+ * @catalog: (nullable): a catalog name associated with the table
+ * @schema: (nullable): a schema name associated with the table
  * @name: a table name associated with the table
  *
  * Sets database object names. @catalog and @schema can be %NULL but
@@ -241,21 +241,6 @@ gda_ddl_base_get_name (GdaDdlBase  *self)
   GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
 
   return priv->m_name;
-}
-
-/**
- * gda_ddl_base_free:
- * @self: a #GdaDdlBase instance to free.
- *
- * A convenient method to free the memory.
- * It is a wrapper around g_clear_object().
- *
- * Since: 6.0
- */
-void
-gda_ddl_base_free (GdaDdlBase *self)
-{
-  g_clear_object (&self);
 }
 
 /**
