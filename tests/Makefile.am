@@ -121,4 +121,5 @@ EXTRA_DIST = dbstruct.xml
 
 DISTCLEANFILES= \
 	ddl_test.db \
-	op_test_db.db
+	op_test_db.db \
+	iter.db
