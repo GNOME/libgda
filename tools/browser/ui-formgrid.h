@@ -24,6 +24,7 @@
 #include <libgda/gda-data-model.h>
 #include <libgda-ui/gdaui-data-proxy-info.h>
 #include <libgda-ui/gdaui-raw-grid.h>
+#include <libgda-ui/gdaui-data-proxy.h>
 #include "../common/t-connection.h"
 
 G_BEGIN_DECLS

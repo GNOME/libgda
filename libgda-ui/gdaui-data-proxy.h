@@ -23,16 +23,11 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <libgda/gda-decl.h>
+#include <libgda/gda-data-proxy.h>
 #include "gdaui-decl.h"
 #include "gdaui-enums.h"
 
 G_BEGIN_DECLS
-
-#define GDAUI_TYPE_DATA_PROXY          (gdaui_data_proxy_get_type())
-#define GDAUI_DATA_PROXY(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, GDAUI_TYPE_DATA_PROXY, GdauiDataProxy)
-#define GDAUI_IS_DATA_PROXY(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_DATA_PROXY)
-#define GDAUI_DATA_PROXY_GET_IFACE(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDAUI_TYPE_DATA_PROXY, GdauiDataProxyIface))
 
 /**
  * GdauiDataProxyWriteMode:
@@ -51,8 +46,11 @@ typedef enum {
 	GDAUI_DATA_PROXY_WRITE_ON_VALUE_CHANGE     = 3 
 } GdauiDataProxyWriteMode;
 
+#define GDAUI_TYPE_DATA_PROXY          (gdaui_data_proxy_get_type())
+G_DECLARE_INTERFACE(GdauiDataProxy, gdaui_data_proxy, GDAUI, DATA_PROXY, GtkWidget)
+
 /* struct for the interface */
-struct _GdauiDataProxyIface
+struct _GdauiDataProxyInterface
 {
 	GTypeInterface           g_iface;
 
@@ -67,7 +65,6 @@ struct _GdauiDataProxyIface
 	/* signals */
 	void                 (* proxy_changed)       (GdauiDataProxy *iface, GdaDataProxy *proxy);
 };
-
 /**
  * SECTION:gdaui-data-proxy
  * @short_description: Displaying and modifying data in a #GdaDataProxy
@@ -80,8 +77,6 @@ struct _GdauiDataProxyIface
  * to a #GdaDataModel (through a #GdaDataProxy to actually proxy the changes before they
  * are written to the data model).
  */
-
-GType             gdaui_data_proxy_get_type                  (void) G_GNUC_CONST;
 
 GdaDataProxy     *gdaui_data_proxy_get_proxy                 (GdauiDataProxy *iface);
 

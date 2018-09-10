@@ -20,14 +20,8 @@
 #ifndef __GDAUI_DECL_H_
 #define __GDAUI_DECL_H_
 
-/* 
- * Interfaces 
- */
 
-typedef struct _GdauiDataProxy       GdauiDataProxy;
-typedef struct _GdauiDataProxyIface  GdauiDataProxyIface;
-
-/* 
+/*
  * Colors
  */
 #define GDAUI_COLOR_NORMAL_NULL "#00cd66"

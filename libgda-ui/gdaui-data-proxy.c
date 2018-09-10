@@ -35,36 +35,10 @@ enum {
 
 static gint gdaui_data_proxy_signals[LAST_SIGNAL] = { 0 };
 
-static void gdaui_data_proxy_iface_init (gpointer g_class);
-
-GType
-gdaui_data_proxy_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiDataProxyIface),
-			(GBaseInitFunc) gdaui_data_proxy_iface_init,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) NULL,
-			NULL,
-			NULL,
-			0,
-			0,
-			(GInstanceInitFunc) NULL,
-			0
-		};
-		
-		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataProxy", &info, 0);
-		g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
-	}
-	return type;
-}
-
+G_DEFINE_INTERFACE(GdauiDataProxy, gdaui_data_proxy, GTK_TYPE_WIDGET)
 
 static void
-gdaui_data_proxy_iface_init (G_GNUC_UNUSED gpointer g_class)
+gdaui_data_proxy_default_init (GdauiDataProxyInterface *iface)
 {
 	static gboolean initialized = FALSE;
 
@@ -83,7 +57,7 @@ gdaui_data_proxy_iface_init (G_GNUC_UNUSED gpointer g_class)
 			g_signal_new ("proxy-changed",
                                       GDAUI_TYPE_DATA_PROXY,
                                       G_SIGNAL_RUN_FIRST,
-                                      G_STRUCT_OFFSET (GdauiDataProxyIface, proxy_changed),
+                                      G_STRUCT_OFFSET (GdauiDataProxyInterface, proxy_changed),
                                       NULL, NULL,
                                       g_cclosure_marshal_VOID__OBJECT, G_TYPE_NONE,
                                       1, GDA_TYPE_DATA_PROXY);

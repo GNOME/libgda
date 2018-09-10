@@ -54,7 +54,7 @@ static void proxy_access_changed_cb (GdaDataProxy *proxy, GdauiRawForm *form);
 static void proxy_row_inserted_or_removed_cb (GdaDataProxy *proxy, gint row, GdauiRawForm *form);
 
 /* GdauiDataProxy interface */
-static void            gdaui_raw_form_widget_init         (GdauiDataProxyIface *iface);
+static void            gdaui_raw_form_widget_init         (GdauiDataProxyInterface *iface);
 static GdaDataProxy   *gdaui_raw_form_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
 static gboolean        gdaui_raw_form_supports_action       (GdauiDataProxy *iface, GdauiAction action);
@@ -133,7 +133,7 @@ gdaui_raw_form_get_type (void)
 }
 
 static void
-gdaui_raw_form_widget_init (GdauiDataProxyIface *iface)
+gdaui_raw_form_widget_init (GdauiDataProxyInterface *iface)
 {
 	iface->get_proxy = gdaui_raw_form_get_proxy;
 	iface->set_column_editable = gdaui_raw_form_set_column_editable;

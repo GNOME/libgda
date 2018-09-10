@@ -23,7 +23,7 @@
 
 #include <gtk/gtk.h>
 #include <libgda/gda-decl.h>
-#include <libgda-ui/gdaui-decl.h>
+#include <libgda-ui/gdaui-data-proxy.h>
 #include <libgda-ui/gdaui-enums.h>
 
 G_BEGIN_DECLS

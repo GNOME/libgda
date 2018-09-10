@@ -43,7 +43,7 @@ static void gdaui_form_get_property (GObject *object,
 				     GParamSpec *pspec);
 
 /* GdauiDataProxy interface */
-static void            gdaui_form_widget_init         (GdauiDataProxyIface *iface);
+static void            gdaui_form_widget_init         (GdauiDataProxyInterface *iface);
 static GdaDataProxy   *gdaui_form_get_proxy           (GdauiDataProxy *iface);
 static void            gdaui_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable);
 static gboolean        gdaui_form_supports_action       (GdauiDataProxy *iface, GdauiAction action);
@@ -119,7 +119,7 @@ gdaui_form_get_type (void)
 }
 
 static void
-gdaui_form_widget_init (GdauiDataProxyIface *iface)
+gdaui_form_widget_init (GdauiDataProxyInterface *iface)
 {
 	iface->get_proxy = gdaui_form_get_proxy;
 	iface->set_column_editable = gdaui_form_set_column_editable;

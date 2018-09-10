@@ -66,7 +66,7 @@ static void reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_nod
 
 
 /* GdauiDataProxy interface */
-static void            gdaui_raw_grid_widget_init           (GdauiDataProxyIface *iface);
+static void            gdaui_raw_grid_widget_init           (GdauiDataProxyInterface *iface);
 static GdaDataProxy   *gdaui_raw_grid_get_proxy             (GdauiDataProxy *iface);
 static void            gdaui_raw_grid_set_column_editable   (GdauiDataProxy *iface, gint column, gboolean editable);
 static gboolean        gdaui_raw_grid_supports_action       (GdauiDataProxy *iface, GdauiAction action);
@@ -216,7 +216,7 @@ gdaui_raw_grid_get_type (void)
 }
 
 static void
-gdaui_raw_grid_widget_init (GdauiDataProxyIface *iface)
+gdaui_raw_grid_widget_init (GdauiDataProxyInterface *iface)
 {
 	iface->get_proxy = gdaui_raw_grid_get_proxy;
 	iface->set_column_editable = gdaui_raw_grid_set_column_editable;
