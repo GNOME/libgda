@@ -27,27 +27,12 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_RAW_FORM          (gdaui_raw_form_get_type())
-#define GDAUI_RAW_FORM(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_raw_form_get_type(), GdauiRawForm)
-#define GDAUI_RAW_FORM_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_raw_form_get_type (), GdauiRawFormClass)
-#define GDAUI_IS_RAW_FORM(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_raw_form_get_type ())
-
-
-typedef struct _GdauiRawForm      GdauiRawForm;
-typedef struct _GdauiRawFormClass GdauiRawFormClass;
-typedef struct _GdauiRawFormPriv  GdauiRawFormPriv;
-
-/* struct for the object's data */
-struct _GdauiRawForm
-{
-	GdauiBasicForm      object;
-
-	GdauiRawFormPriv   *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiRawForm, gdaui_raw_form, GDAUI, RAW_FORM, GdauiBasicForm)
 /* struct for the object's class */
 struct _GdauiRawFormClass
 {
 	GdauiBasicFormClass parent_class;
+	gpointer            padding[12];
 };
 
 /**
@@ -62,7 +47,6 @@ struct _GdauiRawFormClass
  * information about data model size, and features searching.
  */
 
-GType        gdaui_raw_form_get_type              (void) G_GNUC_CONST;
 GtkWidget   *gdaui_raw_form_new                   (GdaDataModel *model);
 
 G_END_DECLS
