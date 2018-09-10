@@ -28,16 +28,6 @@
 
 G_BEGIN_DECLS
 
-#define GDAUI_TYPE_DATA_PROXY_INFO          (gdaui_data_proxy_info_get_type())
-#define GDAUI_DATA_PROXY_INFO(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_data_proxy_info_get_type(), GdauiDataProxyInfo)
-#define GDAUI_DATA_PROXY_INFO_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_data_proxy_info_get_type (), GdauiDataProxyInfoClass)
-#define GDAUI_IS_DATA_PROXY_INFO(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_data_proxy_info_get_type ())
-
-
-typedef struct _GdauiDataProxyInfo      GdauiDataProxyInfo;
-typedef struct _GdauiDataProxyInfoClass GdauiDataProxyInfoClass;
-typedef struct _GdauiDataProxyInfoPriv  GdauiDataProxyInfoPriv;
-
 /**
  * GdauiDataProxyInfoFlag:
  * @GDAUI_DATA_PROXY_INFO_NONE: 
@@ -57,18 +47,15 @@ typedef enum
 	GDAUI_DATA_PROXY_INFO_NO_FILTER = 1 << 5
 } GdauiDataProxyInfoFlag;
 
-/* struct for the object's data */
-struct _GdauiDataProxyInfo
-{
-	GtkToolbar              object;
+#define GDAUI_TYPE_DATA_PROXY_INFO          (gdaui_data_proxy_info_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdauiDataProxyInfo, gdaui_data_proxy_info, GDAUI, DATA_PROXY_INFO, GtkToolbar)
 
-	GdauiDataProxyInfoPriv *priv;
-};
 
 /* struct for the object's class */
 struct _GdauiDataProxyInfoClass
 {
-	GtkToolbarClass         parent_class;
+	GtkToolbarClass     parent_class;
+	gpointer            padding[12];
 };
 
 /**
@@ -86,7 +73,6 @@ struct _GdauiDataProxyInfoClass
  * </itemizedlist>
  */
 
-GType             gdaui_data_proxy_info_get_type (void) G_GNUC_CONST;
 GtkWidget        *gdaui_data_proxy_info_new      (GdauiDataProxy *data_proxy, GdauiDataProxyInfoFlag flags);
 GtkToolItem      *gdaui_data_proxy_info_get_item (GdauiDataProxyInfo *info, GdauiAction action);
 G_END_DECLS
