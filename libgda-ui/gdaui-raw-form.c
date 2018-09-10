@@ -454,19 +454,9 @@ gdaui_raw_form_dispose (GObject *object)
 {
 	GdauiRawForm *form;
 
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_RAW_FORM (object));
 	form = GDAUI_RAW_FORM (object);
 
-	GdauiRawFormPrivate *priv = gdaui_raw_form_get_instance_private (form);
-
-	if (priv) {
-		gdaui_raw_form_clean (form);
-
-		/* the private area itself */
-		g_free (priv);
-		priv = NULL;
-	}
+	gdaui_raw_form_clean (form);
 
 	/* for the parent class */
 	G_OBJECT_CLASS (gdaui_raw_form_parent_class)->dispose (object);
