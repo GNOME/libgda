@@ -27,26 +27,12 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_SERVER_OPERATION          (gdaui_server_operation_get_type())
-#define GDAUI_SERVER_OPERATION(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_server_operation_get_type(), GdauiServerOperation)
-#define GDAUI_SERVER_OPERATION_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_server_operation_get_type (), GdauiServerOperationClass)
-#define GDAUI_IS_SERVER_OPERATION(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_server_operation_get_type ())
-
-
-typedef struct _GdauiServerOperation      GdauiServerOperation;
-typedef struct _GdauiServerOperationClass GdauiServerOperationClass;
-typedef struct _GdauiServerOperationPriv  GdauiServerOperationPriv;
-
-/* struct for the object's data */
-struct _GdauiServerOperation
-{
-	GtkBox                     object;
-	GdauiServerOperationPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiServerOperation, gdaui_server_operation, GDAUI, SERVER_OPERATION, GtkBox)
 /* struct for the object's class */
 struct _GdauiServerOperationClass
 {
-	GtkBoxClass                parent_class;
+	GtkBoxClass         parent_class;
+	gpointer            padding[12];
 };
 
 /**
@@ -63,7 +49,6 @@ struct _GdauiServerOperationClass
  * SQLite database.
  */
 
-GType             gdaui_server_operation_get_type         (void) G_GNUC_CONST;
 GtkWidget        *gdaui_server_operation_new              (GdaServerOperation *op);
 GtkWidget        *gdaui_server_operation_new_in_dialog    (GdaServerOperation *op, GtkWindow *parent,
 							   const gchar *title, const gchar *header);

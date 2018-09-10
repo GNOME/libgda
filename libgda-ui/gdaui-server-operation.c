@@ -2,6 +2,7 @@
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,8 +34,6 @@
 #include "gdaui-data-proxy-info.h"
 #include <libgda/gda-debug-macros.h>
 
-static void gdaui_server_operation_class_init (GdauiServerOperationClass *class);
-static void gdaui_server_operation_init (GdauiServerOperation *wid);
 static void gdaui_server_operation_dispose (GObject *object);
 
 static void gdaui_server_operation_set_property (GObject *object,
@@ -63,14 +62,16 @@ typedef struct _WidgetData {
 } WidgetData;
 #define WIDGET_DATA(x) ((WidgetData*)(x))
 
-struct _GdauiServerOperationPriv
+typedef struct
 {
 	GdaServerOperation     *op;
 	GSList                 *widget_data; /* list of WidgetData structures */
 	GtkBuilder             *builder;
 	gboolean                opt_header;
 	GtkWidget              *widget; /* Widget used to change operation parameters */
-};
+} GdauiServerOperationPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiServerOperation, gdaui_server_operation, GTK_TYPE_BOX)
 
 WidgetData *widget_data_new (WidgetData *parent, const gchar *path_name);
 void        widget_data_free (WidgetData *wd);
@@ -102,6 +103,8 @@ widget_data_free (WidgetData *wd)
 WidgetData *
 widget_data_find (GdauiServerOperation *form, const gchar *path)
 {
+	g_return_val_if_fail (GDAUI_IS_SERVER_OPERATION (form), NULL);
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	gchar **array;
 	gint i, index;
 	WidgetData *wd = NULL;
@@ -117,7 +120,7 @@ widget_data_find (GdauiServerOperation *form, const gchar *path)
 		return NULL;
 	}
 
-	list = form->priv->widget_data;
+	list = priv->widget_data;
 	while (list && !wd) {
 		if (WIDGET_DATA (list->data)->path_name &&
 		    !strcmp (WIDGET_DATA (list->data)->path_name, array[1]))
@@ -153,40 +156,10 @@ widget_data_find (GdauiServerOperation *form, const gchar *path)
 	return wd;
 }
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-gdaui_server_operation_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiServerOperationClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_server_operation_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiServerOperation),
-			0,
-			(GInstanceInitFunc) gdaui_server_operation_init,
-			0
-		};
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiServerOperation", &info, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_server_operation_class_init (GdauiServerOperationClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-
-	parent_class = g_type_class_peek_parent (class);
 
 	object_class->dispose = gdaui_server_operation_dispose;
 
@@ -207,16 +180,16 @@ gdaui_server_operation_class_init (GdauiServerOperationClass *class)
 }
 
 static void
-gdaui_server_operation_init (GdauiServerOperation * wid)
+gdaui_server_operation_init (GdauiServerOperation * form)
 {
-	wid->priv = g_new0 (GdauiServerOperationPriv, 1);
-	wid->priv->op = NULL;
-	wid->priv->widget_data = NULL;
-	wid->priv->builder = NULL;
-	wid->priv->opt_header = FALSE;
-	wid->priv->widget = NULL;
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
+	priv->op = NULL;
+	priv->widget_data = NULL;
+	priv->builder = NULL;
+	priv->opt_header = FALSE;
+	priv->widget = NULL;
 
-	gtk_orientable_set_orientation (GTK_ORIENTABLE (wid), GTK_ORIENTATION_VERTICAL);
+	gtk_orientable_set_orientation (GTK_ORIENTABLE (form), GTK_ORIENTATION_VERTICAL);
 }
 
 
@@ -254,33 +227,29 @@ gdaui_server_operation_dispose (GObject *object)
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (object));
 	form = GDAUI_SERVER_OPERATION (object);
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 
-	if (form->priv) {
 		/* paramlist */
-		if (form->priv->op) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->op),
-							      G_CALLBACK (sequence_item_added_cb), form);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (form->priv->op),
-							      G_CALLBACK (sequence_item_remove_cb), form);
-			g_object_unref (form->priv->op);
-		}
-
-		if (form->priv->widget_data) {
-			g_slist_foreach (form->priv->widget_data, (GFunc) widget_data_free, NULL);
-			g_slist_free (form->priv->widget_data);
-			form->priv->widget_data = NULL;
-		}
-
-		if (form->priv->builder)
-			g_object_unref (form->priv->builder);
-
-		/* the private area itself */
-		g_free (form->priv);
-		form->priv = NULL;
+	if (priv->op) {
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->op),
+						      G_CALLBACK (sequence_item_added_cb), form);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (priv->op),
+						      G_CALLBACK (sequence_item_remove_cb), form);
+		g_object_unref (priv->op);
 	}
 
+	if (priv->widget_data) {
+		g_slist_foreach (priv->widget_data, (GFunc) widget_data_free, NULL);
+		g_slist_free (priv->widget_data);
+		priv->widget_data = NULL;
+	}
+
+	if (priv->builder)
+		g_object_unref (priv->builder);
+
+
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_server_operation_parent_class)->dispose (object);
 }
 
 
@@ -292,35 +261,34 @@ gdaui_server_operation_set_property (GObject *object,
 {
 	GdauiServerOperation *form;
 
-        form = GDAUI_SERVER_OPERATION (object);
-        if (form->priv) {
-                switch (param_id) {
+	form = GDAUI_SERVER_OPERATION (object);
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
+	switch (param_id) {
 		case PROP_SERVER_OP_OBJ:
-			if (form->priv->op) {
+			if (priv->op) {
 				TO_IMPLEMENT;
 				g_assert_not_reached ();
 			}
 
-			form->priv->op = GDA_SERVER_OPERATION(g_value_get_object (value));
-			if (form->priv->op) {
-				g_return_if_fail (GDA_IS_SERVER_OPERATION (form->priv->op));
+			priv->op = GDA_SERVER_OPERATION(g_value_get_object (value));
+			if (priv->op) {
+				g_return_if_fail (GDA_IS_SERVER_OPERATION (priv->op));
 
-				g_object_ref (form->priv->op);
+				g_object_ref (priv->op);
 
 				gdaui_server_operation_fill (form);
-				g_signal_connect (G_OBJECT (form->priv->op), "sequence-item-added",
+				g_signal_connect (G_OBJECT (priv->op), "sequence-item-added",
 						  G_CALLBACK (sequence_item_added_cb), form);
-				g_signal_connect (G_OBJECT (form->priv->op), "sequence-item-remove",
+				g_signal_connect (G_OBJECT (priv->op), "sequence-item-remove",
 						  G_CALLBACK (sequence_item_remove_cb), form);
 			}
 			break;
 		case PROP_OPT_HEADER:
-			form->priv->opt_header = g_value_get_boolean (value);
+			priv->opt_header = g_value_get_boolean (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -332,20 +300,19 @@ gdaui_server_operation_get_property (GObject *object,
 {
 	GdauiServerOperation *form;
 
-        form = GDAUI_SERVER_OPERATION (object);
-        if (form->priv) {
-                switch (param_id) {
+	form = GDAUI_SERVER_OPERATION (object);
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
+	switch (param_id) {
 		case PROP_SERVER_OP_OBJ:
-			g_value_set_object (value, form->priv->op);
+			g_value_set_object (value, priv->op);
 			break;
 		case PROP_OPT_HEADER:
-			g_value_set_boolean (value, form->priv->opt_header);
+			g_value_set_boolean (value, priv->opt_header);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 /*
@@ -365,11 +332,13 @@ static void
 sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWidget *wid,
 			     const gchar *path, gint index)
 {
+	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (form));
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	GtkWidget *image;
 	guint min, size;
 
-	min = gda_server_operation_get_sequence_min_size (form->priv->op, path);
-	size = gda_server_operation_get_sequence_size (form->priv->op, path);
+	min = gda_server_operation_get_sequence_min_size (priv->op, path);
+	size = gda_server_operation_get_sequence_size (priv->op, path);
 
 	/* new widget */
 	gtk_grid_attach (GTK_GRID (grid), wid, 0, index, 1, 1);
@@ -392,10 +361,12 @@ sequence_grid_attach_widget (GdauiServerOperation *form, GtkWidget *grid, GtkWid
 static GtkWidget *
 fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **section_str, GSList **label_widgets)
 {
+	g_return_val_if_fail (GDAUI_IS_SERVER_OPERATION (form), NULL);
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	GdaServerOperationNode *info_node;
 	GtkWidget *plwid = NULL;
 
-	info_node = gda_server_operation_get_node_info (form->priv->op, path);
+	info_node = gda_server_operation_get_node_info (priv->op, path);
 	if (info_node == NULL) {
 		g_warning (_("Mal formed Server Operation. No Node at path: '%s'"), path);
 		return NULL;
@@ -438,7 +409,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			}
 			*label_widgets = g_slist_reverse (*label_widgets);
 		}
-		form->priv->widget = plwid;
+		priv->widget = plwid;
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_DATA_MODEL: {
@@ -550,7 +521,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 			label_entry = gdaui_basic_form_get_label_widget (GDAUI_BASIC_FORM (plwid), param);
 			*label_widgets = g_slist_prepend (*label_widgets, label_entry);
 		}
-		form->priv->widget = plwid;
+		priv->widget = plwid;
 		break;
 	}
 	case GDA_SERVER_OPERATION_NODE_SEQUENCE: {
@@ -560,10 +531,10 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		gchar *parent_path = NULL, *path_name = NULL;
 		guint max;
 
-		max = gda_server_operation_get_sequence_max_size (form->priv->op, path);
+		max = gda_server_operation_get_sequence_max_size (priv->op, path);
 		if (section_str) {
 			const gchar *seq_name;
-			seq_name = gda_server_operation_get_sequence_name (form->priv->op, path);
+			seq_name = gda_server_operation_get_sequence_name (priv->op, path);
 			*section_str = g_strdup_printf ("<b>%s:</b>", seq_name);
 		}
 
@@ -574,7 +545,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (plwid),
 						     GTK_SHADOW_NONE);
 
-		size = gda_server_operation_get_sequence_size (form->priv->op, path);
+		size = gda_server_operation_get_sequence_size (priv->op, path);
 		grid = gtk_grid_new ();
 		gtk_grid_set_row_spacing (GTK_GRID (grid), 10);
 		gtk_container_add (GTK_CONTAINER (plwid), grid);
@@ -582,13 +553,13 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 					      GTK_SHADOW_NONE);
 		gtk_widget_show (grid);
 
-		parent_path = gda_server_operation_get_node_parent (form->priv->op, path);
-		path_name = gda_server_operation_get_node_path_portion (form->priv->op, path);
+		parent_path = gda_server_operation_get_node_parent (priv->op, path);
+		path_name = gda_server_operation_get_node_path_portion (priv->op, path);
 		wdp = widget_data_find (form, parent_path);
 		wd = widget_data_new (wdp, path_name);
 		wd->widget = grid;
 		if (! wdp)
-			form->priv->widget_data = g_slist_append (form->priv->widget_data, wd);
+			priv->widget_data = g_slist_append (priv->widget_data, wd);
 		g_free (parent_path);
 		g_free (path_name);
 
@@ -630,7 +601,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		gchar *parent_path;
 		WidgetData *wdp, *wdi;
 
-		node_names = gda_server_operation_get_sequence_item_names (form->priv->op, path);
+		node_names = gda_server_operation_get_sequence_item_names (priv->op, path);
 		size = g_strv_length (node_names);
 		if (size > 1) {
 			GtkWidget *grid;
@@ -677,7 +648,7 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 		else
 			plwid = fill_create_widget (form, node_names[0], NULL, NULL);
 
-		parent_path = gda_server_operation_get_node_parent (form->priv->op, path);
+		parent_path = gda_server_operation_get_node_parent (priv->op, path);
 		wdp = widget_data_find (form, parent_path);
 		g_assert (wdp);
 		wdi = widget_data_new (wdp, NULL);
@@ -698,30 +669,32 @@ fill_create_widget (GdauiServerOperation *form, const gchar *path, gchar **secti
 static void
 gdaui_server_operation_fill (GdauiServerOperation *form)
 {
+	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (form));
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	gint i;
 	gchar **topnodes;
 
 	/* parameters list management */
-	if (form->priv->op == NULL)
+	if (priv->op == NULL)
 		/* nothing to do */
 		return;
 
 	/* load specific GUI */
-	if (form->priv->builder == NULL) {
-		form->priv->builder = gtk_builder_new ();
-		if (! gtk_builder_add_from_resource (form->priv->builder, "/gdaui/glade/data/server_operation.xml", NULL)) {
+	if (priv->builder == NULL) {
+		priv->builder = gtk_builder_new ();
+		if (! gtk_builder_add_from_resource (priv->builder, "/gdaui/glade/data/server_operation.xml", NULL)) {
 			g_message ("Could not load GdaServerOperation UI data, please report error to "
 				   "https://gitlab.gnome.org/GNOME/libgda/issues");
-			g_object_unref (form->priv->builder);
-			form->priv->builder = NULL;
+			g_object_unref (priv->builder);
+			priv->builder = NULL;
 		}
 	}
 
 	GtkWidget *mainw = NULL;
-	if (form->priv->builder) {
-		mainw = (GtkWidget*) gtk_builder_get_object (form->priv->builder,
+	if (priv->builder) {
+		mainw = (GtkWidget*) gtk_builder_get_object (priv->builder,
 							     gda_server_operation_op_type_to_string
-							     (gda_server_operation_get_op_type (form->priv->op)));
+							     (gda_server_operation_get_op_type (priv->op)));
 		if (mainw) {
 			gtk_widget_unparent (mainw);
 			gtk_box_pack_start (GTK_BOX (form), mainw, TRUE, TRUE, 0);
@@ -730,14 +703,14 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 	}
 
 	/* user visible widgets */
-	topnodes = gda_server_operation_get_root_nodes (form->priv->op);
+	topnodes = gda_server_operation_get_root_nodes (priv->op);
 	for (i = 0; topnodes[i]; i++) {
 		GtkWidget *plwid;
 		gchar *section_str;
 		GtkWidget *container = NULL;
 
 		if (mainw) {
-			container = (GtkWidget*) gtk_builder_get_object (form->priv->builder, topnodes[i]);
+			container = (GtkWidget*) gtk_builder_get_object (priv->builder, topnodes[i]);
 			if (!container)
 				continue;
 		}
@@ -749,7 +722,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 			GdaServerOperationNodeStatus status;
 			GtkWidget *label = NULL, *hbox = NULL;
 
-			if (! (form->priv->opt_header && (g_strv_length (topnodes) == 1)) && section_str) {
+			if (! (priv->opt_header && (g_strv_length (topnodes) == 1)) && section_str) {
 				GtkWidget *lab;
 				label = gtk_label_new ("");
 				gtk_widget_show (label);
@@ -770,7 +743,7 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 				gtk_widget_show (plwid);
 
 
-			gda_server_operation_get_node_type (form->priv->op, topnodes[i], &status);
+			gda_server_operation_get_node_type (priv->op, topnodes[i], &status);
 			switch (status) {
 			case GDA_SERVER_OPERATION_STATUS_OPTIONAL: {
 				GtkWidget *exp;
@@ -816,12 +789,12 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 	if (mainw) {
 		GSList *widgets, *list;
 
-		widgets = gtk_builder_get_objects (form->priv->builder);
+		widgets = gtk_builder_get_objects (priv->builder);
 		for (list = widgets; list; list = list->next) {
 			const gchar *name;
 
 			name = gtk_buildable_get_name ((GtkBuildable *) (list->data));
-			if ((name[0] == '/') && !gda_server_operation_get_node_info (form->priv->op, name)) {
+			if ((name[0] == '/') && !gda_server_operation_get_node_info (priv->op, name)) {
 				GtkWidget *parent;
 
 				/* dirty hack to remove a notebook page */
@@ -853,10 +826,12 @@ gdaui_server_operation_fill (GdauiServerOperation *form)
 static void
 seq_add_item (GtkButton *button, GdauiServerOperation *form)
 {
+	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (form));
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	gchar *path;
 
 	path = g_object_get_data (G_OBJECT (button), "_seq_path");
-	gda_server_operation_add_item_to_sequence (form->priv->op, path);
+	gda_server_operation_add_item_to_sequence (priv->op, path);
 }
 
 /*
@@ -865,6 +840,8 @@ seq_add_item (GtkButton *button, GdauiServerOperation *form)
 static void
 seq_del_item (GtkButton *button, GdauiServerOperation *form)
 {
+	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (form));
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
 	gchar *seq_path, *item_path;
 	gint index;
 
@@ -872,7 +849,7 @@ seq_del_item (GtkButton *button, GdauiServerOperation *form)
 	index = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (button), "_index")) - 1;
 	g_assert (index >= 0);
 	item_path = g_strdup_printf ("%s/%d", seq_path, index);
-	gda_server_operation_del_item_from_sequence (form->priv->op, item_path);
+	gda_server_operation_del_item_from_sequence (priv->op, item_path);
 	g_free (item_path);
 }
 
@@ -1123,13 +1100,15 @@ gdaui_server_operation_new_in_dialog (GdaServerOperation *op, GtkWindow *parent,
 /**
  */
 void
-gdaui_server_operation_update_parameters (GdauiServerOperation *op, GError** error) {
-	GdauiBasicForm *form;
-	g_return_if_fail (op != NULL);
-	g_return_if_fail (op->priv->widget != NULL);
-	g_return_if_fail (GDAUI_IS_BASIC_FORM (op->priv->widget));
-	form = GDAUI_BASIC_FORM (op->priv->widget);
-	gdaui_basic_form_update_data_set (form, error);
+gdaui_server_operation_update_parameters (GdauiServerOperation *form, GError** error) {
+	GdauiBasicForm *bform;
+	g_return_if_fail (form != NULL);
+	g_return_if_fail (GDAUI_IS_SERVER_OPERATION (form));
+	GdauiServerOperationPrivate *priv = gdaui_server_operation_get_instance_private (form);
+	g_return_if_fail (priv->widget != NULL);
+	g_return_if_fail (GDAUI_IS_BASIC_FORM (priv->widget));
+	bform = GDAUI_BASIC_FORM (priv->widget);
+	gdaui_basic_form_update_data_set (bform, error);
 }
 
 /*
