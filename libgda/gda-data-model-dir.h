@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,20 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_MODEL_DIR            (gda_data_model_dir_get_type())
-#define GDA_DATA_MODEL_DIR(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL_DIR, GdaDataModelDir))
-#define GDA_DATA_MODEL_DIR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL_DIR, GdaDataModelDirClass))
-#define GDA_IS_DATA_MODEL_DIR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_MODEL_DIR))
-#define GDA_IS_DATA_MODEL_DIR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_MODEL_DIR))
-
-typedef struct _GdaDataModelDir        GdaDataModelDir;
-typedef struct _GdaDataModelDirClass   GdaDataModelDirClass;
-typedef struct _GdaDataModelDirPrivate GdaDataModelDirPrivate;
-
-struct _GdaDataModelDir {
-	GObject                 object;
-	GdaDataModelDirPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaDataModelDir, gda_data_model_dir, GDA, DATA_MODEL_DIR, GObject)
 struct _GdaDataModelDirClass {
 	GObjectClass            parent_class;
 
@@ -72,7 +60,6 @@ struct _GdaDataModelDirClass {
  *  are requested to help with performances.
  */
 
-GType         gda_data_model_dir_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_dir_new          (const gchar *basedir);
 
 const GSList *gda_data_model_dir_get_errors   (GdaDataModelDir *model);

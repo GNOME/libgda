@@ -1972,7 +1972,7 @@ gda_value_new_date_time (GDateTime *dt)
 }
 
 /**
- * gda_value_new_date_time:
+ * gda_value_new_date_time_from_timet:
  * @val: value to set for the new #GValue.
  *
  * Makes a new #GValue of type #G_TYPE_DATE_TIME with value @val

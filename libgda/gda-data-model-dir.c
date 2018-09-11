@@ -4,7 +4,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,23 @@
 #define __GDA_INTERNAL__
 #include "dir-blob-op.h"
 
-struct _GdaDataModelDirPrivate {
+
+/* GdaDataModel interface */
+static void                 gda_data_model_dir_data_model_init (GdaDataModelIface *iface);
+static gint                 gda_data_model_dir_get_n_rows      (GdaDataModel *model);
+static gint                 gda_data_model_dir_get_n_columns   (GdaDataModel *model);
+static GdaColumn           *gda_data_model_dir_describe_column (GdaDataModel *model, gint col);
+static GdaDataModelAccessFlags gda_data_model_dir_get_access_flags(GdaDataModel *model);
+static const GValue        *gda_data_model_dir_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
+static GdaValueAttribute    gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, gint row);
+
+static gboolean             gda_data_model_dir_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error);
+static gboolean             gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GError **error);
+static gint                 gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GError **error);
+static gboolean             gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error);
+
+
+typedef struct {
 	gchar     *basedir;
 	GSList    *errors; /* list of errors as GError structures */
 	GSList    *columns; /* list of GdaColumn objects */
@@ -56,7 +72,11 @@ struct _GdaDataModelDirPrivate {
 	gint       upd_row; /* internal usage when updating contents */
 
 	GValue    *tmp_value; /* GValue returned by gda_data_model_get_value_at() */
-};
+} GdaDataModelDirPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataModelDir, gda_data_model_dir, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataModelDir)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_MODEL, gda_data_model_dir_data_model_init))
 
 /* Row implementation details */
 typedef struct {
@@ -102,9 +122,6 @@ enum
 		COL_LAST
 	};
 
-static void gda_data_model_dir_class_init (GdaDataModelDirClass *klass);
-static void gda_data_model_dir_init       (GdaDataModelDir *model,
-					   GdaDataModelDirClass *klass);
 static void gda_data_model_dir_dispose    (GObject *object);
 
 static void gda_data_model_dir_set_property (GObject *object,
@@ -116,24 +133,9 @@ static void gda_data_model_dir_get_property (GObject *object,
 					     GValue *value,
 					     GParamSpec *pspec);
 
-/* GdaDataModel interface */
-static void                 gda_data_model_dir_data_model_init (GdaDataModelIface *iface);
-static gint                 gda_data_model_dir_get_n_rows      (GdaDataModel *model);
-static gint                 gda_data_model_dir_get_n_columns   (GdaDataModel *model);
-static GdaColumn           *gda_data_model_dir_describe_column (GdaDataModel *model, gint col);
-static GdaDataModelAccessFlags gda_data_model_dir_get_access_flags(GdaDataModel *model);
-static const GValue        *gda_data_model_dir_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
-static GdaValueAttribute    gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, gint row);
-
-static gboolean             gda_data_model_dir_set_value_at (GdaDataModel *model, gint col, gint row, const GValue *value, GError **error);
-static gboolean             gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GError **error);
-static gint                 gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GError **error);
-static gboolean             gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error);
-
 static void add_error (GdaDataModelDir *model, const gchar *err);
 static void update_data_model (GdaDataModelDir *model);
 
-static GObjectClass *parent_class = NULL;
 #define CLASS(model) (GDA_DATA_MODEL_DIR_CLASS (G_OBJECT_GET_CLASS (model)))
 
 /*
@@ -165,24 +167,21 @@ gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_model_dir_init (GdaDataModelDir *model,
-			 G_GNUC_UNUSED GdaDataModelDirClass *klass)
+gda_data_model_dir_init (GdaDataModelDir *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
 
-	model->priv = g_new0 (GdaDataModelDirPrivate, 1);
-	model->priv->basedir = NULL;
-	model->priv->columns = NULL;
-	model->priv->rows = g_ptr_array_new (); /* array of FileRow pointers */
-	model->priv->tmp_value = NULL;
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	priv->basedir = NULL;
+	priv->columns = NULL;
+	priv->rows = g_ptr_array_new (); /* array of FileRow pointers */
+	priv->tmp_value = NULL;
 }
 
 static void
 gda_data_model_dir_class_init (GdaDataModelDirClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
         object_class->set_property = gda_data_model_dir_set_property;
@@ -208,85 +207,44 @@ gda_data_model_dir_dispose (GObject * object)
 	GdaDataModelDir *model = (GdaDataModelDir *) object;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 
-	if (model->priv) {
-		if (model->priv->tmp_value) {
-			gda_value_free (model->priv->tmp_value);
-			model->priv->tmp_value = NULL;
-		}
-
-		if (model->priv->basedir) {
-			g_free (model->priv->basedir);
-			model->priv->basedir = NULL;
-		}
-
-		if (model->priv->errors) {
-                        g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
-                        g_slist_free (model->priv->errors);
-                }
-
-		if (model->priv->columns) {
-                        g_slist_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
-                        g_slist_free (model->priv->columns);
-                        model->priv->columns = NULL;
-                }
-
-		g_ptr_array_foreach (model->priv->rows, (GFunc) file_row_foreach_func, NULL);
-		g_ptr_array_free (model->priv->rows, TRUE);
-		g_free (model->priv);
-		model->priv = NULL;
+	if (priv->tmp_value) {
+		gda_value_free (priv->tmp_value);
+		priv->tmp_value = NULL;
 	}
 
-	parent_class->dispose (object);
+	if (priv->basedir) {
+		g_free (priv->basedir);
+		priv->basedir = NULL;
+	}
+
+	if (priv->errors) {
+		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (priv->errors);
+	}
+
+	if (priv->columns) {
+		g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->columns);
+		priv->columns = NULL;
+	}
+
+	g_ptr_array_foreach (priv->rows, (GFunc) file_row_foreach_func, NULL);
+	g_ptr_array_free (priv->rows, TRUE);
+
+	G_OBJECT_CLASS (gda_data_model_dir_parent_class)->dispose (object);
 }
 
 static void
 add_error (GdaDataModelDir *model, const gchar *err)
 {
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 	GError *error = NULL;
 
         g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 		     "%s", err);
-        model->priv->errors = g_slist_append (model->priv->errors, error);
-}
-
-/*
- * Public functions
- */
-
-GType
-gda_data_model_dir_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataModelDirClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_model_dir_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataModelDir),
-			0,
-			(GInstanceInitFunc) gda_data_model_dir_init,
-			0
-		};
-		static const GInterfaceInfo data_model_info = {
-                        (GInterfaceInitFunc) gda_data_model_dir_data_model_init,
-                        NULL,
-                        NULL
-                };
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDir", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
+        priv->errors = g_slist_append (priv->errors, error);
 }
 
 static void
@@ -299,72 +257,71 @@ gda_data_model_dir_set_property (GObject *object,
         const gchar *string;
 
         model = GDA_DATA_MODEL_DIR (object);
-        if (model->priv) {
-                switch (param_id) {
-                case PROP_BASEDIR:
-			if (model->priv->basedir) {
-				g_free (model->priv->basedir);
-				model->priv->basedir = NULL;
-			}
-			string = g_value_get_string (value);
-			if (string)
-				model->priv->basedir = g_strdup (string);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	switch (param_id) {
+	case PROP_BASEDIR:
+		if (priv->basedir) {
+			g_free (priv->basedir);
+			priv->basedir = NULL;
 		}
+		string = g_value_get_string (value);
+		if (string)
+			priv->basedir = g_strdup (string);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+	}
 
-		if (model->priv->basedir) {
-			/* create columns */
-			model->priv->columns = NULL;
-			GdaColumn *column;
+	if (priv->basedir) {
+		/* create columns */
+		priv->columns = NULL;
+		GdaColumn *column;
 
-			/* COL_DIRNAME */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "dir_name");
-			gda_column_set_description (column, "dir_name");
-			gda_column_set_g_type (column, G_TYPE_STRING);
+		/* COL_DIRNAME */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "dir_name");
+		gda_column_set_description (column, "dir_name");
+		gda_column_set_g_type (column, G_TYPE_STRING);
 
-			/* COL_FILENAME */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "file_name");
-			gda_column_set_description (column, "file_name");
-			gda_column_set_g_type (column, G_TYPE_STRING);
+		/* COL_FILENAME */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "file_name");
+		gda_column_set_description (column, "file_name");
+		gda_column_set_g_type (column, G_TYPE_STRING);
 
-			/* COL_SIZE */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "size");
-			gda_column_set_description (column, "size");
-			gda_column_set_g_type (column, G_TYPE_UINT);
+		/* COL_SIZE */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "size");
+		gda_column_set_description (column, "size");
+		gda_column_set_g_type (column, G_TYPE_UINT);
 
-			/* COL_MIME */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "mime_type");
-			gda_column_set_description (column, "mime_type");
-			gda_column_set_g_type (column, G_TYPE_STRING);
+		/* COL_MIME */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "mime_type");
+		gda_column_set_description (column, "mime_type");
+		gda_column_set_g_type (column, G_TYPE_STRING);
 
-			/* COL_MD5SUM */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "md5sum");
-			gda_column_set_description (column, "md5sum");
-			gda_column_set_g_type (column, G_TYPE_STRING);
+		/* COL_MD5SUM */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "md5sum");
+		gda_column_set_description (column, "md5sum");
+		gda_column_set_g_type (column, G_TYPE_STRING);
 
-			/* COL_DATA */
-			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns , column);
-			gda_column_set_name (column, "data");
-			gda_column_set_description (column, "data");
-			gda_column_set_g_type (column, GDA_TYPE_BLOB);
+		/* COL_DATA */
+		column = gda_column_new ();
+		priv->columns = g_slist_append (priv->columns , column);
+		gda_column_set_name (column, "data");
+		gda_column_set_description (column, "data");
+		gda_column_set_g_type (column, GDA_TYPE_BLOB);
 
-			/* number of rows */
-			update_data_model (model);
-		}
+		/* number of rows */
+		update_data_model (model);
 	}
 }
 
@@ -375,8 +332,9 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 	GError *error = NULL;
 	const gchar *raw_filename;
 	gchar *complete_dir;
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 
-	complete_dir = g_build_path (G_DIR_SEPARATOR_S, model->priv->basedir, rel_path, NULL);
+	complete_dir = g_build_path (G_DIR_SEPARATOR_S, priv->basedir, rel_path, NULL);
 	dir = g_dir_open (complete_dir, 0, &error);
 	if (!dir) {
 		add_error (model, error && error->message ? error->message : _("No detail"));
@@ -412,10 +370,10 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 				utf8_filename = g_strdup (raw_filename);
 #endif
 				FileRow *row;
-				model->priv->upd_row ++;
+				priv->upd_row ++;
 
-				if (model->priv->upd_row < (int)model->priv->rows->len) {
-					row = g_ptr_array_index (model->priv->rows, model->priv->upd_row);
+				if (priv->upd_row < (int)priv->rows->len) {
+					row = g_ptr_array_index (priv->rows, priv->upd_row);
 					file_row_clean (row);
 				}
 				else
@@ -438,12 +396,12 @@ update_data_model_real (GdaDataModelDir *model, const gchar *rel_path)
 				row->data_value = NULL;
 
 				/* add row */
-				if (model->priv->upd_row < (int)model->priv->rows->len)
-					gda_data_model_row_updated ((GdaDataModel *) model, model->priv->upd_row);
+				if (priv->upd_row < (int)priv->rows->len)
+					gda_data_model_row_updated ((GdaDataModel *) model, priv->upd_row);
 				else {
-					g_ptr_array_add (model->priv->rows, row);
+					g_ptr_array_add (priv->rows, row);
 					gda_data_model_row_inserted ((GdaDataModel *) model,
-								     model->priv->rows->len - 1);
+								     priv->rows->len - 1);
 				}
 			}
 		}
@@ -610,16 +568,17 @@ update_file_mime (FileRow *row, const gchar *complete_filename)
 static void
 update_data_model (GdaDataModelDir *model)
 {
-	model->priv->upd_row = -1;
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	priv->upd_row = -1;
 	update_data_model_real (model, "");
 
 	/* clean extra rows */
 	gsize i;
-	for (i = model->priv->upd_row + 1; i < model->priv->rows->len; i++) {
-		FileRow *row = g_ptr_array_index (model->priv->rows, model->priv->rows->len - 1);
+	for (i = priv->upd_row + 1; i < priv->rows->len; i++) {
+		FileRow *row = g_ptr_array_index (priv->rows, priv->rows->len - 1);
 		file_row_free (row);
-		g_ptr_array_remove_index (model->priv->rows, model->priv->rows->len - 1);
-		gda_data_model_row_removed ((GdaDataModel *) model, model->priv->rows->len - 1);
+		g_ptr_array_remove_index (priv->rows, priv->rows->len - 1);
+		gda_data_model_row_removed ((GdaDataModel *) model, priv->rows->len - 1);
 	}
 }
 
@@ -632,10 +591,11 @@ gda_data_model_dir_get_property (GObject *object,
 	GdaDataModelDir *model;
 
 	model = GDA_DATA_MODEL_DIR (object);
-	if (model->priv) {
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	if (priv) {
 		switch (param_id) {
 		case PROP_BASEDIR:
-			g_value_set_string (value, model->priv->basedir);
+			g_value_set_string (value, priv->basedir);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -676,9 +636,9 @@ const GSList *
 gda_data_model_dir_get_errors (GdaDataModelDir *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
-	g_return_val_if_fail (model->priv, NULL);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 
-	return model->priv->errors;
+	return priv->errors;
 }
 
 /**
@@ -691,12 +651,12 @@ void
 gda_data_model_dir_clean_errors (GdaDataModelDir *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_DIR (model));
-	g_return_if_fail (model->priv);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 
-	if (model->priv->errors) {
-		g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
-		g_slist_free (model->priv->errors);
-		model->priv->errors = NULL;
+	if (priv->errors) {
+		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (priv->errors);
+		priv->errors = NULL;
 	}
 }
 
@@ -706,9 +666,9 @@ gda_data_model_dir_get_n_rows (GdaDataModel *model)
 	GdaDataModelDir *imodel = (GdaDataModelDir *) model;
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (imodel), 0);
-	g_return_val_if_fail (imodel->priv != NULL, 0);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 
-	return imodel->priv->rows->len;
+	return priv->rows->len;
 }
 
 static gint
@@ -717,7 +677,8 @@ gda_data_model_dir_get_n_columns (GdaDataModel *model)
 	GdaDataModelDir *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), 0);
 	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
+	g_return_val_if_fail (priv, 0);
 
 	return COL_LAST;
 }
@@ -728,27 +689,19 @@ gda_data_model_dir_describe_column (GdaDataModel *model, gint col)
 	GdaDataModelDir *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
 	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 
-	return g_slist_nth_data (imodel->priv->columns, col);
+	return g_slist_nth_data (priv->columns, col);
 }
 
 static GdaDataModelAccessFlags
 gda_data_model_dir_get_access_flags (GdaDataModel *model)
 {
-	GdaDataModelDir *imodel;
-	GdaDataModelAccessFlags flags;
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), 0);
-	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, 0);
-
-	flags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
+	return GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
 		GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD |
 		GDA_DATA_MODEL_ACCESS_RANDOM |
 		GDA_DATA_MODEL_ACCESS_WRITE;
 
-	return flags;
 }
 
 static const GValue *
@@ -761,7 +714,7 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), NULL);
 	g_return_val_if_fail (row >= 0, NULL);
 	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 
 	if ((col < 0) || (col > COL_LAST)) {
 		gchar *tmp;
@@ -773,11 +726,11 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
 		return NULL;
 	}
 
-	if ((guint)row >= imodel->priv->rows->len) {
+	if ((guint)row >= priv->rows->len) {
 		gchar *str;
-		if (imodel->priv->rows->len > 0)
+		if (priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-					       imodel->priv->rows->len - 1);
+					       priv->rows->len - 1);
 		else
 			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
@@ -787,16 +740,16 @@ gda_data_model_dir_get_value_at (GdaDataModel *model, gint col, gint row, GError
                 return NULL;
         }
 
-	frow =  g_ptr_array_index (imodel->priv->rows, row);
+	frow =  g_ptr_array_index (priv->rows, row);
 	if (frow) {
 		switch (col) {
 		case COL_DIRNAME: {
 			gchar *tmp;
 			tmp = compute_dirname (imodel, frow);
-			if (!imodel->priv->tmp_value)
-				imodel->priv->tmp_value = gda_value_new (G_TYPE_STRING);
-			g_value_take_string (imodel->priv->tmp_value, tmp);
-			value = imodel->priv->tmp_value;
+			if (!priv->tmp_value)
+				priv->tmp_value = gda_value_new (G_TYPE_STRING);
+			g_value_take_string (priv->tmp_value, tmp);
+			value = priv->tmp_value;
 			break;
 		}
 		case COL_FILENAME:
@@ -860,8 +813,6 @@ gda_data_model_dir_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUS
 	GdaValueAttribute flags = 0;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), 0);
 	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, 0);
-
 	if ((col < 0) || (col > COL_LAST)) {
 		gchar *tmp;
 		tmp = g_strdup_printf (_("Column %d out of range (0-%d)"), col, COL_LAST-1);
@@ -902,7 +853,6 @@ gda_data_model_dir_set_value_at (GdaDataModel *model, gint col, gint row, const 
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), FALSE);
 	imodel = GDA_DATA_MODEL_DIR (model);
-	g_return_val_if_fail (imodel->priv, FALSE);
 
 	if ((col < 0) || (col > COL_LAST)) {
 		gchar *tmp;
@@ -943,15 +893,15 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), FALSE);
 	g_return_val_if_fail (row >= 0, FALSE);
 	imodel = (GdaDataModelDir *) model;
-	g_return_val_if_fail (imodel->priv, FALSE);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 	if (!values)
 		return TRUE;
 
-	if ((guint)row >= imodel->priv->rows->len) {
+	if ((guint)row >= priv->rows->len) {
 		gchar *str;
-		if (imodel->priv->rows->len > 0)
+		if (priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-					       imodel->priv->rows->len - 1);
+					       priv->rows->len - 1);
 		else
 			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
@@ -961,7 +911,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
                 return FALSE;
         }
 
-	frow =  g_ptr_array_index (imodel->priv->rows, row);
+	frow =  g_ptr_array_index (priv->rows, row);
 
 	for (col = 0, list = values; list; list = list->next, col++) {
 		GValue *value = (GValue *) list->data;
@@ -988,9 +938,9 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 
 			new_path = value ? g_value_get_string (value) : "";
 			len = strlen (new_path);
-			base_len = strlen (imodel->priv->basedir);
+			base_len = strlen (priv->basedir);
 			if ((len < base_len) ||
-			    (strncmp (new_path, imodel->priv->basedir, base_len))) {
+			    (strncmp (new_path, priv->basedir, base_len))) {
 				add_error (imodel,
 					   _("New path must be a subpath of the base directory"));
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
@@ -1076,7 +1026,7 @@ gda_data_model_dir_set_values (GdaDataModel *model, gint row, GList *values, GEr
 			gchar *new_filename;
 			gchar *filename;
 
-			new_filename = g_build_filename (imodel->priv->basedir,
+			new_filename = g_build_filename (priv->basedir,
 							 frow->reldir,
 							 g_value_get_string (value), NULL);
 			filename = compute_filename (imodel, frow);
@@ -1178,7 +1128,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), -1);
 	imodel = (GdaDataModelDir *) model;
-	g_return_val_if_fail (imodel->priv, -1);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 
 	GList *list;
 	gint col;
@@ -1203,11 +1153,11 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 		case COL_DIRNAME:
 			if (G_VALUE_TYPE (value) == G_TYPE_STRING) {
 				gint len, base_len;
-				base_len = strlen (imodel->priv->basedir);
+				base_len = strlen (priv->basedir);
 				dirname = g_value_get_string (value);
 				len = strlen (dirname);
 				if ((len < base_len) ||
-				    (strncmp (dirname, imodel->priv->basedir, base_len))) {
+				    (strncmp (dirname, priv->basedir, base_len))) {
 					add_error (imodel, _("New path must be a subpath of the base directory"));
 					g_set_error (error, GDA_DATA_MODEL_ERROR,
 						     GDA_DATA_MODEL_ACCESS_ERROR,
@@ -1244,7 +1194,7 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				FileRow *row;
 
 				row = file_row_new ();
-				row->reldir = g_strdup (dirname + strlen (imodel->priv->basedir));
+				row->reldir = g_strdup (dirname + strlen (priv->basedir));
 #ifndef G_OS_WIN32
 				row->raw_filename_value = g_strdup (filename);
 #else
@@ -1262,9 +1212,9 @@ gda_data_model_dir_append_values (GdaDataModel *model, const GList *values, GErr
 				row->data_value = NULL;
 				if (bin_to_free)
 					g_free (bin_data);
-				g_ptr_array_add (imodel->priv->rows, row);
-				gda_data_model_row_inserted (model, imodel->priv->rows->len - 1);
-				return imodel->priv->rows->len - 1;
+				g_ptr_array_add (priv->rows, row);
+				gda_data_model_row_inserted (model, priv->rows->len - 1);
+				return priv->rows->len - 1;
 			}
 			else {
 #ifndef G_OS_WIN32
@@ -1311,13 +1261,13 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_DIR (model), FALSE);
 	g_return_val_if_fail (row >=0, FALSE);
 	imodel = (GdaDataModelDir *) model;
-	g_return_val_if_fail (imodel->priv, FALSE);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (imodel);
 
-	if ((guint)row >= imodel->priv->rows->len) {
+	if ((guint)row >= priv->rows->len) {
 		gchar *str;
-		if (imodel->priv->rows->len > 0)
+		if (priv->rows->len > 0)
 			str = g_strdup_printf (_("Row %d out of range (0-%d)"), row,
-					       imodel->priv->rows->len - 1);
+					       priv->rows->len - 1);
 		else
 			str = g_strdup_printf (_("Row %d not found (empty data model)"), row);
 		add_error (imodel, str);
@@ -1327,10 +1277,10 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
                 return FALSE;
         }
 
-	frow =  g_ptr_array_index (imodel->priv->rows, row);
+	frow =  g_ptr_array_index (priv->rows, row);
 
 	/* remove filename */
-	filename = g_build_filename (imodel->priv->basedir,
+	filename = g_build_filename (priv->basedir,
 				     frow->reldir,
 				     frow->raw_filename_value ? frow->raw_filename_value :
 				     g_value_get_string (frow->filename_value), NULL);
@@ -1350,7 +1300,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 #ifndef G_OS_WIN32
 	gchar *path;
 
-	path = g_build_path (G_DIR_SEPARATOR_S, imodel->priv->basedir,
+	path = g_build_path (G_DIR_SEPARATOR_S, priv->basedir,
 			     frow->reldir, NULL);
 	g_rmdir (path);
 	g_free (path);
@@ -1358,7 +1308,7 @@ gda_data_model_dir_remove_row (GdaDataModel *model, gint row, GError **error)
 
 	/* remove row from data model */
 	file_row_free (frow);
-	g_ptr_array_remove_index (imodel->priv->rows, row);
+	g_ptr_array_remove_index (priv->rows, row);
 	gda_data_model_row_removed (model, row);
 
 	return TRUE;
@@ -1405,13 +1355,15 @@ dir_equal (const gchar *path1, const gchar *path2)
 static gchar *
 compute_dirname (GdaDataModelDir *model, FileRow *row)
 {
-	return g_build_path (G_DIR_SEPARATOR_S, model->priv->basedir, row->reldir, NULL);
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	return g_build_path (G_DIR_SEPARATOR_S, priv->basedir, row->reldir, NULL);
 }
 
 static gchar *
 compute_filename (GdaDataModelDir *model, FileRow *row)
 {
-	return g_build_filename (model->priv->basedir, row->reldir,
+	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
+	return g_build_filename (priv->basedir, row->reldir,
 				 row->raw_filename_value ? row->raw_filename_value :
 				 g_value_get_string (row->filename_value), NULL);
 }

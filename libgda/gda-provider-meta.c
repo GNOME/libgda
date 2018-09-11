@@ -98,7 +98,7 @@ GdaDataModel  *gda_provider_meta_execute_query (GdaProviderMeta *prov,
 }
 
 /**
- * gda_provider_meta_execute_query:
+ * gda_provider_meta_execute_query_row:
  * @prov: a #GdaProviderMeta
  * @sql: a string with the SQL to execute on provider
  * @error: place to store errors or %NULL
