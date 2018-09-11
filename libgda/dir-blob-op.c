@@ -31,52 +31,17 @@
 typedef struct  {
 	gchar *complete_filename;
 } GdaDirBlobOpPrivate;
-#define gda_dir_blob_op_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DIR_BLOB_OP, GdaDirBlobOpPrivate)
 
-static void gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass);
-static void gda_dir_blob_op_init       (GdaDirBlobOp *blob,
-					GdaDirBlobOpClass *klass);
-static void gda_dir_blob_op_finalize   (GObject *object);
+G_DEFINE_TYPE_WITH_PRIVATE (GdaDirBlobOp, gda_dir_blob_op, GDA_TYPE_BLOB_OP)
+
+static void gda_dir_blob_op_dispose   (GObject *object);
 
 static glong gda_dir_blob_op_get_length (GdaBlobOp *op);
 static glong gda_dir_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
 static glong gda_dir_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
 
-static GObjectClass *parent_class = NULL;
-
-/*
- * Object init and finalize
- */
-GType
-gda_dir_blob_op_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDirBlobOpClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_dir_blob_op_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDirBlobOp),
-			0,
-			(GInstanceInitFunc) gda_dir_blob_op_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaDirBlobOp", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void
-gda_dir_blob_op_init (GdaDirBlobOp *op,
-		      G_GNUC_UNUSED GdaDirBlobOpClass *klass)
+gda_dir_blob_op_init (GdaDirBlobOp *op)
 {
 	g_return_if_fail (GDA_IS_DIR_BLOB_OP (op));
 	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (op);
@@ -89,15 +54,22 @@ gda_dir_blob_op_class_init (GdaDirBlobOpClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
-	g_type_class_add_private (object_class, sizeof (GdaDirBlobOpPrivate));
-
-	parent_class = g_type_class_peek_parent (klass);
+	object_class->dispose = gda_dir_blob_op_dispose;
 
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_dir_blob_op_get_length;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_dir_blob_op_read;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_dir_blob_op_write;
 }
-
+static void
+gda_dir_blob_op_dispose   (GObject *object)
+{
+	GdaDirBlobOp *op = GDA_DIR_BLOB_OP (object);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (op);
+	if (priv->complete_filename) {
+		g_free (priv->complete_filename);
+		priv->complete_filename = NULL;
+	}
+}
 /**
  * _gda_dir_blob_op_new
  */
@@ -206,7 +178,7 @@ gda_dir_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 
 	g_return_val_if_fail (GDA_IS_DIR_BLOB_OP (op), -1);
 	dirop = GDA_DIR_BLOB_OP (op);
-	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (blob);
+	GdaDirBlobOpPrivate *priv = gda_dir_blob_op_get_instance_private (dirop);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
