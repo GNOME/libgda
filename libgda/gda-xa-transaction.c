@@ -142,9 +142,9 @@ gda_xa_transaction_set_property (GObject *object,
 				 GParamSpec *pspec)
 {
         GdaXaTransaction *xa_trans;
-        GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
 
         xa_trans = GDA_XA_TRANSACTION (object);
+        GdaXaTransactionPrivate *priv = gda_xa_transaction_get_instance_private (xa_trans);
         if (priv) {
                 switch (param_id) {
                 case PROP_FORMAT_ID:
