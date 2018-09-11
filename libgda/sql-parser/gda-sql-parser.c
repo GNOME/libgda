@@ -290,9 +290,9 @@ gda_sql_parser_dispose (GObject *object)
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_SQL_PARSER (object));
-	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	parser = GDA_SQL_PARSER (object);
+	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
 
 	/* parent class */
 	parent_class->dispose (object);
