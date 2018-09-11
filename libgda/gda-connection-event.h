@@ -26,24 +26,12 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CONNECTION_EVENT            (gda_connection_event_get_type())
-#define GDA_CONNECTION_EVENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEvent))
-#define GDA_CONNECTION_EVENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEventClass))
-#define GDA_IS_CONNECTION_EVENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION_EVENT))
-#define GDA_IS_CONNECTION_EVENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION_EVENT))
-
-struct _GdaConnectionEvent {
-	GObject object;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaConnectionEvent, gda_connection_event, GDA, CONNECTION_EVENT, GObject)
 
 struct _GdaConnectionEventClass {
 	GObjectClass parent_class;
 
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-	void (*_gda_reserved3) (void);
-	void (*_gda_reserved4) (void);
+	gpointer padding[12];
 };
 
 typedef enum {
@@ -91,8 +79,6 @@ typedef enum
  * is responsible for keeping a list of past events; that list can be consulted using the 
  * gda_connection_get_events() function.
  */
-
-GType                   gda_connection_event_get_type (void) G_GNUC_CONST;
 
 void                    gda_connection_event_set_event_type (GdaConnectionEvent *event, GdaConnectionEventType type);
 GdaConnectionEventType  gda_connection_event_get_event_type (GdaConnectionEvent *event);

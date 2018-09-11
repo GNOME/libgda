@@ -30,7 +30,6 @@ typedef struct {
 	gchar                  *sqlstate;
 	GdaConnectionEventType  type; /* default is GDA_CONNECTION_EVENT_ERROR */
 } GdaConnectionEventPrivate;
-#define gda_connection_event_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_CONNECTION_EVENT, GdaConnectionEventPrivate)
 
 enum {
 	PROP_0,
@@ -38,56 +37,23 @@ enum {
 	PROP_TYPE
 };
 
-static void gda_connection_event_class_init   (GdaConnectionEventClass *klass);
-static void gda_connection_event_init         (GdaConnectionEvent *event, GdaConnectionEventClass *klass);
-static void gda_connection_event_finalize     (GObject *object);
+static void gda_connection_event_dispose      (GObject *object);
 static void gda_connection_event_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void gda_connection_event_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
-
-static GObjectClass *parent_class = NULL;
 
 /*
  * GdaConnectionEvent class implementation
  */
 
-GType
-gda_connection_event_get_type (void)
-{
-	static GType type = 0;
+G_DEFINE_TYPE_WITH_PRIVATE (GdaConnectionEvent, gda_connection_event, G_TYPE_OBJECT)
 
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaConnectionEventClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_connection_event_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaConnectionEvent),
-			0,
-			(GInstanceInitFunc) gda_connection_event_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaConnectionEvent", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 static void
 gda_connection_event_class_init (GdaConnectionEventClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaConnectionEventPrivate));
-
-	object_class->finalize = gda_connection_event_finalize;
+	object_class->dispose = gda_connection_event_dispose;
 	object_class->set_property = gda_connection_event_set_property;
 	object_class->get_property = gda_connection_event_get_property;
 
@@ -103,7 +69,7 @@ gda_connection_event_class_init (GdaConnectionEventClass *klass)
 }
 
 static void
-gda_connection_event_init (GdaConnectionEvent *event, G_GNUC_UNUSED GdaConnectionEventClass *klass)
+gda_connection_event_init (GdaConnectionEvent *event)
 {
 	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 	priv->type = GDA_CONNECTION_EVENT_ERROR;
@@ -111,7 +77,7 @@ gda_connection_event_init (GdaConnectionEvent *event, G_GNUC_UNUSED GdaConnectio
 }
 
 static void
-gda_connection_event_finalize (GObject *object)
+gda_connection_event_dispose (GObject *object)
 {
 	GdaConnectionEvent *event = (GdaConnectionEvent *) object;
 
@@ -119,15 +85,21 @@ gda_connection_event_finalize (GObject *object)
 	GdaConnectionEventPrivate *priv = gda_connection_event_get_instance_private (event);
 
 	/* free memory */
-	if (priv->description)
+	if (priv->description) {
 		g_free (priv->description);
-	if (priv->source)
+		priv->description = NULL;
+	}
+	if (priv->source) {
 		g_free (priv->source);
-	if (priv->sqlstate)
+		priv->source = NULL;
+	}
+	if (priv->sqlstate) {
 		g_free (priv->sqlstate);
+		priv->sqlstate = NULL;
+	}
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_connection_event_parent_class)->dispose (object);
 }
 
 static void gda_connection_event_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
