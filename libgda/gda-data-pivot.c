@@ -95,7 +95,6 @@ static void gda_data_pivot_class_init (GdaDataPivotClass *klass);
 static void gda_data_pivot_init       (GdaDataPivot *model,
 					      GdaDataPivotClass *klass);
 static void gda_data_pivot_dispose    (GObject *object);
-static void gda_data_pivot_finalize   (GObject *object);
 
 static void gda_data_pivot_set_property (GObject *object,
 					 guint param_id,
@@ -360,7 +359,7 @@ gda_data_pivot_get_property (GObject *object,
 	GdaDataPivot *model;
 
 	model = GDA_DATA_PIVOT (object);
-	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (object);
+	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
 	switch (param_id) {
 	case PROP_MODEL:
 		g_value_set_object (value, G_OBJECT (priv->model));
