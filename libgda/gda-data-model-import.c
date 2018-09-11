@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -74,7 +74,21 @@ typedef struct {
 	GSList             *fields; /* list of GValue */
 } CsvParserData;
 
-struct _GdaDataModelImportPrivate {
+
+/* GdaDataModel interface */
+static void                 gda_data_model_import_data_model_init (GdaDataModelIface *iface);
+static gint                 gda_data_model_import_get_n_rows      (GdaDataModel *model);
+static gint                 gda_data_model_import_get_n_columns   (GdaDataModel *model);
+static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel *model, gint col);
+static GdaDataModelAccessFlags gda_data_model_import_get_access_flags(GdaDataModel *model);
+static const GValue        *gda_data_model_import_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
+static GdaValueAttribute    gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GdaDataModelIter    *gda_data_model_import_create_iter      (GdaDataModel *model);
+static gboolean             gda_data_model_import_iter_next       (GdaDataModel *model, GdaDataModelIter *iter);
+static gboolean             gda_data_model_import_iter_prev       (GdaDataModel *model, GdaDataModelIter *iter);
+
+
+typedef struct {
 	/* data access specific variables */
 	gboolean             is_mapped; /* TRUE if a file has been mapped */
 	union {
@@ -130,7 +144,11 @@ struct _GdaDataModelImportPrivate {
 	gint                 iter_row;
 	gboolean             init_done;
 	gboolean             strict;
-};
+} GdaDataModelImportPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataModelImport, gda_data_model_import, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataModelImport)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_MODEL, gda_data_model_import_data_model_init))
 
 /* properties */
 enum
@@ -147,12 +165,9 @@ enum
 #define CSV_TITLE_BUFFER_SIZE 255
 #define CSV_DATA_BUFFER_SIZE 2048
 
-static void gda_data_model_import_class_init (GdaDataModelImportClass *klass);
 static GObject *gda_data_model_import_constructor (GType type,
 						   guint n_construct_properties,
 						   GObjectConstructParam *construct_properties);
-static void gda_data_model_import_init       (GdaDataModelImport *model,
-					      GdaDataModelImportClass *klass);
 static void gda_data_model_import_dispose    (GObject *object);
 static void gda_data_model_import_finalize   (GObject *object);
 
@@ -165,23 +180,9 @@ static void gda_data_model_import_get_property (GObject *object,
 						GValue *value,
 						GParamSpec *pspec);
 
-/* GdaDataModel interface */
-static void                 gda_data_model_import_data_model_init (GdaDataModelIface *iface);
-static gint                 gda_data_model_import_get_n_rows      (GdaDataModel *model);
-static gint                 gda_data_model_import_get_n_columns   (GdaDataModel *model);
-static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel *model, gint col);
-static GdaDataModelAccessFlags gda_data_model_import_get_access_flags(GdaDataModel *model);
-static const GValue        *gda_data_model_import_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
-static GdaValueAttribute    gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, gint row);
-static GdaDataModelIter    *gda_data_model_import_create_iter      (GdaDataModel *model);
-static gboolean             gda_data_model_import_iter_next       (GdaDataModel *model, GdaDataModelIter *iter);
-static gboolean             gda_data_model_import_iter_prev       (GdaDataModel *model, GdaDataModelIter *iter);
-
 static const gchar *find_option_as_string (GdaDataModelImport *model, const gchar *pname);
 static gboolean     find_option_as_boolean (GdaDataModelImport *model, const gchar *pname, gboolean defaults);
 static void         add_error (GdaDataModelImport *model, const gchar *err);
-
-static GObjectClass *parent_class = NULL;
 
 G_DEFINE_TYPE(GdaDataModelImportIter, gda_data_model_import_iter, GDA_TYPE_DATA_MODEL_ITER)
 
@@ -212,53 +213,10 @@ gda_data_model_import_iter_move_prev (GdaDataModelIter *iter) {
 }
 
 
-/**
- * gda_data_model_import_get_type:
- *
- * Returns: the #GType of GdaDataModelImport.
- */
-GType
-gda_data_model_import_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataModelImportClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_model_import_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataModelImport),
-			0,
-			(GInstanceInitFunc) gda_data_model_import_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) gda_data_model_import_data_model_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelImport", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void
 gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
 	object_class->set_property = gda_data_model_import_set_property;
@@ -359,27 +317,27 @@ gda_data_model_import_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_model_import_init (GdaDataModelImport *model, G_GNUC_UNUSED GdaDataModelImportClass *klass)
+gda_data_model_import_init (GdaDataModelImport *model)
 {
-	model->priv = g_new0 (GdaDataModelImportPrivate, 1);
-	model->priv->random_access = FALSE; /* cursor mode is the default */
-	model->priv->columns = NULL;
-	model->priv->random_access_model = NULL;
-	model->priv->errors = NULL;
-	model->priv->cursor_values = NULL;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
+	priv->random_access = FALSE; /* cursor mode is the default */
+	priv->columns = NULL;
+	priv->random_access_model = NULL;
+	priv->errors = NULL;
+	priv->cursor_values = NULL;
 
-	model->priv->is_mapped = TRUE;
-	model->priv->src.mapped.filename = NULL;
-	model->priv->src.mapped.fd = -1;
-	model->priv->src.mapped.start = NULL;
+	priv->is_mapped = TRUE;
+	priv->src.mapped.filename = NULL;
+	priv->src.mapped.fd = -1;
+	priv->src.mapped.start = NULL;
 
-	model->priv->format = FORMAT_CSV;
-	model->priv->data_start = NULL;
-	model->priv->data_length = 0;
+	priv->format = FORMAT_CSV;
+	priv->data_start = NULL;
+	priv->data_length = 0;
 
-	model->priv->iter_row = -1;
-	model->priv->init_done = FALSE;
-	model->priv->strict = FALSE;
+	priv->iter_row = -1;
+	priv->init_done = FALSE;
+	priv->strict = FALSE;
 }
 
 static void init_csv_import  (GdaDataModelImport *model);
@@ -394,7 +352,7 @@ gda_data_model_import_constructor (GType type,
 	GObject *object;
 
 	/* construct parent */
-	object = G_OBJECT_CLASS (parent_class)->constructor (type,
+	object = G_OBJECT_CLASS (gda_data_model_import_parent_class)->constructor (type,
 							     n_construct_properties,
 							     construct_properties);
 
@@ -402,12 +360,13 @@ gda_data_model_import_constructor (GType type,
 	GdaDataModelImport *model;
 	guint i;
 	model = GDA_DATA_MODEL_IMPORT (object);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	for (i = 0; i< n_construct_properties; i++) {
 		GObjectConstructParam *prop = &(construct_properties[i]);
 		if (!strcmp (g_param_spec_get_name (prop->pspec), "random-access")) {
-			model->priv->random_access = g_value_get_boolean (prop->value);
-			if (model->priv->format == FORMAT_XML_NODE)
-				model->priv->random_access = TRUE;
+			priv->random_access = g_value_get_boolean (prop->value);
+			if (priv->format == FORMAT_XML_NODE)
+				priv->random_access = TRUE;
 		}
 		else if (!strcmp (g_param_spec_get_name (prop->pspec), "filename")) {
 			const gchar *string;
@@ -415,12 +374,12 @@ gda_data_model_import_constructor (GType type,
 			if (!string)
 				continue;
 
-			model->priv->is_mapped = TRUE;
-			model->priv->src.mapped.filename = g_strdup (g_value_get_string (prop->value));
+			priv->is_mapped = TRUE;
+			priv->src.mapped.filename = g_strdup (g_value_get_string (prop->value));
 
 			/* file opening */
-			model->priv->src.mapped.fd = open (model->priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
-			if (model->priv->src.mapped.fd < 0) {
+			priv->src.mapped.fd = open (priv->src.mapped.filename, O_RDONLY); /* Flawfinder: ignore */
+			if (priv->src.mapped.fd < 0) {
 				/* error */
 				add_error (model, strerror(errno));
 				continue;
@@ -429,24 +388,24 @@ gda_data_model_import_constructor (GType type,
 			/* file mmaping */
 			struct stat _stat;
 
-			if (fstat (model->priv->src.mapped.fd, &_stat) < 0) {
+			if (fstat (priv->src.mapped.fd, &_stat) < 0) {
 				/* error */
 				add_error (model, strerror(errno));
 				continue;
 			}
-			model->priv->src.mapped.length = _stat.st_size;
+			priv->src.mapped.length = _stat.st_size;
 #ifndef G_OS_WIN32
-			model->priv->src.mapped.start = mmap (NULL, model->priv->src.mapped.length,
+			priv->src.mapped.start = mmap (NULL, priv->src.mapped.length,
 							      PROT_READ, MAP_PRIVATE,
-							      model->priv->src.mapped.fd, 0);
-			if (model->priv->src.mapped.start == MAP_FAILED) {
+							      priv->src.mapped.fd, 0);
+			if (priv->src.mapped.start == MAP_FAILED) {
 				/* error */
 				add_error (model, strerror(errno));
-				model->priv->src.mapped.start = NULL;
+				priv->src.mapped.start = NULL;
 				continue;
 			}
 #else
-			HANDLE hFile = CreateFile (model->priv->src.mapped.filename,
+			HANDLE hFile = CreateFile (priv->src.mapped.filename,
 						   GENERIC_READ,
 						   FILE_SHARE_READ,
 						   NULL,
@@ -484,9 +443,9 @@ gda_data_model_import_constructor (GType type,
 				add_error (model, (gchar *)lpMsgBuf);
 				continue;
 			}
-			model->priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0,
-								      model->priv->src.mapped.length);
-			if (!model->priv->src.mapped.start) {
+			priv->src.mapped.start = MapViewOfFile(view, FILE_MAP_READ, 0, 0,
+								      priv->src.mapped.length);
+			if (!priv->src.mapped.start) {
 				/* error */
 				LPVOID lpMsgBuf;
 				DWORD dw = GetLastError();
@@ -502,86 +461,86 @@ gda_data_model_import_constructor (GType type,
 				continue;
 			}
 #endif
-			model->priv->data_start = model->priv->src.mapped.start;
-			model->priv->data_length = model->priv->src.mapped.length;
+			priv->data_start = priv->src.mapped.start;
+			priv->data_length = priv->src.mapped.length;
 		}
 		else if (!strcmp (g_param_spec_get_name (prop->pspec), "data-string")) {
 			const gchar *string;
 			string = g_value_get_string (prop->value);
 			if (!string)
 				continue;
-			model->priv->is_mapped = FALSE;
-			model->priv->src.string = g_strdup (g_value_get_string (prop->value));
-			model->priv->data_start = model->priv->src.string;
-			model->priv->data_length = strlen (model->priv->src.string);
+			priv->is_mapped = FALSE;
+			priv->src.string = g_strdup (g_value_get_string (prop->value));
+			priv->data_start = priv->src.string;
+			priv->data_length = strlen (priv->src.string);
 		}
 		else if (!strcmp (g_param_spec_get_name (prop->pspec), "xml-node")) {
 			gpointer data = g_value_get_pointer (prop->value);
 			if (!data)
 				continue;
-			model->priv->format = FORMAT_XML_NODE;
-			model->priv->extract.node.node = data;
+			priv->format = FORMAT_XML_NODE;
+			priv->extract.node.node = data;
 		}
 		else if (!strcmp (g_param_spec_get_name (prop->pspec), "options")) {
-			if (model->priv->options)
-				g_object_unref(model->priv->options);
+			if (priv->options)
+				g_object_unref(priv->options);
 
-			model->priv->options = g_value_get_object (prop->value);
-			if (model->priv->options) {
-				if (!GDA_IS_SET (model->priv->options)) {
+			priv->options = g_value_get_object (prop->value);
+			if (priv->options) {
+				if (!GDA_IS_SET (priv->options)) {
 					g_warning (_("\"options\" property is not a GdaSet object"));
-					model->priv->options = NULL;
+					priv->options = NULL;
 				}
 				else
-					g_object_ref (model->priv->options);
+					g_object_ref (priv->options);
 			}
 		}
 		else if (!strcmp (g_param_spec_get_name (prop->pspec), "strict")) {
-			model->priv->strict = g_value_get_boolean (prop->value);
+			priv->strict = g_value_get_boolean (prop->value);
 		}
 	}
 
-	if (model->priv->errors)
+	if (priv->errors)
 		return object;
 
 	/* finish construction */
 	/* determine the real kind of data (CVS text of XML) */
-	if (model->priv->format != FORMAT_XML_NODE
-	    && model->priv->data_start) {
-		if (!strncmp (model->priv->data_start, "<?xml", 5))
-			model->priv->format = FORMAT_XML_DATA;
+	if (priv->format != FORMAT_XML_NODE
+	    && priv->data_start) {
+		if (!strncmp (priv->data_start, "<?xml", 5))
+			priv->format = FORMAT_XML_DATA;
 		else
-			model->priv->format = FORMAT_CSV;
+			priv->format = FORMAT_CSV;
 	}
 
 	/* analyze common options and init */
-	if (! model->priv->init_done) {
-		model->priv->init_done = TRUE;
-		switch (model->priv->format) {
+	if (! priv->init_done) {
+		priv->init_done = TRUE;
+		switch (priv->format) {
 		case FORMAT_XML_DATA:
 			init_xml_import (model);
 			break;
 
 		case FORMAT_CSV:
-			model->priv->extract.csv.quote = '"';
-			if (model->priv->options) {
+			priv->extract.csv.quote = '"';
+			if (priv->options) {
 				const gchar *option;
 				option = find_option_as_string (model, "ENCODING");
 				if (option)
-					model->priv->extract.csv.encoding = g_strdup (option);
+					priv->extract.csv.encoding = g_strdup (option);
 				option = find_option_as_string (model, "SEPARATOR");
 				if (option)
-					model->priv->extract.csv.delimiter = *option;
-				model->priv->extract.csv.quote = '"';
+					priv->extract.csv.delimiter = *option;
+				priv->extract.csv.quote = '"';
 				option = find_option_as_string (model, "QUOTE");
 				if (option)
-					model->priv->extract.csv.quote = *option;
+					priv->extract.csv.quote = *option;
 			}
 			init_csv_import (model);
 			break;
 
 		case FORMAT_XML_NODE:
-			model->priv->random_access = TRUE;
+			priv->random_access = TRUE;
 			init_node_import (model);
 			break;
 		default:
@@ -590,11 +549,11 @@ gda_data_model_import_constructor (GType type,
 
 		/* for random access, create a new GdaDataModelArray model and copy the contents
 		   from this model */
-		if (model->priv->random_access && model->priv->columns && !model->priv->random_access_model) {
+		if (priv->random_access && priv->columns && !priv->random_access_model) {
 			GdaDataModel *ramodel;
 
 			ramodel = gda_data_access_wrapper_new ((GdaDataModel *) model);
-			model->priv->random_access_model = ramodel;
+			priv->random_access_model = ramodel;
 		}
 	}
 
@@ -605,25 +564,26 @@ gda_data_model_import_constructor (GType type,
 static void
 csv_free_stored_rows (GdaDataModelImport *model)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	gsize i;
-	g_assert (model->priv->format == FORMAT_CSV);
-	for (i = 0; i < model->priv->extract.csv.rows_read->len; i++) {
-		GSList *list = g_array_index (model->priv->extract.csv.rows_read,
+	g_assert (priv->format == FORMAT_CSV);
+	for (i = 0; i < priv->extract.csv.rows_read->len; i++) {
+		GSList *list = g_array_index (priv->extract.csv.rows_read,
 					      GSList *, i);
 		g_slist_foreach (list, (GFunc) gda_value_free, NULL);
 		g_slist_free (list);
 	}
 
-	if (model->priv->extract.csv.pdata) {
-		if (model->priv->extract.csv.pdata->fields) {
-			g_slist_foreach (model->priv->extract.csv.pdata->fields, (GFunc) gda_value_free, NULL);
-			g_slist_free (model->priv->extract.csv.pdata->fields);
+	if (priv->extract.csv.pdata) {
+		if (priv->extract.csv.pdata->fields) {
+			g_slist_foreach (priv->extract.csv.pdata->fields, (GFunc) gda_value_free, NULL);
+			g_slist_free (priv->extract.csv.pdata->fields);
 		}
-		g_free (model->priv->extract.csv.pdata);
+		g_free (priv->extract.csv.pdata);
 	}
 
-	g_array_free (model->priv->extract.csv.rows_read, FALSE);
-	model->priv->extract.csv.rows_read = NULL;
+	g_array_free (priv->extract.csv.rows_read, FALSE);
+	priv->extract.csv.rows_read = NULL;
 }
 
 static void
@@ -632,78 +592,77 @@ gda_data_model_import_dispose (GObject *object)
 	GdaDataModelImport *model = (GdaDataModelImport *) object;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
 	/* free memory */
-	if (model->priv) {
-		if (model->priv->options) {
-			g_object_unref (model->priv->options);
-			model->priv->options = NULL;
-		}
+	if (priv->options) {
+		g_object_unref (priv->options);
+		priv->options = NULL;
+	}
 
-		if (model->priv->columns) {
-			g_slist_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
-			g_slist_free (model->priv->columns);
-			model->priv->columns = NULL;
-		}
+	if (priv->columns) {
+		g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
+		g_slist_free (priv->columns);
+		priv->columns = NULL;
+	}
 
-		/* data access mem free */
-		if (model->priv->is_mapped) {
-			if (model->priv->src.mapped.start) {
+	/* data access mem free */
+	if (priv->is_mapped) {
+		if (priv->src.mapped.start) {
 #ifndef G_OS_WIN32
-				munmap (model->priv->src.mapped.start, model->priv->src.mapped.length);
+			munmap (priv->src.mapped.start, priv->src.mapped.length);
 #else
-				UnmapViewOfFile (model->priv->src.mapped.start);
+			UnmapViewOfFile (priv->src.mapped.start);
 #endif
-				model->priv->src.mapped.start = NULL;
-			}
-
-			g_free (model->priv->src.mapped.filename);
-			if (model->priv->src.mapped.fd >= 0) {
-				close (model->priv->src.mapped.fd);
-				model->priv->src.mapped.fd = -1;
-			}
-		}
-		else {
-			g_free (model->priv->src.string);
-			model->priv->src.string = NULL;
+			priv->src.mapped.start = NULL;
 		}
 
-		/* extraction data free */
-		switch (model->priv->format) {
-		case FORMAT_XML_DATA:
-			if (model->priv->extract.xml.reader) {
-				xmlFreeTextReader (model->priv->extract.xml.reader);
-				model->priv->extract.xml.reader = NULL;
-			}
-			break;
-		case FORMAT_CSV:
-			if (model->priv->extract.csv.parser) {
-				csv_fini (model->priv->extract.csv.parser, NULL, NULL, NULL);
-				model->priv->extract.csv.parser = NULL;
-			}
-			if (model->priv->extract.csv.rows_read)
-				csv_free_stored_rows (model);
-			if (model->priv->extract.csv.encoding) {
-				g_free (model->priv->extract.csv.encoding);
-				model->priv->extract.csv.encoding = NULL;
-			}
-			break;
-		case FORMAT_XML_NODE:
-			break;
-		default:
-			g_assert_not_reached ();
-			break;
+		g_free (priv->src.mapped.filename);
+		if (priv->src.mapped.fd >= 0) {
+			close (priv->src.mapped.fd);
+			priv->src.mapped.fd = -1;
 		}
+	}
+	else {
+		g_free (priv->src.string);
+		priv->src.string = NULL;
+	}
 
-		/* random access model free */
-		if (model->priv->random_access_model) {
-			g_object_unref (model->priv->random_access_model);
-			model->priv->random_access_model = NULL;
+	/* extraction data free */
+	switch (priv->format) {
+	case FORMAT_XML_DATA:
+		if (priv->extract.xml.reader) {
+			xmlFreeTextReader (priv->extract.xml.reader);
+			priv->extract.xml.reader = NULL;
 		}
+		break;
+	case FORMAT_CSV:
+		if (priv->extract.csv.parser) {
+			csv_fini (priv->extract.csv.parser, NULL, NULL, NULL);
+			priv->extract.csv.parser = NULL;
+		}
+		if (priv->extract.csv.rows_read)
+			csv_free_stored_rows (model);
+		if (priv->extract.csv.encoding) {
+			g_free (priv->extract.csv.encoding);
+			priv->extract.csv.encoding = NULL;
+		}
+		break;
+	case FORMAT_XML_NODE:
+		break;
+	default:
+		g_assert_not_reached ();
+		break;
+	}
+
+	/* random access model free */
+	if (priv->random_access_model) {
+		g_object_unref (priv->random_access_model);
+		priv->random_access_model = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_data_model_import_parent_class)->dispose (object);
 }
 
 static void
@@ -712,35 +671,34 @@ gda_data_model_import_finalize (GObject *object)
 	GdaDataModelImport *model = (GdaDataModelImport *) object;
 
 	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
 	/* free memory */
-	if (model->priv) {
-		if (model->priv->errors) {
-			g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
-			g_slist_free (model->priv->errors);
-		}
-
-		if (model->priv->cursor_values) {
-			g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
-			g_slist_free (model->priv->cursor_values);
-			model->priv->cursor_values = NULL;
-		}
-
-		g_free (model->priv);
-		model->priv = NULL;
+	if (priv->errors) {
+		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
+		g_slist_free (priv->errors);
+		priv->errors = NULL;
 	}
 
+	if (priv->cursor_values) {
+		g_slist_foreach (priv->cursor_values, (GFunc) gda_value_free, NULL);
+		g_slist_free (priv->cursor_values);
+		priv->cursor_values = NULL;
+	}
+
+
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_data_model_import_parent_class)->finalize (object);
 }
 
 
 static const gchar *
 find_option_as_string (GdaDataModelImport *model, const gchar *pname)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	const GValue *value;
 
-	value = gda_set_get_holder_value (model->priv->options, pname);
+	value = gda_set_get_holder_value (priv->options, pname);
 	if (value && !gda_value_is_null ((GValue *) value)) {
 		if (!gda_value_isa ((GValue *) value, G_TYPE_STRING))
 			g_warning (_("The '%s' option must hold a "
@@ -754,9 +712,10 @@ find_option_as_string (GdaDataModelImport *model, const gchar *pname)
 static gboolean
 find_option_as_boolean (GdaDataModelImport *model, const gchar *pname, gboolean defaults)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	const GValue *value;
 
-	value = gda_set_get_holder_value (model->priv->options, pname);
+	value = gda_set_get_holder_value (priv->options, pname);
 	if (value && !gda_value_is_null ((GValue *) value)) {
 		if (!gda_value_isa ((GValue *) value, G_TYPE_BOOLEAN))
 			g_warning (_("The '%s' option must hold a "
@@ -777,22 +736,21 @@ gda_data_model_import_set_property (GObject *object,
 	GdaDataModelImport *model;
 
 	model = GDA_DATA_MODEL_IMPORT (object);
-	if (model->priv) {
-		switch (param_id) {
-		case PROP_OPTIONS:
-		case PROP_XML_NODE:
-		case PROP_DATA_STRING:
-		case PROP_FILENAME:
-		case PROP_RANDOM_ACCESS:
-			/* handled in the constructor */
-			break;
-		case PROP_STRICT:
-			model->priv->strict = g_value_get_boolean (value);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
+	switch (param_id) {
+	case PROP_OPTIONS:
+	case PROP_XML_NODE:
+	case PROP_DATA_STRING:
+	case PROP_FILENAME:
+	case PROP_RANDOM_ACCESS:
+		/* handled in the constructor */
+		break;
+	case PROP_STRICT:
+		priv->strict = g_value_get_boolean (value);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -805,30 +763,29 @@ gda_data_model_import_get_property (GObject *object,
 	GdaDataModelImport *model;
 
 	model = GDA_DATA_MODEL_IMPORT (object);
-	if (model->priv) {
-		switch (param_id) {
-		case PROP_RANDOM_ACCESS:
-			g_value_set_boolean (value, model->priv->random_access);
-			break;
-		case PROP_FILENAME:
-			if (model->priv->is_mapped)
-				g_value_set_string (value, model->priv->src.mapped.filename);
-			else
-				g_value_set_string (value, NULL);
-			break;
-		case PROP_DATA_STRING:
-			if (model->priv->is_mapped)
-				g_value_set_string (value, NULL);
-			else
-				g_value_set_string (value, model->priv->src.string);
-			break;
-		case PROP_STRICT:
-			g_value_set_boolean (value, model->priv->strict);
-			break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
+	switch (param_id) {
+	case PROP_RANDOM_ACCESS:
+		g_value_set_boolean (value, priv->random_access);
+		break;
+	case PROP_FILENAME:
+		if (priv->is_mapped)
+			g_value_set_string (value, priv->src.mapped.filename);
+		else
+			g_value_set_string (value, NULL);
+		break;
+	case PROP_DATA_STRING:
+		if (priv->is_mapped)
+			g_value_set_string (value, NULL);
+		else
+			g_value_set_string (value, priv->src.string);
+		break;
+	case PROP_STRICT:
+		g_value_set_boolean (value, priv->strict);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
 	}
 }
 
@@ -932,45 +889,46 @@ static gboolean csv_fetch_some_lines (GdaDataModelImport *model);
 static void
 init_csv_import (GdaDataModelImport *model)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	gboolean title_first_line = FALSE;
 	gint nbcols;
 
-	if (model->priv->options)
+	if (priv->options)
 		title_first_line = find_option_as_boolean (model, "NAMES_ON_FIRST_LINE", FALSE) ||
 			find_option_as_boolean (model, "TITLE_AS_FIRST_LINE", FALSE);
 
-	g_assert (model->priv->format == FORMAT_CSV);
+	g_assert (priv->format == FORMAT_CSV);
 
-	if (!model->priv->extract.csv.delimiter)
-		model->priv->extract.csv.delimiter = ',';
+	if (!priv->extract.csv.delimiter)
+		priv->extract.csv.delimiter = ',';
 
-	model->priv->extract.csv.ignore_first_line = FALSE;
-	model->priv->extract.csv.start_pos = model->priv->data_start;
-	model->priv->extract.csv.text_line = 1; /* start line numbering at 1 */
-	model->priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
+	priv->extract.csv.ignore_first_line = FALSE;
+	priv->extract.csv.start_pos = priv->data_start;
+	priv->extract.csv.text_line = 1; /* start line numbering at 1 */
+	priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
 
 	/* parser init */
 	if (!csv_init_csv_parser (model))
 		return;
 
 	/* set parser parameters */
-	csv_set_delim (model->priv->extract.csv.parser, model->priv->extract.csv.delimiter);
-	csv_set_quote (model->priv->extract.csv.parser, model->priv->extract.csv.quote);
+	csv_set_delim (priv->extract.csv.parser, priv->extract.csv.delimiter);
+	csv_set_quote (priv->extract.csv.parser, priv->extract.csv.quote);
 
 	/* fill in at least a row to determine the number of columns */
-	model->priv->extract.csv.initializing = TRUE;
+	priv->extract.csv.initializing = TRUE;
 	csv_fetch_some_lines (model);
-	model->priv->extract.csv.initializing = FALSE;
+	priv->extract.csv.initializing = FALSE;
 
 	/* computing columns */
-	if (model->priv->extract.csv.rows_read->len == 0)
+	if (priv->extract.csv.rows_read->len == 0)
 		return;
 
 	GSList *row;
 	gint col;
 	const GValue *cvalue;
 
-	row = g_array_index (model->priv->extract.csv.rows_read, GSList *, 0);
+	row = g_array_index (priv->extract.csv.rows_read, GSList *, 0);
 	g_assert (row);
 	nbcols = g_slist_length (row);
 
@@ -979,7 +937,7 @@ init_csv_import (GdaDataModelImport *model)
 		gchar *str = NULL;
 
 		column = gda_column_new ();
-		model->priv->columns = g_slist_append (model->priv->columns,
+		priv->columns = g_slist_append (priv->columns,
 						       column);
 		if (title_first_line) {
 			cvalue = g_slist_nth_data (row, col);
@@ -993,12 +951,12 @@ init_csv_import (GdaDataModelImport *model)
 		g_free (str);
 
 		gda_column_set_g_type (column, G_TYPE_STRING);
-		if (model->priv->options) {
+		if (priv->options) {
 			gchar *pname;
 			const GValue *value;
 
 			pname = g_strdup_printf ("G_TYPE_%d", col);
-			value = gda_set_get_holder_value (model->priv->options, pname);
+			value = gda_set_get_holder_value (priv->options, pname);
 			if (value && !gda_value_is_null ((GValue *) value)) {
 				if (!gda_value_isa ((GValue *) value, G_TYPE_GTYPE))
 					g_warning (_("The '%s' option must hold a "
@@ -1017,33 +975,34 @@ init_csv_import (GdaDataModelImport *model)
 	/* reset */
 	/*g_print ("CSV parser RESET...................................................\n");*/
 	csv_free_stored_rows (model);
-	csv_fini (model->priv->extract.csv.parser, NULL, NULL, NULL);
+	csv_fini (priv->extract.csv.parser, NULL, NULL, NULL);
 	csv_init_csv_parser (model);
 
-	model->priv->extract.csv.start_pos = model->priv->data_start;
-	model->priv->extract.csv.text_line = 1; /* start line numbering at 1 */
-	model->priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
+	priv->extract.csv.start_pos = priv->data_start;
+	priv->extract.csv.text_line = 1; /* start line numbering at 1 */
+	priv->extract.csv.rows_read = g_array_new (FALSE, TRUE, sizeof (GSList *));
 	if (title_first_line)
-		model->priv->extract.csv.ignore_first_line = TRUE;
+		priv->extract.csv.ignore_first_line = TRUE;
 	csv_fetch_some_lines (model);
 }
 
 static gboolean
 csv_init_csv_parser (GdaDataModelImport *model)
 {
-	if (csv_init (&(model->priv->extract.csv.parser), 0) != 0) {
-		model->priv->extract.csv.parser = NULL;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
+	if (csv_init (&(priv->extract.csv.parser), 0) != 0) {
+		priv->extract.csv.parser = NULL;
 		return FALSE;
 	}
 
-	model->priv->extract.csv.pdata = g_new0 (CsvParserData, 1);
-	model->priv->extract.csv.pdata->nb_cols = gda_data_model_get_n_columns ((GdaDataModel*) model);
-	model->priv->extract.csv.pdata->model = model;
-	model->priv->extract.csv.pdata->field_next_col = 0;
-	model->priv->extract.csv.pdata->fields = NULL;
+	priv->extract.csv.pdata = g_new0 (CsvParserData, 1);
+	priv->extract.csv.pdata->nb_cols = gda_data_model_get_n_columns ((GdaDataModel*) model);
+	priv->extract.csv.pdata->model = model;
+	priv->extract.csv.pdata->field_next_col = 0;
+	priv->extract.csv.pdata->fields = NULL;
 
-	csv_set_delim (model->priv->extract.csv.parser, model->priv->extract.csv.delimiter);
-	csv_set_quote (model->priv->extract.csv.parser, model->priv->extract.csv.quote);
+	csv_set_delim (priv->extract.csv.parser, priv->extract.csv.delimiter);
+	csv_set_quote (priv->extract.csv.parser, priv->extract.csv.quote);
 	return TRUE;
 }
 
@@ -1056,19 +1015,20 @@ csv_parser_field_read_cb (char *s, size_t len, void *data)
 	GdaColumn *column;
 	GType type = GDA_TYPE_NULL;
 	gchar *copy;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (pdata->model);
 
-	if (pdata->model->priv->extract.csv.ignore_first_line)
+	if (priv->extract.csv.ignore_first_line)
 		return;
 
 	/* convert to correct encoding */
-	if (model->priv->extract.csv.encoding) {
+	if (priv->extract.csv.encoding) {
 		GError *error = NULL;
-		copy = g_convert (s, len, "UTF-8", model->priv->extract.csv.encoding,
+		copy = g_convert (s, len, "UTF-8", priv->extract.csv.encoding,
 				  NULL, NULL, &error);
 		if (!copy) {
 			gchar *str;
 			str = g_strdup_printf (_("Character conversion at line %d, error: %s"),
-					       model->priv->extract.csv.text_line,
+					       priv->extract.csv.text_line,
 					       error && error->message ? error->message:
 					       _("no detail"));
 			add_error (model, str);
@@ -1083,7 +1043,7 @@ csv_parser_field_read_cb (char *s, size_t len, void *data)
 	/*g_print ("FIELD: #%s# ", copy);*/
 
 	/* compute column's type */
-	if (! model->priv->extract.csv.initializing) {
+	if (! priv->extract.csv.initializing) {
 		if (pdata->field_next_col >= pdata->nb_cols) {
 			/* ignore extra fields */
 			g_free (copy);
@@ -1131,9 +1091,10 @@ csv_parser_row_read_cb (G_GNUC_UNUSED char c, void *data)
 	CsvParserData *pdata = (CsvParserData* ) data;
 	GSList *row;
 	gint size;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (pdata->model);
 
-	if (pdata->model->priv->extract.csv.ignore_first_line)
-		pdata->model->priv->extract.csv.ignore_first_line = FALSE;
+	if (priv->extract.csv.ignore_first_line)
+		priv->extract.csv.ignore_first_line = FALSE;
 	else {
 		row = g_slist_reverse (pdata->fields);
 		pdata->fields = NULL;
@@ -1141,10 +1102,10 @@ csv_parser_row_read_cb (G_GNUC_UNUSED char c, void *data)
 
 		size = g_slist_length (row);
 		g_assert (size <= pdata->nb_cols);
-		/*g_print ("===========ROW %d (%d cols)===========\n", pdata->model->priv->extract.csv.text_line, size);*/
+		/*g_print ("===========ROW %d (%d cols)===========\n", priv->extract.csv.text_line, size);*/
 
-		g_array_append_val (pdata->model->priv->extract.csv.rows_read, row);
-		pdata->model->priv->extract.csv.text_line ++;
+		g_array_append_val (priv->extract.csv.rows_read, row);
+		priv->extract.csv.text_line ++;
 	}
 }
 
@@ -1152,40 +1113,41 @@ static gboolean
 csv_fetch_some_lines (GdaDataModelImport *model)
 {
 	size_t size;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	if (!model->priv->extract.csv.initializing)
+	if (!priv->extract.csv.initializing)
 		size = MIN (CSV_TITLE_BUFFER_SIZE,
-			    model->priv->data_start + model->priv->data_length -
-			    model->priv->extract.csv.start_pos);
+			    priv->data_start + priv->data_length -
+			    priv->extract.csv.start_pos);
 	else
 		size = MIN (CSV_DATA_BUFFER_SIZE,
-			    model->priv->data_start + model->priv->data_length -
-			    model->priv->extract.csv.start_pos);
+			    priv->data_start + priv->data_length -
+			    priv->extract.csv.start_pos);
 
-	if (csv_parse (model->priv->extract.csv.parser,
-		       model->priv->extract.csv.start_pos, size,
+	if (csv_parse (priv->extract.csv.parser,
+		       priv->extract.csv.start_pos, size,
 		       csv_parser_field_read_cb,
-		       csv_parser_row_read_cb, model->priv->extract.csv.pdata) != size) {
+		       csv_parser_row_read_cb, priv->extract.csv.pdata) != size) {
 		gchar *str = g_strdup_printf (_("Error while parsing CSV file: %s"),
-					      csv_strerror (csv_error (model->priv->extract.csv.parser)));
+					      csv_strerror (csv_error (priv->extract.csv.parser)));
 		add_error (model, str);
 		g_free (str);
-		model->priv->extract.csv.start_pos = model->priv->data_start + model->priv->data_length;
+		priv->extract.csv.start_pos = priv->data_start + priv->data_length;
 		return FALSE;
 	}
 	else {
-		model->priv->extract.csv.start_pos += size;
+		priv->extract.csv.start_pos += size;
 
 		/* try to finish the line if it has not been read entirely */
-		if (model->priv->extract.csv.rows_read->len == 0) {
-			if ((model->priv->extract.csv.start_pos !=
-			     model->priv->data_start + model->priv->data_length))
+		if (priv->extract.csv.rows_read->len == 0) {
+			if ((priv->extract.csv.start_pos !=
+			     priv->data_start + priv->data_length))
 				return csv_fetch_some_lines (model);
 			else {
 				/* end of data */
-				csv_fini (model->priv->extract.csv.parser,
+				csv_fini (priv->extract.csv.parser,
 					  csv_parser_field_read_cb,
-					  csv_parser_row_read_cb, model->priv->extract.csv.pdata);
+					  csv_parser_row_read_cb, priv->extract.csv.pdata);
 				return TRUE;
 			}
 		}
@@ -1246,18 +1208,19 @@ init_xml_import (GdaDataModelImport *model)
 {
 	int ret;
 	xmlTextReaderPtr reader;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	g_assert (model->priv->format == FORMAT_XML_DATA);
+	g_assert (priv->format == FORMAT_XML_DATA);
 
 	/* init extraction specific variables */
-	reader = xmlReaderForMemory (model->priv->data_start,
-				     model->priv->data_length,
+	reader = xmlReaderForMemory (priv->data_start,
+				     priv->data_length,
 				     NULL, NULL, 0);
-	model->priv->extract.xml.reader = reader;
+	priv->extract.xml.reader = reader;
 
 	if (! reader) {
 		/* error, try to switch to csv */
-		model->priv->format = FORMAT_CSV;
+		priv->format = FORMAT_CSV;
 		init_csv_import (model);
 		return;
 	}
@@ -1268,7 +1231,7 @@ init_xml_import (GdaDataModelImport *model)
 		/* error */
 		add_error (model, _("Failed to read node in XML file"));
 		xmlFreeTextReader (reader);
-		model->priv->extract.xml.reader = NULL;
+		priv->extract.xml.reader = NULL;
 	}
 	else {
 		const xmlChar *name;
@@ -1289,7 +1252,7 @@ init_xml_import (GdaDataModelImport *model)
 			add_error (model, str);
 			g_free (str);
 			xmlFreeTextReader (reader);
-			model->priv->extract.xml.reader = NULL;
+			priv->extract.xml.reader = NULL;
 			return;
 		}
 		node = xmlTextReaderCurrentNode (reader);
@@ -1334,7 +1297,7 @@ init_xml_import (GdaDataModelImport *model)
 				add_error (model, _("No \"gdatype\" attribute specified in <gda_array_field>"));
 				clean_field_specs (fields);
 				xmlFreeTextReader (reader);
-				model->priv->extract.xml.reader = NULL;
+				priv->extract.xml.reader = NULL;
 				return;
 			}
 			str = (gchar*)xmlTextReaderGetAttribute (reader, (xmlChar*)"size");
@@ -1385,7 +1348,7 @@ init_xml_import (GdaDataModelImport *model)
 			add_error (model, _("Expected <gda_array_field> in <gda_array>"));
 			clean_field_specs (fields);
 			xmlFreeTextReader (reader);
-			model->priv->extract.xml.reader = NULL;
+			priv->extract.xml.reader = NULL;
 			return;
 		}
 
@@ -1397,7 +1360,7 @@ init_xml_import (GdaDataModelImport *model)
 
 			spec = (XmlColumnSpec *)(list->data);
 			column = gda_column_new ();
-			model->priv->columns = g_slist_append (model->priv->columns, column);
+			priv->columns = g_slist_append (priv->columns, column);
 			g_object_set (G_OBJECT (column), "id", spec->id, NULL);
 			gda_column_set_description (column, (gchar*)spec->title);
 			gda_column_set_name (column, (gchar*)spec->name);
@@ -1420,7 +1383,7 @@ init_xml_import (GdaDataModelImport *model)
 			g_free (str);
 
 			xmlFreeTextReader (reader);
-			model->priv->extract.xml.reader = NULL;
+			priv->extract.xml.reader = NULL;
 			return;
 		}
 
@@ -1429,7 +1392,7 @@ init_xml_import (GdaDataModelImport *model)
 		if (ret <= 0) {
 			add_error (model, _("Can't read the contents of the <gda_array_data> node"));
 			xmlFreeTextReader (reader);
-			model->priv->extract.xml.reader = NULL;
+			priv->extract.xml.reader = NULL;
 			return;
 		}
 	}
@@ -1451,23 +1414,24 @@ xml_fetch_next_xml_node (xmlTextReaderPtr reader)
 static void
 xml_fetch_next_row (GdaDataModelImport *model)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	xmlTextReaderPtr reader;
 	const xmlChar *name;
 	gint ret;
 
 	const gchar *lang = gda_lang_locale;
 
-	GSList *columns = model->priv->columns;
+	GSList *columns = priv->columns;
 	GdaColumn *last_column = NULL;
 	GSList *values = NULL;
 
-	if (model->priv->cursor_values) {
-		g_slist_foreach (model->priv->cursor_values, (GFunc) gda_value_free, NULL);
-		g_slist_free (model->priv->cursor_values);
-		model->priv->cursor_values = NULL;
+	if (priv->cursor_values) {
+		g_slist_foreach (priv->cursor_values, (GFunc) gda_value_free, NULL);
+		g_slist_free (priv->cursor_values);
+		priv->cursor_values = NULL;
 	}
 
-	reader = model->priv->extract.xml.reader;
+	reader = priv->extract.xml.reader;
 	if (!reader)
 		return;
 
@@ -1480,7 +1444,7 @@ xml_fetch_next_row (GdaDataModelImport *model)
 		add_error (model, str);
 		g_free (str);
 		xmlFreeTextReader (reader);
-		model->priv->extract.xml.reader = NULL;
+		priv->extract.xml.reader = NULL;
 		return;
 	}
 
@@ -1581,13 +1545,13 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	}
 
 	if (values)
-		model->priv->cursor_values = g_slist_reverse (values);
+		priv->cursor_values = g_slist_reverse (values);
 #ifdef GDA_DEBUG_NO
 	GSList *l;
 	gint c;
 
 	g_print ("======== GdaDataModelImport => next XML row ========\n");
-	for (c = 0, l = model->priv->cursor_values; l; l = l->next, c++) {
+	for (c = 0, l = priv->cursor_values; l; l = l->next, c++) {
 		GValue *val = (GValue*)(l->data);
 		g_print ("#%d %s (type:%s)\n", c, gda_value_stringify (val),
 			 val ? g_type_name (G_VALUE_TYPE (val)) : "no type");
@@ -1597,13 +1561,14 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	if (ret <= 0) {
 		/* destroy the reader, nothing to read anymore */
 		xmlFreeTextReader (reader);
-		model->priv->extract.xml.reader = NULL;
+		priv->extract.xml.reader = NULL;
 	}
 }
 
 static void
 init_node_import (GdaDataModelImport *model)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	GdaDataModel *ramodel;
 	xmlNodePtr node, cur;
 	gint nbfields = 0;
@@ -1612,7 +1577,7 @@ init_node_import (GdaDataModelImport *model)
 	gint pos;
 	gchar *str;
 
-	node = model->priv->extract.node.node;
+	node = priv->extract.node.node;
 	if (!node)
 		return;
 
@@ -1623,7 +1588,7 @@ init_node_import (GdaDataModelImport *model)
 		add_error (model, str);
 		g_free (str);
 
-		node = model->priv->extract.node.node = NULL;
+		node = priv->extract.node.node = NULL;
 		return;
 	}
 
@@ -1654,7 +1619,7 @@ init_node_import (GdaDataModelImport *model)
 			else {
 				add_error (model, _("No \"gdatype\" attribute specified in <gda_array_field>"));
 				clean_field_specs (fields);
-				node = model->priv->extract.node.node = NULL;
+				node = priv->extract.node.node = NULL;
 				return;
 			}
 			str = (gchar*)xmlGetProp (cur, (xmlChar*)"size");
@@ -1704,14 +1669,14 @@ init_node_import (GdaDataModelImport *model)
 
 	if (nbfields == 0) {
 		add_error (model, _("No <gda_array_field> specified in <gda_array>"));
-		node = model->priv->extract.node.node = NULL;
+		node = priv->extract.node.node = NULL;
 		clean_field_specs (fields);
 		return;
 	}
 
 	/* random access model creation */
 	ramodel = gda_data_model_array_new (nbfields);
-	model->priv->random_access_model = ramodel;
+	priv->random_access_model = ramodel;
 	str = (gchar*)xmlGetProp (node, (xmlChar*)"id");
 	if (str)
 		g_object_set_data_full (G_OBJECT (model), "id", str, xmlFree);
@@ -1738,10 +1703,10 @@ init_node_import (GdaDataModelImport *model)
 		gda_column_set_g_type (column, spec->gdatype);
 		gda_column_set_allow_null (column, spec->nullok);
 
-		model->priv->columns = g_slist_prepend (model->priv->columns, gda_column_copy (column));
+		priv->columns = g_slist_prepend (priv->columns, gda_column_copy (column));
 	}
 	clean_field_specs (fields);
-	model->priv->columns = g_slist_reverse (model->priv->columns);
+	priv->columns = g_slist_reverse (priv->columns);
 
 	GError *error = NULL;
 	if (cur && ! gda_data_model_add_data_from_xml_node (ramodel, cur, &error)) {
@@ -1755,10 +1720,11 @@ init_node_import (GdaDataModelImport *model)
 static void
 add_error (GdaDataModelImport *model, const gchar *err)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	GError *error = NULL;
 
 	g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR, "%s", err);
-	model->priv->errors = g_slist_append (model->priv->errors, error);
+	priv->errors = g_slist_append (priv->errors, error);
 }
 
 /**
@@ -1774,9 +1740,9 @@ GSList *
 gda_data_model_import_get_errors (GdaDataModelImport *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
-	g_return_val_if_fail (model->priv, NULL);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	return model->priv->errors;
+	return priv->errors;
 }
 
 /**
@@ -1789,11 +1755,11 @@ void
 gda_data_model_import_clean_errors (GdaDataModelImport *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
-	g_return_if_fail (model->priv);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	g_slist_foreach (model->priv->errors, (GFunc) g_error_free, NULL);
-	g_slist_free (model->priv->errors);
-	model->priv->errors = NULL;
+	g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
+	g_slist_free (priv->errors);
+	priv->errors = NULL;
 }
 
 
@@ -1807,13 +1773,13 @@ gda_data_model_import_get_n_rows (GdaDataModel *model)
 	GdaDataModelImport *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), 0);
 	imodel = GDA_DATA_MODEL_IMPORT (model);
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (!imodel->priv->random_access)
+	if (!priv->random_access)
 		return -1;
 	else {
-		if (imodel->priv->random_access_model)
-			return gda_data_model_get_n_rows (imodel->priv->random_access_model);
+		if (priv->random_access_model)
+			return gda_data_model_get_n_rows (priv->random_access_model);
 		else
 			/* number of rows is not known */
 			return -1;
@@ -1826,10 +1792,10 @@ gda_data_model_import_get_n_columns (GdaDataModel *model)
 	GdaDataModelImport *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), 0);
 	imodel = GDA_DATA_MODEL_IMPORT (model);
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (imodel->priv->columns)
-		return g_slist_length (imodel->priv->columns);
+	if (priv->columns)
+		return g_slist_length (priv->columns);
 	else
 		return 0;
 }
@@ -1840,10 +1806,10 @@ gda_data_model_import_describe_column (GdaDataModel *model, gint col)
 	GdaDataModelImport *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
 	imodel = GDA_DATA_MODEL_IMPORT (model);
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (imodel->priv->columns)
-		return g_slist_nth_data (imodel->priv->columns, col);
+	if (priv->columns)
+		return g_slist_nth_data (priv->columns, col);
 	else
 		return NULL;
 }
@@ -1856,13 +1822,13 @@ gda_data_model_import_get_access_flags (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), 0);
 	imodel = GDA_DATA_MODEL_IMPORT (model);
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (imodel->priv->format == FORMAT_CSV) {
+	if (priv->format == FORMAT_CSV) {
 		/*flags |= GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD*/;
   }
 
-	if (imodel->priv->random_access && imodel->priv->random_access_model)
+	if (priv->random_access && priv->random_access_model)
 		flags |= GDA_DATA_MODEL_ACCESS_RANDOM;
 
 	return flags;
@@ -1874,11 +1840,11 @@ gda_data_model_import_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 	GdaDataModelImport *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
 	imodel = GDA_DATA_MODEL_IMPORT (model);
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (imodel->priv->random_access_model)
+	if (priv->random_access_model)
 		/* if there is a random access model, then use it */
-		return gda_data_model_get_value_at (imodel->priv->random_access_model, col, row, error);
+		return gda_data_model_get_value_at (priv->random_access_model, col, row, error);
 	else {
 		/* otherwise, bail out */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
@@ -1896,7 +1862,8 @@ gda_data_model_import_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_U
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), 0);
 	imodel = (GdaDataModelImport *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
+	g_return_val_if_fail (priv, 0);
 
 	flags = GDA_VALUE_ATTR_NO_MODIF;
 	column = gda_data_model_describe_column (model, col);
@@ -1914,15 +1881,16 @@ gda_data_model_import_create_iter (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), NULL);
 	imodel = (GdaDataModelImport *) model;
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
+	g_return_val_if_fail (priv, NULL);
 
-	if (imodel->priv->random_access_model) {
-		iter = gda_data_model_create_iter (imodel->priv->random_access_model);
+	if (priv->random_access_model) {
+		iter = gda_data_model_create_iter (priv->random_access_model);
 		/* REM: don't do:
 		 * g_object_set (G_OBJECT (iter), "forced-model", model, NULL);
 		 * because otherwise data fetch will come back on @model, which is not what is wanted.
 		 * However the problem is that getting the "model" property from the returned iterator will
-		 * give a pointer to imodel->priv->random_access_model and not @model...
+		 * give a pointer to priv->random_access_model and not @model...
 		 */
 	}
 	else
@@ -1935,25 +1903,26 @@ static void
 add_error_too_few_values (GdaDataModelImport *model)
 {
 	gchar *str;
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	switch (model->priv->format){
+	switch (priv->format){
 	case FORMAT_CSV:
-		if (model->priv->strict)
+		if (priv->strict)
 			str = g_strdup_printf (_("Row at line %d does not have enough values"),
-					       model->priv->extract.csv.text_line > 1 ?
-					       model->priv->extract.csv.text_line - 1 :
-					       model->priv->extract.csv.text_line);
+					       priv->extract.csv.text_line > 1 ?
+					       priv->extract.csv.text_line - 1 :
+					       priv->extract.csv.text_line);
 		else
 			str = g_strdup_printf (_("Row at line %d does not have enough values, "
 						 "completed with NULL values"),
-					       model->priv->extract.csv.text_line > 1 ?
-					       model->priv->extract.csv.text_line - 1 :
-					       model->priv->extract.csv.text_line);
+					       priv->extract.csv.text_line > 1 ?
+					       priv->extract.csv.text_line - 1 :
+					       priv->extract.csv.text_line);
 		add_error (model, str);
 		g_free (str);
 		break;
 	default:
-		if (model->priv->strict)
+		if (priv->strict)
 			add_error (model, ("Row does not have enough values"));
 		else
 			add_error (model, ("Row does not have enough values, "
@@ -1965,13 +1934,14 @@ add_error_too_few_values (GdaDataModelImport *model)
 static void
 add_error_too_many_values (GdaDataModelImport *model)
 {
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 	gchar *str;
 
-	switch (model->priv->format){
+	switch (priv->format){
 	case FORMAT_CSV:
 		str = g_strdup_printf (_("Row at line %d does not have enough values "
 					 "(which are thus ignored)"),
-				       model->priv->extract.csv.text_line);
+				       priv->extract.csv.text_line);
 		add_error (model, str);
 		g_free (str);
 		break;
@@ -1989,41 +1959,41 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), FALSE);
 	imodel = (GdaDataModelImport *) model;
-	g_return_val_if_fail (imodel->priv, FALSE);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
 	/* if there is a random access model, then use it */
-	if (imodel->priv->format == FORMAT_XML_NODE)
+	if (priv->format == FORMAT_XML_NODE)
 		return gda_data_model_iter_move_next_default (model, iter);
 
 	/* fetch the next row if necessary */
-	switch (imodel->priv->format) {
+	switch (priv->format) {
 	case FORMAT_XML_DATA:
 		xml_fetch_next_row (imodel);
-		next_values = imodel->priv->cursor_values;
+		next_values = priv->cursor_values;
 		break;
 
 	case FORMAT_CSV:
-		if (! imodel->priv->extract.csv.rows_read) {
+		if (! priv->extract.csv.rows_read) {
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
 
 		if (gda_data_model_iter_is_valid (iter) &&
-		    (imodel->priv->extract.csv.rows_read->len > 0)) {
+		    (priv->extract.csv.rows_read->len > 0)) {
 			/* get rid of row pointer by iter */
-			GSList *list = g_array_index (imodel->priv->extract.csv.rows_read,
+			GSList *list = g_array_index (priv->extract.csv.rows_read,
 						      GSList *, 0);
 			g_assert (list);
 			g_slist_foreach (list, (GFunc) gda_value_free, NULL);
 			g_slist_free (list);
-			g_array_remove_index (imodel->priv->extract.csv.rows_read, 0);
+			g_array_remove_index (priv->extract.csv.rows_read, 0);
 		}
 
 		/* fetch some more rows if necessary */
-		if (imodel->priv->extract.csv.rows_read->len == 0)
+		if (priv->extract.csv.rows_read->len == 0)
 			csv_fetch_some_lines (imodel);
-		if (imodel->priv->extract.csv.rows_read->len != 0)
-			next_values = g_array_index (imodel->priv->extract.csv.rows_read,
+		if (priv->extract.csv.rows_read->len != 0)
+			next_values = g_array_index (priv->extract.csv.rows_read,
 						     GSList *, 0);
 		break;
 	default:
@@ -2051,7 +2021,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			if (plist) {
 				add_error_too_few_values (imodel);
 				for (; plist; plist = plist->next) {
-					if (imodel->priv->strict)
+					if (priv->strict)
 						gda_holder_force_invalid (GDA_HOLDER (plist->data));
 					else
 						gda_holder_set_value (GDA_HOLDER (plist->data), NULL, NULL);
@@ -2061,11 +2031,11 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 				add_error_too_many_values (imodel);
 		}
 		if (gda_data_model_iter_is_valid (iter))
-			imodel->priv->iter_row ++;
+			priv->iter_row ++;
 		else
-			imodel->priv->iter_row = 0;
+			priv->iter_row = 0;
 
-		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row,
+		g_object_set (G_OBJECT (iter), "current-row", priv->iter_row,
 			      "update-model", update_model, NULL);
 
 		return TRUE;
@@ -2085,31 +2055,31 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_IMPORT (model), FALSE);
 	imodel = (GdaDataModelImport *) model;
-	g_return_val_if_fail (imodel->priv, FALSE);
+	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (imodel);
 
-	if (imodel->priv->format == FORMAT_XML_DATA)
+	if (priv->format == FORMAT_XML_DATA)
 		return FALSE;
 
 	/* if there is a random access model, then use it */
-	if (imodel->priv->format == FORMAT_XML_NODE)
+	if (priv->format == FORMAT_XML_NODE)
 		return gda_data_model_iter_move_prev_default (model, iter);
 
 	/* fetch the previous row if necessary */
-	switch (imodel->priv->format) {
+	switch (priv->format) {
 	case FORMAT_CSV:
 	default:
 		g_assert_not_reached ();
 	}
 
 	/* set values in iter */
-	if (imodel->priv->cursor_values) {
+	if (priv->cursor_values) {
 		GSList *plist;
 		GSList *vlist;
 		gboolean update_model;
 
 		g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 		g_object_set (G_OBJECT (iter), "update-model", FALSE, NULL);
-		for (plist = gda_set_get_holders (((GdaSet *) iter)), vlist = imodel->priv->cursor_values;
+		for (plist = gda_set_get_holders (((GdaSet *) iter)), vlist = priv->cursor_values;
 		     plist && vlist;
 		     plist = plist->next, vlist = vlist->next) {
 			GError *lerror = NULL;
@@ -2121,7 +2091,7 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 			if (plist) {
 				add_error_too_few_values (imodel);
 				for (; plist; plist = plist->next) {
-					if (imodel->priv->strict)
+					if (priv->strict)
 						gda_holder_force_invalid (GDA_HOLDER (plist->data));
 					else
 						gda_holder_set_value (GDA_HOLDER (plist->data), NULL, NULL);
@@ -2132,10 +2102,10 @@ gda_data_model_import_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 		}
 
 		if (gda_data_model_iter_is_valid (iter))
-			imodel->priv->iter_row --;
+			priv->iter_row --;
 
-		g_assert (imodel->priv->iter_row >= 0);
-		g_object_set (G_OBJECT (iter), "current-row", imodel->priv->iter_row,
+		g_assert (priv->iter_row >= 0);
+		g_object_set (G_OBJECT (iter), "current-row", priv->iter_row,
 			      "update-model", update_model, NULL);
 		return TRUE;
 	}

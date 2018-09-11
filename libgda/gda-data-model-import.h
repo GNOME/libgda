@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,20 +29,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_MODEL_IMPORT            (gda_data_model_import_get_type())
-#define GDA_DATA_MODEL_IMPORT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL_IMPORT, GdaDataModelImport))
-#define GDA_DATA_MODEL_IMPORT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_MODEL_IMPORT, GdaDataModelImportClass))
-#define GDA_IS_DATA_MODEL_IMPORT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_MODEL_IMPORT))
-#define GDA_IS_DATA_MODEL_IMPORT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_MODEL_IMPORT))
-
-typedef struct _GdaDataModelImport        GdaDataModelImport;
-typedef struct _GdaDataModelImportClass   GdaDataModelImportClass;
-typedef struct _GdaDataModelImportPrivate GdaDataModelImportPrivate;
-
-struct _GdaDataModelImport {
-	GObject                    object;
-	GdaDataModelImportPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaDataModelImport, gda_data_model_import, GDA, DATA_MODEL_IMPORT, GObject)
 struct _GdaDataModelImportClass {
 	GObjectClass               parent_class;
 
@@ -84,7 +72,6 @@ struct _GdaDataModelImportClass {
  */
 
 
-GType         gda_data_model_import_get_type     (void) G_GNUC_CONST;
 GdaDataModel *gda_data_model_import_new_file     (const gchar *filename, gboolean random_access, GdaSet *options);
 GdaDataModel *gda_data_model_import_new_mem      (const gchar *data, gboolean random_access, GdaSet *options);
 GdaDataModel *gda_data_model_import_new_xml_node (xmlNodePtr node);
