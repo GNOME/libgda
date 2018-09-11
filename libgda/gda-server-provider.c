@@ -49,6 +49,10 @@
 #include <libgda/gda-connection-private.h>
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-debug-macros.h>
+#include <libgda/handlers/gda-handler-boolean.h>
+#include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-type.h>
+#include <libgda/handlers/gda-handler-numerical.h>
 #include "providers-support/gda-data-select-priv.h"
 
 /*
