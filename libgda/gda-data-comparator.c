@@ -41,8 +41,6 @@ static void gda_data_comparator_get_property (GObject *object,
 					      guint param_id,
 					      GValue *value,
 					      GParamSpec *pspec);
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 
 static void gda_diff_free (GdaDiff *diff);
 
@@ -71,7 +69,8 @@ typedef struct {
 	gint              *key_columns;
 	GArray            *diffs; /* array of GdaDiff pointers */
 } GdaDataComparatorPrivate;
-#define gda_data_comparator_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_COMPARATOR, GdaDataComparatorPrivate)
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaDataComparator, gda_data_comparator, G_TYPE_OBJECT)
 
 
 /* module error */
@@ -81,34 +80,6 @@ GQuark gda_data_comparator_error_quark (void)
 	if (!quark)
 		quark = g_quark_from_static_string ("gda_data_comparator_error");
 	return quark;
-}
-
-GType
-gda_data_comparator_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataComparatorClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_comparator_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataComparator),
-			0,
-			(GInstanceInitFunc) gda_data_comparator_init,
-			0
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataComparator", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
 }
 
 static gboolean
@@ -135,10 +106,6 @@ static void
 gda_data_comparator_class_init (GdaDataComparatorClass *class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-
-	parent_class = g_type_class_peek_parent (class);
-
-	g_type_class_add_private (object_class, sizeof (GdaDataComparatorPrivate));
 
 	/* signals */
 
@@ -237,7 +204,7 @@ gda_data_comparator_dispose (GObject *object)
 	g_array_free (priv->diffs, TRUE);
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_data_comparator_parent_class)->dispose (object);
 }
 
 static void
