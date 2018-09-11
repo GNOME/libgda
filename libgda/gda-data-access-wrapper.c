@@ -4,6 +4,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,8 +34,18 @@
 #include <libgda/gda-holder.h>
 
 
+/* GdaDataModel interface */
+static void                 gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface);
+static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataModel *model);
+static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
+static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
+static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
+static const GValue        *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
+static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
+static GError             **gda_data_access_wrapper_get_exceptions  (GdaDataModel *model);
+
 #define ROWS_POOL_SIZE 50
-struct _GdaDataAccessWrapperPrivate {
+typedef struct  {
 	GdaDataModel     *model;
 	GdaDataModelAccessFlags model_access_flags;
 
@@ -54,7 +65,11 @@ struct _GdaDataAccessWrapperPrivate {
 	/* rows mapping */
 	GSList           *columns; /* not NULL if a mapping exists */
 	gint             *rows_mapping; /* @nb_cols is set when @rows_mapping is set, and @rows_mapping's size is @nb_cols */
-};
+} GdaDataAccessWrapperPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataAccessWrapper, gda_data_access_wrapper, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataAccessWrapper)
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL, gda_data_access_wrapper_data_model_init))
 
 /* properties */
 enum
@@ -63,11 +78,7 @@ enum
 	PROP_MODEL,
 };
 
-static void gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass);
-static void gda_data_access_wrapper_init       (GdaDataAccessWrapper *model,
-					      GdaDataAccessWrapperClass *klass);
 static void gda_data_access_wrapper_dispose    (GObject *object);
-static void gda_data_access_wrapper_finalize   (GObject *object);
 
 static void gda_data_access_wrapper_set_property (GObject *object,
 						    guint param_id,
@@ -78,70 +89,15 @@ static void gda_data_access_wrapper_get_property (GObject *object,
 						    GValue *value,
 						    GParamSpec *pspec);
 
-/* GdaDataModel interface */
-static void                 gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface);
-static gint                 gda_data_access_wrapper_get_n_rows      (GdaDataModel *model);
-static gint                 gda_data_access_wrapper_get_n_columns   (GdaDataModel *model);
-static GdaColumn           *gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col);
-static GdaDataModelAccessFlags gda_data_access_wrapper_get_access_flags(GdaDataModel *model);
-static const GValue        *gda_data_access_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
-static GdaValueAttribute    gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint row);
-static GError             **gda_data_access_wrapper_get_exceptions  (GdaDataModel *model);
-
 static void iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model);
 static void iter_end_of_data_cb (GdaDataModelIter *iter, GdaDataAccessWrapper *model);
 
 static GdaRow *create_new_row (GdaDataAccessWrapper *model);
 
-static GObjectClass *parent_class = NULL;
-
-/**
- * gda_data_access_wrapper_get_type:
- *
- * Returns: the #GType of GdaDataAccessWrapper.
- */
-GType
-gda_data_access_wrapper_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataAccessWrapperClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_access_wrapper_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataAccessWrapper),
-			0,
-			(GInstanceInitFunc) gda_data_access_wrapper_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) gda_data_access_wrapper_data_model_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataAccessWrapper", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
-static void 
+static void
 gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
 	object_class->set_property = gda_data_access_wrapper_set_property;
@@ -154,7 +110,6 @@ gda_data_access_wrapper_class_init (GdaDataAccessWrapperClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_access_wrapper_dispose;
-	object_class->finalize = gda_data_access_wrapper_finalize;
 }
 
 static void
@@ -185,18 +140,17 @@ gda_data_access_wrapper_data_model_init (GdaDataModelIface *iface)
 }
 
 static void
-gda_data_access_wrapper_init (GdaDataAccessWrapper *model, G_GNUC_UNUSED GdaDataAccessWrapperClass *klass)
+gda_data_access_wrapper_init (GdaDataAccessWrapper *model)
 {
-	g_return_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model));
-	model->priv = g_new0 (GdaDataAccessWrapperPrivate, 1);
-	model->priv->iter_row = -1; /* because model->priv->iter does not yet exist */
-	model->priv->rows = NULL;
-	model->priv->nb_rows = -1;
-	model->priv->end_of_data = FALSE;
-	model->priv->last_row = -1;
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	priv->iter_row = -1; /* because priv->iter does not yet exist */
+	priv->rows = NULL;
+	priv->nb_rows = -1;
+	priv->end_of_data = FALSE;
+	priv->last_row = -1;
 	
-	model->priv->rows_buffer_array = NULL;
-	model->priv->rows_buffer_index = NULL;
+	priv->rows_buffer_array = NULL;
+	priv->rows_buffer_index = NULL;
 }
 
 static void
@@ -226,23 +180,24 @@ model_reset_cb (G_GNUC_UNUSED GdaDataModel *mod, GdaDataAccessWrapper *model)
 static void
 clear_internal_state (GdaDataAccessWrapper *model)
 {
-	if (model->priv) {
-		if (model->priv->columns) {
-			g_slist_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
-			g_slist_free (model->priv->columns);
-			model->priv->columns = NULL;
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	if (priv) {
+		if (priv->columns) {
+			g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
+			g_slist_free (priv->columns);
+			priv->columns = NULL;
 		}
 
-		model->priv->nb_cols = 0;
+		priv->nb_cols = 0;
 
-		if (model->priv->rows_buffer_array) {
-			g_array_free (model->priv->rows_buffer_array, TRUE);
-			model->priv->rows_buffer_array = NULL;
+		if (priv->rows_buffer_array) {
+			g_array_free (priv->rows_buffer_array, TRUE);
+			priv->rows_buffer_array = NULL;
 		}
 
-		if (model->priv->rows_buffer_index) {
-			g_array_free (model->priv->rows_buffer_index, TRUE);
-			model->priv->rows_buffer_index = NULL;
+		if (priv->rows_buffer_index) {
+			g_array_free (priv->rows_buffer_index, TRUE);
+			priv->rows_buffer_index = NULL;
 		}
 	}
 }
@@ -253,93 +208,78 @@ gda_data_access_wrapper_dispose (GObject *object)
 	GdaDataAccessWrapper *model = (GdaDataAccessWrapper *) object;
 
 	g_return_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model));
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
 
 	/* free memory */
-	if (model->priv) {
+	if (priv) {
 		/* random access model free */
 		clear_internal_state (model);
 
-		if (model->priv->iter) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->iter),
+		if (priv->iter) {
+			g_signal_handlers_disconnect_by_func (G_OBJECT (priv->iter),
 							      G_CALLBACK (iter_row_changed_cb), model);
-			g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->iter),
+			g_signal_handlers_disconnect_by_func (G_OBJECT (priv->iter),
 							      G_CALLBACK (iter_end_of_data_cb), model);
 
-			g_object_unref (model->priv->iter);
-			model->priv->iter = NULL;
+			g_object_unref (priv->iter);
+			priv->iter = NULL;
 		}
 
-		if (model->priv->model) {
-			if (model->priv->rows) {
-				g_hash_table_destroy (model->priv->rows);
-				model->priv->rows = NULL;
+		if (priv->model) {
+			if (priv->rows) {
+				g_hash_table_destroy (priv->rows);
+				priv->rows = NULL;
 			}
 			else {
-				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+				g_signal_handlers_disconnect_by_func (G_OBJECT (priv->model),
 								      G_CALLBACK (model_row_inserted_cb), model);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+				g_signal_handlers_disconnect_by_func (G_OBJECT (priv->model),
 								      G_CALLBACK (model_row_updated_cb), model);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+				g_signal_handlers_disconnect_by_func (G_OBJECT (priv->model),
 								      G_CALLBACK (model_row_removed_cb), model);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (model->priv->model),
+				g_signal_handlers_disconnect_by_func (G_OBJECT (priv->model),
 								      G_CALLBACK (model_reset_cb), model);
 			}
-			g_object_unref (model->priv->model);
-			model->priv->model = NULL;
+			g_object_unref (priv->model);
+			priv->model = NULL;
 		}
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gda_data_access_wrapper_finalize (GObject *object)
-{
-	GdaDataAccessWrapper *model = (GdaDataAccessWrapper *) object;
-
-	g_return_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model));
-
-	/* free memory */
-	if (model->priv) {
-		g_free (model->priv);
-		model->priv = NULL;
-	}
-
-	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_data_access_wrapper_parent_class)->dispose (object);
 }
 
 static void
 compute_columns (GdaDataAccessWrapper *model)
 {
-	if (model->priv->rows_mapping) {
-		/* use model->priv->rows_mapping to create columns, and correct it if
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	if (priv->rows_mapping) {
+		/* use priv->rows_mapping to create columns, and correct it if
 		 * needed to remove out of range columns */
 		gint *nmapping;
 		gint i, j, nb_cols;
-		g_assert (!model->priv->columns);
-		nmapping = g_new (gint, model->priv->nb_cols);
-		nb_cols = gda_data_model_get_n_columns (model->priv->model);
-		for (i = 0, j = 0; i < model->priv->nb_cols; i++) {
-			gint nb = model->priv->rows_mapping [i];
+		g_assert (!priv->columns);
+		nmapping = g_new (gint, priv->nb_cols);
+		nb_cols = gda_data_model_get_n_columns (priv->model);
+		for (i = 0, j = 0; i < priv->nb_cols; i++) {
+			gint nb = priv->rows_mapping [i];
 			if (nb >= nb_cols)
 				continue;
 			GdaColumn *column;
-			column = gda_data_model_describe_column (model->priv->model, nb);
+			column = gda_data_model_describe_column (priv->model, nb);
 			if (!column)
 				continue;
-			model->priv->columns = g_slist_append (model->priv->columns,
+			priv->columns = g_slist_append (priv->columns,
 							       gda_column_copy (column));
 			nmapping [j] = nb;
 			j++;
 		}
-		model->priv->nb_cols = j;
-		g_free (model->priv->rows_mapping);
-		model->priv->rows_mapping = nmapping;
+		priv->nb_cols = j;
+		g_free (priv->rows_mapping);
+		priv->rows_mapping = nmapping;
 	}
 	else
-		model->priv->nb_cols = gda_data_model_get_n_columns (model->priv->model);
+		priv->nb_cols = gda_data_model_get_n_columns (priv->model);
 }
 
 static void
@@ -351,15 +291,16 @@ gda_data_access_wrapper_set_property (GObject *object,
 	GdaDataAccessWrapper *model;
 
 	model = GDA_DATA_ACCESS_WRAPPER (object);
-	if (model->priv) {
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	if (priv) {
 		switch (param_id) {
 		case PROP_MODEL: {
 			GdaDataModel *mod = g_value_get_object (value);
 			if (mod) {
 				g_return_if_fail (GDA_IS_DATA_MODEL (mod));
-				model->priv->model_access_flags = gda_data_model_get_access_flags (mod);
+				priv->model_access_flags = gda_data_model_get_access_flags (mod);
 
-				if (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM) {
+				if (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM) {
 					g_signal_connect (G_OBJECT (mod), "row-inserted",
 							  G_CALLBACK (model_row_inserted_cb), model);
 					g_signal_connect (G_OBJECT (mod), "row-updated",
@@ -370,24 +311,24 @@ gda_data_access_wrapper_set_property (GObject *object,
 							  G_CALLBACK (model_reset_cb), model);
 				}
 				else {
-					model->priv->iter = gda_data_model_create_iter (mod);
-					g_return_if_fail (model->priv->iter);
-					g_object_set (model->priv->iter, "validate-changes", FALSE,
+					priv->iter = gda_data_model_create_iter (mod);
+					g_return_if_fail (priv->iter);
+					g_object_set (priv->iter, "validate-changes", FALSE,
 						      NULL);
-					g_signal_connect (G_OBJECT (model->priv->iter), "row-changed",
+					g_signal_connect (G_OBJECT (priv->iter), "row-changed",
 							  G_CALLBACK (iter_row_changed_cb), model);
-					g_signal_connect (G_OBJECT (model->priv->iter), "end-of-data",
+					g_signal_connect (G_OBJECT (priv->iter), "end-of-data",
 							  G_CALLBACK (iter_end_of_data_cb), model);
-					model->priv->iter_row = -1; /* because model->priv->iter is invalid */
-					model->priv->rows = g_hash_table_new_full (g_int_hash, g_int_equal,
+					priv->iter_row = -1; /* because priv->iter is invalid */
+					priv->rows = g_hash_table_new_full (g_int_hash, g_int_equal,
 										   g_free,
 										   (GDestroyNotify) g_object_unref);
 				}
   
-                                if (model->priv->model)
-					g_object_unref (model->priv->model);
+                                if (priv->model)
+					g_object_unref (priv->model);
 
-				model->priv->model = mod;
+				priv->model = mod;
 				g_object_ref (mod);
 
 				compute_columns (model);
@@ -410,10 +351,11 @@ gda_data_access_wrapper_get_property (GObject *object,
 	GdaDataAccessWrapper *model;
 
 	model = GDA_DATA_ACCESS_WRAPPER (object);
-	if (model->priv) {
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	if (priv) {
 		switch (param_id) {
 		case PROP_MODEL:
-			g_value_set_object (value, G_OBJECT (model->priv->model));
+			g_value_set_object (value, G_OBJECT (priv->model));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -476,9 +418,10 @@ gboolean
 gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper, const gint *mapping, gint mapping_size)
 {
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (wrapper), FALSE);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (wrapper);
 
-	if ((! (wrapper->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) &&
-	    (wrapper->priv->iter_row >= 0)) {
+	if ((! (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD)) &&
+	    (priv->iter_row >= 0)) {
 		/* error */
 		return FALSE;
 	}
@@ -487,14 +430,14 @@ gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper, const gint *
 
 	if (mapping) {
 		/* define mapping */
-		wrapper->priv->rows_mapping = g_new (gint, mapping_size);
-		memcpy (wrapper->priv->rows_mapping, mapping, mapping_size * sizeof (gint));
-		wrapper->priv->nb_cols = mapping_size;
+		priv->rows_mapping = g_new (gint, mapping_size);
+		memcpy (priv->rows_mapping, mapping, mapping_size * sizeof (gint));
+		priv->nb_cols = mapping_size;
 	}
 	else {
-		if (wrapper->priv->rows_mapping) {
-			g_free (wrapper->priv->rows_mapping);
-			wrapper->priv->rows_mapping = NULL;
+		if (priv->rows_mapping) {
+			g_free (priv->rows_mapping);
+			priv->rows_mapping = NULL;
 		}
 	}
 
@@ -513,27 +456,27 @@ gda_data_access_wrapper_get_n_rows (GdaDataModel *model)
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
 	imodel = (GdaDataAccessWrapper*) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
 
-	if (imodel->priv->nb_rows >= 0)
-		return imodel->priv->nb_rows;
+	if (priv->nb_rows >= 0)
+		return priv->nb_rows;
 
-	if (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
-		/* imodel->priv->mode is a random access model, use it */
-		imodel->priv->nb_rows = gda_data_model_get_n_rows (imodel->priv->model);
+	if (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
+		/* priv->mode is a random access model, use it */
+		priv->nb_rows = gda_data_model_get_n_rows (priv->model);
 	else {
 		/* go at the end */
-		while (!imodel->priv->end_of_data) {
-			if (! gda_data_model_iter_move_next (imodel->priv->iter)) 
+		while (!priv->end_of_data) {
+			if (! gda_data_model_iter_move_next (priv->iter))
 				break;
 		}
-		if (imodel->priv->end_of_data)
-			imodel->priv->nb_rows = imodel->priv->last_row +1;
+		if (priv->end_of_data)
+			priv->nb_rows = priv->last_row +1;
 		else
-			imodel->priv->nb_rows = -1;
+			priv->nb_rows = -1;
 	}
 
-	return imodel->priv->nb_rows;
+	return priv->nb_rows;
 }
 
 static gint
@@ -542,10 +485,10 @@ gda_data_access_wrapper_get_n_columns (GdaDataModel *model)
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
 	imodel = (GdaDataAccessWrapper*) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
 	
-	if (imodel->priv->model)
-		return imodel->priv->nb_cols;
+	if (priv->model)
+		return priv->nb_cols;
 	else
 		return 0;
 }
@@ -556,13 +499,13 @@ gda_data_access_wrapper_describe_column (GdaDataModel *model, gint col)
 	GdaDataAccessWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
 	imodel = (GdaDataAccessWrapper*) model;
-	g_return_val_if_fail (imodel->priv, NULL);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
 
-	if (imodel->priv->model) {
-		if (imodel->priv->columns)
-			return g_slist_nth_data (imodel->priv->columns, col);
+	if (priv->model) {
+		if (priv->columns)
+			return g_slist_nth_data (priv->columns, col);
 		else
-			return gda_data_model_describe_column (imodel->priv->model, col);
+			return gda_data_model_describe_column (priv->model, col);
 	}
 	else
 		return NULL;
@@ -575,7 +518,8 @@ gda_data_access_wrapper_get_access_flags (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
 	imodel = (GdaDataAccessWrapper*) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
+	g_return_val_if_fail (priv, 0);
 	
 	return GDA_DATA_MODEL_ACCESS_RANDOM;
 }
@@ -583,18 +527,19 @@ gda_data_access_wrapper_get_access_flags (GdaDataModel *model)
 static GdaRow *
 create_new_row (GdaDataAccessWrapper *model)
 {
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
 	gint i;
 	GdaRow *row;
 
-	row = gda_row_new (model->priv->nb_cols);
-	for (i = 0; i < model->priv->nb_cols; i++) {
+	row = gda_row_new (priv->nb_cols);
+	for (i = 0; i < priv->nb_cols; i++) {
 		GdaHolder *holder;
 		GValue *dest;
 		dest = gda_row_get_value (row, i);
-		if (model->priv->rows_mapping)
-			holder = gda_set_get_nth_holder ((GdaSet *) model->priv->iter, model->priv->rows_mapping [i]);
+		if (priv->rows_mapping)
+			holder = gda_set_get_nth_holder ((GdaSet *) priv->iter, priv->rows_mapping [i]);
 		else
-			holder = gda_set_get_nth_holder ((GdaSet *) model->priv->iter, i);
+			holder = gda_set_get_nth_holder ((GdaSet *) priv->iter, i);
 		if (holder) {
 			const GValue *cvalue = gda_holder_get_value (holder);
 			if (cvalue) {
@@ -610,9 +555,9 @@ create_new_row (GdaDataAccessWrapper *model)
 
 	gint *ptr;
 	ptr = g_new (gint, 1);
-	*ptr = model->priv->iter_row;
-	g_hash_table_insert (model->priv->rows, ptr, row);
-	/*g_print ("%s(%d)\n", __FUNCTION__, model->priv->iter_row);*/
+	*ptr = priv->iter_row;
+	g_hash_table_insert (priv->rows, ptr, row);
+	/*g_print ("%s(%d)\n", __FUNCTION__, priv->iter_row);*/
 
 	return row;
 }
@@ -624,29 +569,29 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
 	imodel = (GdaDataAccessWrapper*) model;
-	g_return_val_if_fail (imodel->priv, NULL);
-	g_return_val_if_fail (imodel->priv->model, NULL);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
+	g_return_val_if_fail (priv->model, NULL);
 	g_return_val_if_fail (row >= 0, NULL);
 
-	if (col >= imodel->priv->nb_cols) {
+	if (col >= priv->nb_cols) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     _("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols - 1);
+			     _("Column %d out of range (0-%d)"), col, priv->nb_cols - 1);
 		return NULL;
 	}
 
-	if (!imodel->priv->rows) {
-		/* imodel->priv->model is a random access model, use it */
-		if (imodel->priv->rows_mapping)
-			return gda_data_model_get_value_at (imodel->priv->model, imodel->priv->rows_mapping [col],
+	if (!priv->rows) {
+		/* priv->model is a random access model, use it */
+		if (priv->rows_mapping)
+			return gda_data_model_get_value_at (priv->model, priv->rows_mapping [col],
 							    row, error);
 		else
-			return gda_data_model_get_value_at (imodel->priv->model, col, row, error);
+			return gda_data_model_get_value_at (priv->model, col, row, error);
 	}
 	else {
 		GdaRow *gda_row;
 		gint tmp;
 		tmp = row;
-		gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
+		gda_row = g_hash_table_lookup (priv->rows, &tmp);
 		if (gda_row) {
 			GValue *val = gda_row_get_value (gda_row, col);
 			if (gda_row_value_is_valid (gda_row, val))
@@ -655,12 +600,12 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 				return NULL;
 		}
 		else {
-			g_assert (imodel->priv->iter);
-			if (imodel->priv->iter_row < 0) {
-				if (gda_data_model_iter_move_next (imodel->priv->iter)) {
+			g_assert (priv->iter);
+			if (priv->iter_row < 0) {
+				if (gda_data_model_iter_move_next (priv->iter)) {
 					tmp = row;
-					gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
-					if (row == imodel->priv->iter_row) {
+					gda_row = g_hash_table_lookup (priv->rows, &tmp);
+					if (row == priv->iter_row) {
 						GValue *val = gda_row_get_value (gda_row, col);
 						if (gda_row_value_is_valid (gda_row, val))
 							return val;
@@ -676,24 +621,24 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 			}
 				
 			gda_row = NULL;
-			if (row != imodel->priv->iter_row) {
-				if (row > imodel->priv->iter_row) {
+			if (row != priv->iter_row) {
+				if (row > priv->iter_row) {
 					/* need to move forward */
-					while ((imodel->priv->iter_row < row) && 
-					       gda_data_model_iter_move_next (imodel->priv->iter));
+					while ((priv->iter_row < row) &&
+					       gda_data_model_iter_move_next (priv->iter));
 				}
 				else {
 					/* need to move backwards */
-					g_assert (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD);
-					while ((imodel->priv->iter_row > row) && 
-					       gda_data_model_iter_move_prev (imodel->priv->iter)) ;
+					g_assert (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD);
+					while ((priv->iter_row > row) &&
+					       gda_data_model_iter_move_prev (priv->iter)) ;
 				}
 			}
 
-			if (! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
-			    ! (imodel->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
+			if (! (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
+			    ! (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
 				tmp = row;
-				gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
+				gda_row = g_hash_table_lookup (priv->rows, &tmp);
 
 				if (gda_row) {
 					GValue *val = gda_row_get_value (gda_row, col);
@@ -707,33 +652,33 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 				/* in this case iter can be moved forward and backward at will => we only
 				 * need to keep a pool of GdaRow for performances reasons */
 				tmp = row;
-				gda_row = g_hash_table_lookup (imodel->priv->rows, &tmp);
+				gda_row = g_hash_table_lookup (priv->rows, &tmp);
 
 				if (!gda_row) {
-					if (! imodel->priv->rows_buffer_array) {
-						imodel->priv->rows_buffer_array = g_array_sized_new (FALSE, FALSE, 
+					if (! priv->rows_buffer_array) {
+						priv->rows_buffer_array = g_array_sized_new (FALSE, FALSE,
 												     sizeof (GdaRow*),
 												     ROWS_POOL_SIZE);
-						imodel->priv->rows_buffer_index = g_array_sized_new (FALSE, FALSE, 
+						priv->rows_buffer_index = g_array_sized_new (FALSE, FALSE,
 												     sizeof (gint), 
 												     ROWS_POOL_SIZE);
 					}
-					else if (imodel->priv->rows_buffer_array->len == ROWS_POOL_SIZE) {
+					else if (priv->rows_buffer_array->len == ROWS_POOL_SIZE) {
 						/* get rid of the oldest row (was model's index_row row)*/
 						gint index_row;
 
-						index_row = g_array_index (imodel->priv->rows_buffer_index, gint,
+						index_row = g_array_index (priv->rows_buffer_index, gint,
 									   ROWS_POOL_SIZE - 1);
-						g_array_remove_index (imodel->priv->rows_buffer_array,
+						g_array_remove_index (priv->rows_buffer_array,
 								      ROWS_POOL_SIZE - 1);
-						g_array_remove_index (imodel->priv->rows_buffer_index,
+						g_array_remove_index (priv->rows_buffer_index,
 								      ROWS_POOL_SIZE - 1);
-						g_hash_table_remove (imodel->priv->rows, &index_row);
+						g_hash_table_remove (priv->rows, &index_row);
 					}
-					if (gda_data_model_iter_move_to_row (imodel->priv->iter, row)) {
+					if (gda_data_model_iter_move_to_row (priv->iter, row)) {
 						gda_row = create_new_row (imodel);
-						g_array_prepend_val (imodel->priv->rows_buffer_array, gda_row);
-						g_array_prepend_val (imodel->priv->rows_buffer_index, imodel->priv->iter_row);
+						g_array_prepend_val (priv->rows_buffer_array, gda_row);
+						g_array_prepend_val (priv->rows_buffer_index, priv->iter_row);
 					}
 				}
 
@@ -755,21 +700,22 @@ gda_data_access_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, G
 static void
 iter_row_changed_cb (GdaDataModelIter *iter, gint row, GdaDataAccessWrapper *model)
 {
-	g_assert (model->priv->rows);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	g_assert (priv->rows);
 
 	/*g_print ("%s(%d)\n", __FUNCTION__, row);*/
 	if (gda_data_model_iter_is_valid (iter)) {
-		model->priv->iter_row = row;
-		if (model->priv->last_row < row)
-			model->priv->last_row = row;
+		priv->iter_row = row;
+		if (priv->last_row < row)
+			priv->last_row = row;
 
-		if (! (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
-		    ! (model->priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
+		if (! (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD) ||
+		    ! (priv->model_access_flags & GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD)) {
 			/* keep the changes in rows */
 			GdaRow *gda_row;
 			gint tmp;
 			tmp = row;
-			gda_row = g_hash_table_lookup (model->priv->rows, &tmp);
+			gda_row = g_hash_table_lookup (priv->rows, &tmp);
 			if (!gda_row)
 				create_new_row (model);
 		}
@@ -780,7 +726,8 @@ static void
 iter_end_of_data_cb (G_GNUC_UNUSED GdaDataModelIter *iter, GdaDataAccessWrapper *model)
 {
 	g_assert (GDA_IS_DATA_ACCESS_WRAPPER (model));
-	model->priv->end_of_data = TRUE;
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
+	priv->end_of_data = TRUE;
 }
 
 static GdaValueAttribute
@@ -791,14 +738,14 @@ gda_data_access_wrapper_get_attributes_at (GdaDataModel *model, gint col, gint r
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), 0);
 	imodel = (GdaDataAccessWrapper *) model;
-	g_return_val_if_fail (imodel->priv, 0);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
 
-	if (imodel->priv->model) {
-		if (imodel->priv->rows_mapping)
-			flags = gda_data_model_get_attributes_at (imodel->priv->model, imodel->priv->rows_mapping [col],
+	if (priv->model) {
+		if (priv->rows_mapping)
+			flags = gda_data_model_get_attributes_at (priv->model, priv->rows_mapping [col],
 								  row);
 		else
-			flags = gda_data_model_get_attributes_at (imodel->priv->model, col, row);
+			flags = gda_data_model_get_attributes_at (priv->model, col, row);
 	}
 
 	flags |= GDA_VALUE_ATTR_NO_MODIF;
@@ -813,6 +760,6 @@ gda_data_access_wrapper_get_exceptions (GdaDataModel *model)
 
 	g_return_val_if_fail (GDA_IS_DATA_ACCESS_WRAPPER (model), NULL);
 	imodel = (GdaDataAccessWrapper *) model;
-	g_return_val_if_fail (imodel->priv, NULL);
-	return gda_data_model_get_exceptions (imodel->priv->model);
+	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (imodel);
+	return gda_data_model_get_exceptions (priv->model);
 }

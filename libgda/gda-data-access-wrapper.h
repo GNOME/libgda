@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2006 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,19 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_ACCESS_WRAPPER            (gda_data_access_wrapper_get_type())
-#define GDA_DATA_ACCESS_WRAPPER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_ACCESS_WRAPPER, GdaDataAccessWrapper))
-#define GDA_DATA_ACCESS_WRAPPER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_ACCESS_WRAPPER, GdaDataAccessWrapperClass))
-#define GDA_IS_DATA_ACCESS_WRAPPER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_ACCESS_WRAPPER))
-#define GDA_IS_DATA_ACCESS_WRAPPER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_ACCESS_WRAPPER))
-
-typedef struct _GdaDataAccessWrapper        GdaDataAccessWrapper;
-typedef struct _GdaDataAccessWrapperClass   GdaDataAccessWrapperClass;
-typedef struct _GdaDataAccessWrapperPrivate GdaDataAccessWrapperPrivate;
-
-struct _GdaDataAccessWrapper {
-	GObject                        object;
-	GdaDataAccessWrapperPrivate   *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaDataAccessWrapper, gda_data_access_wrapper, GDA, DATA_ACCESS_WRAPPER, GObject)
 
 struct _GdaDataAccessWrapperClass {
 	GObjectClass                   parent_class;
@@ -62,7 +51,6 @@ struct _GdaDataAccessWrapperClass {
  * and allows data to be accessed in a random way while remaining memory efficient as much as possible.
  */
 
-GType         gda_data_access_wrapper_get_type    (void) G_GNUC_CONST;
 GdaDataModel *gda_data_access_wrapper_new         (GdaDataModel *model);
 gboolean      gda_data_access_wrapper_set_mapping (GdaDataAccessWrapper *wrapper,
 						   const gint *mapping, gint mapping_size);

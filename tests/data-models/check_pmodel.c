@@ -1301,7 +1301,7 @@ test12 (GdaConnection *cnc)
 	iter = gda_data_model_create_iter (model);
   g_assert (GDA_IS_DATA_MODEL_ITER (iter));
   g_assert (GDA_IS_SET (iter));
-	g_signal_connect (iter, "row-changed", iter_row_changed, NULL);
+	g_signal_connect (iter, "row-changed", G_CALLBACK (iter_row_changed), NULL);
 	g_assert (gda_data_model_iter_move_next (iter));
 	g_assert (gda_data_model_iter_move_next (iter));
 
