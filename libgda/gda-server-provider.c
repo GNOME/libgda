@@ -2894,13 +2894,13 @@ meta_finalize_result (gpointer retval, GError **call_error, GError **loc_error)
 		if (loc_error && *loc_error && (*loc_error)->message)
 			g_set_error (call_error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 				     _("Internal error please report bug to "
-				       "http://bugzilla.gnome.org/ for the \"libgda\" product. "
+				       "https://gitlab.gnome.org/GNOME/libgda/issues "
 				       "Reported error is: %s"),
 				     (*loc_error)->message);
 		else
 			g_set_error (call_error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 				     _("Internal error please report bug to "
-				       "http://bugzilla.gnome.org/ for the \"libgda\" product"));
+				       "https://gitlab.gnome.org/GNOME/libgda/issues"));
 		if (loc_error)
 			g_clear_error (loc_error);
 		return FALSE;
