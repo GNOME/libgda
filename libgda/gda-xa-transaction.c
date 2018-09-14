@@ -46,16 +46,13 @@ static void gda_xa_transaction_get_property (GObject *object,
 					     GParamSpec *pspec);
 
 
-static GObjectClass* parent_class = NULL;
-
 typedef struct  {
 	GdaXaTransactionId  xid;
 	GHashTable         *cnc_hash; /* key = cnc, value = branch qualifier as a GdaBinary */
 	GList              *cnc_list;
 	GdaConnection      *non_xa_cnc; /* connection which does not support distributed transaction (also in @cnc_list) */
 } GdaXaTransactionPrivate;
-#define gda_xa_transaction_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_XA_TRANSACTION, GdaXaTransactionPrivate)
-
+G_DEFINE_TYPE_WITH_PRIVATE (GdaXaTransaction, gda_xa_transaction, G_TYPE_OBJECT)
 /* properties */
 enum
 {
@@ -73,10 +70,6 @@ static void
 gda_xa_transaction_class_init (GdaXaTransactionClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof(GdaXaTransactionPrivate));
 
 	object_class->dispose = gda_xa_transaction_dispose;
 
@@ -132,7 +125,7 @@ gda_xa_transaction_dispose (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_xa_transaction_parent_class)->dispose (object);
 }
 
 static void
@@ -221,33 +214,6 @@ GQuark gda_xa_transaction_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_xa_transaction_error");
         return quark;
-}
-
-GType
-gda_xa_transaction_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaXaTransactionClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_xa_transaction_class_init,
-			NULL, NULL,
-			sizeof (GdaXaTransaction),
-			0,
-			(GInstanceInitFunc) gda_xa_transaction_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaXaTransaction", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 /**
