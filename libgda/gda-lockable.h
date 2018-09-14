@@ -25,21 +25,15 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_LOCKABLE            (gda_lockable_get_type())
-#define GDA_LOCKABLE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_LOCKABLE, GdaLockable))
-#define GDA_IS_LOCKABLE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_LOCKABLE))
-#define GDA_LOCKABLE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_LOCKABLE, GdaLockableIface))
-
-typedef struct _GdaLockableIface   GdaLockableIface;
-typedef struct _GdaLockable        GdaLockable;
-
+G_DECLARE_INTERFACE (GdaLockable, gda_lockable, GDA, LOCKABLE, GObject)
 /* struct for the interface */
-struct _GdaLockableIface {
+struct _GdaLockableInterface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	void                 (* i_lock)       (GdaLockable *lock);
-	gboolean             (* i_trylock)    (GdaLockable *lock);
-	void                 (* i_unlock)     (GdaLockable *lock);
+	void                 (* lock)       (GdaLockable *lock);
+	gboolean             (* trylock)    (GdaLockable *lock);
+	void                 (* unlock)     (GdaLockable *lock);
 };
 
 /**
@@ -53,8 +47,6 @@ struct _GdaLockableIface {
  * the same time). Before using an object from a thread, one has to call gda_lockable_lock() or
  * gda_lockable_trylock() and call gda_lockable_unlock() when the object is not used anymore.
  */
-
-GType      gda_lockable_get_type   (void) G_GNUC_CONST;
 
 void       gda_lockable_lock       (GdaLockable *lockable);
 gboolean   gda_lockable_trylock    (GdaLockable *lockable);

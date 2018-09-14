@@ -51,7 +51,7 @@ static void gda_sql_parser_get_property (GObject *object,
 					GParamSpec *pspec);
 
 /* GdaLockable interface */
-static void                 gda_sql_parser_lockable_init (GdaLockableIface *iface);
+static void                 gda_sql_parser_lockable_init (GdaLockableInterface *iface);
 static void                 gda_sql_parser_lock      (GdaLockable *lockable);
 static gboolean             gda_sql_parser_trylock   (GdaLockable *lockable);
 static void                 gda_sql_parser_unlock    (GdaLockable *lockable);
@@ -190,11 +190,11 @@ gda_sql_parser_class_init (GdaSqlParserClass * klass)
 }
 
 static void
-gda_sql_parser_lockable_init (GdaLockableIface *iface)
+gda_sql_parser_lockable_init (GdaLockableInterface *iface)
 {
-	iface->i_lock = gda_sql_parser_lock;
-	iface->i_trylock = gda_sql_parser_trylock;
-	iface->i_unlock = gda_sql_parser_unlock;
+	iface->lock = gda_sql_parser_lock;
+	iface->trylock = gda_sql_parser_trylock;
+	iface->unlock = gda_sql_parser_unlock;
 }
 
 static void

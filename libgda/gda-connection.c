@@ -140,7 +140,7 @@ static void gda_connection_get_property (GObject *object,
 					 GParamSpec *pspec);
 
 /* GdaLockable interface */
-static void                 gda_connection_lockable_init (GdaLockableIface *iface);
+static void                 gda_connection_lockable_init (GdaLockableInterface *iface);
 static void                 gda_connection_lock      (GdaLockable *lockable);
 static gboolean             gda_connection_trylock   (GdaLockable *lockable);
 static void                 gda_connection_unlock    (GdaLockable *lockable);
@@ -416,11 +416,11 @@ gda_connection_class_init (GdaConnectionClass *klass)
 }
 
 static void
-gda_connection_lockable_init (GdaLockableIface *iface)
+gda_connection_lockable_init (GdaLockableInterface *iface)
 {
-	iface->i_lock = gda_connection_lock;
-	iface->i_trylock = gda_connection_trylock;
-	iface->i_unlock = gda_connection_unlock;
+	iface->lock = gda_connection_lock;
+	iface->trylock = gda_connection_trylock;
+	iface->unlock = gda_connection_unlock;
 }
 
 static void

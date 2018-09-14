@@ -23,51 +23,14 @@
 static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
-static void gda_lockable_class_init (gpointer g_class);
 
-GType
-gda_lockable_get_type (void)
-{
-	static GType type = 0;
+G_DEFINE_INTERFACE(GdaLockable, gda_lockable, G_TYPE_OBJECT)
 
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdaLockableIface),
-			(GBaseInitFunc) gda_lockable_class_init,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) NULL,
-			NULL,
-			NULL,
-			0,
-			0,
-			(GInstanceInitFunc) NULL,
-			0
-		};
-		
-		MUTEX_LOCK();
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_INTERFACE, "GdaLockable", &info, 0);
-			g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
-		}
-		MUTEX_UNLOCK();
-	}
-	return type;
-}
-
-static void
-gda_lockable_class_init (G_GNUC_UNUSED gpointer g_class)
-{
-	static gboolean initialized = FALSE;
-
-	MUTEX_LOCK();
-	if (! initialized) {
-		initialized = TRUE;
-	}
-	MUTEX_UNLOCK();
-}
+void
+gda_lockable_default_init (GdaLockableInterface *iface) {}
 
 /**
- * gda_lockable_lock:
+ * gda_lockable_lock: (virtual )
  * @lockable: a #GdaLockable object.
  *
  * Locks @lockable. If it is already locked by another thread, the current thread will block until it is unlocked 
@@ -80,11 +43,11 @@ void
 gda_lockable_lock (GdaLockable *lockable)
 {
 	g_return_if_fail (GDA_IS_LOCKABLE (lockable));
-	
-	if (GDA_LOCKABLE_GET_CLASS (lockable)->i_lock)
-		(GDA_LOCKABLE_GET_CLASS (lockable)->i_lock) (lockable);
+	GdaLockableInterface *iface = GDA_LOCKABLE_GET_IFACE (lockable);
+	if (iface->lock)
+		(iface->lock) (lockable);
 	else
-		g_warning ("Internal implementation error: %s() method not implemented\n", "i_lock");
+		g_warning ("Internal implementation error: %s() method not implemented\n", "lock");
 }
 
 /**
@@ -103,13 +66,13 @@ gboolean
 gda_lockable_trylock (GdaLockable *lockable)
 {
 	g_return_val_if_fail (GDA_IS_LOCKABLE (lockable), FALSE);
+	GdaLockableInterface *iface = GDA_LOCKABLE_GET_IFACE (lockable);
 	
-	if (GDA_LOCKABLE_GET_CLASS (lockable)->i_trylock)
-		return (GDA_LOCKABLE_GET_CLASS (lockable)->i_trylock) (lockable);
-	else {
-		g_warning ("Internal implementation error: %s() method not implemented\n", "i_trylock");
-		return FALSE;
-	}
+	if (iface->trylock)
+		return (iface->trylock) (lockable);
+
+	g_warning ("Internal implementation error: %s() method not implemented\n", "trylock");
+	return FALSE;
 }
 
 /**
@@ -123,9 +86,10 @@ void
 gda_lockable_unlock (GdaLockable *lockable)
 {
 	g_return_if_fail (GDA_IS_LOCKABLE (lockable));
-	
-	if (GDA_LOCKABLE_GET_CLASS (lockable)->i_unlock)
-		(GDA_LOCKABLE_GET_CLASS (lockable)->i_unlock) (lockable);
+	GdaLockableInterface *iface = GDA_LOCKABLE_GET_IFACE (lockable);
+
+	if (iface->unlock)
+		(iface->unlock) (lockable);
 	else
-		g_warning ("Internal implementation error: %s() method not implemented\n", "i_unlock");
+		g_warning ("Internal implementation error: %s() method not implemented\n", "unlock");
 }

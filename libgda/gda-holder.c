@@ -56,7 +56,7 @@ static void gda_holder_get_property (GObject *object,
 				     GParamSpec *pspec);
 
 /* GdaLockable interface */
-static void                 gda_holder_lockable_init (GdaLockableIface *iface);
+static void                 gda_holder_lockable_init (GdaLockableInterface *iface);
 static void                 gda_holder_lock      (GdaLockable *lockable);
 static gboolean             gda_holder_trylock   (GdaLockable *lockable);
 static void                 gda_holder_unlock    (GdaLockable *lockable);
@@ -336,11 +336,11 @@ gda_holder_class_init (GdaHolderClass *class)
 }
 
 static void
-gda_holder_lockable_init (GdaLockableIface *iface)
+gda_holder_lockable_init (GdaLockableInterface *iface)
 {
-	iface->i_lock = gda_holder_lock;
-	iface->i_trylock = gda_holder_trylock;
-	iface->i_unlock = gda_holder_unlock;
+	iface->lock = gda_holder_lock;
+	iface->trylock = gda_holder_trylock;
+	iface->unlock = gda_holder_unlock;
 }
 
 static void
