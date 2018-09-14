@@ -7,6 +7,7 @@
  * Copyright (C) 2004 Paisa  Seeluangsawat <paisa@users.sf.net>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2005 Álvaro Peńa <alvaropg@telefonica.net>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,20 +34,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_ROW            (gda_row_get_type())
-#define GDA_ROW(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_ROW, GdaRow))
-#define GDA_ROW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_ROW, GdaRowClass))
-#define GDA_IS_ROW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_ROW))
-#define GDA_IS_ROW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_ROW))
-
-typedef struct _GdaRow        GdaRow;
-typedef struct _GdaRowClass   GdaRowClass;
-typedef struct _GdaRowPrivate GdaRowPrivate;
-
-struct _GdaRow {
-	GObject        object;
-	GdaRowPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaRow, gda_row, GDA, ROW, GObject)
 struct _GdaRowClass {
 	GObjectClass   parent_class;
 
@@ -71,8 +59,6 @@ struct _GdaRowClass {
  * As a side note, the #GdaRow object is also used internally by the implementation of the data models returned
  * when executing a SELECT statement.
  */
-
-GType         gda_row_get_type       (void) G_GNUC_CONST;
 
 GdaRow       *gda_row_new            (gint count);
 GdaRow       *gda_row_new_from_data_model (GdaDataModel *model, guint row);
