@@ -2998,7 +2998,7 @@ msgid ""
 msgstr ""
 "Jak bylo zmíněno v předchozím oddíle, každý atribut je mapována na sloupec. "
 "Typ sloupce je normálně určen automaticky (řetězec, číslo, …), ale můžete "
-"jej i vynutit připojením „::&lt;typ&gt“ za název atributu pro požadovaný typ."
+"jej i vynutit připojením „::&lt;typ&gt;“ za název atributu pro požadovaný typ."
 
 #. (itstool) path: section/p
 #: C/ldap-connections.page:67
