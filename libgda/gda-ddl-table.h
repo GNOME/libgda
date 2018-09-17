@@ -65,6 +65,7 @@ void            gda_ddl_table_set_temp          (GdaDdlTable *self,
 
 gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
                                               GdaServerOperation *op,
+                                              gboolean ifnotexists,
                                               GError **error);
 
 gboolean        gda_ddl_table_update          (GdaDdlTable *self,
@@ -74,6 +75,7 @@ gboolean        gda_ddl_table_update          (GdaDdlTable *self,
 
 gboolean        gda_ddl_table_create          (GdaDdlTable *self,
                                                GdaConnection *cnc,
+                                               gboolean ifnotexists,
                                                GError **error);
 
 GdaDdlTable    *gda_ddl_table_new_from_meta    (GdaMetaDbObject *obj);

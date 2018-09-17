@@ -485,6 +485,7 @@ gda_ddl_table_is_temp (GdaDdlTable *self)
 gboolean
 gda_ddl_table_prepare_create (GdaDdlTable *self,
                               GdaServerOperation *op,
+                              gboolean ifnotexists,
                               GError **error)
 {
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
@@ -508,7 +509,7 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
     return FALSE;
 
   if (!gda_server_operation_set_value_at(op,
-                                         priv->mp_comment,
+                                         GDA_BOOL_TO_STR(ifnotexists),
                                          error,
                                          "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
     return FALSE;
@@ -639,6 +640,7 @@ on_error:
  * gda_ddl_table_create:
  * @self: a #GdaDdlTable object
  * @cnc: a #GdaConnection object
+ * @ifnotexists: Set to %TRUE if table should be created with "IFNOTEXISTS" option
  * @error: container for error storage
  *
  * Execute a full set of steps to create tabe in the database.
@@ -651,6 +653,7 @@ on_error:
 gboolean
 gda_ddl_table_create (GdaDdlTable *self,
                       GdaConnection *cnc,
+                      gboolean ifnotexists,
                       GError **error)
 {
   g_return_val_if_fail (self,FALSE);
@@ -675,7 +678,7 @@ gda_ddl_table_create (GdaDdlTable *self,
     goto on_error;
 
 
-  if (!gda_ddl_table_prepare_create(self,op,error))
+  if (!gda_ddl_table_prepare_create(self,op,ifnotexists,error))
     goto on_error;
 
   if(!gda_server_provider_perform_operation(provider,cnc,op,error))
