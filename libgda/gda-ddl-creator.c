@@ -738,7 +738,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       g_value_set_string (schema ,gda_ddl_base_get_schema (it->data));
       g_value_set_string (name   ,gda_ddl_base_get_name   (it->data));
 
-      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,error);
+      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,NULL);
 
       if (mobj)
         {
