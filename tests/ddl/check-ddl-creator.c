@@ -48,7 +48,12 @@ typedef struct {
 typedef struct {
     GdaDdlCreator *creator;
     GdaConnection *cnc;
-    GdaServerProvider *provider;
+    GdaDdlColumn *column_id;
+    GdaDdlColumn *column_name;
+    GdaDdlColumn *column_ctime;
+    GdaDdlColumn *column_ts;
+    GdaDdlColumn *column_state;
+    GdaDdlTable *table;
 } DdlCreatorCnc;
 
 static void
@@ -111,52 +116,47 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
 
   g_assert_true (open_res);
 
-  GdaDdlTable *table = gda_ddl_table_new ();
-  gda_ddl_base_set_name (GDA_DDL_BASE(table),"dntypes");
+  self->table = gda_ddl_table_new ();
+  gda_ddl_base_set_name (GDA_DDL_BASE(self->table),"dntypes");
 
-  GdaDdlColumn *column = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column,"id");
-  gda_ddl_column_set_type (column, G_TYPE_INT);
-  gda_ddl_column_set_autoinc (column, TRUE);
-  gda_ddl_column_set_pkey (column, TRUE);
+  self->column_id = gda_ddl_column_new ();
+  gda_ddl_column_set_name (self->column_id,"id");
+  gda_ddl_column_set_type (self->column_id, G_TYPE_INT);
+  gda_ddl_column_set_autoinc (self->column_id, TRUE);
+  gda_ddl_column_set_pkey (self->column_id, TRUE);
 
-  gda_ddl_table_append_column (table,column);
+  gda_ddl_table_append_column (self->table,self->column_id);
 
-  g_clear_object (&column);
+  self->column_name = gda_ddl_column_new ();
+  gda_ddl_column_set_name (self->column_name,"name");
+  gda_ddl_column_set_type (self->column_name, G_TYPE_STRING);
+  gda_ddl_column_set_size (self->column_name, 50);
 
- 
-  column = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column,"name");
-  gda_ddl_column_set_type (column, G_TYPE_STRING);
-  gda_ddl_column_set_size (column, 50);
+  gda_ddl_table_append_column (self->table,self->column_name);
 
-  gda_ddl_table_append_column (table,column);
+  self->column_ctime = gda_ddl_column_new ();
+  gda_ddl_column_set_name (self->column_ctime,"create_time");
+  gda_ddl_column_set_type (self->column_ctime, GDA_TYPE_TIME);
 
-  g_clear_object (&column);
+  gda_ddl_table_append_column (self->table,self->column_ctime);
 
-  column = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column,"create_time");
-  gda_ddl_column_set_type (column, GDA_TYPE_TIME);
+  self->column_state = gda_ddl_column_new ();
+  gda_ddl_column_set_name (self->column_state,"state");
+  gda_ddl_column_set_type (self->column_state, G_TYPE_BOOLEAN);
 
-  gda_ddl_table_append_column (table,column);
+  gda_ddl_table_append_column (self->table,self->column_state);
 
-  g_clear_object (&column);
+  self->column_ts = gda_ddl_column_new ();
+  gda_ddl_column_set_name (self->column_ts,"mytimestamp");
+  gda_ddl_column_set_type (self->column_ts, G_TYPE_DATE_TIME);
 
-  column = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column,"mytimestamp");
-  gda_ddl_column_set_type (column, G_TYPE_DATE_TIME);
+  gda_ddl_table_append_column (self->table,self->column_ts);
 
-  gda_ddl_table_append_column (table,column);
-
-  g_clear_object (&column);
-
-  gda_ddl_creator_append_table (self->creator, table);
-  g_object_unref (table);
+  gda_ddl_creator_append_table (self->creator, self->table);
 
   open_res = gda_ddl_creator_perform_operation (self->creator,self->cnc,NULL);
 
   g_assert_true (open_res);
-
 }
 
 static void
@@ -174,29 +174,14 @@ static void
 test_ddl_creator_finish_db (DdlCreatorCnc *self,
                             gconstpointer user_data)
 {
-  GdaServerOperation *op = NULL;
-
-  op = gda_server_provider_create_operation (self->provider,
-                                             self->cnc,
-                                             GDA_SERVER_OPERATION_DROP_TABLE,
-                                             NULL,
-                                             NULL);
-
-  gboolean open_res;
-
-  open_res = gda_server_operation_set_value_at (op,"dntypes",NULL,"/TABLE_DESC_P/TABLE_NAME");
-  g_assert_true (open_res);
-
-  /*open_res = gda_server_provider_perform_operation (self->provider,self->cnc,op,NULL);*/
-  g_assert_true (open_res);
-
-  g_assert_nonnull (op);
-
-  g_object_unref (op);
-
   gda_connection_close(self->cnc,NULL);
-  g_object_unref (self->creator);
   g_object_unref (self->cnc);
+  g_object_unref (self->creator);
+  g_object_unref (self->column_id);
+  g_object_unref (self->column_name);
+  g_object_unref (self->column_ctime);
+  g_object_unref (self->column_ts);
+  g_object_unref (self->table);
 }
 
 static void
@@ -258,6 +243,8 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
                             gconstpointer user_data)
 {
   gboolean open_res;
+  const gchar* name_str = "First";
+  const gchar* dntypes = "dntypes";
 
   GValue *value_name,*value_state,*value_ctime,*value_timest;
 
@@ -284,57 +271,46 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
 
   GdaDataModel *model = NULL;
   model = gda_connection_execute_select_command (self->cnc,"SELECT * FROM dntypes",NULL);
-	gint i, ncols;
-	g_print ("=== Data Model Dump ===\n");
-	ncols = gda_data_model_get_n_columns (model);
-	for (i = 0; i < ncols; i++) {
-		GdaColumn *col;
-		col = gda_data_model_describe_column (model, i);
-		if (!col)
-			g_print ("Missing column %d\n", i);
-		g_print ("Column %d: ptr=>%p type=>%s dbms_type=%s\n", i, col, 
-             g_type_name (gda_column_get_g_type (col)), gda_column_get_dbms_type (col));
-		g_print ("2Column %d: type=>%s\n", i,  
-             gda_g_type_to_string (gda_column_get_g_type (col)));
-	}
-	gda_data_model_dump (model, stdout);
+  g_assert_nonnull (model);
 
-  open_res = gda_ddl_creator_parse_cnc (self->creator,self->cnc,NULL);
+  GdaDdlCreator *creator = gda_ddl_creator_new ();
+  open_res = gda_ddl_creator_parse_cnc (creator,self->cnc,NULL);
 
-  const GList *tables = gda_ddl_creator_get_tables (self->creator);
+  GList *tables = gda_ddl_creator_get_tables (creator);
   g_assert_nonnull (tables);
   gint raw = 0;
   gint column_count = 0;
 
   for (GList *it = tables; it; it = it->next)
     {
-      g_print("For table %s\n",gda_ddl_base_get_name (GDA_DDL_BASE(it->data)));
-      const GList *columns = gda_ddl_table_get_columns (GDA_DDL_TABLE(it->data));
+      g_assert_cmpstr (dntypes,==,gda_ddl_base_get_name (GDA_DDL_BASE(it->data)));
+      GList *columns = gda_ddl_table_get_columns (GDA_DDL_TABLE(it->data));
       g_assert_nonnull (columns);
 
       column_count = 0;
 
       for (GList *jt = columns;jt;jt=jt->next)
         {
-          GValue *value = NULL;
           GdaDdlColumn *column = GDA_DDL_COLUMN (jt->data);
           GType column_type = gda_ddl_column_get_gtype (column);
-          if (column_type == G_TYPE_NONE)
-            g_print("Column type is NULL\n");
-          g_print ("Column type from DDL: %s\n",g_type_name(column_type));
+          g_assert_true (column_type != G_TYPE_NONE);
           
           if (!g_strcmp0 ("id",gda_ddl_column_get_name (column))) 
             {
-              const GValue *value_int = gda_data_model_get_typed_value_at (model,
-                                                                           column_count++,
-                                                                           raw,
-                                                                           G_TYPE_INT,
-                                                                           FALSE,
-                                                                           NULL);
+              GError *error = NULL;
+              const GValue *value = gda_data_model_get_typed_value_at (model,
+                                                                       column_count++,
+                                                                       raw,
+                                                                       G_TYPE_INT,
+                                                                       FALSE,
+                                                                       &error);
 
-              g_assert_nonnull (value_int);
+              if (!value)
+                g_print ("value_int error: %s\n",error && error->message ? error->message : "No default");
 
-              GType ggtype = G_VALUE_TYPE(value_int);
+              g_assert_nonnull (value);
+
+              GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for ID type is %s\n",g_type_name (ggtype));
               
@@ -342,16 +318,16 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
           
           if (!g_strcmp0 ("name",gda_ddl_column_get_name (column))) 
             {
-              const GValue *value_int = gda_data_model_get_typed_value_at (model,
-                                                                           column_count++,
-                                                                           raw,
-                                                                           G_TYPE_STRING,
-                                                                           FALSE,
-                                                                           NULL);
+              const GValue *value = gda_data_model_get_typed_value_at (model,
+                                                                       column_count++,
+                                                                       raw,
+                                                                       G_TYPE_STRING,
+                                                                       FALSE,
+                                                                       NULL);
 
-              g_assert_nonnull (value_int);
+              g_assert_nonnull (value);
 
-              GType ggtype = G_VALUE_TYPE(value_int);
+              GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for NAME type is %s\n",g_type_name (ggtype));
               
@@ -359,33 +335,32 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
 
           if (!g_strcmp0 ("state",gda_ddl_column_get_name (column))) 
             {
-              const GValue *value_int = gda_data_model_get_typed_value_at (model,
+              const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
                                                                            raw,
                                                                            G_TYPE_BOOLEAN,
                                                                            FALSE,
                                                                            NULL);
 
-              g_assert_nonnull (value_int);
+              g_assert_nonnull (value);
 
-              GType ggtype = G_VALUE_TYPE(value_int);
-
-              g_print ("for STATE type is %s\n",g_type_name (ggtype));
+              GType ggtype = G_VALUE_TYPE(value);
               
+              g_assert_true (TRUE && g_value_get_boolean (value));
             }
 
           if (!g_strcmp0 ("create_time",gda_ddl_column_get_name (column))) 
             {
-              const GValue *value_int = gda_data_model_get_typed_value_at (model,
+              const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
                                                                            raw,
                                                                            GDA_TYPE_TIME,
                                                                            FALSE,
                                                                            NULL);
 
-              g_assert_nonnull (value_int);
+              g_assert_nonnull (value);
 
-              GType ggtype = G_VALUE_TYPE(value_int);
+              GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for created_time type is %s\n",g_type_name (ggtype));
               
@@ -393,17 +368,17 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
 
           if (!g_strcmp0 ("mytimestamp",gda_ddl_column_get_name (column))) 
             {
-              const GValue *value_int = gda_data_model_get_typed_value_at (model,
+              const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
                                                                            raw,
                                                                            G_TYPE_DATE_TIME,
                                                                            FALSE,
                                                                            NULL);
 
-              g_assert_nonnull (value_int);
+              g_assert_nonnull (value);
 
-              GType ggtype = G_VALUE_TYPE(value_int);
-              GDateTime *dt = (GDateTime*)g_value_get_boxed (value_int);
+              GType ggtype = G_VALUE_TYPE(value);
+              GDateTime *dt = (GDateTime*)g_value_get_boxed (value);
 
               g_print ("for dt type is %s\n",g_type_name (ggtype));
               g_print ("YYYY-MM-DD: %d-%d-%d\n",g_date_time_get_year (dt),
@@ -415,9 +390,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
       raw++;
     }
 
-
-
-
+  g_object_unref (creator);
   g_assert_true (open_res);
 
   gda_value_free (value_name);
@@ -426,14 +399,6 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
   gda_value_free (value_timest);
   g_object_unref (model);
 }
-/* static void */
-/* test_ddl_creator_parse_cnc (CheckDdlObject *self, */
-/*                            gconstpointer user_data) */
-/* { */
-/*   gboolean res = gda_ddl_creator_parse_cnc(self->creator,self->cnc,NULL); */
-
-/*   g_assert_true (res); */
-/* } */
 
 gint
 main (gint   argc,
