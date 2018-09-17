@@ -92,17 +92,25 @@ gda_ddl_creator_finalize (GObject *object)
   GdaDdlCreator *self = GDA_DDL_CREATOR(object);
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
+  g_free (priv->mp_schemaname);
+
+  G_OBJECT_CLASS (gda_ddl_creator_parent_class)->finalize (object);
+}
+
+static void
+gda_ddl_creator_dispose (GObject *object)
+{
+  GdaDdlCreator *self = GDA_DDL_CREATOR(object);
+  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
+
   if (priv->mp_tables)
     g_list_free_full (priv->mp_tables, (GDestroyNotify) g_object_unref);
 
   if (priv->mp_views)
     g_list_free_full (priv->mp_views, (GDestroyNotify) g_object_unref);
 
-  g_free (priv->mp_schemaname);
-
   G_OBJECT_CLASS (gda_ddl_creator_parent_class)->finalize (object);
 }
-
 static void
 gda_ddl_creator_get_property (GObject    *object,
                               guint       prop_id,
@@ -148,6 +156,7 @@ gda_ddl_creator_class_init (GdaDdlCreatorClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gda_ddl_creator_finalize;
+  object_class->dispose = gda_ddl_creator_dispose;
   object_class->get_property = gda_ddl_creator_get_property;
   object_class->set_property = gda_ddl_creator_set_property;
 
@@ -371,7 +380,6 @@ gda_ddl_creator_parse_file_from_path (GdaDdlCreator *self,
                    GDA_DDL_CREATOR_ERROR,
                    GDA_DDL_CREATOR_DOC_NULL,
                    _("xmlDoc object can't be created from xmfile name '%s'"), xmlfile);
-      g_print ("Step %d\n",__LINE__);
       goto on_error;
     }
 
@@ -424,7 +432,6 @@ gda_ddl_creator_validate_file_from_path (const gchar *xmlfile,
                    GDA_DDL_CREATOR_ERROR,
                    GDA_DDL_CREATOR_DOC_NULL,
                    _("xmlDoc object can't be created from xmfile name '%s'"), xmlfile);
-      g_print ("Step %d\n",__LINE__);
       goto on_error;
     }
 
@@ -448,7 +455,7 @@ on_error:
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_creator_get_tables (GdaDdlCreator *self)
 {
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
@@ -463,7 +470,7 @@ gda_ddl_creator_get_tables (GdaDdlCreator *self)
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_creator_get_views (GdaDdlCreator *self)
 {
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
@@ -627,13 +634,13 @@ on_error:
  */
 void
 gda_ddl_creator_append_table (GdaDdlCreator *self,
-                              const GdaDdlTable *table)
+                              GdaDdlTable *table)
 {
   g_return_if_fail (self);
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
-  priv->mp_tables = g_list_append (priv->mp_tables,(gpointer)table);
+  priv->mp_tables = g_list_append (priv->mp_tables,g_object_ref (table));
 }
 
 /**
@@ -647,13 +654,13 @@ gda_ddl_creator_append_table (GdaDdlCreator *self,
  */
 void
 gda_ddl_creator_append_view (GdaDdlCreator *self,
-                             const GdaDdlView *view)
+                             GdaDdlView *view)
 {
   g_return_if_fail (self);
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
-  priv->mp_views = g_list_append (priv->mp_views,(gpointer)view);
+  priv->mp_views = g_list_append (priv->mp_views,g_object_ref (view));
 }
 
 /**
@@ -740,7 +747,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
         }
       else
         {
-          if(!gda_ddl_table_create (it->data,cnc,error))
+          if(!gda_ddl_table_create (it->data,cnc,TRUE,error))
             goto on_error;
         }
     } /* End of for loop */
