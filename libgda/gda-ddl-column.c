@@ -640,6 +640,8 @@ gda_ddl_column_set_type (GdaDdlColumn *self,
   g_return_if_fail (self);
   GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
   priv->m_gtype = type;
+  g_free (priv->mp_type);
+  priv->mp_type = g_strdup (gda_g_type_to_string (type));
 }
 
 /**
@@ -996,15 +998,18 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
   gchar *numstr = NULL;
   numstr = g_strdup_printf ("%d",priv->m_size);
 
-  if(!gda_server_operation_set_value_at(op,numstr,error,"/FIELDS_A/@COLUMN_SIZE/%d",order))
+  if (g_type_is_a (priv->m_gtype,G_TYPE_STRING))
     {
-      g_free (numstr);
-      return FALSE;
-    }
-  else
-    {
-      g_free (numstr);
-      numstr = NULL;
+      if(!gda_server_operation_set_value_at(op,numstr,error,"/FIELDS_A/@COLUMN_SIZE/%d",order))
+        {
+          g_free (numstr);
+          return FALSE;
+        }
+      else
+        {
+          g_free (numstr);
+          numstr = NULL;
+        }
     }
 
 /* We need to set scale only for numeric column type */
