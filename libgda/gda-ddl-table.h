@@ -53,8 +53,8 @@ GQuark gda_ddl_table_error_quark(void);
 
 GdaDdlTable*    gda_ddl_table_new               (void);
 gboolean        gda_ddl_table_is_valid          (GdaDdlTable *self);
-const GList*    gda_ddl_table_get_columns       (GdaDdlTable *self);
-const GList*    gda_ddl_table_get_fkeys         (GdaDdlTable *self);
+GList*          gda_ddl_table_get_columns       (GdaDdlTable *self);
+GList*          gda_ddl_table_get_fkeys         (GdaDdlTable *self);
 
 void            gda_ddl_table_append_column     (GdaDdlTable *self,
                                                  GdaDdlColumn *column);
@@ -65,6 +65,7 @@ void            gda_ddl_table_set_temp          (GdaDdlTable *self,
 
 gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
                                               GdaServerOperation *op,
+                                              gboolean ifnotexists,
                                               GError **error);
 
 gboolean        gda_ddl_table_update          (GdaDdlTable *self,
@@ -74,6 +75,7 @@ gboolean        gda_ddl_table_update          (GdaDdlTable *self,
 
 gboolean        gda_ddl_table_create          (GdaDdlTable *self,
                                                GdaConnection *cnc,
+                                               gboolean ifnotexists,
                                                GError **error);
 
 GdaDdlTable    *gda_ddl_table_new_from_meta    (GdaMetaDbObject *obj);

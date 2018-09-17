@@ -81,18 +81,18 @@ gboolean         gda_ddl_creator_parse_file (GdaDdlCreator *self,
                                              GFile *xmlfile,
                                              GError **error);
 
-const GList     *gda_ddl_creator_get_tables	(GdaDdlCreator *self);
-const GList     *gda_ddl_creator_get_views	(GdaDdlCreator *self);
+GList           *gda_ddl_creator_get_tables	(GdaDdlCreator *self);
+GList           *gda_ddl_creator_get_views	(GdaDdlCreator *self);
 
 gboolean         gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
                                             GdaConnection *cnc,
                                             GError **error);
 
 void             gda_ddl_creator_append_table (GdaDdlCreator *self,
-                                               const GdaDdlTable *table);
+                                               GdaDdlTable *table);
 
 void             gda_ddl_creator_append_view (GdaDdlCreator *self,
-                                              const GdaDdlView *view);
+                                              GdaDdlView *view);
 
 gboolean         gda_ddl_creator_perform_operation (GdaDdlCreator *self,
                                                     GdaConnection *cnc,
