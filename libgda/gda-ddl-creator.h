@@ -89,10 +89,10 @@ gboolean         gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
                                             GError **error);
 
 void             gda_ddl_creator_append_table (GdaDdlCreator *self,
-                                               const GdaDdlTable *table);
+                                               GdaDdlTable *table);
 
 void             gda_ddl_creator_append_view (GdaDdlCreator *self,
-                                              const GdaDdlView *view);
+                                              GdaDdlView *view);
 
 gboolean         gda_ddl_creator_perform_operation (GdaDdlCreator *self,
                                                     GdaConnection *cnc,

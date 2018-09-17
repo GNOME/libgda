@@ -634,7 +634,7 @@ on_error:
  */
 void
 gda_ddl_creator_append_table (GdaDdlCreator *self,
-                              const GdaDdlTable *table)
+                              GdaDdlTable *table)
 {
   g_return_if_fail (self);
 
@@ -654,7 +654,7 @@ gda_ddl_creator_append_table (GdaDdlCreator *self,
  */
 void
 gda_ddl_creator_append_view (GdaDdlCreator *self,
-                             const GdaDdlView *view)
+                             GdaDdlView *view)
 {
   g_return_if_fail (self);
 
@@ -747,7 +747,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
         }
       else
         {
-          if(!gda_ddl_table_create (it->data,cnc,error))
+          if(!gda_ddl_table_create (it->data,cnc,TRUE,error))
             goto on_error;
         }
     } /* End of for loop */
