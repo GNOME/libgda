@@ -53,8 +53,8 @@ GQuark gda_ddl_table_error_quark(void);
 
 GdaDdlTable*    gda_ddl_table_new               (void);
 gboolean        gda_ddl_table_is_valid          (GdaDdlTable *self);
-const GList*    gda_ddl_table_get_columns       (GdaDdlTable *self);
-const GList*    gda_ddl_table_get_fkeys         (GdaDdlTable *self);
+GList*          gda_ddl_table_get_columns       (GdaDdlTable *self);
+GList*          gda_ddl_table_get_fkeys         (GdaDdlTable *self);
 
 void            gda_ddl_table_append_column     (GdaDdlTable *self,
                                                  GdaDdlColumn *column);

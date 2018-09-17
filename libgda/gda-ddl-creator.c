@@ -455,7 +455,7 @@ on_error:
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_creator_get_tables (GdaDdlCreator *self)
 {
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
@@ -470,7 +470,7 @@ gda_ddl_creator_get_tables (GdaDdlCreator *self)
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_creator_get_views (GdaDdlCreator *self)
 {
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);

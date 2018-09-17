@@ -422,7 +422,7 @@ gda_ddl_table_is_valid (GdaDdlTable *self)
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_table_get_columns (GdaDdlTable *self)
 {
   g_return_val_if_fail (self, NULL);
@@ -443,7 +443,7 @@ gda_ddl_table_get_columns (GdaDdlTable *self)
  *
  * Since: 6.0
  */
-const GList*
+GList*
 gda_ddl_table_get_fkeys (GdaDdlTable *self)
 {
   g_return_val_if_fail (self, NULL);
