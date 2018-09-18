@@ -834,6 +834,7 @@ create_entry_widget (SingleEntry *sentry)
 	GtkWidget *entry;
 	gboolean editable = TRUE;
 	GValue *ref_value = NULL;
+  gint items_count;
 
 	disconnect_single_entry_signals (sentry);
 	if (sentry->entry) {
@@ -886,10 +887,14 @@ create_entry_widget (SingleEntry *sentry)
 		const gchar *plugin = NULL;
 		const GValue *plugin_val;
 
-		if (gda_set_group_get_n_nodes (sg) != 1) { /* only 1 item in the list */
-      g_warning (_("There are more entries than expected in group. Found %d"), gda_set_group_get_n_nodes (sg));
-      return;
-    }
+		items_count = gda_set_group_get_n_nodes (sg);
+		if ( items_count != 1) { /* only 1 item in the list */
+			g_warning (ngettext("There are more entries than expected in group. Found %d",
+			                    "There are more entries than expected in group. Found %d",
+			                    items_count),
+			           items_count);
+			return;
+		}
 
 		param = GDA_HOLDER (gda_set_node_get_holder (gda_set_group_get_node (sg)));
 		sentry->single_param = param;
