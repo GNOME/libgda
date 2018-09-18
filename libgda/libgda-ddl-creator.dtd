@@ -27,7 +27,7 @@
 
 <!ELEMENT check         (#PCDATA)>
 
-<!ELEMENT fkey (fk_field?)>
+<!ELEMENT fkey (fk_field+)>
 <!ATTLIST fkey reftable CDATA #IMPLIED>
 <!ATTLIST fkey onupdate (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>
 <!ATTLIST fkey ondelete (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>

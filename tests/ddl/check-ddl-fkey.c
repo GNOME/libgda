@@ -181,7 +181,7 @@ test_ddl_fkey_finish (CheckDdlObject *self,
                       gconstpointer user_data)
 {
   g_free (self->xmlfile);
-  gda_ddl_fkey_free (self->fkey);
+  g_object_unref (self->fkey);
   xmlFreeDoc (self->doc);
   g_list_free (self->reffield);
   g_list_free (self->fkfield);
