@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,21 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE_MGR_COLUMNS            (gda_tree_mgr_columns_get_type())
-#define GDA_TREE_MGR_COLUMNS(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_MGR_COLUMNS, GdaTreeMgrColumns))
-#define GDA_TREE_MGR_COLUMNS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_COLUMNS, GdaTreeMgrColumnsClass))
-#define GDA_IS_TREE_MGR_COLUMNS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_COLUMNS))
-#define GDA_IS_TREE_MGR_COLUMNS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_COLUMNS))
-#define GDA_TREE_MGR_COLUMNS_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_COLUMNS, GdaTreeMgrColumnsClass))
-
-typedef struct _GdaTreeMgrColumns GdaTreeMgrColumns;
-typedef struct _GdaTreeMgrColumnsPriv GdaTreeMgrColumnsPriv;
-typedef struct _GdaTreeMgrColumnsClass GdaTreeMgrColumnsClass;
-
-struct _GdaTreeMgrColumns {
-	GdaTreeManager        object;
-	GdaTreeMgrColumnsPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaTreeMgrColumns, gda_tree_mgr_columns, GDA, TREE_MGR_COLUMNS, GdaTreeManager)
 struct _GdaTreeMgrColumnsClass {
 	GdaTreeManagerClass   object_class;
 };
@@ -65,7 +52,6 @@ struct _GdaTreeMgrColumnsClass {
  * gda_tree_node_fetch_attribute()).
  */
 
-GType              gda_tree_mgr_columns_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_columns_new                      (GdaConnection *cnc, const gchar *schema,
 								  const gchar *table_name);
 
