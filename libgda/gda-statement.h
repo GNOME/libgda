@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,11 +26,6 @@
 #include <sql-parser/gda-statement-struct.h>
 
 G_BEGIN_DECLS
-
-#define GDA_TYPE_STATEMENT          (gda_statement_get_type())
-#define GDA_STATEMENT(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_statement_get_type(), GdaStatement)
-#define GDA_STATEMENT_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_statement_get_type (), GdaStatementClass)
-#define GDA_IS_STATEMENT(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_statement_get_type ())
 
 /* error reporting */
 extern GQuark gda_statement_error_quark (void);
@@ -102,11 +98,9 @@ typedef enum {
         GDA_STATEMENT_SQL_TIMEZONE_TO_GMT    = 1 << 7
 } GdaStatementSqlFlag;
 
-/* struct for the object's data */
-struct _GdaStatement
-{
-	GObject              object;
-};
+
+#define GDA_TYPE_STATEMENT          (gda_statement_get_type())
+G_DECLARE_DERIVABLE_TYPE(GdaStatement, gda_statement, GDA, STATEMENT, GObject)
 
 /* struct for the object's class */
 struct _GdaStatementClass
@@ -148,7 +142,6 @@ struct _GdaStatementClass
  *  Note that it is possible to use the same #GdaStatement object at the same time with several #GdaConnection objects.
  */
 
-GType               gda_statement_get_type               (void) G_GNUC_CONST;
 GdaStatement       *gda_statement_new                    (void);
 GdaStatement       *gda_statement_copy                   (GdaStatement *orig);
 

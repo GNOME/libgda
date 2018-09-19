@@ -49,8 +49,6 @@
 /* 
  * Main static functions 
  */
-static void gda_statement_class_init (GdaStatementClass *klass);
-static void gda_statement_init (GdaStatement *stmt);
 static void gda_statement_dispose (GObject *object);
 
 static void gda_statement_set_property (GObject *object,
@@ -61,14 +59,13 @@ static void gda_statement_get_property (GObject *object,
 					guint param_id,
 					GValue *value,
 					GParamSpec *pspec);
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 
 typedef struct {
 	GdaSqlStatement *internal_struct;
 	GType           *requested_types;
 } GdaStatementPrivate;
-#define gda_statement_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_STATEMENT, GdaStatementPrivate)
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaStatement, gda_statement, G_TYPE_OBJECT)
 /* signals */
 enum
 {
@@ -96,41 +93,10 @@ GQuark gda_statement_error_quark (void)
 }
 
 
-GType
-gda_statement_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaStatementClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_statement_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaStatement),
-			0,
-			(GInstanceInitFunc) gda_statement_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaStatement", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void
 gda_statement_class_init (GdaStatementClass * klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaStatementPrivate));
 
 	/**
 	 * GdaStatement::reset:
@@ -249,7 +215,7 @@ gda_statement_dispose (GObject *object)
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_statement_parent_class)->dispose (object);
 }
 
 static void
@@ -262,8 +228,7 @@ gda_statement_set_property (GObject *object,
 
 	stmt = GDA_STATEMENT (object);
 	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
-	if (priv) {
-		switch (param_id) {
+	switch (param_id) {
 		case PROP_STRUCTURE:
 			if (priv->internal_struct) {
 				gda_sql_statement_free (priv->internal_struct);
@@ -279,7 +244,6 @@ gda_statement_set_property (GObject *object,
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -292,16 +256,14 @@ gda_statement_get_property (GObject *object,
 	GdaStatement *stmt;
 	stmt = GDA_STATEMENT (object);
 	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
-	
-	if (priv) {
-		switch (param_id) {
+
+	switch (param_id) {
 		case PROP_STRUCTURE:
 			g_value_set_pointer (value, gda_sql_statement_copy (priv->internal_struct));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}	
 	}
 }
 
