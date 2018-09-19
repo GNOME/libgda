@@ -24,14 +24,13 @@
 #include "gda-tree-mgr-schemas.h"
 #include "gda-tree-node.h"
 
-struct _GdaTreeMgrSchemasPriv {
+typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStore  *mstore;
 	GdaStatement  *stmt;
-};
+} GdaTreeMgrSchemasPrivate;
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeMgrSchemas, gda_tree_mgr_schemas, GDA_TYPE_TREE_MANAGER)
 
-static void gda_tree_mgr_schemas_class_init (GdaTreeMgrSchemasClass *klass);
-static void gda_tree_mgr_schemas_init       (GdaTreeMgrSchemas *tmgr1, GdaTreeMgrSchemasClass *klass);
 static void gda_tree_mgr_schemas_dispose    (GObject *object);
 static void gda_tree_mgr_schemas_set_property (GObject *object,
 					      guint param_id,
@@ -45,8 +44,6 @@ static void gda_tree_mgr_schemas_get_property (GObject *object,
 /* virtual methods */
 static GSList *gda_tree_mgr_schemas_update_children (GdaTreeManager *manager, GdaTreeNode *node, 
 						     const GSList *children_nodes, gboolean *out_error, GError **error);
-
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum {
@@ -63,8 +60,6 @@ static void
 gda_tree_mgr_schemas_class_init (GdaTreeMgrSchemasClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual methods */
 	((GdaTreeManagerClass*) klass)->update_children = gda_tree_mgr_schemas_update_children;
@@ -101,11 +96,7 @@ gda_tree_mgr_schemas_class_init (GdaTreeMgrSchemasClass *klass)
 }
 
 static void
-gda_tree_mgr_schemas_init (GdaTreeMgrSchemas *mgr, G_GNUC_UNUSED GdaTreeMgrSchemasClass *klass)
-{
-	g_return_if_fail (GDA_IS_TREE_MGR_SCHEMAS (mgr));
-	mgr->priv = g_new0 (GdaTreeMgrSchemasPriv, 1);
-}
+gda_tree_mgr_schemas_init (GdaTreeMgrSchemas *mgr) {}
 
 static void
 gda_tree_mgr_schemas_dispose (GObject *object)
@@ -113,56 +104,24 @@ gda_tree_mgr_schemas_dispose (GObject *object)
 	GdaTreeMgrSchemas *mgr = (GdaTreeMgrSchemas *) object;
 
 	g_return_if_fail (GDA_IS_TREE_MGR_SCHEMAS (mgr));
+	GdaTreeMgrSchemasPrivate *priv = gda_tree_mgr_schemas_get_instance_private (mgr);
 
-	if (mgr->priv) {
-		if (mgr->priv->cnc)
-			g_object_unref (mgr->priv->cnc);
-		if (mgr->priv->mstore)
-			g_object_unref (mgr->priv->mstore);
-		if (mgr->priv->stmt)
-			g_object_unref (mgr->priv->stmt);
-
-		g_free (mgr->priv);
-		mgr->priv = NULL;
+	if (priv->cnc) {
+		g_object_unref (priv->cnc);
+		priv->cnc = NULL;
+	}
+	if (priv->mstore) {
+		g_object_unref (priv->mstore);
+		priv->mstore = NULL;
+	}
+	if (priv->stmt) {
+		g_object_unref (priv->stmt);
+		priv->stmt = NULL;
 	}
 
+
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-/**
- * gda_tree_mgr_schemas_get_type:
- *
- * Returns: the GType
- *
- * Since: 4.2
- */
-GType
-gda_tree_mgr_schemas_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeMgrSchemasClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_mgr_schemas_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTreeMgrSchemas),
-                        0,
-                        (GInstanceInitFunc) gda_tree_mgr_schemas_init,
-			0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (GDA_TYPE_TREE_MANAGER, "GdaTreeMgrSchemas", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
+	G_OBJECT_CLASS (gda_tree_mgr_schemas_parent_class)->dispose (object);
 }
 
 static void
@@ -171,26 +130,25 @@ gda_tree_mgr_schemas_set_property (GObject *object,
 				   const GValue *value,
 				   GParamSpec *pspec)
 {
-        GdaTreeMgrSchemas *mgr;
+	GdaTreeMgrSchemas *mgr;
 
-        mgr = GDA_TREE_MGR_SCHEMAS (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_SCHEMAS (object);
+	GdaTreeMgrSchemasPrivate *priv = gda_tree_mgr_schemas_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_CNC:
-			mgr->priv->cnc = (GdaConnection*) g_value_get_object (value);
-			if (mgr->priv->cnc)
-				g_object_ref (mgr->priv->cnc);
+			priv->cnc = (GdaConnection*) g_value_get_object (value);
+			if (priv->cnc)
+				g_object_ref (priv->cnc);
 			break;
 		case PROP_META_STORE:
-			mgr->priv->mstore = (GdaMetaStore*) g_value_get_object (value);
-			if (mgr->priv->mstore)
-				g_object_ref (mgr->priv->mstore);
+			priv->mstore = (GdaMetaStore*) g_value_get_object (value);
+			if (priv->mstore)
+				g_object_ref (priv->mstore);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -199,22 +157,21 @@ gda_tree_mgr_schemas_get_property (GObject *object,
 				   GValue *value,
 				   GParamSpec *pspec)
 {
-        GdaTreeMgrSchemas *mgr;
+	GdaTreeMgrSchemas *mgr;
 
-        mgr = GDA_TREE_MGR_SCHEMAS (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_SCHEMAS (object);
+	GdaTreeMgrSchemasPrivate *priv = gda_tree_mgr_schemas_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_CNC:
-			g_value_set_object (value, mgr->priv->cnc);
+			g_value_set_object (value, priv->cnc);
 			break;
 		case PROP_META_STORE:
-			g_value_set_object (value, mgr->priv->mstore);
+			g_value_set_object (value, priv->mstore);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 /**
@@ -249,22 +206,23 @@ gda_tree_mgr_schemas_update_children (GdaTreeManager *manager, GdaTreeNode *node
 	GdaDataModel *model;
 	GSList *list = NULL;
 	GdaConnection *scnc;
+	GdaTreeMgrSchemasPrivate *priv = gda_tree_mgr_schemas_get_instance_private (mgr);
 
-	if (!mgr->priv->cnc && !mgr->priv->mstore) {
+	if (!priv->cnc && !priv->mstore) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     "%s", _("No connection and no GdaMetaStore specified"));
 		if (out_error)
 			*out_error = TRUE;
 		return NULL;
 	}
-	else if (mgr->priv->mstore)
-		store = mgr->priv->mstore;
+	else if (priv->mstore)
+		store = priv->mstore;
 	else
-		store = gda_connection_get_meta_store (mgr->priv->cnc);
+		store = gda_connection_get_meta_store (priv->cnc);
 
 	scnc = gda_meta_store_get_internal_connection (store);
 
-	if (!mgr->priv->stmt) {
+	if (!priv->stmt) {
 		GdaSqlParser *parser;
 		GdaStatement *stmt;
 
@@ -282,10 +240,10 @@ gda_tree_mgr_schemas_update_children (GdaTreeManager *manager, GdaTreeNode *node
 				*out_error = TRUE;
 			return NULL;
 		}
-		mgr->priv->stmt = stmt;
+		priv->stmt = stmt;
 	}
 
-	model = gda_connection_statement_execute_select (scnc, mgr->priv->stmt, NULL, error);
+	model = gda_connection_statement_execute_select (scnc, priv->stmt, NULL, error);
 	if (!model) {
 		if (out_error)
 			*out_error = TRUE;

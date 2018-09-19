@@ -26,21 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE_MGR_SCHEMAS            (gda_tree_mgr_schemas_get_type())
-#define GDA_TREE_MGR_SCHEMAS(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_MGR_SCHEMAS, GdaTreeMgrSchemas))
-#define GDA_TREE_MGR_SCHEMAS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_SCHEMAS, GdaTreeMgrSchemasClass))
-#define GDA_IS_TREE_MGR_SCHEMAS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_SCHEMAS))
-#define GDA_IS_TREE_MGR_SCHEMAS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_SCHEMAS))
-#define GDA_TREE_MGR_SCHEMAS_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_SCHEMAS, GdaTreeMgrSchemasClass))
-
-typedef struct _GdaTreeMgrSchemas GdaTreeMgrSchemas;
-typedef struct _GdaTreeMgrSchemasPriv GdaTreeMgrSchemasPriv;
-typedef struct _GdaTreeMgrSchemasClass GdaTreeMgrSchemasClass;
-
-struct _GdaTreeMgrSchemas {
-	GdaTreeManager        object;
-	GdaTreeMgrSchemasPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaTreeMgrSchemas, gda_tree_mgr_schemas, GDA, TREE_MGR_SCHEMAS, GdaTreeManager)
 struct _GdaTreeMgrSchemasClass {
 	GdaTreeManagerClass   object_class;
 };
@@ -61,7 +47,6 @@ struct _GdaTreeMgrSchemasClass {
  * The #GdaConnection to be used needs to be specified when the object is created.
  */
 
-GType              gda_tree_mgr_schemas_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_schemas_new                      (GdaConnection *cnc);
 
 G_END_DECLS
