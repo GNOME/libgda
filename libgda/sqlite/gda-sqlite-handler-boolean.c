@@ -28,7 +28,7 @@ static void gda_sqlite_handler_boolean_dispose (GObject   * object);
 
 
 /* GdaDataHandler interface */
-static void         gda_sqlite_handler_boolean_data_handler_init      (GdaDataHandlerIface *iface);
+static void         gda_sqlite_handler_boolean_data_handler_init      (GdaDataHandlerInterface *iface);
 static gchar       *gda_sqlite_handler_boolean_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);
 static gchar       *gda_sqlite_handler_boolean_get_str_from_value     (GdaDataHandler *dh, const GValue *value);
 static GValue      *gda_sqlite_handler_boolean_get_value_from_sql     (GdaDataHandler *dh, const gchar *sql, 
@@ -86,7 +86,7 @@ _gda_sqlite_handler_boolean_get_type (void)
 }
 
 static void
-gda_sqlite_handler_boolean_data_handler_init (GdaDataHandlerIface *iface)
+gda_sqlite_handler_boolean_data_handler_init (GdaDataHandlerInterface *iface)
 {
 	iface->get_sql_from_value = gda_sqlite_handler_boolean_get_sql_from_value;
 	iface->get_str_from_value = gda_sqlite_handler_boolean_get_str_from_value;

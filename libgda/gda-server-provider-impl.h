@@ -35,6 +35,7 @@
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-xa-transaction.h>
 #include <libgda/thread-wrapper/gda-worker.h>
+#include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
 

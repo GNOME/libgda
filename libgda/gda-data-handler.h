@@ -2,6 +2,7 @@
  * Copyright (C) 2006 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,13 +31,10 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_HANDLER          (gda_data_handler_get_type())
-#define GDA_DATA_HANDLER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_HANDLER, GdaDataHandler)
-#define GDA_IS_DATA_HANDLER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_HANDLER)
-#define GDA_DATA_HANDLER_GET_IFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_HANDLER, GdaDataHandlerIface))
-
+G_DECLARE_INTERFACE(GdaDataHandler, gda_data_handler, GDA, DATA_HANDLER, GObject)
 
 /* struct for the interface */
-struct _GdaDataHandlerIface
+struct _GdaDataHandlerInterface
 {
 	GTypeInterface           g_iface;
 
@@ -75,8 +73,6 @@ struct _GdaDataHandlerIface
  * <link linkend="gda-server-provider-get-data-handler-dbms">gda_server_provider_get_data_handler_dbms()</link>.
  */
 
-
-GType        gda_data_handler_get_type               (void) G_GNUC_CONST;
 
 /* Simple data manipulation */
 gchar         *gda_data_handler_get_sql_from_value     (GdaDataHandler *dh, const GValue *value);

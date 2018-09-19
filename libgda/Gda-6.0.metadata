@@ -20,9 +20,6 @@ ServerOperation.get_value_at_path name="get_value_at"
 ServerOperation.op_type_to_string parent="Gda.ServerOperationType" name="to_string"
 ServerOperation.string_to_op_type parent="Gda.ServerOperationType" name="from_string"
 
-// Enable skiped objects
-ServerOperation.prepare_create_table_v skip=false
-
 // Set type
 ServerProvider.set_impl_functions skip=true // FIXME:
 
@@ -46,4 +43,5 @@ BlobOpFunctions skip=true
 ServerProviderBase skip=true
 sql_statement_get_contents_infos skip=true
 SqlStatementContentsInfo skip=true
+
 

@@ -25,6 +25,7 @@
 
 #include <glib-object.h>
 #include <sql-parser/gda-sql-statement.h>
+#include <libgda/gda-data-handler.h>
 
 G_BEGIN_DECLS
 

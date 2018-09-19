@@ -20,6 +20,7 @@
 #include <glib-object.h>
 #include <libgda/gda-connection.h>
 #include <libgda/gda-quark-list.h>
+#include <libgda/gda-data-handler.h>
 
 #ifndef __GDA_PROVIDER_H__
 #define __GDA_PROVIDER_H__

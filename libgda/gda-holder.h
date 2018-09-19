@@ -23,6 +23,7 @@
 #define __GDA_HOLDER_H_
 
 #include <libgda/gda-decl.h>
+#include <libgda/gda-data-handler.h>
 #include "gda-value.h"
 
 G_BEGIN_DECLS

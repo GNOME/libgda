@@ -61,7 +61,7 @@ struct _GdaHandlerTime
  * in file gdate.c
  */
 
-static void   data_handler_iface_init (GdaDataHandlerIface *iface);
+static void   data_handler_iface_init (GdaDataHandlerInterface *iface);
 static gchar *render_date_locale      (const GDate *date, LocaleSetting *locale);
 static void   handler_compute_locale  (GdaHandlerTime *hdl);
 
@@ -1147,7 +1147,7 @@ gda_handler_time_get_descr (GdaDataHandler *iface)
 }
 
 static void
-data_handler_iface_init (GdaDataHandlerIface *iface)
+data_handler_iface_init (GdaDataHandlerInterface *iface)
 {
 	iface->get_sql_from_value = gda_handler_time_get_sql_from_value;
 	iface->get_str_from_value = gda_handler_time_get_str_from_value;

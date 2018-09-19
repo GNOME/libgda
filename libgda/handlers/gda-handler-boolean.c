@@ -31,7 +31,7 @@ struct _GdaHandlerBoolean
 	GObject   parent_instance;
 };
 
-static void data_handler_iface_init (GdaDataHandlerIface *iface);
+static void data_handler_iface_init (GdaDataHandlerInterface *iface);
 
 G_DEFINE_TYPE_EXTENDED (GdaHandlerBoolean, gda_handler_boolean, G_TYPE_OBJECT, 0,
                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, data_handler_iface_init))
@@ -148,7 +148,7 @@ gda_handler_boolean_dispose (GObject *object)
 }
 
 static void
-data_handler_iface_init (GdaDataHandlerIface *iface)
+data_handler_iface_init (GdaDataHandlerInterface *iface)
 {
 	iface->get_sql_from_value = gda_handler_boolean_get_sql_from_value;
 	iface->get_str_from_value = gda_handler_boolean_get_str_from_value;
