@@ -75,13 +75,13 @@
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
 
-#include <libgda/gda-tree.h> 
-#include <libgda/gda-tree-manager.h> 
-#include <libgda/gda-tree-mgr-columns.h> 
-#include <libgda/gda-tree-mgr-label.h> 
-#include <libgda/gda-tree-mgr-schemas.h> 
-#include <libgda/gda-tree-mgr-select.h> 
-#include <libgda/gda-tree-mgr-tables.h> 
+#include <libgda/gda-tree.h>
+#include <libgda/gda-tree-manager.h>
+#include <libgda/gda-tree-mgr-columns.h>
+#include <libgda/gda-tree-mgr-label.h>
+#include <libgda/gda-tree-mgr-schemas.h>
+#include <libgda/gda-tree-mgr-select.h>
+#include <libgda/gda-tree-mgr-tables.h>
 #include <libgda/gda-tree-node.h>
 
 #include <libgda/gda-sql-builder.h>
@@ -105,4 +105,5 @@ gchar *gda_get_application_exec_path (const gchar *app_name);
 G_END_DECLS
 
 #endif
+
 
