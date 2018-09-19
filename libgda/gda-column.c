@@ -47,10 +47,11 @@ typedef struct {
 	gint         position;
 	GValue      *default_value;
 } GdaColumnPrivate;
-#define gda_column_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_COLUMN, GdaColumnPrivate)
+
+G_DEFINE_TYPE_WITH_PRIVATE(GdaColumn,gda_column,G_TYPE_OBJECT)
 
 static void gda_column_class_init (GdaColumnClass *klass);
-static void gda_column_init       (GdaColumn *column, GdaColumnClass *klass);
+static void gda_column_init       (GdaColumn *column);
 static void gda_column_finalize   (GObject *object);
 
 static void gda_column_set_property (GObject *object,
@@ -78,7 +79,6 @@ enum
         PROP_ID,
 };
 
-static GObjectClass *parent_class = NULL;
 GdaAttributesManager *_gda_column_attributes_manager;
 
 static void
@@ -86,9 +86,6 @@ gda_column_class_init (GdaColumnClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	
-	parent_class = g_type_class_peek_parent (klass);
-	
-	g_type_class_add_private (object_class, sizeof (GdaColumnPrivate));
 	/* signals */
 	/**
 	 * GdaColumn::name-changed:
@@ -136,12 +133,12 @@ gda_column_class_init (GdaColumnClass *klass)
 
 	object_class->finalize = gda_column_finalize;
 
-	/* extra */
-	_gda_column_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
+  /* extra */
+  _gda_column_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
 }
 
 static void
-gda_column_init (GdaColumn *column, G_GNUC_UNUSED GdaColumnClass *klass)
+gda_column_init (GdaColumn *column)
 {
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
@@ -170,35 +167,7 @@ gda_column_finalize (GObject *object)
 	g_free (priv->id);
 	g_free (priv->dbms_type);
 	
-	parent_class->finalize (object);
-}
-
-GType
-gda_column_get_type (void)
-{
-	static GType type = 0;
-	
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaColumnClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_column_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaColumn),
-			0,
-			(GInstanceInitFunc) gda_column_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (PARENT_TYPE, "GdaColumn", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	
-	return type;
+	G_OBJECT_CLASS (gda_column_parent_class)->finalize (object);
 }
 
 static void
@@ -254,11 +223,7 @@ gda_column_get_property (GObject *object,
 GdaColumn *
 gda_column_new (void)
 {
-	GdaColumn *column;
-
-	column = g_object_new (GDA_TYPE_COLUMN, NULL);
-
-	return column;
+	return g_object_new (GDA_TYPE_COLUMN, NULL);
 }
 
 /**
@@ -324,14 +289,15 @@ gda_column_get_name (GdaColumn *column)
 void
 gda_column_set_name (GdaColumn *column, const gchar *name)
 {
-	gchar *old_name = NULL;
+	const gchar *old_name = NULL;
+	gchar *nname = NULL;
 	GValue *value = NULL;
 
 	g_return_if_fail (GDA_IS_COLUMN (column));
 
-	old_name = (gchar *) gda_column_get_name (column);
+	old_name = gda_column_get_name (column);
 	if (old_name)
-		old_name = g_strdup (old_name);
+		nname = g_strdup (old_name);
 
 	if (name)
 		g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), name);
@@ -341,9 +307,9 @@ gda_column_set_name (GdaColumn *column, const gchar *name)
 
 	g_signal_emit (G_OBJECT (column),
 		       gda_column_signals[NAME_CHANGED],
-		       0, old_name);
+		       0, nname);
 
-	g_free (old_name);
+  g_free (nname);
 }
 
 /**
@@ -412,10 +378,8 @@ gda_column_set_dbms_type (GdaColumn *column, const gchar *dbms_type)
 	g_return_if_fail (GDA_IS_COLUMN (column));
 	GdaColumnPrivate *priv = gda_column_get_instance_private (column);
 	
-	if (priv->dbms_type != NULL) {
-		g_free (priv->dbms_type);
-		priv->dbms_type = NULL;
-	}
+  g_free (priv->dbms_type);
+  priv->dbms_type = NULL;
 	
 	if (dbms_type)
 		priv->dbms_type = g_strdup (dbms_type);
@@ -600,7 +564,7 @@ const GValue *
 gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
 {
 	g_return_val_if_fail (GDA_IS_COLUMN (column), NULL);
-	return gda_attributes_manager_get (_gda_column_attributes_manager, column, attribute);
+  return gda_attributes_manager_get (_gda_column_attributes_manager, column, attribute);
 }
 
 /**

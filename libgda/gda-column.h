@@ -30,14 +30,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_COLUMN            (gda_column_get_type())
-#define GDA_COLUMN(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_COLUMN, GdaColumn))
-#define GDA_COLUMN_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_COLUMN, GdaColumnClass))
-#define GDA_IS_COLUMN(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_COLUMN))
-#define GDA_IS_COLUMN_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_COLUMN))
-
-struct _GdaColumn {
-	GObject           object;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaColumn, gda_column, GDA, COLUMN, GObject)
 
 struct _GdaColumnClass {
 	GObjectClass          parent_class;
@@ -64,7 +57,6 @@ struct _GdaColumnClass {
  * The #GdaColumn object represents a #GdaDataModel's column and handle all its properties.
  */
 
-GType           gda_column_get_type           (void) G_GNUC_CONST;
 GdaColumn      *gda_column_new                (void);
 GdaColumn      *gda_column_copy               (GdaColumn *column);
 
