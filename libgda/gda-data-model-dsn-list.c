@@ -33,22 +33,23 @@ typedef struct {
 	gint    row_to_remove;
 	GValue *tmp_value;
 } GdaDataModelDsnListPrivate;
-#define gda_data_model_dsn_list_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_MODEL_DSN_LIST, GdaDataModelDsnListPrivate)
+
+static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataModelDsnList,gda_data_model_dsn_list,G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL,gda_data_model_dsn_list_data_model_init))
 
 static void gda_data_model_dsn_list_class_init (GdaDataModelDsnListClass *klass);
 static void gda_data_model_dsn_list_init       (GdaDataModelDsnList *model);
 static void gda_data_model_dsn_list_dispose    (GObject *object);
 
 /* GdaDataModel interface */
-static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface);
 static gint                 gda_data_model_dsn_list_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_dsn_list_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_dsn_list_describe_column (GdaDataModel *model, gint col);
 static GdaDataModelAccessFlags gda_data_model_dsn_list_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_model_dsn_list_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 static GdaValueAttribute    gda_data_model_dsn_list_get_attributes_at (GdaDataModel *model, gint col, gint row);
-
-static GObjectClass *parent_class = NULL;
 
 static void dsn_added_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
 static void dsn_to_be_removed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnList *model);
@@ -153,10 +154,6 @@ gda_data_model_dsn_list_class_init (GdaDataModelDsnListClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaDataModelDsnListPrivate));
-
 	object_class->dispose = gda_data_model_dsn_list_dispose;
 }
 
@@ -183,7 +180,7 @@ gda_data_model_dsn_list_dispose (GObject *object)
 		priv->tmp_value = NULL;
 	}
 
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_data_model_dsn_list_parent_class)->dispose (object);
 }
 
 static void 
@@ -216,47 +213,6 @@ dsn_changed_cb (G_GNUC_UNUSED GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsn
 	gda_data_model_row_updated ((GdaDataModel *) model, gda_config_get_dsn_info_index (info->name));
 }
 
-
-/*
- * Public functions
- */
-
-GType
-gda_data_model_dsn_list_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataModelDsnListClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_model_dsn_list_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataModelDsnList),
-			0,
-			(GInstanceInitFunc) gda_data_model_dsn_list_init,
-			0
-		};
-		static const GInterfaceInfo data_model_info = {
-                        (GInterfaceInitFunc) gda_data_model_dsn_list_data_model_init,
-                        NULL,
-                        NULL
-                };
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelDsnList", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
-
 /*
  * GdaDataModel implementation
  */
@@ -285,7 +241,7 @@ static GdaColumn *
 gda_data_model_dsn_list_describe_column (GdaDataModel *model, gint col)
 {
 	GdaDataModelDsnList *dmodel = GDA_DATA_MODEL_DSN_LIST (model);
-	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (model);
+	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (dmodel);
 
 	return g_slist_nth_data (priv->columns, col);
 }
