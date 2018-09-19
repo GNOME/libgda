@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,12 +25,12 @@
 #include "gda-tree-mgr-label.h"
 #include "gda-tree-node.h"
 
-struct _GdaTreeMgrLabelPriv {
+typedef struct {
 	gchar         *label; /* imposed upon construction */
-};
+} GdaTreeMgrLabelPrivate;
 
-static void gda_tree_mgr_label_class_init (GdaTreeMgrLabelClass *klass);
-static void gda_tree_mgr_label_init       (GdaTreeMgrLabel *tmgr1, GdaTreeMgrLabelClass *klass);
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeMgrLabel, gda_tree_mgr_label, GDA_TYPE_TREE_MANAGER)
+
 static void gda_tree_mgr_label_dispose    (GObject *object);
 static void gda_tree_mgr_label_set_property (GObject *object,
 					      guint param_id,
@@ -61,8 +62,6 @@ gda_tree_mgr_label_class_init (GdaTreeMgrLabelClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* virtual methods */
 	((GdaTreeManagerClass*) klass)->update_children = gda_tree_mgr_label_update_children;
 
@@ -79,11 +78,7 @@ gda_tree_mgr_label_class_init (GdaTreeMgrLabelClass *klass)
 }
 
 static void
-gda_tree_mgr_label_init (GdaTreeMgrLabel *mgr, G_GNUC_UNUSED GdaTreeMgrLabelClass *klass)
-{
-	g_return_if_fail (GDA_IS_TREE_MGR_LABEL (mgr));
-	mgr->priv = g_new0 (GdaTreeMgrLabelPriv, 1);
-}
+gda_tree_mgr_label_init (GdaTreeMgrLabel *mgr) {}
 
 static void
 gda_tree_mgr_label_dispose (GObject *object)
@@ -91,48 +86,13 @@ gda_tree_mgr_label_dispose (GObject *object)
 	GdaTreeMgrLabel *mgr = (GdaTreeMgrLabel *) object;
 
 	g_return_if_fail (GDA_IS_TREE_MGR_LABEL (mgr));
+	GdaTreeMgrLabelPrivate *priv = gda_tree_mgr_label_get_instance_private (mgr);
 
-	if (mgr->priv) {
-		g_free (mgr->priv->label);
-		g_free (mgr->priv);
-		mgr->priv = NULL;
-	}
+	g_free (priv->label);
+	priv->label = NULL;
 
 	/* chain to parent class */
 	parent_class->dispose (object);
-}
-
-/**
- * gda_tree_mgr_label_get_type:
- *
- * Since: 4.2
- */
-GType
-gda_tree_mgr_label_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeMgrLabelClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_mgr_label_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTreeMgrLabel),
-                        0,
-                        (GInstanceInitFunc) gda_tree_mgr_label_init,
-			0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (GDA_TYPE_TREE_MANAGER, "GdaTreeMgrLabel", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
 }
 
 static void
@@ -141,19 +101,18 @@ gda_tree_mgr_label_set_property (GObject *object,
 				   const GValue *value,
 				   GParamSpec *pspec)
 {
-        GdaTreeMgrLabel *mgr;
+	GdaTreeMgrLabel *mgr;
 
-        mgr = GDA_TREE_MGR_LABEL (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_LABEL (object);
+	GdaTreeMgrLabelPrivate *priv = gda_tree_mgr_label_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_LABEL:
-			mgr->priv->label = g_value_dup_string (value);
+			priv->label = g_value_dup_string (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -162,19 +121,18 @@ gda_tree_mgr_label_get_property (GObject *object,
 				   GValue *value,
 				   GParamSpec *pspec)
 {
-        GdaTreeMgrLabel *mgr;
+	GdaTreeMgrLabel *mgr;
 
-        mgr = GDA_TREE_MGR_LABEL (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_LABEL (object);
+	GdaTreeMgrLabelPrivate *priv = gda_tree_mgr_label_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_LABEL:
-			g_value_set_string (value, mgr->priv->label);
+			g_value_set_string (value, priv->label);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 /**
@@ -208,7 +166,8 @@ gda_tree_mgr_label_update_children (GdaTreeManager *manager, GdaTreeNode *node, 
 
 	GdaTreeMgrLabel *mgr = GDA_TREE_MGR_LABEL (manager);
 	GdaTreeNode *snode;
+	GdaTreeMgrLabelPrivate *priv = gda_tree_mgr_label_get_instance_private (mgr);
 
-	snode = gda_tree_manager_create_node (manager, node, mgr->priv->label ? mgr->priv->label : _("No name"));
+	snode = gda_tree_manager_create_node (manager, node, priv->label ? priv->label : _("No name"));
 	return g_slist_prepend (NULL, snode);
 }

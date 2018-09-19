@@ -22,6 +22,7 @@
 
 #include <glib-object.h>
 #include <stdio.h>
+#include <libgda/gda-tree-manager.h>
 #include "gda-decl.h"
 
 G_BEGIN_DECLS

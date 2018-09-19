@@ -73,9 +73,6 @@ typedef struct _GdaMetaStructClass   GdaMetaStructClass;
  */
 typedef gboolean (*GdaSqlReservedKeywordsFunc) (const gchar *word);
 
-typedef struct _GdaTreeManager GdaTreeManager;
-typedef struct _GdaTreeManagerClass GdaTreeManagerClass;
-
 typedef struct _GdaTreeNode GdaTreeNode;
 typedef struct _GdaTreeNodeClass GdaTreeNodeClass;
 

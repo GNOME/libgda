@@ -21,6 +21,7 @@
 #define __GDA_TREE_NODE_H__
 
 #include <glib-object.h>
+#include <libgda/gda-tree-manager.h>
 #include "gda-decl.h"
 
 G_BEGIN_DECLS
