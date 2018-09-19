@@ -67,7 +67,6 @@ typedef struct _GdaSqlParserClass GdaSqlParserClass;
  */
 typedef struct _GdaMetaStruct        GdaMetaStruct;
 typedef struct _GdaMetaStructClass   GdaMetaStructClass;
-typedef struct _GdaMetaStructPrivate GdaMetaStructPrivate;
 
 /*
  * Determines if @word is a reserved SQL keyword

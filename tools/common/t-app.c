@@ -1632,7 +1632,7 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **argv, 
 	GSList *objlist;
 
 	store = gda_connection_get_meta_store (cnc);
-	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
 	if (!argv[0]) {
 		GSList *list;

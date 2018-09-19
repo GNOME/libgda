@@ -396,7 +396,7 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 	GdaMetaDbObject *table_dbo;
 	GValue *name_value;
 	g_value_set_string ((name_value = gda_value_new (G_TYPE_STRING)), table);
-	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (cnc), GDA_META_STRUCT_FEATURE_NONE);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", gda_connection_get_meta_store (cnc), "features", GDA_META_STRUCT_FEATURE_NONE, NULL);
 	table_dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE,
 						NULL, NULL, name_value, error);
 	gda_value_free (name_value);

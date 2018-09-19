@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,35 +23,13 @@
 
 #include <glib-object.h>
 #include <libgda/gda-data-model.h>
-#include <libgda/gda-meta-store.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-attributes-manager.h>
 
 G_BEGIN_DECLS
 
 #define GDA_TYPE_META_STRUCT          (gda_meta_struct_get_type())
-#define GDA_META_STRUCT(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_meta_struct_get_type(), GdaMetaStruct)
-#define GDA_META_STRUCT_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_meta_struct_get_type (), GdaMetaStructClass)
-#define GDA_IS_META_STRUCT(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_meta_struct_get_type ())
-
-/* error reporting */
-extern GQuark gda_meta_struct_error_quark (void);
-#define GDA_META_STRUCT_ERROR gda_meta_struct_error_quark ()
-
-typedef enum {
-	GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
-        GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
-        GDA_META_STRUCT_INCOHERENCE_ERROR,
-	GDA_META_STRUCT_XML_ERROR
-} GdaMetaStructError;
-
-
-/* struct for the object's data */
-struct _GdaMetaStruct
-{
-	GObject                object;
-	GdaMetaStructPrivate  *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaMetaStruct, gda_meta_struct, GDA, META_STRUCT, GObject)
 
 /* struct for the object's class */
 struct _GdaMetaStructClass
@@ -64,6 +43,17 @@ struct _GdaMetaStructClass
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+/* error reporting */
+extern GQuark gda_meta_struct_error_quark (void);
+#define GDA_META_STRUCT_ERROR gda_meta_struct_error_quark ()
+
+typedef enum {
+	GDA_META_STRUCT_UNKNOWN_OBJECT_ERROR,
+        GDA_META_STRUCT_DUPLICATE_OBJECT_ERROR,
+        GDA_META_STRUCT_INCOHERENCE_ERROR,
+	GDA_META_STRUCT_XML_ERROR
+} GdaMetaStructError;
 
 /**
  * GdaMetaDbObjectType:
@@ -490,8 +480,6 @@ typedef struct {
  *  </programlisting>
  */
 
-GType               gda_meta_struct_get_type           (void) G_GNUC_CONST;
-GdaMetaStruct      *gda_meta_struct_new                (GdaMetaStore *store, GdaMetaStructFeature features);
 gboolean            gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog,
 							const gchar *schema, 
 							const gchar *xml_spec_file, GError **error);

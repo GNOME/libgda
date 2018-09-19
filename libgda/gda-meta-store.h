@@ -27,6 +27,7 @@
 #include <libgda/gda-enums.h>
 #include <libgda/gda-data-model.h>
 #include <libgda/gda-decl.h>
+#include <libgda/gda-meta-struct.h>
 
 G_BEGIN_DECLS
 
@@ -190,6 +191,7 @@ gboolean          gda_meta_store_schema_remove_custom_object (GdaMetaStore *stor
 GSList           *gda_meta_store_schema_get_all_tables    (GdaMetaStore *store);
 GSList           *gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table_name);
 GdaMetaStruct    *gda_meta_store_schema_get_structure     (GdaMetaStore *store, GError **error);
+GdaMetaStruct    *gda_meta_store_create_struct            (GdaMetaStore *store, GdaMetaStructFeature features);
 
 gboolean          gda_meta_store_declare_foreign_key      (GdaMetaStore *store, GdaMetaStruct *mstruct,
 							   const gchar *fk_name,

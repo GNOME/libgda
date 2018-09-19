@@ -4168,7 +4168,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
 		return NULL;
 	}
 
-	mstruct = gda_meta_struct_new (real_store, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", real_store, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 	nrows = gda_data_model_get_n_rows (model);
 	for (i = 0; i < nrows; i++) {
 		/* FIXME: only take into account the database objects which have a corresponding DbObject */
@@ -4557,7 +4557,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
 	GdaMetaDbObject *eobj;
 	gboolean needs_creation = TRUE;
 	pstore = gda_connection_get_meta_store (priv->cnc);
-	mstruct = gda_meta_struct_new (pstore, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", pstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), dbo->obj_name);
 	if (!(eobj = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN,
 						 NULL, NULL, value, &lerror))) {
@@ -5073,7 +5073,7 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 	g_return_val_if_fail (ref_colnames, FALSE);
 
 	if (!mstruct)
-		u_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+		u_mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", GDA_META_STRUCT_FEATURE_NONE, NULL);
 
 	/* find database objects */
 	GValue *v1 = NULL, *v2 = NULL, *v3;
@@ -5292,7 +5292,7 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 	g_return_val_if_fail (ref_table, FALSE);
 
 	if (!mstruct)
-		u_mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_NONE);
+		u_mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", GDA_META_STRUCT_FEATURE_NONE, NULL);
 
 	/* find database objects */
 	GValue *v1 = NULL, *v2 = NULL, *v3;
@@ -5401,4 +5401,17 @@ gda_meta_store_undeclare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruc
 		g_object_unref (params);
 
 	return retval;
+}
+
+/**
+ * gda_meta_store_create_struct:
+ * @store: a #GdaMetaStore
+ * @features: features of new struct
+ *
+ * Returns: (transfer full): a new #GdaMetaStruct using @store
+ */
+GdaMetaStruct*
+gda_meta_store_create_struct (GdaMetaStore *store, GdaMetaStructFeature features)
+{
+  return (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", features, NULL);
 }

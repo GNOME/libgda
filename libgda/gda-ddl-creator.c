@@ -578,7 +578,7 @@ gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
   GdaMetaStruct *mstruct = NULL;
 
   mstore = gda_connection_get_meta_store (cnc);
-  mstruct = gda_meta_struct_new (mstore,GDA_META_STRUCT_FEATURE_ALL);
+  mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
   GSList *dblist = NULL;
 
@@ -712,7 +712,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
     return FALSE;
 
   GdaMetaStore *mstore = gda_connection_get_meta_store (cnc);
-  GdaMetaStruct *mstruct = gda_meta_struct_new (mstore, GDA_META_STRUCT_FEATURE_ALL);
+  GdaMetaStruct *mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
   // We need information about catalog, schema, name for each object we would
   // like to check

@@ -264,7 +264,7 @@ meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED const GSList *
 	GError *error = NULL;
 	GdaMetaStruct *mstruct;
 
-	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (tcnc->priv->cnc),
+	mstruct = gda_meta_store_create_struct (gda_connection_get_meta_store (tcnc->priv->cnc),
 				       GDA_META_STRUCT_FEATURE_ALL);
 
 	t_connection_set_busy_state (tcnc, TRUE, _("Analysing database schema"));
@@ -369,7 +369,7 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 
 	gboolean retval = TRUE;
 	GdaMetaStruct *mstruct;
-	mstruct = gda_meta_struct_new (store, GDA_META_STRUCT_FEATURE_ALL);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 	if (tcnc->priv->mstruct != NULL)
 		g_object_unref (tcnc->priv->mstruct = mstruct);
 	tcnc->priv->mstruct = mstruct;

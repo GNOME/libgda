@@ -1826,7 +1826,7 @@ gda_data_select_compute_row_selection_condition (GdaDataSelect *model, GError **
 		goto out;
 	}
 	g_value_set_string ((nvalue = gda_value_new (G_TYPE_STRING)), target->table_name);
-	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (model->priv->cnc), GDA_META_STRUCT_FEATURE_NONE);
+	mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", gda_connection_get_meta_store (model->priv->cnc), "features", GDA_META_STRUCT_FEATURE_NONE, NULL);
 	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, NULL, NULL, nvalue, error);
 	if (!dbo)
 		goto out;

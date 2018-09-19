@@ -365,7 +365,7 @@ gda_sql_statement_check_validity (GdaSqlStatement *stmt, GdaConnection *cnc, GEr
 		/* prepare data */
 		data.cnc = cnc;
 		data.store = gda_connection_get_meta_store (cnc);
-		data.mstruct = gda_meta_struct_new (data.store, GDA_META_STRUCT_FEATURE_NONE);
+		data.mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", data.store, "features", GDA_META_STRUCT_FEATURE_NONE, NULL);
 
 		/* attach the GdaMetaStruct to @stmt */
 		stmt->validity_meta_struct = data.mstruct;

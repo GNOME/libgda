@@ -65,7 +65,6 @@ gda_meta_struct_load_from_xml_file (GdaMetaStruct *mstruct, const gchar *catalog
 	gchar *quoted_schema = NULL;
 
 	g_return_val_if_fail (GDA_IS_META_STRUCT (mstruct), FALSE);
-	g_return_val_if_fail (mstruct->priv, FALSE);
 	g_return_val_if_fail (xml_spec_file && *xml_spec_file, FALSE);
 
 	if (catalog) {
