@@ -29,16 +29,7 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_TRANSACTION_STATUS            (gda_transaction_status_get_type())
-#define GDA_TRANSACTION_STATUS(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TRANSACTION_STATUS, GdaTransactionStatus))
-#define GDA_TRANSACTION_STATUS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TRANSACTION_STATUS, GdaTransactionStatusClass))
-#define GDA_IS_TRANSACTION_STATUS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TRANSACTION_STATUS))
-#define GDA_IS_TRANSACTION_STATUS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TRANSACTION_STATUS))
-#define GDA_TYPE_TRANSACTION_STATUS_EVENT      (gda_transaction_status_event_get_type())
 
-typedef struct _GdaTransactionStatus        GdaTransactionStatus;
-typedef struct _GdaTransactionStatusClass   GdaTransactionStatusClass;
-typedef struct _GdaTransactionStatusEvent   GdaTransactionStatusEvent;
 
 /**
  * GdaTransactionStatusEventType:
@@ -62,38 +53,8 @@ typedef enum {
 	GDA_TRANSACTION_STATUS_STATE_FAILED
 } GdaTransactionStatusState;
 
-/**
- * GdaTransactionStatusEvent:
- * @trans: 
- * @type: 
- * @conn_event:
- */
-struct _GdaTransactionStatusEvent {
-	GdaTransactionStatus         *trans;
-	GdaTransactionStatusEventType type;
-	union {
-		gchar                *svp_name; /* save point name if this event corresponds to a new save point */
-		gchar                *sql;      /* SQL to store SQL queries in transactions */
-		GdaTransactionStatus *sub_trans;/* sub transaction event */
-	} pl;
-	GdaConnectionEvent           *conn_event;
-
-	/*< private >*/
-	gpointer  _gda_reserved1;
-	gpointer  _gda_reserved2;
-};
-
-/**
- * GdaTransactionStatus:
- * @name:
- * @isolation_level:
- * @state:
- * @events: (element-type Gda.TransactionStatusEvent):
- *
- */
-struct _GdaTransactionStatus {
-	GObject                    object;
-};
+#define GDA_TYPE_TRANSACTION_STATUS            (gda_transaction_status_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaTransactionStatus, gda_transaction_status, GDA, TRANSACTION_STATUS, GObject)
 
 struct _GdaTransactionStatusClass {
 	GObjectClass             parent_class;
@@ -106,6 +67,27 @@ struct _GdaTransactionStatusClass {
 	void (*_gda_reserved4) (void);
 };
 
+
+/**
+ * GdaTransactionStatusEvent:
+ * @trans: 
+ * @type: 
+ * @conn_event:
+ */
+typedef struct {
+	GdaTransactionStatus         *trans;
+	GdaTransactionStatusEventType type;
+	union {
+		gchar                *svp_name; /* save point name if this event corresponds to a new save point */
+		gchar                *sql;      /* SQL to store SQL queries in transactions */
+		GdaTransactionStatus *sub_trans;/* sub transaction event */
+	} pl;
+	GdaConnectionEvent           *conn_event;
+
+	/*< private >*/
+	gpointer  _gda_reserved1;
+	gpointer  _gda_reserved2;
+} GdaTransactionStatusEvent;
 /**
  * SECTION:gda-transaction-status
  * @short_description: Keeps track of the transaction status of a connection
@@ -127,7 +109,6 @@ struct _GdaTransactionStatusClass {
  * #GdaTransactionStatus's attributes are directly accessible using the public members of the object.
  */
 
-GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;
 GdaTransactionStatus *gda_transaction_status_new      (const gchar *name);
 void                    gda_transaction_status_set_isolation_level (GdaTransactionStatus *st, GdaTransactionIsolation il);
 GdaTransactionIsolation gda_transaction_status_get_isolation_level (GdaTransactionStatus *st);
