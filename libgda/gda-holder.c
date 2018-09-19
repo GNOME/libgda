@@ -66,8 +66,6 @@ static void bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder);
 static void full_bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder);
 static void gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 GdaAttributesManager *gda_holder_attributes_manager;
 
 /* signals */
@@ -125,7 +123,9 @@ typedef struct {
 
 	gboolean         validate_changes;
 } GdaHolderPrivate;
-#define gda_holder_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_HOLDER, GdaHolderPrivate)
+G_DEFINE_TYPE_WITH_CODE (GdaHolder, gda_holder, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaHolder)
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_LOCKABLE, gda_holder_lockable_init))
 /* module error */
 GQuark gda_holder_error_quark (void)
 {
@@ -133,43 +133,6 @@ GQuark gda_holder_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_holder_error");
         return quark;
-}
-
-GType
-gda_holder_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaHolderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_holder_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaHolder),
-			0,
-			(GInstanceInitFunc) gda_holder_init,
-			0
-		};
-
-		static GInterfaceInfo lockable_info = {
-                        (GInterfaceInitFunc) gda_holder_lockable_init,
-			NULL,
-                        NULL
-                };
-		
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaHolder", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 static gboolean
@@ -203,10 +166,6 @@ static void
 gda_holder_class_init (GdaHolderClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
-
-	parent_class = g_type_class_peek_parent (class);
-
-	g_type_class_add_private (object_class, sizeof (GdaHolderPrivate));
 
 	/**
 	 * GdaHolder::source-changed:
@@ -594,7 +553,7 @@ gda_holder_dispose (GObject *object)
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_holder_parent_class)->dispose (object);
 }
 
 static void
@@ -611,7 +570,7 @@ gda_holder_finalize (GObject   * object)
 	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_holder_parent_class)->finalize (object);
 }
 
 

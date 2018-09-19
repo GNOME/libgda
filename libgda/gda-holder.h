@@ -28,11 +28,6 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_HOLDER          (gda_holder_get_type())
-#define GDA_HOLDER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_holder_get_type(), GdaHolder)
-#define GDA_HOLDER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_holder_get_type (), GdaHolderClass)
-#define GDA_IS_HOLDER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_holder_get_type ())
-
 /* error reporting */
 extern GQuark gda_holder_error_quark (void);
 #define GDA_HOLDER_ERROR gda_holder_error_quark ()
@@ -43,11 +38,8 @@ typedef enum {
 	GDA_HOLDER_VALUE_NULL_ERROR
 } GdaHolderError;
 
-/* struct for the object's data */
-struct _GdaHolder
-{
-	GObject                 object;
-};
+#define GDA_TYPE_HOLDER          (gda_holder_get_type())
+G_DECLARE_DERIVABLE_TYPE(GdaHolder, gda_holder, GDA, HOLDER, GObject)
 
 
 /* struct for the object's class */
@@ -83,7 +75,6 @@ struct _GdaHolderClass
  * Each GdaHolder object is thread safe.
  */
 
-GType               gda_holder_get_type                (void) G_GNUC_CONST;
 GdaHolder          *gda_holder_new                     (GType type);
 GdaHolder          *gda_holder_new_inline              (GType type, const gchar *id, ...);
 GdaHolder          *gda_holder_copy                    (GdaHolder *orig);
