@@ -28,11 +28,13 @@
 
 #define PARENT_TYPE G_TYPE_OBJECT
 
-static void gda_transaction_status_class_init (GdaTransactionStatusClass *klass);
-static void gda_transaction_status_init       (GdaTransactionStatus *tstatus, GdaTransactionStatusClass *klass);
-static void gda_transaction_status_finalize   (GObject *object);
+typedef struct {
+  gchar                     *name;
+} GdaTransactionStatusPrivate;
 
-static GObjectClass* parent_class = NULL;
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTransactionStatus, gda_transaction_status, G_TYPE_OBJECT)
+
+static void gda_transaction_status_finalize   (GObject *object);
 
 /*
  * GdaTransactionStatus class implementation
@@ -43,14 +45,14 @@ gda_transaction_status_class_init (GdaTransactionStatusClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
 	object_class->finalize = gda_transaction_status_finalize;
 }
 
 static void
-gda_transaction_status_init (GdaTransactionStatus *tstatus, G_GNUC_UNUSED GdaTransactionStatusClass *klass)
+gda_transaction_status_init (GdaTransactionStatus *tstatus)
 {
-	tstatus->name = NULL;
+  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
+	priv->name = NULL;
 	tstatus->isolation_level = GDA_TRANSACTION_ISOLATION_UNKNOWN;
 	tstatus->events = NULL;
 	tstatus->state = GDA_TRANSACTION_STATUS_STATE_OK;
@@ -85,10 +87,11 @@ gda_transaction_status_finalize (GObject *object)
 
 	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus));
 
+  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	/* free memory */
-	if (tstatus->name) {
-		g_free (tstatus->name);
-		tstatus->name = NULL;
+	if (priv->name) {
+		g_free (priv->name);
+		priv->name = NULL;
 	}
 
 	if (tstatus->events) {
@@ -98,34 +101,7 @@ gda_transaction_status_finalize (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->finalize (object);
-}
-
-GType
-gda_transaction_status_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaTransactionStatusClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_transaction_status_class_init,
-			NULL, NULL,
-			sizeof (GdaTransactionStatus),
-			0,
-			(GInstanceInitFunc) gda_transaction_status_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (PARENT_TYPE, "GdaTransactionStatus", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
+	G_OBJECT_CLASS (gda_transaction_status_parent_class)->finalize (object);
 }
 
 
@@ -164,8 +140,9 @@ gda_transaction_status_new (const gchar *name)
 	GdaTransactionStatus *tstatus;
 
 	tstatus = g_object_new (GDA_TYPE_TRANSACTION_STATUS, NULL);
+  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	if (name)
-		tstatus->name = g_strdup (name);
+		priv->name = g_strdup (name);
 
 	return tstatus;
 }
@@ -277,13 +254,14 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
 		return NULL;
 
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus), NULL);
+  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	if (destev)
 		*destev = NULL;
 
 	if (!str)
 		return gda_transaction_status_find_current (tstatus, destev, FALSE);
 
-	if (tstatus->name && !strcmp (tstatus->name, str))
+	if (priv->name && !strcmp (priv->name, str))
 		return tstatus;
 
 	for (evlist = tstatus->events; evlist && !trans; evlist = evlist->next) {
@@ -327,6 +305,7 @@ gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransacti
 	if (!tstatus)
 		return NULL;
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus), NULL);
+  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	if (destev)
 		*destev = NULL;
 
@@ -338,7 +317,7 @@ gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransacti
 			*destev = ev;
 	}
 
-	if (!trans && ((unnamed_only && !tstatus->name) || !unnamed_only))
+	if (!trans && ((unnamed_only && !priv->name) || !unnamed_only))
 			trans = tstatus;
 
 	return trans;

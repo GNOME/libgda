@@ -93,7 +93,6 @@ struct _GdaTransactionStatusEvent {
 struct _GdaTransactionStatus {
 	GObject                    object;
 	
-	gchar                     *name;
 	GdaTransactionIsolation    isolation_level;
 	GdaTransactionStatusState  state;
 	GList                     *events;
