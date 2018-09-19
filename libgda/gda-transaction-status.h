@@ -25,6 +25,7 @@
 
 #include <glib-object.h>
 #include <libgda/gda-enums.h>
+#include <libgda/gda-connection-event.h>
 #include <libgda/gda-decl.h>
 
 G_BEGIN_DECLS
