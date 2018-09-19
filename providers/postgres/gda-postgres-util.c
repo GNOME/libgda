@@ -117,7 +117,7 @@ _gda_postgres_make_error (GdaConnection *cnc, PGconn *pconn, PGresult *pg_res, G
         trans = gda_connection_get_transaction_status (cnc);
         if (trans) {
                 if ((PQtransactionStatus (pconn) == PQTRANS_INERROR) &&
-                    (trans->state != GDA_TRANSACTION_STATUS_STATE_FAILED))
+                    (gda_transaction_status_get_state (trans) != GDA_TRANSACTION_STATUS_STATE_FAILED))
                         gda_connection_internal_change_transaction_state (cnc,
                                                                           GDA_TRANSACTION_STATUS_STATE_FAILED);
         }

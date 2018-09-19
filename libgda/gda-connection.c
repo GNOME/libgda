@@ -5452,7 +5452,7 @@ gda_connection_internal_transaction_started (GdaConnection *cnc, const gchar *pa
 	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
 
 	st = gda_transaction_status_new (trans_name);
-	st->isolation_level = isol_level;
+	gda_transaction_status_set_isolation_level (st, isol_level);
 
 	gda_connection_lock ((GdaLockable*) cnc);
 
@@ -5821,10 +5821,10 @@ gda_connection_internal_change_transaction_state (GdaConnection *cnc,
 
 	g_return_if_fail (priv->trans_status);
 
-	if (priv->trans_status->state == newstate)
+	if (gda_transaction_status_get_state (priv->trans_status) == newstate)
 		return;
 
-	priv->trans_status->state = newstate;
+	gda_transaction_status_set_state (priv->trans_status, newstate);
 #ifdef GDA_DEBUG_signal
 	g_print (">> 'TRANSACTION_STATUS_CHANGED' from %s\n", __FUNCTION__);
 #endif

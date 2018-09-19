@@ -2,6 +2,7 @@
  * Copyright (C) 2006 - 2011 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -92,14 +93,6 @@ struct _GdaTransactionStatusEvent {
  */
 struct _GdaTransactionStatus {
 	GObject                    object;
-	
-	GdaTransactionIsolation    isolation_level;
-	GdaTransactionStatusState  state;
-	GList                     *events;
-
-	/*< private >*/
-	gpointer  _gda_reserved1;
-	gpointer  _gda_reserved2;
 };
 
 struct _GdaTransactionStatusClass {
@@ -136,6 +129,10 @@ struct _GdaTransactionStatusClass {
 
 GType                 gda_transaction_status_get_type (void) G_GNUC_CONST;
 GdaTransactionStatus *gda_transaction_status_new      (const gchar *name);
+void                    gda_transaction_status_set_isolation_level (GdaTransactionStatus *st, GdaTransactionIsolation il);
+GdaTransactionIsolation gda_transaction_status_get_isolation_level (GdaTransactionStatus *st);
+void                    gda_transaction_status_set_state (GdaTransactionStatus *st, GdaTransactionStatusState state);
+GdaTransactionStatusState gda_transaction_status_get_state (GdaTransactionStatus *st);
 
 
 GType                 gda_transaction_status_event_get_type (void) G_GNUC_CONST;

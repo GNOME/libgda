@@ -3,6 +3,7 @@
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +31,9 @@
 
 typedef struct {
   gchar                     *name;
+  GdaTransactionIsolation    isolation_level;
+  GdaTransactionStatusState  state;
+  GList                     *events;
 } GdaTransactionStatusPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaTransactionStatus, gda_transaction_status, G_TYPE_OBJECT)
@@ -53,9 +57,9 @@ gda_transaction_status_init (GdaTransactionStatus *tstatus)
 {
   GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	priv->name = NULL;
-	tstatus->isolation_level = GDA_TRANSACTION_ISOLATION_UNKNOWN;
-	tstatus->events = NULL;
-	tstatus->state = GDA_TRANSACTION_STATUS_STATE_OK;
+	priv->isolation_level = GDA_TRANSACTION_ISOLATION_UNKNOWN;
+	priv->events = NULL;
+	priv->state = GDA_TRANSACTION_STATUS_STATE_OK;
 }
 
 static void
@@ -87,17 +91,17 @@ gda_transaction_status_finalize (GObject *object)
 
 	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus));
 
-  GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 	/* free memory */
 	if (priv->name) {
 		g_free (priv->name);
 		priv->name = NULL;
 	}
 
-	if (tstatus->events) {
-		g_list_foreach (tstatus->events, (GFunc) event_free, NULL);
-		g_list_free (tstatus->events);
-		tstatus->events = NULL;
+	if (priv->events) {
+		g_list_foreach (priv->events, (GFunc) event_free, NULL);
+		g_list_free (priv->events);
+		priv->events = NULL;
 	}
 
 	/* chain to parent class */
@@ -159,11 +163,13 @@ gda_transaction_status_add_event_svp (GdaTransactionStatus *tstatus, const gchar
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus), NULL);
 	g_return_val_if_fail (svp_name, NULL);
 
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
+
 	ev = g_new0 (GdaTransactionStatusEvent, 1);
 	ev->trans = tstatus;
 	ev->type = GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT;
 	ev->pl.svp_name = g_strdup (svp_name);
-	tstatus->events = g_list_append (tstatus->events, ev);
+	priv->events = g_list_append (priv->events, ev);
 
 	return ev;
 }
@@ -179,6 +185,7 @@ gda_transaction_status_add_event_sql (GdaTransactionStatus *tstatus, const gchar
 
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus), NULL);
 	g_return_val_if_fail (sql, NULL);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 
 	ev = g_new0 (GdaTransactionStatusEvent, 1);
 	ev->trans = tstatus;
@@ -188,7 +195,7 @@ gda_transaction_status_add_event_sql (GdaTransactionStatus *tstatus, const gchar
 		ev->conn_event = conn_event;
 		g_object_ref (conn_event);
 	}
-	tstatus->events = g_list_append (tstatus->events, ev);
+	priv->events = g_list_append (priv->events, ev);
 
 	return ev;
 }
@@ -204,13 +211,14 @@ gda_transaction_status_add_event_sub (GdaTransactionStatus *tstatus, GdaTransact
 
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus), NULL);
 	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (sub_trans), NULL);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 
 	ev = g_new0 (GdaTransactionStatusEvent, 1);
 	ev->trans = tstatus;
 	ev->type = GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION;
 	ev->pl.sub_trans = sub_trans;
 	g_object_ref (ev->pl.sub_trans);
-	tstatus->events = g_list_append (tstatus->events, ev);
+	priv->events = g_list_append (priv->events, ev);
 
 	return ev;
 }
@@ -222,21 +230,22 @@ gda_transaction_status_free_events (GdaTransactionStatus *tstatus, GdaTransactio
 	GList *node;
 
 	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus));
-	node = g_list_find (tstatus->events, event);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
+	node = g_list_find (priv->events, event);
 	g_return_if_fail (node);
 
 	if (free_after) {
-		GList *list = g_list_last (tstatus->events);
+		GList *list = g_list_last (priv->events);
 		GList *tmp;
 		while (list != node) {
 			event_free ((GdaTransactionStatusEvent *)(list->data));
 			tmp = list->prev;
-			tstatus->events = g_list_delete_link (tstatus->events, list);
+			priv->events = g_list_delete_link (priv->events, list);
 			list = tmp;
 		}
 	}
 	event_free (event);
-	tstatus->events = g_list_delete_link (tstatus->events, node);
+	priv->events = g_list_delete_link (priv->events, node);
 }
 
 /**
@@ -264,7 +273,7 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
 	if (priv->name && !strcmp (priv->name, str))
 		return tstatus;
 
-	for (evlist = tstatus->events; evlist && !trans; evlist = evlist->next) {
+	for (evlist = priv->events; evlist && !trans; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *)(evlist->data);
 		switch (ev->type) {
 		case GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT:
@@ -309,7 +318,7 @@ gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransacti
 	if (destev)
 		*destev = NULL;
 
-	for (evlist = tstatus->events; evlist && !trans; evlist = evlist->next) {
+	for (evlist = priv->events; evlist && !trans; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *)(evlist->data);
 		if (ev->type == GDA_TRANSACTION_STATUS_EVENT_SUB_TRANSACTION)
 			trans = gda_transaction_status_find_current (ev->pl.sub_trans, destev, unnamed_only);
@@ -323,6 +332,47 @@ gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransacti
 	return trans;
 }
 
+/**
+ * gda_transaction_status_set_isolation_level:
+ */
+void
+gda_transaction_status_set_isolation_level (GdaTransactionStatus *st, GdaTransactionIsolation il)
+{
+	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (st));
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (st);
+	priv->isolation_level = il;
+}
+/**
+ * gda_transaction_status_get_isolation_level:
+ */
+GdaTransactionIsolation
+gda_transaction_status_get_isolation_level (GdaTransactionStatus *st)
+{
+	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (st), GDA_TRANSACTION_ISOLATION_UNKNOWN);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (st);
+	return priv->isolation_level;
+}
+/**
+ * gda_transaction_status_set_state:
+ */
+void
+gda_transaction_status_set_state (GdaTransactionStatus *st, GdaTransactionStatusState state)
+{
+	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (st));
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (st);
+	priv->state = state;
+}
+
+/**
+ * gda_transaction_status_get_state:
+ */
+GdaTransactionStatusState
+gda_transaction_status_get_state (GdaTransactionStatus *st)
+{
+	g_return_val_if_fail (GDA_IS_TRANSACTION_STATUS (st), GDA_TRANSACTION_STATUS_STATE_FAILED);
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (st);
+	return priv->state;
+}
 
 #ifdef GDA_DEBUG
 void
@@ -338,14 +388,15 @@ gda_transaction_status_dump (GdaTransactionStatus *tstatus, guint offset)
 #define level_str(lev) ((lev < 4) ? levels[lev] : "UNKNOWN ISOLATION LEVEL")
 
 	g_return_if_fail (GDA_IS_TRANSACTION_STATUS (tstatus));
+	GdaTransactionStatusPrivate *priv = gda_transaction_status_get_instance_private (tstatus);
 
 	str = g_new (gchar, offset+1);
 	memset (str, ' ', offset);
 	str [offset] = 0;
 
-	g_print ("%sGdaTransactionStatus: %s (%s, %p)\n", str, tstatus->name ? tstatus->name : "(NONAME)", 
-		 level_str (tstatus->isolation_level), tstatus);
-	for (evlist = tstatus->events; evlist; evlist = evlist->next) {
+	g_print ("%sGdaTransactionStatus: %s (%s, %p)\n", str, priv->name ? priv->name : "(NONAME)",
+		 level_str (priv->isolation_level), tstatus);
+	for (evlist = priv->events; evlist; evlist = evlist->next) {
 		GdaTransactionStatusEvent *ev = (GdaTransactionStatusEvent *) (evlist->data);
 		switch (ev->type) {
 		case GDA_TRANSACTION_STATUS_EVENT_SAVEPOINT:
