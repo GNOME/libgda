@@ -31,10 +31,7 @@
 /* 
  * Main static functions 
  */
-static void gda_batch_class_init (GdaBatchClass *klass);
-static void gda_batch_init (GdaBatch *batch);
 static void gda_batch_dispose (GObject *object);
-static void gda_batch_finalize (GObject *object);
 
 static void gda_batch_set_property (GObject *object,
 				    guint param_id,
@@ -44,13 +41,11 @@ static void gda_batch_get_property (GObject *object,
 				    guint param_id,
 				    GValue *value,
 				    GParamSpec *pspec);
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 
 typedef struct {
 	GSList *statements; /* list of GdaStatement objects */
 } GdaBatchPrivate;
-#define gda_batch_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_BATCH, GdaBatchPrivate)
+G_DEFINE_TYPE_WITH_PRIVATE (GdaBatch, gda_batch, G_TYPE_OBJECT)
 /* signals */
 enum
 {
@@ -75,41 +70,11 @@ GQuark gda_batch_error_quark (void)
 	return quark;
 }
 
-GType
-gda_batch_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaBatchClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_batch_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaBatch),
-			0,
-			(GInstanceInitFunc) gda_batch_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaBatch", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void m_changed_cb (GdaBatch *batch, GdaStatement *changed_stmt);
 static void
 gda_batch_class_init (GdaBatchClass * klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (object_class, sizeof (GdaBatch));
 
 	/**
 	 * GdaBatch::changed:
@@ -130,7 +95,6 @@ gda_batch_class_init (GdaBatchClass * klass)
 	klass->changed = m_changed_cb;
 
 	object_class->dispose = gda_batch_dispose;
-	object_class->finalize = gda_batch_finalize;
 
 	/* Properties */
 	object_class->set_property = gda_batch_set_property;
@@ -217,24 +181,10 @@ gda_batch_dispose (GObject *object)
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_batch_parent_class)->dispose (object);
 }
 
 static void
-gda_batch_finalize (GObject *object)
-{
-	GdaBatch *batch;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_BATCH (object));
-
-	batch = GDA_BATCH (object);
-	/* parent class */
-	parent_class->finalize (object);
-}
-
-
-static void 
 gda_batch_set_property (GObject *object,
 			     guint param_id,
 			     G_GNUC_UNUSED const GValue *value,
