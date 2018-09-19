@@ -33,7 +33,7 @@ typedef struct {
 	GSList      *managers; /* list of GdaTreeManager */
 	GdaTreeNode *root;
 } GdaTreePrivate;
-#define gda_tree_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_TREE, GdaTreePrivate)
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTree, gda_tree, G_TYPE_OBJECT)
 
 static void gda_tree_class_init (GdaTreeClass *klass);
 static void gda_tree_init       (GdaTree *tree);
@@ -73,8 +73,6 @@ enum {
 	PROP_IS_LIST
 };
 
-static GObjectClass *parent_class = NULL;
-
 /*
  * GdaTree class implementation
  * @klass:
@@ -83,10 +81,6 @@ static void
 gda_tree_class_init (GdaTreeClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaTreePrivate));
 
 	/* signals */
 	/**
@@ -207,7 +201,7 @@ gda_tree_dispose (GObject *object)
 		g_slist_free (priv->managers);
 	}
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_tree_parent_class)->dispose (object);
 }
 
 
@@ -218,43 +212,6 @@ GQuark gda_tree_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_tree_error");
         return quark;
-}
-
-/**
- * gda_tree_get_type:
- * 
- * Registers the #GdaTree class on the GLib type system.
- * 
- * Returns: the GType identifying the class.
- *
- * Since: 4.2
- */
-GType
-gda_tree_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTree),
-                        0,
-                        (GInstanceInitFunc) gda_tree_init,
-                        0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (G_TYPE_OBJECT, "GdaTree", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
 }
 
 static void
