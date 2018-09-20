@@ -2,6 +2,7 @@
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,8 +30,6 @@
 #include "gdaui-data-proxy-info.h"
 #include "gdaui-enum-types.h"
 
-static void gdaui_form_class_init (GdauiFormClass * class);
-static void gdaui_form_init (GdauiForm *wid);
 static void gdaui_form_dispose (GObject *object);
 
 static void gdaui_form_set_property (GObject *object,
@@ -61,14 +60,15 @@ static gboolean          gdaui_form_selector_select_row (GdauiDataSelector *ifac
 static void              gdaui_form_selector_unselect_row (GdauiDataSelector *iface, gint row);
 static void              gdaui_form_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible);
 
-struct _GdauiFormPriv
-{
+typedef struct {
 	GtkWidget *raw_form;
 	GtkWidget *info;
-};
+} GdauiFormPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
+G_DEFINE_TYPE_WITH_CODE (GdauiForm, gdaui_form, GTK_TYPE_BOX,
+                         G_ADD_PRIVATE (GdauiForm)
+                         G_IMPLEMENT_INTERFACE (GDAUI_TYPE_DATA_PROXY, gdaui_form_widget_init)
+                         G_IMPLEMENT_INTERFACE (GDAUI_TYPE_DATA_SELECTOR, gdaui_form_selector_init))
 
 /* properties */
 enum {
@@ -78,45 +78,6 @@ enum {
 	PROP_MODEL,
 	PROP_INFO_FLAGS
 };
-
-GType
-gdaui_form_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiFormClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_form_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiForm),
-			0,
-			(GInstanceInitFunc) gdaui_form_init,
-			0
-		};
-
-		static const GInterfaceInfo proxy_info = {
-                        (GInterfaceInitFunc) gdaui_form_widget_init,
-                        NULL,
-                        NULL
-                };
-
-		static const GInterfaceInfo selector_info = {
-                        (GInterfaceInitFunc) gdaui_form_selector_init,
-                        NULL,
-                        NULL
-                };
-
-		type = g_type_register_static (GTK_TYPE_BOX, "GdauiForm", &info, 0);
-		g_type_add_interface_static (type, GDAUI_TYPE_DATA_PROXY, &proxy_info);
-		g_type_add_interface_static (type, GDAUI_TYPE_DATA_SELECTOR, &selector_info);
-	}
-
-	return type;
-}
 
 static void
 gdaui_form_widget_init (GdauiDataProxyInterface *iface)
@@ -146,7 +107,6 @@ gdaui_form_class_init (GdauiFormClass *class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
 	object_class->dispose = gdaui_form_dispose;
 
 	/* Properties */
@@ -176,8 +136,9 @@ static void
 form_layout_changed_cb (G_GNUC_UNUSED GdauiBasicForm *raw_form, GdauiForm *form)
 {
 	gboolean expand;
-	g_object_get (G_OBJECT (form->priv->raw_form), "can-expand-v", &expand, NULL);
-	gtk_container_child_set (GTK_CONTAINER (form), form->priv->raw_form,
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
+	g_object_get (G_OBJECT (priv->raw_form), "can-expand-v", &expand, NULL);
+	gtk_container_child_set (GTK_CONTAINER (form), priv->raw_form,
 				 "expand", expand, "fill", expand, NULL);
 	gtk_widget_queue_resize ((GtkWidget*) form);
 }
@@ -191,9 +152,9 @@ form_selection_changed_cb (G_GNUC_UNUSED GdauiRawForm *rawform, GdauiForm *form)
 static void
 gdaui_form_init (GdauiForm *form)
 {
-	form->priv = g_new0 (GdauiFormPriv, 1);
-	form->priv->raw_form = NULL;
-	form->priv->info = NULL;
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
+	priv->raw_form = NULL;
+	priv->info = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (form), GTK_ORIENTATION_VERTICAL);
 
@@ -203,23 +164,23 @@ gdaui_form_init (GdauiForm *form)
 	gtk_box_pack_start (GTK_BOX (form), frame, TRUE, TRUE, 0);
 	gtk_widget_show (frame);
 
-	form->priv->raw_form = gdaui_raw_form_new (NULL);
-	gtk_container_add (GTK_CONTAINER (frame), form->priv->raw_form);
+	priv->raw_form = gdaui_raw_form_new (NULL);
+	gtk_container_add (GTK_CONTAINER (frame), priv->raw_form);
 
-	gtk_widget_show (form->priv->raw_form);
-	g_signal_connect (form->priv->raw_form, "layout-changed",
+	gtk_widget_show (priv->raw_form);
+	g_signal_connect (priv->raw_form, "layout-changed",
 			  G_CALLBACK (form_layout_changed_cb), form);
-	g_signal_connect (form->priv->raw_form, "selection-changed",
+	g_signal_connect (priv->raw_form, "selection-changed",
 			  G_CALLBACK (form_selection_changed_cb), form);
 
-	form->priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (form->priv->raw_form),
+	priv->info = gdaui_data_proxy_info_new (GDAUI_DATA_PROXY (priv->raw_form),
 						      GDAUI_DATA_PROXY_INFO_CURRENT_ROW |
 						      GDAUI_DATA_PROXY_INFO_ROW_MOVE_BUTTONS);
-	gtk_widget_set_halign (form->priv->info, GTK_ALIGN_START);
-	gtk_style_context_add_class (gtk_widget_get_style_context (form->priv->info), "inline-toolbar");
+	gtk_widget_set_halign (priv->info, GTK_ALIGN_START);
+	gtk_style_context_add_class (gtk_widget_get_style_context (priv->info), "inline-toolbar");
 
-	gtk_box_pack_start (GTK_BOX (form), form->priv->info, FALSE, FALSE, 0);
-	gtk_widget_show (form->priv->info);
+	gtk_box_pack_start (GTK_BOX (form), priv->info, FALSE, FALSE, 0);
+	gtk_widget_show (priv->info);
 
 }
 
@@ -230,20 +191,15 @@ gdaui_form_dispose (GObject *object)
 
 	g_return_if_fail (GDAUI_IS_FORM (object));
 	form = GDAUI_FORM (object);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
 
-	if (form->priv) {
-		g_signal_handlers_disconnect_by_func (form->priv->raw_form,
-						      G_CALLBACK (form_layout_changed_cb), form);
-		g_signal_handlers_disconnect_by_func (form->priv->raw_form,
-						      G_CALLBACK (form_selection_changed_cb), form);
-
-		/* the private area itself */
-		g_free (form->priv);
-		form->priv = NULL;
-	}
+	g_signal_handlers_disconnect_by_func (priv->raw_form,
+					      G_CALLBACK (form_layout_changed_cb), form);
+	g_signal_handlers_disconnect_by_func (priv->raw_form,
+					      G_CALLBACK (form_selection_changed_cb), form);
 
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_form_parent_class)->dispose (object);
 }
 
 
@@ -280,24 +236,23 @@ gdaui_form_set_property (GObject *object,
 	GdaDataModel *model;
 
 	form = GDAUI_FORM (object);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
 
-	if (form->priv) {
-		switch (param_id) {
+	switch (param_id) {
 		case PROP_MODEL: {
 			model = GDA_DATA_MODEL (g_value_get_object (value));
-			g_object_set (G_OBJECT (form->priv->raw_form), "model", model, NULL);
-			gtk_container_child_set (GTK_CONTAINER (form), form->priv->raw_form,
+			g_object_set (G_OBJECT (priv->raw_form), "model", model, NULL);
+			gtk_container_child_set (GTK_CONTAINER (form), priv->raw_form,
 						 "expand", TRUE, "fill", TRUE, NULL);
 			gtk_widget_queue_resize ((GtkWidget*) form);
 			break;
 		}
 		case PROP_INFO_FLAGS:
-			g_object_set (G_OBJECT (form->priv->info), "flags", g_value_get_flags (value), NULL);
+			g_object_set (G_OBJECT (priv->info), "flags", g_value_get_flags (value), NULL);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -310,110 +265,122 @@ gdaui_form_get_property (GObject *object,
 	GdauiForm *form;
 	GdaDataModel *model;
 
-        form = GDAUI_FORM (object);
-        if (form->priv) {
-		switch (param_id) {
+	form = GDAUI_FORM (object);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
+	switch (param_id) {
 		case PROP_RAW_FORM:
-			g_value_set_object (value, form->priv->raw_form);
+			g_value_set_object (value, priv->raw_form);
 			break;
 		case PROP_INFO:
-			g_value_set_object (value, form->priv->info);
+			g_value_set_object (value, priv->info);
 			break;
 		case PROP_INFO_FLAGS: {
 			GdauiDataProxyInfoFlag flags;
-			g_object_get (G_OBJECT (form->priv->info), "flags", &flags, NULL);
+			g_object_get (G_OBJECT (priv->info), "flags", &flags, NULL);
 			g_value_set_flags (value, flags);
 			break;
 		}
 		case PROP_MODEL:
-			g_object_get (G_OBJECT (form->priv->raw_form), "model", &model, NULL);
+			g_object_get (G_OBJECT (priv->raw_form), "model", &model, NULL);
 			g_value_take_object (value, G_OBJECT (model));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
-        }
+	}
 }
 
 /* GdauiDataProxy interface */
 static GdaDataProxy *
 gdaui_form_get_proxy (GdauiDataProxy *iface)
 {
-	return gdaui_data_proxy_get_proxy ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_proxy_get_proxy ((GdauiDataProxy*) priv->raw_form);
 }
 
 static void
 gdaui_form_set_column_editable (GdauiDataProxy *iface, gint column, gboolean editable)
 {
-	gdaui_data_proxy_column_set_editable ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form,
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	gdaui_data_proxy_column_set_editable ((GdauiDataProxy*) priv->raw_form,
 					      column, editable);
 }
 
 static gboolean
 gdaui_form_supports_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	return gdaui_data_proxy_supports_action ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form, action);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_proxy_supports_action ((GdauiDataProxy*) priv->raw_form, action);
 }
 
 static void
 gdaui_form_perform_action (GdauiDataProxy *iface, GdauiAction action)
 {
-	gdaui_data_proxy_perform_action ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form, action);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	gdaui_data_proxy_perform_action ((GdauiDataProxy*) priv->raw_form, action);
 }
 
 static gboolean
 gdaui_form_widget_set_write_mode (GdauiDataProxy *iface, GdauiDataProxyWriteMode mode)
 {
-	return gdaui_data_proxy_set_write_mode ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form, mode);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_proxy_set_write_mode ((GdauiDataProxy*) priv->raw_form, mode);
 }
 
 static GdauiDataProxyWriteMode
 gdaui_form_widget_get_write_mode (GdauiDataProxy *iface)
 {
-	return gdaui_data_proxy_get_write_mode ((GdauiDataProxy*) GDAUI_FORM (iface)->priv->raw_form);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_proxy_get_write_mode ((GdauiDataProxy*) priv->raw_form);
 }
 
 /* GdauiDataSelector interface */
 static GdaDataModel *
 gdaui_form_selector_get_model (GdauiDataSelector *iface)
 {
-	return gdaui_data_selector_get_model ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_selector_get_model ((GdauiDataSelector*) priv->raw_form);
 }
 
 static void
 gdaui_form_selector_set_model (GdauiDataSelector *iface, GdaDataModel *model)
 {
-	gdaui_data_selector_set_model ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form, model);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	gdaui_data_selector_set_model ((GdauiDataSelector*) priv->raw_form, model);
 }
 
 static GArray *
 gdaui_form_selector_get_selected_rows (GdauiDataSelector *iface)
 {
-	return gdaui_data_selector_get_selected_rows ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_selector_get_selected_rows ((GdauiDataSelector*)priv->raw_form);
 }
 
 static GdaDataModelIter *
 gdaui_form_selector_get_data_set (GdauiDataSelector *iface)
 {
-	return gdaui_data_selector_get_data_set ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_selector_get_data_set ((GdauiDataSelector*) priv->raw_form);
 }
 
 static gboolean
 gdaui_form_selector_select_row (GdauiDataSelector *iface, gint row)
 {
-	return gdaui_data_selector_select_row ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form, row);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	return gdaui_data_selector_select_row ((GdauiDataSelector*) priv->raw_form, row);
 }
 
 static void
 gdaui_form_selector_unselect_row (GdauiDataSelector *iface, gint row)
 {
-	gdaui_data_selector_unselect_row ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form, row);
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	gdaui_data_selector_unselect_row ((GdauiDataSelector*) priv->raw_form, row);
 }
 
 static void
 gdaui_form_selector_set_column_visible (GdauiDataSelector *iface, gint column, gboolean visible)
 {
-	gdaui_data_selector_set_column_visible ((GdauiDataSelector*) GDAUI_FORM (iface)->priv->raw_form,
+	GdauiFormPrivate *priv = gdaui_form_get_instance_private (GDAUI_FORM (iface));
+	gdaui_data_selector_set_column_visible ((GdauiDataSelector*) priv->raw_form,
 						column, visible);
 }

@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,23 +28,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_FORM          (gdaui_form_get_type())
-#define GDAUI_FORM(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_form_get_type(), GdauiForm)
-#define GDAUI_FORM_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_form_get_type (), GdauiFormClass)
-#define GDAUI_IS_FORM(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_form_get_type ())
-#define GDAUI_IS_FORM_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDAUI_TYPE_FORM))
-
-typedef struct _GdauiForm      GdauiForm;
-typedef struct _GdauiFormClass GdauiFormClass;
-typedef struct _GdauiFormPriv  GdauiFormPriv;
-
-/* struct for the object's data */
-struct _GdauiForm
-{
-	GtkBox             object;
-
-	GdauiFormPriv     *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiForm, gdaui_form, GDAUI, FORM, GtkBox)
 /* struct for the object's class */
 struct _GdauiFormClass
 {
@@ -58,8 +43,6 @@ struct _GdauiFormClass
  * @Image:
  * @see_also: The #GdauiRawForm widget which is used by the #GdaForm widget.
  */
-
-GType             gdaui_form_get_type            (void) G_GNUC_CONST;
 
 GtkWidget        *gdaui_form_new                 (GdaDataModel *model);
 
