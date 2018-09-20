@@ -2,6 +2,7 @@
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,8 +40,6 @@
 
 #define MAX_ACCEPTED_STRING_LENGTH 800U
 
-static void gdaui_data_cell_renderer_textual_init       (GdauiDataCellRendererTextual      *celltext);
-static void gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *class);
 static void gdaui_data_cell_renderer_textual_dispose    (GObject *object);
 static void gdaui_data_cell_renderer_textual_finalize   (GObject *object);
 
@@ -89,7 +88,7 @@ enum {
 	PROP_OPTIONS
 };
 
-struct _GdauiDataCellRendererTextualPrivate
+typedef struct
 {
 	GdaDataHandler *dh;
 	GType           type;
@@ -104,7 +103,9 @@ struct _GdauiDataCellRendererTextualPrivate
 	gint            n_decimals;
 	guchar          thousands_sep;
 
-};
+} GdauiDataCellRendererTextualPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiDataCellRendererTextual, gdaui_data_cell_renderer_textual, GTK_TYPE_CELL_RENDERER_TEXT)
 
 typedef struct
 {
@@ -113,51 +114,21 @@ typedef struct
 } GdauiDataCellRendererTextualInfo;
 #define GDAUI_DATA_CELL_RENDERER_TEXTUAL_INFO_KEY "__info_key"
 
-
-
-static GObjectClass *parent_class = NULL;
 static guint text_cell_renderer_textual_signals [LAST_SIGNAL];
 
 #define GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH "__path"
 
-GType
-gdaui_data_cell_renderer_textual_get_type (void)
-{
-	static GType cell_text_type = 0;
-
-	if (!cell_text_type) {
-		static const GTypeInfo cell_text_info =	{
-			sizeof (GdauiDataCellRendererTextualClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_data_cell_renderer_textual_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiDataCellRendererTextual),
-			0,              /* n_preallocs */
-			(GInstanceInitFunc) gdaui_data_cell_renderer_textual_init,
-			0
-		};
-
-		cell_text_type =
-			g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GdauiDataCellRendererTextual",
-						&cell_text_info, 0);
-	}
-
-	return cell_text_type;
-}
-
 static void
 gdaui_data_cell_renderer_textual_init (GdauiDataCellRendererTextual *datacell)
 {
-	datacell->priv = g_new0 (GdauiDataCellRendererTextualPrivate, 1);
-	datacell->priv->dh = NULL;
-	datacell->priv->type = GDA_TYPE_NULL;
-	datacell->priv->type_forced = FALSE;
-	datacell->priv->value = NULL;
-	datacell->priv->options = NULL;
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
+	priv->dh = NULL;
+	priv->type = GDA_TYPE_NULL;
+	priv->type_forced = FALSE;
+	priv->value = NULL;
+	priv->options = NULL;
 
-	datacell->priv->n_decimals = -1; /* unlimited */
+	priv->n_decimals = -1; /* unlimited */
 
 	g_object_set ((GObject*) datacell, "xalign", 0.0, "yalign", 0.5,
 		      "xpad", 2, "ypad", 2, NULL);
@@ -169,9 +140,7 @@ gdaui_data_cell_renderer_textual_class_init (GdauiDataCellRendererTextualClass *
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
-    	object_class->dispose = gdaui_data_cell_renderer_textual_dispose;
+	object_class->dispose = gdaui_data_cell_renderer_textual_dispose;
 	object_class->finalize = gdaui_data_cell_renderer_textual_finalize;
 
 	object_class->get_property = gdaui_data_cell_renderer_textual_get_property;
@@ -228,29 +197,27 @@ static void
 gdaui_data_cell_renderer_textual_dispose (GObject *object)
 {
 	GdauiDataCellRendererTextual *datacell = GDAUI_DATA_CELL_RENDERER_TEXTUAL (object);
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
 
-	if (datacell->priv->dh) {
-		g_object_unref (G_OBJECT (datacell->priv->dh));
-		datacell->priv->dh = NULL;
+	if (priv->dh) {
+		g_object_unref (G_OBJECT (priv->dh));
+		priv->dh = NULL;
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_data_cell_renderer_textual_parent_class)->dispose (object);
 }
 
 static void
 gdaui_data_cell_renderer_textual_finalize (GObject *object)
 {
 	GdauiDataCellRendererTextual *datacell = GDAUI_DATA_CELL_RENDERER_TEXTUAL (object);
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
 
-	if (datacell->priv) {
-		g_free (datacell->priv->options);
-		g_free (datacell->priv);
-		datacell->priv = NULL;
-	}
+	g_free (priv->options);
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_data_cell_renderer_textual_parent_class)->finalize (object);
 }
 
 
@@ -403,6 +370,7 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 	const gchar* options;
 	static gchar *too_long_msg = NULL;
 	static gint too_long_msg_len;
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
 
 	if (!too_long_msg) {
 		too_long_msg = g_strconcat ("<b><i>&lt;", _("string truncated because too long"),
@@ -415,9 +383,9 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 		/* FIXME: is it necessary to make a copy of value, couldn't we just use the
 		 * value AS IS for performances reasons ? */
 		if (! OPTIMIZE) {
-			if (datacell->priv->value) {
-				gda_value_free (datacell->priv->value);
-				datacell->priv->value = NULL;
+			if (priv->value) {
+				gda_value_free (priv->value);
+				priv->value = NULL;
 			}
 		}
 
@@ -427,36 +395,36 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 				gchar *str;
 				gboolean is_int, is_num;
 
-				if (G_VALUE_TYPE (gval) != datacell->priv->type) {
-					if (!datacell->priv->type_forced) {
-						datacell->priv->type_forced = TRUE;
-						if (datacell->priv->type != GDA_TYPE_NULL)
+				if (G_VALUE_TYPE (gval) != priv->type) {
+					if (!priv->type_forced) {
+						priv->type_forced = TRUE;
+						if (priv->type != GDA_TYPE_NULL)
 							g_warning (_("Data cell renderer's specified type (%s) "
 								     "differs from actual "
 								     "value to display type (%s)"),
-								   g_type_name (datacell->priv->type),
+								   g_type_name (priv->type),
 								   g_type_name (G_VALUE_TYPE (gval)));
 					}
 					else
 						g_warning (_("Data cell renderer asked to display values of different "
 							     "data types, at least %s and %s, which means the data model has "
 							     "some incoherencies"),
-							   g_type_name (datacell->priv->type),
+							   g_type_name (priv->type),
 							   g_type_name (G_VALUE_TYPE (gval)));
-					datacell->priv->type = G_VALUE_TYPE (gval);
+					priv->type = G_VALUE_TYPE (gval);
 				}
-				is_num = is_numerical (datacell->priv->type, &is_int);
+				is_num = is_numerical (priv->type, &is_int);
 				if (is_num)
 					xalign = 1.;
 
 				if (! OPTIMIZE)
-					datacell->priv->value = gda_value_copy (gval);
+					priv->value = gda_value_copy (gval);
 
-				if (!datacell->priv->dh && (datacell->priv->type != GDA_TYPE_NULL))
-					datacell->priv->dh = g_object_ref (gda_data_handler_get_default (datacell->priv->type));
+				if (!priv->dh && (priv->type != GDA_TYPE_NULL))
+					priv->dh = g_object_ref (gda_data_handler_get_default (priv->type));
 
-				if (datacell->priv->dh) {
-					str = gda_data_handler_get_str_from_value (datacell->priv->dh, gval);
+				if (priv->dh) {
+					str = gda_data_handler_get_str_from_value (priv->dh, gval);
 					gboolean use_markup = FALSE;
 					if (str) {
 						guint length;
@@ -474,22 +442,22 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 						}
 					}
 
-					if (datacell->priv->options) {
+					if (priv->options) {
 						/* extra specific treatments to handle the options */
 						gchar *tmp_str;
 
-						if (!is_num && (datacell->priv->max_length > 0))
-							str [datacell->priv->max_length] = 0;
+						if (!is_num && (priv->max_length > 0))
+							str [priv->max_length] = 0;
 						else if (is_num) {
 							tmp_str = adjust_numeric_display (str, is_int,
-											  datacell->priv->n_decimals,
+											  priv->n_decimals,
 											  get_default_decimal_sep (),
-											  datacell->priv->thousands_sep);
+											  priv->thousands_sep);
 							g_free (str);
 							str = tmp_str;
 						}
-						if (datacell->priv->currency) {
-							tmp_str = g_strdup_printf ("%s %s", str, datacell->priv->currency);
+						if (priv->currency) {
+							tmp_str = g_strdup_printf ("%s %s", str, priv->currency);
 							g_free (str);
 							str = tmp_str;
 						}
@@ -510,30 +478,30 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 			else if (gval)
 				g_object_set (G_OBJECT (object), "text", "", NULL);
 			else {
-				datacell->priv->invalid = TRUE;
+				priv->invalid = TRUE;
 				g_object_set (G_OBJECT (object), "text", "", NULL);
 			}
 		}
 		else {
-			datacell->priv->invalid = TRUE;
+			priv->invalid = TRUE;
 			g_object_set (G_OBJECT (object), "text", "", NULL);
 		}
 		break;
 	case PROP_VALUE_ATTRIBUTES:
-		datacell->priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
+		priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
 		break;
 	case PROP_TO_BE_DELETED:
-		datacell->priv->to_be_deleted = g_value_get_boolean (value);
+		priv->to_be_deleted = g_value_get_boolean (value);
 		break;
 	case PROP_DATA_HANDLER:
-		if (datacell->priv->dh)
-			g_object_unref (G_OBJECT (datacell->priv->dh));
-		datacell->priv->dh = GDA_DATA_HANDLER (g_value_get_object (value));
-		if (datacell->priv->dh)
-			g_object_ref (G_OBJECT (datacell->priv->dh));
+		if (priv->dh)
+			g_object_unref (G_OBJECT (priv->dh));
+		priv->dh = GDA_DATA_HANDLER (g_value_get_object (value));
+		if (priv->dh)
+			g_object_ref (G_OBJECT (priv->dh));
 		break;
 	case PROP_TYPE:
-		datacell->priv->type = g_value_get_gtype (value);
+		priv->type = g_value_get_gtype (value);
 		break;
 	case PROP_OPTIONS:
 		options = g_value_get_string(value);
@@ -541,25 +509,25 @@ gdaui_data_cell_renderer_textual_set_property (GObject *object,
 			GdaQuarkList *params;
 			const gchar *str;
 
-			datacell->priv->options = g_strdup (options);
+			priv->options = g_strdup (options);
 
 			params = gda_quark_list_new_from_string (options);
 			str = gda_quark_list_find (params, "MAX_SIZE");
 			if (str)
-				datacell->priv->max_length = atoi (str);
+				priv->max_length = atoi (str);
 			str = gda_quark_list_find (params, "THOUSAND_SEP");
 			if (str) {
 				if ((*str == 't') || (*str == 'T'))
-					datacell->priv->thousands_sep = get_default_thousands_sep ();
+					priv->thousands_sep = get_default_thousands_sep ();
 				else
-					datacell->priv->thousands_sep = 0;
+					priv->thousands_sep = 0;
 			}
 			str = gda_quark_list_find (params, "NB_DECIMALS");
 			if (str)
-				datacell->priv->n_decimals = atoi (str);
+				priv->n_decimals = atoi (str);
 			str = gda_quark_list_find (params, "CURRENCY");
 			if (str)
-				datacell->priv->currency = g_strdup_printf ("%s ", str);
+				priv->currency = g_strdup_printf ("%s ", str);
 			gda_quark_list_free (params);
 		}
 
@@ -625,14 +593,15 @@ gdaui_data_cell_renderer_textual_render (GtkCellRenderer      *cell,
 	GdauiDataCellRendererTextual *datacell = (GdauiDataCellRendererTextual*) cell;
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->render) (cell, cr, widget, background_area, cell_area, flags);
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
 
-	if (datacell->priv->to_be_deleted) {
+	if (priv->to_be_deleted) {
 		cairo_set_source_rgba (cr, 0., 0., 0., 1.);
 		cairo_rectangle (cr, cell_area->x, cell_area->y + cell_area->height / 2. - .5,
 				 cell_area->width, 1.);
 		cairo_fill (cr);
 	}
-	if (datacell->priv->invalid)
+	if (priv->invalid)
 		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);
 }
 
@@ -693,6 +662,7 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 	gboolean editable;
 
 	datacell = GDAUI_DATA_CELL_RENDERER_TEXTUAL (cell);
+	GdauiDataCellRendererTextualPrivate *priv = gdaui_data_cell_renderer_textual_get_instance_private (datacell);
 
 	/* If the cell isn't editable we return NULL. */
 	g_object_get (G_OBJECT (cell), "editable", &editable, NULL);
@@ -700,19 +670,19 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 		return NULL;
 
 	/* If there is no data handler then the cell also is not editable */
-	if (!datacell->priv->dh)
+	if (!priv->dh)
 		return NULL;
 
-	if (datacell->priv->type == G_TYPE_DATE)
-		entry = gdaui_entry_date_new (datacell->priv->dh);
-	else if (datacell->priv->type == GDA_TYPE_TIME)
-		entry = gdaui_entry_time_new (datacell->priv->dh);
-	else if (datacell->priv->type == G_TYPE_DATE_TIME)
-		entry = gdaui_entry_timestamp_new (datacell->priv->dh);
-	else if (gdaui_entry_number_is_type_numeric (datacell->priv->type))
-		entry = gdaui_entry_number_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);
+	if (priv->type == G_TYPE_DATE)
+		entry = gdaui_entry_date_new (priv->dh);
+	else if (priv->type == GDA_TYPE_TIME)
+		entry = gdaui_entry_time_new (priv->dh);
+	else if (priv->type == G_TYPE_DATE_TIME)
+		entry = gdaui_entry_timestamp_new (priv->dh);
+	else if (gdaui_entry_number_is_type_numeric (priv->type))
+		entry = gdaui_entry_number_new (priv->dh, priv->type, priv->options);
 	else
-		entry = gdaui_entry_string_new (datacell->priv->dh, datacell->priv->type, datacell->priv->options);
+		entry = gdaui_entry_string_new (priv->dh, priv->type, priv->options);
 
 	g_object_set (G_OBJECT (entry), "is-cell-renderer", TRUE, "actions", FALSE, NULL);
 
@@ -721,12 +691,12 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 		gchar *text;
 
 		g_object_get (G_OBJECT (cell), "text", &text, NULL);
-		orig = gda_data_handler_get_value_from_str (datacell->priv->dh, text, datacell->priv->type);
+		orig = gda_data_handler_get_value_from_str (priv->dh, text, priv->type);
 		g_free (text);
 		gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), orig);
 	}
 	else
-		gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), datacell->priv->value);
+		gdaui_data_entry_set_reference_value (GDAUI_DATA_ENTRY (entry), priv->value);
 
 	info = g_new0 (GdauiDataCellRendererTextualInfo, 1);
  	g_object_set_data_full (G_OBJECT (entry), GDAUI_DATA_CELL_RENDERER_TEXTUAL_PATH, g_strdup (path), g_free);

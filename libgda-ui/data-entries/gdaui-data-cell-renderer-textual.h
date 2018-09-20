@@ -27,23 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL		(gdaui_data_cell_renderer_textual_get_type ())
-#define GDAUI_DATA_CELL_RENDERER_TEXTUAL(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL, GdauiDataCellRendererTextual))
-#define GDAUI_DATA_CELL_RENDERER_TEXTUAL_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL, GdauiDataCellRendererTextualClass))
-#define GDAUI_IS_DATA_CELL_RENDERER_TEXTUAL(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL))
-#define GDAUI_IS_DATA_CELL_RENDERER_TEXTUAL_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL))
-#define GDAUI_DATA_CELL_RENDERER_TEXTUAL_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_TEXTUAL, GdauiDataCellRendererTextualClass))
-
-typedef struct _GdauiDataCellRendererTextual        GdauiDataCellRendererTextual;
-typedef struct _GdauiDataCellRendererTextualClass   GdauiDataCellRendererTextualClass;
-typedef struct _GdauiDataCellRendererTextualPrivate GdauiDataCellRendererTextualPrivate;
-
-struct _GdauiDataCellRendererTextual
-{
-	GtkCellRendererText                    parent;
-
-	GdauiDataCellRendererTextualPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererTextual, gdaui_data_cell_renderer_textual, GDAUI, DATA_CELL_RENDERER_TEXTUAL, GtkCellRendererText)
 struct _GdauiDataCellRendererTextualClass
 {
 	GtkCellRendererTextClass               parent_class;
@@ -53,8 +37,7 @@ struct _GdauiDataCellRendererTextualClass
 			  const GValue      *new_value);
 };
 
-GType            gdaui_data_cell_renderer_textual_get_type (void) G_GNUC_CONST;
-GtkCellRenderer *gdaui_data_cell_renderer_textual_new      (GdaDataHandler *dh, GType type, 
+GtkCellRenderer *gdaui_data_cell_renderer_textual_new      (GdaDataHandler *dh, GType type,
 							    const gchar *options);
 
 
