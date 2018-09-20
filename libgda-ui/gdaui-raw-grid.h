@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,22 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_RAW_GRID          (gdaui_raw_grid_get_type())
-#define GDAUI_RAW_GRID(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_raw_grid_get_type(), GdauiRawGrid)
-#define GDAUI_RAW_GRID_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_raw_grid_get_type (), GdauiRawGridClass)
-#define GDAUI_IS_RAW_GRID(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_raw_grid_get_type ())
-
-
-typedef struct _GdauiRawGrid      GdauiRawGrid;
-typedef struct _GdauiRawGridClass GdauiRawGridClass;
-typedef struct _GdauiRawGridPriv  GdauiRawGridPriv;
-
-/* struct for the object's data */
-struct _GdauiRawGrid
-{
-	GtkTreeView         object;
-
-	GdauiRawGridPriv   *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdauiRawGrid, gdaui_raw_grid, GDAUI, RAW_GRID, GtkTreeView)
 
 /* struct for the object's class */
 struct _GdauiRawGridClass
@@ -48,7 +34,7 @@ struct _GdauiRawGridClass
 	GtkTreeViewClass    parent_class;
 
 	void             (* double_clicked)    (GdauiRawGrid *grid, gint row);
-        void             (* populate_popup)    (GdauiRawGrid *grid, GtkMenu *menu);
+	void             (* populate_popup)    (GdauiRawGrid *grid, GtkMenu *menu);
 };
 
 /**
@@ -62,8 +48,6 @@ struct _GdauiRawGridClass
  * The #GdauiGrid widget which uses the #GdauiRawGrid and adds decorations such as
  * information about data model size, and features searching.
  */
-
-GType      gdaui_raw_grid_get_type              (void) G_GNUC_CONST;
 
 GtkWidget *gdaui_raw_grid_new                   (GdaDataModel *model);
 
