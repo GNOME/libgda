@@ -33,10 +33,7 @@
 
 #define GDAUI_DATA_CELL_RENDERER_COMBO_PATH "gdaui-data-cell-renderer-combo-path"
 
-static void gdaui_data_cell_renderer_combo_init       (GdauiDataCellRendererCombo      *celltext);
-static void gdaui_data_cell_renderer_combo_class_init (GdauiDataCellRendererComboClass *class);
 static void gdaui_data_cell_renderer_combo_dispose    (GObject *object);
-static void gdaui_data_cell_renderer_combo_finalize   (GObject *object);
 
 static void gdaui_data_cell_renderer_combo_get_property  (GObject *object,
 							  guint param_id,
@@ -85,7 +82,7 @@ enum {
 	PROP_PARAMLISTSOURCE
 };
 
-struct _GdauiDataCellRendererComboPrivate
+typedef struct
 {
 	GdauiSet       *paramlist;
 	GdauiSetSource *source;
@@ -95,47 +92,21 @@ struct _GdauiDataCellRendererComboPrivate
 	gboolean      set_default_if_invalid;
 	gboolean      show_expander;
 	gboolean      invalid;
-};
+} GdauiDataCellRendererComboPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiDataCellRendererCombo, gdaui_data_cell_renderer_combo, GTK_TYPE_CELL_RENDERER_TEXT)
 
 
-static GObjectClass *parent_class = NULL;
 static guint text_cell_renderer_combo_signals [LAST_SIGNAL] = { 0 };
-
-GType
-gdaui_data_cell_renderer_combo_get_type (void)
-{
-	static GType cell_text_type = 0;
-
-	if (!cell_text_type) {
-		static const GTypeInfo cell_text_info =	{
-			sizeof (GdauiDataCellRendererComboClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_data_cell_renderer_combo_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiDataCellRendererCombo),
-			0,              /* n_preallocs */
-			(GInstanceInitFunc) gdaui_data_cell_renderer_combo_init,
-			0
-		};
-		
-		cell_text_type =
-			g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GdauiDataCellRendererCombo",
-						&cell_text_info, 0);
-	}
-
-	return cell_text_type;
-}
 
 static void
 gdaui_data_cell_renderer_combo_init (GdauiDataCellRendererCombo *datacell)
 {
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 	g_object_set ((GObject*) datacell, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE, NULL);
-	datacell->priv = g_new0 (GdauiDataCellRendererComboPrivate, 1);
-	datacell->priv->attributes = 0;
-	datacell->priv->set_default_if_invalid = FALSE;
-	datacell->priv->show_expander = TRUE;
+	priv->attributes = 0;
+	priv->set_default_if_invalid = FALSE;
+	priv->show_expander = TRUE;
 }
 
 static void
@@ -144,10 +115,7 @@ gdaui_data_cell_renderer_combo_class_init (GdauiDataCellRendererComboClass *clas
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
-    	object_class->dispose = gdaui_data_cell_renderer_combo_dispose;
-	object_class->finalize = gdaui_data_cell_renderer_combo_finalize;
+	object_class->dispose = gdaui_data_cell_renderer_combo_dispose;
 
 	object_class->get_property = gdaui_data_cell_renderer_combo_get_property;
 	object_class->set_property = gdaui_data_cell_renderer_combo_set_property;
@@ -215,30 +183,16 @@ static void
 gdaui_data_cell_renderer_combo_dispose (GObject *object)
 {
 	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 
-	if (datacell->priv->paramlist) {
-		g_object_unref (datacell->priv->paramlist);
-		datacell->priv->paramlist = NULL;
+	if (priv->paramlist) {
+		g_object_unref (priv->paramlist);
+		priv->paramlist = NULL;
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_data_cell_renderer_combo_parent_class)->dispose (object);
 }
-
-static void
-gdaui_data_cell_renderer_combo_finalize (GObject *object)
-{
-	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
-
-	if (datacell->priv) {
-		g_free (datacell->priv);
-		datacell->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
-}
-
 
 static void
 gdaui_data_cell_renderer_combo_get_property (GObject *object,
@@ -247,13 +201,14 @@ gdaui_data_cell_renderer_combo_get_property (GObject *object,
 					     GParamSpec *pspec)
 {
 	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 
 	switch (param_id) {
 	case PROP_VALUE_ATTRIBUTES:
-		g_value_set_flags (value, datacell->priv->attributes);
+		g_value_set_flags (value, priv->attributes);
 		break;
 	case PROP_SET_DEFAULT_IF_INVALID:
-		g_value_set_boolean (value, datacell->priv->set_default_if_invalid);
+		g_value_set_boolean (value, priv->set_default_if_invalid);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -270,10 +225,11 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 					     GParamSpec *pspec)
 {
 	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (object);
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 
 	switch (param_id) {
 	case PROP_VALUES:
-		datacell->priv->invalid = FALSE;
+		priv->invalid = FALSE;
 		if (value) {	
 			GList *gvalues = g_value_get_pointer (value);
 			if (gvalues) {
@@ -293,29 +249,29 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 					gvalues = g_list_next (gvalues);
 				}
 
-				g_return_if_fail (length == gdaui_set_source_get_ref_n_cols (datacell->priv->source));
+				g_return_if_fail (length == gdaui_set_source_get_ref_n_cols (priv->source));
 				
 				if (allnull) 
 					g_object_set (G_OBJECT (object), "text", "", NULL);
 				else {
 					/* find the data model row for the values */
-					/* if (gdaui_data_model_get_status (datacell->priv->data_model) &  */
+					/* if (gdaui_data_model_get_status (priv->data_model) &  */
 					/* 					    GDAUI_DATA_MODEL_NEEDS_INIT_REFRESH) */
-					/* 						gdaui_data_model_refresh (datacell->priv->data_model, NULL); */
+					/* 						gdaui_data_model_refresh (priv->data_model, NULL); */
 					GdaDataModel *source_model;
-					source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (datacell->priv->source));
+					source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (priv->source));
 					row = gda_data_model_get_row_from_values (source_model,
 										  values,
-										  gdaui_set_source_get_ref_columns (datacell->priv->source));
+										  gdaui_set_source_get_ref_columns (priv->source));
 					if (row >= 0) {
 						GList *dsplay_values = NULL;
 						gint i;
 						gchar *str;
 						
-						for (i = 0; i < gdaui_set_source_get_shown_n_cols (datacell->priv->source); i++) {
+						for (i = 0; i < gdaui_set_source_get_shown_n_cols (priv->source); i++) {
 							const GValue *value;
 							gint* cols;
-							cols = gdaui_set_source_get_shown_columns (datacell->priv->source);
+							cols = gdaui_set_source_get_shown_columns (priv->source);
 							value = gda_data_model_get_value_at (source_model, cols [i], row, NULL);
 							dsplay_values = g_list_append (dsplay_values, (GValue *) value);
 						}
@@ -325,7 +281,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 						g_free (str);
 					}
 					else {
-						if (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL)
+						if (priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL)
 							g_object_set (G_OBJECT (object), "text", "", NULL);
 						else
 							g_object_set (G_OBJECT (object), "text", "???", NULL);
@@ -335,12 +291,12 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 				g_slist_free (values);
 			}
 			else {
-				datacell->priv->invalid = TRUE;
+				priv->invalid = TRUE;
 				g_object_set (G_OBJECT (object), "text", "", NULL);
 			}
 		}
 		else {
-			datacell->priv->invalid = TRUE;
+			priv->invalid = TRUE;
 			g_object_set (G_OBJECT (object), "text", "", NULL);
 		}
 		
@@ -351,7 +307,7 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 			GList *gvalues = g_value_get_pointer (value);
 			gchar *str;
 
-			g_assert (g_list_length (gvalues) == (guint) gdaui_set_source_get_shown_n_cols (datacell->priv->source));
+			g_assert (g_list_length (gvalues) == (guint) gdaui_set_source_get_shown_n_cols (priv->source));
 			str = render_text_to_display_from_values (gvalues);
 			g_object_set (G_OBJECT (object), "text", str, NULL);
 			g_free (str);
@@ -362,29 +318,29 @@ gdaui_data_cell_renderer_combo_set_property (GObject *object,
 		g_object_notify (object, "values-display");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
-		datacell->priv->attributes = g_value_get_flags (value);
+		priv->attributes = g_value_get_flags (value);
 		break;
 	case PROP_TO_BE_DELETED:
-		datacell->priv->to_be_deleted = g_value_get_boolean (value);
+		priv->to_be_deleted = g_value_get_boolean (value);
 		break;
 	case PROP_SHOW_EXPANDER:
-		datacell->priv->show_expander = g_value_get_boolean (value);
+		priv->show_expander = g_value_get_boolean (value);
 		break;
 	case PROP_SET_DEFAULT_IF_INVALID:
-		datacell->priv->set_default_if_invalid = g_value_get_boolean (value);
+		priv->set_default_if_invalid = g_value_get_boolean (value);
 		break;
 	case PROP_PARAMLIST:
-		if (datacell->priv->paramlist)
-			g_object_unref (datacell->priv->paramlist);
+		if (priv->paramlist)
+			g_object_unref (priv->paramlist);
 
-		datacell->priv->paramlist = GDAUI_SET (g_value_get_object(value));
-		if(datacell->priv->paramlist)
-			g_object_ref(datacell->priv->paramlist);
+		priv->paramlist = GDAUI_SET (g_value_get_object(value));
+		if(priv->paramlist)
+			g_object_ref(priv->paramlist);
 
-		g_object_ref (G_OBJECT (datacell->priv->paramlist)); 
+		g_object_ref (G_OBJECT (priv->paramlist));
 		break;
 	case PROP_PARAMLISTSOURCE:
-		datacell->priv->source = GDAUI_SET_SOURCE (g_value_get_pointer(value));
+		priv->source = GDAUI_SET_SOURCE (g_value_get_pointer(value));
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -471,9 +427,10 @@ gdaui_data_cell_renderer_combo_get_size (GtkCellRenderer *cell,
 	/* get the size as calculated by the GtkCellRendererText */
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->get_size) (cell, widget, cell_area, x_offset, y_offset, width, height);
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (GDAUI_DATA_CELL_RENDERER_COMBO (cell));
 	
 	/* Add more space for the popdown menu symbol */
-	if (GDAUI_DATA_CELL_RENDERER_COMBO (cell)->priv->show_expander) {
+	if (priv->show_expander) {
 		guint xpad, ypad;
 		g_object_get ((GObject*) cell, "xpad", &xpad, "ypad", &ypad, NULL);
 		gint expander_size;
@@ -498,14 +455,15 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 				       GtkCellRendererState  flags)
 	
 {
-	GdauiDataCellRendererCombo *combocell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
+	GdauiDataCellRendererCombo *datacell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 
 	/* render the text as for the GtkCellRendererText */
 	GtkCellRendererClass *text_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TEXT);
 	(text_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
 	/* render the popdown menu symbol */
-	if (combocell->priv->show_expander) {
+	if (priv->show_expander) {
 		gint expander_size;
 		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
 		guint xpad, ypad;
@@ -521,7 +479,7 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
                                     expander_size, expander_size);
 	}
 
-	if (combocell->priv->to_be_deleted) {
+	if (priv->to_be_deleted) {
 		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
 		guint xpad;
 		g_object_get ((GObject*) cell, "xpad", &xpad, NULL);
@@ -533,7 +491,7 @@ gdaui_data_cell_renderer_combo_render (GtkCellRenderer      *cell,
 				 y, y);
 	}
 
-	if (combocell->priv->invalid)
+	if (priv->invalid)
 		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);
 }
 
@@ -560,22 +518,23 @@ gdaui_data_cell_renderer_combo_start_editing (GtkCellRenderer     *cell,
 		return NULL;
 
 	datacell = GDAUI_DATA_CELL_RENDERER_COMBO (cell);
-	source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (datacell->priv->source));
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
+	source_model = gda_set_source_get_data_model (gdaui_set_source_get_source (priv->source));
 	combo = gdaui_combo_new_with_model (source_model,
-					    gdaui_set_source_get_shown_n_cols (datacell->priv->source), 
-					    gdaui_set_source_get_shown_columns (datacell->priv->source));
+					    gdaui_set_source_get_shown_n_cols (priv->source),
+					    gdaui_set_source_get_shown_columns (priv->source));
 	
 	g_object_set (combo, "has-frame", FALSE, NULL);
 	g_object_set_data_full (G_OBJECT (combo),
 				GDAUI_DATA_CELL_RENDERER_COMBO_PATH,
 				g_strdup (path), g_free);
 	gdaui_combo_add_null (GDAUI_COMBO (combo),
-				      (datacell->priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
+				      (priv->attributes & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE);
 	gtk_widget_show (combo);
 
 	g_signal_connect (GTK_CELL_EDITABLE (combo), "editing-done",
 			  G_CALLBACK (gdaui_data_cell_renderer_combo_editing_done), datacell);
-	datacell->priv->focus_out_id = g_signal_connect (combo, "focus-out-event",
+	priv->focus_out_id = g_signal_connect (combo, "focus-out-event",
 							 G_CALLBACK (gdaui_data_cell_renderer_combo_focus_out_event),
 							 datacell);
 	
@@ -589,10 +548,11 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 	const gchar *path;
 	gboolean canceled;
 	GSList *list, *list_all;
+	GdauiDataCellRendererComboPrivate *priv = gdaui_data_cell_renderer_combo_get_instance_private (datacell);
 
-	if (datacell->priv->focus_out_id > 0) {
-		g_signal_handler_disconnect (combo, datacell->priv->focus_out_id);
-		datacell->priv->focus_out_id = 0;
+	if (priv->focus_out_id > 0) {
+		g_signal_handler_disconnect (combo, priv->focus_out_id);
+		priv->focus_out_id = 0;
 	}
 	
 	/*canceled = _gtk_combo_box_editing_canceled (GTK_COMBO_BOX (combo));*/
@@ -602,8 +562,8 @@ gdaui_data_cell_renderer_combo_editing_done (GtkCellEditable *combo, GdauiDataCe
 		return;
 	
 	list = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 
-					      gdaui_set_source_get_ref_n_cols (datacell->priv->source), 
-					      gdaui_set_source_get_ref_columns (datacell->priv->source));
+					      gdaui_set_source_get_ref_n_cols (priv->source),
+					      gdaui_set_source_get_ref_columns (priv->source));
 	list_all = _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo), 0, NULL);
 
 	path = g_object_get_data (G_OBJECT (combo), GDAUI_DATA_CELL_RENDERER_COMBO_PATH);

@@ -26,23 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_CELL_RENDERER_COMBO		(gdaui_data_cell_renderer_combo_get_type ())
-#define GDAUI_DATA_CELL_RENDERER_COMBO(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, GdauiDataCellRendererCombo))
-#define GDAUI_DATA_CELL_RENDERER_COMBO_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, GdauiDataCellRendererComboClass))
-#define GDAUI_IS_DATA_CELL_RENDERER_COMBO(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_COMBO))
-#define GDAUI_IS_DATA_CELL_RENDERER_COMBO_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_COMBO))
-#define GDAUI_DATA_CELL_RENDERER_COMBO_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_COMBO, GdauiDataCellRendererComboClass))
-
-typedef struct _GdauiDataCellRendererCombo        GdauiDataCellRendererCombo;
-typedef struct _GdauiDataCellRendererComboClass   GdauiDataCellRendererComboClass;
-typedef struct _GdauiDataCellRendererComboPrivate GdauiDataCellRendererComboPrivate;
-
-struct _GdauiDataCellRendererCombo
-{
-	GtkCellRendererText            parent;
-
-	GdauiDataCellRendererComboPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererCombo, gdaui_data_cell_renderer_combo, GDAUI, DATA_CELL_RENDERER_COMBO, GtkCellRendererText)
 struct _GdauiDataCellRendererComboClass
 {
 	GtkCellRendererTextClass parent_class;
@@ -52,7 +36,6 @@ struct _GdauiDataCellRendererComboClass
 			  GSList *new_values, GSList *all_new_values);
 };
 
-GType            gdaui_data_cell_renderer_combo_get_type (void) G_GNUC_CONST;
 GtkCellRenderer *gdaui_data_cell_renderer_combo_new      (GdauiSet *paramlist, GdauiSetSource *source);
 
 G_END_DECLS
