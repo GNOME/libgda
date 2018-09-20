@@ -92,7 +92,6 @@ enum {
 
 static GObjectClass *parent_class = NULL;
 static guint bin_cell_signals[LAST_SIGNAL] = { 0 };
-static GdkPixbuf *attach_pixbuf = NULL;
 
 
 GType
@@ -198,14 +197,6 @@ gdaui_data_cell_renderer_bin_class_init (GdauiDataCellRendererBinClass *class)
 			      G_TYPE_NONE, 2,
 			      G_TYPE_STRING,
 			      G_TYPE_VALUE);
-
-	if (! attach_pixbuf) {
-		#define ICON_FILE "/gdaui/images/data/bin-attachment.png"
-		attach_pixbuf = gdk_pixbuf_new_from_resource (ICON_FILE, NULL);
-		if (!attach_pixbuf)
-			g_warning (_("Could not find icon file %s in resources please report error to "
-				   "https://gitlab.gnome.org/GNOME/libgda/issues"), ICON_FILE);
-	}
 }
 
 static void
@@ -273,9 +264,15 @@ gdaui_data_cell_renderer_bin_set_property (GObject *object,
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
 		if (value) {	
                         GValue *gval = g_value_get_boxed (value);
-			if (gval && (G_VALUE_TYPE (gval) != GDA_TYPE_NULL))
+			if (gval && (G_VALUE_TYPE (gval) != GDA_TYPE_NULL)) {
+				GError *error = NULL;
+				GdkPixbuf *attach_pixbuf = gdk_pixbuf_new_from_resource ("/gdaui/bin-attachment.png", &error);
+				if (!attach_pixbuf)
+					g_warning (_("Could not find icon file bin-attachment.png in resources please report error to "
+							 "https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"),
+										 error != NULL ? error->message != NULL ? error->message : _("No detail") : _("No detail"));
 				g_object_set (object, "pixbuf", attach_pixbuf, NULL);
-			else if (gval)
+			} else if (gval)
 				g_object_set (object, "pixbuf", NULL, NULL);
 			else {
 				cell->priv->invalid = TRUE;
