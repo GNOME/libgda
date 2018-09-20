@@ -37,6 +37,8 @@ enum {
 static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
 static void gdaui_data_entry_iface_init (gpointer g_class);
 
+G_DEFINE_INTERFACE (GdauiDataEntry, gdaui_data_entry, GTK_TYPE_WIDGET)
+
 /* module error */
 GQuark gdaui_data_entry_error_quark (void)
 {
@@ -44,31 +46,6 @@ GQuark gdaui_data_entry_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gdaui_data_entry_error");
         return quark;
-}
-
-GType
-gdaui_data_entry_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiDataEntryIface),
-			(GBaseInitFunc) gdaui_data_entry_iface_init,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) NULL,
-			NULL,
-			NULL,
-			0,
-			0,
-			(GInstanceInitFunc) NULL,
-			0
-		};
-
-		type = g_type_register_static (G_TYPE_INTERFACE, "GdauiDataEntry", &info, 0);
-		g_type_interface_add_prerequisite (type, GTK_TYPE_WIDGET);
-	}
-	return type;
 }
 
 /* static gboolean */
@@ -86,16 +63,13 @@ gdaui_data_entry_get_type (void)
 /* } */
 
 static void
-gdaui_data_entry_iface_init (gpointer g_class)
+gdaui_data_entry_default_init (GdauiDataEntryInterface *iface)
 {
-	static gboolean initialized = FALSE;
-
-	if (! initialized) {
 		gdaui_data_entry_signals[CONTENTS_MODIFIED] =
 			g_signal_new ("contents-modified",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
-				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_modified),
+				      G_STRUCT_OFFSET (GdauiDataEntryInterface, contents_modified),
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -103,7 +77,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 			g_signal_new ("contents-activated",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
-				      G_STRUCT_OFFSET (GdauiDataEntryIface, contents_activated),
+				      G_STRUCT_OFFSET (GdauiDataEntryInterface, contents_activated),
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -111,7 +85,7 @@ gdaui_data_entry_iface_init (gpointer g_class)
 			g_signal_new ("status-changed",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
-				      G_STRUCT_OFFSET (GdauiDataEntryIface, status_changed),
+				      G_STRUCT_OFFSET (GdauiDataEntryInterface, status_changed),
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
@@ -119,13 +93,11 @@ gdaui_data_entry_iface_init (gpointer g_class)
 			g_signal_new ("expand-changed",
 				      GDAUI_TYPE_DATA_ENTRY,
 				      G_SIGNAL_RUN_FIRST,
-				      G_STRUCT_OFFSET (GdauiDataEntryIface, expand_changed),
+				      G_STRUCT_OFFSET (GdauiDataEntryInterface, expand_changed),
 				      NULL, NULL,
 				      _gdaui_marshal_VOID__VOID,
 				      G_TYPE_NONE, 0);
 
-		initialized = TRUE;
-	}
 }
 
 /**

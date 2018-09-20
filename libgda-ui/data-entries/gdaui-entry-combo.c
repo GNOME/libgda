@@ -48,7 +48,7 @@ static void          real_combo_block_signals (GdauiEntryCombo *wid);
 static void          real_combo_unblock_signals (GdauiEntryCombo *wid);
 
 /* GdauiDataEntry interface (value must be a GDA_TYPE_LIST) */
-static void            gdaui_entry_combo_data_entry_init   (GdauiDataEntryIface *iface);
+static void            gdaui_entry_combo_data_entry_init   (GdauiDataEntryInterface *iface);
 static void            gdaui_entry_combo_set_value         (GdauiDataEntry *de, const GValue * value);
 static GValue         *gdaui_entry_combo_get_value         (GdauiDataEntry *de);
 static void            gdaui_entry_combo_set_ref_value     (GdauiDataEntry *de, const GValue * value);
@@ -133,7 +133,7 @@ gdaui_entry_combo_get_type (void)
 }
 
 static void
-gdaui_entry_combo_data_entry_init (GdauiDataEntryIface *iface)
+gdaui_entry_combo_data_entry_init (GdauiDataEntryInterface *iface)
 {
         iface->set_value_type = NULL;
         iface->get_value_type = NULL;

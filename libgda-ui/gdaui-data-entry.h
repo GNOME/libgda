@@ -28,14 +28,6 @@
 
 G_BEGIN_DECLS
 
-#define GDAUI_TYPE_DATA_ENTRY          (gdaui_data_entry_get_type())
-#define GDAUI_DATA_ENTRY(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, GDAUI_TYPE_DATA_ENTRY, GdauiDataEntry)
-#define GDAUI_IS_DATA_ENTRY(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, GDAUI_TYPE_DATA_ENTRY)
-#define GDAUI_DATA_ENTRY_GET_IFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDAUI_TYPE_DATA_ENTRY, GdauiDataEntryIface))
-
-typedef struct _GdauiDataEntry        GdauiDataEntry;
-typedef struct _GdauiDataEntryIface   GdauiDataEntryIface;
-
 /* error reporting */
 extern GQuark gdaui_data_entry_error_quark (void);
 #define GDAUI_DATA_ENTRY_ERROR gdaui_data_entry_error_quark ()
@@ -46,8 +38,10 @@ typedef enum
 	GDAUI_DATA_ENTRY_INVALID_DATA_ERROR
 } GdauiDataEntryError;
 
+#define GDAUI_TYPE_DATA_ENTRY          (gdaui_data_entry_get_type())
+G_DECLARE_INTERFACE (GdauiDataEntry, gdaui_data_entry, GDAUI, DATA_ENTRY, GtkWidget)
 /* struct for the interface */
-struct _GdauiDataEntryIface
+struct _GdauiDataEntryInterface
 {
 	GTypeInterface           g_iface;
 
@@ -116,8 +110,6 @@ struct _GdauiDataEntryIface
  */
 
 
-
-GType           gdaui_data_entry_get_type               (void) G_GNUC_CONST;
 
 void            gdaui_data_entry_set_value_type         (GdauiDataEntry *de, GType type);
 GType           gdaui_data_entry_get_value_type         (GdauiDataEntry *de);
