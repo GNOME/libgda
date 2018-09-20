@@ -27,30 +27,13 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_BIN          (gdaui_entry_bin_get_type())
-#define GDAUI_ENTRY_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_bin_get_type(), GdauiEntryBin)
-#define GDAUI_ENTRY_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_bin_get_type (), GdauiEntryBinClass)
-#define GDAUI_IS_ENTRY_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_bin_get_type ())
-
-
-typedef struct _GdauiEntryBin GdauiEntryBin;
-typedef struct _GdauiEntryBinClass GdauiEntryBinClass;
-typedef struct _GdauiEntryBinPrivate GdauiEntryBinPrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryBin
-{
-	GdauiEntryWrapper           object;
-	GdauiEntryBinPrivate       *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryBin, gdaui_entry_bin, GDAUI, ENTRY_BIN, GdauiEntryWrapper)
 /* struct for the object's class */
 struct _GdauiEntryBinClass
 {
 	GdauiEntryWrapperClass      parent_class;
 };
 
-GType        gdaui_entry_bin_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_bin_new             (GdaDataHandler *dh, GType type);
 
 
