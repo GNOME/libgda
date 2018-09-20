@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,24 +28,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_WRAPPER          (gdaui_entry_wrapper_get_type())
-#define GDAUI_ENTRY_WRAPPER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_wrapper_get_type(), GdauiEntryWrapper)
-#define GDAUI_ENTRY_WRAPPER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_wrapper_get_type (), GdauiEntryWrapperClass)
-#define GDAUI_IS_ENTRY_WRAPPER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_wrapper_get_type ())
-
-
-typedef struct _GdauiEntryWrapper      GdauiEntryWrapper;
-typedef struct _GdauiEntryWrapperClass GdauiEntryWrapperClass;
-typedef struct _GdauiEntryWrapperPriv  GdauiEntryWrapperPriv;
-
-
-/* struct for the object's data */
-struct _GdauiEntryWrapper
-{
-	GdauiEntryShell        object;
-
-	GdauiEntryWrapperPriv  *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryWrapper, gdaui_entry_wrapper, GDAUI, ENTRY_WRAPPER, GdauiEntryShell)
 /* struct for the object's class */
 struct _GdauiEntryWrapperClass
 {
@@ -65,7 +49,6 @@ struct _GdauiEntryWrapperClass
 };
 
 
-GType           gdaui_entry_wrapper_get_type           (void) G_GNUC_CONST;
 void            gdaui_entry_wrapper_contents_changed   (GdauiEntryWrapper *wrapper);
 void            gdaui_entry_wrapper_contents_activated (GdauiEntryWrapper *wrapper);
 
