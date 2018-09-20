@@ -36,10 +36,7 @@ static void gdaui_data_cell_renderer_info_set_property  (GObject *object,
 							    guint param_id,
 							    const GValue *value,
 							    GParamSpec *pspec);
-static void gdaui_data_cell_renderer_info_init       (GdauiDataCellRendererInfo      *celltext);
-static void gdaui_data_cell_renderer_info_class_init (GdauiDataCellRendererInfoClass *class);
 static void gdaui_data_cell_renderer_info_dispose    (GObject *object);
-static void gdaui_data_cell_renderer_info_finalize   (GObject *object);
 
 static void gdaui_data_cell_renderer_info_get_size   (GtkCellRenderer            *cell,
 						      GtkWidget                  *widget,
@@ -78,55 +75,27 @@ enum {
 	PROP_GROUP
 };
 
-struct _GdauiDataCellRendererInfoPriv {
+typedef struct {
 	/* attributes valid for the while life of the object */
 	GdauiDataStore      *store;
-	GdaDataModelIter      *iter;
+	GdaDataModelIter    *iter;
 	GdauiSetGroup       *group;
 
 	/* attribute valid only for drawing */
 	gboolean               active;
 	guint                  attributes;
-};
+} GdauiDataCellRendererInfoPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiDataCellRendererInfo, gdaui_data_cell_renderer_info, GTK_TYPE_CELL_RENDERER)
 
 #define INFO_WIDTH 6
 #define INFO_HEIGHT 14
-static GObjectClass *parent_class = NULL;
 static guint info_cell_signals[LAST_SIGNAL] = { 0 };
 
-
-GType
-gdaui_data_cell_renderer_info_get_type (void)
-{
-	static GType cell_info_type = 0;
-
-	if (!cell_info_type) {
-		static const GTypeInfo cell_info_info = {
-			sizeof (GdauiDataCellRendererInfoClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_data_cell_renderer_info_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiDataCellRendererInfo),
-			0,              /* n_preallocs */
-			(GInstanceInitFunc) gdaui_data_cell_renderer_info_init,
-			0
-		};
-		
-		cell_info_type =
-			g_type_register_static (GTK_TYPE_CELL_RENDERER, "GdauiDataCellRendererInfo",
-						&cell_info_info, 0);
-	}
-
-	return cell_info_type;
-}
 
 static void
 gdaui_data_cell_renderer_info_init (GdauiDataCellRendererInfo *cellinfo)
 {
-	cellinfo->priv = g_new0 (GdauiDataCellRendererInfoPriv, 1);
-
 	g_object_set ((GObject*) cellinfo, "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
 		      "xpad", 1, "ypad", 1, NULL);
 }
@@ -137,10 +106,7 @@ gdaui_data_cell_renderer_info_class_init (GdauiDataCellRendererInfoClass *class)
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
-    	object_class->dispose = gdaui_data_cell_renderer_info_dispose;
-	object_class->finalize = gdaui_data_cell_renderer_info_finalize;
+	object_class->dispose = gdaui_data_cell_renderer_info_dispose;
 
 	object_class->get_property = gdaui_data_cell_renderer_info_get_property;
 	object_class->set_property = gdaui_data_cell_renderer_info_set_property;
@@ -195,35 +161,21 @@ static void
 gdaui_data_cell_renderer_info_dispose (GObject *object)
 {
 	GdauiDataCellRendererInfo *cellinfo = GDAUI_DATA_CELL_RENDERER_INFO (object);
+	GdauiDataCellRendererInfoPrivate *priv = gdaui_data_cell_renderer_info_get_instance_private (cellinfo);
 
-	if (cellinfo->priv->store) {
-		g_object_unref (cellinfo->priv->store);
-		cellinfo->priv->store = NULL;
+	if (priv->store) {
+		g_object_unref (priv->store);
+		priv->store = NULL;
 	}
 
-	if (cellinfo->priv->iter) {
-		g_object_unref (cellinfo->priv->iter);
-		cellinfo->priv->iter = NULL;
-	}
-
-	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_data_cell_renderer_info_finalize (GObject *object)
-{
-	GdauiDataCellRendererInfo *cellinfo = GDAUI_DATA_CELL_RENDERER_INFO (object);
-
-	if (cellinfo->priv) {
-		g_free (cellinfo->priv);
-		cellinfo->priv = NULL;
+	if (priv->iter) {
+		g_object_unref (priv->iter);
+		priv->iter = NULL;
 	}
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_data_cell_renderer_info_parent_class)->dispose (object);
 }
-
 
 static void
 gdaui_data_cell_renderer_info_get_property (GObject *object,
@@ -232,13 +184,14 @@ gdaui_data_cell_renderer_info_get_property (GObject *object,
 					       GParamSpec *pspec)
 {
 	GdauiDataCellRendererInfo *cellinfo = GDAUI_DATA_CELL_RENDERER_INFO (object);
+	GdauiDataCellRendererInfoPrivate *priv = gdaui_data_cell_renderer_info_get_instance_private (cellinfo);
   
 	switch (param_id) {
 	case PROP_VALUE_ATTRIBUTES:
-		g_value_set_flags (value, cellinfo->priv->attributes);
+		g_value_set_flags (value, priv->attributes);
 		break;
 	case PROP_EDITABLE:
-		g_value_set_boolean (value, cellinfo->priv->active);
+		g_value_set_boolean (value, priv->active);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -254,37 +207,38 @@ gdaui_data_cell_renderer_info_set_property (GObject *object,
 					       GParamSpec *pspec)
 {
 	GdauiDataCellRendererInfo *cellinfo = GDAUI_DATA_CELL_RENDERER_INFO (object);
+	GdauiDataCellRendererInfoPrivate *priv = gdaui_data_cell_renderer_info_get_instance_private (cellinfo);
   
 	switch (param_id) {
 	case PROP_VALUE_ATTRIBUTES:
-		cellinfo->priv->attributes = g_value_get_flags (value);
+		priv->attributes = g_value_get_flags (value);
 		g_object_set (object, "sensitive", 
-			      !(cellinfo->priv->attributes & GDA_VALUE_ATTR_NO_MODIF), NULL);
+			      !(priv->attributes & GDA_VALUE_ATTR_NO_MODIF), NULL);
 		break;
 	case PROP_EDITABLE:
-		cellinfo->priv->active = g_value_get_boolean (value);
+		priv->active = g_value_get_boolean (value);
 		g_object_notify (G_OBJECT(object), "editable");
 		break;
 	case PROP_TO_BE_DELETED:
 		break;
 	case PROP_STORE:
-		if (cellinfo->priv->store)
-			g_object_unref (cellinfo->priv->store);
+		if (priv->store)
+			g_object_unref (priv->store);
 
-		cellinfo->priv->store = GDAUI_DATA_STORE(g_value_get_object(value));
-		if (cellinfo->priv->store)
-			g_object_ref(cellinfo->priv->store);
+		priv->store = GDAUI_DATA_STORE(g_value_get_object(value));
+		if (priv->store)
+			g_object_ref(priv->store);
     		break;
 	case PROP_ITER:
-		if (cellinfo->priv->iter)
-			g_object_unref(cellinfo->priv->iter);
+		if (priv->iter)
+			g_object_unref(priv->iter);
 
-		cellinfo->priv->iter = GDA_DATA_MODEL_ITER (g_value_get_object (value));
-		if (cellinfo->priv->iter)
-			g_object_ref (cellinfo->priv->iter);
+		priv->iter = GDA_DATA_MODEL_ITER (g_value_get_object (value));
+		if (priv->iter)
+			g_object_ref (priv->iter);
     		break;
 	case PROP_GROUP:
-		cellinfo->priv->group = GDAUI_SET_GROUP (g_value_get_pointer(value));
+		priv->group = GDAUI_SET_GROUP (g_value_get_pointer(value));
    		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -373,6 +327,7 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 				      G_GNUC_UNUSED GtkCellRendererState  flags)
 {
 	GdauiDataCellRendererInfo *cellinfo = (GdauiDataCellRendererInfo *) cell;
+	GdauiDataCellRendererInfoPrivate *priv = gdaui_data_cell_renderer_info_get_instance_private (cellinfo);
 
   GtkStyleContext *context;
 
@@ -384,13 +339,13 @@ gdaui_data_cell_renderer_info_render (GtkCellRenderer      *cell,
 	if (gtk_style_context_has_class (context, "is-invalid"))
     gtk_style_context_remove_class (context, "is-invalid");
 
-	if (cellinfo->priv->attributes & GDA_VALUE_ATTR_DATA_NON_VALID) {
+	if (priv->attributes & GDA_VALUE_ATTR_DATA_NON_VALID) {
       gtk_style_context_add_class (context, "is-invalid");
 	}
-	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
+	else if (priv->attributes & GDA_VALUE_ATTR_IS_DEFAULT) {
       gtk_style_context_add_class (context, "is-invalid");
 	}
-	else if (cellinfo->priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
+	else if (priv->attributes & GDA_VALUE_ATTR_IS_NULL) {
       gtk_style_context_add_class (context, "is-invalid");
 	}
 }
@@ -410,6 +365,7 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 	gchar *tmp;
 
 	cellinfo = GDAUI_DATA_CELL_RENDERER_INFO (cell);
+	GdauiDataCellRendererInfoPrivate *priv = gdaui_data_cell_renderer_info_get_instance_private (cellinfo);
 
 	/* free any pre-allocated path */
 	if ((tmp = g_object_get_data (G_OBJECT (cellinfo), "path"))) {
@@ -417,14 +373,14 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 		g_object_set_data (G_OBJECT (cellinfo), "path", NULL);
 	}
 
-	if (cellinfo->priv->active) {
+	if (priv->active) {
 		GtkWidget *menu;
 		guint attributes = 0;
 		GtkTreeIter iter;
 		GtkTreePath *treepath;
 
 		treepath = gtk_tree_path_new_from_string (path);
-		if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (cellinfo->priv->store), &iter, treepath)) {
+		if (! gtk_tree_model_get_iter (GTK_TREE_MODEL (priv->store), &iter, treepath)) {
 			g_warning ("Can't set iter on model from path %s", path);
 			gtk_tree_path_free (treepath);
 			return FALSE;
@@ -432,27 +388,27 @@ gdaui_data_cell_renderer_info_activate (GtkCellRenderer      *cell,
 		gtk_tree_path_free (treepath);
 
 		/* we want the attributes */
-		if (! gda_set_group_get_source (gdaui_set_group_get_group (cellinfo->priv->group))) {
+		if (! gda_set_group_get_source (gdaui_set_group_get_group (priv->group))) {
 			gint col;
 			GdaDataModel *proxied_model;
 			GdaDataProxy *proxy;
 			GdaSetGroup *sg;
 			
-			proxy = gdaui_data_store_get_proxy (cellinfo->priv->store);
+			proxy = gdaui_data_store_get_proxy (priv->store);
 			proxied_model = gda_data_proxy_get_proxied_model (proxy);
-			sg = gdaui_set_group_get_group (cellinfo->priv->group);
+			sg = gdaui_set_group_get_group (priv->group);
 			g_assert (gda_set_group_get_n_nodes (sg) == 1);
-			col = g_slist_index (gda_set_get_holders (GDA_SET (cellinfo->priv->iter)),
+			col = g_slist_index (gda_set_get_holders (GDA_SET (priv->iter)),
 					     gda_set_node_get_holder (  gda_set_group_get_node (sg)));
 
-			gtk_tree_model_get (GTK_TREE_MODEL (cellinfo->priv->store), &iter, 
+			gtk_tree_model_get (GTK_TREE_MODEL (priv->store), &iter,
 					    gda_data_model_get_n_columns (proxied_model) + col, 
 					    &attributes, -1);
 		}
 		else 
-			attributes = _gdaui_utility_proxy_compute_attributes_for_group (cellinfo->priv->group, 
-											cellinfo->priv->store,
-											cellinfo->priv->iter,
+			attributes = _gdaui_utility_proxy_compute_attributes_for_group (priv->group,
+											priv->store,
+											priv->iter,
 											&iter, NULL);
 		
 		/* build the popup menu */

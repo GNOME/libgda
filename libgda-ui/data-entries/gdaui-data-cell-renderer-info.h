@@ -28,23 +28,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_CELL_RENDERER_INFO			(gdaui_data_cell_renderer_info_get_type ())
-#define GDAUI_DATA_CELL_RENDERER_INFO(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_INFO, GdauiDataCellRendererInfo))
-#define GDAUI_DATA_CELL_RENDERER_INFO_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_INFO, GdauiDataCellRendererInfoClass))
-#define GDAUI_IS_DATA_CELL_RENDERER_INFO(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_INFO))
-#define GDAUI_IS_DATA_CELL_RENDERER_INFO_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_INFO))
-#define GDAUI_DATA_CELL_RENDERER_INFO_GET_CLASS(obj)         (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_INFO, GdauiDataCellRendererInfoClass))
-
-typedef struct _GdauiDataCellRendererInfo GdauiDataCellRendererInfo;
-typedef struct _GdauiDataCellRendererInfoClass GdauiDataCellRendererInfoClass;
-typedef struct _GdauiDataCellRendererInfoPriv GdauiDataCellRendererInfoPriv;
-
-struct _GdauiDataCellRendererInfo
-{
-	GtkCellRenderer             parent;
-
-	GdauiDataCellRendererInfoPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererInfo, gdaui_data_cell_renderer_info, GDAUI, DATA_CELL_RENDERER_INFO, GtkCellRenderer)
 struct _GdauiDataCellRendererInfoClass
 {
 	GtkCellRendererClass parent_class;
@@ -54,7 +38,6 @@ struct _GdauiDataCellRendererInfoClass
 				 GdaValueAttribute            requested_action);
 };
 
-GType            gdaui_data_cell_renderer_info_get_type  (void) G_GNUC_CONST;
 GtkCellRenderer *gdaui_data_cell_renderer_info_new       (GdauiDataStore *store,
 							  GdaDataModelIter *iter, 
 							  GdauiSetGroup *group);
