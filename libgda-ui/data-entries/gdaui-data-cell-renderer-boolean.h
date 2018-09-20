@@ -26,23 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN		(gdaui_data_cell_renderer_boolean_get_type ())
-#define GDAUI_DATA_CELL_RENDERER_BOOLEAN(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN, GdauiDataCellRendererBoolean))
-#define GDAUI_DATA_CELL_RENDERER_BOOLEAN_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN, GdauiDataCellRendererBooleanClass))
-#define GDAUI_IS_DATA_CELL_RENDERER_BOOLEAN(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN))
-#define GDAUI_IS_DATA_CELL_RENDERER_BOOLEAN_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN))
-#define GDAUI_DATA_CELL_RENDERER_BOOLEAN_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BOOLEAN, GdauiDataCellRendererBooleanClass))
-
-typedef struct _GdauiDataCellRendererBoolean GdauiDataCellRendererBoolean;
-typedef struct _GdauiDataCellRendererBooleanClass GdauiDataCellRendererBooleanClass;
-typedef struct _GdauiDataCellRendererBooleanPrivate GdauiDataCellRendererBooleanPrivate;
-
-struct _GdauiDataCellRendererBoolean
-{
-	GtkCellRendererToggle                parent;
-	
-	GdauiDataCellRendererBooleanPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererBoolean, gdaui_data_cell_renderer_boolean, GDAUI, DATA_CELL_RENDERER_BOOLEAN, GtkCellRendererToggle)
 struct _GdauiDataCellRendererBooleanClass
 {
 	GtkCellRendererToggleClass           parent_class;
@@ -52,7 +36,6 @@ struct _GdauiDataCellRendererBooleanClass
 						       const GValue            *new_value);
 };
 
-GType            gdaui_data_cell_renderer_boolean_get_type  (void) G_GNUC_CONST;
 GtkCellRenderer *gdaui_data_cell_renderer_boolean_new       (GdaDataHandler *dh, GType type);
 
 G_END_DECLS

@@ -38,7 +38,6 @@ static void gdaui_data_cell_renderer_boolean_set_property  (GObject *object,
 static void gdaui_data_cell_renderer_boolean_init       (GdauiDataCellRendererBoolean      *celltext);
 static void gdaui_data_cell_renderer_boolean_class_init (GdauiDataCellRendererBooleanClass *class);
 static void gdaui_data_cell_renderer_boolean_dispose    (GObject *object);
-static void gdaui_data_cell_renderer_boolean_finalize   (GObject *object);
 static void gdaui_data_cell_renderer_boolean_render     (GtkCellRenderer            *cell,
 							 cairo_t                    *cr,
 							 GtkWidget                  *widget,
@@ -66,7 +65,7 @@ enum {
 };
 
 
-struct _GdauiDataCellRendererBooleanPrivate
+typedef struct
 {
 	GdaDataHandler       *dh;
         GType                 type;
@@ -77,7 +76,9 @@ struct _GdauiDataCellRendererBooleanPrivate
 	gboolean              editable;
 	gboolean              active;
 	gboolean              null;
-};
+} GdauiDataCellRendererBooleanPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiDataCellRendererBoolean, gdaui_data_cell_renderer_boolean, GTK_TYPE_CELL_RENDERER_TOGGLE)
 
 enum {
 	PROP_0,
@@ -89,44 +90,16 @@ enum {
 	PROP_TYPE
 };
 
-static GObjectClass *parent_class = NULL;
 static guint toggle_cell_signals[LAST_SIGNAL] = { 0 };
 
-
-GType
-gdaui_data_cell_renderer_boolean_get_type (void)
-{
-	static GType cell_type = 0;
-
-	if (!cell_type) {
-		static const GTypeInfo cell_info = {
-			sizeof (GdauiDataCellRendererBooleanClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_data_cell_renderer_boolean_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiDataCellRendererBoolean),
-			0,              /* n_preallocs */
-			(GInstanceInitFunc) gdaui_data_cell_renderer_boolean_init,
-			0
-		};
-
-		cell_type =
-			g_type_register_static (GTK_TYPE_CELL_RENDERER_TOGGLE, "GdauiDataCellRendererBoolean",
-						&cell_info, 0);
-	}
-
-	return cell_type;
-}
 
 static void
 gdaui_data_cell_renderer_boolean_init (GdauiDataCellRendererBoolean *cell)
 {
-	cell->priv = g_new0 (GdauiDataCellRendererBooleanPrivate, 1);
-	cell->priv->dh = NULL;
-	cell->priv->type = G_TYPE_BOOLEAN;
-	cell->priv->editable = FALSE;
+	GdauiDataCellRendererBooleanPrivate *priv = gdaui_data_cell_renderer_boolean_get_instance_private (cell);
+	priv->dh = NULL;
+	priv->type = G_TYPE_BOOLEAN;
+	priv->editable = FALSE;
 	g_object_set (G_OBJECT (cell), "mode", GTK_CELL_RENDERER_MODE_ACTIVATABLE,
 		      "xpad", 2, "ypad", 2, NULL);
 }
@@ -137,10 +110,7 @@ gdaui_data_cell_renderer_boolean_class_init (GdauiDataCellRendererBooleanClass *
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
 	GtkCellRendererClass *cell_class = GTK_CELL_RENDERER_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gdaui_data_cell_renderer_boolean_dispose;
-	object_class->finalize = gdaui_data_cell_renderer_boolean_finalize;
 
 	object_class->get_property = gdaui_data_cell_renderer_boolean_get_property;
 	object_class->set_property = gdaui_data_cell_renderer_boolean_set_property;
@@ -201,28 +171,15 @@ static void
 gdaui_data_cell_renderer_boolean_dispose (GObject *object)
 {
 	GdauiDataCellRendererBoolean *datacell = GDAUI_DATA_CELL_RENDERER_BOOLEAN (object);
+	GdauiDataCellRendererBooleanPrivate *priv = gdaui_data_cell_renderer_boolean_get_instance_private (datacell);
 
-	if (datacell->priv->dh) {
-		g_object_unref (G_OBJECT (datacell->priv->dh));
-		datacell->priv->dh = NULL;
+	if (priv->dh) {
+		g_object_unref (G_OBJECT (priv->dh));
+		priv->dh = NULL;
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_data_cell_renderer_boolean_finalize (GObject *object)
-{
-	GdauiDataCellRendererBoolean *datacell = GDAUI_DATA_CELL_RENDERER_BOOLEAN (object);
-
-	if (datacell->priv) {
-		g_free (datacell->priv);
-		datacell->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_data_cell_renderer_boolean_parent_class)->dispose (object);
 }
 
 static void
@@ -232,15 +189,16 @@ gdaui_data_cell_renderer_boolean_get_property (GObject *object,
 					       GParamSpec *pspec)
 {
 	GdauiDataCellRendererBoolean *cell = GDAUI_DATA_CELL_RENDERER_BOOLEAN (object);
+	GdauiDataCellRendererBooleanPrivate *priv = gdaui_data_cell_renderer_boolean_get_instance_private (cell);
 
 	switch (param_id) {
 	case PROP_VALUE:
-		g_value_set_boxed (value, cell->priv->value);
+		g_value_set_boxed (value, priv->value);
 		break;
 	case PROP_VALUE_ATTRIBUTES:
 		break;
 	case PROP_EDITABLE:
-		g_value_set_boolean (value, cell->priv->editable);
+		g_value_set_boolean (value, priv->editable);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -256,15 +214,16 @@ gdaui_data_cell_renderer_boolean_set_property (GObject *object,
 					       GParamSpec *pspec)
 {
 	GdauiDataCellRendererBoolean *cell = GDAUI_DATA_CELL_RENDERER_BOOLEAN (object);
+	GdauiDataCellRendererBooleanPrivate *priv = gdaui_data_cell_renderer_boolean_get_instance_private (cell);
 
 	switch (param_id) {
 	case PROP_VALUE:
 		/* Because we don't have a copy of the value, we MUST NOT free it! */
-                cell->priv->value = NULL;
+                priv->value = NULL;
 		if (value) {
                         GValue *gval = g_value_get_boxed (value);
 			if (gval && !gda_value_is_null (gval)) {
-				g_return_if_fail (G_VALUE_TYPE (gval) == cell->priv->type);
+				g_return_if_fail (G_VALUE_TYPE (gval) == priv->type);
 				if (! gda_value_isa (gval, G_TYPE_BOOLEAN))
 					g_warning ("GdauiDataCellRendererBoolean can only handle boolean values");
 				else
@@ -277,16 +236,16 @@ gdaui_data_cell_renderer_boolean_set_property (GObject *object,
 					      "inconsistent", TRUE,
 					      "active", FALSE, NULL);
 			else {
-				cell->priv->invalid = TRUE;
+				priv->invalid = TRUE;
 				g_object_set (G_OBJECT (object),
 					      "inconsistent", TRUE,
 					      "active", FALSE, NULL);
 			}
 
-                        cell->priv->value = gval;
+                        priv->value = gval;
                 }
 		else {
-			cell->priv->invalid = TRUE;
+			priv->invalid = TRUE;
 			g_object_set (G_OBJECT (object),
 				      "inconsistent", TRUE,
 				      "active", FALSE, NULL);
@@ -295,26 +254,26 @@ gdaui_data_cell_renderer_boolean_set_property (GObject *object,
                 g_object_notify (object, "value");
 		break;
 	case PROP_VALUE_ATTRIBUTES:
-		cell->priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
+		priv->invalid = g_value_get_flags (value) & GDA_VALUE_ATTR_DATA_NON_VALID ? TRUE : FALSE;
 		break;
 	case PROP_EDITABLE:
-		cell->priv->editable = g_value_get_boolean (value);
-		g_object_set (G_OBJECT (object), "activatable", cell->priv->editable, NULL);
+		priv->editable = g_value_get_boolean (value);
+		g_object_set (G_OBJECT (object), "activatable", priv->editable, NULL);
 		g_object_notify (G_OBJECT(object), "editable");
 		break;
 	case PROP_TO_BE_DELETED:
-		cell->priv->to_be_deleted = g_value_get_boolean (value);
+		priv->to_be_deleted = g_value_get_boolean (value);
 		break;
 	case PROP_DATA_HANDLER:
-		if(cell->priv->dh)
-			g_object_unref (G_OBJECT(cell->priv->dh));
+		if(priv->dh)
+			g_object_unref (G_OBJECT(priv->dh));
 
-		cell->priv->dh = GDA_DATA_HANDLER(g_value_get_object(value));
-		if(cell->priv->dh)
-			g_object_ref (G_OBJECT (cell->priv->dh));
+		priv->dh = GDA_DATA_HANDLER(g_value_get_object(value));
+		if(priv->dh)
+			g_object_ref (G_OBJECT (priv->dh));
 		break;
 	case PROP_TYPE:
-		cell->priv->type = g_value_get_gtype(value);
+		priv->type = g_value_get_gtype(value);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -373,10 +332,11 @@ gdaui_data_cell_renderer_boolean_render (GtkCellRenderer      *cell,
 {
 	GdauiDataCellRendererBoolean *datacell = GDAUI_DATA_CELL_RENDERER_BOOLEAN (cell);
 	GtkCellRendererClass *toggle_class = g_type_class_peek (GTK_TYPE_CELL_RENDERER_TOGGLE);
+	GdauiDataCellRendererBooleanPrivate *priv = gdaui_data_cell_renderer_boolean_get_instance_private (datacell);
 
 	(toggle_class->render) (cell, cr, widget, background_area, cell_area, flags);
 
-	if (datacell->priv->to_be_deleted) {
+	if (priv->to_be_deleted) {
 		GtkStyleContext *style_context = gtk_widget_get_style_context (widget);
 		guint xpad;
 		g_object_get (G_OBJECT(widget), "xpad", &xpad, NULL);
@@ -387,7 +347,7 @@ gdaui_data_cell_renderer_boolean_render (GtkCellRenderer      *cell,
 				 y, y);
 
 	}
-	if (datacell->priv->invalid)
+	if (priv->invalid)
 		gdaui_data_cell_renderer_draw_invalid_area (cr, cell_area);
 }
 
@@ -406,7 +366,7 @@ gdaui_data_cell_renderer_boolean_activate  (GtkCellRenderer            *cell,
 		gboolean retval, active;
 		GValue *value;
 
-		retval = GTK_CELL_RENDERER_CLASS (parent_class)->activate (cell, event,
+		retval = GTK_CELL_RENDERER_CLASS (gdaui_data_cell_renderer_boolean_parent_class)->activate (cell, event,
 									   widget, path,
 									   background_area,
 									   cell_area, flags);
