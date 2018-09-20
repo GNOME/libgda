@@ -261,31 +261,35 @@ gda_ddl_fkey_parse_node (GdaDdlBuildable *buildable,
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_ONUPDATE]);
 
-  g_assert(prop);
-
-  priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
-
-  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+  if (prop)
     {
-      if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
-        priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
+      priv->m_onupdate = GDA_DDL_FKEY_NO_ACTION;
+
+      for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+        {
+          if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
+            priv->m_onupdate = (GdaDdlFkeyReferenceAction)i;
+        }
+
+      xmlFree (prop);
+      prop = NULL;
     }
 
-  xmlFree (prop);
-  prop = NULL;
 
   prop = xmlGetProp (node,(xmlChar *)gdaddlfkeynodes[GDA_DDL_FKEY_ONDELETE]);
 
-  g_assert(prop);
-
-  for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+  if (prop)
     {
-      if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
-        priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
-    }
+      for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+        {
+          if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
+            priv->m_ondelete = (GdaDdlFkeyReferenceAction)i;
+        }
 
-  xmlFree (prop);
-  prop = NULL;
+      xmlFree (prop);
+      prop = NULL;
+
+    }
 
   name = NULL;
   xmlChar *reffield = NULL;
