@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,21 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE_MGR_SELECT            (gda_tree_mgr_select_get_type())
-#define GDA_TREE_MGR_SELECT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_MGR_SELECT, GdaTreeMgrSelect))
-#define GDA_TREE_MGR_SELECT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_SELECT, GdaTreeMgrSelectClass))
-#define GDA_IS_TREE_MGR_SELECT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_SELECT))
-#define GDA_IS_TREE_MGR_SELECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_SELECT))
-#define GDA_TREE_MGR_SELECT_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_SELECT, GdaTreeMgrSelectClass))
-
-typedef struct _GdaTreeMgrSelect GdaTreeMgrSelect;
-typedef struct _GdaTreeMgrSelectPriv GdaTreeMgrSelectPriv;
-typedef struct _GdaTreeMgrSelectClass GdaTreeMgrSelectClass;
-
-struct _GdaTreeMgrSelect {
-	GdaTreeManager        object;
-	GdaTreeMgrSelectPriv *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaTreeMgrSelect, gda_tree_mgr_select, GDA, TREE_MGR_SELECT, GdaTreeManager)
 struct _GdaTreeMgrSelectClass {
 	GdaTreeManagerClass   object_class;
 };
@@ -67,7 +54,6 @@ struct _GdaTreeMgrSelectClass {
  * the column name and the attribute value is the value if that column.
  */
 
-GType              gda_tree_mgr_select_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_select_new                      (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params);
 
 G_END_DECLS

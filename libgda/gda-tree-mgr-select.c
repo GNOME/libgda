@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,16 +25,15 @@
 #include "gda-tree-mgr-select.h"
 #include "gda-tree-node.h"
 
-struct _GdaTreeMgrSelectPriv {
+typedef struct {
 	GdaConnection *cnc;
 	GdaStatement  *stmt;
 	GdaSet        *params; /* set by the constructor, may not contain values for all @stmt's params */
 	GdaSet        *priv_params;
 	GSList        *non_bound_params;
-};
+} GdaTreeMgrSelectPrivate;
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeMgrSelect, gda_tree_mgr_select, GDA_TYPE_TREE_MANAGER)
 
-static void gda_tree_mgr_select_class_init (GdaTreeMgrSelectClass *klass);
-static void gda_tree_mgr_select_init       (GdaTreeMgrSelect *tmgr1, GdaTreeMgrSelectClass *klass);
 static void gda_tree_mgr_select_dispose    (GObject *object);
 static void gda_tree_mgr_select_set_property (GObject *object,
 					      guint param_id,
@@ -47,8 +47,6 @@ static void gda_tree_mgr_select_get_property (GObject *object,
 /* virtual methods */
 static GSList *gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
 						    gboolean *out_error, GError **error);
-
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum {
@@ -66,8 +64,6 @@ static void
 gda_tree_mgr_select_class_init (GdaTreeMgrSelectClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual methods */
 	((GdaTreeManagerClass*) klass)->update_children = gda_tree_mgr_select_update_children;
@@ -93,11 +89,7 @@ gda_tree_mgr_select_class_init (GdaTreeMgrSelectClass *klass)
 }
 
 static void
-gda_tree_mgr_select_init (GdaTreeMgrSelect *mgr, G_GNUC_UNUSED GdaTreeMgrSelectClass *klass)
-{
-	g_return_if_fail (GDA_IS_TREE_MGR_SELECT (mgr));
-	mgr->priv = g_new0 (GdaTreeMgrSelectPriv, 1);
-}
+gda_tree_mgr_select_init (GdaTreeMgrSelect *mgr) {}
 
 static void
 gda_tree_mgr_select_dispose (GObject *object)
@@ -105,60 +97,22 @@ gda_tree_mgr_select_dispose (GObject *object)
 	GdaTreeMgrSelect *mgr = (GdaTreeMgrSelect *) object;
 
 	g_return_if_fail (GDA_IS_TREE_MGR_SELECT (mgr));
+	GdaTreeMgrSelectPrivate *priv = gda_tree_mgr_select_get_instance_private (mgr);
 
-	if (mgr->priv) {
-		if (mgr->priv->cnc)
-			g_object_unref (mgr->priv->cnc);
-		if (mgr->priv->stmt)
-			g_object_unref (mgr->priv->stmt);
-		if (mgr->priv->params)
-			g_object_unref (mgr->priv->params);
-		if (mgr->priv->priv_params)
-			g_object_unref (mgr->priv->priv_params);
-		if (mgr->priv->non_bound_params)
-			g_slist_free (mgr->priv->non_bound_params);
+	if (priv->cnc)
+		g_object_unref (priv->cnc);
+	if (priv->stmt)
+		g_object_unref (priv->stmt);
+	if (priv->params)
+		g_object_unref (priv->params);
+	if (priv->priv_params)
+		g_object_unref (priv->priv_params);
+	if (priv->non_bound_params)
+		g_slist_free (priv->non_bound_params);
 
-		g_free (mgr->priv);
-		mgr->priv = NULL;
-	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-/**
- * gda_tree_mgr_select_get_type:
- *
- * Returns: the GType
- *
- * Since: 4.2
- */
-GType
-gda_tree_mgr_select_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeMgrSelectClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_mgr_select_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTreeMgrSelect),
-                        0,
-                        (GInstanceInitFunc) gda_tree_mgr_select_init,
-			0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (GDA_TYPE_TREE_MANAGER, "GdaTreeMgrSelect", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
+	G_OBJECT_CLASS (gda_tree_mgr_select_parent_class)->dispose (object);
 }
 
 static void
@@ -167,52 +121,51 @@ gda_tree_mgr_select_set_property (GObject *object,
 				  const GValue *value,
 				  GParamSpec *pspec)
 {
-        GdaTreeMgrSelect *mgr;
+	GdaTreeMgrSelect *mgr;
 
-        mgr = GDA_TREE_MGR_SELECT (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_SELECT (object);
+	GdaTreeMgrSelectPrivate *priv = gda_tree_mgr_select_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_CNC:
-			mgr->priv->cnc = (GdaConnection*) g_value_get_object (value);
-			if (mgr->priv->cnc)
-				g_object_ref (mgr->priv->cnc);
+			priv->cnc = (GdaConnection*) g_value_get_object (value);
+			if (priv->cnc)
+				g_object_ref (priv->cnc);
 			break;
 		case PROP_STMT:
-			mgr->priv->stmt = (GdaStatement*) g_value_get_object (value);
-			if (mgr->priv->stmt) {
+			priv->stmt = (GdaStatement*) g_value_get_object (value);
+			if (priv->stmt) {
 				GError *lerror = NULL;
-				g_object_ref (mgr->priv->stmt);
-				if (!gda_statement_get_parameters (mgr->priv->stmt, &(mgr->priv->priv_params), &lerror)) {
+				g_object_ref (priv->stmt);
+				if (!gda_statement_get_parameters (priv->stmt, &(priv->priv_params), &lerror)) {
 					g_warning (_("Could not get SELECT statement's parameters: %s"),
 						   lerror && lerror->message ? lerror->message : _("No detail"));
 					if (lerror)
 						g_error_free (lerror);
 				}
-				if (mgr->priv->priv_params && gda_set_get_holders (mgr->priv->priv_params))
-					mgr->priv->non_bound_params = g_slist_copy (gda_set_get_holders (mgr->priv->priv_params));
+				if (priv->priv_params && gda_set_get_holders (priv->priv_params))
+					priv->non_bound_params = g_slist_copy (gda_set_get_holders (priv->priv_params));
 			}
 			break;
 		case PROP_PARAMS:
-			mgr->priv->params = (GdaSet*) g_value_get_object (value);
-			if (mgr->priv->params)
-				g_object_ref (mgr->priv->params);
+			priv->params = (GdaSet*) g_value_get_object (value);
+			if (priv->params)
+				g_object_ref (priv->params);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 
-	if (mgr->priv->priv_params && mgr->priv->params) {
-		/* bind holders in mgr->priv->priv_params to the ones in mgr->priv->params
+	if (priv->priv_params && priv->params) {
+		/* bind holders in priv->priv_params to the ones in priv->params
 		 * if they exist */
 		GSList *params;
 		GSList *non_bound_params = NULL;
 
-		g_slist_free (mgr->priv->non_bound_params);
-		for (params = gda_set_get_holders (mgr->priv->priv_params); params; params = params->next) {
+		g_slist_free (priv->non_bound_params);
+		for (params = gda_set_get_holders (priv->priv_params); params; params = params->next) {
 			GdaHolder *frh = GDA_HOLDER (params->data);
-			GdaHolder *toh = gda_set_get_holder (mgr->priv->params, gda_holder_get_id (frh));
+			GdaHolder *toh = gda_set_get_holder (priv->params, gda_holder_get_id (frh));
 			if (toh) {
 				GError *lerror = NULL;
 				if (!gda_holder_set_bind (frh, toh, &lerror)) {
@@ -228,7 +181,7 @@ gda_tree_mgr_select_set_property (GObject *object,
 			else
 				non_bound_params = g_slist_prepend (non_bound_params, frh);
 		}
-		mgr->priv->non_bound_params = non_bound_params;
+		priv->non_bound_params = non_bound_params;
 	}
 }
 
@@ -238,25 +191,24 @@ gda_tree_mgr_select_get_property (GObject *object,
 				   GValue *value,
 				   GParamSpec *pspec)
 {
-        GdaTreeMgrSelect *mgr;
+	GdaTreeMgrSelect *mgr;
 
-        mgr = GDA_TREE_MGR_SELECT (object);
-        if (mgr->priv) {
-                switch (param_id) {
+	mgr = GDA_TREE_MGR_SELECT (object);
+	GdaTreeMgrSelectPrivate *priv = gda_tree_mgr_select_get_instance_private (mgr);
+	switch (param_id) {
 		case PROP_CNC:
-			g_value_set_object (value, mgr->priv->cnc);
+			g_value_set_object (value, priv->cnc);
 			break;
 		case PROP_STMT:
-			g_value_set_object (value, mgr->priv->stmt);
+			g_value_set_object (value, priv->stmt);
 			break;
 		case PROP_PARAMS:
-			g_value_set_object (value, mgr->priv->params);
+			g_value_set_object (value, priv->params);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 /**
@@ -294,8 +246,9 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	GdaTreeMgrSelect *mgr = GDA_TREE_MGR_SELECT (manager);
 	GdaDataModel *model;
 	GSList *list = NULL;
+	GdaTreeMgrSelectPrivate *priv = gda_tree_mgr_select_get_instance_private (mgr);
 
-	if (!mgr->priv->cnc) {
+	if (!priv->cnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     "%s", _("No connection specified"));
 		if (out_error)
@@ -303,7 +256,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 		return NULL;
 	}
 
-	if (!mgr->priv->stmt) {
+	if (!priv->stmt) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     "%s", _("No SELECT statement specified"));
 		if (out_error)
@@ -311,10 +264,10 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 		return NULL;
 	}
 
-	if (node && mgr->priv->non_bound_params) {
+	if (node && priv->non_bound_params) {
 		/* looking for values in @node's attributes */
 		GSList *nbplist;
-		for (nbplist = mgr->priv->non_bound_params; nbplist; nbplist = nbplist->next) {
+		for (nbplist = priv->non_bound_params; nbplist; nbplist = nbplist->next) {
 			const GValue *cvalue;
 			GdaHolder *holder = (GdaHolder*) nbplist->data;
 			cvalue = gda_tree_node_fetch_attribute (node, gda_holder_get_id (holder));
@@ -335,7 +288,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 		}
 	}
 
-	model = gda_connection_statement_execute_select (mgr->priv->cnc, mgr->priv->stmt, mgr->priv->priv_params, error);
+	model = gda_connection_statement_execute_select (priv->cnc, priv->stmt, priv->priv_params, error);
 	if (!model) {
 		if (out_error)
 			*out_error = TRUE;
