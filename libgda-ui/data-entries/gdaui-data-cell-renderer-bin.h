@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,23 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_DATA_CELL_RENDERER_BIN		(gdaui_data_cell_renderer_bin_get_type ())
-#define GDAUI_DATA_CELL_RENDERER_BIN(obj)		(G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BIN, GdauiDataCellRendererBin))
-#define GDAUI_DATA_CELL_RENDERER_BIN_CLASS(klass)	(G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_BIN, GdauiDataCellRendererBinClass))
-#define GDAUI_IS_DATA_CELL_RENDERER_BIN(obj)		(G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BIN))
-#define GDAUI_IS_DATA_CELL_RENDERER_BIN_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_DATA_CELL_RENDERER_BIN))
-#define GDAUI_DATA_CELL_RENDERER_BIN_GET_CLASS(obj)    (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_DATA_CELL_RENDERER_BIN, GdauiDataCellRendererBinClass))
-
-typedef struct _GdauiDataCellRendererBin GdauiDataCellRendererBin;
-typedef struct _GdauiDataCellRendererBinClass GdauiDataCellRendererBinClass;
-typedef struct _GdauiDataCellRendererBinPrivate GdauiDataCellRendererBinPrivate;
-
-struct _GdauiDataCellRendererBin
-{
-	GtkCellRendererPixbuf             parent;
-	
-	GdauiDataCellRendererBinPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererBin, gdaui_data_cell_renderer_bin, GDAUI, DATA_CELL_RENDERER_BIN, GtkCellRendererPixbuf)
 struct _GdauiDataCellRendererBinClass
 {
 	GtkCellRendererPixbufClass  parent_class;
@@ -52,7 +37,6 @@ struct _GdauiDataCellRendererBinClass
 			  const GValue             *new_value);
 };
 
-GType            gdaui_data_cell_renderer_bin_get_type  (void) G_GNUC_CONST;
 GtkCellRenderer *gdaui_data_cell_renderer_bin_new       (GdaDataHandler *dh, GType type);
 
 G_END_DECLS
