@@ -455,8 +455,6 @@ gdaui_set_source_set_ref_columns (GdauiSetSource *s, gint *columns, gint n_colum
 	}
 }
 
-static void gdaui_set_class_init (GdauiSetClass * class);
-static void gdaui_set_init (GdauiSet *wid);
 static void gdaui_set_dispose (GObject *object);
 
 static void gdaui_set_set_property (GObject *object,
@@ -589,19 +587,17 @@ gdaui_set_dispose (GObject *object)
         set = GDAUI_SET (object);
         GdauiSetPrivate *priv = gdaui_set_get_instance_private (set);
 
-        if (priv) {
-                if (priv->set) {
-                        g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
-                                                              G_CALLBACK (wrapped_set_public_data_changed_cb), set);
-                        g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
-                                                              G_CALLBACK (wrapped_set_source_model_changed_cb), set);
+        if (priv->set) {
+                g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
+                                                      G_CALLBACK (wrapped_set_public_data_changed_cb), set);
+                g_signal_handlers_disconnect_by_func (G_OBJECT (priv->set),
+                                                      G_CALLBACK (wrapped_set_source_model_changed_cb), set);
 
-                        g_object_unref (priv->set);
-                        priv->set = NULL;
-                }
-
-		clean_public_data (set);
+                g_object_unref (priv->set);
+                priv->set = NULL;
         }
+
+        clean_public_data (set);
 
         /* for the parent class */
         G_OBJECT_CLASS (gdaui_set_parent_class)->dispose (object);

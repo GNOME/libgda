@@ -26,16 +26,6 @@
 
 G_BEGIN_DECLS
 
-#define GDAUI_TYPE_SET          (gdaui_set_get_type())
-#define GDAUI_SET(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_set_get_type(), GdauiSet)
-#define GDAUI_SET_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_set_get_type (), GdauiSetClass)
-#define GDAUI_IS_SET(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_set_get_type ())
-
-
-typedef struct _GdauiSet      GdauiSet;
-typedef struct _GdauiSetClass GdauiSetClass;
-typedef struct _GdauiSetPriv  GdauiSetPriv;
-
 typedef struct _GdauiSetGroup GdauiSetGroup;
 typedef struct _GdauiSetSource GdauiSetSource;
 
@@ -68,14 +58,8 @@ gint*             gdaui_set_source_get_ref_columns    (GdauiSetSource *s);
 void              gdaui_set_source_set_ref_columns    (GdauiSetSource *s, gint *columns, gint n_columns);
 
 
-/* struct for the object's data */
-/**
- * GdauiSet:
- */
-struct _GdauiSet
-{
-	GObject         object;
-};
+#define GDAUI_TYPE_SET          (gdaui_set_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdauiSet, gdaui_set, GDAUI, SET, GObject)
 
 /* struct for the object's class */
 struct _GdauiSetClass
@@ -85,10 +69,9 @@ struct _GdauiSetClass
 	void             (*source_model_changed)  (GdauiSet *set, GdauiSetSource *source);
 };
 
-/* 
+/*
  * Generic widget's methods 
  */
-GType             gdaui_set_get_type            (void) G_GNUC_CONST;
 GdauiSet         *gdaui_set_new                 (GdaSet *set);
 GdauiSetGroup    *gdaui_set_get_group           (GdauiSet *dbset, GdaHolder *holder);
 GSList           *gdaui_set_get_sources         (GdauiSet *set);
