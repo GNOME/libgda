@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,22 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY                 (gdaui_entry_get_type ())
-#define GDAUI_ENTRY(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDAUI_TYPE_ENTRY, GdauiEntry))
-#define GDAUI_ENTRY_CLASS(klass)         (G_TYPE_CHECK_CLASS_CAST ((klass), GDAUI_TYPE_ENTRY, GdauiEntryClass))
-#define GDAUI_IS_ENTRY(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDAUI_TYPE_ENTRY))
-#define GDAUI_IS_ENTRY_CLASS(klass)      (G_TYPE_CHECK_CLASS_TYPE ((klass), GDAUI_TYPE_ENTRY))
-#define GDAUI_ENTRY_GET_CLASS(obj)       (G_TYPE_INSTANCE_GET_CLASS ((obj), GDAUI_TYPE_ENTRY, GdauiEntryClass))
-
-typedef struct _GdauiEntry        GdauiEntry;
-typedef struct _GdauiEntryClass   GdauiEntryClass;
-typedef struct _GdauiEntryPrivate GdauiEntryPrivate;
-
-struct _GdauiEntry
-{
-	GtkEntry           entry;
-	GdauiEntryPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntry, gdaui_entry, GDAUI, ENTRY, GtkEntry)
 struct _GdauiEntryClass
 {
 	GtkEntryClass           parent_class;
@@ -81,7 +67,6 @@ struct _GdauiEntryClass
 	void                     (*assume_delete) (GdauiEntry *entry, gint virt_start_pos, gint virt_end_pos, gint offset);
 };
 
-GType                 gdaui_entry_get_type           (void) G_GNUC_CONST;
 GtkWidget            *gdaui_entry_new                (const gchar *prefix, const gchar *suffix);
 
 void                  gdaui_entry_set_max_length     (GdauiEntry *entry, gint max);

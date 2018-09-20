@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +26,7 @@
 
 #include "gdaui-entry.h"
 
-struct _GdauiEntryPrivate {
+typedef struct {
 	gchar   *prefix;
 	gint     prefix_len;
 	gint     prefix_clen; /* UTF8 len */
@@ -36,14 +37,11 @@ struct _GdauiEntryPrivate {
 	gboolean isnull;
 	guchar   internal_changes;
 	gint     max_width;
-};
+} GdauiEntryPrivate;
 
-#define ENTER_INTERNAL_CHANGES(entry) (entry)->priv->internal_changes ++
-#define LEAVE_INTERNAL_CHANGES(entry) (entry)->priv->internal_changes --
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiEntry, gdaui_entry, GTK_TYPE_ENTRY)
 
-static void gdaui_entry_class_init   (GdauiEntryClass *klass);
-static void gdaui_entry_init         (GdauiEntry *entry);
-static void gdaui_entry_finalize     (GObject *object);
+static void gdaui_entry_dispose     (GObject *object);
 static void gdaui_entry_set_property (GObject *object,
 				      guint param_id,
 				      const GValue *value,
@@ -56,13 +54,15 @@ static void gdaui_entry_get_property (GObject *object,
 void
 _gdaui_entry_block_changes (GdauiEntry *entry)
 {
-	ENTER_INTERNAL_CHANGES(entry);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	priv->internal_changes++;
 }
 
 void
 _gdaui_entry_unblock_changes (GdauiEntry *entry)
 {
-	LEAVE_INTERNAL_CHANGES(entry);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	priv->internal_changes--;
 }
 
 
@@ -87,42 +87,12 @@ static void insert_text_cb (GtkEditable *editable, const gchar *text, gint lengt
 static void internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length, gint *position,
 				  gboolean handle_default_insert);
 
-
-static GObjectClass *parent_class = NULL;
-
-GType
-gdaui_entry_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo type_info = {
-			sizeof (GdauiEntryClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_entry_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiEntry),
-			0,		/* n_preallocs */
-			(GInstanceInitFunc) gdaui_entry_init,
-			0
-		};
-		
-		type = g_type_register_static (GTK_TYPE_ENTRY, "GdauiEntry", &type_info, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_entry_class_init (GdauiEntryClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	object_class->finalize = gdaui_entry_finalize;
+	object_class->dispose = gdaui_entry_dispose;
 	klass->assume_insert = NULL;
 	klass->assume_delete = NULL;
 	klass->get_empty_text = NULL;
@@ -143,13 +113,13 @@ gdaui_entry_class_init (GdauiEntryClass *klass)
 static void
 gdaui_entry_init (GdauiEntry *entry)
 {
-	entry->priv = g_new0 (GdauiEntryPrivate, 1);
-	entry->priv->prefix = NULL;
-	entry->priv->suffix = NULL;
-	entry->priv->maxlen = 65535; /* eg. unlimited for GtkEntry */
-	entry->priv->isnull = TRUE;
-	entry->priv->internal_changes = 0;
-	entry->priv->max_width = -1;
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	priv->prefix = NULL;
+	priv->suffix = NULL;
+	priv->maxlen = 65535; /* eg. unlimited for GtkEntry */
+	priv->isnull = TRUE;
+	priv->internal_changes = 0;
+	priv->max_width = -1;
 
 	g_signal_connect (G_OBJECT (entry), "delete-text",
 			  G_CALLBACK (delete_text_cb), NULL);
@@ -162,23 +132,20 @@ gdaui_entry_init (GdauiEntry *entry)
 }
 
 static void 
-gdaui_entry_finalize (GObject *object)
+gdaui_entry_dispose (GObject *object)
 {
-	GdauiEntry *entry;
+        GdauiEntry *entry;
 
         g_return_if_fail (object != NULL);
         g_return_if_fail (GDAUI_IS_ENTRY (object));
 
         entry = GDAUI_ENTRY (object);
-        if (entry->priv) {
-		g_free (entry->priv->prefix);
-		g_free (entry->priv->suffix);
-                g_free (entry->priv);
-                entry->priv = NULL;
-        }
+        GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+        g_free (priv->prefix);
+        g_free (priv->suffix);
 
         /* parent class */
-        parent_class->finalize (object);
+        G_OBJECT_CLASS (gdaui_entry_parent_class)->dispose (object);
 }
 
 static void 
@@ -191,61 +158,60 @@ gdaui_entry_set_property (GObject *object,
 	const gchar *str;
 	gchar *otext;
 
-        entry = GDAUI_ENTRY (object);
-        if (entry->priv) {
-                switch (param_id) {
-                case PROP_PREFIX:
+	entry = GDAUI_ENTRY (object);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	switch (param_id) {
+		case PROP_PREFIX:
 			otext = gdaui_entry_get_text (entry);
-			g_free (entry->priv->prefix);
-			entry->priv->prefix = NULL;
-			entry->priv->prefix_len = 0;
+			g_free (priv->prefix);
+			priv->prefix = NULL;
+			priv->prefix_len = 0;
 
 			str = g_value_get_string (value);
 			if (str) {
 				if (! g_utf8_validate (str, -1, NULL))
 					g_warning (_("Invalid UTF-8 format!"));
 				else {
-					entry->priv->prefix = g_strdup (str);
-					entry->priv->prefix_len = strlen (str);
-					entry->priv->prefix_clen = g_utf8_strlen (str, -1);
+					priv->prefix = g_strdup (str);
+					priv->prefix_len = strlen (str);
+					priv->prefix_clen = g_utf8_strlen (str, -1);
 				}
 			}
 			adjust_display (entry, otext);
 			g_free (otext);
-			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
-                        break;
-                case PROP_SUFFIX:
-			otext = gdaui_entry_get_text (entry);
-			g_free (entry->priv->suffix);
-			entry->priv->suffix = NULL;
-			entry->priv->suffix_len = 0;
-
-			str = g_value_get_string (value);
-			if (str) {
-				if (! g_utf8_validate (str, -1, NULL))
-					g_warning (_("Invalid UTF-8 format!"));
-				else {
-					entry->priv->suffix = g_strdup (str);
-					entry->priv->suffix_len = strlen (str);
-					entry->priv->suffix_clen = g_utf8_strlen (str, -1);
-				}
-			}
-			adjust_display (entry, otext);
-			g_free (otext);
-			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
-                        break;
-		case PROP_MAXLEN:
-			entry->priv->maxlen = g_value_get_int (value);
-			otext = gdaui_entry_get_text (entry);
-			adjust_display (entry, otext);
-			g_free (otext);
-			gdaui_entry_set_width_chars (entry, entry->priv->max_width);
+			gdaui_entry_set_width_chars (entry, priv->max_width);
 			break;
-                default:
-                        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-                }
-        }
+		case PROP_SUFFIX:
+			otext = gdaui_entry_get_text (entry);
+			g_free (priv->suffix);
+			priv->suffix = NULL;
+			priv->suffix_len = 0;
+
+			str = g_value_get_string (value);
+			if (str) {
+				if (! g_utf8_validate (str, -1, NULL))
+					g_warning (_("Invalid UTF-8 format!"));
+				else {
+					priv->suffix = g_strdup (str);
+					priv->suffix_len = strlen (str);
+					priv->suffix_clen = g_utf8_strlen (str, -1);
+				}
+			}
+			adjust_display (entry, otext);
+			g_free (otext);
+			gdaui_entry_set_width_chars (entry, priv->max_width);
+			break;
+		case PROP_MAXLEN:
+			priv->maxlen = g_value_get_int (value);
+			otext = gdaui_entry_get_text (entry);
+			adjust_display (entry, otext);
+			g_free (otext);
+			gdaui_entry_set_width_chars (entry, priv->max_width);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+	}
 }
 
 static void
@@ -256,29 +222,29 @@ gdaui_entry_get_property (GObject *object,
 {
 	GdauiEntry *entry;
 
-        entry = GDAUI_ENTRY (object);
-        if (entry->priv) {
-                switch (param_id) {
-                case PROP_PREFIX:
-			g_value_set_string (value, entry->priv->prefix);
-                        break;
-                case PROP_SUFFIX:
-			g_value_set_string (value, entry->priv->suffix);
-                        break;
-		case PROP_MAXLEN:
-			g_value_set_int (value, entry->priv->maxlen);
+	entry = GDAUI_ENTRY (object);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	switch (param_id) {
+		case PROP_PREFIX:
+			g_value_set_string (value, priv->prefix);
 			break;
-                default:
-                        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-                }
-        }
+		case PROP_SUFFIX:
+			g_value_set_string (value, priv->suffix);
+			break;
+		case PROP_MAXLEN:
+			g_value_set_int (value, priv->maxlen);
+			break;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+			break;
+	}
 }
 
 static void
 signal_handlers_block (GdauiEntry *entry)
 {
-	ENTER_INTERNAL_CHANGES (entry);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	priv->internal_changes++;
 	g_signal_handlers_block_by_func (entry, G_CALLBACK (insert_text_cb), NULL);
 	g_signal_handlers_block_by_func (entry, G_CALLBACK (delete_text_cb), NULL);
 }
@@ -286,9 +252,10 @@ signal_handlers_block (GdauiEntry *entry)
 static void
 signal_handlers_unblock (GdauiEntry *entry)
 {
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 	g_signal_handlers_unblock_by_func (entry, G_CALLBACK (insert_text_cb), NULL);
 	g_signal_handlers_unblock_by_func (entry, G_CALLBACK (delete_text_cb), NULL);
-	LEAVE_INTERNAL_CHANGES (entry);
+	priv->internal_changes--;
 }
 
 /*
@@ -318,15 +285,16 @@ static void
 adjust_display (GdauiEntry *entry, gchar *existing_text)
 {
 	gchar *tmp;
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 
-	if (!entry->priv->isnull) {
+	if (!priv->isnull) {
 		signal_handlers_block (entry);
-		if (g_utf8_strlen (existing_text, -1) > entry->priv->maxlen)
-			truncate_utf8_string (existing_text, entry->priv->maxlen);
+		if (g_utf8_strlen (existing_text, -1) > priv->maxlen)
+			truncate_utf8_string (existing_text, priv->maxlen);
 		tmp = g_strdup_printf ("%s%s%s",
-				       entry->priv->prefix ? entry->priv->prefix : "",
+				       priv->prefix ? priv->prefix : "",
 				       existing_text ? existing_text : "",
-				       entry->priv->suffix ? entry->priv->suffix : "");
+				       priv->suffix ? priv->suffix : "");
 		
 		gtk_entry_set_text (GTK_ENTRY (entry), tmp); /* emits a "changed" signal */
 		g_free (tmp);
@@ -392,8 +360,9 @@ gdaui_entry_get_text (GdauiEntry *entry)
 	gchar *text;
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY (entry), NULL);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 
-	if (entry->priv->isnull)
+	if (priv->isnull)
 		text = NULL;
 	else {
 		const gchar *ctext;
@@ -402,12 +371,12 @@ gdaui_entry_get_text (GdauiEntry *entry)
 		if (ctext) {
 			len = strlen (ctext);
 			text = g_strdup (ctext);
-			if (entry->priv->prefix) {
-				len -= entry->priv->prefix_len;
-				memmove (text, text + entry->priv->prefix_len, len+1);
+			if (priv->prefix) {
+				len -= priv->prefix_len;
+				memmove (text, text + priv->prefix_len, len+1);
 			}
-			if (entry->priv->suffix) {
-				len -= entry->priv->suffix_len;
+			if (priv->suffix) {
+				len -= priv->suffix_len;
 				text [len] = 0;
 			}
 		}
@@ -435,15 +404,16 @@ void
 gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 
 	if (text) {
-		entry->priv->isnull = TRUE;
+		priv->isnull = TRUE;
 		signal_handlers_block (entry);
 		gtk_entry_set_text (GTK_ENTRY (entry), "");
 		signal_handlers_unblock (entry);
-		ENTER_INTERNAL_CHANGES(entry);
+		priv->internal_changes++;
 
-		if (entry->priv->internal_changes ==  1) {
+		if (priv->internal_changes ==  1) {
 			/* function has been called by "external" programmer,
 			 * emits the "insert-text" signal which is treated */
 			gtk_entry_set_text (GTK_ENTRY (entry), text);
@@ -454,11 +424,11 @@ gdaui_entry_set_text (GdauiEntry *entry, const gchar *text)
 			gint pos = 0;
 			internal_insert_text (GTK_EDITABLE (entry), text, g_utf8_strlen (text, -1), &pos, TRUE);
 		}
-		entry->priv->isnull = FALSE; /* in case it has not been set */
-		LEAVE_INTERNAL_CHANGES(entry);
+		priv->isnull = FALSE; /* in case it has not been set */
+		priv->internal_changes--;
 	}
 	else {
-		entry->priv->isnull = TRUE;
+		priv->isnull = TRUE;
 		signal_handlers_block (entry);
 		gtk_entry_set_text (GTK_ENTRY (entry), "");
 		signal_handlers_unblock (entry);
@@ -512,14 +482,15 @@ void
 gdaui_entry_set_width_chars (GdauiEntry *entry, gint max_width)
 {
 	g_return_if_fail (GDAUI_IS_ENTRY (entry));
-	entry->priv->max_width = max_width;
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+	priv->max_width = max_width;
 	if (max_width < 0) {
 		gtk_entry_set_width_chars (GTK_ENTRY (entry), -1);
 		gtk_widget_set_hexpand (GTK_WIDGET (entry), TRUE);
 	}
 	else {
-		max_width += (entry->priv->prefix_clen > 0 ? entry->priv->prefix_clen + 1 : 0);
-		max_width += (entry->priv->suffix_clen > 0 ? entry->priv->suffix_clen + 1 : 0);
+		max_width += (priv->prefix_clen > 0 ? priv->prefix_clen + 1 : 0);
+		max_width += (priv->suffix_clen > 0 ? priv->suffix_clen + 1 : 0);
 		gtk_entry_set_width_chars (GTK_ENTRY (entry), max_width);
 		gtk_entry_set_max_width_chars (GTK_ENTRY (entry), max_width);
 		gtk_widget_set_hexpand (GTK_WIDGET (entry), FALSE);
@@ -534,7 +505,8 @@ static void
 changed_cb (GtkEditable *editable, G_GNUC_UNUSED gpointer data)
 {
         GdauiEntry *entry = (GdauiEntry*) editable;
-        if (entry->priv->internal_changes > 0)
+        GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
+        if (priv->internal_changes > 0)
                 g_signal_stop_emission_by_name (editable, "changed");
 }
 
@@ -545,11 +517,12 @@ delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUS
 	gint len = 0;
 	gint nstart = start_pos, nend = end_pos;
 	GdauiEntry *entry = GDAUI_ENTRY (editable);
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 
 	signal_handlers_block (entry);
-	if (entry->priv->prefix) {
-		if (nstart < entry->priv->prefix_clen)
-			nstart = entry->priv->prefix_clen;
+	if (priv->prefix) {
+		if (nstart < priv->prefix_clen)
+			nstart = priv->prefix_clen;
 	}
 	if (nend < 0) {
 		otext = gtk_entry_get_text ((GtkEntry*) entry);
@@ -563,14 +536,14 @@ delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUS
 		return;
 	}
 
-	if (entry->priv->suffix) {
+	if (priv->suffix) {
 		if (!otext) {
 			otext = gtk_entry_get_text ((GtkEntry*) entry);
 			len = g_utf8_strlen (otext, -1);
 		}
 		if (nend - nstart == 1) {
-			if ((nstart >= len - entry->priv->suffix_clen)) {
-				nstart = len - entry->priv->suffix_clen - 1;
+			if ((nstart >= len - priv->suffix_clen)) {
+				nstart = len - priv->suffix_clen - 1;
 				nend = nstart + 1;
 				g_signal_stop_emission_by_name (editable, "delete-text");
 				signal_handlers_unblock (entry);
@@ -579,15 +552,15 @@ delete_text_cb (GtkEditable *editable, gint start_pos, gint end_pos, G_GNUC_UNUS
 				return;
 			}
 		}
-		if (nend > len - entry->priv->suffix_clen)
-			nend = len - entry->priv->suffix_clen;
+		if (nend > len - priv->suffix_clen)
+			nend = len - priv->suffix_clen;
 	}
 
 	if (GDAUI_ENTRY_GET_CLASS (editable)->assume_delete) {
 		g_signal_stop_emission_by_name (editable, "delete-text");
-		GDAUI_ENTRY_GET_CLASS (editable)->assume_delete (entry, nstart - entry->priv->prefix_clen,
-								 nend - entry->priv->prefix_clen,
-								 entry->priv->prefix_clen);
+		GDAUI_ENTRY_GET_CLASS (editable)->assume_delete (entry, nstart - priv->prefix_clen,
+								 nend - priv->prefix_clen,
+								 priv->prefix_clen);
 		//g_print ("Subclass assumes text delete\n");
 	}
 	else if ((nstart != start_pos) || (nend != end_pos)) {
@@ -610,15 +583,16 @@ internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length
 	GdauiEntry *entry = GDAUI_ENTRY (editable);
 	gint text_clen;
 	gint start;
+	GdauiEntryPrivate *priv = gdaui_entry_get_instance_private (entry);
 
 	if (gtk_editable_get_selection_bounds (editable, &start, NULL))
 		*position = start;
 
 	signal_handlers_block (entry);
 
- 	if (entry->priv->isnull) {
+ 	if (priv->isnull) {
 		gchar *etext = NULL;
-		entry->priv->isnull = FALSE;
+		priv->isnull = FALSE;
 		if (GDAUI_ENTRY_GET_CLASS (editable)->get_empty_text)
 			etext = GDAUI_ENTRY_GET_CLASS (editable)->get_empty_text (entry);
 		adjust_display (entry, etext ? etext : "");
@@ -629,33 +603,33 @@ internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length
 	clen = g_utf8_strlen (otext, -1);
 
 	/* adjust insert position */
-	if (entry->priv->prefix) {
-		if (*position < entry->priv->prefix_clen)
-			*position = entry->priv->prefix_clen;
+	if (priv->prefix) {
+		if (*position < priv->prefix_clen)
+			*position = priv->prefix_clen;
 	}
-	if (entry->priv->suffix) {
-		if (*position > clen - entry->priv->suffix_clen)
-			*position = clen - entry->priv->suffix_clen;
+	if (priv->suffix) {
+		if (*position > clen - priv->suffix_clen)
+			*position = clen - priv->suffix_clen;
 	}
 
 	/* test if the whole insertion is Ok */
 	text_clen = g_utf8_strlen (text, text_length);
 	if (GDAUI_ENTRY_GET_CLASS (editable)->assume_insert) {
 		/* Subclass assumes text insert */
-		gint pos = *position - entry->priv->prefix_clen;
+		gint pos = *position - priv->prefix_clen;
 		GDAUI_ENTRY_GET_CLASS (editable)->assume_insert (entry, text, text_length,
-								 &pos, entry->priv->prefix_clen);
-		*position = pos + entry->priv->prefix_clen;
+								 &pos, priv->prefix_clen);
+		*position = pos + priv->prefix_clen;
 
 		g_signal_stop_emission_by_name (editable, "insert-text");
 		signal_handlers_unblock (entry);
 		g_signal_emit_by_name (entry, "changed");
 	}
-	else if (clen - entry->priv->prefix_clen - entry->priv->suffix_clen + text_clen > entry->priv->maxlen) {
+	else if (clen - priv->prefix_clen - priv->suffix_clen + text_clen > priv->maxlen) {
 		/* text to insert is too long and needs to be truncated */
 		gchar *itext;
 		gint nallowed;
-		nallowed = entry->priv->maxlen - (clen - entry->priv->prefix_clen - entry->priv->suffix_clen);
+		nallowed = priv->maxlen - (clen - priv->prefix_clen - priv->suffix_clen);
 		g_signal_stop_emission_by_name (editable, "insert-text");
 		itext = g_strdup (text);
 		itext [nallowed] = 0; /* FIXME: convert nallowed to gchar */
@@ -669,9 +643,9 @@ internal_insert_text (GtkEditable *editable, const gchar *text, gint text_length
 	}
 	else {
 		if (handle_default_insert) {
-			ENTER_INTERNAL_CHANGES(entry);
+			priv->internal_changes++;
 			gtk_editable_insert_text (editable, text, text_length, position);
-			LEAVE_INTERNAL_CHANGES(entry);
+			priv->internal_changes--;
 			signal_handlers_unblock (entry);
 			g_signal_emit_by_name (entry, "changed");
 		}
