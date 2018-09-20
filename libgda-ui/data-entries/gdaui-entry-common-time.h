@@ -26,30 +26,12 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_COMMON_TIME          (gdaui_entry_common_time_get_type())
-#define GDAUI_ENTRY_COMMON_TIME(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_common_time_get_type(), GdauiEntryCommonTime)
-#define GDAUI_ENTRY_COMMON_TIME_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_common_time_get_type (), GdauiEntryCommonTimeClass)
-#define GDAUI_IS_ENTRY_COMMON_TIME(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_common_time_get_type ())
-
-
-typedef struct _GdauiEntryCommonTime GdauiEntryCommonTime;
-typedef struct _GdauiEntryCommonTimeClass GdauiEntryCommonTimeClass;
-typedef struct _GdauiEntryCommonTimePrivate GdauiEntryCommonTimePrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryCommonTime
-{
-	GdauiEntryWrapper              object;
-	GdauiEntryCommonTimePrivate   *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryCommonTime, gdaui_entry_common_time, GDAUI,ENTRY_COMMON_TIME, GdauiEntryWrapper)
 /* struct for the object's class */
 struct _GdauiEntryCommonTimeClass
 {
 	GdauiEntryWrapperClass         parent_class;
 };
-
-GType  gdaui_entry_common_time_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
