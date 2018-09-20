@@ -26,20 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE_MGR_TABLES            (gda_tree_mgr_tables_get_type())
-#define GDA_TREE_MGR_TABLES(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_MGR_TABLES, GdaTreeMgrTables))
-#define GDA_TREE_MGR_TABLES_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_MGR_TABLES, GdaTreeMgrTablesClass))
-#define GDA_IS_TREE_MGR_TABLES(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_MGR_TABLES))
-#define GDA_IS_TREE_MGR_TABLES_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_MGR_TABLES))
-#define GDA_TREE_MGR_TABLES_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_MGR_TABLES, GdaTreeMgrTablesClass))
-
-typedef struct _GdaTreeMgrTables GdaTreeMgrTables;
-typedef struct _GdaTreeMgrTablesPriv GdaTreeMgrTablesPriv;
-typedef struct _GdaTreeMgrTablesClass GdaTreeMgrTablesClass;
-
-struct _GdaTreeMgrTables {
-	GdaTreeManager        object;
-	GdaTreeMgrTablesPriv *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaTreeMgrTables, gda_tree_mgr_tables, GDA, TREE_MGR_TABLES, GdaTreeManager)
 
 struct _GdaTreeMgrTablesClass {
 	GdaTreeManagerClass   object_class;
@@ -65,7 +52,6 @@ struct _GdaTreeMgrTablesClass {
  * gda_tree_node_fetch_attribute()).
  */
 
-GType              gda_tree_mgr_tables_get_type                 (void) G_GNUC_CONST;
 GdaTreeManager*    gda_tree_mgr_tables_new                      (GdaConnection *cnc, const gchar *schema);
 
 G_END_DECLS
