@@ -21,14 +21,6 @@
 
 #include "gdaui-entry-boolean.h"
 
-/* 
- * Main static functions 
- */
-static void gdaui_entry_boolean_class_init (GdauiEntryBooleanClass * class);
-static void gdaui_entry_boolean_init (GdauiEntryBoolean * srv);
-static void gdaui_entry_boolean_dispose (GObject   * object);
-static void gdaui_entry_boolean_finalize (GObject   * object);
-
 /* virtual functions */
 static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
 static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value);
@@ -37,49 +29,19 @@ static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 static void       grab_focus (GdauiEntryWrapper *mgwrap);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
 /* private structure */
-struct _GdauiEntryBooleanPrivate
+typedef struct
 {
 	GtkWidget *switchw;
-};
+} GdauiEntryBooleanPrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiEntryBoolean, gdaui_entry_boolean, GDAUI_TYPE_ENTRY_WRAPPER)
 
-GType
-gdaui_entry_boolean_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryBooleanClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_boolean_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryBoolean),
-			0,
-			(GInstanceInitFunc) gdaui_entry_boolean_init,
-			0
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryBoolean", &info, 0);
-	}
-	return type;
-}
 
 static void
 gdaui_entry_boolean_class_init (GdauiEntryBooleanClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-
-	parent_class = g_type_class_peek_parent (class);
-
-	object_class->dispose = gdaui_entry_boolean_dispose;
-	object_class->finalize = gdaui_entry_boolean_finalize;
 
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
@@ -90,10 +52,10 @@ gdaui_entry_boolean_class_init (GdauiEntryBooleanClass * class)
 }
 
 static void
-gdaui_entry_boolean_init (GdauiEntryBoolean * gdaui_entry_boolean)
+gdaui_entry_boolean_init (GdauiEntryBoolean * entry)
 {
-	gdaui_entry_boolean->priv = g_new0 (GdauiEntryBooleanPrivate, 1);
-	gdaui_entry_boolean->priv->switchw = NULL;
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (entry);
+	priv->switchw = NULL;
 }
 
 /**
@@ -121,43 +83,6 @@ gdaui_entry_boolean_new (GdaDataHandler *dh, GType type)
 	return GTK_WIDGET (obj);
 }
 
-
-static void
-gdaui_entry_boolean_dispose (GObject   * object)
-{
-	GdauiEntryBoolean *gdaui_entry_boolean;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (object));
-
-	gdaui_entry_boolean = GDAUI_ENTRY_BOOLEAN (object);
-	if (gdaui_entry_boolean->priv) {
-
-	}
-
-	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_entry_boolean_finalize (GObject   * object)
-{
-	GdauiEntryBoolean *gdaui_entry_boolean;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (object));
-
-	gdaui_entry_boolean = GDAUI_ENTRY_BOOLEAN (object);
-	if (gdaui_entry_boolean->priv) {
-
-		g_free (gdaui_entry_boolean->priv);
-		gdaui_entry_boolean->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
-}
-
 static void
 event_after_cb (GtkWidget *widget, GdkEvent *event, gpointer data)
 {
@@ -171,14 +96,14 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap), NULL);
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_val_if_fail (mgbool->priv, NULL);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
 	GtkWidget *wid, *box;
 	box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 	wid = gtk_switch_new ();
 	gtk_box_pack_start (GTK_BOX (box), wid, FALSE, FALSE, 0);
 	gtk_widget_show (wid);
-	mgbool->priv->switchw = wid;
+	priv->switchw = wid;
 	g_signal_connect_swapped (wid, "event-after",
 				  G_CALLBACK (event_after_cb), box);
 
@@ -192,16 +117,16 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap));
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_if_fail (mgbool->priv);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
 	if (value) {
 		if (gda_value_is_null ((GValue *) value))
-			gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), FALSE);
+			gtk_switch_set_active (GTK_SWITCH (priv->switchw), FALSE);
 		else
-			gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), g_value_get_boolean ((GValue *) value));
+			gtk_switch_set_active (GTK_SWITCH (priv->switchw), g_value_get_boolean ((GValue *) value));
 	}
 	else
-		gtk_switch_set_active (GTK_SWITCH (mgbool->priv->switchw), FALSE);
+		gtk_switch_set_active (GTK_SWITCH (priv->switchw), FALSE);
 }
 
 static GValue *
@@ -214,10 +139,10 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap), NULL);
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_val_if_fail (mgbool->priv, NULL);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
-	if (gtk_switch_get_active (GTK_SWITCH (mgbool->priv->switchw)))
+	if (gtk_switch_get_active (GTK_SWITCH (priv->switchw)))
 		str = "TRUE";
 	else
 		str = "FALSE";
@@ -233,11 +158,11 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 
 	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap));
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_if_fail (mgbool->priv);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
-	g_signal_connect_swapped (G_OBJECT (mgbool->priv->switchw), "notify::active",
+	g_signal_connect_swapped (G_OBJECT (priv->switchw), "notify::active",
 				  modify_cb, mgwrap);
-	g_signal_connect_swapped (G_OBJECT (mgbool->priv->switchw), "notify::active",
+	g_signal_connect_swapped (G_OBJECT (priv->switchw), "notify::active",
 				  activate_cb, mgwrap);
 }
 
@@ -248,9 +173,9 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap));
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_if_fail (mgbool->priv);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
-	gtk_widget_set_sensitive (mgbool->priv->switchw, editable);
+	gtk_widget_set_sensitive (priv->switchw, editable);
 }
 
 static void
@@ -260,7 +185,7 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_BOOLEAN (mgwrap));
 	mgbool = GDAUI_ENTRY_BOOLEAN (mgwrap);
-	g_return_if_fail (mgbool->priv);
+	GdauiEntryBooleanPrivate *priv = gdaui_entry_boolean_get_instance_private (mgbool);
 
-	gtk_widget_grab_focus (mgbool->priv->switchw);
+	gtk_widget_grab_focus (priv->switchw);
 }

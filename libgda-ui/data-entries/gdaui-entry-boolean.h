@@ -27,30 +27,13 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_BOOLEAN          (gdaui_entry_boolean_get_type())
-#define GDAUI_ENTRY_BOOLEAN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_boolean_get_type(), GdauiEntryBoolean)
-#define GDAUI_ENTRY_BOOLEAN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_boolean_get_type (), GdauiEntryBooleanClass)
-#define GDAUI_IS_ENTRY_BOOLEAN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_boolean_get_type ())
-
-
-typedef struct _GdauiEntryBoolean GdauiEntryBoolean;
-typedef struct _GdauiEntryBooleanClass GdauiEntryBooleanClass;
-typedef struct _GdauiEntryBooleanPrivate GdauiEntryBooleanPrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryBoolean
-{
-	GdauiEntryWrapper              object;
-	GdauiEntryBooleanPrivate       *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryBoolean, gdaui_entry_boolean, GDAUI, ENTRY_BOOLEAN, GdauiEntryWrapper)
 /* struct for the object's class */
 struct _GdauiEntryBooleanClass
 {
 	GdauiEntryWrapperClass         parent_class;
 };
 
-GType        gdaui_entry_boolean_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_boolean_new             (GdaDataHandler *dh, GType type);
 
 
