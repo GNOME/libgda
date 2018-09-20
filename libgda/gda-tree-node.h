@@ -27,23 +27,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_TREE_NODE            (gda_tree_node_get_type())
-#define GDA_TREE_NODE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_TREE_NODE, GdaTreeNode))
-#define GDA_TREE_NODE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_TREE_NODE, GdaTreeNodeClass))
-#define GDA_IS_TREE_NODE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_TREE_NODE))
-#define GDA_IS_TREE_NODE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_TREE_NODE))
-#define GDA_TREE_NODE_GET_CLASS(o)    (G_TYPE_INSTANCE_GET_CLASS ((o), GDA_TYPE_TREE_NODE, GdaTreeNodeClass))
+G_DECLARE_DERIVABLE_TYPE (GdaTreeNode, gda_tree_node, GDA, TREE_NODE, GObject)
 
-/* error reporting */
-extern GQuark gda_tree_node_error_quark (void);
-#define GDA_TREE_NODE_ERROR gda_tree_node_error_quark ()
-
-typedef enum {
-	GDA_TREE_NODE_UNKNOWN_ERROR
-} GdaTreeNodeError;
-
-struct _GdaTreeNode {
-	GObject             object;
-};
 
 struct _GdaTreeNodeClass {
 	GObjectClass        object_class;
@@ -66,6 +51,14 @@ struct _GdaTreeNodeClass {
 	void (*_gda_reserved4) (void);
 };
 
+/* error reporting */
+extern GQuark gda_tree_node_error_quark (void);
+#define GDA_TREE_NODE_ERROR gda_tree_node_error_quark ()
+
+typedef enum {
+	GDA_TREE_NODE_UNKNOWN_ERROR
+} GdaTreeNodeError;
+
 /**
  * SECTION:gda-tree-node
  * @short_description: A node in a #GdaTree
@@ -81,7 +74,6 @@ struct _GdaTreeNodeClass {
  * calling gda_tree_manager_set_node_create_func()).
  */
 
-GType              gda_tree_node_get_type          (void) G_GNUC_CONST;
 GdaTreeNode*       gda_tree_node_new               (const gchar *name);
 
 GdaTreeNode       *gda_tree_node_get_parent        (GdaTreeNode *node);

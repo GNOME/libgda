@@ -29,7 +29,7 @@ typedef struct {
         GSList         *children; /* list of GdaTreeNodesList */
 	GdaTreeNode    *parent;
 } GdaTreeNodePrivate;
-#define gda_tree_node_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_TREE_NODE, GdaTreeNodePrivate)
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeNode, gda_tree_node, G_TYPE_OBJECT)
 /*
  * The GdaTreeNodesList stores the list of children nodes created by a GdaTreeManager object
  */
@@ -45,8 +45,6 @@ void              _gda_nodes_list_free (GdaTreeNodesList *nl);
 /*
  * GObject functions
  */
-static void gda_tree_node_class_init (GdaTreeNodeClass *klass);
-static void gda_tree_node_init       (GdaTreeNode *tnode);
 static void gda_tree_node_dispose    (GObject *object);
 static void gda_tree_node_set_property (GObject *object,
 					guint param_id,
@@ -77,7 +75,6 @@ enum {
 	PROP_NAME
 };
 
-static GObjectClass *parent_class = NULL;
 GdaAttributesManager *_gda_tree_node_attributes_manager;
 
 static void m_node_changed (GdaTreeNode *reporting, GdaTreeNode *node);
@@ -94,9 +91,6 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaTreeNodePrivate));
 	/* signals */
 	/**
 	 * GdaTreeNode::node-changed:
@@ -291,7 +285,7 @@ gda_tree_node_dispose (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_tree_node_parent_class)->dispose (object);
 }
 
 
@@ -302,41 +296,6 @@ GQuark gda_tree_node_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_tree_node_error");
         return quark;
-}
-
-/**
- * gda_tree_node_get_type:
- * 
- * Registers the #GdaTreeNode class on the GLib type system.
- * 
- * Returns: the GType identifying the class.
- */
-GType
-gda_tree_node_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeNodeClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_node_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTreeNode),
-                        0,
-                        (GInstanceInitFunc) gda_tree_node_init,
-			0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (G_TYPE_OBJECT, "GdaTreeNode", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
 }
 
 static void
