@@ -2,7 +2,7 @@
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,8 +27,6 @@
 #include "gdaui-data-store.h"
 #include <libgda/gda-debug-macros.h>
 
-static void gdaui_entry_combo_class_init (GdauiEntryComboClass *class);
-static void gdaui_entry_combo_init (GdauiEntryCombo *wid);
 static void gdaui_entry_combo_dispose (GObject *object);
 
 static void gdaui_entry_combo_set_property (GObject *object,
@@ -81,7 +79,7 @@ typedef struct {
 #define COMBO_NODE(x) ((ComboNode*)(x))
 
 /* Private structure */
-struct  _GdauiEntryComboPriv {
+typedef struct {
         GtkWidget              *combo_entry;
 	GSList                 *combo_nodes; /* list of ComboNode structures */
 
@@ -96,41 +94,11 @@ struct  _GdauiEntryComboPriv {
 	gboolean                default_possible;
 
 	gboolean                set_default_if_invalid; /* use first entry when provided value is not found ? */
-};
+} GdauiEntryComboPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-gdaui_entry_combo_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryComboClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_combo_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryCombo),
-			0,
-			(GInstanceInitFunc) gdaui_entry_combo_init,
-			0
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gdaui_entry_combo_data_entry_init,
-			NULL,
-			NULL
-		};
-
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_SHELL, "GdauiEntryCombo", &info, 0);
-		g_type_add_interface_static (type, GDAUI_TYPE_DATA_ENTRY, &data_entry_info);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_CODE (GdauiEntryCombo, gdaui_entry_combo, GDAUI_TYPE_ENTRY_SHELL,
+                         G_ADD_PRIVATE (GdauiEntryCombo)
+                         G_IMPLEMENT_INTERFACE (GDAUI_TYPE_DATA_ENTRY, gdaui_entry_combo_data_entry_init))
 
 static void
 gdaui_entry_combo_data_entry_init (GdauiDataEntryInterface *iface)
@@ -145,40 +113,39 @@ gdaui_entry_combo_data_entry_init (GdauiDataEntryInterface *iface)
         iface->set_attributes = gdaui_entry_combo_set_attributes;
         iface->get_attributes = gdaui_entry_combo_get_attributes;
         iface->get_handler = NULL;
-	iface->grab_focus = gdaui_entry_combo_grab_focus;
-	iface->set_unknown_color = gdaui_entry_combo_set_unknown_color;
+        iface->grab_focus = gdaui_entry_combo_grab_focus;
+        iface->set_unknown_color = gdaui_entry_combo_set_unknown_color;
 }
 
 
 static void
 gdaui_entry_combo_class_init (GdauiEntryComboClass *class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-	
-	parent_class = g_type_class_peek_parent (class);
+        GObjectClass   *object_class = G_OBJECT_CLASS (class);
+        object_class->dispose = gdaui_entry_combo_dispose;
 
-	object_class->dispose = gdaui_entry_combo_dispose;
-
-	/* Properties */
+        /* Properties */
         object_class->set_property = gdaui_entry_combo_set_property;
         object_class->get_property = gdaui_entry_combo_get_property;
         g_object_class_install_property (object_class, PROP_SET_DEFAULT_IF_INVALID,
-					 g_param_spec_boolean ("set-default-if-invalid", NULL, NULL, FALSE,
+                                         g_param_spec_boolean ("set-default-if-invalid", NULL, NULL, FALSE,
                                                                (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 }
 
 static void
-real_combo_block_signals (GdauiEntryCombo *wid)
+real_combo_block_signals (GdauiEntryCombo *combo)
 {
-	g_signal_handlers_block_by_func (G_OBJECT (wid->priv->combo_entry),
-					 G_CALLBACK (combo_contents_changed_cb), wid);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	g_signal_handlers_block_by_func (G_OBJECT (priv->combo_entry),
+					 G_CALLBACK (combo_contents_changed_cb), combo);
 }
 
 static void
-real_combo_unblock_signals (GdauiEntryCombo *wid)
+real_combo_unblock_signals (GdauiEntryCombo *combo)
 {
-	g_signal_handlers_unblock_by_func (G_OBJECT (wid->priv->combo_entry),
-					   G_CALLBACK (combo_contents_changed_cb), wid);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	g_signal_handlers_unblock_by_func (G_OBJECT (priv->combo_entry),
+					   G_CALLBACK (combo_contents_changed_cb), combo);
 }
 
 
@@ -191,20 +158,19 @@ gdaui_entry_combo_emit_signal (GdauiEntryCombo *combo)
 static void
 gdaui_entry_combo_init (GdauiEntryCombo *combo)
 {
-	/* Private structure */
-	combo->priv = g_new0 (GdauiEntryComboPriv, 1);
-	combo->priv->combo_nodes = NULL;
-	combo->priv->set_default_if_invalid = FALSE;
-	combo->priv->combo_entry = NULL;
-	combo->priv->data_valid = FALSE;
-	combo->priv->invalid = FALSE;
-	combo->priv->null_forced = FALSE;
-	combo->priv->default_forced = FALSE;
-	combo->priv->null_possible = TRUE;
-	combo->priv->default_possible = FALSE;
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	priv->combo_nodes = NULL;
+	priv->set_default_if_invalid = FALSE;
+	priv->combo_entry = NULL;
+	priv->data_valid = FALSE;
+	priv->invalid = FALSE;
+	priv->null_forced = FALSE;
+	priv->default_forced = FALSE;
+	priv->null_possible = TRUE;
+	priv->default_possible = FALSE;
 
-	combo->priv->paramlist = NULL;
-	combo->priv->source = NULL;
+	priv->paramlist = NULL;
+	priv->source = NULL;
 }
 
 /**
@@ -235,7 +201,8 @@ gdaui_entry_combo_new (GdauiSet *paramlist, GdauiSetSource *source)
 static void
 uiset_source_model_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiSetSource *source, GdauiEntryCombo* combo)
 {
-	if (source == combo->priv->source) {
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	if (source == priv->source) {
 		GSList *list, *values = NULL;
 		GdaSetSource *s;
 		s = gdaui_set_source_get_source (source);
@@ -244,13 +211,13 @@ uiset_source_model_changed_cb (G_GNUC_UNUSED GdauiSet *paramlist, GdauiSetSource
 			cvalue = gda_holder_get_value (gda_set_node_get_holder (GDA_SET_NODE (list->data)));
 			values = g_slist_append (values, (GValue *) cvalue);
 		}
-		gdaui_combo_set_data (GDAUI_COMBO (combo->priv->combo_entry),
+		gdaui_combo_set_data (GDAUI_COMBO (priv->combo_entry),
 				       gda_set_source_get_data_model (s),
-				       gdaui_set_source_get_shown_n_cols (combo->priv->source), 
-				       gdaui_set_source_get_shown_columns (combo->priv->source));
-		_gdaui_combo_set_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), values, NULL);
+				       gdaui_set_source_get_shown_n_cols (priv->source),
+				       gdaui_set_source_get_shown_columns (priv->source));
+		_gdaui_combo_set_selected_ext (GDAUI_COMBO (priv->combo_entry), values, NULL);
 		g_slist_free (values);
-		gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry), combo->priv->null_possible);
+		gdaui_combo_add_null (GDAUI_COMBO (priv->combo_entry), priv->null_possible);
 	}
 }
 
@@ -274,9 +241,10 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 	g_return_if_fail (GDAUI_IS_SET (paramlist));
 	g_return_if_fail (source);
 	g_return_if_fail (g_slist_find (gdaui_set_get_sources (paramlist), source));
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
   
-	combo->priv->paramlist = paramlist;
-	combo->priv->source = source;
+	priv->paramlist = paramlist;
+	priv->source = source;
 	g_object_ref (G_OBJECT (paramlist));
 	g_signal_connect (paramlist, "source-model-changed",
 			  G_CALLBACK (uiset_source_model_changed_cb), combo);
@@ -290,23 +258,23 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 		
 		cnode->node = GDA_SET_NODE (list->data);
 		cnode->value = NULL;
-		combo->priv->combo_nodes = g_slist_append (combo->priv->combo_nodes, cnode);
+		priv->combo_nodes = g_slist_append (priv->combo_nodes, cnode);
 
 		values = g_slist_append (values, (GValue *) gda_holder_get_value (gda_set_node_get_holder (cnode->node)));
 		if (gda_holder_get_not_null (gda_set_node_get_holder (cnode->node)))
 			null_possible = FALSE;
 	}
-	combo->priv->null_possible = null_possible;
+	priv->null_possible = null_possible;
 
 	/* create the combo box itself */
 	entry = gdaui_combo_new_with_model (gda_set_source_get_data_model (gdaui_set_source_get_source (source)), 
-					    gdaui_set_source_get_shown_n_cols (combo->priv->source), 
-					    gdaui_set_source_get_shown_columns (combo->priv->source));
+					    gdaui_set_source_get_shown_n_cols (priv->source),
+					    gdaui_set_source_get_shown_columns (priv->source));
 	g_object_set (G_OBJECT (entry), "as-list", TRUE, NULL);
 
 	gdaui_entry_shell_pack_entry (GDAUI_ENTRY_SHELL (combo), entry);
 	gtk_widget_show (entry);
-	combo->priv->combo_entry = entry;
+	priv->combo_entry = entry;
 
 	if (values) {
 		_gdaui_combo_set_selected_ext (GDAUI_COMBO (entry), values, NULL);
@@ -314,9 +282,9 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 		g_slist_free (values);
 	}
 
-	gdaui_combo_add_null (GDAUI_COMBO (entry), combo->priv->null_possible);
+	gdaui_combo_add_null (GDAUI_COMBO (entry), priv->null_possible);
 
-	combo->priv->data_valid = combo->priv->null_possible ? TRUE : FALSE;
+	priv->data_valid = priv->null_possible ? TRUE : FALSE;
 
 	combo_contents_changed_cb ((GdauiCombo*) entry, combo);
 	g_signal_connect (G_OBJECT (entry), "changed",
@@ -326,11 +294,12 @@ void _gdaui_entry_combo_construct (GdauiEntryCombo* combo, GdauiSet *paramlist, 
 static void
 choose_auto_default_value (GdauiEntryCombo *combo)
 {
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 	gint pos = 0;
-	if (combo->priv->null_possible)
+	if (priv->null_possible)
 		pos ++;
 	
-	gtk_combo_box_set_active (GTK_COMBO_BOX (combo->priv->combo_entry), pos);
+	gtk_combo_box_set_active (GTK_COMBO_BOX (priv->combo_entry), pos);
 }
 
 static void
@@ -342,35 +311,31 @@ gdaui_entry_combo_dispose (GObject *object)
 	g_return_if_fail (GDAUI_IS_ENTRY_COMBO (object));
 
 	combo = GDAUI_ENTRY_COMBO (object);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	if (combo->priv) {
-		if (combo->priv->paramlist) {
-			g_signal_handlers_disconnect_by_func (combo->priv->paramlist,
-							      G_CALLBACK (uiset_source_model_changed_cb),
-							      combo);
-			g_object_unref (combo->priv->paramlist);
-		}
-
-		if (combo->priv->combo_nodes) {
-			GSList *list;
-			for (list = combo->priv->combo_nodes; list; list = list->next) {
-				ComboNode *node = COMBO_NODE (list->data);
-
-				gda_value_free (node->value);
-				gda_value_free (node->value_orig);
-				gda_value_free (node->value_default);
-				g_free (node);
-			}
-			g_slist_free (combo->priv->combo_nodes);
-			combo->priv->combo_nodes = NULL;
-		}
-
-		g_free (combo->priv);
-		combo->priv = NULL;
+	if (priv->paramlist) {
+		g_signal_handlers_disconnect_by_func (priv->paramlist,
+						      G_CALLBACK (uiset_source_model_changed_cb),
+						      combo);
+		g_object_unref (priv->paramlist);
 	}
-	
+
+	if (priv->combo_nodes) {
+		GSList *list;
+		for (list = priv->combo_nodes; list; list = list->next) {
+			ComboNode *node = COMBO_NODE (list->data);
+
+			gda_value_free (node->value);
+			gda_value_free (node->value_orig);
+			gda_value_free (node->value_default);
+			g_free (node);
+		}
+		g_slist_free (priv->combo_nodes);
+		priv->combo_nodes = NULL;
+	}
+
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gdaui_entry_combo_parent_class)->dispose (object);
 }
 
 static void 
@@ -380,16 +345,17 @@ gdaui_entry_combo_set_property (GObject *object,
 				GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
-	if (combo->priv) {
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	if (priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID:
-			if (combo->priv->set_default_if_invalid != g_value_get_boolean (value)) {
+			if (priv->set_default_if_invalid != g_value_get_boolean (value)) {
 				guint attrs;
 
-				combo->priv->set_default_if_invalid = g_value_get_boolean (value);
+				priv->set_default_if_invalid = g_value_get_boolean (value);
 				attrs = gdaui_data_entry_get_attributes (GDAUI_DATA_ENTRY (combo));
 
-				if (combo->priv->set_default_if_invalid && (attrs & GDA_VALUE_ATTR_DATA_NON_VALID)) 
+				if (priv->set_default_if_invalid && (attrs & GDA_VALUE_ATTR_DATA_NON_VALID))
 					choose_auto_default_value (combo);
 			}
 			break;
@@ -407,10 +373,11 @@ gdaui_entry_combo_get_property (GObject *object,
 				GParamSpec *pspec)
 {
 	GdauiEntryCombo *combo = GDAUI_ENTRY_COMBO (object);
-	if (combo->priv) {
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	if (priv) {
 		switch (param_id) {
 		case PROP_SET_DEFAULT_IF_INVALID:
-			g_value_set_boolean (value, combo->priv->set_default_if_invalid);
+			g_value_set_boolean (value, priv->set_default_if_invalid);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -422,7 +389,8 @@ gdaui_entry_combo_get_property (GObject *object,
 static void
 combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *combo)
 {
-	if (gdaui_combo_is_null_selected (GDAUI_COMBO (combo->priv->combo_entry))) /* Set to NULL? */ {
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+	if (gdaui_combo_is_null_selected (GDAUI_COMBO (priv->combo_entry))) /* Set to NULL? */ {
 		gdaui_entry_combo_set_values (combo, NULL);
 		gdaui_entry_combo_emit_signal (combo);
 	}
@@ -431,15 +399,15 @@ combo_contents_changed_cb (G_GNUC_UNUSED GdauiCombo *entry, GdauiEntryCombo *com
 		GSList *list;
 		GtkTreeModel *model;
 
-		combo->priv->null_forced = FALSE;
-		combo->priv->default_forced = FALSE;
-		combo->priv->data_valid = TRUE;
+		priv->null_forced = FALSE;
+		priv->default_forced = FALSE;
+		priv->data_valid = TRUE;
 			
 		/* updating the node's values */
-		g_assert (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (combo->priv->combo_entry), &iter));
+		g_assert (gtk_combo_box_get_active_iter (GTK_COMBO_BOX (priv->combo_entry), &iter));
 		
-		model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo->priv->combo_entry));
-		for (list = combo->priv->combo_nodes; list; list = list->next) {
+		model = gtk_combo_box_get_model (GTK_COMBO_BOX (priv->combo_entry));
+		for (list = priv->combo_nodes; list; list = list->next) {
 			ComboNode *node = COMBO_NODE (list->data);
 
 			gda_value_free (node->value);
@@ -481,7 +449,7 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	GSList *list;
 
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), FALSE);
-	g_return_val_if_fail (combo->priv, FALSE);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
 	/* try to determine if all the values are NULL or of type GDA_TYPE_NULL */
 	for (list = values; list; list = list->next) {
@@ -497,19 +465,19 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 		GtkTreeModel *model;
 		GSList *list;
 
-		g_return_val_if_fail (g_slist_length (values) == g_slist_length (combo->priv->combo_nodes), FALSE);
+		g_return_val_if_fail (g_slist_length (values) == g_slist_length (priv->combo_nodes), FALSE);
 		
-		model = gtk_combo_box_get_model (GTK_COMBO_BOX (combo->priv->combo_entry));
+		model = gtk_combo_box_get_model (GTK_COMBO_BOX (priv->combo_entry));
 		if (gdaui_data_store_get_iter_from_values (GDAUI_DATA_STORE (model), &iter, 
-							   values, gdaui_set_source_get_ref_columns (combo->priv->source))) {
+							   values, gdaui_set_source_get_ref_columns (priv->source))) {
 			ComboNode *node;
 
 			real_combo_block_signals (combo);
-			gtk_combo_box_set_active_iter (GTK_COMBO_BOX (combo->priv->combo_entry), &iter);
+			gtk_combo_box_set_active_iter (GTK_COMBO_BOX (priv->combo_entry), &iter);
 			real_combo_unblock_signals (combo);
 
 			/* adjusting the values */
-			for (list = combo->priv->combo_nodes; list; list = list->next) {
+			for (list = priv->combo_nodes; list; list = list->next) {
 				node = COMBO_NODE (list->data);
 				gda_value_free (node->value);
 				gtk_tree_model_get (model, &iter, gda_set_node_get_source_column (node->node),
@@ -518,8 +486,8 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 					node->value = gda_value_copy (node->value);
 			}
 			
-			combo->priv->null_forced = FALSE;
-			combo->priv->default_forced = FALSE;
+			priv->null_forced = FALSE;
+			priv->default_forced = FALSE;
 		}
 		else
 			/* values not found */
@@ -527,24 +495,24 @@ gdaui_entry_combo_set_values (GdauiEntryCombo *combo, GSList *values)
 	}
 	else  { /* set to NULL */
 		GSList *list;
-		for (list = combo->priv->combo_nodes; list; list = list->next) {
+		for (list = priv->combo_nodes; list; list = list->next) {
 			gda_value_free (COMBO_NODE (list->data)->value);
 			COMBO_NODE (list->data)->value = NULL;
 		}
 
-		if (combo->priv->null_possible) {
+		if (priv->null_possible) {
 			real_combo_block_signals (combo);
-			gtk_combo_box_set_active (GTK_COMBO_BOX (combo->priv->combo_entry), -1);
+			gtk_combo_box_set_active (GTK_COMBO_BOX (priv->combo_entry), -1);
 			real_combo_unblock_signals (combo);
 
-			combo->priv->null_forced = TRUE;
-			combo->priv->default_forced = FALSE;
+			priv->null_forced = TRUE;
+			priv->default_forced = FALSE;
 		}
 		else 
 			err = TRUE;
 	}
 
-	combo->priv->data_valid = !err;
+	priv->data_valid = !err;
 	g_signal_emit_by_name (G_OBJECT (combo), "status-changed");
 
 	/* notify the status and contents changed */
@@ -569,9 +537,9 @@ gdaui_entry_combo_get_values (GdauiEntryCombo *combo)
 	GSList *list;
 	GSList *retval = NULL;
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
-	g_return_val_if_fail (combo->priv, NULL);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	for (list = combo->priv->combo_nodes; list; list = list->next) {
+	for (list = priv->combo_nodes; list; list = list->next) {
 		ComboNode *node = COMBO_NODE (list->data);		
 		retval = g_slist_append (retval, (GValue *) node->value);
 	}
@@ -592,9 +560,9 @@ GSList *
 gdaui_entry_combo_get_all_values (GdauiEntryCombo *combo)
 {
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
-	g_return_val_if_fail (combo->priv, NULL);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	return _gdaui_combo_get_selected_ext (GDAUI_COMBO (combo->priv->combo_entry), 0, NULL);
+	return _gdaui_combo_get_selected_ext (GDAUI_COMBO (priv->combo_entry), 0, NULL);
 }
 
 /**
@@ -611,13 +579,13 @@ gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 	GSList *list;
 
 	g_return_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo));
-	g_return_if_fail (combo->priv);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
 	/* rem: we don't care if the values can be set or not, we just try */
 	gdaui_entry_combo_set_values (combo, values);
 
 	/* clean all the orig values */
-	for (list = combo->priv->combo_nodes; list; list = list->next) {
+	for (list = priv->combo_nodes; list; list = list->next) {
 		ComboNode *node = COMBO_NODE (list->data);
 		if (node->value_orig) {
 			gda_value_free (node->value_orig);
@@ -631,19 +599,19 @@ gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 		const GValue *arg_value;
 		gboolean equal = TRUE;
 		
-		g_return_if_fail (g_slist_length (values) == g_slist_length (combo->priv->combo_nodes));
+		g_return_if_fail (g_slist_length (values) == g_slist_length (priv->combo_nodes));
 		
 		/* 
 		 * first make sure the value types are the same as for the data model 
 		 */
-		for (nodes = combo->priv->combo_nodes, argptr = values;
+		for (nodes = priv->combo_nodes, argptr = values;
 		     argptr && nodes && equal;
 		     nodes = nodes->next, argptr = argptr->next) {
 			GdaColumn *attrs;
 			GType type = GDA_TYPE_NULL;
 			
 			attrs = gda_data_model_describe_column (
-			                    gda_set_source_get_data_model (gdaui_set_source_get_source (combo->priv->source)),
+			                    gda_set_source_get_data_model (gdaui_set_source_get_source (priv->source)),
 								gda_set_node_get_source_column (COMBO_NODE (nodes->data)->node));
 			arg_value = (GValue*) (argptr->data);
 			
@@ -656,7 +624,7 @@ gdaui_entry_combo_set_reference_values (GdauiEntryCombo *combo, GSList *values)
 		 * then, actual copy of the values
 		 */
 		if (equal) {
-			for (nodes = combo->priv->combo_nodes, argptr = values;
+			for (nodes = priv->combo_nodes, argptr = values;
 			     argptr && nodes;
 			     nodes = nodes->next, argptr = argptr->next)
 				if (argptr->data)
@@ -683,9 +651,9 @@ gdaui_entry_combo_get_reference_values (GdauiEntryCombo *combo)
 	gboolean allnull = TRUE;
 
 	g_return_val_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo), NULL);
-	g_return_val_if_fail (combo->priv, NULL);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	for (list = combo->priv->combo_nodes; list; list = list->next) {
+	for (list = priv->combo_nodes; list; list = list->next) {
 		ComboNode *node = COMBO_NODE (list->data);
 
 		if (node->value_orig && 
@@ -715,7 +683,7 @@ void
 gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, G_GNUC_UNUSED GSList *values)
 {
 	g_return_if_fail (combo && GDAUI_IS_ENTRY_COMBO (combo));
-	g_return_if_fail (combo->priv);
+	//GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 	TO_IMPLEMENT;
 }
 
@@ -730,10 +698,10 @@ gdaui_entry_combo_set_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue *
 	GdauiEntryCombo *combo;
 
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
-        combo = GDAUI_ENTRY_COMBO (iface);
-        g_return_if_fail (combo->priv);
+        //combo = GDAUI_ENTRY_COMBO (iface);
+        //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	TO_IMPLEMENT;
+        TO_IMPLEMENT;
 }
 
 static GValue *
@@ -742,12 +710,12 @@ gdaui_entry_combo_get_value (GdauiDataEntry *iface)
         GdauiEntryCombo *combo;
 	
         g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), NULL);
-        combo = GDAUI_ENTRY_COMBO (iface);
-        g_return_val_if_fail (combo->priv, NULL);
-	
-	TO_IMPLEMENT;
-	
-	return NULL;
+        //combo = GDAUI_ENTRY_COMBO (iface);
+        //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+
+        TO_IMPLEMENT;
+
+        return NULL;
 }
 
 static void
@@ -756,10 +724,10 @@ gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GVal
         GdauiEntryCombo *combo;
 	
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
-        combo = GDAUI_ENTRY_COMBO (iface);
-        g_return_if_fail (combo->priv);
+        //combo = GDAUI_ENTRY_COMBO (iface);
+        //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	TO_IMPLEMENT;
+        TO_IMPLEMENT;
 }
 
 static const GValue *
@@ -768,24 +736,23 @@ gdaui_entry_combo_get_ref_value (GdauiDataEntry *iface)
         GdauiEntryCombo *combo;
 	
         g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), NULL);
-        combo = GDAUI_ENTRY_COMBO (iface);
-        g_return_val_if_fail (combo->priv, NULL);
-                     
-	TO_IMPLEMENT;
+        //combo = GDAUI_ENTRY_COMBO (iface);
+        //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+        TO_IMPLEMENT;
 
-	return NULL;
+        return NULL;
 }
 
 static void
 gdaui_entry_combo_set_value_default (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue * value)
 {
         GdauiEntryCombo *combo;
-	
+
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
-        combo = GDAUI_ENTRY_COMBO (iface);
-        g_return_if_fail (combo->priv);
-	
-	TO_IMPLEMENT;
+        //combo = GDAUI_ENTRY_COMBO (iface);
+        //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
+
+        TO_IMPLEMENT;
 }
 
 
@@ -796,7 +763,7 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 
 	g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
 	combo = GDAUI_ENTRY_COMBO (iface);
-	g_return_if_fail (combo->priv);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
 	/* Setting to NULL */
 	if (mask & GDA_VALUE_ATTR_IS_NULL) {
@@ -807,10 +774,10 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			gdaui_entry_combo_set_values (combo, NULL);
 			
 			/* if default is set, see if we can keep it that way */
-			if (combo->priv->default_forced) {
+			if (priv->default_forced) {
 				GSList *list;
 				gboolean allnull = TRUE;
-				for (list = combo->priv->combo_nodes; list; list = list->next) {
+				for (list = priv->combo_nodes; list; list = list->next) {
 					if (COMBO_NODE (list->data)->value_default && 
 					    (G_VALUE_TYPE (COMBO_NODE (list->data)->value_default) != 
 					     GDA_TYPE_NULL)) {
@@ -820,24 +787,24 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 				}
 
 				if (!allnull)
-					combo->priv->default_forced = FALSE;
+					priv->default_forced = FALSE;
 			}
 
 			gdaui_entry_combo_emit_signal (combo);
 			return;
 		}
 		else {
-			combo->priv->null_forced = FALSE;
+			priv->null_forced = FALSE;
 			gdaui_entry_combo_emit_signal (combo);
 		}
 	}
 
 	/* Can be NULL ? */
 	if (mask & GDA_VALUE_ATTR_CAN_BE_NULL)
-		if (combo->priv->null_possible != (gboolean)(attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE) {
-			combo->priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
-			gdaui_combo_add_null (GDAUI_COMBO (combo->priv->combo_entry),
-						      combo->priv->null_possible);		 
+		if (priv->null_possible != (gboolean)(attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE) {
+			priv->null_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_NULL) ? TRUE : FALSE;
+			gdaui_combo_add_null (GDAUI_COMBO (priv->combo_entry),
+						      priv->null_possible);
 		}
 
 
@@ -850,17 +817,17 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			GSList *tmplist = NULL;
 			GSList *list;
 			
-			for (list = combo->priv->combo_nodes; list; list = list->next)
+			for (list = priv->combo_nodes; list; list = list->next)
 				tmplist = g_slist_append (tmplist, COMBO_NODE (list->data)->value_default);
 
 			gdaui_entry_combo_set_values (combo, tmplist);
 			g_slist_free (tmplist);
 
 			/* if NULL is set, see if we can keep it that way */
-			if (combo->priv->null_forced) {
+			if (priv->null_forced) {
 				GSList *list;
 				gboolean allnull = TRUE;
-				for (list = combo->priv->combo_nodes; list; list = list->next) {
+				for (list = priv->combo_nodes; list; list = list->next) {
 					if (COMBO_NODE (list->data)->value_default && 
 					    (G_VALUE_TYPE (COMBO_NODE (list->data)->value_default) != 
 					     GDA_TYPE_NULL)) {
@@ -870,22 +837,22 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 				}
 				
 				if (!allnull)
-					combo->priv->null_forced = FALSE;
+					priv->null_forced = FALSE;
 			}
 
-			combo->priv->default_forced = TRUE;
+			priv->default_forced = TRUE;
 			gdaui_entry_combo_emit_signal (combo);
 			return;
 		}
 		else {
-			combo->priv->default_forced = FALSE;
+			priv->default_forced = FALSE;
 			gdaui_entry_combo_emit_signal (combo);
 		}
 	}
 
 	/* Can be DEFAULT ? */
 	if (mask & GDA_VALUE_ATTR_CAN_BE_DEFAULT)
-		combo->priv->default_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT) ? TRUE : FALSE;
+		priv->default_possible = (attrs & GDA_VALUE_ATTR_CAN_BE_DEFAULT) ? TRUE : FALSE;
 	
 	/* Modified ? */
 	if (mask & GDA_VALUE_ATTR_IS_UNCHANGED) {
@@ -893,19 +860,19 @@ gdaui_entry_combo_set_attributes (GdauiDataEntry *iface, guint attrs, guint mask
 			GSList *tmplist = NULL;
 			GSList *list;
 			
-			for (list = combo->priv->combo_nodes; list; list = list->next)
+			for (list = priv->combo_nodes; list; list = list->next)
 				tmplist = g_slist_append (tmplist, COMBO_NODE (list->data)->value_orig);
 				
 			gdaui_entry_combo_set_values (combo, tmplist);
 			g_slist_free (tmplist);
-			combo->priv->default_forced = FALSE;
+			priv->default_forced = FALSE;
 			gdaui_entry_combo_emit_signal (combo);
 		}
 	}
 
 	/* invalid data */
 	if (mask & GDA_VALUE_ATTR_DATA_NON_VALID)
-		combo->priv->invalid = attrs & GDA_VALUE_ATTR_DATA_NON_VALID;
+		priv->invalid = attrs & GDA_VALUE_ATTR_DATA_NON_VALID;
 
 	/* NON WRITABLE attributes */
 	if (mask & GDA_VALUE_ATTR_HAS_VALUE_ORIG)
@@ -927,9 +894,9 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 
 	g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), 0);
 	combo = GDAUI_ENTRY_COMBO (iface);
-	g_return_val_if_fail (combo->priv, 0);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	for (list = combo->priv->combo_nodes; list; list = list->next) {
+	for (list = priv->combo_nodes; list; list = list->next) {
 		gboolean changed = FALSE;
 
 		/* NULL? */
@@ -965,29 +932,29 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 	if (isunchanged)
 		retval |= GDA_VALUE_ATTR_IS_UNCHANGED;
 
-	if (isnull || combo->priv->null_forced)
+	if (isnull || priv->null_forced)
 		retval |= GDA_VALUE_ATTR_IS_NULL;
 
 	/* can be NULL? */
-	if (combo->priv->null_possible) 
+	if (priv->null_possible)
 		retval |= GDA_VALUE_ATTR_CAN_BE_NULL;
 	
 	/* is default */
-	if (combo->priv->default_forced)
+	if (priv->default_forced)
 		retval |= GDA_VALUE_ATTR_IS_DEFAULT;
 	
 	/* can be default? */
-	if (combo->priv->default_possible)
+	if (priv->default_possible)
 		retval |= GDA_VALUE_ATTR_CAN_BE_DEFAULT;
 	
 	/* data valid? */
-	if ((! combo->priv->data_valid) || combo->priv->invalid)
+	if ((! priv->data_valid) || priv->invalid)
 		retval |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	else {
 		GSList *nodes;
 		gboolean allnull = TRUE;
 		
-		for (nodes = combo->priv->combo_nodes; nodes; nodes = nodes->next) {
+		for (nodes = priv->combo_nodes; nodes; nodes = nodes->next) {
 			ComboNode *node = COMBO_NODE (nodes->data);
 
 			/* all the nodes are NULL ? */
@@ -997,8 +964,8 @@ gdaui_entry_combo_get_attributes (GdauiDataEntry *iface)
 			}
 		}
 
-		if ((allnull && !combo->priv->null_possible) ||
-		    (combo->priv->null_forced && !combo->priv->null_possible))
+		if ((allnull && !priv->null_possible) ||
+		    (priv->null_forced && !priv->null_possible))
 			retval |= GDA_VALUE_ATTR_DATA_NON_VALID;
 	}
 
@@ -1019,10 +986,10 @@ gdaui_entry_combo_grab_focus (GdauiDataEntry *iface)
 
 	g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
 	combo = GDAUI_ENTRY_COMBO (iface);
-	g_return_if_fail (combo->priv);
+	GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
 
-	if (combo->priv->combo_entry)
-		gtk_widget_grab_focus (combo->priv->combo_entry);
+	if (priv->combo_entry)
+		gtk_widget_grab_focus (priv->combo_entry);
 }
 
 static void
