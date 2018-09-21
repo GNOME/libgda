@@ -203,8 +203,6 @@ libgda_sources =  \
 	gda-marshal.c \
 	gda-enum-types.c \
 	gda-server-operation-private.h \
-	gda-types.c \
-	gda-types.h \
 	gda-statement-priv.h \
 	$(gda_built_sources) \
 	$(gda_sources)

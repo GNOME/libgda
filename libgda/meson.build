@@ -208,8 +208,6 @@ libgda_source_all = files([
 	'gda-meta-store-extra.h',
 	'gda-meta-struct-private.h',
 	'gda-server-operation-private.h',
-	'gda-types.c',
-	'gda-types.h',
 	'gda-statement-priv.h',
 	])
 

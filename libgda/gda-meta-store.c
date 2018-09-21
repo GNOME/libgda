@@ -64,7 +64,6 @@
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-connection-sqlite.h>
-#include "gda-types.h"
 #include "gda-data-meta-wrapper.h"
 #include <libgda/gda-debug-macros.h>
 

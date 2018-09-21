@@ -36,9 +36,8 @@
 #include <libgda.h>
 #include <libgda/gda-attributes-manager.h>
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-types.h>
 
-/* 
+/*
  * Main static functions 
  */
 static void gda_holder_class_init (GdaHolderClass * class);

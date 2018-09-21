@@ -40,7 +40,6 @@
 #include "gda-server-provider.h"
 #include "gda-util.h"
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-types.h>
 
 extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;

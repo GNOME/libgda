@@ -47,7 +47,6 @@
 #include <sql-parser/gda-sql-statement.h>
 #include <sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-custom-marshal.h>
-#include <libgda/gda-types.h>
 
 /*
  * Main static functions
