@@ -122,7 +122,6 @@
     <xi:include href="xml/gda-tree-mgr-select.xml"/>
     <xi:include href="xml/gda-tree-mgr-tables.xml"/>
     <xi:include href="xml/gda-tree-node.xml"/>
-    <xi:include href="xml/gda-types.xml"/>
     <xi:include href="xml/gda-util.xml"/>
     <xi:include href="xml/gda-value.xml"/>
     <xi:include href="xml/gda-vconnection-data-model.xml"/>
