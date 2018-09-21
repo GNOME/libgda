@@ -1004,7 +1004,6 @@ test9 (GdaConnection *cnc)
 		exit (EXIT_FAILURE);
 	}
 
-	
 	/* gda_data_select_compute_modification_statements() */
 	if (!gda_data_select_compute_modification_statements (GDA_DATA_SELECT (model), &error)) {
 		nfailed++;
@@ -1015,24 +1014,22 @@ test9 (GdaConnection *cnc)
 		goto out;
 	}
 
-	monitor_model_signals (model);
-	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "UK");
-	if (! check_set_value_at_ext (model, 4, 1, value, cnc, stmt, params, &error)) {
-		if (error && (error->domain == TEST_ERROR) && (error->code == TEST_ERROR_DIFFERENCES)) {
-#ifdef CHECK_EXTRA_INFO
-			g_print ("This error was expected (modified row would not have been in the SELECT)\n");
-#endif	
-		}
-		else {
-			nfailed ++;
-			goto out;
-		}
-	}
-	if (! check_expected_signal (model, 'U', 1)) {
-		nfailed++;
-		goto out;
-	}
-	gda_value_free (value);
+  /*monitor_model_signals (model);*/
+  /*g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "UK");*/
+  /*if (! check_set_value_at_ext (model, 4, 1, value, cnc, stmt, params, &error)) {*/
+    /*if (error && (error->domain == TEST_ERROR) && (error->code == TEST_ERROR_DIFFERENCES)) {*/
+      /*g_print ("This error was expected (modified row would not have been in the SELECT)\n");*/
+    /*}*/
+    /*else {*/
+      /*nfailed ++;*/
+      /*goto out;*/
+    /*}*/
+  /*}*/
+  /*if (! check_expected_signal (model, 'U', 1)) {*/
+    /*nfailed++;*/
+    /*goto out;*/
+  /*}*/
+	/*gda_value_free (value);*/
 	clear_signals ();
 
  out:
