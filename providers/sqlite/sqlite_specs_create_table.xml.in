@@ -30,6 +30,30 @@
   </gda_array>
 
   <!-- foreign key spec: not supported by SQLite -->
+  <sequence id="FKEY_S" _name="Foreign key">
+    <parameter id="FKEY_REF_TABLE" _name="Referenced table" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_">
+      <gda_value>ref_table</gda_value>
+    </parameter>
+    <gda_array id="FKEY_FIELDS_A" _name="Fields" _descr="Fields in the foreign key">
+      <gda_array_field id="FK_FIELD" _name="Field" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field id="FK_REF_PK_FIELD" _name="Referenced field" gdatype="gchararray" nullok="FALSE" source="_FKEY_REF_TABLE/DICT_FIELDS_"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>id_ref</gda_value>
+          <gda_value>id</gda_value>
+        </gda_array_row>
+      </gda_array_data>
+    </gda_array>
+    <parameter id="FKEY_MATCH_TYPE" _name="Match type" _descr="Matching method if more than one field involved" gdatype="gchararray" nullok="TRUE" source="match_types:0">
+      <gda_value>MATCH SIMPLE</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONUPDATE" _name="On update action" gdatype="gchararray" nullok="TRUE" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+    <parameter id="FKEY_ONDELETE" _name="On delete action" gdatype="gchararray" nullok="TRUE" source="action_cb:0">
+      <gda_value>NO ACTION</gda_value>
+    </parameter>
+  </sequence>
 
   <!-- other table constraints -->
   <sequence id="TABLE_CONSTRAINTS_S" _name="Global constraints">
