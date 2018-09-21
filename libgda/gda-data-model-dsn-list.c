@@ -36,11 +36,10 @@ typedef struct {
 
 static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GdaDataModelDsnList,gda_data_model_dsn_list,G_TYPE_OBJECT,
+G_DEFINE_TYPE_WITH_CODE (GdaDataModelDsnList, gda_data_model_dsn_list,G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataModelDsnList)
                          G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL,gda_data_model_dsn_list_data_model_init))
 
-static void gda_data_model_dsn_list_class_init (GdaDataModelDsnListClass *klass);
-static void gda_data_model_dsn_list_init       (GdaDataModelDsnList *model);
 static void gda_data_model_dsn_list_dispose    (GObject *object);
 
 /* GdaDataModel interface */
@@ -89,8 +88,7 @@ gda_data_model_dsn_list_init (GdaDataModelDsnList *model)
 {
 	GdaConfig *config;
 	GdaColumn *col;
-	GdaDataModelDsnList *dmodel = GDA_DATA_MODEL_DSN_LIST (model);
-	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (dmodel);
+	GdaDataModelDsnListPrivate *priv = gda_data_model_dsn_list_get_instance_private (model);
 
 	priv->nb_dsn = gda_config_get_nb_dsn ();
 	priv->row_to_remove = -1;
