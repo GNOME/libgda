@@ -1338,8 +1338,11 @@ compute_object_content (HtmlDoc *hdoc, WebServer *webserver, TConnection *tcnc,
 	g_value_take_string ((v1 = gda_value_new (G_TYPE_STRING)),
 			     gda_sql_identifier_quote (name, t_connection_get_cnc (tcnc), NULL, FALSE, FALSE));
 
-	mstruct = gda_meta_struct_new (gda_connection_get_meta_store (t_connection_get_cnc (tcnc)),
-				       GDA_META_STRUCT_FEATURE_ALL);
+  mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT,
+                                           "meta-store",gda_connection_get_meta_store (t_connection_get_cnc (tcnc)),
+                                           "features",GDA_META_STRUCT_FEATURE_ALL,
+                                           NULL);
+
 	dbo = gda_meta_struct_complement (mstruct, GDA_META_DB_UNKNOWN, NULL, v0, v1, error);
 	gda_value_free (v0);
 	gda_value_free (v1);
