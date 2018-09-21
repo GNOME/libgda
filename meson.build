@@ -148,13 +148,13 @@ if glib_mkenums.found()
 else
   error ('glib-mkenums not found')
 endif
-conf.set('GDA_ABI_MAJOR_VERSION', MAJOR_VERSION)
-conf.set('GDA_ABI_MINOR_VERSION', MINOR_VERSION)
+conf.set('GDA_ABI_MAJOR_VERSION', API_MAJOR_VERSION)
+conf.set('GDA_ABI_MINOR_VERSION', API_MINOR_VERSION)
 conf.set('VERSION', project_version)
 conf.set('prefix', get_option('prefix'))
-conf.set('exec_prefix', get_option('libexecdir'))
-conf.set('libdir', get_option('libdir'))
-conf.set('includedir', get_option('includedir'))
+conf.set('exec_prefix', join_paths (get_option('prefix'), get_option('libexecdir')))
+conf.set('libdir', join_paths (get_option('prefix'), get_option('libdir')))
+conf.set('includedir', join_paths (get_option('prefix'), get_option('includedir')))
 conf.set('GDA_DEBUG_FLAGS', '')
 if lbdb_found
 	conf.set('LIBGDA_BDB_INC', '#include <libgda/gda-data-model-bdb.h>')
