@@ -242,6 +242,10 @@ ldaph_sources = files ([
 	'gda-tree-mgr-ldap.h'
 	])
 libgda_headers_all += ldaph_sources
+install_headers(ldaph_sources,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
+	)
+
 ldapc_sources = files ([
 	'gda-data-model-ldap.c',
 	'gda-tree-mgr-ldap.c'

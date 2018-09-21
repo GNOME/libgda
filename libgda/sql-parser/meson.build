@@ -27,6 +27,10 @@ libgda_sql_parser_headers = files([
 	'gda-statement-struct-unknown.h',
 	'gda-statement-struct-util.h'])
 
+install_headers(libgda_sql_parser_headers,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda','sql-parser')
+	)
+
 gda_sql_parser_enums = gnome_module.mkenums_simple('gda-sql-parser-enum-types', sources: libgda_sql_parser_headers)
 
 gendef_exe = executable('gen_def', 'gen_def.c',

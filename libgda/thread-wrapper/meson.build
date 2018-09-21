@@ -5,6 +5,10 @@ threadwrapper_headers_priv = files([
 	'gda-connect.h'
 	])
 
+install_headers(threadwrapper_headers + threadwrapper_headers_priv,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda','thread-wrapper')
+	)
+
 threadwrapper_sources = files([
 	'gda-worker.c',
 	])

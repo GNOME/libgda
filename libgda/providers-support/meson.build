@@ -6,6 +6,11 @@ psupport_headers_priv = files([
 	'gda-meta-column-types.h'
 ])
 
+install_headers(psupport_headers + psupport_headers_priv,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda','providers-support')
+	)
+
+
 psupport_sources = files([
 	'gda-pstmt.c'
 ])

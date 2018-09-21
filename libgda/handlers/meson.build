@@ -7,6 +7,10 @@ libgda_handlers_headers = files([
 	'gda-handler-type.h'
 	])
 
+install_headers(libgda_handlers_headers,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda','handlers')
+	)
+
 libgda_handlers_sources = files([
 	'gda-handler-bin.c',
 	'gda-handler-boolean.c',
