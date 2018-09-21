@@ -31,6 +31,9 @@ libgda_virtualh = configure_file(
 		output : 'libgda.h',
 		configuration : conf)
 
+install_headers(libgda_virtualh,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
+	)
 
 gda_marshalls = gnome_module.genmarshal('gda-marshal',prefix : '_gda_marshal',
 					sources : 'gda-marshal.list')
@@ -128,6 +131,10 @@ libgda_headers_all += [
 	libgda_headers,
 	gda_enum_headers
 	]
+
+install_headers(libgda_headers_all,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
+	)
 
 libgda_sources= files([
 	'gda-attributes-manager.c',
