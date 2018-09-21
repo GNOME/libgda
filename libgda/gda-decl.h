@@ -32,7 +32,6 @@ typedef struct _GdaConnectionClass   GdaConnectionClass;
 
 typedef struct _GdaServerProvider        GdaServerProvider;
 typedef struct _GdaServerProviderClass   GdaServerProviderClass;
-typedef struct _GdaServerProviderInfo    GdaServerProviderInfo;
 
 typedef struct _GdaDataModelIface   GdaDataModelIface;
 typedef struct _GdaDataModel        GdaDataModel;
