@@ -245,11 +245,14 @@ gdaui_entry_wrapper_dispose (GObject *object)
 	wrapper = GDAUI_ENTRY_WRAPPER (object);
 	GdauiEntryWrapperPrivate *priv = gdaui_entry_wrapper_get_instance_private (wrapper);
 
-		if (priv->value_ref)
-			gda_value_free (priv->value_ref);
-		if (priv->value_default)
-			gda_value_free (priv->value_default);
-
+	if (priv->value_ref) {
+		gda_value_free (priv->value_ref);
+		priv->value_ref = NULL;
+	}
+	if (priv->value_default) {
+		gda_value_free (priv->value_default);
+		priv->value_default = NULL;
+	}
 
 	/* for the parent class */
 	G_OBJECT_CLASS (gdaui_entry_wrapper_parent_class)->dispose (object);
