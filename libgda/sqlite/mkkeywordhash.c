@@ -261,7 +261,7 @@ main (int argc, char **argv)
 	for(i=0; i<nKeyword; i++){
 		Keyword *p = &aKeywordTable[i];
 		p->len = strlen(p->zName);
-		assert( (uint) p->len < sizeof(p->zOrigName) );
+		assert( (unsigned int) p->len < sizeof(p->zOrigName) );
 		strcpy(p->zOrigName, p->zName);
 		totalLen += p->len;
 		p->hash = (UpperToLower[(int)p->zName[0]]*4) ^
