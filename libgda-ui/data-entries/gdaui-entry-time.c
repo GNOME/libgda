@@ -24,42 +24,14 @@
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
-/* 
+G_DEFINE_TYPE (GdauiEntryTime, gdaui_entry_time, GDAUI_TYPE_ENTRY_COMMON_TIME)
+
+/*
  * Main static functions 
  */
-static void gdaui_entry_time_class_init (GdauiEntryTimeClass * class);
-static void gdaui_entry_time_init (GdauiEntryTime * srv);
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
-GType
-gdaui_entry_time_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryTimeClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_time_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryTime),
-			0,
-			(GInstanceInitFunc) gdaui_entry_time_init,
-			0
-		};
-	
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_COMMON_TIME, "GdauiEntryTime", &info, 0);
-	}
-	return type;
-}
-
 static void
 gdaui_entry_time_class_init (GdauiEntryTimeClass * class)
 {
-	parent_class = g_type_class_peek_parent (class);
 }
 
 static void
