@@ -25,10 +25,7 @@
 /* 
  * Main static functions 
  */
-static void gdaui_entry_none_class_init (GdauiEntryNoneClass * class);
-static void gdaui_entry_none_init (GdauiEntryNone *srv);
 static void gdaui_entry_none_dispose (GObject *object);
-static void gdaui_entry_none_finalize (GObject *object);
 
 /* virtual functions */
 static GtkWidget *create_entry (GdauiEntryWrapper *mgwrap);
@@ -36,49 +33,21 @@ static void       real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value
 static GValue  *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
 /* private structure */
-struct _GdauiEntryNonePrivate
+typedef struct
 {
 	GValue *stored_value; /* this value is never modified */
-};
+} GdauiEntryNonePrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiEntryNone, gdaui_entry_none, GDAUI_TYPE_ENTRY_WRAPPER)
 
-GType
-gdaui_entry_none_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryNoneClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_none_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryNone),
-			0,
-			(GInstanceInitFunc) gdaui_entry_none_init,
-			0
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryNone", &info, 0);
-	}
-	return type;
-}
 
 static void
 gdaui_entry_none_class_init (GdauiEntryNoneClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gdaui_entry_none_dispose;
-	object_class->finalize = gdaui_entry_none_finalize;
 
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
@@ -89,8 +58,8 @@ gdaui_entry_none_class_init (GdauiEntryNoneClass * class)
 static void
 gdaui_entry_none_init (GdauiEntryNone * entry)
 {
-	entry->priv = g_new0 (GdauiEntryNonePrivate, 1);
-	entry->priv->stored_value = NULL;
+	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
+	priv->stored_value = NULL;
 }
 
 /**
@@ -124,33 +93,14 @@ gdaui_entry_none_dispose (GObject   * object)
 	g_return_if_fail (GDAUI_IS_ENTRY_NONE (object));
 
 	entry = GDAUI_ENTRY_NONE (object);
-	if (entry->priv) {
-		if (entry->priv->stored_value) {
-			gda_value_free (entry->priv->stored_value);
-			entry->priv->stored_value = NULL;
-		}
+	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
+	if (priv->stored_value) {
+		gda_value_free (priv->stored_value);
+		priv->stored_value = NULL;
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_entry_none_finalize (GObject   * object)
-{
-	GdauiEntryNone *entry;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_NONE (object));
-
-	entry = GDAUI_ENTRY_NONE (object);
-	if (entry->priv) {
-		g_free (entry->priv);
-		entry->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_entry_none_parent_class)->dispose (object);
 }
 
 static GtkWidget *
@@ -161,7 +111,7 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap), NULL);
 	entry = GDAUI_ENTRY_NONE (mgwrap);
-	g_return_val_if_fail (entry->priv, NULL);
+	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
 
 	evbox = gtk_event_box_new ();
 	gtk_widget_add_events (evbox, GDK_FOCUS_CHANGE_MASK);
@@ -183,15 +133,15 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap));
 	entry = GDAUI_ENTRY_NONE (mgwrap);
-	g_return_if_fail (entry->priv);
+	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
 
-	if (entry->priv->stored_value) {
-		gda_value_free (entry->priv->stored_value);
-		entry->priv->stored_value = NULL;
+	if (priv->stored_value) {
+		gda_value_free (priv->stored_value);
+		priv->stored_value = NULL;
 	}
 
 	if (value)
-		entry->priv->stored_value = gda_value_copy ((GValue *) value);
+		priv->stored_value = gda_value_copy ((GValue *) value);
 }
 
 static GValue *
@@ -201,10 +151,10 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap), NULL);
 	entry = GDAUI_ENTRY_NONE (mgwrap);
-	g_return_val_if_fail (entry->priv, NULL);
+	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
 
-	if (entry->priv->stored_value)
-		return gda_value_copy (entry->priv->stored_value);
+	if (priv->stored_value)
+		return gda_value_copy (priv->stored_value);
 	else
 		return gda_value_new_null ();
 }
@@ -213,9 +163,9 @@ static void
 connect_signals(GdauiEntryWrapper *mgwrap, G_GNUC_UNUSED GCallback modify_cb,
 		G_GNUC_UNUSED GCallback activate_cb)
 {
-	GdauiEntryNone *entry;
+	/* GdauiEntryNone *entry; */
 
-	g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap));
-	entry = GDAUI_ENTRY_NONE (mgwrap);
-	g_return_if_fail (entry->priv);
+	/* g_return_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap)); */
+	/* entry = GDAUI_ENTRY_NONE (mgwrap); */
+	/* GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry); */
 }

@@ -26,22 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_NONE          (gdaui_entry_none_get_type())
-#define GDAUI_ENTRY_NONE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_none_get_type(), GdauiEntryNone)
-#define GDAUI_ENTRY_NONE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_none_get_type (), GdauiEntryNoneClass)
-#define GDAUI_IS_ENTRY_NONE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_none_get_type ())
-
-
-typedef struct _GdauiEntryNone GdauiEntryNone;
-typedef struct _GdauiEntryNoneClass GdauiEntryNoneClass;
-typedef struct _GdauiEntryNonePrivate GdauiEntryNonePrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryNone
-{
-	GdauiEntryWrapper            object;
-	GdauiEntryNonePrivate       *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryNone, gdaui_entry_none, GDAUI, ENTRY_NONE, GdauiEntryWrapper)
 
 /* struct for the object's class */
 struct _GdauiEntryNoneClass
@@ -49,7 +34,6 @@ struct _GdauiEntryNoneClass
 	GdauiEntryWrapperClass       parent_class;
 };
 
-GType        gdaui_entry_none_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_none_new             (GType type);
 
 
