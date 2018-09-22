@@ -28,10 +28,7 @@
 /* 
  * Main static functions 
  */
-static void gdaui_entry_number_class_init (GdauiEntryNumberClass *klass);
-static void gdaui_entry_number_init (GdauiEntryNumber *srv);
 static void gdaui_entry_number_dispose (GObject *object);
-static void gdaui_entry_number_finalize (GObject *object);
 
 static void gdaui_entry_number_set_property (GObject *object,
 					     guint param_id,
@@ -66,11 +63,8 @@ static void       grab_focus (GdauiEntryWrapper *mgwrap);
 /* options */
 static void set_entry_options (GdauiEntryNumber *mgstr, const gchar *options);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
 /* private structure */
-struct _GdauiEntryNumberPrivate
+typedef struct
 {
 	GtkWidget     *entry;
 	gboolean       editing_canceled;
@@ -78,7 +72,11 @@ struct _GdauiEntryNumberPrivate
 	guchar         thousand_sep;
 	guint16        nb_decimals;
 	gchar         *currency;
-};
+} GdauiEntryNumberPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdauiEntryNumber, gdaui_entry_number, GDAUI_TYPE_ENTRY_WRAPPER,
+                         G_ADD_PRIVATE (GdauiEntryNumber)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_CELL_EDITABLE, gdaui_entry_number_cell_editable_init))
 
 static void
 gdaui_entry_number_cell_editable_init (GtkCellEditableIface *iface)
@@ -86,46 +84,12 @@ gdaui_entry_number_cell_editable_init (GtkCellEditableIface *iface)
 	iface->start_editing = gdaui_entry_number_start_editing;
 }
 
-GType
-gdaui_entry_number_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryNumberClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_number_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryNumber),
-			0,
-			(GInstanceInitFunc) gdaui_entry_number_init,
-			0
-		};
-		
-		static const GInterfaceInfo cell_editable_info = {
-			(GInterfaceInitFunc) gdaui_entry_number_cell_editable_init,    /* interface_init */
-			NULL,                                                 /* interface_finalize */
-			NULL                                                  /* interface_data */
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryNumber", &info, 0);
-		g_type_add_interface_static (type, GTK_TYPE_CELL_EDITABLE, &cell_editable_info);
-	}
-	return type;
-}
-
 static void
 gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	object_class->dispose = gdaui_entry_number_dispose;
-	object_class->finalize = gdaui_entry_number_finalize;
 
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
@@ -148,20 +112,21 @@ gdaui_entry_number_class_init (GdauiEntryNumberClass * klass)
 static gboolean
 key_press_event_cb (GdauiEntryNumber *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 	if (key_event->keyval == GDK_KEY_Escape)
-		mgstr->priv->editing_canceled = TRUE;
+		priv->editing_canceled = TRUE;
 	return FALSE;
 }
 
 static void
 gdaui_entry_number_init (GdauiEntryNumber *mgstr)
 {
-	mgstr->priv = g_new0 (GdauiEntryNumberPrivate, 1);
-	mgstr->priv->entry = NULL;
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
+	priv->entry = NULL;
 
-	mgstr->priv->thousand_sep = 0;
-	mgstr->priv->nb_decimals = G_MAXUINT16; /* unlimited number of decimals */
-	mgstr->priv->currency = NULL;
+	priv->thousand_sep = 0;
+	priv->nb_decimals = G_MAXUINT16; /* unlimited number of decimals */
+	priv->currency = NULL;
 
 	g_signal_connect (mgstr, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
@@ -217,32 +182,16 @@ gdaui_entry_number_dispose (GObject   * object)
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (object));
 
 	mgstr = GDAUI_ENTRY_NUMBER (object);
-	if (mgstr->priv) {
-		if (mgstr->priv->entry)
-			mgstr->priv->entry = NULL;
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
+	if (priv->entry)
+		priv->entry = NULL;
+	if (priv->currency) {
+		g_free (priv->currency);
+		priv->currency = NULL;
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_entry_number_finalize (GObject   * object)
-{
-	GdauiEntryNumber *mgstr;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (object));
-
-	mgstr = GDAUI_ENTRY_NUMBER (object);
-	if (mgstr->priv) {
-		g_free (mgstr->priv->currency);
-		g_free (mgstr->priv);
-		mgstr->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_entry_number_parent_class)->dispose (object);
 }
 
 static void
@@ -254,8 +203,7 @@ gdaui_entry_number_set_property (GObject *object,
 	GdauiEntryNumber *mgstr;
 
 	mgstr = GDAUI_ENTRY_NUMBER (object);
-	if (mgstr->priv) {
-		switch (param_id) {
+	switch (param_id) {
 		case PROP_OPTIONS:
 			set_entry_options (mgstr, g_value_get_string (value));
 			break;
@@ -265,7 +213,6 @@ gdaui_entry_number_set_property (GObject *object,
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -278,15 +225,14 @@ gdaui_entry_number_get_property (GObject *object,
 	GdauiEntryNumber *mgstr;
 
 	mgstr = GDAUI_ENTRY_NUMBER (object);
-	if (mgstr->priv) {
-		switch (param_id) {
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
+	switch (param_id) {
 		case PROP_EDITING_CANCELED:
-			g_value_set_boolean (value, mgstr->priv->editing_canceled);
+			g_value_set_boolean (value, priv->editing_canceled);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -304,14 +250,15 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap), NULL);
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
 	hb = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-	mgstr->priv->entry = gdaui_numeric_entry_new (gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
+	priv->entry = gdaui_numeric_entry_new (gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 	sync_entry_options (mgstr);
 
-	gtk_container_add (GTK_CONTAINER (hb), mgstr->priv->entry);
-	gtk_widget_show (mgstr->priv->entry);
-	g_signal_connect_swapped (mgstr->priv->entry, "event-after",
+	gtk_container_add (GTK_CONTAINER (hb), priv->entry);
+	gtk_widget_show (priv->entry);
+	g_signal_connect_swapped (priv->entry, "event-after",
                                   G_CALLBACK (event_after_cb), hb);
 	return hb;
 }
@@ -325,18 +272,19 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
 	text = gda_data_handler_get_str_from_value (dh, value);
 	if (value) {
 		if (gda_value_is_null ((GValue *) value))
-			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
 		else 
-			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), text);
+			gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), text);
 	}
 	else
-		gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
+		gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
 
 	g_free (text);
 }
@@ -349,9 +297,9 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap), NULL);
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
-	g_return_val_if_fail (mgstr->priv, NULL);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
-	value = gdaui_numeric_entry_get_value (GDAUI_NUMERIC_ENTRY (mgstr->priv->entry));
+	value = gdaui_numeric_entry_get_value (GDAUI_NUMERIC_ENTRY (priv->entry));
 
 	if (!value) {
 		/* in case the contents of the GtkEntry cannot be interpreted as a GValue */
@@ -368,11 +316,11 @@ connect_signals (GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activ
 
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
-	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "changed",
+	g_signal_connect_swapped (G_OBJECT (priv->entry), "changed",
 				  modify_cb, mgwrap);
-	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "activate",
+	g_signal_connect_swapped (G_OBJECT (priv->entry), "activate",
 				  activate_cb, mgwrap);
 }
 
@@ -383,8 +331,9 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
-	gtk_editable_set_editable (GTK_EDITABLE (mgstr->priv->entry), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (priv->entry), editable);
 }
 
 static void
@@ -394,8 +343,9 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (mgwrap));
 	mgstr = GDAUI_ENTRY_NUMBER (mgwrap);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
-	gtk_widget_grab_focus (mgstr->priv->entry);
+	gtk_widget_grab_focus (priv->entry);
 }
 
 /*
@@ -420,17 +370,18 @@ gdaui_entry_number_start_editing (GtkCellEditable *iface, GdkEvent *event)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_NUMBER (iface));
 	mgstr = GDAUI_ENTRY_NUMBER (iface);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
-	mgstr->priv->editing_canceled = FALSE;
-	g_object_set (G_OBJECT (mgstr->priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
+	priv->editing_canceled = FALSE;
+	g_object_set (G_OBJECT (priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
 
-	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "editing-done",
+	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (priv->entry), event);
+	g_signal_connect (G_OBJECT (priv->entry), "editing-done",
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
-	g_signal_connect (G_OBJECT (mgstr->priv->entry), "remove-widget",
+	g_signal_connect (G_OBJECT (priv->entry), "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
 
-	gtk_widget_grab_focus (mgstr->priv->entry);
+	gtk_widget_grab_focus (priv->entry);
 	gtk_widget_queue_draw (GTK_WIDGET (mgstr));
 }
 
@@ -457,7 +408,7 @@ get_default_thousands_sep ()
 static void
 set_entry_options (GdauiEntryNumber *mgstr, const gchar *options)
 {
-	g_assert (mgstr->priv);
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
 
 	if (options && *options) {
                 GdaQuarkList *params;
@@ -468,39 +419,40 @@ set_entry_options (GdauiEntryNumber *mgstr, const gchar *options)
 		str = gda_quark_list_find (params, "THOUSAND_SEP");
 		if (str) {
 			if ((*str == 't') || (*str == 'T'))
-				mgstr->priv->thousand_sep = get_default_thousands_sep ();
+				priv->thousand_sep = get_default_thousands_sep ();
 			else
-				mgstr->priv->thousand_sep = 0;
+				priv->thousand_sep = 0;
 		}
 		str = gda_quark_list_find (params, "NB_DECIMALS");
 		if (str) {
 			if (*str)
-				mgstr->priv->nb_decimals = atoi (str);
+				priv->nb_decimals = atoi (str);
 			else
-				mgstr->priv->nb_decimals = 0;
+				priv->nb_decimals = 0;
 		}
 		str = gda_quark_list_find (params, "CURRENCY");
 		if (str && *str) {
-			g_free (mgstr->priv->currency);
-			mgstr->priv->currency = g_strdup_printf ("%s ", str);
+			g_free (priv->currency);
+			priv->currency = g_strdup_printf ("%s ", str);
 		}
                 gda_quark_list_free (params);
 		sync_entry_options (mgstr);
         }
 }
 
-/* sets the correct options for mgstr->priv->entry if it exists */
+/* sets the correct options for priv->entry if it exists */
 static void
 sync_entry_options (GdauiEntryNumber *mgstr)
 {
-	if (!mgstr->priv->entry)
+	GdauiEntryNumberPrivate *priv = gdaui_entry_number_get_instance_private (mgstr);
+	if (!priv->entry)
 		return;
 
-	g_object_set (G_OBJECT (mgstr->priv->entry), 
+	g_object_set (G_OBJECT (priv->entry),
 		      "type", gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgstr)),
-		      "n-decimals", mgstr->priv->nb_decimals,
-		      "thousands-sep", mgstr->priv->thousand_sep,
-		      "prefix", mgstr->priv->currency,
+		      "n-decimals", priv->nb_decimals,
+		      "thousands-sep", priv->thousand_sep,
+		      "prefix", priv->currency,
 		      NULL);
-	g_signal_emit_by_name (mgstr->priv->entry, "changed");
+	g_signal_emit_by_name (priv->entry, "changed");
 }
