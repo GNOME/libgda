@@ -30,10 +30,7 @@
 /* 
  * Main static functions 
  */
-static void gdaui_entry_string_class_init (GdauiEntryStringClass *klass);
-static void gdaui_entry_string_init (GdauiEntryString *srv);
 static void gdaui_entry_string_dispose (GObject *object);
-static void gdaui_entry_string_finalize (GObject *object);
 
 static void gdaui_entry_string_set_property (GObject *object,
 					     guint param_id,
@@ -69,11 +66,8 @@ static void       grab_focus (GdauiEntryWrapper *mgwrap);
 /* options */
 static void set_entry_options (GdauiEntryString *mgstr, const gchar *options);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
 /* private structure */
-struct _GdauiEntryStringPrivate
+typedef struct
 {
 	gboolean       multiline;
 	gboolean       hidden;
@@ -87,7 +81,11 @@ struct _GdauiEntryStringPrivate
 	GtkWidget     *view;
 
 	gint           maxsize;
-};
+} GdauiEntryStringPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdauiEntryString, gdaui_entry_string, GDAUI_TYPE_ENTRY_WRAPPER,
+                         G_ADD_PRIVATE (GdauiEntryString)
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_CELL_EDITABLE, gdaui_entry_string_cell_editable_init))
 
 static void
 gdaui_entry_string_cell_editable_init (GtkCellEditableIface *iface)
@@ -95,46 +93,13 @@ gdaui_entry_string_cell_editable_init (GtkCellEditableIface *iface)
 	iface->start_editing = gdaui_entry_string_start_editing;
 }
 
-GType
-gdaui_entry_string_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryStringClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_string_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryString),
-			0,
-			(GInstanceInitFunc) gdaui_entry_string_init,
-			0
-		};
-		
-		static const GInterfaceInfo cell_editable_info = {
-			(GInterfaceInitFunc) gdaui_entry_string_cell_editable_init,    /* interface_init */
-			NULL,                                                 /* interface_finalize */
-			NULL                                                  /* interface_data */
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryString", &info, 0);
-		g_type_add_interface_static (type, GTK_TYPE_CELL_EDITABLE, &cell_editable_info);
-	}
-	return type;
-}
 
 static void
 gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	object_class->dispose = gdaui_entry_string_dispose;
-	object_class->finalize = gdaui_entry_string_finalize;
 
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (klass)->real_set_value = real_set_value;
@@ -160,25 +125,26 @@ gdaui_entry_string_class_init (GdauiEntryStringClass * klass)
 static gboolean
 key_press_event_cb (GdauiEntryString *mgstr, GdkEventKey *key_event, G_GNUC_UNUSED gpointer data)
 {
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 	if (key_event->keyval == GDK_KEY_Escape)
-		mgstr->priv->editing_canceled = TRUE;
+		priv->editing_canceled = TRUE;
 	return FALSE;
 }
 
 static void
 gdaui_entry_string_init (GdauiEntryString *mgstr)
 {
-	mgstr->priv = g_new0 (GdauiEntryStringPrivate, 1);
-	mgstr->priv->multiline = FALSE;
-	mgstr->priv->hidden = FALSE;
-	mgstr->priv->vbox = NULL;
-	mgstr->priv->entry = NULL;
-	mgstr->priv->editing_canceled = FALSE;
-	mgstr->priv->buffer = NULL;
-	mgstr->priv->view = NULL;
-	mgstr->priv->sw = NULL;
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	priv->multiline = FALSE;
+	priv->hidden = FALSE;
+	priv->vbox = NULL;
+	priv->entry = NULL;
+	priv->editing_canceled = FALSE;
+	priv->buffer = NULL;
+	priv->view = NULL;
+	priv->sw = NULL;
 
-	mgstr->priv->maxsize = 65535; /* eg. unlimited for GtkEntry */
+	priv->maxsize = 65535; /* eg. unlimited for GtkEntry */
 
 	g_signal_connect (mgstr, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
@@ -222,34 +188,15 @@ gdaui_entry_string_dispose (GObject   * object)
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (object));
 
 	mgstr = GDAUI_ENTRY_STRING (object);
-	if (mgstr->priv) {
-		if (mgstr->priv->entry)
-			mgstr->priv->entry = NULL;
-		
-		if (mgstr->priv->view)
-			mgstr->priv->view = NULL;
-	}
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	if (priv->entry)
+		priv->entry = NULL;
+
+	if (priv->view)
+		priv->view = NULL;
 
 	/* parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gdaui_entry_string_finalize (GObject   * object)
-{
-	GdauiEntryString *mgstr;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_STRING (object));
-
-	mgstr = GDAUI_ENTRY_STRING (object);
-	if (mgstr->priv) {
-		g_free (mgstr->priv);
-		mgstr->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gdaui_entry_string_parent_class)->dispose (object);
 }
 
 static void
@@ -261,19 +208,19 @@ gdaui_entry_string_set_property (GObject *object,
 	GdauiEntryString *mgstr;
 
 	mgstr = GDAUI_ENTRY_STRING (object);
-	if (mgstr->priv) {
-		switch (param_id) {
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	switch (param_id) {
 		case PROP_MULTILINE:
-			if (g_value_get_boolean (value) != mgstr->priv->multiline) {
-				mgstr->priv->multiline = g_value_get_boolean (value);
-				if (mgstr->priv->multiline) {
-					gtk_widget_hide (mgstr->priv->entry);
-					gtk_widget_show (mgstr->priv->sw);
+			if (g_value_get_boolean (value) != priv->multiline) {
+				priv->multiline = g_value_get_boolean (value);
+				if (priv->multiline) {
+					gtk_widget_hide (priv->entry);
+					gtk_widget_show (priv->sw);
 					gtk_widget_set_vexpand (GTK_WIDGET (mgstr), TRUE);
 				}
 				else {
-					gtk_widget_show (mgstr->priv->entry);
-					gtk_widget_hide (mgstr->priv->sw);
+					gtk_widget_show (priv->entry);
+					gtk_widget_hide (priv->sw);
 					gtk_widget_set_vexpand (GTK_WIDGET (mgstr), FALSE);
 				}
 				g_signal_emit_by_name (object, "expand-changed");
@@ -288,7 +235,6 @@ gdaui_entry_string_set_property (GObject *object,
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -301,18 +247,17 @@ gdaui_entry_string_get_property (GObject *object,
 	GdauiEntryString *mgstr;
 
 	mgstr = GDAUI_ENTRY_STRING (object);
-	if (mgstr->priv) {
-		switch (param_id) {
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	switch (param_id) {
 		case PROP_MULTILINE:
-			g_value_set_boolean (value, mgstr->priv->multiline);
+			g_value_set_boolean (value, priv->multiline);
 			break;
 		case PROP_EDITING_CANCELED:
-			g_value_set_boolean (value, mgstr->priv->editing_canceled);
+			g_value_set_boolean (value, priv->editing_canceled);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
 	}
 }
 
@@ -333,42 +278,42 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap), NULL);
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_val_if_fail (mgstr->priv, NULL);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
 	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
 	gtk_widget_set_hexpand (GTK_WIDGET (mgwrap), TRUE);
-	mgstr->priv->vbox = vbox;
+	priv->vbox = vbox;
 	gtk_widget_add_events (vbox, GDK_FOCUS_CHANGE_MASK);
 
 	/* one line entry */
-	mgstr->priv->entry = gdaui_entry_new (NULL, NULL);
+	priv->entry = gdaui_entry_new (NULL, NULL);
 	sync_entry_options (mgstr);
-	gtk_box_pack_start (GTK_BOX (vbox), mgstr->priv->entry, FALSE, TRUE, 0);
-	g_signal_connect_after (G_OBJECT (mgstr->priv->entry), "show", 
+	gtk_box_pack_start (GTK_BOX (vbox), priv->entry, FALSE, TRUE, 0);
+	g_signal_connect_after (G_OBJECT (priv->entry), "show",
 				G_CALLBACK (widget_shown_cb), mgstr);
 
 	/* multiline entry */
-	mgstr->priv->view = gtk_text_view_new ();
-	gtk_widget_set_vexpand (mgstr->priv->view, TRUE);
-	mgstr->priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (mgstr->priv->view));
-	mgstr->priv->sw = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (mgstr->priv->sw), GTK_SHADOW_IN);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (mgstr->priv->sw),
+	priv->view = gtk_text_view_new ();
+	gtk_widget_set_vexpand (priv->view, TRUE);
+	priv->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->view));
+	priv->sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->sw), GTK_SHADOW_IN);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (priv->sw),
 					GTK_POLICY_AUTOMATIC,
 					GTK_POLICY_AUTOMATIC);
-	gtk_container_add (GTK_CONTAINER (mgstr->priv->sw), mgstr->priv->view);
-	gtk_widget_show (mgstr->priv->view);
-	gtk_box_pack_start (GTK_BOX (vbox), mgstr->priv->sw, TRUE, TRUE, 0);
-	g_signal_connect_after (G_OBJECT (mgstr->priv->sw), "show", 
+	gtk_container_add (GTK_CONTAINER (priv->sw), priv->view);
+	gtk_widget_show (priv->view);
+	gtk_box_pack_start (GTK_BOX (vbox), priv->sw, TRUE, TRUE, 0);
+	g_signal_connect_after (G_OBJECT (priv->sw), "show",
 				G_CALLBACK (widget_shown_cb), mgstr);
 
 	/* mark both widgets to be shown */
-	gtk_widget_show (mgstr->priv->entry);
-	gtk_widget_show (mgstr->priv->sw);
+	gtk_widget_show (priv->entry);
+	gtk_widget_show (priv->sw);
 
-	g_signal_connect (mgstr->priv->entry, "event-after",
+	g_signal_connect (priv->entry, "event-after",
                           G_CALLBACK (ev_cb), vbox);
-	g_signal_connect (mgstr->priv->view, "event-after",
+	g_signal_connect (priv->view, "event-after",
                           G_CALLBACK (ev_cb), vbox);
 	return vbox;
 }
@@ -376,11 +321,12 @@ create_entry (GdauiEntryWrapper *mgwrap)
 static void
 widget_shown_cb (GtkWidget *wid, GdauiEntryString *mgstr)
 {
-	if ((wid == mgstr->priv->entry) && mgstr->priv->multiline)
-		gtk_widget_hide (mgstr->priv->entry);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	if ((wid == priv->entry) && priv->multiline)
+		gtk_widget_hide (priv->entry);
 
-	if ((wid == mgstr->priv->sw) && !mgstr->priv->multiline)
-		gtk_widget_hide (mgstr->priv->sw);
+	if ((wid == priv->sw) && !priv->multiline)
+		gtk_widget_hide (priv->sw);
 }
 
 
@@ -395,7 +341,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap));
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 
@@ -409,22 +355,22 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 	/* fill the single line widget */
 	if (value) {
 		if (gda_value_is_null ((GValue *) value))
-			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
+			gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
 		else 
-			gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), text);
+			gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), text);
 	}
 	else
-		gdaui_entry_set_text (GDAUI_ENTRY (mgstr->priv->entry), NULL);
+		gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
 
 	/* fill the multiline widget */
 	if (value) {
 		if (gda_value_is_null ((GValue *) value) || !text)
-                        gtk_text_buffer_set_text (mgstr->priv->buffer, "", -1);
+                        gtk_text_buffer_set_text (priv->buffer, "", -1);
 		else 
-			gtk_text_buffer_set_text (mgstr->priv->buffer, text, -1);
+			gtk_text_buffer_set_text (priv->buffer, text, -1);
 	}
 	else 
-		gtk_text_buffer_set_text (mgstr->priv->buffer, "", -1);
+		gtk_text_buffer_set_text (priv->buffer, "", -1);
 
 	g_free (text);
 }
@@ -438,21 +384,21 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap), NULL);
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_val_if_fail (mgstr->priv, NULL);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
-	if (! mgstr->priv->multiline) {
+	if (! priv->multiline) {
 		gchar *cstr;
-		cstr = gdaui_entry_get_text (GDAUI_ENTRY (mgstr->priv->entry));
+		cstr = gdaui_entry_get_text (GDAUI_ENTRY (priv->entry));
 		value = gda_data_handler_get_value_from_str (dh, cstr, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 		g_free (cstr);
 	}
 	else {
 		GtkTextIter start, end;
 		gchar *str;
-		gtk_text_buffer_get_start_iter (mgstr->priv->buffer, &start);
-		gtk_text_buffer_get_end_iter (mgstr->priv->buffer, &end);
-		str = gtk_text_buffer_get_text (mgstr->priv->buffer, &start, &end, FALSE);
+		gtk_text_buffer_get_start_iter (priv->buffer, &start);
+		gtk_text_buffer_get_end_iter (priv->buffer, &end);
+		str = gtk_text_buffer_get_text (priv->buffer, &start, &end, FALSE);
 		value = gda_data_handler_get_value_from_str (dh, str, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 		g_free (str);
 	}
@@ -473,14 +419,14 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap));
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
-	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "changed",
+	g_signal_connect_swapped (G_OBJECT (priv->entry), "changed",
 				  modify_cb, mgwrap);
-	g_signal_connect_swapped (G_OBJECT (mgstr->priv->entry), "activate",
+	g_signal_connect_swapped (G_OBJECT (priv->entry), "activate",
 				  activate_cb, mgwrap);
 
-	g_signal_connect_swapped (G_OBJECT (mgstr->priv->buffer), "changed",
+	g_signal_connect_swapped (G_OBJECT (priv->buffer), "changed",
 				  modify_cb, mgwrap);
 	/* FIXME: how does the user "activates" the GtkTextView widget ? */
 }
@@ -492,10 +438,10 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap));
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
-	gtk_editable_set_editable (GTK_EDITABLE (mgstr->priv->entry), editable);
-	gtk_text_view_set_editable (GTK_TEXT_VIEW (mgstr->priv->view), editable);
+	gtk_editable_set_editable (GTK_EDITABLE (priv->entry), editable);
+	gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->view), editable);
 }
 
 static void
@@ -505,12 +451,12 @@ grab_focus (GdauiEntryWrapper *mgwrap)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (mgwrap));
 	mgstr = GDAUI_ENTRY_STRING (mgwrap);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
-	if (mgstr->priv->multiline)
-		gtk_widget_grab_focus (mgstr->priv->view);
+	if (priv->multiline)
+		gtk_widget_grab_focus (priv->view);
 	else
-		gtk_widget_grab_focus (mgstr->priv->entry);
+		gtk_widget_grab_focus (priv->entry);
 }
 
 /*
@@ -535,24 +481,24 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_STRING (iface));
 	mgstr = GDAUI_ENTRY_STRING (iface);
-	g_return_if_fail (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
-	mgstr->priv->editing_canceled = FALSE;
-	g_object_set (G_OBJECT (mgstr->priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
-	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_LEFT, 0);
-	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_RIGHT, 0);
-	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_TOP, 0);
-	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (mgstr->priv->view), GTK_TEXT_WINDOW_BOTTOM, 0);
-	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (mgstr->priv->sw), GTK_SHADOW_NONE);
-	gtk_container_set_border_width (GTK_CONTAINER (mgstr->priv->sw), 0);
+	priv->editing_canceled = FALSE;
+	g_object_set (G_OBJECT (priv->entry), "has-frame", FALSE, "xalign", 0., NULL);
+	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (priv->view), GTK_TEXT_WINDOW_LEFT, 0);
+	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (priv->view), GTK_TEXT_WINDOW_RIGHT, 0);
+	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (priv->view), GTK_TEXT_WINDOW_TOP, 0);
+	gtk_text_view_set_border_window_size (GTK_TEXT_VIEW (priv->view), GTK_TEXT_WINDOW_BOTTOM, 0);
+	gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (priv->sw), GTK_SHADOW_NONE);
+	gtk_container_set_border_width (GTK_CONTAINER (priv->sw), 0);
 
-	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (mgstr->priv->entry), event);
-	g_signal_connect (mgstr->priv->entry, "editing-done",
+	gtk_cell_editable_start_editing (GTK_CELL_EDITABLE (priv->entry), event);
+	g_signal_connect (priv->entry, "editing-done",
 			  G_CALLBACK (gtk_cell_editable_entry_editing_done_cb), mgstr);
-	g_signal_connect (mgstr->priv->entry, "remove-widget",
+	g_signal_connect (priv->entry, "remove-widget",
 			  G_CALLBACK (gtk_cell_editable_entry_remove_widget_cb), mgstr);
 	
-	gtk_widget_grab_focus (mgstr->priv->entry);
+	gtk_widget_grab_focus (priv->entry);
 	gtk_widget_queue_draw (GTK_WIDGET (mgstr));
 }
 
@@ -562,7 +508,7 @@ gdaui_entry_string_start_editing (GtkCellEditable *iface, GdkEvent *event)
 static void
 set_entry_options (GdauiEntryString *mgstr, const gchar *options)
 {
-	g_assert (mgstr->priv);
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
 
 	if (options && *options) {
                 GdaQuarkList *params;
@@ -572,35 +518,35 @@ set_entry_options (GdauiEntryString *mgstr, const gchar *options)
 
 		str = gda_quark_list_find (params, "MAX_SIZE");
 		if (str) 
-			mgstr->priv->maxsize = atoi (str);
+			priv->maxsize = atoi (str);
 		
 		str = gda_quark_list_find (params, "MULTILINE");
 		if (str) {
 			if ((*str == 't') || (*str == 'T'))
-				mgstr->priv->multiline = TRUE;
+				priv->multiline = TRUE;
 			else
-				mgstr->priv->multiline = FALSE;
+				priv->multiline = FALSE;
 			
 		}
 		
 		str = gda_quark_list_find (params, "HIDDEN");
 		if (str) {
 			if ((*str == 't') || (*str == 'T'))
-				mgstr->priv->hidden = TRUE;
+				priv->hidden = TRUE;
 			else
-				mgstr->priv->hidden = FALSE;
+				priv->hidden = FALSE;
 		}
 		
-		if (mgstr->priv->entry) {
-			if (mgstr->priv->multiline) {
-				gtk_widget_hide (mgstr->priv->entry);
-				gtk_widget_show (mgstr->priv->sw);
+		if (priv->entry) {
+			if (priv->multiline) {
+				gtk_widget_hide (priv->entry);
+				gtk_widget_show (priv->sw);
 			}
 			else {
-				gtk_widget_show (mgstr->priv->entry);
-				gtk_widget_hide (mgstr->priv->sw);
-				gtk_entry_set_visibility (GTK_ENTRY (mgstr->priv->entry), 
-							  !mgstr->priv->hidden);
+				gtk_widget_show (priv->entry);
+				gtk_widget_hide (priv->sw);
+				gtk_entry_set_visibility (GTK_ENTRY (priv->entry),
+							  !priv->hidden);
 			}
 		}
                 gda_quark_list_free (params);
@@ -608,15 +554,16 @@ set_entry_options (GdauiEntryString *mgstr, const gchar *options)
         }
 }
 
-/* sets the correct options for mgstr->priv->entry if it exists */
+/* sets the correct options for priv->entry if it exists */
 static void
 sync_entry_options (GdauiEntryString *mgstr)
 {
-	if (!mgstr->priv->entry)
+	GdauiEntryStringPrivate *priv = gdaui_entry_string_get_instance_private (mgstr);
+	if (!priv->entry)
 		return;
 
-	g_object_set (G_OBJECT (mgstr->priv->entry), 
-		      "max-length", mgstr->priv->maxsize,
+	g_object_set (G_OBJECT (priv->entry),
+		      "max-length", priv->maxsize,
 		      NULL);
-	g_signal_emit_by_name (mgstr->priv->entry, "changed");
+	g_signal_emit_by_name (priv->entry, "changed");
 }

@@ -26,30 +26,13 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_STRING          (gdaui_entry_string_get_type())
-#define GDAUI_ENTRY_STRING(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_string_get_type(), GdauiEntryString)
-#define GDAUI_ENTRY_STRING_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_string_get_type (), GdauiEntryStringClass)
-#define GDAUI_IS_ENTRY_STRING(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_string_get_type ())
-
-
-typedef struct _GdauiEntryString GdauiEntryString;
-typedef struct _GdauiEntryStringClass GdauiEntryStringClass;
-typedef struct _GdauiEntryStringPrivate GdauiEntryStringPrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryString
-{
-	GdauiEntryWrapper              object;
-	GdauiEntryStringPrivate       *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryString, gdaui_entry_string, GDAUI, ENTRY_STRING, GdauiEntryWrapper)
 /* struct for the object's class */
 struct _GdauiEntryStringClass
 {
 	GdauiEntryWrapperClass         parent_class;
 };
 
-GType        gdaui_entry_string_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_string_new             (GdaDataHandler *dh, GType type, const gchar *options);
 
 
