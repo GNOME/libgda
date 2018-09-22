@@ -27,39 +27,10 @@
 /* 
  * Main static functions 
  */
-static void gdaui_entry_timestamp_class_init (GdauiEntryTimestampClass * class);
-static void gdaui_entry_timestamp_init (GdauiEntryTimestamp * srv);
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
-GType
-gdaui_entry_timestamp_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryTimestampClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_timestamp_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryTimestamp),
-			0,
-			(GInstanceInitFunc) gdaui_entry_timestamp_init,
-			0
-		};
-	
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_COMMON_TIME, "GdauiEntryTimestamp", &info, 0);
-	}
-	return type;
-}
-
+G_DEFINE_TYPE (GdauiEntryTimestamp, gdaui_entry_timestamp, GDAUI_TYPE_ENTRY_COMMON_TIME)
 static void
 gdaui_entry_timestamp_class_init (GdauiEntryTimestampClass * class)
 {
-	parent_class = g_type_class_peek_parent (class);
 }
 
 static void

@@ -26,21 +26,7 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_TIMESTAMP          (gdaui_entry_timestamp_get_type())
-#define GDAUI_ENTRY_TIMESTAMP(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_timestamp_get_type(), GdauiEntryTimestamp)
-#define GDAUI_ENTRY_TIMESTAMP_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_timestamp_get_type (), GdauiEntryTimestampClass)
-#define GDAUI_IS_ENTRY_TIMESTAMP(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_timestamp_get_type ())
-
-
-typedef struct _GdauiEntryTimestamp GdauiEntryTimestamp;
-typedef struct _GdauiEntryTimestampClass GdauiEntryTimestampClass;
-typedef struct _GdauiEntryTimestampPrivate GdauiEntryTimestampPrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryTimestamp
-{
-	GdauiEntryCommonTime           object;
-};
+G_DECLARE_DERIVABLE_TYPE (GdauiEntryTimestamp, gdaui_entry_timestamp, GDAUI, ENTRY_TIMESTAMP, GdauiEntryCommonTime)
 
 /* struct for the object's class */
 struct _GdauiEntryTimestampClass
@@ -48,7 +34,6 @@ struct _GdauiEntryTimestampClass
 	GdauiEntryCommonTimeClass      parent_class;
 };
 
-GType        gdaui_entry_timestamp_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_timestamp_new             (GdaDataHandler *dh);
 
 
