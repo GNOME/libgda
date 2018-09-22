@@ -26,29 +26,13 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_DATE          (gdaui_entry_date_get_type())
-#define GDAUI_ENTRY_DATE(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_date_get_type(), GdauiEntryDate)
-#define GDAUI_ENTRY_DATE_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_date_get_type (), GdauiEntryDateClass)
-#define GDAUI_IS_ENTRY_DATE(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_date_get_type ())
-
-
-typedef struct _GdauiEntryDate GdauiEntryDate;
-typedef struct _GdauiEntryDateClass GdauiEntryDateClass;
-typedef struct _GdauiEntryDatePrivate GdauiEntryDatePrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryDate
-{
-	GdauiEntryCommonTime           object;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdauiEntryDate, gdaui_entry_date, GDUI, ENTRY_DATE, GdauiEntryCommonTime)
 /* struct for the object's class */
 struct _GdauiEntryDateClass
 {
 	GdauiEntryCommonTimeClass      parent_class;
 };
 
-GType        gdaui_entry_date_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_date_new             (GdaDataHandler *dh);
 
 
