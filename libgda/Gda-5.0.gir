@@ -77,7 +77,10 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="ptr" transfer-ownership="none">
+          <parameter name="ptr"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -92,13 +95,19 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="from_mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="from" transfer-ownership="none">
+          <parameter name="from"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer*"/>
           </parameter>
           <parameter name="to_mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </parameter>
-          <parameter name="to" transfer-ownership="none">
+          <parameter name="to"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer*"/>
           </parameter>
         </parameters>
@@ -111,14 +120,20 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="ptr" transfer-ownership="none">
+          <parameter name="ptr"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
           <parameter name="func" transfer-ownership="none" closure="2">
             <type name="AttributesManagerFunc"
                   c:type="GdaAttributesManagerFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -141,7 +156,10 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="ptr" transfer-ownership="none">
+          <parameter name="ptr"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
           <parameter name="att_name" transfer-ownership="none">
@@ -157,7 +175,10 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="ptr" transfer-ownership="none">
+          <parameter name="ptr"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
           <parameter name="att_name" transfer-ownership="none">
@@ -176,7 +197,10 @@ and/or use gtk-doc annotations.  -->
           <instance-parameter name="mgr" transfer-ownership="none">
             <type name="AttributesManager" c:type="GdaAttributesManager*"/>
           </instance-parameter>
-          <parameter name="ptr" transfer-ownership="none">
+          <parameter name="ptr"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
           <parameter name="att_name" transfer-ownership="none">
@@ -204,7 +228,10 @@ and/or use gtk-doc annotations.  -->
             <type name="AttributesManagerSignal"
                   c:type="GdaAttributesManagerSignal"/>
           </parameter>
-          <parameter name="signal_data" transfer-ownership="none">
+          <parameter name="signal_data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -221,7 +248,10 @@ and/or use gtk-doc annotations.  -->
         <parameter name="value" transfer-ownership="none">
           <type name="GObject.Value" c:type="const GValue*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -241,7 +271,10 @@ and/or use gtk-doc annotations.  -->
         <parameter name="value" transfer-ownership="none">
           <type name="GObject.Value" c:type="const GValue*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -465,9 +498,13 @@ times in @batch's statements' list, then only the first one is removed.</doc>
             glib:get-type="gda_binary_get_type"
             c:symbol-prefix="binary">
       <field name="data" writable="1">
-        <type name="guint8" c:type="guchar*"/>
+        <doc xml:space="preserve">the actual data as an array</doc>
+        <array zero-terminated="0" c:type="guchar*">
+          <type name="guint8" c:type="guchar"/>
+        </array>
       </field>
       <field name="binary_length" writable="1">
+        <doc xml:space="preserve">length of @data</doc>
         <type name="glong" c:type="glong"/>
       </field>
       <method name="to_string" c:identifier="gda_binary_to_string">
@@ -499,14 +536,17 @@ a string for example when using g_value_transform() or gda_value_stringify().</d
       </method>
       <function name="copy" c:identifier="gda_binary_copy">
         <doc xml:space="preserve">Creates a new #GdaBinary structure from an existing one.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a newly allocated #GdaBinary which contains a copy of information in @boxed.
 
 Free-function: gda_binary_free</doc>
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">source to get a copy from.</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -518,7 +558,10 @@ Free-function: gda_binary_free</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="full">
+          <parameter name="boxed"
+                     transfer-ownership="full"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">#GdaBinary to free.</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -581,14 +624,17 @@ is converted to "\\".</doc>
       </method>
       <function name="copy" c:identifier="gda_blob_copy">
         <doc xml:space="preserve">Creates a new #GdaBlob structure from an existing one.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a newly allocated #GdaBlob which contains a copy of information in @boxed.
 
 Free-function: gda_blob_free</doc>
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">source to get a copy from.</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -600,7 +646,10 @@ Free-function: gda_blob_free</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="full">
+          <parameter name="boxed"
+                     transfer-ownership="full"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">#GdaBlob to free.</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -1038,7 +1087,7 @@ Attributes can have any name, but Libgda proposes some default names, see &lt;li
       </method>
       <method name="get_default_value"
               c:identifier="gda_column_get_default_value">
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">@column's default value, as a #GValue object, or %NULL if column does not have a default value</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -1658,7 +1707,10 @@ This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigEr
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="new_dsn" transfer-ownership="none">
+          <parameter name="new_dsn"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">a #GdaDsnInfo</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -1670,7 +1722,10 @@ This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigEr
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="dsn" transfer-ownership="none">
+          <parameter name="dsn"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">a #GdaDsnInfo</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -1682,7 +1737,10 @@ This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigEr
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="old_dsn" transfer-ownership="none">
+          <parameter name="old_dsn"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">a #GdaDsnInfo</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -1694,7 +1752,10 @@ This method may fail with a %GDA_CONFIG_ERROR domain error (see the #GdaConfigEr
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="old_dsn" transfer-ownership="none">
+          <parameter name="old_dsn"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">a #GdaDsnInfo</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -3036,7 +3097,7 @@ change.</doc>
               introspectable="0">
         <doc xml:space="preserve">Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
 If it's not set, then add a connection event and returns %NULL</doc>
-        <return-value>
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the pointer to the opaque structure set using gda_connection_internal_set_provider_data(), or %NULL</doc>
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
@@ -3054,7 +3115,7 @@ If it's not set, then add a connection event and returns %NULL</doc>
               throws="1">
         <doc xml:space="preserve">Get the opaque pointer previously set using gda_connection_internal_set_provider_data().
 If it's not set, then add a connection event and returns %NULL</doc>
-        <return-value>
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the pointer to the opaque structure set using gda_connection_internal_set_provider_data(), or %NULL</doc>
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
@@ -3174,7 +3235,10 @@ set opaque @data, you'll have to do it yourself.</doc>
             <doc xml:space="preserve">a #GdaConnection object</doc>
             <type name="Connection" c:type="GdaConnection*"/>
           </instance-parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">an opaque structure, known only to the provider for which @cnc is opened</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -5146,7 +5210,10 @@ will speed things up as less data will be processed.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
-          <parameter name="object" transfer-ownership="none">
+          <parameter name="object"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -5282,7 +5349,7 @@ The returned pointer is %NULL if there is no default data handler available for 
       <virtual-method name="get_sane_init_value" invoker="get_sane_init_value">
         <doc xml:space="preserve">Creates a new GValue which holds a sane initial value to be used if no value is specifically
 provided. For example for a simple string, this would return a new value containing the "" string.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">the new #GValue, or %NULL if no such value can be created.</doc>
           <type name="GObject.Value" c:type="GValue*"/>
         </return-value>
@@ -5445,7 +5512,7 @@ Note: the @str string must be in the current locale representation</doc>
               c:identifier="gda_data_handler_get_sane_init_value">
         <doc xml:space="preserve">Creates a new GValue which holds a sane initial value to be used if no value is specifically
 provided. For example for a simple string, this would return a new value containing the "" string.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">the new #GValue, or %NULL if no such value can be created.</doc>
           <type name="GObject.Value" c:type="GValue*"/>
         </return-value>
@@ -5678,7 +5745,7 @@ Note: the @str string must be in the current locale representation</doc>
       </field>
       <field name="get_sane_init_value">
         <callback name="get_sane_init_value">
-          <return-value transfer-ownership="full">
+          <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">the new #GValue, or %NULL if no such value can be created.</doc>
             <type name="GObject.Value" c:type="GValue*"/>
           </return-value>
@@ -5848,7 +5915,7 @@ about the given column in the data model.
 
 WARNING: the returned #GdaColumn object belongs to the @model model and
 and should not be destroyed; any modification will affect the whole data model.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the description of the column.</doc>
           <type name="Column" c:type="GdaColumn*"/>
         </return-value>
@@ -6008,7 +6075,7 @@ gda_data_model_set_values() methods.
 
 Upon errors %NULL will be returned and @error will be assigned a
 #GError from the #GDA_DATA_MODEL_ERROR domain.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a #GValue containing the value stored in the given
 position, or %NULL on error (out-of-bound position, etc).</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
@@ -6391,7 +6458,7 @@ Upon errors -1 will be returned and @error will be assigned a
               c:identifier="gda_data_model_array_copy_model"
               throws="1">
         <doc xml:space="preserve">Makes a copy of @src into a new #GdaDataModelArray object</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new data model, or %NULL if an error occurred</doc>
           <type name="DataModelArray" c:type="GdaDataModelArray*"/>
         </return-value>
@@ -6408,7 +6475,7 @@ Upon errors -1 will be returned and @error will be assigned a
               throws="1">
         <doc xml:space="preserve">Like gda_data_model_array_copy_model(), makes a copy of @src, but copies only some
 columns.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new data model, or %NULL if an error occurred</doc>
           <type name="DataModelArray" c:type="GdaDataModelArray*"/>
         </return-value>
@@ -6473,7 +6540,7 @@ about the given column in the data model.
 
 WARNING: the returned #GdaColumn object belongs to the @model model and
 and should not be destroyed; any modification will affect the whole data model.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the description of the column.</doc>
           <type name="Column" c:type="GdaColumn*"/>
         </return-value>
@@ -6507,7 +6574,10 @@ The following environment variables can affect the resulting output:
             <doc xml:space="preserve">a #GdaDataModel.</doc>
             <type name="DataModel" c:type="GdaDataModel*"/>
           </instance-parameter>
-          <parameter name="to_stream" transfer-ownership="none">
+          <parameter name="to_stream"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">where to dump the data model</doc>
             <type name="gpointer" c:type="FILE*"/>
           </parameter>
@@ -6886,7 +6956,7 @@ Note: the same limitations and usage instructions apply as for gda_data_model_ge
 
 Upon errors %NULL will be returned and @error will be assigned a
 #GError from the #GDA_DATA_MODEL_ERROR domain.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a #GValue containing the value stored in the given
 position, or %NULL on error (out-of-bound position, wrong data type, etc).</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
@@ -6940,7 +7010,7 @@ gda_data_model_set_values() methods.
 
 Upon errors %NULL will be returned and @error will be assigned a
 #GError from the #GDA_DATA_MODEL_ERROR domain.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a #GValue containing the value stored in the given
 position, or %NULL on error (out-of-bound position, etc).</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
@@ -7752,345 +7822,6 @@ Also clears @model's contents.</doc>
             c:type="GdaDataModelArrayPrivate"
             disguised="1">
     </record>
-    <class name="DataModelBdb"
-           c:symbol-prefix="data_model_bdb"
-           c:type="GdaDataModelBdb"
-           parent="GObject.Object"
-           glib:type-name="GdaDataModelBdb"
-           glib:get-type="gda_data_model_bdb_get_type"
-           glib:type-struct="DataModelBdbClass">
-      <implements name="DataModel"/>
-      <function name="new" c:identifier="gda_data_model_bdb_new">
-        <doc xml:space="preserve">Creates a new #GdaDataModel object to access the contents of the Berkeley DB file @file,
-for the database @db_name if not %NULL</doc>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve">a new #GdaDataModel</doc>
-          <type name="DataModel" c:type="GdaDataModel*"/>
-        </return-value>
-        <parameters>
-          <parameter name="filename" transfer-ownership="none">
-            <doc xml:space="preserve">name of the file containing the database</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-          <parameter name="db_name"
-                     transfer-ownership="none"
-                     nullable="1"
-                     allow-none="1">
-            <doc xml:space="preserve">the name of the database within @filename, or %NULL</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-        </parameters>
-      </function>
-      <virtual-method name="create_data_columns" introspectable="0">
-        <return-value>
-          <type name="GLib.SList" c:type="GSList*">
-            <type name="gpointer" c:type="gpointer"/>
-          </type>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-        </parameters>
-      </virtual-method>
-      <virtual-method name="create_key_columns" introspectable="0">
-        <return-value>
-          <type name="GLib.SList" c:type="GSList*">
-            <type name="gpointer" c:type="gpointer"/>
-          </type>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-        </parameters>
-      </virtual-method>
-      <virtual-method name="get_data_part">
-        <return-value transfer-ownership="full">
-          <type name="GObject.Value" c:type="GValue*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-          <parameter name="data" transfer-ownership="none">
-            <type name="gpointer" c:type="gpointer"/>
-          </parameter>
-          <parameter name="length" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="part" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-        </parameters>
-      </virtual-method>
-      <virtual-method name="get_key_part">
-        <return-value transfer-ownership="full">
-          <type name="GObject.Value" c:type="GValue*"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-          <parameter name="data" transfer-ownership="none">
-            <type name="gpointer" c:type="gpointer"/>
-          </parameter>
-          <parameter name="length" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="part" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-        </parameters>
-      </virtual-method>
-      <virtual-method name="update_data_part" throws="1">
-        <return-value transfer-ownership="none">
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-          <parameter name="data" transfer-ownership="none">
-            <type name="gpointer" c:type="gpointer"/>
-          </parameter>
-          <parameter name="length" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="part" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="value" transfer-ownership="none">
-            <type name="GObject.Value" c:type="const GValue*"/>
-          </parameter>
-        </parameters>
-      </virtual-method>
-      <virtual-method name="update_key_part" throws="1">
-        <return-value transfer-ownership="none">
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-          <parameter name="data" transfer-ownership="none">
-            <type name="gpointer" c:type="gpointer"/>
-          </parameter>
-          <parameter name="length" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="part" transfer-ownership="none">
-            <type name="gint" c:type="gint"/>
-          </parameter>
-          <parameter name="value" transfer-ownership="none">
-            <type name="GObject.Value" c:type="const GValue*"/>
-          </parameter>
-        </parameters>
-      </virtual-method>
-      <method name="clean_errors"
-              c:identifier="gda_data_model_bdb_clean_errors">
-        <doc xml:space="preserve">Reset the list of errors which have occurred while using @model</doc>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <doc xml:space="preserve">a #GdaDataModelBdb object</doc>
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_errors" c:identifier="gda_data_model_bdb_get_errors">
-        <doc xml:space="preserve">Get the list of errors which have occurred while using @model</doc>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve">a read-only list of #GError pointers, or %NULL if no error has occurred</doc>
-          <type name="GLib.SList" c:type="const GSList*">
-            <type name="GLib.Error"/>
-          </type>
-        </return-value>
-        <parameters>
-          <instance-parameter name="model" transfer-ownership="none">
-            <doc xml:space="preserve">a #GdaDataModelBdb object</doc>
-            <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <property name="db-name"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="utf8" c:type="gchar*"/>
-      </property>
-      <property name="filename"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="utf8" c:type="gchar*"/>
-      </property>
-      <field name="object">
-        <type name="GObject.Object" c:type="GObject"/>
-      </field>
-      <field name="priv">
-        <type name="DataModelBdbPrivate" c:type="GdaDataModelBdbPrivate*"/>
-      </field>
-    </class>
-    <record name="DataModelBdbClass"
-            c:type="GdaDataModelBdbClass"
-            glib:is-gtype-struct-for="DataModelBdb">
-      <field name="parent_class">
-        <type name="GObject.ObjectClass" c:type="GObjectClass"/>
-      </field>
-      <field name="create_key_columns" introspectable="0">
-        <callback name="create_key_columns" introspectable="0">
-          <return-value>
-            <type name="GLib.SList" c:type="GSList*">
-              <type name="gpointer" c:type="gpointer"/>
-            </type>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="create_data_columns" introspectable="0">
-        <callback name="create_data_columns" introspectable="0">
-          <return-value>
-            <type name="GLib.SList" c:type="GSList*">
-              <type name="gpointer" c:type="gpointer"/>
-            </type>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="get_key_part">
-        <callback name="get_key_part">
-          <return-value transfer-ownership="full">
-            <type name="GObject.Value" c:type="GValue*"/>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-            <parameter name="length" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="part" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="get_data_part">
-        <callback name="get_data_part">
-          <return-value transfer-ownership="full">
-            <type name="GObject.Value" c:type="GValue*"/>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-            <parameter name="length" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="part" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="update_key_part">
-        <callback name="update_key_part" throws="1">
-          <return-value transfer-ownership="none">
-            <type name="gboolean" c:type="gboolean"/>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-            <parameter name="length" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="part" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="value" transfer-ownership="none">
-              <type name="GObject.Value" c:type="const GValue*"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="update_data_part">
-        <callback name="update_data_part" throws="1">
-          <return-value transfer-ownership="none">
-            <type name="gboolean" c:type="gboolean"/>
-          </return-value>
-          <parameters>
-            <parameter name="model" transfer-ownership="none">
-              <type name="DataModelBdb" c:type="GdaDataModelBdb*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-            <parameter name="length" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="part" transfer-ownership="none">
-              <type name="gint" c:type="gint"/>
-            </parameter>
-            <parameter name="value" transfer-ownership="none">
-              <type name="GObject.Value" c:type="const GValue*"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="_gda_reserved1" introspectable="0">
-        <callback name="_gda_reserved1">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved2" introspectable="0">
-        <callback name="_gda_reserved2">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved3" introspectable="0">
-        <callback name="_gda_reserved3">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-      <field name="_gda_reserved4" introspectable="0">
-        <callback name="_gda_reserved4">
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-        </callback>
-      </field>
-    </record>
-    <record name="DataModelBdbPrivate"
-            c:type="GdaDataModelBdbPrivate"
-            disguised="1">
-    </record>
     <class name="DataModelDir"
            c:symbol-prefix="data_model_dir"
            c:type="GdaDataModelDir"
@@ -8308,7 +8039,7 @@ for the database @db_name if not %NULL</doc>
       </field>
       <field name="i_describe_column">
         <callback name="i_describe_column">
-          <return-value transfer-ownership="none">
+          <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">the description of the column.</doc>
             <type name="Column" c:type="GdaColumn*"/>
           </return-value>
@@ -8341,7 +8072,7 @@ for the database @db_name if not %NULL</doc>
       </field>
       <field name="i_get_value_at">
         <callback name="i_get_value_at" throws="1">
-          <return-value transfer-ownership="none">
+          <return-value transfer-ownership="none" nullable="1">
             <doc xml:space="preserve">a #GValue containing the value stored in the given
 position, or %NULL on error (out-of-bound position, etc).</doc>
             <type name="GObject.Value" c:type="const GValue*"/>
@@ -9079,7 +8810,7 @@ column @col</doc>
       <method name="get_value_at"
               c:identifier="gda_data_model_iter_get_value_at">
         <doc xml:space="preserve">Get the value stored at the column @col in @iter. The returned value must not be modified.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the #GValue, or %NULL if the value could not be fetched</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -9099,7 +8830,7 @@ column @col</doc>
               version="4.2.10"
               throws="1">
         <doc xml:space="preserve">Get the value stored at the column @col in @iter. The returned value must not be modified.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the #GValue, or %NULL if the value could not be fetched</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -9117,7 +8848,7 @@ column @col</doc>
       <method name="get_value_for_field"
               c:identifier="gda_data_model_iter_get_value_for_field">
         <doc xml:space="preserve">Get the value stored at the column @field_name in @iter</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the #GValue, or %NULL</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -9554,11 +9285,10 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
         <type name="utf8" c:type="gchar*"/>
       </property>
       <property name="cnc"
-                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
-        <type/>
+        <type name="Connection"/>
       </property>
       <property name="filter"
                 writable="1"
@@ -9571,9 +9301,6 @@ gda_data_model_iter_get_value_at() will return %NULL when using an iterator.</do
                 construct-only="1"
                 transfer-ownership="none">
         <type name="gint" c:type="gint"/>
-      </property>
-      <property name="use-rdn" writable="1" transfer-ownership="none">
-        <type name="gboolean" c:type="gboolean"/>
       </property>
       <field name="object">
         <type name="GObject.Object" c:type="GObject"/>
@@ -11565,11 +11292,14 @@ occurrence of "'" with "''" and "\" with "\\"</doc>
         <type name="gdouble" c:type="gdouble"/>
       </field>
       <function name="copy" c:identifier="gda_geometricpoint_copy">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -11579,7 +11309,10 @@ occurrence of "'" with "''" and "\" with "\\"</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -12299,7 +12032,7 @@ and that default value is not of the same type as @holder, then %NULL is returne
 If @holder is set to NULL, then the returned value is a #GDA_TYPE_NULL GValue.
 
 If @holder is invalid, then the returned value is %NULL.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the value, or %NULL</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -14866,7 +14599,10 @@ uses a function which is not natively provided by SQLite.</doc>
             <type name="AttributesManagerFunc"
                   c:type="GdaAttributesManagerFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">user data to be passed as last argument of @func each time it is called</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -15113,7 +14849,7 @@ Free-function: gda_numeric_free</doc>
               c:identifier="gda_numeric_get_string"
               version="5.0.2">
         <doc xml:space="preserve">Get the string representation of @numeric, in the C locale format (dot as a fraction separator).</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new string representing the stored valued in @numeric</doc>
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -15513,7 +15249,10 @@ of each pair, and the given user_data parameter. @qlist may not be modified whil
             <doc xml:space="preserve">the function to call for each key/value pair</doc>
             <type name="GLib.HFunc" c:type="GHFunc"/>
           </parameter>
-          <parameter name="user_data" transfer-ownership="none">
+          <parameter name="user_data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">user data to pass to the function</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -15707,7 +15446,7 @@ Use this object with gda_repetitive_statement_append_set().</doc>
 
 This is a pointer to the internal array of values. Don't try to free
 or modify it (modifying is reserved to database provider's implementations).</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a pointer to the #GValue in the position @num of @row.</doc>
           <type name="GObject.Value" c:type="GValue*"/>
         </return-value>
@@ -15933,7 +15672,7 @@ gda_server_operation_perform_create_database() to perform the database creation.
 
 If @db_name is left %NULL, then the name of the database to create will have to be set in the
 returned #GdaServerOperation using gda_server_operation_set_value_at().</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">new #GdaServerOperation object, or %NULL if the provider does not support database
 creation</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
@@ -15977,7 +15716,7 @@ flag, you need to finish the list using %NULL.
 You'll be able to modify the #GdaServerOperation object to add custom options * to the operation. When finished call #gda_server_operation_perform_create_table
 or #gda_server_provider_perform_operation
 in order to execute the operation.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a #GdaServerOperation if no errors; NULL and set @error otherwise</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
         </return-value>
@@ -16011,7 +15750,7 @@ gda_server_operation_perform_drop_database() to perform the database creation.
 
 If @db_name is left %NULL, then the name of the database to drop will have to be set in the
 returned #GdaServerOperation using gda_server_operation_set_value_at().</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">new #GdaServerOperation object, or %NULL if the provider does not support database
 destruction</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
@@ -16036,7 +15775,7 @@ destruction</doc>
                 throws="1">
         <doc xml:space="preserve">This is just a convenient function to create a #GdaServerOperation to drop a
 table in an opened connection.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaServerOperation or %NULL if couldn't create the opereration.</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
         </return-value>
@@ -16139,7 +15878,7 @@ of a #GdaServerOperationType</doc>
               introspectable="0">
         <doc xml:space="preserve">Get information about the node identified by @path. The returned #GdaServerOperationNode structure can be
 copied but not modified; it may change or cease to exist if @op changes</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a #GdaServerOperationNode structure, or %NULL if the node was not found</doc>
           <type name="ServerOperationNode" c:type="GdaServerOperationNode*"/>
         </return-value>
@@ -16454,7 +16193,7 @@ if the @path is not defined or @path does not hold any value.</doc>
               shadows="get_value_at"
               version="4.2.6">
         <doc xml:space="preserve">Get the value for the node at the @path path</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a constant #GValue if a value has been defined, or %NULL if the value is undefined or if the @path is not defined or @path does not hold any value.</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -17195,7 +16934,7 @@ action. The @options can contain:
  &lt;listitem&gt;named values which ID is a path in the resulting GdaServerOperation object, to initialize some value&lt;/listitem&gt;
  &lt;listitem&gt;named values which may change the contents of the GdaServerOperation, see &lt;link linkend="gda-server-op-information-std"&gt;this section&lt;/link&gt; for more information&lt;/listitem&gt;
 &lt;/itemizedlist&gt;</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
         </return-value>
@@ -17452,7 +17191,10 @@ to be enclosed in single quotes before being used in an SQL statement.</doc>
             <type name="ServerProviderAsyncCallback"
                   c:type="GdaServerProviderAsyncCallback"/>
           </parameter>
-          <parameter name="cb_data" transfer-ownership="none">
+          <parameter name="cb_data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -17478,7 +17220,10 @@ to be enclosed in single quotes before being used in an SQL statement.</doc>
             <type name="ServerProviderAsyncCallback"
                   c:type="GdaServerProviderAsyncCallback"/>
           </parameter>
-          <parameter name="cb_data" transfer-ownership="none">
+          <parameter name="cb_data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -17491,7 +17236,7 @@ to be enclosed in single quotes before being used in an SQL statement.</doc>
 
 This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
 the operation; to actually perform the operation, use gda_server_provider_perform_operation().</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.</doc>
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -17578,7 +17323,10 @@ the operation; to actually perform the operation, use gda_server_provider_perfor
             <type name="ServerProviderExecCallback"
                   c:type="GdaServerProviderExecCallback"/>
           </parameter>
-          <parameter name="cb_data" transfer-ownership="none">
+          <parameter name="cb_data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -17734,7 +17482,7 @@ action. The @options can contain:
  &lt;listitem&gt;named values which ID is a path in the resulting GdaServerOperation object, to initialize some value&lt;/listitem&gt;
  &lt;listitem&gt;named values which may change the contents of the GdaServerOperation, see &lt;link linkend="gda-server-op-information-std"&gt;this section&lt;/link&gt; for more information&lt;/listitem&gt;
 &lt;/itemizedlist&gt;</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred</doc>
           <type name="ServerOperation" c:type="GdaServerOperation*"/>
         </return-value>
@@ -17927,7 +17675,7 @@ Note: this function is currently very poorly implemented by database providers.<
 The returned value may be %NULL either if the provider does not implement that method, or if
 there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
 returned if a DBMS has integers only up to 4 bytes and a #G_TYPE_INT64 is requested).</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the name of the DBMS type, or %NULL</doc>
           <type name="utf8" c:type="const gchar*"/>
         </return-value>
@@ -18148,7 +17896,7 @@ and can be reused.</doc>
 
 This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
 the operation; to actually perform the operation, use gda_server_provider_perform_operation().</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.</doc>
           <type name="utf8" c:type="gchar*"/>
         </return-value>
@@ -18356,7 +18104,10 @@ otherwise.</doc>
         <parameter name="error" transfer-ownership="none">
           <type name="GLib.Error" c:type="const GError*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -18555,7 +18306,10 @@ otherwise.</doc>
               <type name="ServerProviderAsyncCallback"
                     c:type="GdaServerProviderAsyncCallback"/>
             </parameter>
-            <parameter name="cb_data" transfer-ownership="none">
+            <parameter name="cb_data"
+                       transfer-ownership="none"
+                       nullable="1"
+                       allow-none="1">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>
@@ -18626,7 +18380,7 @@ otherwise.</doc>
       </field>
       <field name="create_operation">
         <callback name="create_operation" throws="1">
-          <return-value transfer-ownership="full">
+          <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred</doc>
             <type name="ServerOperation" c:type="GdaServerOperation*"/>
           </return-value>
@@ -18659,7 +18413,7 @@ otherwise.</doc>
       </field>
       <field name="render_operation">
         <callback name="render_operation" throws="1">
-          <return-value transfer-ownership="full">
+          <return-value transfer-ownership="full" nullable="1">
             <doc xml:space="preserve">a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.</doc>
             <type name="utf8" c:type="gchar*"/>
           </return-value>
@@ -18704,7 +18458,10 @@ otherwise.</doc>
               <type name="ServerProviderAsyncCallback"
                     c:type="GdaServerProviderAsyncCallback"/>
             </parameter>
-            <parameter name="cb_data" transfer-ownership="none">
+            <parameter name="cb_data"
+                       transfer-ownership="none"
+                       nullable="1"
+                       allow-none="1">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>
@@ -18925,7 +18682,10 @@ otherwise.</doc>
               <type name="ServerProviderExecCallback"
                     c:type="GdaServerProviderExecCallback"/>
             </parameter>
-            <parameter name="cb_data" transfer-ownership="none">
+            <parameter name="cb_data"
+                       transfer-ownership="none"
+                       nullable="1"
+                       allow-none="1">
               <type name="gpointer" c:type="gpointer"/>
             </parameter>
           </parameters>
@@ -19165,7 +18925,10 @@ otherwise.</doc>
         <parameter name="error" transfer-ownership="none">
           <type name="GLib.Error" c:type="const GError*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -20898,7 +20661,7 @@ don't modify the returned structure.</doc>
       </method>
       <method name="get_holder_value" c:identifier="gda_set_get_holder_value">
         <doc xml:space="preserve">Get the value of the #GdaHolder which ID is @holder_id</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the requested GValue, or %NULL (see gda_holder_get_value())</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </return-value>
@@ -21204,7 +20967,10 @@ it was #GDA_TYPE_NULL</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="source" transfer-ownership="none">
+          <parameter name="source"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">the #GdaSetSource for which the @data_model attribute has changed</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -21929,7 +21695,10 @@ its type and its parent in the structure hierarchy.</doc>
           <parameter name="func" transfer-ownership="none" closure="1">
             <type name="SqlForeachFunc" c:type="GdaSqlForeachFunc"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -22183,8 +21952,7 @@ expression IDs are taken from the @when_array and @then_array at the same index,
       </method>
       <method name="add_cond_v"
               c:identifier="gda_sql_builder_add_cond_v"
-              version="4.2"
-              introspectable="0">
+              version="4.2">
         <doc xml:space="preserve">Builds a new expression which represents a condition (or operation).
 
 As a side case, if @ops_ids_size is 1,
@@ -22671,7 +22439,7 @@ needed anymore. If the part with @id as ID cannot be found, the returned value i
 
 The returned pointer belongs to @builder's internal representation.
 Use gda_sql_statement_copy() if you need to keep it.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">a #GdaSqlStatement pointer</doc>
           <type name="SqlStatement" c:type="GdaSqlStatement*"/>
         </return-value>
@@ -22747,7 +22515,6 @@ Use gda_sql_statement_copy() if you need to keep it.</doc>
         <doc xml:space="preserve">Alter a join in a SELECT statement to make its condition use equal field
 values in the fields named @field_name in both tables, via the USING keyword.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">the ID of the new join, or %0 if there was an error</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
@@ -23427,7 +23194,10 @@ This structure represents the name of a table's field.</doc>
           <doc xml:space="preserve">the current #GdaSqlAnyPart node</doc>
           <type name="SqlAnyPart" c:type="GdaSqlAnyPart*"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">user data passed to gda_sql_any_part_foreach().</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -23772,7 +23542,7 @@ This structure represents the name of a table's field.</doc>
 at some point, then the parsing stops, @error may be set and %NULL is returned
 
 if @sql is %NULL, then the returned #GdaBatch object will contain no statement.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaBatch object, or %NULL if an error occurred</doc>
           <type name="Batch" c:type="GdaBatch*"/>
         </return-value>
@@ -23796,7 +23566,7 @@ not %NULL) will point at the first non parsed character.
 
 To include variables in the @sql string, see the
 &lt;link linkend="GdaSqlParser.description"&gt;GdaSqlParser's object description&lt;/link&gt;.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaStatement object, or %NULL if an error occurred</doc>
           <type name="Statement" c:type="GdaStatement*"/>
         </return-value>
@@ -23834,7 +23604,7 @@ if @sql is %NULL, then the returned #GdaBatch object will contain no statement.
 
 To include variables in the @sql string, see the
 &lt;link linkend="GdaSqlParser.description"&gt;GdaSqlParser's object description&lt;/link&gt;.</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new #GdaBatch object, or %NULL if an error occurred</doc>
           <type name="Batch" c:type="GdaBatch*"/>
         </return-value>
@@ -23913,9 +23683,9 @@ To include variables in the @sql string, see the
       <field name="parent_class">
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
-      <field name="delim_alloc" introspectable="0">
-        <callback name="delim_alloc" introspectable="0">
-          <return-value>
+      <field name="delim_alloc">
+        <callback name="delim_alloc">
+          <return-value transfer-ownership="none">
             <type name="gpointer" c:type="void*"/>
           </return-value>
           <parameters>
@@ -23979,9 +23749,9 @@ To include variables in the @sql string, see the
       <field name="delim_tokens_trans">
         <type name="gint" c:type="gint*"/>
       </field>
-      <field name="parser_alloc" introspectable="0">
-        <callback name="parser_alloc" introspectable="0">
-          <return-value>
+      <field name="parser_alloc">
+        <callback name="parser_alloc">
+          <return-value transfer-ownership="none">
             <type name="gpointer" c:type="void*"/>
           </return-value>
           <parameters>
@@ -25060,7 +24830,7 @@ set the value of @expr-&gt;value instead.</doc>
       </field>
       <field name="construct">
         <callback name="construct">
-          <return-value>
+          <return-value transfer-ownership="none">
             <type name="gpointer" c:type="gpointer"/>
           </return-value>
         </callback>
@@ -25079,7 +24849,7 @@ set the value of @expr-&gt;value instead.</doc>
       </field>
       <field name="copy">
         <callback name="copy">
-          <return-value>
+          <return-value transfer-ownership="none">
             <type name="gpointer" c:type="gpointer"/>
           </return-value>
           <parameters>
@@ -25923,7 +25693,10 @@ gda_thread_wrapper_disconnect() method.</doc>
             <doc xml:space="preserve">a #GdaThreadWrapper object</doc>
             <type name="ThreadWrapper" c:type="GdaThreadWrapper*"/>
           </instance-parameter>
-          <parameter name="instance" transfer-ownership="none">
+          <parameter name="instance"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">the instance to connect to</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -25954,7 +25727,10 @@ gda_thread_wrapper_disconnect() method.</doc>
             <type name="ThreadWrapperCallback"
                   c:type="GdaThreadWrapperCallback"/>
           </parameter>
-          <parameter name="data" transfer-ownership="none">
+          <parameter name="data"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <doc xml:space="preserve">data to pass to @callback's calls</doc>
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
@@ -25985,7 +25761,6 @@ thread and this signal has not been handled in the user thread).</doc>
       <method name="execute"
               c:identifier="gda_thread_wrapper_execute"
               version="4.2"
-              introspectable="0"
               throws="1">
         <doc xml:space="preserve">Make @wrapper execute the @func function with the @arg argument (along with a #GError which is not @error)
 in the sub thread managed by @wrapper. To execute a function which does not return anything,
@@ -26088,7 +25863,7 @@ If an error occurred in this function, then the @arg_destroy_func function is no
               throws="1">
         <doc xml:space="preserve">Use this method to check if the execution of a function is finished. The function's execution must have
 been requested using gda_thread_wrapper_execute().</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the pointer returned by the execution, or %NULL if no result is available</doc>
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
@@ -26234,7 +26009,10 @@ was called.</doc>
           <doc xml:space="preserve">the #GdaThreadWrapper</doc>
           <type name="ThreadWrapper" c:type="GdaThreadWrapper*"/>
         </parameter>
-        <parameter name="instance" transfer-ownership="none">
+        <parameter name="instance"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">a pointer to the instance which emitted the signal</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -26250,11 +26028,17 @@ was called.</doc>
           <doc xml:space="preserve">array of @n_param_values GValue</doc>
           <type name="GObject.Value" c:type="const GValue*"/>
         </parameter>
-        <parameter name="gda_reserved" transfer-ownership="none">
+        <parameter name="gda_reserved"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">reserved</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
-        <parameter name="data" transfer-ownership="none">
+        <parameter name="data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">a pointer to the data (which is the @data argument passed to gda_thread_wrapper_connect_raw())</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -26303,15 +26087,17 @@ was called.</doc>
     </enumeration>
     <callback name="ThreadWrapperFunc"
               c:type="GdaThreadWrapperFunc"
-              introspectable="0"
               throws="1">
       <doc xml:space="preserve">Specifies the type of function to be passed to gda_thread_wrapper_execute().</doc>
-      <return-value>
+      <return-value transfer-ownership="none" nullable="1">
         <doc xml:space="preserve">a pointer to some data which will be returned by gda_thread_wrapper_fetch_result()</doc>
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="arg" transfer-ownership="none">
+        <parameter name="arg"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">pointer to the data (which is the @arg argument passed to gda_thread_wrapper_execute_void())</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -26329,7 +26115,10 @@ was called.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="arg" transfer-ownership="none">
+        <parameter name="arg"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">a pointer to the data (which is the @arg argument passed to gda_thread_wrapper_execute_void())</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -26396,11 +26185,14 @@ Note: the resulting will always be a valid time.</doc>
         </parameters>
       </method>
       <function name="copy" c:identifier="gda_time_copy">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -26410,7 +26202,10 @@ Note: the resulting will always be a valid time.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -26487,11 +26282,14 @@ Note: the resulting will always be a valid time.</doc>
         </parameters>
       </method>
       <function name="copy" c:identifier="gda_timestamp_copy">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <type name="gpointer" c:type="gpointer"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -26501,7 +26299,10 @@ Note: the resulting will always be a valid time.</doc>
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
-          <parameter name="boxed" transfer-ownership="none">
+          <parameter name="boxed"
+                     transfer-ownership="none"
+                     nullable="1"
+                     allow-none="1">
             <type name="gpointer" c:type="gpointer"/>
           </parameter>
         </parameters>
@@ -26602,7 +26403,7 @@ full control of transactions to be used with providers.</doc>
         </parameters>
       </method>
       <method name="find" c:identifier="gda_transaction_status_find">
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <type name="TransactionStatus" c:type="GdaTransactionStatus*"/>
         </return-value>
         <parameters>
@@ -26622,7 +26423,7 @@ full control of transactions to be used with providers.</doc>
               c:identifier="gda_transaction_status_find_current">
         <doc xml:space="preserve">Find a pointer to the "current" _unnamed_ transaction, which is the last
 transaction if there are several nested transactions</doc>
-        <return-value transfer-ownership="full">
+        <return-value transfer-ownership="full" nullable="1">
           <type name="TransactionStatus" c:type="GdaTransactionStatus*"/>
         </return-value>
         <parameters>
@@ -26900,7 +26701,7 @@ transaction if there are several nested transactions</doc>
       </method>
       <method name="get_node" c:identifier="gda_tree_get_node" version="4.2">
         <doc xml:space="preserve">Locates a #GdaTreeNode using the @tree_path path.</doc>
-        <return-value transfer-ownership="none">
+        <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the requested #GdaTreeNode pointer, or %NULL if not found</doc>
           <type name="TreeNode" c:type="GdaTreeNode*"/>
         </return-value>
@@ -28803,7 +28604,10 @@ are converted to "%ab" where ab is the hexadecimal representation of the charact
           <type name="AttributesManagerSignal"
                 c:type="GdaAttributesManagerSignal"/>
         </parameter>
-        <parameter name="signal_data" transfer-ownership="none">
+        <parameter name="signal_data"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -28812,14 +28616,17 @@ are converted to "%ab" where ab is the hexadecimal representation of the charact
               c:identifier="gda_binary_copy"
               moved-to="Binary.copy">
       <doc xml:space="preserve">Creates a new #GdaBinary structure from an existing one.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">a newly allocated #GdaBinary which contains a copy of information in @boxed.
 
 Free-function: gda_binary_free</doc>
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">source to get a copy from.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -28833,7 +28640,10 @@ Free-function: gda_binary_free</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="full">
+        <parameter name="boxed"
+                   transfer-ownership="full"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">#GdaBinary to free.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -28843,14 +28653,17 @@ Free-function: gda_binary_free</doc>
               c:identifier="gda_blob_copy"
               moved-to="Blob.copy">
       <doc xml:space="preserve">Creates a new #GdaBlob structure from an existing one.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">a newly allocated #GdaBlob which contains a copy of information in @boxed.
 
 Free-function: gda_blob_free</doc>
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">source to get a copy from.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -28864,7 +28677,10 @@ Free-function: gda_blob_free</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="full">
+        <parameter name="boxed"
+                   transfer-ownership="full"
+                   nullable="1"
+                   allow-none="1">
           <doc xml:space="preserve">#GdaBlob to free.</doc>
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
@@ -28875,7 +28691,7 @@ Free-function: gda_blob_free</doc>
       <doc xml:space="preserve">Creates an array of strings (terminated by a %NULL) corresponding to possible completions.
 If no completion is available, then the returned array contains just one NULL entry, and
 if it was not possible to try to compute a completions list, then %NULL is returned.</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">a new array of strings, or %NULL (use g_strfreev() to free the returned array)</doc>
         <array c:type="gchar**">
           <type name="utf8"/>
@@ -29169,11 +28985,14 @@ returned by #g_type_name.</doc>
     <function name="geometricpoint_copy"
               c:identifier="gda_geometricpoint_copy"
               moved-to="GeometricPoint.copy">
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -29185,8 +29004,28 @@ returned by #g_type_name.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
+        </parameter>
+      </parameters>
+    </function>
+    <function name="get_application_exec_path"
+              c:identifier="gda_get_application_exec_path">
+      <doc xml:space="preserve">Find the path to the application identified by @app_name. For example if the application
+is "gda-sql", then calling this function will return
+"/your/prefix/bin/gda-sql-5.0" if Libgda is installed in
+the "/your/prefix" prefix (which would usually be "/usr"), and for the ABI version 5.0.</doc>
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">the path as a new string, or %NULL if the application cannot be found</doc>
+        <type name="utf8" c:type="gchar*"/>
+      </return-value>
+      <parameters>
+        <parameter name="app_name" transfer-ownership="none">
+          <doc xml:space="preserve">the name of the application to find</doc>
+          <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
     </function>
@@ -29220,6 +29059,28 @@ can also be used in hash tables as a #GEqualFunc.</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
       </parameters>
+    </function>
+    <function name="init" c:identifier="gda_init">
+      <doc xml:space="preserve">Initializes the GDA library, must be called prior to any Libgda usage.
+
+Please note that if you call setlocale() to modify the current locale, you should also
+call gda_locale_changed() before using Libgda again.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
+    </function>
+    <function name="locale_changed"
+              c:identifier="gda_locale_changed"
+              version="4.2.3">
+      <doc xml:space="preserve">Call this function whenever the setlocale() function has been called
+to change the current locale; this function is first called by gda_init() so you
+don't need to call it if you have set the locale before calling gda_init().
+
+Failing to call this function after having changed the current locale may result
+in Libgda reverting to the previous set locale.</doc>
+      <return-value transfer-ownership="none">
+        <type name="none" c:type="void"/>
+      </return-value>
     </function>
     <function name="log_disable" c:identifier="gda_log_disable">
       <doc xml:space="preserve">Disables GDA logs.</doc>
@@ -29867,7 +29728,7 @@ each part is either a text surrounded by double quotes which can contain upper a
 an SQL identifier in lower case.
 
 For example the &lt;![CDATA["test.\"ATable\""]]&gt; string will result in the array: &lt;![CDATA[{"test", "\"ATable\"", NULL}]]&gt;</doc>
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <doc xml:space="preserve">a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)</doc>
         <array c:type="gchar**">
           <type name="utf8"/>
@@ -30058,11 +29919,14 @@ of the non alphanumeric char.</doc>
     <function name="time_copy"
               c:identifier="gda_time_copy"
               moved-to="Time.copy">
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -30074,7 +29938,10 @@ of the non alphanumeric char.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -30082,11 +29949,14 @@ of the non alphanumeric char.</doc>
     <function name="timestamp_copy"
               c:identifier="gda_timestamp_copy"
               moved-to="Timestamp.copy">
-      <return-value transfer-ownership="full">
+      <return-value transfer-ownership="full" nullable="1">
         <type name="gpointer" c:type="gpointer"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
@@ -30098,7 +29968,10 @@ of the non alphanumeric char.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="boxed" transfer-ownership="none">
+        <parameter name="boxed"
+                   transfer-ownership="none"
+                   nullable="1"
+                   allow-none="1">
           <type name="gpointer" c:type="gpointer"/>
         </parameter>
       </parameters>
