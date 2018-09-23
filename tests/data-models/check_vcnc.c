@@ -90,8 +90,9 @@ main (int argc, char *argv[])
 
 	g_print ("*** Copying data into 'countries' virtual table...\n");
 	assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country", NULL);
-
+#if HAVE_SQLITE
 	check_simultanous_select_random (virtual);
+#endif
 	check_simultanous_select_forward (virtual);
 	check_threads_select_random (virtual);
 	check_date (virtual);

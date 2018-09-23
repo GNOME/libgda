@@ -1292,7 +1292,6 @@ map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataMode
 			if (! info->aConstraint[i].usable)
 				continue;
 
-			filter->aConstraint[j].iColumn = info->aConstraint[i].iColumn;
 			switch (info->aConstraint[i].op) {
 			case SQLITE_INDEX_CONSTRAINT_EQ:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_EQ;
@@ -1312,15 +1311,18 @@ map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataMode
 			case SQLITE_INDEX_CONSTRAINT_MATCH:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
 				break;
+#if HAVE_SQLITE
 			case SQLITE_INDEX_CONSTRAINT_LIKE:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_LIKE;
 				break;
 			case SQLITE_INDEX_CONSTRAINT_GLOB:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_GLOB;
 				break;
+#endif
 			default:
 				g_assert_not_reached ();
 			}
+			filter->aConstraint[j].iColumn = info->aConstraint[i].iColumn;
 
 			filter->aConstraintUsage[j].argvIndex = 0;
 			filter->aConstraintUsage[j].omit = FALSE;

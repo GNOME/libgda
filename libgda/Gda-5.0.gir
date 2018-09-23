@@ -23655,12 +23655,6 @@ To include variables in the @sql string, see the
       <property name="column-error" transfer-ownership="none">
         <type name="gint" c:type="gint"/>
       </property>
-      <property name="debug"
-                readable="0"
-                writable="1"
-                transfer-ownership="none">
-        <type name="gboolean" c:type="gboolean"/>
-      </property>
       <property name="line-error" transfer-ownership="none">
         <type name="gint" c:type="gint"/>
       </property>
