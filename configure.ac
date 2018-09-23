@@ -1,6 +1,6 @@
 m4_define(major, 5)
 m4_define(minor, 2)
-m4_define(micro, 4)
+m4_define(micro, 5)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
@@ -18,6 +18,7 @@ m4_include(m4/ldap.m4)
 AC_INIT([GNU Data Access],[major.minor.micro],[https://bugzilla.gnome.org/enter_bug.cgi?product=libgda],[libgda],[http://www.gnome-db.org])
 AC_PREREQ([2.68])
 AC_CONFIG_SRCDIR(libgda/libgda.h.in)
+AM_PROG_AR
 AM_INIT_AUTOMAKE([1.11.1 -Wall no-define no-dist-gzip dist-xz])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
