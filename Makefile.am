@@ -123,7 +123,6 @@ EXTRA_DIST = \
 	intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in \
-	mkinstalldirs \
 	$(example_files) \
 	getsp.class \
 	getsp.java

@@ -1,3 +1,32 @@
+
+libgda 5.2.5
+
+ - Updated SQLite to 3.8.11.1
+ - Fix SQLCipher build by embedding source code for 3.4.2 version
+ - Fix SQLCipher disabling
+ - Fix Doc generation
+ - Bugs corrected: #787685 #789382 #761560 #761529 #760420 #761424 #754263 #754208
+ - Corrected HTML output containing <SCRIPT> tag
+ - Correct some truncated help strings
+ - Don't use (deprecated) g_thread_supported()
+ - MySQL meta data: fixed case where schema is incomplete in MySQL database
+ - Allow introspection for gda_sql_builder_add_cond_v()
+ - SQLite: handle WITHOUT ROWID without any error
+ - Translations:
+	- es (Daniel Mustieles)
+	- da (Ask Hjorth Larsen)
+	- pt_BR (Rafael Fontenelle)
+	- eu (Inaki Larranaga Murgoitio)
+	- sr (Мирослав Николић)
+	- sv (Anders Jonsson)
+	- de (Mario Blättermann)
+	- cs (Marek Černocký)
+	- hu (Balázs Meskó)
+	- oc (Balázs Meskó)
+	- el (Tom Tryfonidis)
+	- po (Pedro Albuquerque)
+	- id (Andika Triwidada)
+
 libgda 5.2.4, 2015-06-13
 
  - Added missing file in distributed tarball, bug #750891
