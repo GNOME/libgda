@@ -1312,6 +1312,34 @@ map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataMode
 			case SQLITE_INDEX_CONSTRAINT_MATCH:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
 				break;
+			case SQLITE_INDEX_CONSTRAINT_LIKE:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_LIKE;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_GLOB:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_GLOB;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_REGEXP:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_REGEXP;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_NE:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_NE;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_ISNOT:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_ISNOT;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_ISNOTNULL:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_ISNOTNULL;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_ISNULL:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_ISNULL;
+				break;
+			case SQLITE_INDEX_CONSTRAINT_IS:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_IS;
+				break;
+/*FIXME: 			case SQLITE_INDEX_CONSTRAINT_FUNCTION:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_;
+				break;
+#define SQLITE_INDEX_CONSTRAINT_FUNCTION 150 */
 			default:
 				g_assert_not_reached ();
 			}
