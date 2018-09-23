@@ -10,7 +10,12 @@ sqliteinc= -I$(top_srcdir)/libgda/sqlite/sqlite-src \
 endif
 SUBDIRS+= virtual
 
-noinst_LTLIBRARIES = libgda-sqlite.la libgda-sqlcipher.la
+noinst_LTLIBRARIES = libgda-sqlite.la
+
+if HAVE_LIBCRYPTO
+noinst_LTLIBRARIES += libgda-sqlcipher.la
+endif
+
 if BDBSQL
 noinst_LTLIBRARIES += libgda-bdbsqlite.la
 endif
@@ -71,15 +76,19 @@ libgda_sqlite_la_LIBADD = \
 	$(sqlitelibs) \
 	$(COREDEPS_LIBS)
 
+if BDBSQL
 libgda_bdbsqlite_la_SOURCES = $(sqlitesources)
 libgda_bdbsqlite_la_CFLAGS = $(BDBSQL_CFLAGS) -DPNAME=\""BDBSql"\" -DCLASS_PREFIX=\""GdaDBDSql"\" $(BDBSQL_CFLAGS) -DWITH_BDBSQLITE -DSEARCH_LIB_PATH=\""$(BDBSQL_PATH)"\"
 libgda_bdbsqlite_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_bdbsqlite_la_LIBADD = 
+endif
 
+if HAVE_LIBCRYPTO
 libgda_sqlcipher_la_SOURCES = $(sqlitesources)
 libgda_sqlcipher_la_CFLAGS = -DPNAME=\""SQLCipher"\" -DCLASS_PREFIX=\""GdaSQLCipher"\" -DSTATIC_SQLITE -DSQLITE_HAS_CODEC -DSEARCH_LIB_PATH=\"""\"
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED)
 libgda_sqlcipher_la_LIBADD = 
+endif
 
 gdaincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/sqlite
 gdainclude_HEADERS=$(sqliteheaders)
