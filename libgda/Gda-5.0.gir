@@ -23511,6 +23511,8 @@ This structure represents the name of a table's field.</doc>
               value="32"
               c:identifier="GDA_SQL_OPERATOR_TYPE_NOTILIKE">
       </member>
+      <member name="glob" value="33" c:identifier="GDA_SQL_OPERATOR_TYPE_GLOB">
+      </member>
     </enumeration>
     <class name="SqlParser"
            c:symbol-prefix="sql_parser"

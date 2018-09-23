@@ -1951,6 +1951,9 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 	case GDA_SQL_OPERATOR_TYPE_OR:
 		multi_op = "OR";
 		break;
+	case GDA_SQL_OPERATOR_TYPE_GLOB:
+		str = g_strdup_printf ("%s GLOB %s", SQL_OPERAND (sql_list->data)->sql, SQL_OPERAND (sql_list->next->data)->sql);
+		break;
 	default:
 		g_assert_not_reached ();
 		break;

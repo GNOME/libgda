@@ -1315,6 +1315,9 @@ map_sqlite3_info_to_gda_filter (sqlite3_index_info *info, GdaVconnectionDataMode
 			case SQLITE_INDEX_CONSTRAINT_LIKE:
 				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_LIKE;
 				break;
+			case SQLITE_INDEX_CONSTRAINT_GLOB:
+				filter->aConstraint[j].op = GDA_SQL_OPERATOR_TYPE_GLOB;
+				break;
 			default:
 				g_assert_not_reached ();
 			}
