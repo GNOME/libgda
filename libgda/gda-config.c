@@ -1728,7 +1728,6 @@ load_all_providers (void)
 	if (dirname) {
 		gchar *pdir;
 		pdir = g_build_path (G_DIR_SEPARATOR_S, dirname, "providers", NULL);
-    g_print (pdir);
 		load_providers_from_dir (pdir, TRUE);
 		g_free (pdir);
 	}

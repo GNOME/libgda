@@ -601,10 +601,8 @@ static void
 vcontext_object_weak_notify_cb (VContext *context, GObject *old_context_object)
 {
 	g_assert (context);
-	g_mutex_lock (context->vtable->context.mutex);
 	context->context_object = NULL;
 	g_hash_table_remove (context->vtable->context.hash, old_context_object);
-	g_mutex_unlock (context->vtable->context.mutex);
 }
 
 static void
