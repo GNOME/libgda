@@ -120,3 +120,25 @@ test('ddlfkey', ddlfkey,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+ddlcreate = executable('check_ddl_create',
+	'check-ddl-db-create.c',
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ddlcreate', ddlcreate,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)
