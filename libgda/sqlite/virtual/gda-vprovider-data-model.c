@@ -249,6 +249,7 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 static void
 virtual_filtered_data_free (VirtualFilteredData *data)
 {
+	g_return_if_fail (data != NULL);
 	if (data->argv) {
 		int i;
 		for (i = 0; i < data->argc; i++)
@@ -279,6 +280,7 @@ virtual_filtered_data_free (VirtualFilteredData *data)
 static VirtualFilteredData *
 virtual_filtered_data_ref (VirtualFilteredData *data)
 {
+	g_return_if_fail (data != NULL);
 	data->refcount ++;
 	return data;
 }
@@ -286,6 +288,7 @@ virtual_filtered_data_ref (VirtualFilteredData *data)
 void
 _gda_vconnection_virtual_filtered_data_unref (VirtualFilteredData *data)
 {
+	g_return_if_fail (data != NULL);
 	data->refcount --;
 	if (data->refcount == 0)
 		virtual_filtered_data_free (data);
@@ -298,6 +301,7 @@ virtual_cursor_free (VirtualCursor *cursor)
 		return;
 
 	_gda_vconnection_virtual_filtered_data_unref (cursor->data);
+	cursor->data = NULL;
 	g_free (cursor);
 }
 
