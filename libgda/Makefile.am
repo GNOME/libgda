@@ -2,11 +2,7 @@ QUIET_GEN = $(Q:@=@echo ' GEN '$@;)
 
 lib_LTLIBRARIES = libgda-5.0.la
 
-if ENABLE_VALA_EXTENSIONS
-    VALA_EXTENSIONS= . data
-endif
-
-SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper $(VALA_EXTENSIONS)
+SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
 
 DEF_FLAGS=
 if BDB 
@@ -387,3 +383,7 @@ clean-local:
 	then \
 		rm -f $(gir_DATA) $(vapi_DATA); \
 	fi
+
+if ENABLE_VALA_EXTENSIONS
+    SUBDIRS+= . data
+endif

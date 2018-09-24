@@ -545,37 +545,20 @@ then
 	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
 fi
 
+AM_PROG_VALAC([0.30.0])
+AC_PATH_PROG(VAPIGEN, [vapigen], [no])
 vala_api="No Vala bindings will be generated"
-if test "x$enable_vala" = "xyes"
+if test "x$VAPIGEN" = "xno"
 then
-	AM_PROG_VALAC([0.30.0])
-	if test "x$VALA_API_VERSION" = "x"
-	then
-		VAPIGEN_CHECK([0.30.0],[0.30],,no)
-		vala_api="0.30 (Default)"
-	else
-		VAPIGEN_CHECK([0.30.0],$VALA_API_VERSION,,no)
-		vala_api=$VALA_API_VERSION
-	fi
-else
-	AM_CONDITIONAL(ENABLE_VAPIGEN,false)
+	enable_vala_ext = "no"
 fi
+AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$VAPIGEN" != "xno")
 
-if test "x$enable_vala_ext" = "xyes" -a "x$vapigen_pkg_found" != "xyes"
-then
-	AC_MSG_ERROR([Utility GObject clases written in Vala (Vala extensions) for Libgda are requested but Vala/vapigen is not available])
-	enable_vala_ext=no
-fi
-
-if test "x$enable_vala_ext" = "xyes"
-then
-  dnl Check for libgee
-  GEE_REQUIRED="0.8.0"
-  PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED)
-  AC_SUBST(GEE_CFLAGS)
-  AC_SUBST(GEE_LIBS)
-  enable_vala_ext=yes
-fi
+dnl Check for libgee
+GEE_REQUIRED="0.8.0"
+PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED,[],enable_vala_ext=no)
+AC_SUBST(GEE_CFLAGS)
+AC_SUBST(GEE_LIBS)
 
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 
@@ -647,10 +630,10 @@ dnl ******************************
 dnl Vala documentation
 dnl ******************************
 enable_vala_doc="no"
+AC_PATH_PROG(YELP_BUILD, [yelp-build], [no])
 if test "x$enable_gtk_doc" = "xyes"
 then
 dnl Find yelp-build program
-    AC_PATH_PROG(YELP_BUILD, [yelp-build], [no])
     if test "x$YELP_BUILD" = "xno";
     then
         AC_MSG_RESULT([Vala documentation not build because yelp-build has not been found])

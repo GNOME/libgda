@@ -55,9 +55,7 @@ pkgconfig_DATA = libgda-sqlcipher-5.0.pc
 
 EXTRA_DIST = $(xml_in_files) \
 	libgda-sqlcipher-5.0.pc.in \
-	sqlcipher.patch \
+	sqlite3.c sqlite3.h sqlite3ext.h \
 	COPYING.sqlcipher
-
-CLEANFILES = $(sqlite_sources)
 
 DISTCLEANFILES = $(xml_DATA)

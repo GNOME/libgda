@@ -840,7 +840,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			g_string_append (string, " WITH");
 			with = TRUE;
 		}
-		g_string_append (string, " CREATEDB");
+		g_string_append (string, " CREATE DATABASE");
 	}
 
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEROLE");
@@ -849,7 +849,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			g_string_append (string, " WITH");
 			with = TRUE;
 		}
-		g_string_append (string, " CREATEROLE");
+		g_string_append (string, " CREATE ROLE");
 	}
 
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_CREATEUSER");
@@ -858,7 +858,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			g_string_append (string, " WITH");
 			with = TRUE;
 		}
-		g_string_append (string, " CREATEUSER");
+		g_string_append (string, " CREATE USER");
 	}
 
 	value = gda_server_operation_get_value_at (op, "/USER_DEF_P/CAP_INHERIT");

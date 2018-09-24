@@ -380,9 +380,9 @@ namespace GdaData
 						rc++;
 					}
 
-					op.set_value_at (f.fkey.update_rule.to_string (),
+					op.set_value_at (f.fkey.update_rule.to_string ().replace("_", " "),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONUPDATE");
-					op.set_value_at (f.fkey.delete_rule.to_string (),
+					op.set_value_at (f.fkey.delete_rule.to_string ().replace("_", " "),
 										"/FKEY_S/" + refs.to_string () + "/FKEY_ONDELETE");
 					refs++;
 				}

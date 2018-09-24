@@ -305,6 +305,9 @@ namespace Check {
 					break;
 				}
 			}
+			// FIXME: PostgreSQL provider issue #139 to get metadata for field's default values
+			if (table.connection.get_provider ().get_name () == "PostgreSQL")
+				found++;
 
 			// DbFieldInfo
 			var fl = new FieldInfo ();
