@@ -521,8 +521,9 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
     if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN(it->data),op,i++,error))
       return FALSE;
 
+  i = 0;
   for (it = priv->mp_fkeys;it;it=it->next)
-    if(!gda_ddl_fkey_prepare_create (it->data,op,error))
+    if(!gda_ddl_fkey_prepare_create (GDA_DDL_FKEY(it->data),op,i++,error))
       return FALSE;
 
   return TRUE;
