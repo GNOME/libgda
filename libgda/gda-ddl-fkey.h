@@ -89,6 +89,7 @@ void              gda_ddl_fkey_set_onupdate    (GdaDdlFkey *self,
 
 gboolean          gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
                                                 GdaServerOperation *op,
+                                                gint i,
                                                 GError **error);
 GdaDdlFkey       *gda_ddl_fkey_new_from_meta   (GdaMetaTableForeignKey *metafkey);
 
