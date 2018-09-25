@@ -155,8 +155,8 @@ void                              gda_blob_set_op (GdaBlob *blob, GdaBlobOp *op)
 
 /**
  * SECTION:gda-value
- * @short_description: Assorted functions for dealing with #GValue values
- * @title: A single Value
+ * @short_description: Assorted functions for dealing with single #GValue values
+ * @title: GdaValue
  * @stability: Stable
  * @see_also: #GValue and #GdaBlobOp
  *

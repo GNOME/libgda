@@ -18,128 +18,137 @@
     </releaseinfo>
   </bookinfo>
 
-  <chapter>
-    <title>API Reference</title>
-        <xi:include href="xml/background.xml"/>
-    <xi:include href="xml/binreloc.xml"/>
-    <xi:include href="xml/dir-blob-op.xml"/>
-    <xi:include href="xml/gda-attributes-manager.xml"/>
-    <xi:include href="xml/gda-batch.xml"/>
-    <xi:include href="xml/gda-binreloc.xml"/>
-    <xi:include href="xml/gda-blob-op.xml"/>
-    <xi:include href="xml/gda-blob-op-impl.xml"/>
-    <xi:include href="xml/gda-column.xml"/>
-    <xi:include href="xml/gda-config.xml"/>
-    <xi:include href="xml/gda-connect.xml"/>
-    <xi:include href="xml/gda-connection.xml"/>
-    <xi:include href="xml/gda-connection-event.xml"/>
-    <xi:include href="xml/gda-connection-internal.xml"/>
-    <xi:include href="xml/gda-connection-private.xml"/>
-    <xi:include href="xml/gda-data-access-wrapper.xml"/>
-    <xi:include href="xml/gda-data-comparator.xml"/>
-    <xi:include href="xml/gda-data-handler.xml"/>
-    <xi:include href="xml/gda-data-meta-wrapper.xml"/>
-    <xi:include href="xml/gda-data-model.xml"/>
-    <xi:include href="xml/gda-data-model-array.xml"/>
-    <xi:include href="xml/gda-data-model-dir.xml"/>
-    <xi:include href="xml/gda-data-model-dsn-list.xml"/>
-    <xi:include href="xml/gda-data-model-extra.xml"/>
-    <xi:include href="xml/gda-data-model-import.xml"/>
-    <xi:include href="xml/gda-data-model-iter.xml"/>
-    <xi:include href="xml/gda-data-model-iter-extra.xml"/>
-    <xi:include href="xml/gda-data-model-ldap.xml"/>
-    <xi:include href="xml/gda-data-model-private.xml"/>
-    <xi:include href="xml/gda-data-pivot.xml"/>
-    <xi:include href="xml/gda-data-proxy.xml"/>
-    <xi:include href="xml/gda-data-select.xml"/>
-    <xi:include href="xml/gda-data-select-extra.xml"/>
-    <xi:include href="xml/gda-data-select-priv.xml"/>
-    <xi:include href="xml/gda-ddl-base.xml"/>
-    <xi:include href="xml/gda-ddl-buildable.xml"/>
-    <xi:include href="xml/gda-ddl-column.xml"/>
-    <xi:include href="xml/gda-ddl-creator.xml"/>
-    <xi:include href="xml/gda-ddl-fkey.xml"/>
-    <xi:include href="xml/gda-ddl-table.xml"/>
-    <xi:include href="xml/gda-ddl-view.xml"/>
-    <xi:include href="xml/gda-debug-macros.xml"/>
-    <xi:include href="xml/gda-decl.xml"/>
-    <xi:include href="xml/gda-enums.xml"/>
-    <xi:include href="xml/gda-handler-bin.xml"/>
-    <xi:include href="xml/gda-handler-boolean.xml"/>
-    <xi:include href="xml/gda-handler-numerical.xml"/>
-    <xi:include href="xml/gda-handler-string.xml"/>
-    <xi:include href="xml/gda-handler-time.xml"/>
-    <xi:include href="xml/gda-handler-type.xml"/>
-    <xi:include href="xml/gda-holder.xml"/>
-    <xi:include href="xml/gda-ldap-connection.xml"/>
-    <xi:include href="xml/gda-lockable.xml"/>
-    <xi:include href="xml/gda-log.xml"/>
-    <xi:include href="xml/gda-meta-column-types.xml"/>
-    <xi:include href="xml/gda-meta-store.xml"/>
-    <xi:include href="xml/gda-meta-struct.xml"/>
-    <xi:include href="xml/gda-pstmt.xml"/>
-    <xi:include href="xml/gda-quark-list.xml"/>
-    <xi:include href="xml/gda-repetitive-statement.xml"/>
-    <xi:include href="xml/gda-row.xml"/>
-    <xi:include href="xml/gda-server-operation.xml"/>
-    <xi:include href="xml/gda-server-provider.xml"/>
-    <xi:include href="xml/gda-server-provider-extra.xml"/>
-    <xi:include href="xml/gda-server-provider-impl.xml"/>
-    <xi:include href="xml/gda-server-provider-private.xml"/>
-    <xi:include href="xml/gda-set.xml"/>
-    <xi:include href="xml/gda-sql-builder.xml"/>
-    <xi:include href="xml/gda-sql-parser.xml"/>
-    <xi:include href="xml/gda-sql-parser-private.xml"/>
-    <xi:include href="xml/gda-sqlite.xml"/>
-    <xi:include href="xml/gda-sqlite-blob-op.xml"/>
-    <xi:include href="xml/gda-sqlite-handler-bin.xml"/>
-    <xi:include href="xml/gda-sqlite-handler-boolean.xml"/>
-    <xi:include href="xml/gda-sqlite-provider.xml"/>
-    <xi:include href="xml/gda-sqlite-pstmt.xml"/>
-    <xi:include href="xml/gda-sqlite-recordset.xml"/>
-    <xi:include href="xml/gda-statement.xml"/>
-    <xi:include href="xml/gda-statement-extra.xml"/>
-    <xi:include href="xml/gda-statement-struct.xml"/>
-    <xi:include href="xml/gda-statement-struct-compound.xml"/>
-    <xi:include href="xml/gda-statement-struct-decl.xml"/>
-    <xi:include href="xml/gda-statement-struct-delete.xml"/>
-    <xi:include href="xml/gda-statement-struct-insert.xml"/>
-    <xi:include href="xml/gda-statement-struct-parts.xml"/>
-    <xi:include href="xml/gda-statement-struct-pspec.xml"/>
-    <xi:include href="xml/gda-statement-struct-select.xml"/>
-    <xi:include href="xml/gda-statement-struct-trans.xml"/>
-    <xi:include href="xml/gda-statement-struct-unknown.xml"/>
-    <xi:include href="xml/gda-statement-struct-update.xml"/>
-    <xi:include href="xml/gda-statement-struct-util.xml"/>
-    <xi:include href="xml/gda-transaction-status.xml"/>
-    <xi:include href="xml/gda-transaction-status-private.xml"/>
-    <xi:include href="xml/gda-tree.xml"/>
-    <xi:include href="xml/gda-tree-manager.xml"/>
-    <xi:include href="xml/gda-tree-mgr-columns.xml"/>
-    <xi:include href="xml/gda-tree-mgr-label.xml"/>
-    <xi:include href="xml/gda-tree-mgr-ldap.xml"/>
-    <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
-    <xi:include href="xml/gda-tree-mgr-select.xml"/>
-    <xi:include href="xml/gda-tree-mgr-tables.xml"/>
-    <xi:include href="xml/gda-tree-node.xml"/>
-    <xi:include href="xml/gda-util.xml"/>
-    <xi:include href="xml/gda-value.xml"/>
-    <xi:include href="xml/gda-vconnection-data-model.xml"/>
-    <xi:include href="xml/gda-vconnection-data-model-private.xml"/>
-    <xi:include href="xml/gda-vconnection-hub.xml"/>
-    <xi:include href="xml/gda-virtual-connection.xml"/>
-    <xi:include href="xml/gda-virtual-provider.xml"/>
-    <xi:include href="xml/gda-vprovider-data-model.xml"/>
-    <xi:include href="xml/gda-vprovider-hub.xml"/>
-    <xi:include href="xml/gda-worker.xml"/>
-    <xi:include href="xml/gda-xa-transaction.xml"/>
-    <xi:include href="xml/libgda-global-variables.xml"/>
-    <xi:include href="xml/keywords_hash.xml"/>
-    <xi:include href="xml/gda-symbols-util.xml"/>
-    <xi:include href="xml/itsignaler.xml"/>
-    <xi:include href="xml/parser_tokens.xml"/>
 
-  </chapter>
+  <part id="api">
+    <title>API Reference</title>
+
+    <chapter id="Getting Started">
+      <title>Getting Started</title>
+      <xi:include href="xml/libgda.xml"/>
+    </chapter>
+
+    <chapter id="Connection">
+      <title>Connection</title>
+      <xi:include href="xml/gda-connection.xml"/>
+      <xi:include href="xml/gda-connection-event.xml"/>
+      <xi:include href="xml/gda-ldap-connection.xml"/>
+      <xi:include href="xml/gda-xa-transaction.xml"/>
+      <xi:include href="xml/gda-transaction-status.xml"/>
+      <xi:include href="xml/gda-virtual-connection.xml"/>
+      <xi:include href="xml/gda-vconnection-data-model.xml"/>
+      <xi:include href="xml/gda-vconnection-hub.xml"/>
+    </chapter>
+
+    <chapter id="Provider">
+      <title>Provider</title>
+      <xi:include href="xml/gda-provider.xml"/>
+      <xi:include href="xml/gda-server-provider.xml"/>
+      <xi:include href="xml/gda-virtual-provider.xml"/>
+      <xi:include href="xml/gda-vprovider-data-model.xml"/>
+      <xi:include href="xml/gda-vprovider-hub.xml"/>
+      <xi:include href="xml/provider-support.xml"/>
+      <xi:include href="xml/provider-support-sql.xml"/>
+    </chapter>
+
+    <chapter id="Data Model">
+      <title>Data Model</title>
+      <xi:include href="xml/gda-data-model.xml"/>
+      <xi:include href="xml/gda-data-model-array.xml"/>
+      <xi:include href="xml/gda-data-model-bdb.xml"/>
+      <xi:include href="xml/gda-data-model-dir.xml"/>
+      <xi:include href="xml/gda-data-model-import.xml"/>
+      <xi:include href="xml/gda-data-model-iter.xml"/>
+      <xi:include href="xml/gda-data-model-ldap.xml"/>
+      <xi:include href="xml/gda-data-access-wrapper.xml"/>
+      <xi:include href="xml/gda-column.xml"/>
+      <xi:include href="xml/gda-row.xml"/>
+      <xi:include href="xml/gda-data-pivot.xml"/>
+      <xi:include href="xml/gda-data-proxy.xml"/>
+      <xi:include href="xml/gda-meta-store.xml"/>
+      <xi:include href="xml/gda-meta-struct.xml"/>
+      <xi:include href="xml/gda-data-select.xml"/>
+    </chapter>
+
+    <chapter id="Data Handlers">
+      <title>Data Handlers</title>
+      <xi:include href="xml/gda-blob-op.xml"/>
+      <xi:include href="xml/gda-value.xml"/>
+      <xi:include href="xml/gda-holder.xml"/>
+      <xi:include href="xml/gda-set.xml"/>
+      <xi:include href="xml/gda-data-handler.xml"/>
+      <xi:include href="xml/gda-data-comparator.xml"/>
+      <xi:include href="xml/gda-handler-bin.xml"/>
+      <xi:include href="xml/gda-handler-boolean.xml"/>
+      <xi:include href="xml/gda-handler-numerical.xml"/>
+      <xi:include href="xml/gda-handler-string.xml"/>
+      <xi:include href="xml/gda-handler-time.xml"/>
+      <xi:include href="xml/gda-handler-type.xml"/>
+      <xi:include href="xml/gda-quark-list.xml"/>
+      <xi:include href="xml/gda-attributes-manager.xml"/>
+    </chapter>
+
+    <chapter id="DDL">
+      <title>DDL</title>
+      <xi:include href="xml/gda-ddl-base.xml"/>
+      <xi:include href="xml/gda-ddl-buildable.xml"/>
+      <xi:include href="xml/gda-ddl-column.xml"/>
+      <xi:include href="xml/gda-ddl-creator.xml"/>
+      <xi:include href="xml/gda-ddl-fkey.xml"/>
+      <xi:include href="xml/gda-ddl-table.xml"/>
+      <xi:include href="xml/gda-ddl-view.xml"/>
+    </chapter>
+
+    <chapter id="Statement">
+      <title>Statement</title>
+      <xi:include href="xml/gda-pstmt.xml"/>
+      <xi:include href="xml/gda-sql-parser.xml"/>
+      <xi:include href="xml/gda-sql-builder.xml"/>
+      <xi:include href="xml/gda-statement.xml"/>
+      <xi:include href="xml/gda-repetitive-statement.xml"/>
+      <xi:include href="xml/gda-batch.xml"/>
+    </chapter>
+
+    <chapter id="Tree Manager">
+      <title>Tree Manager</title>
+      <xi:include href="xml/gda-tree.xml"/>
+      <xi:include href="xml/gda-tree-node.xml"/>
+      <xi:include href="xml/gda-tree-manager.xml"/>
+      <xi:include href="xml/gda-tree-mgr-columns.xml"/>
+      <xi:include href="xml/gda-tree-mgr-label.xml"/>
+      <xi:include href="xml/gda-tree-mgr-ldap.xml"/>
+      <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
+      <xi:include href="xml/gda-tree-mgr-select.xml"/>
+      <xi:include href="xml/gda-tree-mgr-tables.xml"/>
+    </chapter>
+
+    <chapter id="Server Operation">
+      <title>Server Operation</title>
+      <xi:include href="xml/gda-server-operation.xml"/>
+      <xi:include href="xml/gda-server-operation-nodes.xml"/>
+      <xi:include href="xml/gda-server-operation-sequences.xml"/>
+    </chapter>
+
+    <chapter id="Report">
+      <title>Report</title>
+      <xi:include href="xml/gda-report-engine.xml"/>
+      <xi:include href="xml/gda-report-document.xml"/>
+      <xi:include href="xml/gda-report-rml-document.xml"/>
+      <xi:include href="xml/gda-report-docbook-document.xml"/>
+    </chapter>
+
+    <chapter id="Utilities">
+      <title>Utilities</title>
+      <xi:include href="xml/gda-lockable.xml"/>
+      <xi:include href="xml/gda-log.xml"/>
+      <xi:include href="xml/gda-util.xml"/>
+
+      <xi:include href="xml/gda-config.xml"/>
+      <xi:include href="xml/gda-connect.xml"/>
+      
+      <xi:include href="xml/gda-worker.xml"/>
+    </chapter>
+  </part>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
     <xi:include href="xml/tree_index.sgml"/>
@@ -152,61 +161,29 @@
     <title>Index of deprecated API</title>
     <xi:include href="xml/api-index-deprecated.xml"><xi:fallback /></xi:include>
   </index>
-  <index id="api-index-5-0" role="5.0">
-    <title>Index of new API in 5.0</title>
-    <xi:include href="xml/api-index-5.0.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-4-2-1" role="4.2.1">
-    <title>Index of new API in 4.2.1</title>
-    <xi:include href="xml/api-index-4.2.1.xml"><xi:fallback /></xi:include>
+  <index id="api-index-6-0" role="6.0">
+    <title>Index of new API in 6.0</title>
+    <xi:include href="xml/api-index-6.0.xml"><xi:fallback /></xi:include>
   </index>
   <index id="api-index-5-2" role="5.2">
     <title>Index of new API in 5.2</title>
     <xi:include href="xml/api-index-5.2.xml"><xi:fallback /></xi:include>
   </index>
-  <index id="api-index-6-0-0" role="6.0.0">
-    <title>Index of new API in 6.0.0</title>
-    <xi:include href="xml/api-index-6.0.0.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-4-2" role="4.2">
-    <title>Index of new API in 4.2</title>
-    <xi:include href="xml/api-index-4.2.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-4-2-4" role="4.2.4">
-    <title>Index of new API in 4.2.4</title>
-    <xi:include href="xml/api-index-4.2.4.xml"><xi:fallback /></xi:include>
+  <index id="api-index-5-2-0" role="5.2.0">
+    <title>Index of new API in 5.2.0</title>
+    <xi:include href="xml/api-index-5.2.0.xml"><xi:fallback /></xi:include>
   </index>
   <index id="api-index-5-0-2" role="5.0.2">
     <title>Index of new API in 5.0.2</title>
     <xi:include href="xml/api-index-5.0.2.xml"><xi:fallback /></xi:include>
   </index>
-  <index id="api-index-4-0-3" role="4.0.3">
-    <title>Index of new API in 4.0.3</title>
-    <xi:include href="xml/api-index-4.0.3.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-4-2-3" role="4.2.3">
-    <title>Index of new API in 4.2.3</title>
-    <xi:include href="xml/api-index-4.2.3.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-5-2-0" role="5.2.0">
-    <title>Index of new API in 5.2.0</title>
-    <xi:include href="xml/api-index-5.2.0.xml"><xi:fallback /></xi:include>
+  <index id="api-index-5-0" role="5.0">
+    <title>Index of new API in 5.0</title>
+    <xi:include href="xml/api-index-5.0.xml"><xi:fallback /></xi:include>
   </index>
   <index id="api-index-4-2-10" role="4.2.10">
     <title>Index of new API in 4.2.10</title>
     <xi:include href="xml/api-index-4.2.10.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-3-2" role="3.2">
-    <title>Index of new API in 3.2</title>
-    <xi:include href="xml/api-index-3.2.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-4-2-6" role="4.2.6">
-    <title>Index of new API in 4.2.6</title>
-    <xi:include href="xml/api-index-4.2.6.xml"><xi:fallback /></xi:include>
-  </index>
-  <index id="api-index-6-0" role="6.0">
-    <title>Index of new API in 6.0</title>
-    <xi:include href="xml/api-index-6.0.xml"><xi:fallback /></xi:include>
   </index>
   <index id="api-index-4-2-9" role="4.2.9">
     <title>Index of new API in 4.2.9</title>
@@ -215,6 +192,34 @@
   <index id="api-index-4-2-8" role="4.2.8">
     <title>Index of new API in 4.2.8</title>
     <xi:include href="xml/api-index-4.2.8.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-6" role="4.2.6">
+    <title>Index of new API in 4.2.6</title>
+    <xi:include href="xml/api-index-4.2.6.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-4" role="4.2.4">
+    <title>Index of new API in 4.2.4</title>
+    <xi:include href="xml/api-index-4.2.4.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-3" role="4.2.3">
+    <title>Index of new API in 4.2.3</title>
+    <xi:include href="xml/api-index-4.2.3.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-1" role="4.2.1">
+    <title>Index of new API in 4.2.1</title>
+    <xi:include href="xml/api-index-4.2.1.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2" role="4.2">
+    <title>Index of new API in 4.2</title>
+    <xi:include href="xml/api-index-4.2.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-0-3" role="4.0.3">
+    <title>Index of new API in 4.0.3</title>
+    <xi:include href="xml/api-index-4.0.3.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-3-2" role="3.2">
+    <title>Index of new API in 3.2</title>
+    <xi:include href="xml/api-index-3.2.xml"><xi:fallback /></xi:include>
   </index>
   <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
 </book>
