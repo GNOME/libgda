@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE schema SYSTEM "../../libgda/libgda-ddl-creator.dtd">
 <schema>
-  <table name="employee" temptable="FALSE">
-    <comment>employee table</comment>
+  <table name="employee">
     <column name="id" type="int" pkey="TRUE"
             unique="TRUE" nnul="TRUE" autoinc="FALSE">
-    </column>
-    <column name="employee_id" type="int" unique="TRUE" 
-            nnul="TRUE" pkey="TRUE">
-    </column>
-    <column name="last_name" type="string" nnul="TRUE">
-            <comment>Some comments here</comment>
-            <value>Smith</value>
-    </column>
-    <column name="start_time" type="timestamp">
-            <value>now()</value>
-    </column>
-    <column name="remote" type="boolean">
-    </column>
-    <column name="hight" type="numeric">
-            <value scale="2">123.45</value>
     </column>
     <column name="job_site_id" type="int" nnul="TRUE">
     </column>
@@ -27,12 +11,12 @@
       <fk_field name="job_site_id" reffield="id"/>
     </fkey>
   </table>
-  <table name="job_site" temptable="FALSE">
-    <comment>employee table</comment>
+  <table name="job_site">
     <column name="id" type="int" pkey="TRUE"
             unique="TRUE" nnul="TRUE" autoinc="FALSE">
     </column>
-    <column name="location" type="string">
+    <column name="name" type="string">
+      <value size="20"></value>
     </column>
   </table>
 </schema>
