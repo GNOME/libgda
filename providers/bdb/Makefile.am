@@ -25,6 +25,9 @@ libgda_bdb_la_LIBADD = \
 noinst_PROGRAMS = gda-bdb-test
 
 gda_bdb_test_SOURCES = gda-bdb-test.c
+gda_bdb_test_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-DBDB_CURRENT_BUILDDIR=\"$(abs_builddir)\"
 gda_bdb_test_LDADD = \
 	$(COREDEPS_LIBS) \
 	$(BDB_LIBS) \
