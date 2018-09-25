@@ -41,7 +41,7 @@ struct _GdaBlobOpClass {
 /**
  * SECTION:gda-blob-op
  * @short_description: Binary data and BLOBs handling
- * @title: Blobs
+ * @title: GdaBlob
  * @stability: Stable
  * @see_also:
  *

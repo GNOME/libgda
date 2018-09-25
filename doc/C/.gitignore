@@ -29,5 +29,4 @@ libgda-6.0-unused.sgml
 version.xml
 builddate.xml
 *.bak
-libgda-6.0-sections.txt
 setup-build.stamp

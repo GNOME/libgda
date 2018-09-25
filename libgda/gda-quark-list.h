@@ -37,7 +37,7 @@ typedef struct _GdaQuarkList GdaQuarkList;
 /**
  * SECTION:gda-quark-list
  * @short_description: Manages lists of KEY=VALUE pairs
- * @title: Quark list
+ * @title: GdaQuarkList
  * @stability: Stable
  * @see_also:
  *
