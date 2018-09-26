@@ -20,7 +20,7 @@
  * Copyright (C) 2008 Johannes Schmid <jschmid@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011,2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -6390,39 +6390,47 @@ gda_connection_internal_reset_transaction_status (GdaConnection *cnc)
  */
 
 static void prepared_stmts_stmt_reset_cb (GdaStatement *gda_stmt, GdaConnection *cnc);
-static void statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt);
 
-static void 
+static void
 prepared_stmts_stmt_reset_cb (GdaStatement *gda_stmt, GdaConnection *cnc)
 {
 	gda_connection_lock ((GdaLockable*) cnc);
+	g_object_ref (gda_stmt);
 
 	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
-	g_object_weak_unref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
 	g_assert (cnc->priv->prepared_stmts);
 	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
 
+	g_object_unref (gda_stmt);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
 static void
 prepared_stms_foreach_func (GdaStatement *gda_stmt, G_GNUC_UNUSED GdaPStmt *prepared_stmt, GdaConnection *cnc)
 {
+	g_object_ref (gda_stmt);
 	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
-	g_object_weak_unref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
+	g_object_unref (gda_stmt);
 }
 
-static void
-statement_weak_notify_cb (GdaConnection *cnc, GdaStatement *stmt)
-{
-	g_rec_mutex_lock (& cnc->priv->rmutex);
+typedef struct {
+	GdaStatement   *statement;
+	GdaPStmt       *prepared_stmt;
+} PreparedStatementRef;
 
-	g_assert (cnc->priv->prepared_stmts);
-	g_hash_table_remove (cnc->priv->prepared_stmts, stmt);
-
-	g_rec_mutex_unlock (& cnc->priv->rmutex);
+PreparedStatementRef*
+_gda_prepared_estatement_new (GdaStatement *stmt, GdaPStmt *pstmt) {
+	PreparedStatementRef *nps = g_new0(PreparedStatementRef,1);
+	nps->statement = g_object_ref (stmt);
+	nps->prepared_stmt = g_object_ref (pstmt);
+	return nps;
 }
 
+void
+_gda_prepared_estatement_free (PreparedStatementRef *ps) {
+	g_object_unref (ps->statement);
+	g_object_unref (ps->prepared_stmt);
+}
 
 /**
  * gda_connection_add_prepared_statement:
@@ -6442,21 +6450,25 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_return_if_fail (GDA_IS_STATEMENT (gda_stmt));
 	g_return_if_fail (GDA_IS_PSTMT (prepared_stmt));
+	// Hold a reference until the end of the method
+	g_object_ref (prepared_stmt);
+	g_object_ref (gda_stmt);
 
 	gda_connection_lock ((GdaLockable*) cnc);
 
 	if (!cnc->priv->prepared_stmts)
 		cnc->priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal,
-								   NULL, g_object_unref);
+								   NULL, _gda_prepared_estatement_free);
 	g_hash_table_remove (cnc->priv->prepared_stmts, gda_stmt);
-	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, g_object_ref (prepared_stmt));
-	
-	/* destroy the prepared statement if gda_stmt is destroyed, or changes */
-	g_object_weak_ref (G_OBJECT (gda_stmt), (GWeakNotify) statement_weak_notify_cb, cnc);
+	PreparedStatementRef *ref = _gda_prepared_estatement_new (gda_stmt, prepared_stmt);
+	g_hash_table_insert (cnc->priv->prepared_stmts, gda_stmt, ref);
+
 	g_signal_connect (G_OBJECT (gda_stmt), "reset",
 			  G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
+	g_object_unref (prepared_stmt);
+	g_object_unref (gda_stmt);
 }
 
 /**
@@ -6477,8 +6489,11 @@ gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
-	if (cnc->priv->prepared_stmts) 
-		retval = g_hash_table_lookup (cnc->priv->prepared_stmts, gda_stmt);
+	if (cnc->priv->prepared_stmts) {
+		PreparedStatementRef *ref = g_hash_table_lookup (cnc->priv->prepared_stmts, gda_stmt);
+		if (ref)
+			retval = ref->prepared_stmt;
+	}
 	gda_connection_unlock ((GdaLockable*) cnc);
 
 	return retval;
@@ -6495,12 +6510,14 @@ gda_connection_get_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 void
 gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stmt)
 {
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_return_if_fail (cnc != NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
+	g_object_ref (gda_stmt);
 	if (gda_connection_get_prepared_statement (cnc, gda_stmt))
 		prepared_stmts_stmt_reset_cb (gda_stmt, cnc);
+	g_object_unref (gda_stmt);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }
 
