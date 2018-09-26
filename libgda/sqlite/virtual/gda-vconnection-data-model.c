@@ -605,19 +605,11 @@ _gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 
 
 static void
-vcontext_object_weak_notify_cb (VContext *context, GObject *old_context_object)
-{
-	g_assert (context);
-	context->context_object = NULL;
-	g_hash_table_remove (context->vtable->context.hash, old_context_object);
-}
-
-static void
 vcontext_free (VContext *context)
 {
-	if (context->context_object)
-		g_object_weak_unref (context->context_object,
-				     (GWeakNotify) vcontext_object_weak_notify_cb, context);
+	GObject *obj = g_weak_ref_get (&(context->context_object));
+	g_hash_table_remove (context->vtable->context.hash, obj);
+	g_object_unref (obj);
 	if (context->context_data) {
 		g_array_free (context->context_data, TRUE);
 		context->context_data = NULL;
@@ -648,12 +640,11 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 
 			if (! vc) {
 				vc = g_new0 (VContext, 1);
-				vc->context_object = obj;
+				g_weak_ref_set (&(vc->context_object), obj);
 				vc->context_data = g_array_new (FALSE, FALSE,
 								sizeof (VirtualFilteredData*));
 				g_array_set_clear_func (vc->context_data, (GDestroyNotify) _gda_vconnection_virtual_filtered_data_unref);
 				vc->vtable = td;
-				g_object_weak_ref (obj, (GWeakNotify) vcontext_object_weak_notify_cb, vc);
 				g_hash_table_insert (td->context.hash, obj, vc);
 #ifdef DEBUG_VCONTEXT
 				g_print ("VCNew %p\n", vc);
@@ -688,15 +679,14 @@ _gda_vconnection_change_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 		VContext *ovc, *nvc;
 		ovc = td->context.current_vcontext;
 		nvc = g_new0 (VContext, 1);
-		nvc->context_object = obj;
+		g_weak_ref_set (&(nvc->context_object), obj);
 		nvc->vtable = ovc->vtable;
 		nvc->context_data = ovc->context_data;
 		ovc->context_data = NULL;
-		g_object_weak_ref (obj, (GWeakNotify) vcontext_object_weak_notify_cb, nvc);
 		g_hash_table_insert (td->context.hash, obj, nvc);
 #ifdef DEBUG_VCONTEXT
 		g_print ("VCNew %p\n", nvc);
 #endif
-		g_hash_table_remove (td->context.hash, ovc->context_object);
+		g_hash_table_remove (td->context.hash, obj);
 	}
 }

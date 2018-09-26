@@ -39,7 +39,7 @@ typedef struct ExecContext ExecContext;
 typedef struct VirtualFilteredData VirtualFilteredData;
 
 struct VContext{
-	GObject                 *context_object;
+	GWeakRef                 context_object;
 	GArray                  *context_data;
 	GdaVConnectionTableData *vtable;
 };
