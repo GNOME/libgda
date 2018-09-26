@@ -3,6 +3,7 @@
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -618,13 +619,8 @@ vcontext_free (VContext *context)
 		g_object_weak_unref (context->context_object,
 				     (GWeakNotify) vcontext_object_weak_notify_cb, context);
 	if (context->context_data) {
-		guint i;
-		for (i = 0; i < context->context_data->len; i++) {
-			VirtualFilteredData *data;
-			data = g_array_index (context->context_data, VirtualFilteredData*, i);
-			_gda_vconnection_virtual_filtered_data_unref (data);
-		}
 		g_array_free (context->context_data, TRUE);
+		context->context_data = NULL;
 	}
 	g_free (context);
 #ifdef DEBUG_VCONTEXT
@@ -655,6 +651,7 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 				vc->context_object = obj;
 				vc->context_data = g_array_new (FALSE, FALSE,
 								sizeof (VirtualFilteredData*));
+				g_array_set_clear_func (vc->context_data, (GDestroyNotify) _gda_vconnection_virtual_filtered_data_unref);
 				vc->vtable = td;
 				g_object_weak_ref (obj, (GWeakNotify) vcontext_object_weak_notify_cb, vc);
 				g_hash_table_insert (td->context.hash, obj, vc);
