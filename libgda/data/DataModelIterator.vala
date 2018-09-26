@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * libgdadata
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * Copyright (C) 2011-2018 Daniel Espinosa Ortiz <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -146,38 +146,6 @@
  		public void remove () {}
  		
  		// Traversable  Interface
- 		public Gee.Iterator<Value?> chop (int offset, int length = -1) 
- 			requires ( offset >= 0)
- 		{
- 			int maxpos = this.maxpos;
- 			int pos_init = this.pos_init + offset;
- 			if (length > -1) {
- 				maxpos = this.pos_init + offset + length;
- 				if (maxpos > this.maxpos)
- 					maxpos = this.maxpos;
- 			}
- 			return new DataModelIterator.with_offset (this.iter.data_model, pos_init, maxpos);
- 		}
- 		
-		public Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
-		{
-			var elements = new Gee.HashMap <int,int> ();
-			for (int i = this.pos_init; i < this.maxpos; i++) {
-				int row = i / this.iter.data_model.get_n_columns ();
-				int col = i - row * this.iter.data_model.get_n_columns ();
-				try {
-					Value v = this.iter.data_model.get_value_at (col, row);
-					if (f (v))
-						elements.set (i, row);
-				}
-				catch (Error e) {
-					stdout.printf ("ERROR***DataModelIterator: %s\n", e.message);
-					continue;
-				}
-			}
-			return new DataModelIterator.filtered_elements (this.iter.data_model, elements);
-		}
-		
 		public new void @foreach (Gee.ForallFunc<Value?> f)
 		{
 			try {

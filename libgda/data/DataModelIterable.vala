@@ -1,7 +1,7 @@
 /* -*- Mode: Vala; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * libgdadata
- * Copyright (C) Daniel Espinosa Ortiz 2011 <esodan@gmail.com>
+ * Copyright (C) 201-2018 Daniel Espinosa Ortiz <esodan@gmail.com>
  * 
  * libgda is free software: you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -42,19 +42,7 @@
  		}
  		
  		// Traversable Interface
- 		
-		public override Gee.Iterator<Value?> chop (int offset, int length = -1)
- 		{
- 			var iter = new DataModelIterator (this.model);
- 			return iter.chop (offset, length);
- 		}
- 		
-		public override Gee.Iterator<Value?> filter (owned Gee.Predicate<Value?> f)
-		{
-			var iter = new DataModelIterator (this.model);
- 			return iter.filter (f);
-		}
-		
+
 		public new void @foreach (Gee.ForallFunc<Value?> f)
 		{
 			try {
@@ -66,13 +54,7 @@
 				}
 			} catch {}
 		}
-		
-		public override Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?,A> f)
-		{
-			var iter = new DataModelIterator (this.model);
- 			return iter.stream<A> (f);
-		}
-		
+
 		// Interface Collection
 		public override bool add (Value? item) {
 			try {
