@@ -3,7 +3,7 @@
 <schema>
   <table name="employee">
     <column name="id" type="int" pkey="TRUE"
-            unique="TRUE" nnul="TRUE" autoinc="FALSE">
+            unique="TRUE" nnul="TRUE" autoinc="TRUE">
     </column>
     <column name="job_site_id" type="int" nnul="TRUE">
     </column>
@@ -13,7 +13,7 @@
   </table>
   <table name="job_site">
     <column name="id" type="int" pkey="TRUE"
-            unique="TRUE" nnul="TRUE" autoinc="FALSE">
+            unique="TRUE" nnul="TRUE" autoinc="TRUE" >
     </column>
     <column name="name" type="string">
       <value size="20"></value>
