@@ -30,37 +30,19 @@ namespace Check {
 		{
 			try {
 				GLib.FileUtils.unlink("table.db");
-				bool usepg = false;
 				try {
-					this.connection = Connection.open_from_string ("PostgreSQL",
-										"DB_NAME=test", null,
-										Gda.ConnectionOptions.NONE);
+					this.connection = Connection.open_from_string(
+									"SQLite", "DB_DIR=.;DB_NAME=table",
+									null,
+									Gda.ConnectionOptions.NONE);
 					if (this.connection.is_opened ()) {
-						usepg = true;
-						stdout.printf ("Using PostgreSQL provider. "+
-										"Creating Database...\n");
-						init_pg ();
+						stdout.printf("Using SQLite provider. "+
+									"Creating Database...\n");
+						Init_sqlite ();
 					}
 				}
-			 	catch (Error e) {
-					GLib.message ("Not using PostgreSQL provider. Message: "
-									+ e.message+"\n");
-				}
-				if (!usepg) {
-					try {
-						this.connection = Connection.open_from_string(
-										"SQLite", "DB_DIR=.;DB_NAME=table",
-										null,
-										Gda.ConnectionOptions.NONE);
-						if (this.connection.is_opened ()) {
-							stdout.printf("Using SQLite provider. "+
-										"Creating Database...\n");
-							Init_sqlite ();
-						}
-					}
-					catch (Error e) {
-						
-					}
+				catch (Error e) {
+
 				}
 			}
 			catch (Error e) {
@@ -394,12 +376,6 @@ namespace Check {
 			a.update_meta = true;
 			a.update ();
 			stdout.printf ("Current Provider: %s", a.connection.get_provider ().get_name());
-			// FIXME: execute test once PostgreSQL metastore is fixed
-			if (a.connection.get_provider ().get_name() == "PostgreSQL") {
-				stdout.printf ("PostgreSQL has deficient metastore update. Skiping\n");
-				stdout.printf (">>>>>>>> TEST PASS <<<<<<<<<<<\n");
-				return 0;
-			}
 			try {
 				var rs = a.records;
 				stdout.printf (@"Records in DATABASE table: $(a.name)\n");

@@ -89,6 +89,9 @@
  		public bool read_only {	get { return true; } }
  		
  		public bool next () {
+ 			if (!has_next ()) {
+ 				return false;
+ 			}
  			if (!this.filtered) 
  			{
 	 			if (this._current_pos == -1)
@@ -118,6 +121,7 @@
  					this.iter.invalidate_contents ();
  				return ret;
  			}
+ 			return false;
  		}
  		
  		public bool has_next () {
@@ -159,34 +163,6 @@
 			catch {}
 		}
 		
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * {@inheritDoc}<< BR >>
-		 * << BR >>
-		 * ''Implementation:'' This function returns an iterator that can iterate over YIELDED values
-		 * by {@link [StreamFunc].
-		 */
-		public Gee.Iterator<A> stream<A> (owned Gee.StreamFunc<Value?, A> f)
-		{
-			var l = new Gee.ArrayList<A> ();
-			try {
-				for (int i = this.pos_init; i < this.maxpos; i++) {
-					int row = i / this.iter.data_model.get_n_columns ();
-					int col = i - row * this.iter.data_model.get_n_columns ();
-					Value v = this.iter.data_model.get_value_at (col, row);
-					var g = new Gee.Lazy<Value?>.from_value (v);
-					Gee.Lazy<A> s;
-					var r = f (Gee.Traversable.Stream.CONTINUE, g, out s);
-					if (r == Gee.Traversable.Stream.END)
-						break;
-					if (r == Gee.Traversable.Stream.YIELD) {
-						l.add (s);
-					}
-				}
-			} catch {}		
-			return l.iterator ();
-		}
  	}
  }
  

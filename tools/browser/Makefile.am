@@ -201,7 +201,9 @@ EXTRA_DIST = \
 	$(Desktop_in_files) $(icons_DATA) $(appicons_DATA) \
 	$(appdata_in_files)
 
-DISTCLEANFILES = $(desktop_DATA)
+DISTCLEANFILES = \
+	$(desktop_DATA) \
+	$(appdata_DATA)
 
 CLEANFILES = \
 	marshal.h \

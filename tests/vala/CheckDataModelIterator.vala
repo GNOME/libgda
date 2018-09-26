@@ -311,9 +311,9 @@ namespace Check {
 			var app = new Tests ();
 			failures += app.InitIter ();
 			failures += app.iterating ();
-			failures += app.streaming ();
-			failures += app.filtering ();
-			failures += app.choping ();
+			//failures += app.streaming ();
+			// failures += app.filtering ();
+			// failures += app.choping ();
 			return failures != 0 ? 1 : 0;
 		}
 	}
