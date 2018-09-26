@@ -1,6 +1,7 @@
 
 libgda 5.2.5
-
+ - GdaConnection has removed the use of g_object_weak_*, improving
+   multi-threading behaviour
  - Updated SQLite to 3.8.11.1
  - Fix SQLCipher build by embedding source code for 3.4.2 version
  - Fix SQLCipher disabling
