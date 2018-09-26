@@ -86,7 +86,7 @@ gda_pstmt_init (GdaPStmt *pstmt, G_GNUC_UNUSED GdaPStmtClass *klass)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->priv = g_new0 (GdaPStmtPrivate, 1);
 	g_rec_mutex_init (& pstmt->priv->mutex);
-	g_weak_ref_init (& pstmt->priv->gda_stmt_ref, NULL);
+	g_weak_ref_init (&pstmt->priv->gda_stmt_ref, NULL);
 	pstmt->sql = NULL;
 	pstmt->param_ids = NULL;
 	pstmt->ncols = -1;
@@ -101,20 +101,22 @@ static void
 gda_stmt_reset_cb (GdaStatement *stmt, GdaPStmt *pstmt)
 {
 	g_rec_mutex_lock (& pstmt->priv->mutex);
-	if (stmt)
+	if (stmt) {
+		g_object_ref (stmt);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (stmt),
 						      G_CALLBACK (gda_stmt_reset_cb), pstmt);
+		g_object_unref (stmt);
+	}
 	else {
-		stmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
-		if (stmt) {
-			g_signal_handlers_disconnect_by_func (G_OBJECT (stmt),
+		GdaStatement *stm = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
+		if (stm) {
+			g_signal_handlers_disconnect_by_func (G_OBJECT (stm),
 							      G_CALLBACK (gda_stmt_reset_cb), pstmt);
-			g_object_unref (stmt);
+			g_object_unref (stm);
 		}
 	}
 
-	g_weak_ref_clear (& pstmt->priv->gda_stmt_ref);
-	g_weak_ref_init (& pstmt->priv->gda_stmt_ref, NULL);
+	g_weak_ref_set (& pstmt->priv->gda_stmt_ref, NULL);
 	g_rec_mutex_unlock (& pstmt->priv->mutex);
 }
 
@@ -135,8 +137,8 @@ gda_pstmt_finalize (GObject *object)
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
 	/* free memory */
-	g_weak_ref_clear (& pstmt->priv->gda_stmt_ref);
 	g_rec_mutex_clear (& pstmt->priv->mutex);
+	g_weak_ref_clear (&pstmt->priv->gda_stmt_ref);
 	g_free (pstmt->priv);
 
 	if (pstmt->sql) {
@@ -175,6 +177,7 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 	g_return_if_fail (!stmt || GDA_IS_STATEMENT (stmt));
 
 	g_rec_mutex_lock (& pstmt->priv->mutex);
+	g_object_ref (stmt);
 
 	GdaStatement *estmt;
 	estmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
@@ -187,11 +190,9 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 
 	gda_stmt_reset_cb (NULL, pstmt);
 
-	if (stmt) {
-		g_object_ref (stmt);
-		g_weak_ref_set (& pstmt->priv->gda_stmt_ref, stmt);
-		g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
-	}
+	g_weak_ref_set (& pstmt->priv->gda_stmt_ref, stmt);
+	g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	g_object_unref (stmt);
 	g_rec_mutex_unlock (& pstmt->priv->mutex);
 }
 
