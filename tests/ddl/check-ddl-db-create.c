@@ -59,23 +59,23 @@ test_ddl_db_create_start(CheckCreatedb *self,
 
   self->creator = gda_ddl_creator_new();
 
-  self->cnc = gda_connection_new_from_string("SQLite",
-                                             "DB_DIR=.;DB_NAME=ddl_test_create",
-                                             NULL,
-                                             GDA_CONNECTION_OPTIONS_NONE,
-                                             NULL);
+  self->cnc = gda_connection_new_from_string ("SQLite",
+                                              "DB_DIR=.;DB_NAME=ddl_test_create",
+                                              NULL,
+                                              GDA_CONNECTION_OPTIONS_NONE,
+                                              NULL);
 
   g_assert_nonnull (self->cnc);
 
-  gboolean res = gda_connection_open(self->cnc,NULL);
+  gboolean res = gda_connection_open (self->cnc,NULL);
   g_assert_true (res);
 
   res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
   g_assert_true (res);
 
-  res = gda_ddl_creator_parse_file_from_path(self->creator,
-                                             self->xmlfile,
-                                             NULL);
+  res = gda_ddl_creator_parse_file_from_path (self->creator,
+                                              self->xmlfile,
+                                              NULL);
 
   g_assert_true (res);
   
@@ -89,6 +89,26 @@ static void
 test_ddl_db_create_finish (CheckCreatedb *self,
                            gconstpointer user_data)
 {
+/* Dropping all tables */
+  GdaServerOperation *op = gda_connection_create_operation (self->cnc,
+                                                            GDA_SERVER_OPERATION_DROP_TABLE,
+                                                            NULL,
+                                                            NULL);
+
+  g_assert_true (op);
+
+  gboolean res = gda_server_operation_set_value_at (op,"employee",NULL,"/TABLE_DESC_P/TABLE_NAME");
+  g_assert_true (res);
+  res = gda_connection_perform_operation (self->cnc,op,NULL);
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (op,"job_site",NULL,"/TABLE_DESC_P/TABLE_NAME");
+  g_assert_true (res);
+  res = gda_connection_perform_operation (self->cnc,op,NULL);
+  g_assert_true (res);
+
+  g_object_unref (op);
+
   gda_connection_close (self->cnc, NULL);
   g_free (self->xmlfile);
   g_object_unref (self->creator);
@@ -99,7 +119,45 @@ static void
 test_ddl_db_create_test1 (CheckCreatedb *self,
                           gconstpointer user_data)
 {
+  GValue *value_name = gda_value_new (G_TYPE_STRING);
 
+  g_value_set_string (value_name,"John");
+
+  GValue *value_id = gda_value_new (G_TYPE_INT);
+
+  GError *error = NULL;
+
+  gboolean res = gda_connection_insert_row_into_table (self->cnc,"job_site",&error,
+                                                       "name",value_name,
+                                                       NULL); 
+  g_assert_true (res);
+
+  g_value_set_string (value_name,"Tom");
+
+  res = gda_connection_insert_row_into_table (self->cnc,"job_site",NULL,
+                                              "name",value_name,
+                                              NULL); 
+  g_assert_true (res);
+
+  g_value_set_int (value_id,2);
+
+  res = gda_connection_insert_row_into_table (self->cnc,"employee",NULL,
+                                              "job_site_id",value_id,
+                                              NULL); 
+  g_assert_true (res);
+
+/* Try to insert wrong data 
+ * There is no job_site record with id == 3
+ */
+  g_value_set_int (value_id,3);
+
+  res = gda_connection_insert_row_into_table (self->cnc,"employee",NULL,
+                                              "job_site_id",value_id,
+                                              NULL); 
+  g_assert_false (res);
+
+  gda_value_free (value_id);
+  gda_value_free (value_name);
 }
 
 gint
