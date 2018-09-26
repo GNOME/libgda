@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2008 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2008 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +33,8 @@ static void gda_pstmt_finalize   (GObject *object);
 static GObjectClass *parent_class = NULL;
 
 struct _GdaPStmtPrivate {
-	GdaStatement *gda_stmt; /* GdaPStmt object holds a weak reference on this stmt object, may be NULL */
+	GRecMutex mutex;
+	GWeakRef gda_stmt_ref; /* holds a weak reference to #GdaStatement, or %NULL */
 };
 
 /**
@@ -84,7 +86,8 @@ gda_pstmt_init (GdaPStmt *pstmt, G_GNUC_UNUSED GdaPStmtClass *klass)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	pstmt->priv = g_new0 (GdaPStmtPrivate, 1);
-	pstmt->priv->gda_stmt = NULL;
+	g_rec_mutex_init (& pstmt->priv->mutex);
+	g_weak_ref_init (&pstmt->priv->gda_stmt_ref, NULL);
 	pstmt->sql = NULL;
 	pstmt->param_ids = NULL;
 	pstmt->ncols = -1;
@@ -92,13 +95,30 @@ gda_pstmt_init (GdaPStmt *pstmt, G_GNUC_UNUSED GdaPStmtClass *klass)
 	pstmt->tmpl_columns = NULL;
 }
 
+/*
+ * @stmt may be %NULL
+ */
 static void
 gda_stmt_reset_cb (GdaStatement *stmt, GdaPStmt *pstmt)
 {
-	g_signal_handlers_disconnect_by_func (G_OBJECT (stmt), 
-					      G_CALLBACK (gda_stmt_reset_cb), pstmt);
-	g_object_remove_weak_pointer ((GObject*) pstmt->priv->gda_stmt, (gpointer*) &(pstmt->priv->gda_stmt));
-	pstmt->priv->gda_stmt = NULL;
+	g_rec_mutex_lock (& pstmt->priv->mutex);
+	if (stmt) {
+		g_object_ref (stmt);
+		g_signal_handlers_disconnect_by_func (G_OBJECT (stmt),
+						      G_CALLBACK (gda_stmt_reset_cb), pstmt);
+		g_object_unref (stmt);
+	}
+	else {
+		GdaStatement *stm = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
+		if (stm) {
+			g_signal_handlers_disconnect_by_func (G_OBJECT (stm),
+							      G_CALLBACK (gda_stmt_reset_cb), pstmt);
+			g_object_unref (stm);
+		}
+	}
+
+	g_weak_ref_set (& pstmt->priv->gda_stmt_ref, NULL);
+	g_rec_mutex_unlock (& pstmt->priv->mutex);
 }
 
 static void
@@ -106,8 +126,7 @@ gda_pstmt_dispose (GObject *object)
 {
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
-	if (pstmt->priv->gda_stmt) 
-		gda_stmt_reset_cb (pstmt->priv->gda_stmt, pstmt);
+	gda_stmt_reset_cb (NULL, pstmt);
 
 	/* chain to parent class */
 	parent_class->dispose (object);
@@ -119,6 +138,8 @@ gda_pstmt_finalize (GObject *object)
 	GdaPStmt *pstmt = (GdaPStmt *) object;
 
 	/* free memory */
+	g_rec_mutex_clear (& pstmt->priv->mutex);
+	g_weak_ref_clear (&pstmt->priv->gda_stmt_ref);
 	g_free (pstmt->priv);
 
 	if (pstmt->sql) {
@@ -146,7 +167,7 @@ gda_pstmt_finalize (GObject *object)
 /**
  * gda_pstmt_set_gda_statement:
  * @pstmt: a #GdaPStmt object
- * @stmt: a #GdaStatement object
+ * @stmt: (allow-none): a #GdaStatement object, or %NULL
  *
  * Informs @pstmt that it corresponds to the preparation of the @stmt statement
  */
@@ -156,16 +177,24 @@ gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt)
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	g_return_if_fail (!stmt || GDA_IS_STATEMENT (stmt));
 
-	if (pstmt->priv->gda_stmt == stmt)
-		return;
-	if (pstmt->priv->gda_stmt) 
-		gda_stmt_reset_cb (pstmt->priv->gda_stmt, pstmt);
+	g_rec_mutex_lock (& pstmt->priv->mutex);
+	g_object_ref (stmt);
 
-	pstmt->priv->gda_stmt = stmt;
-	if (stmt) {
-		g_object_add_weak_pointer ((GObject*) stmt, (gpointer*) &(pstmt->priv->gda_stmt));
-		g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	GdaStatement *estmt;
+	estmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
+	if (estmt == stmt) {
+		if (estmt)
+			g_object_unref (estmt);
+		g_rec_mutex_unlock (& pstmt->priv->mutex);
+		return;
 	}
+
+	gda_stmt_reset_cb (NULL, pstmt);
+
+	g_weak_ref_set (& pstmt->priv->gda_stmt_ref, stmt);
+	g_signal_connect (G_OBJECT (stmt), "reset", G_CALLBACK (gda_stmt_reset_cb), pstmt);
+	g_object_unref (stmt);
+	g_rec_mutex_unlock (& pstmt->priv->mutex);
 }
 
 /**
@@ -181,6 +210,9 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 	GSList *list;
 	g_return_if_fail (GDA_IS_PSTMT (src));
 	g_return_if_fail (GDA_IS_PSTMT (dest));
+
+	g_rec_mutex_lock (& src->priv->mutex);
+	g_rec_mutex_lock (& dest->priv->mutex);
 
 	g_free (dest->sql);
 	dest->sql = NULL;
@@ -207,8 +239,16 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 			dest->tmpl_columns = g_slist_append (dest->tmpl_columns, 
 							     gda_column_copy (GDA_COLUMN (list->data)));
 	}
-	if (src->priv->gda_stmt)
-		gda_pstmt_set_gda_statement (dest, src->priv->gda_stmt);
+	GdaStatement *stmt;
+	stmt = g_weak_ref_get (& src->priv->gda_stmt_ref);
+	if (stmt) {
+		gda_pstmt_set_gda_statement (dest, stmt);
+		g_object_unref (stmt);
+	}
+
+	g_rec_mutex_unlock (& src->priv->mutex);
+	g_rec_mutex_unlock (& dest->priv->mutex);
+
 }
 
 /**
@@ -226,5 +266,11 @@ GdaStatement *
 gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
 {
 	g_return_val_if_fail (GDA_IS_PSTMT (pstmt), NULL);
-	return pstmt->priv->gda_stmt;
+	g_rec_mutex_lock (& pstmt->priv->mutex);
+	GdaStatement *stmt;
+	stmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
+	if (stmt)
+		g_object_unref (stmt);
+	g_rec_mutex_unlock (& pstmt->priv->mutex);
+	return stmt;
 }
