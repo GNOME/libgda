@@ -6,6 +6,7 @@ image: ubuntu:devel
 
 stages:
      - build
+     - dist
 
 variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
@@ -40,12 +41,25 @@ autotools_build:
   stage: build
   script:
   - ./autogen.sh
-  - make distclean
-  - mkdir _build
-  - cd _build
-  - ../configure
   - make
   - make check
+  artifacts:
+    when: on_failure
+    paths:
+    - tests/test-suite.log
+    - libgda/test-suite.log
+    - tests/data-models/test-suite.log
+    - tests/meta-store/test-suite.log
+    - tests/value-holders/test-suite.log
+    - tests/parser/test-suite.log
+    - tests/providers/test-suite.log
+    expire_in: 1 week
+
+autotools_dist:
+  stage: dist
+  script:
+  - ./autogen.sh
+  - make
   - make distcheck
   artifacts:
     when: on_failure
