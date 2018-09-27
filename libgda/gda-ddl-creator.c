@@ -157,7 +157,8 @@ gda_ddl_creator_set_property (GObject      *object,
         if (priv->cnc)
           g_object_unref (priv->cnc);
 
-        priv->cnc = GDA_CONNECTION (g_object_ref (g_value_get_object (value)));
+        priv->cnc = GDA_CONNECTION (g_object_ref (G_OBJECT (g_value_get_object (value))));
+
       break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -182,10 +183,10 @@ gda_ddl_creator_class_init (GdaDdlCreatorClass *klass)
                          G_PARAM_READWRITE);
 
   properties[PROP_CNC] =
-    g_param_spec_string ("connection",
+    g_param_spec_object ("connection",
                          "Connection",
                          "Connection to DB",
-                         NULL,
+                         GDA_TYPE_CONNECTION,
                          G_PARAM_READWRITE);
 
   g_object_class_install_properties (object_class,N_PROPS,properties);
@@ -199,6 +200,7 @@ gda_ddl_creator_init (GdaDdlCreator *self)
   priv->mp_tables = NULL;
   priv->mp_views = NULL;
   priv->mp_schemaname = NULL;
+  priv->cnc = NULL;
 }
 
 static gboolean
@@ -687,7 +689,6 @@ gda_ddl_creator_append_view (GdaDdlCreator *self,
 /**
  * gda_ddl_creator_perform_operation:
  * @self: a #GdaDdlCreator object
- * @cnc: a connection object to work with
  * @error: object to store error
  *
  * After population @self with all data this method may be
@@ -712,13 +713,13 @@ gda_ddl_creator_append_view (GdaDdlCreator *self,
  */
 gboolean
 gda_ddl_creator_perform_operation (GdaDdlCreator *self,
-                                   GdaConnection *cnc,
                                    GError **error)
 {
   g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (cnc,FALSE);
 
-  if (!gda_connection_is_opened (cnc))
+  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
+
+  if (!gda_connection_is_opened (priv->cnc))
     {
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
@@ -727,17 +728,16 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       return FALSE;
     }
 
-  gda_lockable_lock ((GdaLockable*)cnc);
+  gda_lockable_lock ((GdaLockable*)priv->cnc);
 // We need to get MetaData
-  if(!gda_connection_update_meta_store (cnc, NULL, error))
+  if(!gda_connection_update_meta_store (priv->cnc, NULL, error))
     return FALSE;
 
-  GdaMetaStore *mstore = gda_connection_get_meta_store (cnc);
+  GdaMetaStore *mstore = gda_connection_get_meta_store (priv->cnc);
   GdaMetaStruct *mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
   // We need information about catalog, schema, name for each object we would
   // like to check
-  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
   GdaMetaDbObject *mobj = NULL;
   GValue *catalog = NULL;
@@ -763,12 +763,12 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
 
       if (mobj)
         {
-          if(!gda_ddl_table_update (it->data,GDA_META_TABLE(mobj),cnc,error))
+          if(!gda_ddl_table_update (it->data,GDA_META_TABLE(mobj),priv->cnc,error))
             goto on_error;
         }
       else
         {
-          if(!gda_ddl_table_create (it->data,cnc,TRUE,error))
+          if(!gda_ddl_table_create (it->data,priv->cnc,TRUE,error))
             goto on_error;
         }
     } /* End of for loop */
@@ -780,12 +780,12 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
 /*TODO: add update option for views */
   for (it = priv->mp_views; it; it = it->next)
     {
-      if(!gda_ddl_view_create (it->data,cnc,error))
+      if(!gda_ddl_view_create (it->data,priv->cnc,error))
         goto on_error;
     } /* End of for loop */
 
   g_object_unref (mstruct);
-  gda_lockable_unlock ((GdaLockable*)cnc);
+  gda_lockable_unlock ((GdaLockable*)priv->cnc);
 
   return TRUE;
 
@@ -794,7 +794,7 @@ on_error:
   gda_value_free (schema);
   gda_value_free (name);
   g_object_unref (mstruct);
-  gda_lockable_unlock ((GdaLockable*)cnc);
+  gda_lockable_unlock ((GdaLockable*)priv->cnc);
 
   return FALSE;
 }

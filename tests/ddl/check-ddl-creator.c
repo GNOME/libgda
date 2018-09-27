@@ -154,7 +154,9 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
 
   gda_ddl_creator_append_table (self->creator, self->table);
 
-  open_res = gda_ddl_creator_perform_operation (self->creator,self->cnc,NULL);
+  gda_ddl_creator_set_connection (self->creator,self->cnc);
+
+  open_res = gda_ddl_creator_perform_operation (self->creator,NULL);
 
   g_assert_true (open_res);
 }
@@ -228,8 +230,9 @@ test_ddl_creator_create_db (CheckDdlObject *self,
   g_assert_true (res);
 
   GError *error = NULL;
+  gda_ddl_creator_set_connection (self->creator,self->cnc);
+
   gboolean resop = gda_ddl_creator_perform_operation(self->creator,
-                                                     self->cnc,
                                                      &error);  
 
   if (!resop)

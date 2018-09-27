@@ -95,7 +95,6 @@ void             gda_ddl_creator_append_view (GdaDdlCreator *self,
                                               GdaDdlView *view);
 
 gboolean         gda_ddl_creator_perform_operation (GdaDdlCreator *self,
-                                                    GdaConnection *cnc,
                                                     GError **error);
 
 gboolean         gda_ddl_creator_write_to_file (GdaDdlCreator *self,
