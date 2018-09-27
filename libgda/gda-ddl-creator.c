@@ -39,6 +39,7 @@ typedef struct
   GList *mp_tables; /* List of all tables that should be create, GdaDdlTable  */
   GList *mp_views; /* List of all views that should be created, GdaDdlView */
   gchar *mp_schemaname;
+  GdaConnection *cnc;
 } GdaDdlCreatorPrivate;
 
 /**
@@ -62,6 +63,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlCreator, gda_ddl_creator, G_TYPE_OBJECT)
 enum {
   PROP_0,
   PROP_SCHEMA_NAME,
+  PROP_CNC,
   /*<private>*/
   N_PROPS
 };
@@ -109,6 +111,9 @@ gda_ddl_creator_dispose (GObject *object)
   if (priv->mp_views)
     g_list_free_full (priv->mp_views, (GDestroyNotify) g_object_unref);
 
+  if (priv->cnc)
+    g_object_unref (priv->cnc);
+
   G_OBJECT_CLASS (gda_ddl_creator_parent_class)->finalize (object);
 }
 static void
@@ -124,6 +129,9 @@ gda_ddl_creator_get_property (GObject    *object,
     {
       case PROP_SCHEMA_NAME:
         g_value_set_string (value, priv->mp_schemaname);
+      break;
+      case PROP_CNC:
+        g_value_set_object (value, G_OBJECT (priv->cnc));  
       break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -145,6 +153,12 @@ gda_ddl_creator_set_property (GObject      *object,
         g_free(priv->mp_schemaname);
         priv->mp_schemaname = g_value_dup_string (value);
       break;
+      case PROP_CNC:
+        if (priv->cnc)
+          g_object_unref (priv->cnc);
+
+        priv->cnc = GDA_CONNECTION (g_object_ref (g_value_get_object (value)));
+      break;
       default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -164,6 +178,13 @@ gda_ddl_creator_class_init (GdaDdlCreatorClass *klass)
     g_param_spec_string ("schema_name",
                          "schema-name",
                          "Name of the schema",
+                         NULL,
+                         G_PARAM_READWRITE);
+
+  properties[PROP_CNC] =
+    g_param_spec_string ("connection",
+                         "Connection",
+                         "Connection to DB",
                          NULL,
                          G_PARAM_READWRITE);
 
@@ -974,4 +995,41 @@ on_error:
     xmlFreeDoc (doc);
 
   return FALSE;
+}
+
+/**
+ * gda_ddl_creator_set_connection:
+ * @self: a #GdaDdlCreator instance
+ * @cnc: a #GdaConnection instance to use
+ *
+ * Associate the passed @cnc with @self. See gda_ddl_creator_get_connection() to retrieve the
+ * associated value
+ */
+void
+gda_ddl_creator_set_connection (GdaDdlCreator *self,
+                                GdaConnection *cnc)
+{
+  g_return_if_fail (GDA_IS_DDL_CREATOR (self));
+  g_return_if_fail (GDA_IS_CONNECTION (cnc));
+
+  g_object_set (self,"connection",cnc,NULL);
+}
+
+/**
+ * gda_ddl_creator_get_connection:
+ * @self: a #GdaDdlCreator instance to use
+ *
+ * Returns an associated #GdaConnection value
+ *
+ * Returns: (transfer none): Returns current connection object. The returned object belongs to
+ * @self and should nt be freed. 
+ */
+GdaConnection*
+gda_ddl_creator_get_connection (GdaDdlCreator *self)
+{
+  g_return_val_if_fail (GDA_IS_DDL_CREATOR (self),NULL);
+
+  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
+
+  return priv->cnc; 
 }

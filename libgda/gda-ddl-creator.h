@@ -108,6 +108,11 @@ gboolean         gda_ddl_creator_write_to_path (GdaDdlCreator *self,
 
 gboolean         gda_ddl_creator_validate_file_from_path (const gchar *xmlfile,
                                                           GError **error);
+
+void             gda_ddl_creator_set_connection (GdaDdlCreator *self,
+                                                 GdaConnection *cnc);
+
+GdaConnection   *gda_ddl_creator_get_connection (GdaDdlCreator *self);
 G_END_DECLS
 
 #endif /* GDA_DDL_CREATOR_H */
