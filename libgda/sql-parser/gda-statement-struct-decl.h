@@ -44,7 +44,7 @@ typedef enum {
 	GDA_SQL_VALIDATION_ERROR
 } GdaSqlError;
 /*
- * GdaSqlErrorType: (skip)
+ * GdaSqlErrorType:
  *
  **/
 typedef GdaSqlError GdaSqlErrorType;

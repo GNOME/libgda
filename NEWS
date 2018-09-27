@@ -8,6 +8,7 @@ libgda 5.2.5 2018-09-25
  - Updated SQLite to 3.8.11.1
  - Fix SQLCipher build by embedding source code for 3.4.2 version
  - Fix SQLCipher disabling
+ - Updated GObject Introspection annotations
  - Fix Doc generation
  - Bugs corrected: #787685 #789382 #761560 #761529 #760420 #761424 #754263 #754208
  - Corrected HTML output containing <SCRIPT> tag

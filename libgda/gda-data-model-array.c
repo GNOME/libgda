@@ -325,7 +325,7 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
 }
 
 /**
- * gda_data_model_array_new_with_g_types_v:
+ * gda_data_model_array_new_with_g_types_v: (rename-to gda_data_model_array_new_with_g_types)
  * @cols: number of columns for rows in this data model.
  * @types: (array): array of types of the columns of the model to create as #GType, as many as indicated by @cols
  *
@@ -336,7 +336,6 @@ gda_data_model_array_new_with_g_types (gint cols, ...)
  *
  * Since: 4.2.6
  *
- * Rename to: gda_data_model_array_new_with_g_types
  */
 GdaDataModel *
 gda_data_model_array_new_with_g_types_v (gint cols, GType *types)
@@ -361,7 +360,7 @@ gda_data_model_array_new_with_g_types_v (gint cols, GType *types)
  *
  * Makes a copy of @src into a new #GdaDataModelArray object
  *
- * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new data model, or %NULL if an error occurred
  */
 GdaDataModelArray *
 gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
@@ -416,7 +415,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
  * Like gda_data_model_array_copy_model(), makes a copy of @src, but copies only some
  * columns.
  *
- * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new data model, or %NULL if an error occurred
  *
  * Since: 5.2.0
  */

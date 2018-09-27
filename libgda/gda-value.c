@@ -56,7 +56,7 @@
 
 #  ifdef GSEAL_ENABLE
 /**
- * GdaNumeric:
+ * GdaNumeric: (set-value-func gda_value_set_numeric) (get-value-func gda_value_get_numeric)
  * @number: a string representing a number
  * @precision: precision to use when @number is converted (not implemented jet)
  * @width: not implemented jet
@@ -66,8 +66,6 @@
  * This struct must be considered as opaque. Any access to its members must use its
  * accessors added since version 5.0.2.
  *
- * Set value func: gda_value_set_numeric()
- * Get value func: gda_value_get_numeric()
  */
 struct _GdaNumeric {
 	gchar*   number; /* stored in the "C" locale, never NULL */
@@ -603,7 +601,7 @@ gda_blob_free (gpointer boxed)
 /**
  * gda_blob_set_op:
  * @blob: a #GdaBlob value
- * @op: (allow-none): a #GdaBlobOp object, or %NULL
+ * @op: (nullable): a #GdaBlobOp object, or %NULL
  *
  * correctly assigns @op to @blob
  */
@@ -1038,7 +1036,7 @@ gda_numeric_get_precision (const GdaNumeric *numeric)
  *
  * Get the string representation of @numeric, in the C locale format (dot as a fraction separator).
  *
- * Returns: (transfer full) (allow-none): a new string representing the stored valued in @numeric
+ * Returns: (transfer full) (nullable): a new string representing the stored valued in @numeric
  *
  * Since: 5.0.2
  */
@@ -1527,7 +1525,7 @@ gda_value_new_null (void)
 
 /**
  * gda_value_new_default: (skip)
- * @default_val: (allow-none): the default value as a string, or %NULL
+ * @default_val: (nullable): the default value as a string, or %NULL
  *
  * Creates a new default value.
  *
@@ -1813,7 +1811,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 
 /**
  * gda_value_free: (skip)
- * @value: (transfer full) (allow-none): the resource to free (or %NULL)
+ * @value: (transfer full) (nullable): the resource to free (or %NULL)
  *
  * Deallocates all memory associated to a #GValue.
  */
@@ -3058,7 +3056,7 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 
 /**
  * gda_string_to_binary:
- * @str: (allow-none): a string to convert, or %NULL
+ * @str: (nullable): a string to convert, or %NULL
  *
  * Performs the reverse of gda_binary_to_string() (note that for any "\xyz" succession
  * of 4 characters where "xyz" represents a valid octal value, the resulting read value will

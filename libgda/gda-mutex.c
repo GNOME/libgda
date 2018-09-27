@@ -21,7 +21,7 @@
 #include <libgda/gda-mutex.h>
 
 /**
- * gda_mutex_new: (skip)
+ * gda_mutex_new:
  *
  * Creates a new #GdaMutex.
  *

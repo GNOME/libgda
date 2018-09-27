@@ -132,9 +132,8 @@ gda_statement_class_init (GdaStatementClass * klass)
 
 	/**
 	 * GdaStatement::reset:
-	 * @stmt: the #GdaStatement object
 	 *
-	 * Gets emitted whenever the @stmt has changed
+	 * Gets emitted whenever the statement has changed
 	 */
 	gda_statement_signals[RESET] =
 		g_signal_new ("reset",
@@ -146,10 +145,9 @@ gda_statement_class_init (GdaStatementClass * klass)
 			      0);
 	/**
 	 * GdaStatement::checked:
-	 * @stmt: the #GdaStatement object
 	 *
 	 * Gets emitted whenever the structure and contents
-	 * of @stmt have been verified (emitted after gda_statement_check_validity()).
+	 * of the statement have been verified (emitted after gda_statement_check_validity()).
 	 */
 	gda_statement_signals[CHECKED] =
 		g_signal_new ("checked",

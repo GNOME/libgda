@@ -328,7 +328,7 @@ use_part (SqlPart *p, GdaSqlAnyPart *parent)
 /**
  * gda_sql_builder_get_statement:
  * @builder: a #GdaSqlBuilder object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates a new #GdaStatement statement from @builder's contents.
  *
@@ -360,7 +360,7 @@ gda_sql_builder_get_statement (GdaSqlBuilder *builder, GError **error)
  * The returned pointer belongs to @builder's internal representation.
  * Use gda_sql_statement_copy() if you need to keep it.
  *
- * Returns: (transfer none) (allow-none): a #GdaSqlStatement pointer
+ * Returns: (transfer none) (nullable): a #GdaSqlStatement pointer
  *
  * Since: 4.2
  */
@@ -483,8 +483,8 @@ gda_sql_builder_set_where (GdaSqlBuilder *builder, GdaSqlBuilderId cond_id)
  * gda_sql_builder_select_add_field:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: (allow-none): a table name, or %NULL
- * @alias: (allow-none): an alias (eg. for the "AS" clause), or %NULL
+ * @table_name: (nullable): a table name, or %NULL
+ * @alias: (nullable): an alias (eg. for the "AS" clause), or %NULL
  *
  * Valid only for: SELECT statements.
  *
@@ -651,7 +651,7 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
  * gda_sql_builder_add_field_value_as_gvalue:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @value: (allow-none): value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
+ * @value: (nullable): value to set the field to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Valid only for: INSERT, UPDATE statements.
  *
@@ -799,8 +799,8 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
 /**
  * gda_sql_builder_add_expr_value:
  * @builder: a #GdaSqlBuilder object
- * @dh: (allow-none): deprecated useless argument, just pass %NULL
- * @value: (allow-none): value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
+ * @dh: (nullable): deprecated useless argument, just pass %NULL
+ * @value: (nullable): value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
  *
@@ -842,7 +842,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHan
 /**
  * gda_sql_builder_add_expr: (skip)
  * @builder: a #GdaSqlBuilder object
- * @dh: (allow-none): deprecated useless argument, just pass %NULL
+ * @dh: (nullable): deprecated useless argument, just pass %NULL
  * @type: the GType of the following argument
  * @...: value to set the expression to, of the type specified by @type
  *
@@ -950,7 +950,7 @@ gda_sql_builder_add_id (GdaSqlBuilder *builder, const gchar *str)
  * gda_sql_builder_add_field_id:
  * @builder: a #GdaSqlBuilder object
  * @field_name: a field name
- * @table_name: (allow-none): a table name, or %NULL
+ * @table_name: (nullable): a table name, or %NULL
  *
  * Defines an expression representing a field in @builder,
  * which may be reused to build other parts of a statement,
@@ -1139,7 +1139,7 @@ typedef struct {
  * gda_sql_builder_select_add_target_id:
  * @builder: a #GdaSqlBuilder object
  * @table_id: the ID of the expression holding a table reference (not %0)
- * @alias: (allow-none): the alias to give to the target, or %NULL
+ * @alias: (nullable): the alias to give to the target, or %NULL
  *
  * Adds a new target to a SELECT statement. If there already exists a target representing
  * the same table and the same alias (or with the same absence of alias) then the same target
@@ -1224,7 +1224,7 @@ gda_sql_builder_select_add_target_id (GdaSqlBuilder *builder, GdaSqlBuilderId ta
  * gda_sql_builder_select_add_target:
  * @builder: a #GdaSqlBuilder object
  * @table_name: the name of the target table
- * @alias: (allow-none): the alias to give to the target, or %NULL
+ * @alias: (nullable): the alias to give to the target, or %NULL
  *
  * Adds a new target to a SELECT statement
  *
@@ -1364,8 +1364,6 @@ gda_sql_builder_select_join_targets (GdaSqlBuilder *builder,
  * Alter a join in a SELECT statement to make its condition use equal field 
  * values in the fields named @field_name in both tables, via the USING keyword.
  *
- * Returns: the ID of the new join, or %0 if there was an error
- *
  * Since: 4.2
  */
 void
@@ -1409,7 +1407,7 @@ gda_sql_builder_join_add_field (GdaSqlBuilder *builder, GdaSqlBuilderId join_id,
  * @builder: a #GdaSqlBuiler
  * @expr_id: the ID of the expression to use during sorting (not %0)
  * @asc: %TRUE for an ascending sorting
- * @collation_name: (allow-none):  name of the collation to use when sorting, or %NULL
+ * @collation_name: (nullable):  name of the collation to use when sorting, or %NULL
  *
  * Adds a new ORDER BY expression to a SELECT statement.
  *
@@ -1671,7 +1669,7 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
 }
 
 /**
- * gda_sql_builder_add_function_v:
+ * gda_sql_builder_add_function_v: (rename-to gda_sql_builder_add_function)
  * @builder: a #GdaSqlBuilder object
  * @func_name: the functions's name
  * @args: (array length=args_size): an array of IDs representing the function's arguments
@@ -1680,8 +1678,6 @@ gda_sql_builder_add_function (GdaSqlBuilder *builder, const gchar *func_name, ..
  * Builds a new expression which represents a function applied to some arguments
  *
  * Returns: the ID of the new expression, or %0 if there was an error
- *
- * Rename to: gda_sql_builder_add_function
  *
  * Since: 4.2
  */
@@ -1911,7 +1907,7 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
 }
 
 /**
- * gda_sql_builder_add_case_v:
+ * gda_sql_builder_add_case_v: (rename-to gda_sql_builder_add_case)
  * @builder: a #GdaSqlBuilder object
  * @test_expr: the expression ID representing the test of the CASE, or %0
  * @else_expr: the expression ID representing the ELSE expression, or %0
@@ -1927,7 +1923,6 @@ gda_sql_builder_add_case (GdaSqlBuilder *builder,
  *
  * Since: 4.2
  *
- * Rename to: gda_sql_builder_add_case
  */
 GdaSqlBuilderId
 gda_sql_builder_add_case_v (GdaSqlBuilder *builder,
