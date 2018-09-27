@@ -335,7 +335,6 @@ handlers = \
 	handlers/gda-handler-type.c
 
 introspection_sources = $(gda_sources) \
-	$(gda_built_sources) \
 	$(gda_headers) \
 	$(psupport) \
 	$(threadwrapper) \
@@ -347,6 +346,7 @@ Gda_5_0_gir_CFLAGS = $(GLOBAL_CFLAGS)
 
 Gda_5_0_gir_LIBS = $(lib_LTLIBRARIES)
 Gda_5_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
+Gda_5_0_gir_FILES += $(gda_built_sources)
 INTROSPECTION_GIRS += Gda-5.0.gir
 
 if ENABLE_GI_SYSTEM_INSTALL
