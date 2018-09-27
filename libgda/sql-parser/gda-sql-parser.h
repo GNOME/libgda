@@ -30,11 +30,6 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQL_PARSER          (gda_sql_parser_get_type())
-#define GDA_SQL_PARSER(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_sql_parser_get_type(), GdaSqlParser)
-#define GDA_SQL_PARSER_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_sql_parser_get_type (), GdaSqlParserClass)
-#define GDA_IS_SQL_PARSER(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_sql_parser_get_type ())
-
 /* error reporting */
 extern GQuark gda_sql_parser_error_quark (void);
 #define GDA_SQL_PARSER_ERROR gda_sql_parser_error_quark ()
@@ -59,12 +54,6 @@ typedef enum {
         GDA_SQL_PARSER_FLAVOUR_POSTGRESQL = 4
 } GdaSqlParserFlavour;
 
-/* struct for the object's data */
-struct _GdaSqlParser
-{
-	GObject              object;
-};
-
 /* interface with the Lemon parser */
 typedef struct _GdaSqlParserIface
 {
@@ -77,6 +66,8 @@ typedef struct _GdaSqlParserIface
 	gpointer         _gda_reserved2;
 } GdaSqlParserIface;
 
+#define GDA_TYPE_SQL_PARSER          (gda_sql_parser_get_type())
+G_DECLARE_DERIVABLE_TYPE(GdaSqlParser, gda_sql_parser, GDA, SQL_PARSER, GObject)
 /* struct for the object's class */
 struct _GdaSqlParserClass
 {
@@ -183,7 +174,6 @@ struct _GdaSqlParserClass
  * The #GdaSqlParser object implements its own locking mechanism so it is thread-safe.
  */
 
-GType               gda_sql_parser_get_type               (void) G_GNUC_CONST;
 GdaSqlParser       *gda_sql_parser_new                    (void);
 
 GdaStatement       *gda_sql_parser_parse_string           (GdaSqlParser *parser, 

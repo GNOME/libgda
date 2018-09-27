@@ -36,8 +36,6 @@
 /*
  * Main static functions
  */
-static void gda_sql_parser_class_init (GdaSqlParserClass *klass);
-static void gda_sql_parser_init (GdaSqlParser *stmt);
 static void gda_sql_parser_dispose (GObject *object);
 static void gda_sql_parser_finalize (GObject *object);
 
@@ -55,9 +53,6 @@ static void                 gda_sql_parser_lockable_init (GdaLockableInterface *
 static void                 gda_sql_parser_lock      (GdaLockable *lockable);
 static gboolean             gda_sql_parser_trylock   (GdaLockable *lockable);
 static void                 gda_sql_parser_unlock    (GdaLockable *lockable);
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
 
 static void gda_sql_parser_reset (GdaSqlParser *parser);
 static GValue *tokenizer_get_next_token (GdaSqlParser *parser);
@@ -80,6 +75,11 @@ void priv_gda_sql_parserFree (void*, void(*)(void*));
 void priv_gda_sql_parserTrace (void*, char *);
 void priv_gda_sql_parser (void*, int, GValue *, GdaSqlParserIface *);
 
+
+
+G_DEFINE_TYPE_WITH_CODE (GdaSqlParser, gda_sql_parser, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaSqlParser)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_LOCKABLE, gda_sql_parser_lockable_init))
 
 /* signals */
 enum
@@ -111,49 +111,10 @@ GQuark gda_sql_parser_error_quark (void)
 }
 
 
-GType
-gda_sql_parser_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaSqlParserClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sql_parser_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaSqlParser),
-			0,
-			(GInstanceInitFunc) gda_sql_parser_init,
-			0
-		};
-
-		static GInterfaceInfo lockable_info = {
-                        (GInterfaceInitFunc) gda_sql_parser_lockable_init,
-			NULL,
-                        NULL
-                };
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaSqlParser", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void
 gda_sql_parser_class_init (GdaSqlParserClass * klass)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaSqlParserPrivate));
 
 	object_class->dispose = gda_sql_parser_dispose;
 	object_class->finalize = gda_sql_parser_finalize;
@@ -201,12 +162,14 @@ static void
 gda_sql_parser_reset (GdaSqlParser *parser)
 {
 	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
-	g_free (priv->sql);
+	if (priv->sql)
+		g_free (priv->sql);
 	priv->sql = NULL;
 	g_array_free (priv->passed_tokens, TRUE);
 	priv->passed_tokens = g_array_new (FALSE, FALSE, sizeof (gint));
 
-	g_free (priv->error_msg);
+	if (priv->error_msg)
+		g_free (priv->error_msg);
 	priv->error_msg = NULL;
 	priv->error_line = 0;
 	priv->error_col = 0;
@@ -293,9 +256,16 @@ gda_sql_parser_dispose (GObject *object)
 
 	parser = GDA_SQL_PARSER (object);
 	GdaSqlParserPrivate *priv = gda_sql_parser_get_instance_private (parser);
+	gda_sql_parser_reset (parser);
+	if (priv->context)
+		g_free (priv->context);
+	priv->context = NULL;
+	if (priv->passed_tokens)
+		g_array_free (priv->passed_tokens, TRUE);
+	priv->passed_tokens = NULL;
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_sql_parser_parent_class)->dispose (object);
 }
 
 static void
@@ -312,8 +282,6 @@ gda_sql_parser_finalize (GObject *object)
 	GdaSqlParserClass *klass;
 
 	klass = (GdaSqlParserClass*) G_OBJECT_GET_CLASS (parser);
-	gda_sql_parser_reset (parser);
-	g_free (priv->context);
 
 	if (klass->delim_alloc) {
 		g_assert (klass->delim_free);
@@ -328,12 +296,10 @@ gda_sql_parser_finalize (GObject *object)
 	else
 		priv_gda_sql_parserFree (priv->lemon_parser, g_free);
 
-	g_array_free (priv->passed_tokens, TRUE);
-
 	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_sql_parser_parent_class)->finalize (object);
 }
 
 
