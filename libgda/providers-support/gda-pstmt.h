@@ -27,43 +27,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_PSTMT            (gda_pstmt_get_type())
-#define GDA_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_PSTMT, GdaPStmt))
-#define GDA_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_PSTMT, GdaPStmtClass))
-#define GDA_IS_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_PSTMT))
-#define GDA_IS_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_PSTMT))
-
-typedef struct _GdaPStmt        GdaPStmt;
-typedef struct _GdaPStmtPrivate GdaPStmtPrivate;
-typedef struct _GdaPStmtClass   GdaPStmtClass;
-
-/**
- * GdaPStmt:
- * @sql: actual SQL code used for this prepared statement, mem freed by GdaPStmt
- * @param_ids: (element-type utf8): list of parameters' IDs (as gchar *), mem freed by GdaPStmt
- * @ncols: number of types in array
- * @types: (array length=ncols) (element-type GLib.Type): array of ncols types
- * @tmpl_columns: (element-type Gda.Column): list of #GdaColumn objects which data models created from this prep. statement can copy
- *
- */
-struct _GdaPStmt {
-	GObject       object;
-
-	GdaPStmtPrivate *priv;
-	gchar        *sql; /* actual SQL code used for this prepared statement, mem freed by GdaPStmt */
-        GSList       *param_ids; /* list of parameters' IDs (as gchar *), mem freed by GdaPStmt */
-
-	/* meta data */
-        gint          ncols;
-        GType        *types; /* array of ncols types */
-	GSList       *tmpl_columns; /* list of #GdaColumn objects which data models created from this prep. statement
-				     * can copy */
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer         _gda_reserved1;
-	gpointer         _gda_reserved2;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaPStmt, gda_pstmt, GDA, PSTMT, GObject)
 struct _GdaPStmtClass {
 	GObjectClass  parent_class;
 
@@ -107,6 +71,10 @@ GType         gda_pstmt_get_type          (void) G_GNUC_CONST;
 void          gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
 void          gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
 GdaStatement *gda_pstmt_get_gda_statement (GdaPStmt *pstmt);
+gint          gda_pstmt_get_ncols         (GdaPStmt *pstmt);
+GSList       *gda_pstmt_get_tmpl_columns  (GdaPStmt *pstmt);
+GType        *gda_pstmt_get_types         (GdaPStmt *pstmt);
+void          gda_pstmt_set_columns       (GdaPStmt *pstmt, gint ncols, GType* types);
 
 G_END_DECLS
 

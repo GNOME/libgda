@@ -10,7 +10,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Marco Ciampa <ciampix@libero.it>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017, 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -164,9 +164,9 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 	gint *missing_cols, nb_missing;
 	GdaDataSelect *pmodel = (GdaDataSelect*) model;
 
-	missing_cols = g_new (gint, pmodel->prep_stmt->ncols);
-	for (nb_missing = 0, i = 0; i < pmodel->prep_stmt->ncols; i++) {
-		if (pmodel->prep_stmt->types[i] == GDA_TYPE_NULL)
+	missing_cols = g_new (gint, gda_pstmt_get_ncols (pmodel->prep_stmt));
+	for (nb_missing = 0, i = 0; i < gda_pstmt_get_ncols (pmodel->prep_stmt); i++) {
+		if (gda_pstmt_get_types (pmodel->prep_stmt)[i] == GDA_TYPE_NULL)
 			missing_cols [nb_missing++] = i;
 	}
 
@@ -184,10 +184,10 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		g_print ("Prefetched row %d of model %p\n", model->priv->next_row_num - 1, pmodel);
 #endif
 		for (i = nb_missing - 1; i >= 0; i--) {
-			if (pmodel->prep_stmt->types [missing_cols [i]] != GDA_TYPE_NULL) {
+			if (gda_pstmt_get_types (pmodel->prep_stmt) [missing_cols [i]] != GDA_TYPE_NULL) {
 #ifdef GDA_DEBUG_NO
 				g_print ("Found type '%s' for col %d\n", 
-					 g_type_name (pmodel->prep_stmt->types [missing_cols [i]]),
+					 g_type_name (gda_pstmt_get_types (pmodel->prep_stmt) [missing_cols [i]]),
 					 missing_cols [i]);
 #endif
 				memmove (missing_cols + i, missing_cols + i + 1, sizeof (gint) * (nb_missing - i - 1));
@@ -228,14 +228,14 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
                 _gda_sqlite_compute_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
-	if (_GDA_PSTMT (ps)->ncols < 0)
+	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
 		_GDA_PSTMT (ps)->ncols = SQLITE3_CALL (sqlite3_column_count) (ps->sqlite_stmt) -
 			ps->nb_rowid_columns;
 
         /* completing ps */
 	g_assert (! ps->stmt_used);
         ps->stmt_used = TRUE;
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+        if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (_GDA_PSTMT (ps)->ncols > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
 		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
