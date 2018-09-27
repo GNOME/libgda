@@ -40,18 +40,17 @@ typedef struct {
 	guint8    max_nchars;
 } NumAttr;
 
-struct _GdauiNumericEntryPrivate {
+typedef struct {
 	GType   type;
 	gchar   decimal_sep; /* default obtained automatically */
 	gchar   thousands_sep; /* 0 for no separator */
 	guint16 nb_decimals; /* G_MAXUINT16 for no limit */
 
 	NumAttr num_attr;
-};
+} GdauiNumericEntryPrivate;
 
-static void gdaui_numeric_entry_class_init   (GdauiNumericEntryClass *klass);
-static void gdaui_numeric_entry_init         (GdauiNumericEntry *entry);
-static void gdaui_numeric_entry_finalize     (GObject *object);
+G_DEFINE_TYPE_WITH_PRIVATE (GdauiNumericEntry, gdaui_numeric_entry, GDAUI_TYPE_ENTRY)
+
 static void gdaui_numeric_entry_set_property (GObject *object,
 						guint param_id,
 						const GValue *value,
@@ -73,41 +72,11 @@ enum
         PROP_THOUSANDS_SEP
 };
 
-static GObjectClass *parent_class = NULL;
-
-GType
-gdaui_numeric_entry_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo type_info = {
-			sizeof (GdauiNumericEntryClass),
-			NULL,		/* base_init */
-			NULL,		/* base_finalize */
-			(GClassInitFunc) gdaui_numeric_entry_class_init,
-			NULL,		/* class_finalize */
-			NULL,		/* class_data */
-			sizeof (GdauiNumericEntry),
-			0,		/* n_preallocs */
-			(GInstanceInitFunc) gdaui_numeric_entry_init,
-			0
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY, "GdauiNumericEntry", &type_info, 0);
-	}
-
-	return type;
-}
-
 static void
 gdaui_numeric_entry_class_init (GdauiNumericEntryClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	object_class->finalize = gdaui_numeric_entry_finalize;
 	GDAUI_ENTRY_CLASS (klass)->assume_insert = gdaui_numeric_entry_assume_insert;
 	GDAUI_ENTRY_CLASS (klass)->assume_delete = gdaui_numeric_entry_assume_delete;
 	GDAUI_ENTRY_CLASS (klass)->get_empty_text = NULL;
@@ -239,30 +208,12 @@ get_default_decimal_sep ()
 static void
 gdaui_numeric_entry_init (GdauiNumericEntry *entry)
 {
-	entry->priv = g_new0 (GdauiNumericEntryPrivate, 1);
-	entry->priv->type = G_TYPE_INT64;
-	compute_numeric_attributes (entry->priv->type, &(entry->priv->num_attr));
-	entry->priv->decimal_sep = get_default_decimal_sep ();
-	entry->priv->thousands_sep = 0;
-	entry->priv->nb_decimals = G_MAXUINT16;
-}
-
-static void 
-gdaui_numeric_entry_finalize (GObject *object)
-{
-	GdauiNumericEntry *entry;
-
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GDAUI_IS_ENTRY (object));
-
-        entry = GDAUI_NUMERIC_ENTRY (object);
-        if (entry->priv) {
-                g_free (entry->priv);
-                entry->priv = NULL;
-        }
-
-        /* parent class */
-        parent_class->finalize (object);
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
+	priv->type = G_TYPE_INT64;
+	compute_numeric_attributes (priv->type, &(priv->num_attr));
+	priv->decimal_sep = get_default_decimal_sep ();
+	priv->thousands_sep = 0;
+	priv->nb_decimals = G_MAXUINT16;
 }
 
 static void 
@@ -275,8 +226,9 @@ gdaui_numeric_entry_set_property (GObject *object,
 	gchar *otext;
 
         entry = GDAUI_NUMERIC_ENTRY (object);
-	otext = gdaui_entry_get_text (GDAUI_ENTRY (entry));
-        if (entry->priv) {
+        GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
+        otext = gdaui_entry_get_text (GDAUI_ENTRY (entry));
+        if (priv) {
                 switch (param_id) {
                 case PROP_TYPE: {
 			NumAttr num_attr;
@@ -284,13 +236,13 @@ gdaui_numeric_entry_set_property (GObject *object,
 			if (num_attr.is_numerical == FALSE)
 				g_warning (_("Type %s is not numerical"), g_type_name (g_value_get_gtype (value)));
 			else {
-				entry->priv->type = g_value_get_gtype (value);
-				entry->priv->num_attr = num_attr;
+				priv->type = g_value_get_gtype (value);
+				priv->num_attr = num_attr;
 			}
                         break;
 		}
 		case PROP_N_DECIMALS:
-                        entry->priv->nb_decimals = g_value_get_uint (value);
+                        priv->nb_decimals = g_value_get_uint (value);
                         break;
                 case PROP_DECIMAL_SEP: {
 			gchar sep;
@@ -298,7 +250,7 @@ gdaui_numeric_entry_set_property (GObject *object,
                         if ((sep == 0) || (sep == '+') || (sep == '-'))
                                 g_warning (_("Decimal separator cannot be the '%c' character"), sep ? sep : '0');
                         else {
-                                entry->priv->decimal_sep = (gchar) g_value_get_schar (value);
+                                priv->decimal_sep = (gchar) g_value_get_schar (value);
                         }
                         break;
                 }
@@ -308,7 +260,7 @@ gdaui_numeric_entry_set_property (GObject *object,
                         if ((sep == '+') || (sep == '-') || (sep == '_'))
                                 g_warning (_("Decimal thousands cannot be the '%c' character"), sep);
                         else {
-                                entry->priv->thousands_sep = (gchar) g_value_get_schar (value);
+                                priv->thousands_sep = (gchar) g_value_get_schar (value);
                         }
                         break;
                 }
@@ -321,18 +273,18 @@ gdaui_numeric_entry_set_property (GObject *object,
 	g_free (otext);
 
 	gint msize;
-	if (entry->priv->num_attr.max_nchars == 0)
+	if (priv->num_attr.max_nchars == 0)
 		msize = -1;
 	else {
-		msize = (gint) entry->priv->num_attr.max_nchars;
-		if (entry->priv->thousands_sep)
-			msize += entry->priv->num_attr.max_nchars / 3;
-		if (! entry->priv->num_attr.is_int)
+		msize = (gint) priv->num_attr.max_nchars;
+		if (priv->thousands_sep)
+			msize += priv->num_attr.max_nchars / 3;
+		if (! priv->num_attr.is_int)
 			msize += 1;
-		if (entry->priv->nb_decimals != G_MAXUINT16)
-			msize += entry->priv->nb_decimals;
+		if (priv->nb_decimals != G_MAXUINT16)
+			msize += priv->nb_decimals;
 	}
-	/*g_print ("GdauiNumericEntry: type %s => msize = %d\n", g_type_name (entry->priv->type), msize);*/
+	/*g_print ("GdauiNumericEntry: type %s => msize = %d\n", g_type_name (priv->type), msize);*/
 	gdaui_entry_set_width_chars (GDAUI_ENTRY (entry), msize);
 }
 
@@ -345,19 +297,20 @@ gdaui_numeric_entry_get_property (GObject *object,
 	GdauiNumericEntry *entry;
 
         entry = GDAUI_NUMERIC_ENTRY (object);
-        if (entry->priv) {
+        GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
+        if (priv) {
                 switch (param_id) {
                 case PROP_TYPE:
-			g_value_set_gtype (value, entry->priv->type);
+			g_value_set_gtype (value, priv->type);
                         break;
 		case PROP_N_DECIMALS:
-                        g_value_set_uint (value, entry->priv->nb_decimals);
+                        g_value_set_uint (value, priv->nb_decimals);
                         break;
                 case PROP_DECIMAL_SEP:
-                        g_value_set_schar (value, (gint8) entry->priv->decimal_sep);
+                        g_value_set_schar (value, (gint8) priv->decimal_sep);
                         break;
                 case PROP_THOUSANDS_SEP:
-                        g_value_set_schar (value, (gint8) entry->priv->thousands_sep);
+                        g_value_set_schar (value, (gint8) priv->thousands_sep);
                         break;
                 default:
                         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -380,18 +333,19 @@ text_unformat (GdauiNumericEntry *entry, gchar *str, gint *pos)
 	g_assert (str);
 	gchar *ptr;
 	gint i, len;
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
 	len = strlen (str);
 	for (ptr = str, i = 0;
 	     *ptr;
 	     i++) {
-		if (*ptr == entry->priv->thousands_sep) {
+		if (*ptr == priv->thousands_sep) {
 			memmove (ptr, ptr+1, len - (ptr - str));
 			len--;
 			if (*pos >= i)
 				*pos = *pos - 1;
 		}
-		else if ((*ptr == entry->priv->decimal_sep) &&
-			 (ptr[1] == entry->priv->decimal_sep)) {
+		else if ((*ptr == priv->decimal_sep) &&
+			 (ptr[1] == priv->decimal_sep)) {
 			memmove (ptr, ptr+1, len - (ptr - str));
 			len--;
 			/*if (*pos > i)
@@ -420,10 +374,11 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_s
 	gint i, last_th_sep_pos;
 	gint dec_pos = -1; /* position of the decimal */
 	gint cpos;
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
 
 	len = strlen (str);
 	string = g_string_new ("");
-	if (entry->priv->num_attr.is_int)
+	if (priv->num_attr.is_int)
 		last_th_sep_pos = len - 1;
 	else
 		last_th_sep_pos = -1;
@@ -432,14 +387,14 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_s
 	for (i = len - 1, ptr = str + len - 1;
 	     ptr >= str;
 	     ptr --, i --) {
-		if (*ptr == entry->priv->decimal_sep) {
+		if (*ptr == priv->decimal_sep) {
 			last_th_sep_pos = i - 1;
 			dec_pos = len - i - 1;
 		}
 		else if (i == last_th_sep_pos - 3) {
 			last_th_sep_pos = i;
-			if (entry->priv->thousands_sep) {
-				g_string_append_c (string, entry->priv->thousands_sep);
+			if (priv->thousands_sep) {
+				g_string_append_c (string, priv->thousands_sep);
 				if (i < cpos)
 					cpos ++;
 			}
@@ -456,8 +411,8 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_s
 		     ptr --, i --) {
 			if (i == last_th_sep_pos - 3) {
 				last_th_sep_pos = i;
-				if (entry->priv->thousands_sep) {
-					g_string_append_c (string, entry->priv->thousands_sep);
+				if (priv->thousands_sep) {
+					g_string_append_c (string, priv->thousands_sep);
 					if (i < cpos)
 						cpos ++;
 				}
@@ -469,13 +424,13 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_s
 	g_strreverse (string->str);
 
 	/* fix the number of decimals if necessary */
-	if ((! entry->priv->num_attr.is_int) &&
-	    entry->priv->nb_decimals != G_MAXUINT16) {
+	if ((! priv->num_attr.is_int) &&
+	    priv->nb_decimals != G_MAXUINT16) {
 		if (dec_pos == -1) {
 			/* no decimal */
-			if (entry->priv->nb_decimals > 0) {
-				g_string_append_c (string, entry->priv->decimal_sep);
-				for (i = 0; i < entry->priv->nb_decimals; i++)
+			if (priv->nb_decimals > 0) {
+				g_string_append_c (string, priv->decimal_sep);
+				for (i = 0; i < priv->nb_decimals; i++)
 					g_string_append_c (string, '0');
 			}
 		}
@@ -483,26 +438,26 @@ text_reformat (GdauiNumericEntry *entry, gchar *str, gint *pos, gboolean allow_s
 			gint nb_dec;
 			len = strlen (string->str);
 			nb_dec = dec_pos; /* FIXME */
-			if (nb_dec < entry->priv->nb_decimals) {
-				for (i = nb_dec; i < entry->priv->nb_decimals; i++)
+			if (nb_dec < priv->nb_decimals) {
+				for (i = nb_dec; i < priv->nb_decimals; i++)
 					g_string_append_c (string, '0');
 			}
-			else if (nb_dec > entry->priv->nb_decimals) {
-				g_string_truncate (string, len - (nb_dec - entry->priv->nb_decimals));
+			else if (nb_dec > priv->nb_decimals) {
+				g_string_truncate (string, len - (nb_dec - priv->nb_decimals));
 				if (!allow_sep_ending &&
-				    (string->str[string->len - 1] == entry->priv->decimal_sep)) {
-					/* we don't want numbers terminated by entry->priv->decimal_sep */
+				    (string->str[string->len - 1] == priv->decimal_sep)) {
+					/* we don't want numbers terminated by priv->decimal_sep */
 					g_string_truncate (string, string->len - 1);
 				}
 			}
 		}
 	}
-	else if ((! entry->priv->num_attr.is_int) &&
+	else if ((! priv->num_attr.is_int) &&
 		 dec_pos >= 0) {
 		/* remove all the '0' which are useless */
-		while ((string->str[string->len - 1] == entry->priv->decimal_sep) ||
+		while ((string->str[string->len - 1] == priv->decimal_sep) ||
 		       (string->str[string->len - 1] == '0')) {
-			if (string->str[string->len - 1] == entry->priv->decimal_sep) {
+			if (string->str[string->len - 1] == priv->decimal_sep) {
 				if (!allow_sep_ending)
 					g_string_truncate (string, string->len - 1);
 				break;
@@ -522,6 +477,7 @@ test_text_validity (GdauiNumericEntry *entry, const gchar *text)
 {
 	gboolean retval = TRUE;
 	gchar *endptr [1];
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
 
 #ifdef GDA_DEBUG_NO
 	g_print ("Validity text: #%s#", text);
@@ -531,24 +487,24 @@ test_text_validity (GdauiNumericEntry *entry, const gchar *text)
 		;
 	else {
 		gchar *tmp = g_strdup (text);
-		if (entry->priv->num_attr.is_int) {
+		if (priv->num_attr.is_int) {
 			gchar *ptr;
 			
 			for (ptr = tmp; *ptr; ) {
-				if (*ptr == entry->priv->thousands_sep) 
+				if (*ptr == priv->thousands_sep)
 					/* remove that char */
 					memmove (ptr, ptr + 1, strlen (ptr));
 				else
 					ptr++;
 			}
-			if (entry->priv->num_attr.is_signed) {
+			if (priv->num_attr.is_signed) {
 				gint64 value;
 				errno = 0;
 				value = g_ascii_strtoll (tmp, endptr, 10);
 				if (((value == G_MININT64) || (value == G_MAXINT64)) &&
 				    (errno == ERANGE))
 					retval = FALSE;
-				if ((**endptr != 0) || (value < entry->priv->num_attr.imin) || (value > entry->priv->num_attr.imax))
+				if ((**endptr != 0) || (value < priv->num_attr.imin) || (value > priv->num_attr.imax))
 					retval = FALSE;
 			}
 			else {
@@ -557,7 +513,7 @@ test_text_validity (GdauiNumericEntry *entry, const gchar *text)
 				value = g_ascii_strtoull (tmp, endptr, 10);
 				if ((value == G_MAXUINT64) && (errno == ERANGE))
 					retval = FALSE;
-				if ((**endptr != 0) || (value > entry->priv->num_attr.uimax))
+				if ((**endptr != 0) || (value > priv->num_attr.uimax))
 					retval = FALSE;
 			}
 		}
@@ -566,11 +522,11 @@ test_text_validity (GdauiNumericEntry *entry, const gchar *text)
 			gdouble value;
 			
 			for (ptr = tmp; *ptr; ) {
-				if (*ptr == entry->priv->decimal_sep) {
+				if (*ptr == priv->decimal_sep) {
 					*ptr = get_default_decimal_sep ();
 					ptr++;
 				}
-				else if (*ptr == entry->priv->thousands_sep)
+				else if (*ptr == priv->thousands_sep)
 					memmove (ptr, ptr + 1, strlen (ptr));
 				else
 					ptr++;
@@ -581,7 +537,7 @@ test_text_validity (GdauiNumericEntry *entry, const gchar *text)
 			    (errno == ERANGE))
 				retval = FALSE;
 			if ((**endptr != 0) || 
-			    ((entry->priv->num_attr.fmax > 0) && (value > entry->priv->num_attr.fmax)))
+			    ((priv->num_attr.fmax > 0) && (value > priv->num_attr.fmax)))
 				retval  = FALSE;
 		}
 		g_free (tmp);
@@ -605,6 +561,7 @@ gdaui_numeric_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint te
 	gint olen, nlen;
 
 	fentry = (GdauiNumericEntry*) entry;
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (fentry);
 	otext = gdaui_entry_get_text (GDAUI_ENTRY (entry));
 	olen = strlen (otext);
 	for (ptr = otext, i = 0; (i < *virt_pos) && *ptr; ptr = g_utf8_next_char (ptr), i++);
@@ -629,7 +586,7 @@ gdaui_numeric_entry_assume_insert (GdauiEntry *entry, const gchar *text, gint te
 		/*g_print ("ERROR!\n");*/
 		return;
 	}
-	ntext = text_reformat (fentry, string->str, virt_pos, (text[text_length-1] == fentry->priv->decimal_sep));
+	ntext = text_reformat (fentry, string->str, virt_pos, (text[text_length-1] == priv->decimal_sep));
 	g_string_free (string, TRUE);
 	/*g_print ("NEW: [%s]\n", ntext);*/
 
@@ -650,13 +607,14 @@ gdaui_numeric_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gint 
 	gint cursor_pos;
 
 	fentry = (GdauiNumericEntry*) entry;
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (fentry);
 	ndel = virt_end_pos - virt_start_pos;
 	otext = gdaui_entry_get_text (GDAUI_ENTRY (entry));
 	cursor_pos = gtk_editable_get_position (GTK_EDITABLE (entry));
 
 	if (otext) {
-		if ((ndel == 1) && (otext[virt_start_pos] == fentry->priv->decimal_sep) &&
-		    (fentry->priv->nb_decimals != G_MAXUINT16)) {
+		if ((ndel == 1) && (otext[virt_start_pos] == priv->decimal_sep) &&
+		    (priv->nb_decimals != G_MAXUINT16)) {
 			gtk_editable_set_position (GTK_EDITABLE (entry), cursor_pos - 1);
 			g_free (otext);
 			return;
@@ -675,7 +633,7 @@ gdaui_numeric_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gint 
 	/*g_print ("SANITIZED: [%s]", string->str);*/
 
 	if (!test_text_validity (fentry, string->str)) {
-		if ((string->str[0] == fentry->priv->decimal_sep) &&
+		if ((string->str[0] == priv->decimal_sep) &&
 		    string->str[1] == 0)
 			ntext = g_strdup ("");
 		g_string_free (string, TRUE);
@@ -731,20 +689,21 @@ gdaui_numeric_entry_get_value (GdauiNumericEntry *entry)
 	g_return_val_if_fail (GDAUI_IS_NUMERIC_ENTRY (entry), NULL);
 	
 	text = gdaui_entry_get_text ((GdauiEntry*) entry);
+	GdauiNumericEntryPrivate *priv = gdaui_numeric_entry_get_instance_private (entry);
 	if (text) {
 		gchar *ptr;
 		gint len;
 		len = strlen (text);
 		for (ptr = text; *ptr; ) {
-			if (*ptr == entry->priv->thousands_sep)
+			if (*ptr == priv->thousands_sep)
 				memmove (ptr, ptr+1, len - (ptr - text));
 			else {
-				if (*ptr == entry->priv->decimal_sep)
+				if (*ptr == priv->decimal_sep)
 					*ptr = '.';
 				ptr++;
 			}
 		}
-		value = gda_value_new_from_string (text, entry->priv->type);
+		value = gda_value_new_from_string (text, priv->type);
 		g_free (text);
 	}
 
