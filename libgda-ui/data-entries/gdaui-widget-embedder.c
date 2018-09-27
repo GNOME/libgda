@@ -2,6 +2,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,37 +19,49 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "widget-embedder.h"
+#include "gdaui-widget-embedder.h"
 #include <gdaui-decl.h>
 
-static void     widget_embedder_realize       (GtkWidget       *widget);
-static void     widget_embedder_unrealize     (GtkWidget       *widget);
-static void     widget_embedder_get_preferred_width  (GtkWidget *widget,
+static void     gdaui_widget_embedder_realize       (GtkWidget       *widget);
+static void     gdaui_widget_embedder_unrealize     (GtkWidget       *widget);
+static void     gdaui_widget_embedder_get_preferred_width  (GtkWidget *widget,
 						      gint      *minimum,
 						      gint      *natural);
-static void     widget_embedder_get_preferred_height (GtkWidget *widget,
+static void     gdaui_widget_embedder_get_preferred_height (GtkWidget *widget,
 						      gint      *minimum,
 						      gint      *natural);
-static void     widget_embedder_size_allocate (GtkWidget       *widget,
+static void     gdaui_widget_embedder_size_allocate (GtkWidget       *widget,
                                                GtkAllocation   *allocation);
-static gboolean widget_embedder_damage        (GtkWidget       *widget,
+static gboolean gdaui_widget_embedder_damage        (GtkWidget       *widget,
                                                GdkEventExpose  *event);
-static gboolean widget_embedder_draw          (GtkWidget       *widget,
+static gboolean gdaui_widget_embedder_draw          (GtkWidget       *widget,
 					       cairo_t         *cr);
-static void     widget_embedder_add           (GtkContainer    *container,
+static void     gdaui_widget_embedder_add           (GtkContainer    *container,
                                                GtkWidget       *child);
-static void     widget_embedder_remove        (GtkContainer    *container,
+static void     gdaui_widget_embedder_remove        (GtkContainer    *container,
                                                GtkWidget       *widget);
-static void     widget_embedder_forall        (GtkContainer    *container,
+static void     gdaui_widget_embedder_forall        (GtkContainer    *container,
                                                gboolean         include_internals,
                                                GtkCallback      callback,
                                                gpointer         callback_data);
-static GType    widget_embedder_child_type    (GtkContainer    *container);
+static GType    gdaui_widget_embedder_child_type    (GtkContainer    *container);
 
-G_DEFINE_TYPE (WidgetEmbedder, widget_embedder, GTK_TYPE_CONTAINER);
+typedef struct {
+  GtkWidget *child;
+  GdkWindow *offscreen_window;
+  gboolean   valid;
+
+  /* unknown colors */
+  gdouble red;
+  gdouble green;
+  gdouble blue;
+  gdouble alpha;
+} GdauiWidgetEmbedderPrivate;
+
+G_DEFINE_TYPE (GdauiWidgetEmbedder, gdaui_widget_embedder, GTK_TYPE_CONTAINER);
 
 static void
-to_child (G_GNUC_UNUSED WidgetEmbedder *bin,
+to_child (G_GNUC_UNUSED GdauiWidgetEmbedder *bin,
           double         widget_x,
           double         widget_y,
           double        *x_out,
@@ -59,7 +72,7 @@ to_child (G_GNUC_UNUSED WidgetEmbedder *bin,
 }
 
 static void
-to_parent (G_GNUC_UNUSED WidgetEmbedder *bin,
+to_parent (G_GNUC_UNUSED GdauiWidgetEmbedder *bin,
            double         offscreen_x,
            double         offscreen_y,
            double        *x_out,
@@ -70,62 +83,64 @@ to_parent (G_GNUC_UNUSED WidgetEmbedder *bin,
 }
 
 static void
-widget_embedder_class_init (WidgetEmbedderClass *klass)
+gdaui_widget_embedder_class_init (GdauiWidgetEmbedderClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 	GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
-	widget_class->realize = widget_embedder_realize;
-	widget_class->unrealize = widget_embedder_unrealize;
-	widget_class->get_preferred_width = widget_embedder_get_preferred_width;
-	widget_class->get_preferred_height = widget_embedder_get_preferred_height;
-	widget_class->size_allocate = widget_embedder_size_allocate;
-	widget_class->draw = widget_embedder_draw;
+	widget_class->realize = gdaui_widget_embedder_realize;
+	widget_class->unrealize = gdaui_widget_embedder_unrealize;
+	widget_class->get_preferred_width = gdaui_widget_embedder_get_preferred_width;
+	widget_class->get_preferred_height = gdaui_widget_embedder_get_preferred_height;
+	widget_class->size_allocate = gdaui_widget_embedder_size_allocate;
+	widget_class->draw = gdaui_widget_embedder_draw;
 
 	g_signal_override_class_closure (g_signal_lookup ("damage-event", GTK_TYPE_WIDGET),
-					 WIDGET_EMBEDDER_TYPE,
-					 g_cclosure_new (G_CALLBACK (widget_embedder_damage),
+					 GDAUI_TYPE_WIDGET_EMBEDDER,
+					 g_cclosure_new (G_CALLBACK (gdaui_widget_embedder_damage),
 							 NULL, NULL));
 
-	container_class->add = widget_embedder_add;
-	container_class->remove = widget_embedder_remove;
-	container_class->forall = widget_embedder_forall;
-	container_class->child_type = widget_embedder_child_type;
+	container_class->add = gdaui_widget_embedder_add;
+	container_class->remove = gdaui_widget_embedder_remove;
+	container_class->forall = gdaui_widget_embedder_forall;
+	container_class->child_type = gdaui_widget_embedder_child_type;
 }
 
 static void
-widget_embedder_init (WidgetEmbedder *bin)
+gdaui_widget_embedder_init (GdauiWidgetEmbedder *bin)
 {
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 	gtk_widget_set_has_window (GTK_WIDGET (bin), TRUE);
-	bin->valid = TRUE;
-	bin->red = -1.;
-	bin->green = -1.;
-	bin->blue = -1.;
-	bin->alpha = -1.;
+	priv->valid = TRUE;
+	priv->red = -1.;
+	priv->green = -1.;
+	priv->blue = -1.;
+	priv->alpha = -1.;
 }
 
 GtkWidget *
-widget_embedder_new (void)
+gdaui_widget_embedder_new (void)
 {
-	return g_object_new (WIDGET_EMBEDDER_TYPE, NULL);
+	return g_object_new (GDAUI_TYPE_WIDGET_EMBEDDER, NULL);
 }
 
 static GdkWindow *
 pick_offscreen_child (G_GNUC_UNUSED GdkWindow     *offscreen_window,
                       double         widget_x,
                       double         widget_y,
-                      WidgetEmbedder *bin)
+                      GdauiWidgetEmbedder *bin)
 {
 	GtkAllocation child_area;
 	double x, y;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
-	if (bin->child && gtk_widget_get_visible (bin->child)) {
+	if (priv->child && gtk_widget_get_visible (priv->child)) {
 		to_child (bin, widget_x, widget_y, &x, &y);
-		
+
 		gtk_widget_get_allocation ((GtkWidget*) bin, &child_area);
 		if (x >= 0 && x < child_area.width &&
 		    y >= 0 && y < child_area.height)
-			return bin->offscreen_window;
+			return priv->offscreen_window;
 	}
 
 	return NULL;
@@ -137,7 +152,7 @@ offscreen_window_to_parent (G_GNUC_UNUSED GdkWindow     *offscreen_window,
                             double         offscreen_y,
                             double        *parent_x,
                             double        *parent_y,
-                            WidgetEmbedder *bin)
+                            GdauiWidgetEmbedder *bin)
 {
 	to_parent (bin, offscreen_x, offscreen_y, parent_x, parent_y);
 }
@@ -148,15 +163,16 @@ offscreen_window_from_parent (G_GNUC_UNUSED GdkWindow     *window,
                               double         parent_y,
                               double        *offscreen_x,
                               double        *offscreen_y,
-                              WidgetEmbedder *bin)
+                              GdauiWidgetEmbedder *bin)
 {
 	to_child (bin, parent_x, parent_y, offscreen_x, offscreen_y);
 }
 
 static void
-widget_embedder_realize (GtkWidget *widget)
+gdaui_widget_embedder_realize (GtkWidget *widget)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 	GdkWindowAttr attributes;
 	gint attributes_mask;
 	gint border_width;
@@ -198,109 +214,115 @@ widget_embedder_realize (GtkWidget *widget)
 	attributes.window_type = GDK_WINDOW_OFFSCREEN;
 
 	child_requisition.width = child_requisition.height = 0;
-	if (bin->child && gtk_widget_get_visible (bin->child)) {
+	if (priv->child && gtk_widget_get_visible (priv->child)) {
 		GtkAllocation allocation;
-		gtk_widget_get_allocation (bin->child, &allocation);
+		gtk_widget_get_allocation (priv->child, &allocation);
 		attributes.width = allocation.width;
 		attributes.height = allocation.height;
 	}
-	bin->offscreen_window = gdk_window_new (gdk_screen_get_root_window (gtk_widget_get_screen (widget)),
+	priv->offscreen_window = gdk_window_new (gdk_screen_get_root_window (gtk_widget_get_screen (widget)),
 						&attributes, attributes_mask);
-	gdk_window_set_user_data (bin->offscreen_window, widget);
-	if (bin->child)
-		gtk_widget_set_parent_window (bin->child, bin->offscreen_window);
-	gdk_offscreen_window_set_embedder (bin->offscreen_window, win);
-	g_signal_connect (bin->offscreen_window, "to-embedder",
+	gdk_window_set_user_data (priv->offscreen_window, widget);
+	if (priv->child)
+		gtk_widget_set_parent_window (priv->child, priv->offscreen_window);
+	gdk_offscreen_window_set_embedder (priv->offscreen_window, win);
+	g_signal_connect (priv->offscreen_window, "to-embedder",
 			  G_CALLBACK (offscreen_window_to_parent), bin);
-	g_signal_connect (bin->offscreen_window, "from-embedder",
+	g_signal_connect (priv->offscreen_window, "from-embedder",
 			  G_CALLBACK (offscreen_window_from_parent), bin);
 
-	gdk_window_show (bin->offscreen_window);
+	gdk_window_show (priv->offscreen_window);
 }
 
 static void
-widget_embedder_unrealize (GtkWidget *widget)
+gdaui_widget_embedder_unrealize (GtkWidget *widget)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
-	gdk_window_set_user_data (bin->offscreen_window, NULL);
-	gdk_window_destroy (bin->offscreen_window);
-	bin->offscreen_window = NULL;
+	gdk_window_set_user_data (priv->offscreen_window, NULL);
+	gdk_window_destroy (priv->offscreen_window);
+	priv->offscreen_window = NULL;
 
-	GTK_WIDGET_CLASS (widget_embedder_parent_class)->unrealize (widget);
+	GTK_WIDGET_CLASS (gdaui_widget_embedder_parent_class)->unrealize (widget);
 }
 
 static GType
-widget_embedder_child_type (GtkContainer *container)
+gdaui_widget_embedder_child_type (GtkContainer *container)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
-	if (bin->child)
+	if (priv->child)
 		return G_TYPE_NONE;
 
 	return GTK_TYPE_WIDGET;
 }
 
 static void
-widget_embedder_add (GtkContainer *container,
+gdaui_widget_embedder_add (GtkContainer *container,
                      GtkWidget    *widget)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
-	if (!bin->child) {
-		gtk_widget_set_parent_window (widget, bin->offscreen_window);
+	if (!priv->child) {
+		gtk_widget_set_parent_window (widget, priv->offscreen_window);
 		gtk_widget_set_parent (widget, GTK_WIDGET (bin));
-		bin->child = widget;
+		priv->child = widget;
 	}
 	else
-		g_warning ("WidgetEmbedder cannot have more than one child\n");
+		g_warning ("GdauiWidgetEmbedder cannot have more than one child\n");
 }
 
 static void
-widget_embedder_remove (GtkContainer *container,
+gdaui_widget_embedder_remove (GtkContainer *container,
                         GtkWidget    *widget)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (container);
 	gboolean was_visible;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
 	was_visible = gtk_widget_get_visible (widget);
 
-	if (bin->child == widget) {
+	if (priv->child == widget) {
 		gtk_widget_unparent (widget);
-		
-		bin->child = NULL;
-		
+
+		priv->child = NULL;
+
 		if (was_visible && gtk_widget_get_visible (GTK_WIDGET (container)))
 			gtk_widget_queue_resize (GTK_WIDGET (container));
 	}
 }
 
 static void
-widget_embedder_forall (GtkContainer *container,
+gdaui_widget_embedder_forall (GtkContainer *container,
                         G_GNUC_UNUSED gboolean      include_internals,
                         GtkCallback   callback,
                         gpointer      callback_data)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (container);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
 	g_return_if_fail (callback != NULL);
 
-	if (bin->child)
-		(*callback) (bin->child, callback_data);
+	if (priv->child)
+		(*callback) (priv->child, callback_data);
 }
 
 static void
-widget_embedder_size_request (GtkWidget      *widget,
+gdaui_widget_embedder_size_request (GtkWidget      *widget,
                               GtkRequisition *requisition)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (widget);
 	GtkRequisition child_requisition;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
 	child_requisition.width = 0;
 	child_requisition.height = 0;
 
-	if (bin->child && gtk_widget_get_visible (bin->child))
-		gtk_widget_get_preferred_size (bin->child, &child_requisition, NULL);
+	if (priv->child && gtk_widget_get_visible (priv->child))
+		gtk_widget_get_preferred_size (priv->child, &child_requisition, NULL);
 
 	guint border_width;
 	border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
@@ -309,32 +331,33 @@ widget_embedder_size_request (GtkWidget      *widget,
 }
 
 static void
-widget_embedder_get_preferred_width (GtkWidget *widget,
+gdaui_widget_embedder_get_preferred_width (GtkWidget *widget,
 				     gint      *minimum,
 				     gint      *natural)
 {
 	GtkRequisition requisition;
-	widget_embedder_size_request (widget, &requisition);
+	gdaui_widget_embedder_size_request (widget, &requisition);
 	*minimum = *natural = requisition.width;
 }
 
 static void
-widget_embedder_get_preferred_height (GtkWidget *widget,
+gdaui_widget_embedder_get_preferred_height (GtkWidget *widget,
 				      gint      *minimum,
 				      gint      *natural)
 {
 	GtkRequisition requisition;
-	widget_embedder_size_request (widget, &requisition);
+	gdaui_widget_embedder_size_request (widget, &requisition);
 	*minimum = *natural = requisition.height;
 }
 
 static void
-widget_embedder_size_allocate (GtkWidget     *widget,
+gdaui_widget_embedder_size_allocate (GtkWidget     *widget,
                                GtkAllocation *allocation)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (widget);
 	gint border_width;
 	gint w, h;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 
 	gtk_widget_set_allocation (widget, allocation);
 
@@ -352,28 +375,28 @@ widget_embedder_size_allocate (GtkWidget     *widget,
 					w, h);
 	}
 
-	if (bin->child && gtk_widget_get_visible (bin->child)){
+	if (priv->child && gtk_widget_get_visible (priv->child)){
 		GtkAllocation child_allocation;
-		
+
 		child_allocation.x = 0;
 		child_allocation.y = 0;
 		child_allocation.height = h;
 		child_allocation.width = w;
-		
+
 		if (gtk_widget_get_realized (widget))
-			gdk_window_move_resize (bin->offscreen_window,
+			gdk_window_move_resize (priv->offscreen_window,
 						child_allocation.x,
 						child_allocation.y,
 						child_allocation.width,
 						child_allocation.height);
-		
+
 		child_allocation.x = child_allocation.y = 0;
-		gtk_widget_size_allocate (bin->child, &child_allocation);
+		gtk_widget_size_allocate (priv->child, &child_allocation);
 	}
 }
 
 static gboolean
-widget_embedder_damage (GtkWidget      *widget,
+gdaui_widget_embedder_damage (GtkWidget      *widget,
                         G_GNUC_UNUSED GdkEventExpose *event)
 {
 	gdk_window_invalidate_rect (gtk_widget_get_window (widget), NULL, FALSE);
@@ -382,21 +405,23 @@ widget_embedder_damage (GtkWidget      *widget,
 }
 
 void
-widget_embedder_set_ucolor (WidgetEmbedder *bin, gdouble red, gdouble green,
+gdaui_widget_embedder_set_ucolor (GdauiWidgetEmbedder *bin, gdouble red, gdouble green,
 			    gdouble blue, gdouble alpha)
 {
-	bin->red = red;
-	bin->green = green;
-	bin->blue = blue;
-	bin->alpha = alpha;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
+	priv->red = red;
+	priv->green = green;
+	priv->blue = blue;
+	priv->alpha = alpha;
 	gtk_widget_queue_draw (GTK_WIDGET (bin));
 }
 
 
 static gboolean
-widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
+gdaui_widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 {
-	WidgetEmbedder *bin = WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedder *bin = GDAUI_WIDGET_EMBEDDER (widget);
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
 #define MARGIN 1.5
 	GdkWindow *window;
 
@@ -404,20 +429,20 @@ widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 	if (gtk_cairo_should_draw_window (cr, window)) {
 		cairo_surface_t *surface;
 		GtkAllocation child_area;
-		
-		if (bin->child && gtk_widget_get_visible (bin->child)) {
-			surface = gdk_offscreen_window_get_surface (bin->offscreen_window);
-			gtk_widget_get_allocation (bin->child, &child_area);
+
+		if (priv->child && gtk_widget_get_visible (priv->child)) {
+			surface = gdk_offscreen_window_get_surface (priv->offscreen_window);
+			gtk_widget_get_allocation (priv->child, &child_area);
 			cairo_set_source_surface (cr, surface, 0, 0);
 			cairo_paint (cr);
 
-			if (! bin->valid) {
-				if ((bin->red >= 0.) && (bin->red <= 1.) &&
-				    (bin->green >= 0.) && (bin->green <= 1.) &&
-				    (bin->blue >= 0.) && (bin->blue <= 1.) &&
-				    (bin->alpha >= 0.) && (bin->alpha <= 1.))
-					cairo_set_source_rgba (cr, bin->red, bin->green,
-							       bin->blue, bin->alpha);
+			if (! priv->valid) {
+				if ((priv->red >= 0.) && (priv->red <= 1.) &&
+				    (priv->green >= 0.) && (priv->green <= 1.) &&
+				    (priv->blue >= 0.) && (priv->blue <= 1.) &&
+				    (priv->alpha >= 0.) && (priv->alpha <= 1.))
+					cairo_set_source_rgba (cr, priv->red, priv->green,
+							       priv->blue, priv->alpha);
 				else
 					cairo_set_source_rgba (cr, GDAUI_COLOR_UNKNOWN_MASK);
 				cairo_rectangle (cr, child_area.x + MARGIN, child_area.y + MARGIN,
@@ -428,10 +453,10 @@ widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 		}
 	}
 
-	if (gtk_cairo_should_draw_window (cr, bin->offscreen_window)) {
-		if (bin->child)
+	if (gtk_cairo_should_draw_window (cr, priv->offscreen_window)) {
+		if (priv->child)
 			gtk_container_propagate_draw (GTK_CONTAINER (widget),
-						      bin->child,
+						      priv->child,
 						      cr);
 	}
 
@@ -439,15 +464,16 @@ widget_embedder_draw (GtkWidget *widget, cairo_t *cr)
 }
 
 /**
- * widget_embedder_set_valid
- * @bin: a #WidgetEmbedder
+ * gdaui_widget_embedder_set_valid
+ * @bin: a #GdauiWidgetEmbedder
  * @valid: set to %TRUE for a valid entry
  *
  * Changes the validity aspect of @bin
  */
 void
-widget_embedder_set_valid (WidgetEmbedder *bin, gboolean valid)
+gdaui_widget_embedder_set_valid (GdauiWidgetEmbedder *bin, gboolean valid)
 {
-	bin->valid = valid;
+	GdauiWidgetEmbedderPrivate *priv = gdaui_widget_embedder_get_instance_private (bin);
+	priv->valid = valid;
 	gtk_widget_queue_draw (GTK_WIDGET (bin));
 }

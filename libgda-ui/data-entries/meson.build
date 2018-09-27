@@ -65,8 +65,8 @@ libgda_ui_data_entries_sources = files([
 libgda_ui_data_entries_sources_all = files([
 	'common-bin.c',
 	'common-bin.h',
-	'widget-embedder.c',
-	'widget-embedder.h',
+	'gdaui-widget-embedder.c',
+	'gdaui-widget-embedder.h',
 	])
 libgda_ui_data_entries_sources_all += [
 	libgda_ui_data_entries_sources,
