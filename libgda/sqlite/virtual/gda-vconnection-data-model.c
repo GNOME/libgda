@@ -30,9 +30,9 @@
 #include "../gda-sqlite.h"
 
 struct _GdaVconnectionDataModelPrivate {
-	GSList *table_data_list; /* list of GdaVConnectionTableData structures */
+	GSList       *table_data_list; /* list of GdaVConnectionTableData structures */
 
-	GMutex        lock_context;
+	GRecMutex     lock_context;
 	GdaStatement *executed_stmt;
 };
 
@@ -139,7 +139,7 @@ gda_vconnection_data_model_init (GdaVconnectionDataModel *cnc, G_GNUC_UNUSED Gda
 {
 	cnc->priv = g_new (GdaVconnectionDataModelPrivate, 1);
 	cnc->priv->table_data_list = NULL;
-	g_mutex_init (& (cnc->priv->lock_context));
+	g_rec_mutex_init (& (cnc->priv->lock_context));
 
 	g_object_set (G_OBJECT (cnc), "cnc-string", "_IS_VIRTUAL=TRUE", NULL);
 }
@@ -160,7 +160,7 @@ gda_vconnection_data_model_dispose (GObject *object)
 		}
 		gda_connection_close_no_warning ((GdaConnection *) cnc);
 
-		g_mutex_clear (& (cnc->priv->lock_context));
+		g_rec_mutex_clear (& (cnc->priv->lock_context));
 		g_free (cnc->priv);
 		cnc->priv = NULL;
 	}
@@ -246,13 +246,13 @@ gboolean
 gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc, 
 				      GdaDataModel *model, const gchar *table_name, GError **error)
 {
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	GdaVconnectionDataModelSpec *spec;
 	gboolean retval;
 
 	spec = g_new0 (GdaVconnectionDataModelSpec, 1);
-	spec->data_model = model;
+	spec->data_model = g_object_ref (model);
 	spec->create_columns_func = create_columns;
-	g_object_ref (model);
 	retval = gda_vconnection_data_model_add (cnc, spec, (GDestroyNotify) spec_destroy_func, table_name, error);
 
 	return retval;
@@ -626,7 +626,7 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 {
 	GSList *list;
 	if (obj) {
-		g_mutex_lock (& (cnc->priv->lock_context));
+		g_rec_mutex_lock (& (cnc->priv->lock_context));
 		for (list = cnc->priv->table_data_list; list; list = list->next) {
 			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
 			VContext *vc = NULL;
@@ -662,7 +662,7 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 			 * an exception already occurred */
 			td->context.current_vcontext = NULL;
 		}
-		g_mutex_unlock (& (cnc->priv->lock_context));
+		g_rec_mutex_unlock (& (cnc->priv->lock_context));
 	}
 }
 
