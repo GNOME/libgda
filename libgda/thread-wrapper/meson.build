@@ -52,3 +52,15 @@ test_worker_sources = files([
 	'test-worker.c'
 	])
 test_worker_sources += libgda_threadwrapper_sources
+
+test_connect_sources = files([
+	'dummy-object.h',
+	'dummy-object.c',
+	'test-connect.c'
+])
+
+test_connect_sources += threadwrapper_sources_priv
+test_connect_sources += threadwrapper_headers_priv
+test_connect_sources += threadwrapper_sources
+test_connect_sources += threadwrapper_headers
+

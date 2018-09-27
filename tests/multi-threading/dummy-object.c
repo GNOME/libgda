@@ -20,12 +20,14 @@
 #include "dummy-object.h"
 #include <glib-object.h>
 
-/* 
- * Main static functions 
+/*
+ * Main static functions
  */
-static void dummy_object_class_init (DummyObjectClass * class);
-static void dummy_object_init (DummyObject *object);
+typedef struct {
+  gint dummy;
+} DummyObjectPrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (DummyObject, dummy_object, G_TYPE_OBJECT)
 /* get a pointer to the parents to be able to call their destructor */
 static GObjectClass  *parent_class = NULL;
 
@@ -41,34 +43,6 @@ enum
 
 static gint dummy_object_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
 
-GType
-dummy_object_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (DummyObjectClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) dummy_object_class_init,
-			NULL,
-			NULL,
-			sizeof (DummyObject),
-			0,
-			(GInstanceInitFunc) dummy_object_init,
-			NULL
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "DummyObject", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 /* VOID:INT,STRING (gda-marshal.list:39) */
 #define g_marshal_value_peek_string(v)   (char*) g_value_get_string (v)
@@ -224,6 +198,8 @@ dummy_object_class_init (DummyObjectClass *class)
 static void
 dummy_object_init (DummyObject *object)
 {
+  DummyObjectPrivate *priv = dummy_object_get_instance_private (object);
+  priv->dummy = 0;
 }
 
 /**

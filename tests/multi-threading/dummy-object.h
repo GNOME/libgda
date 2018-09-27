@@ -25,19 +25,7 @@
 G_BEGIN_DECLS
 
 #define DUMMY_TYPE_OBJECT          (dummy_object_get_type())
-#define DUMMY_OBJECT(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, dummy_object_get_type(), DummyObject)
-#define DUMMY_OBJECT_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, dummy_object_get_type (), DummyObjectClass)
-#define DUMMY_IS_OBJECT(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, dummy_object_get_type ())
-
-typedef struct _DummyObject DummyObject;
-typedef struct _DummyObjectClass DummyObjectClass;
-
-/* struct for the object's data */
-struct _DummyObject
-{
-	GObject                 object;
-};
-
+G_DECLARE_DERIVABLE_TYPE (DummyObject, dummy_object, DUMMY, OBJECT, GObject)
 
 /* struct for the object's class */
 struct _DummyObjectClass
@@ -49,7 +37,6 @@ struct _DummyObjectClass
 	gchar                   *(*sig3)   (DummyObject *object, gchar *str, gint i);
 };
 
-GType               dummy_object_get_type                (void) G_GNUC_CONST;
 DummyObject        *dummy_object_new                     (void);
 
 G_END_DECLS
