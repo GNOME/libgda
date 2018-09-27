@@ -80,6 +80,8 @@ struct _GdaDataPivotPrivate {
 	/* computed data */
 	GArray        *columns; /* Array of GdaColumn objects, for ALL columns! */
 	GdaDataModel  *results;
+	GRecMutex provider_mutex;
+	GdaVirtualProvider *virtual_provider;
 };
 
 /* properties */
@@ -122,8 +124,6 @@ static GdaDataModelAccessFlags gda_data_pivot_get_access_flags(GdaDataModel *mod
 static const GValue        *gda_data_pivot_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 
 static GObjectClass *parent_class = NULL;
-static GMutex provider_mutex;
-static GdaVirtualProvider *virtual_provider = NULL;
 
 /**
  * gda_data_pivot_get_type:
@@ -220,6 +220,8 @@ gda_data_pivot_init (GdaDataPivot *model, G_GNUC_UNUSED GdaDataPivotClass *klass
 	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
 	model->priv = g_new0 (GdaDataPivotPrivate, 1);
 	model->priv->model = NULL;
+	model->priv->virtual_provider = NULL;
+	g_rec_mutex_init (& model->priv->provider_mutex);
 }
 
 static void
@@ -292,12 +294,20 @@ gda_data_pivot_dispose (GObject *object)
 		}
 
 		if (model->priv->vcnc) {
-			g_object_unref (model->priv->vcnc);
+			if (G_IS_OBJECT (model->priv->vcnc))
+				g_object_unref (model->priv->vcnc);
 			model->priv->vcnc = NULL;
 		}
 
 		if (model->priv->model) {
-			g_object_unref (model->priv->model);
+			if (G_IS_OBJECT (model->priv->model))
+				g_object_unref (model->priv->model);
+			model->priv->model = NULL;
+		}
+
+		if (model->priv->virtual_provider) {
+			if (G_IS_OBJECT (model->priv->virtual_provider))
+				g_object_unref (model->priv->virtual_provider);
 			model->priv->model = NULL;
 		}
 	}
@@ -312,6 +322,8 @@ gda_data_pivot_finalize (GObject *object)
 	GdaDataPivot *model = (GdaDataPivot *) object;
 
 	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
+
+	g_rec_mutex_clear (& model->priv->provider_mutex);
 
 	/* free memory */
 	if (model->priv) {
@@ -344,14 +356,14 @@ gda_data_pivot_set_property (GObject *object,
 	if (model->priv) {
 		switch (param_id) {
 		case PROP_MODEL: {
-			GdaDataModel *mod = g_value_get_object (value);
+			GdaDataModel *mod = g_value_dup_object (value);
 
 			clean_previous_population (model);
 
 			if (mod) {
 				g_return_if_fail (GDA_IS_DATA_MODEL (mod));
-  
-                                if (model->priv->model) {
+
+				if (model->priv->model) {
 					if (model->priv->vcnc)
 						gda_vconnection_data_model_remove (GDA_VCONNECTION_DATA_MODEL (model->priv->vcnc),
 										   TABLE_NAME, NULL);
@@ -359,7 +371,6 @@ gda_data_pivot_set_property (GObject *object,
 				}
 
 				model->priv->model = mod;
-				g_object_ref (mod);
 			}
 			break;
 		}
@@ -2100,15 +2111,14 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 {
 	GdaConnection *vcnc;
 	GError *lerror = NULL;
-	if (pivot->priv->vcnc)
+	if (!pivot->priv->vcnc && GDA_IS_CONNECTION (pivot->priv->vcnc))
 		return TRUE;
 
-	g_mutex_lock (&provider_mutex);
-	if (!virtual_provider)
-		virtual_provider = gda_vprovider_data_model_new ();
-	g_mutex_unlock (&provider_mutex);
+	g_rec_mutex_lock (&pivot->priv->provider_mutex);
+	if (!pivot->priv->virtual_provider)
+		pivot->priv->virtual_provider = gda_vprovider_data_model_new ();
 
-	vcnc = gda_virtual_connection_open (virtual_provider, &lerror);
+	vcnc = gda_virtual_connection_open (pivot->priv->virtual_provider, &lerror);
 	if (! vcnc) {
 		g_print ("Virtual ERROR: %s\n", lerror && lerror->message ? lerror->message : "No detail");
 		if (lerror)
@@ -2119,6 +2129,7 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 	}
 
 	pivot->priv->vcnc = vcnc;
+	g_rec_mutex_unlock (&pivot->priv->provider_mutex);
 	return TRUE;
 }
 
@@ -2142,14 +2153,12 @@ bind_source_model (GdaDataPivot *pivot, GError **error)
 		return TRUE;
 	}
 
-	GError *lerror = NULL;
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (pivot->priv->vcnc),
 						   pivot->priv->model,
-						   TABLE_NAME, &lerror)) {
+						   TABLE_NAME, NULL)) {
 		g_set_error (error, GDA_DATA_PIVOT_ERROR, GDA_DATA_PIVOT_SOURCE_MODEL_ERROR,
 			     "%s",
 			     _("Invalid source data model (may have incompatible column names)"));
-		g_clear_error (&lerror);
 		return FALSE;
 	}
 
