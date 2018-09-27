@@ -1,7 +1,10 @@
 
-libgda 5.2.5
+libgda 5.2.5 2018-09-25
  - GdaConnection has removed the use of g_object_weak_*, improving
    multi-threading behaviour
+ - Prepared statements now use GWeakRef for weak references
+ - GdaDataPivot use instance providers and locking
+ - GdaVConnectionDataModel use GRecMutex
  - Updated SQLite to 3.8.11.1
  - Fix SQLCipher build by embedding source code for 3.4.2 version
  - Fix SQLCipher disabling
