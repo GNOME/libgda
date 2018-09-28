@@ -42,7 +42,8 @@ autotools_build:
   script:
   - ./autogen.sh
   - make
-  - make check
+  - broadwayd &
+  - GDK_BACKEND=broadway make check
   artifacts:
     when: on_failure
     paths:
@@ -60,7 +61,8 @@ autotools_dist:
   script:
   - ./autogen.sh
   - make
-  - make distcheck
+  - broadwayd &
+  - GDK_BACKEND=broadway make distcheck
   artifacts:
     when: on_failure
     paths:
