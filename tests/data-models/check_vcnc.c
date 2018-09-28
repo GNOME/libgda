@@ -66,10 +66,16 @@ main (int argc, char *argv[])
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "city.csv", NULL);
 	city_model = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
+	g_print("Imported Data Model for CITIES:\n");
+	g_assert (GDA_IS_DATA_MODEL (city_model));
+	g_print ("%s", gda_data_model_dump_as_string (city_model));
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "country.csv", NULL);
 	country_model = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
+	g_print("Imported Data Model for COUNTRIES:\n");
+	g_assert (GDA_IS_DATA_MODEL (country_model));
+	g_print ("%s", gda_data_model_dump_as_string (country_model));
 
 	/* Add data models to connection */
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual), city_model, "city", &error)) 

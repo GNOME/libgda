@@ -71,6 +71,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-data-handler.h>
 #include <thread-wrapper/itsignaler.h>
+#include <libgda/gda-marshal.h>
 
 #include <glib/gstdio.h>
 #include <fcntl.h>
