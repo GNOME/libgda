@@ -15,16 +15,8 @@ AM_CPPFLAGS = \
 	$(sqliteinc) \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1
 
-#sqlcipher.patch:
-#	cp $(srcdir)/sqlcipher-3.3.patch $(srcdir)/sqlcipher.patch
 
 sqlite_sources = sqlite3.c sqlite3.h
-sqlite3.c: sqlite3.h $(srcdir)/sqlcipher.patch $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c
-	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.c sqlite3.c
-	patch -p0 < $(srcdir)/sqlcipher.patch
-
-sqlite3.h: $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h
-	cp $(top_srcdir)/libgda/sqlite/sqlite-src/sqlite3.h sqlite3.h
 
 libmain.lo: sqlite3.h
 
@@ -73,12 +65,10 @@ pkgconfig_DATA = libgda-sqlcipher-6.0.pc
 
 EXTRA_DIST = $(xml_in_files) \
 	libgda-sqlcipher-6.0.pc.in \
-	sqlcipher.patch \
 	COPYING.sqlcipher \
 	sqlcipher.gresource.xml
 
 CLEANFILES = \
-	$(sqlite_sources) \
 	sqlcipher.gresources.c \
 	$(RESOURCES)
 
