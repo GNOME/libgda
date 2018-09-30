@@ -25,6 +25,7 @@ variables:
                 libldap2-dev
                 libgoocanvas-2.0-dev
                 libhsqldb1.8.0-java
+                default-jdk
                 yelp-tools
                 iso-codes
                 libgirepository1.0-dev
