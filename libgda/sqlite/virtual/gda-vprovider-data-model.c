@@ -280,7 +280,7 @@ virtual_filtered_data_free (VirtualFilteredData *data)
 static VirtualFilteredData *
 virtual_filtered_data_ref (VirtualFilteredData *data)
 {
-	g_return_if_fail (data != NULL);
+	g_return_val_if_fail (data != NULL, NULL);
 	data->refcount ++;
 	return data;
 }
