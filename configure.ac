@@ -476,46 +476,37 @@ dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
 AC_ARG_ENABLE([gda-gi],
-    AS_HELP_STRING([--enable-gda-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda [default=no]]),
-    [enable_gda_gi=$enableval],[enable_gda_gi=no])
+    AS_HELP_STRING([--disable-gda-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda [default=no]]),
+    [disable_gda_gi=yes],[disable_gda_gi=no])
 
-if test "x$enable_introspection" = "xyes" -a "x$found_introspection" = "xyes"
+if test "x$found_introspection" != "xyes"
 then
-  enable_gda_gi=yes
+  disable_gda_gi=yes
+  disable_gdaui_gi=yes
 fi
 
-if test "x$enable_gda_gi" = "xyes" -a "x$found_introspection" != "xyes"
-then
-	AC_MSG_ERROR([Introspection for Libgda is requested but not available])
-fi
-
-AM_CONDITIONAL(ENABLE_GDA_GI, [test "$enable_gda_gi" = "yes"])
+AM_CONDITIONAL(ENABLE_GDA_GI, [test "x$disable_gda_gi" != "xyes"])
 
 AC_ARG_ENABLE([gdaui-gi],
-    AS_HELP_STRING([--enable-gdaui-gi[=@<:@no/auto/yes@:>@]], [Enable GObject Introspection for libgda-ui [default=no]]),
-    [enable_gdaui_gi=$enableval],[enable_gdaui_gi=no])
+    AS_HELP_STRING([--disable-gdaui-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda-ui [default=no]]),
+    [disable_gdaui_gi=yes],[disable_gdaui_gi=no])
 
-if test "x$enable_gda_gi" != "xyes" -a "$enable_gdaui_gi" = "xyes"
+if test "x$disable_gda_gi" = "xyes"
 then
-	AC_MSG_ERROR([Introspection for Libgda UI is requested but not available])
+	disable_gdaui_gi="yes"
 fi
 
-if test "x$enable_gdaui_gi" = "xyes" -a "x$have_ui" != "xyes"
+if test "x$have_ui" != "xyes"
 then
-	AC_MSG_ERROR([Introspection for Libgda UI is requested but no GTK+ is available])
+	disable_gdaui_gi="yes"
 fi
 
-AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
+AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "x$disable_gdaui_gi" != "xyes"])
 
 AC_ARG_ENABLE([gi-system-install],
     AS_HELP_STRING([--enable-gi-system-install[=@<:@no/auto/yes@:>@]], [Install GObject Introspection files along with system installed files [default=yes]]),
     [enable_gi_system_install=$enableval],[enable_gi_system_install=yes])
 AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "xyes"])
-
-if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
-then
-	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
-fi
 
 dnl ******************************
 dnl Check for Vala Compiler
@@ -524,25 +515,22 @@ dnl ******************************
 AC_PATH_PROG([VALAC], [valac], [no])
 
 AC_PATH_PROG(VAPIGEN, [vapigen], [no])
-if test "x$VAPIGEN" = "xno" -a "x$enable_vala" = yes
+if test "x$VAPIGEN" = "xno" -a "x$enable_vala" = "xyes"
 then
 	AC_MSG_ERROR([GDA Vala bindings is requested but vapigen is not found])
 fi
 AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$VAPIGEN" != "xno")
 
-if test "x$enable_gda_gi" != "xyes" -a "x$enable_vala" = "xyes"
+AC_ARG_ENABLE([gdaui-vala],
+    AS_HELP_STRING([--disable-gdaui-vala[=@<:@yes/no@:>@]], [Disable Vala bindings for GDA-UI [default=no]]),
+    [disable_gdaui_vala=$enableval],[disable_gdaui_vala=no])
+
+if test "x$enable_vala" = "xyes"
 then
-	AC_MSG_ERROR([GDA Vala bindings is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
+	disable_gdaui_gi="xyes"
 fi
 
-AC_ARG_ENABLE([gdaui-vala],
-    AS_HELP_STRING([--enable-gdaui-vala[=@<:@no/yes@:>@]], [Enable Vala bindings for GDA-UI [default=no]]),
-    [enable_gdaui_vala=$enableval],[enable_gdaui_vala=no])
-if test "x$enable_vala" != "xyes" -a "x$enable_gdaui_vala" = "xyes"
-then
-	AC_MSG_ERROR([Vala bindings for GDA-UI is requested but GDA Vala bindings is disable. Use --enable-vala])
-fi
-AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
+AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$disable_gdaui_vala" != "xyes")
 
 AC_ARG_ENABLE([vala-extensions],
     AS_HELP_STRING([--enable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
@@ -1053,8 +1041,8 @@ echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Installing Glade GTK+ UI extension catalog: `if test x$have_glade != xno; then echo yes; else echo no; fi`"
 echo "   Building Libxslt extension: `if test x$have_xslt != xno; then echo yes; else echo no; fi`"
-echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes; then echo yes; else echo no; fi`"
-echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
+echo "   Building libgda GObject Introspection: `if test x$disable_gda_gi != xyes; then echo yes; else echo no; fi`"
+echo "   Building libgda-ui GObject Introspection: `if test x$disable_gdaui_gi != xyes; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings (--enable-vala): `if test x$enable_vala != xyes; then echo no; else echo yes; fi`"
