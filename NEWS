@@ -1,4 +1,8 @@
 
+libgda-5.2.6
+ - Fixed compilation on MacOS
+ - Improvements to Continuous Integration
+
 libgda 5.2.5 2018-09-25
  - GdaConnection has removed the use of g_object_weak_*, improving
    multi-threading behaviour

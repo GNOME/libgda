@@ -524,9 +524,9 @@ dnl ******************************
 AC_PATH_PROG([VALAC], [valac], [no])
 
 AC_PATH_PROG(VAPIGEN, [vapigen], [no])
-if test "x$VAPIGEN" = "xno"
+if test "x$VAPIGEN" = "xno" -a "x$enable_vala" = yes
 then
-	enable_vala_ext = "no"
+	AC_MSG_ERROR([GDA Vala bindings is requested but vapigen is not found])
 fi
 AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$VAPIGEN" != "xno")
 
@@ -553,16 +553,22 @@ then
 	AC_MSG_ERROR([Vala Bindigs are requested but Vala's compiler is not found])
 fi
 
-if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes" -a "x$found_valac" != "xno"
+if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes" -a "x$VALAC" = "xno"
 then
-	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala Bindings is disable. Use --enable-vala])
+	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala's compiler is not present])
 fi
 
 dnl Check for libgee
+found_gee="xyes"
 GEE_REQUIRED="0.8.0"
-PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED,[],enable_vala_ext=no)
+PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED,[],found_gee=no)
 AC_SUBST(GEE_CFLAGS)
 AC_SUBST(GEE_LIBS)
+
+if test "x$enable_vala_ext" = "xyes" -a "x$found_gee" = "xno"
+then
+	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but GEE library development is not present])
+fi
 
 AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 
