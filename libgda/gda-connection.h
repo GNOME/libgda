@@ -41,6 +41,7 @@
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-batch.h>
+#include "gda-ddl-creator.h"
 
 G_BEGIN_DECLS
 
@@ -294,6 +295,7 @@ const gchar         *gda_connection_get_provider_name    (GdaConnection *cnc);
 GdaServerOperation  *gda_connection_create_operation     (GdaConnection *cnc, GdaServerOperationType type,
                                                           GdaSet *options, GError **error);
 
+GdaDdlCreator       *gda_connection_create_ddl_creator   (GdaConnection *cnc);
 gboolean             gda_connection_perform_operation    (GdaConnection *cnc, GdaServerOperation *op, GError **error);
                                                           
 GdaServerOperation  *gda_connection_prepare_operation_create_table_v          (GdaConnection *cnc, const gchar *table_name, GError **error, ...);
