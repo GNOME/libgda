@@ -370,7 +370,7 @@ vapi: libgda-5.0.vapi
 libgda-5.0.vapi: Gda-5.0.gir
 	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda --library libgda-5.0 --pkg libxml-2.0 Gda-5.0.gir
 
-vapidir = $(VAPIDIR)
+vapidir = $(datadir)/vala/vapi
 vapi_DATA=libgda-5.0.vapi
 
 EXTRA_DIST += \

@@ -61,7 +61,7 @@ libgdadata_5_0_la_SOURCES = \
 $(include_headers): DataBase.c
 vapi: gdadata-5.0.vapi
 
-vapidir = $(VAPIDIR)
+vapidir = $(datadir)/vala/vapi
 vapi_DATA = gdadata-5.0.vapi
 
 gdadata-5.0.vapi GdaData-5.0.gir: libgdadata-5.0.la
