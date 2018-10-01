@@ -18,8 +18,8 @@ AM_CFLAGS =\
 lib_LTLIBRARIES = libgdadata-5.0.la
 
 VALAFLAGS = \
-    --vapidir=$(top_srcdir)/libgda \
-    --vapidir=$(VAPIDIR) \
+    --vapidir=$(top_builddir)/libgda \
+    --vapidir=$(datadir)/vala/vapi \
     --includedir=$(top_srcdir)/libgda \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \
