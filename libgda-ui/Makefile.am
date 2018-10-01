@@ -173,6 +173,8 @@ EXTRA_DIST = $(DTD_FILES) \
 	gdaui.css \
 	gdaui.gresource.xml
 
+DISTCLEANFILES=
+
 if ENABLE_GDAUI_GI
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
@@ -258,11 +260,12 @@ libgdaui-5.0.vapi: Gdaui-5.0.gir
 	$(VAPIGEN) --metadatadir=$(top_srcdir)/libgda-ui --vapidir=$(top_srcdir)/libgda --girdir=$(top_srcdir)/libgda --library=libgda-ui-5.0 --pkg=libxml-2.0 --pkg=libgda-5.0 --pkg=gio-2.0 --pkg=atk --pkg=gtk+-3.0 Gdaui-5.0.gir
 
 vapidir = $(VAPIDIR)
-vapi_DATA=libgdaui-5.0.vapi
+vapi_DATA=libgda-ui-5.0.vapi
 
 EXTRA_DIST += \
-	Gdaui-5.0.metadata \
-        $(vapi_DATA)
+	Gdaui-5.0.metadata
+
+CLEANFILES += $(vapi_DATA)
 
 endif
 

@@ -475,33 +475,25 @@ dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
 GOBJECT_INTROSPECTION_CHECK([1.30.0])
-AC_ARG_ENABLE([gda-gi],
-    AS_HELP_STRING([--disable-gda-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda [default=no]]),
-    [disable_gda_gi=yes],[disable_gda_gi=no])
-
-if test "x$found_introspection" != "xyes"
-then
-  disable_gda_gi=yes
-  disable_gdaui_gi=yes
-fi
-
-AM_CONDITIONAL(ENABLE_GDA_GI, [test "x$disable_gda_gi" != "xyes"])
 
 AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--disable-gdaui-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda-ui [default=no]]),
     [disable_gdaui_gi=yes],[disable_gdaui_gi=no])
 
-if test "x$disable_gda_gi" = "xyes"
+if test x$found_introspection != xyes
 then
-	disable_gdaui_gi="yes"
+  disable_gda_gi=yes
+  disable_gdaui_gi=yes
 fi
 
-if test "x$have_ui" != "xyes"
+AM_CONDITIONAL(ENABLE_GDA_GI, [test x$disable_gda_gi != xyes])
+
+if test x$have_ui != xyes
 then
-	disable_gdaui_gi="yes"
+	disable_gdaui_gi=yes
 fi
 
-AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "x$disable_gdaui_gi" != "xyes"])
+AM_CONDITIONAL(ENABLE_GDAUI_GI, [test x$disable_gdaui_gi != xyes])
 
 AC_ARG_ENABLE([gi-system-install],
     AS_HELP_STRING([--enable-gi-system-install[=@<:@no/auto/yes@:>@]], [Install GObject Introspection files along with system installed files [default=yes]]),
@@ -512,39 +504,49 @@ dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
 
+AC_ARG_ENABLE([vala],
+    AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]], [Generate Vala bindings and extensions]),
+    [enable_vala=yes],[enable_vala=no])
+
 AC_PATH_PROG([VALAC], [valac], [no])
-
-AC_PATH_PROG(VAPIGEN, [vapigen], [no])
-if test "x$VAPIGEN" = "xno" -a "x$enable_vala" = "xyes"
-then
-	AC_MSG_ERROR([GDA Vala bindings is requested but vapigen is not found])
-fi
-AM_CONDITIONAL(ENABLE_VAPIGEN, test "x$VAPIGEN" != "xno")
-
-AC_ARG_ENABLE([gdaui-vala],
-    AS_HELP_STRING([--disable-gdaui-vala[=@<:@yes/no@:>@]], [Disable Vala bindings for GDA-UI [default=no]]),
-    [disable_gdaui_vala=$enableval],[disable_gdaui_vala=no])
-
-if test "x$enable_vala" = "xyes"
-then
-	disable_gdaui_gi="xyes"
-fi
-
-AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$disable_gdaui_vala" != "xyes")
-
-AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--enable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
-    [enable_vala_ext=$enableval],[enable_vala_ext=no])
 
 if test "x$enable_vala" = "xyes" -a "x$VALAC" = "xno"
 then
-	AC_MSG_ERROR([Vala Bindigs are requested but Vala's compiler is not found])
+	AC_MSG_NOTICE([Vala's compiler not found, disabling Vala Bindigs and extensions])
+	enable_vala=no
 fi
 
-if test "x$enable_vala" != "xyes" -a "x$enable_vala_ext" = "xyes" -a "x$VALAC" = "xno"
+AC_PATH_PROG(VAPIGEN, [vapigen], [no])
+
+if test x$VAPIGEN = xno -a x$enable_vala = xyes
 then
-	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but Vala's compiler is not present])
+	AC_MSG_NOTICE([vapigen not found, disabling Vala bindings and extensions])
+	enable_vala=no
 fi
+
+AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vala = xyes)
+
+AC_ARG_ENABLE([gdaui-vala],
+    AS_HELP_STRING([--disable-gdaui-vala[=@<:@yes/no@:>@]], [Generate Vala bindings and extensions]),
+    [disable_gdaui_vala=yes],[disable_gdaui_vala=no])
+
+if test x$enable_vala != xyes -o x$disable_gdaui_gi = xyes -o x$have_ui = xno
+then
+	disable_gdaui_vala=yes
+fi
+
+AM_CONDITIONAL(ENABLE_GDAUI_VALA, test x$disable_gdaui_vala != xyes)
+
+AC_ARG_ENABLE([vala-extensions],
+    AS_HELP_STRING([--disable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
+    [disable_vala_ext=yes],[disable_vala_ext=no])
+
+if test x$enable_vala = xno
+then
+	disable_vala_ext=yes
+fi
+
+AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test x$disable_vala_ext != xyes)
 
 dnl Check for libgee
 found_gee="xyes"
@@ -553,12 +555,10 @@ PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED,[],found_gee=no)
 AC_SUBST(GEE_CFLAGS)
 AC_SUBST(GEE_LIBS)
 
-if test "x$enable_vala_ext" = "xyes" -a "x$found_gee" = "xno"
+if test "x$disable_vala_ext" != "xyes" -a "x$found_gee" = "xno"
 then
 	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but GEE library development is not present])
 fi
-
-AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test "x$enable_vala_ext" = "xyes")
 
 dnl ******************************
 dnl Checks for libcrypto
@@ -1045,9 +1045,9 @@ echo "   Building libgda GObject Introspection: `if test x$disable_gda_gi != xye
 echo "   Building libgda-ui GObject Introspection: `if test x$disable_gdaui_gi != xyes; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
-echo "   Building GDA Vala Bindings (--enable-vala): `if test x$enable_vala != xyes; then echo no; else echo yes; fi`"
-echo "   Building GDA-UI Vala Bindings: `if test x$enable_gdaui_vala != xyes; then echo no; else echo yes; fi`"
-echo "   Building Vala Extensions: `if test x$enable_vala_ext != xno; then echo yes; else echo no; fi`"
+echo "   Building GDA Vala Bindings (--enable-vala): `if test x$enable_vala = xno; then echo no; else echo yes; fi`"
+echo "   Building GDA-UI Vala Bindings: `if test x$disable_gdaui_vala = xyes; then echo no; else echo yes; fi`"
+echo "   Building Vala Extensions: `if test x$disable_vala_ext = xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"

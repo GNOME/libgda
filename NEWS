@@ -2,6 +2,11 @@
 libgda-5.2.6
  - Fixed compilation on MacOS
  - Improvements to Continuous Integration
+ - All Vala bindings and Vala extensions are built by default using --enable-vala,
+   added --disable* switch to disable some or all of them
+ - Fixes on outdated unit tests
+ - Translations:
+	- es (Daniel Mustieles)
 
 libgda 5.2.5 2018-09-25
  - GdaConnection has removed the use of g_object_weak_*, improving

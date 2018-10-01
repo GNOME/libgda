@@ -360,7 +360,7 @@ endif
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(typelibs_DATA)
+CLEANFILES += $(typelibs_DATA) $(INTROSPECTION_GIRS)
 endif
 
 if ENABLE_VAPIGEN
@@ -374,15 +374,11 @@ vapidir = $(VAPIDIR)
 vapi_DATA=libgda-5.0.vapi
 
 EXTRA_DIST += \
-	Gda-5.0.metadata \
-        $(vapi_DATA)
-endif
+	Gda-5.0.metadata
 
-clean-local:
-	@if ! test -d "$(top_srcdir)/.git"; \
-	then \
-		rm -f $(gir_DATA) $(vapi_DATA); \
-	fi
+CLEANFILES += $(vapi_DATA)
+
+endif
 
 if ENABLE_VALA_EXTENSIONS
     SUBDIRS+= . data
