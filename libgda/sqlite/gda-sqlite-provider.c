@@ -801,7 +801,8 @@ gda_sqlite_provider_dispose (GObject *object)
   GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
   GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
   g_weak_ref_clear (priv->connection);
-  g_free (priv->connection);
+  if (priv->connection)
+    g_free (priv->connection);
   priv->connection = NULL;
 }
 

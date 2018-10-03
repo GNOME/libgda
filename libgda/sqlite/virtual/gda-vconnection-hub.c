@@ -3,7 +3,7 @@
  * Copyright (C) 2008 - 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017-2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,15 +42,15 @@ static void hub_connection_free (HubConnection *hc);
 static gboolean attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error);
 static void detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc);
 
-static GdaSqlParser *internal_parser;
-
 struct _GdaVconnectionHubPrivate {
-	GSList *hub_connections; /* list of HubConnection structures */
+	GSList        *hub_connections; /* list of HubConnection structures */
+	GdaSqlParser *internal_parser;
 };
 
 static void gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass);
 static void gda_vconnection_hub_init       (GdaVconnectionHub *cnc, GdaVconnectionHubClass *klass);
 static void gda_vconnection_hub_dispose   (GObject *object);
+static void gda_vconnection_hub_finalize   (GObject *object);
 static GObjectClass  *parent_class = NULL;
 
 static HubConnection *get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns);
@@ -67,9 +67,7 @@ gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_vconnection_hub_dispose;
-
-	/* static objects */
-	internal_parser = gda_sql_parser_new ();
+	object_class->finalize = gda_vconnection_hub_finalize;
 }
 
 static void
@@ -77,6 +75,7 @@ gda_vconnection_hub_init (GdaVconnectionHub *cnc, G_GNUC_UNUSED GdaVconnectionHu
 {
 	cnc->priv = g_new (GdaVconnectionHubPrivate, 1);
 	cnc->priv->hub_connections = NULL;
+	cnc->priv->internal_parser = gda_sql_parser_new ();;
 }
 
 static void
@@ -89,16 +88,34 @@ gda_vconnection_hub_dispose (GObject *object)
 	/* free memory */
 	if (cnc->priv) {
 		gda_connection_close ((GdaConnection *) cnc, NULL);
-		g_assert (!cnc->priv->hub_connections);
-
-		g_free (cnc->priv);
-		cnc->priv = NULL;
+		if (cnc->priv->hub_connections) {
+			g_slist_free_full (cnc->priv->hub_connections, hub_connection_free);
+			cnc->priv->hub_connections = NULL;
+		}
+		if (cnc->priv->internal_parser)
+			g_object_unref (cnc->priv->internal_parser);
 	}
 
 	/* chain to parent class */
 	parent_class->dispose (object);
 }
 
+static void
+gda_vconnection_hub_finalize (GObject *object)
+{
+	GdaVconnectionHub *cnc = (GdaVconnectionHub *) object;
+
+	g_return_if_fail (GDA_IS_VCONNECTION_HUB (cnc));
+
+	/* free memory */
+	if (cnc->priv) {
+		g_free (cnc->priv);
+		cnc->priv = NULL;
+	}
+
+	/* chain to parent class */
+	parent_class->finalize (object);
+}
 GType
 gda_vconnection_hub_get_type (void)
 {
@@ -826,7 +843,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	if (hc->ns) {
 		GdaStatement *stmt;
 		tmp = g_strdup_printf ("ATTACH ':memory:' AS %s", hc->ns);
-		stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
+		stmt = gda_sql_parser_parse_string (hub->priv->internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
 		g_assert (stmt);
 		if (gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, error) == -1) {
@@ -991,7 +1008,7 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 		GdaStatement *stmt;
 		gchar *tmp;
 		tmp = g_strdup_printf ("DETACH %s", hc->ns);
-		stmt = gda_sql_parser_parse_string (internal_parser, tmp, NULL, NULL);
+		stmt = gda_sql_parser_parse_string (hub->priv->internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
 		g_assert (stmt);
 		gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, NULL);

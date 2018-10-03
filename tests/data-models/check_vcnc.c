@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017,2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@
 #include <sql-parser/gda-sql-parser.h>
 #include <string.h>
 #include <unistd.h>
+#include <gio/gio.h>
 
 #define NTHREADS 50
 
@@ -34,26 +35,58 @@ static GdaDataModel *run_sql_select (GdaConnection *cnc, const gchar *sql,
 static gboolean run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error);
 static GdaDataModel *assert_run_sql_select (GdaConnection *cnc, const gchar *sql,
 					    Action action, const gchar *compare_file);
-static void assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params);
+static gboolean assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error);
 GdaDataModel *load_from_file (const gchar *filename);
 static void assert_data_model_equal (GdaDataModel *model, GdaDataModel *ref);
 
-static GdaConnection *open_destination_connection (void);
+typedef struct {
+  gint fails;
+  GMainLoop *loop;
+  GFile *fdb;
+} Data;
+
+static GdaConnection *open_destination_connection (Data *data);
 static void check_update_delete (GdaConnection *virtual);
 static void check_simultanous_select_random (GdaConnection *virtual);
 static void check_simultanous_select_forward (GdaConnection *virtual);
 static void check_threads_select_random (GdaConnection *virtual);
 static void check_date (GdaConnection *virtual);
 
+
+static gboolean test1 (Data *data);
+
 int
 main (int argc, char *argv[])
 {
+  GMainLoop *loop;
+  gda_init ();
+  loop = g_main_loop_new (NULL, FALSE);
+  Data *data = g_new0(Data, 1);
+  data->fails = 0;
+  data->loop = loop;
+  g_idle_add ((GSourceFunc) test1, data);
+  g_main_loop_run (loop);
+  if (data->fails != 0)
+    g_print ("FAIL %d\n", data->fails);
+  else
+    g_print ("All Ok\n");
+  g_main_loop_unref (loop);
+  if (G_IS_OBJECT (data->fdb)) {
+    if (g_file_query_exists (data->fdb, NULL)) {
+      g_file_delete (data->fdb, NULL, NULL);
+      g_object_unref (data->fdb);
+    }
+  }
+  g_free (data);
+  return 0;
+}
+
+static gboolean
+test1 (Data *data) {
 	GError *error = NULL;	
 	GdaConnection *virtual, *out_cnc;
 	GdaVirtualProvider *provider;
 	gchar *file;
-	
-	gda_init ();
 
 	provider = gda_vprovider_hub_new ();
 	virtual = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
@@ -66,16 +99,10 @@ main (int argc, char *argv[])
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "city.csv", NULL);
 	city_model = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
-	g_print("Imported Data Model for CITIES:\n");
-	g_assert (GDA_IS_DATA_MODEL (city_model));
-	g_print ("%s", gda_data_model_dump_as_string (city_model));
 	file = g_build_filename (CHECK_FILES, "tests", "data-models", "country.csv", NULL);
 	country_model = gda_data_model_import_new_file (file, TRUE, options);
 	g_free (file);
 	g_object_unref (options);
-	g_print("Imported Data Model for COUNTRIES:\n");
-	g_assert (GDA_IS_DATA_MODEL (country_model));
-	g_print ("%s", gda_data_model_dump_as_string (country_model));
 
 	/* Add data models to connection */
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual), city_model, "city", &error)) 
@@ -84,19 +111,23 @@ main (int argc, char *argv[])
 		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
 
 	/* SQLite connection for outputs */
-        out_cnc = open_destination_connection ();
+    out_cnc = open_destination_connection (data);
+    if (out_cnc == NULL)
+      return FALSE;
 
 	/* adding connections to the virtual connection */
         if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), out_cnc, "out", &error)) {
                 g_print ("Could not add connection to virtual connection: %s\n",
                          error && error->message ? error->message : "No detail");
-                exit (1);
+                data->fails += 1;
+                g_main_loop_quit (data->loop);
+                return G_SOURCE_REMOVE;
         }
 
 	check_update_delete (virtual);
 
 	g_print ("*** Copying data into 'countries' virtual table...\n");
-	assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country", NULL);
+	assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country", NULL, NULL);
 
 	check_simultanous_select_random (virtual);
 	check_simultanous_select_forward (virtual);
@@ -106,50 +137,98 @@ main (int argc, char *argv[])
         if (! gda_connection_close (virtual, &error)) {
 		g_print ("gda_connection_close(virtual) error: %s\n",
                          error && error->message ? error->message : "No detail");
-                exit (1);
+                data->fails += 1;
+                g_main_loop_quit (data->loop);
+                return G_SOURCE_REMOVE;
 	}
         if (! gda_connection_close (out_cnc, &error)) {
 		g_print ("gda_connection_close(out_cnc) error: %s\n",
                          error && error->message ? error->message : "No detail");
-                exit (1);
-	}
+                data->fails += 1;
+                g_main_loop_quit (data->loop);
+                return G_SOURCE_REMOVE;
+  }
+  g_main_loop_quit (data->loop);
+  return G_SOURCE_REMOVE;
+}
 
-	g_print ("All Ok\n");
-        return 0;
+static gchar*
+create_connection_string () {
+  GFile *db;
+  GFile *d;
+  GRand *rand;
+  gint i;
+
+  rand = g_rand_new ();
+  gchar** envp = g_get_environ ();
+  const gchar* build_dir = g_environ_getenv (envp, "GDA_TOP_BUILD_DIR");
+  gchar *sd = g_strdup_printf ("file://%s/tests/data-models", build_dir);
+  g_strfreev (envp);
+  d = g_file_new_for_uri (sd);
+  g_assert (g_file_query_exists (d, NULL));
+  i = g_rand_int (rand);
+  gchar *sdb = g_strdup_printf ("%s/vcnc%d", sd, i);
+  db = g_file_new_for_uri (sdb);
+  while (g_file_query_exists (db, NULL)) {
+    g_object_unref (db);
+    i++;
+    g_free (sdb);
+    sdb = g_strdup_printf ("%s/vcnc%d", sd, i);
+    db = g_file_new_for_uri (sdb);
+  }
+  g_free (sd);
+
+  gchar* path = g_file_get_path (d);
+  gchar *cstr = g_strdup_printf ("DB_DIR=%s;DB_NAME=vcnc%d", path, i);
+  g_free (path);
+  g_print ("Connecting using: %s\n", cstr);
+  g_object_unref (d);
+  g_object_unref (db);
+  return cstr;
 }
 
 GdaConnection *
-open_destination_connection (void)
+open_destination_connection (Data *data)
 {
         /* create connection */
         GdaConnection *cnc;
         GError *error = NULL;
-        cnc = gda_connection_new_from_string ("SQLite", "DB_DIR=.;DB_NAME=vcnc",
+
+        gchar *cstr = create_connection_string ();
+        cnc = gda_connection_new_from_string ("SQLite", cstr,
 					      NULL,
 					      GDA_CONNECTION_OPTIONS_NONE,
 					      &error);
+        g_free (cstr);
         if (!cnc) {
                 g_print ("Could not create connection to local SQLite database: %s\n",
                          error && error->message ? error->message : "No detail");
-                exit (1);
+                data->fails++;
+                g_main_loop_quit (data->loop);
+                return NULL;
         }
-	if (! gda_connection_open (cnc, &error)) {
-		 g_print ("gda_connection_open() error: %s\n",
+        if (! gda_connection_open (cnc, &error)) {
+          g_print ("gda_connection_open() error: %s\n",
                          error && error->message ? error->message : "No detail");
-                exit (1);
-	}
+                data->fails++;
+                g_main_loop_quit (data->loop);
+                return NULL;
+        }
 
         /* table "cities" */
-        assert_run_sql_non_select (cnc, "DROP table IF EXISTS cities", NULL);
-        assert_run_sql_non_select (cnc, "CREATE table cities (name string not NULL primary key, countrycode string not null, population int)", NULL);
+        if (!assert_run_sql_non_select (cnc, "DROP table IF EXISTS cities", NULL, NULL)) {
+          g_object_unref (cnc);
+          cnc = open_destination_connection (data);
+        }
+        assert_run_sql_non_select (cnc, "CREATE table cities (name string not NULL primary key, countrycode string not null, population int)", NULL, NULL);
 
         /* table "countries" */
-        assert_run_sql_non_select (cnc, "DROP table IF EXISTS countries", NULL);
-        assert_run_sql_non_select (cnc, "CREATE table countries (code string not null primary key, name string not null)", NULL);
+        assert_run_sql_non_select (cnc, "DROP table IF EXISTS countries", NULL, NULL);
+        assert_run_sql_non_select (cnc, "CREATE table countries (code string not null primary key, name string not null)", NULL, NULL);
 
 	/* table "misc" */
-        assert_run_sql_non_select (cnc, "DROP table IF EXISTS misc", NULL);
-        assert_run_sql_non_select (cnc, "CREATE table misc (ts timestamp, adate date, atime time)", NULL);
+        assert_run_sql_non_select (cnc, "DROP table IF EXISTS misc", NULL, NULL);
+        assert_run_sql_non_select (cnc, "CREATE table misc (ts timestamp, adate date, atime time)", NULL, NULL);
 
         return cnc;
 }
@@ -256,16 +335,10 @@ assert_run_sql_select (GdaConnection *cnc, const gchar *sql, Action action, cons
 	return model;
 }
 
-static void
-assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params)
+static gboolean
+assert_run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error)
 {
-	GError *error = NULL;
-	if (! run_sql_non_select (cnc, sql, params, &error)) {
-		g_print ("Error executing [%s]: %s\n",
-			 sql,
-			 error && error->message ? error->message : "No detail");
-		exit (1);
-	}
+	return run_sql_non_select (cnc, sql, params, error);
 }
 
 GdaDataModel *
@@ -482,13 +555,13 @@ check_update_delete (GdaConnection *virtual)
 {
 	/* Check DELETE and UPDATE */
 	g_print ("*** Copying data into virtual 'cities' table...\n");
-	assert_run_sql_non_select (virtual, "INSERT INTO out.cities SELECT * FROM city WHERE population >= 500000", NULL);
+	assert_run_sql_non_select (virtual, "INSERT INTO out.cities SELECT * FROM city WHERE population >= 500000", NULL, NULL);
 	g_print ("*** Showing list of cities WHERE population >= 1000000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 1000000 "
 			       "ORDER BY name", ACTION_COMPARE, "cities1.xml");
 
 	g_print ("*** Deleting data where population < 2000000...\n");
-	assert_run_sql_non_select (virtual, "DELETE FROM out.cities WHERE population < 2000000", NULL);
+	assert_run_sql_non_select (virtual, "DELETE FROM out.cities WHERE population < 2000000", NULL, NULL);
 
 	g_print ("*** Showing (shorter) list of cities WHERE population >= 1000000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 1000000 "
@@ -496,7 +569,7 @@ check_update_delete (GdaConnection *virtual)
 
 	g_print ("*** Updating data where population > 3000000...\n");
 	assert_run_sql_non_select (virtual, "UPDATE out.cities SET population = 3000000 WHERE "
-				   "population >= 3000000", NULL);
+				   "population >= 3000000", NULL, NULL);
 	
 	g_print ("*** Showing list of cities WHERE population >= 2100000\n");
 	assert_run_sql_select (virtual, "SELECT * FROM out.cities WHERE population >= 2100000 "
@@ -605,7 +678,7 @@ check_date (GdaConnection *virtual)
 	g_date_free (adate);
 
 	assert_run_sql_non_select (virtual, "INSERT INTO out.misc VALUES (##ts::timestamp, "
-				   "##adate::date, ##atime::time)", set);
+				   "##adate::date, ##atime::time)", set, NULL);
 
 	g_print ("*** Showing contents of 'misc'\n");
 	model = assert_run_sql_select (virtual, "SELECT * FROM out.misc",

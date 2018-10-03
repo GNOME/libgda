@@ -136,20 +136,19 @@ gda_virtual_connection_open (GdaVirtualProvider *virtual_provider, GdaConnection
 {
 	g_return_val_if_fail (GDA_IS_VIRTUAL_PROVIDER (virtual_provider), NULL);
 
-	GdaConnection *cnc;
+	GdaConnection *cnc = NULL;
 	cnc = _gda_server_provider_create_connection (GDA_SERVER_PROVIDER (virtual_provider), NULL, NULL,
 						      NULL, options);
-	if (cnc) {
-		g_object_set (G_OBJECT (cnc), "provider", virtual_provider, NULL);
-		if (!gda_connection_open (cnc, error)) {
-			g_object_unref (cnc);
-			cnc = NULL;
-		}
-	}
-	else
+	if (!GDA_IS_CONNECTION (cnc)) {
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "%s", 
 			     _("Internal error: virtual provider does not implement the create_operation() virtual method"));
+		return NULL;
+	}
 
+	if (!gda_connection_open (cnc, error)) {
+		g_object_unref (cnc);
+		cnc = NULL;
+	}
 	return cnc;
 }
 
