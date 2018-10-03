@@ -4,10 +4,6 @@ TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs
 TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
 check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer
 
-if ENABLE_VALA_EXTENSIONS
-    VALA_EXTENSIONS= vala
-endif
-
 if HAVE_UI
 UI_EXTENSION = ui
 endif

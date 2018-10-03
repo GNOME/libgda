@@ -537,17 +537,6 @@ fi
 
 AM_CONDITIONAL(ENABLE_GDAUI_VALA, test x$disable_gdaui_vala != xyes)
 
-AC_ARG_ENABLE([vala-extensions],
-    AS_HELP_STRING([--disable-vala-extensions[=@<:@no/yes@:>@]], [Enable utility GObject based extensions written in Vala [default=no]]),
-    [disable_vala_ext=yes],[disable_vala_ext=no])
-
-if test x$enable_vala = xno
-then
-	disable_vala_ext=yes
-fi
-
-AM_CONDITIONAL(ENABLE_VALA_EXTENSIONS, test x$disable_vala_ext != xyes)
-
 dnl Check for libgee
 found_gee="xyes"
 GEE_REQUIRED="0.8.0"
@@ -920,8 +909,6 @@ libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile
-libgda/data/Makefile
-libgda/data/libgdadata-5.0.pc
 providers/Makefile
 providers/reuseable/Makefile
 providers/reuseable/postgres/Makefile
@@ -998,7 +985,6 @@ tests/value-holders/Makefile
 tests/meta-store/Makefile
 tests/multi-threading/Makefile
 tests/ui/Makefile
-tests/vala/Makefile
 doc/Makefile
 doc/C/Makefile
 doc/C/libgda.types
@@ -1047,7 +1033,6 @@ echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else
 echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings (--enable-vala): `if test x$enable_vala = xno; then echo no; else echo yes; fi`"
 echo "   Building GDA-UI Vala Bindings: `if test x$disable_gdaui_vala = xyes; then echo no; else echo yes; fi`"
-echo "   Building Vala Extensions: `if test x$disable_vala_ext = xyes; then echo no; else echo yes; fi`"
 echo "   Building Vala Documentation: `if test x$enable_vala_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Building Libgda's associated tools: `if test x$enable_tools = xyes; then echo yes; else echo no; fi`"
 echo "   Compiled providers:"

@@ -262,11 +262,11 @@ libgda-ui-5.0.vapi: Gdaui-5.0.gir
 vapidir = $(datadir)/vala/vapi
 vapi_DATA=libgda-ui-5.0.vapi
 
-EXTRA_DIST += \
-	Gdaui-5.0.metadata
-
 CLEANFILES += $(vapi_DATA)
 
 endif
 
 endif
+
+EXTRA_DIST += \
+	Gdaui-5.0.metadata
