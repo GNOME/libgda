@@ -631,7 +631,7 @@ gda_server_provider_get_server_version (GdaServerProvider *provider, GdaConnecti
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 
@@ -704,7 +704,7 @@ gda_server_provider_supports_operation (GdaServerProvider *provider, GdaConnecti
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -916,7 +916,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1043,7 +1043,7 @@ gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1126,7 +1126,7 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1226,7 +1226,7 @@ gda_server_provider_supports_feature (GdaServerProvider *provider, GdaConnection
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1304,7 +1304,7 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1364,7 +1364,7 @@ gda_server_provider_get_data_handler_dbms (GdaServerProvider *provider, GdaConne
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1439,7 +1439,7 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1669,7 +1669,7 @@ gda_server_provider_escape_string (GdaServerProvider *provider, GdaConnection *c
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1739,7 +1739,7 @@ gda_server_provider_unescape_string (GdaServerProvider *provider, GdaConnection 
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -1817,7 +1817,7 @@ gda_server_provider_create_parser (GdaServerProvider *provider, GdaConnection *c
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -2033,7 +2033,7 @@ worker_open_connection (WorkerOpenConnectionData *data, GError **error)
 		GdaServerProviderConnectionData *cdata;
 		cdata = gda_connection_internal_get_provider_data_error (data->cnc, NULL);
 		if (!cdata) {
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			result = FALSE;
 		}
 		else
@@ -2077,7 +2077,7 @@ stage2_open_connection (GdaWorker *worker, GdaConnection *cnc, gpointer result)
 		GdaServerProviderConnectionData *cdata;
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			result = NULL;
 			_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 		}
@@ -2314,7 +2314,7 @@ _gda_server_provider_close_connection (GdaServerProvider *provider, GdaConnectio
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 
@@ -2395,7 +2395,7 @@ _gda_server_provider_statement_prepare (GdaServerProvider *provider, GdaConnecti
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -2511,7 +2511,7 @@ _gda_server_provider_statement_execute (GdaServerProvider *provider, GdaConnecti
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -2597,7 +2597,7 @@ _gda_server_provider_statement_to_sql  (GdaServerProvider *provider, GdaConnecti
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -2680,7 +2680,7 @@ _gda_server_provider_identifier_quote (GdaServerProvider *provider, GdaConnectio
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider data set");
+			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);
@@ -2935,7 +2935,7 @@ _gda_server_provider_meta_0arg (GdaServerProvider *provider, GdaConnection *cnc,
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		goto out;
 	}
 
@@ -3000,7 +3000,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		goto out;
 	}
 
@@ -3064,7 +3064,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		goto out;
 	}
 
@@ -3129,7 +3129,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		goto out;
 	}
 
@@ -3193,7 +3193,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		goto out;
 	}
 
@@ -3289,7 +3289,7 @@ _gda_server_provider_begin_transaction (GdaServerProvider *provider, GdaConnecti
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3359,7 +3359,7 @@ _gda_server_provider_commit_transaction (GdaServerProvider *provider, GdaConnect
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3428,7 +3428,7 @@ _gda_server_provider_rollback_transaction (GdaServerProvider *provider, GdaConne
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3489,7 +3489,7 @@ _gda_server_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3550,7 +3550,7 @@ _gda_server_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnect
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3611,7 +3611,7 @@ _gda_server_provider_delete_savepoint (GdaServerProvider *provider, GdaConnectio
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3761,7 +3761,7 @@ _gda_server_provider_xa (GdaServerProvider *provider, GdaConnection *cnc, const 
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
@@ -3806,7 +3806,7 @@ _gda_server_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cnc
 	cdata = gda_connection_internal_get_provider_data_error (cnc, FALSE);
 	if (!cdata) {
 		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
 		return FALSE;
 	}
 	worker = gda_worker_ref (cdata->worker);
