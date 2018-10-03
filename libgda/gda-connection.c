@@ -1426,8 +1426,8 @@ gda_connection_open (GdaConnection *cnc, GError **error)
 	gboolean opened;
 	opened = _gda_server_provider_open_connection_sync (priv->provider_obj, cnc, params, auth, error);
 
-	if (opened && !priv->provider_data) {
-		g_warning ("Internal error: connection reported as opened, yet no provider data set");
+	if (opened && !priv->provider_data && !GDA_IS_VIRTUAL_PROVIDER (priv->provider_obj)) {
+		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_ERROR, "Internal error: connection has been reported as opened, yet no provider's data has been setted");
 		opened = FALSE;
 	}
 
@@ -1513,8 +1513,8 @@ gda_connection_close (GdaConnection *cnc, GError **error)
 
 	if (! priv->provider_data) {
 		/* connection already closed */
-		g_object_unref (cnc);
 		gda_connection_unlock ((GdaLockable*) cnc);
+		g_object_unref (cnc);
 		return TRUE;
 	}
 
@@ -5938,7 +5938,7 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 
 	if (!priv->prepared_stmts)
 		priv->prepared_stmts = g_hash_table_new_full (g_direct_hash, g_direct_equal,
-								   NULL, _gda_prepared_estatement_free);
+								   NULL, (GDestroyNotify) _gda_prepared_estatement_free);
 	g_hash_table_remove (priv->prepared_stmts, gda_stmt);
 	PreparedStatementRef *ref = _gda_prepared_estatement_new (gda_stmt, prepared_stmt);
 	g_hash_table_insert (priv->prepared_stmts, gda_stmt, ref);
