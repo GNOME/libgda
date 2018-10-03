@@ -1,7 +1,3 @@
-if ENABLE_VALA_DOC
-MALLARD_DOC_DIR=mallard
-endif
-
-SUBDIRS = $(MALLARD_DOC_DIR) C
+SUBDIRS = C
 
 DOC_LINGUAS = el es gl
