@@ -23,7 +23,6 @@
 
 #include <glib-object.h>
 #include <gmodule.h>
-#include "gda-connection.h"
 #include "gda-ddl-table.h"
 #include "gda-ddl-view.h"
 #include "gda-server-operation.h"
@@ -85,7 +84,6 @@ GList           *gda_ddl_creator_get_tables	(GdaDdlCreator *self);
 GList           *gda_ddl_creator_get_views	(GdaDdlCreator *self);
 
 gboolean         gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
-                                            GdaConnection *cnc,
                                             GError **error);
 
 void             gda_ddl_creator_append_table (GdaDdlCreator *self,
@@ -108,10 +106,11 @@ gboolean         gda_ddl_creator_write_to_path (GdaDdlCreator *self,
 gboolean         gda_ddl_creator_validate_file_from_path (const gchar *xmlfile,
                                                           GError **error);
 
-void             gda_ddl_creator_set_connection (GdaDdlCreator *self,
-                                                 GdaConnection *cnc);
+gboolean         gda_ddl_creator_drop_table (GdaDdlCreator *self,
+                                             const gchar* table,
+                                             GError **error);
 
-GdaConnection   *gda_ddl_creator_get_connection (GdaDdlCreator *self);
+
 G_END_DECLS
 
 #endif /* GDA_DDL_CREATOR_H */

@@ -7134,11 +7134,7 @@ gda_connection_operation_get_sql_identifier_at_path (GdaConnection *cnc, GdaServ
  * @cnc: A #GdaConnection object to use
  *
  * A convenient method to create a new #GdaDdlCreator instance and set the current @cnc as a
- * property. If for some reason, this approach doesn't fit well, the same task can be achieved 
- * by the following code:
- *
- * GdaDdlCreator *creator = gda_ddl_creator_new ();
- * g_object_set (creator, "connection", cnc, NULL);
+ * property. 
  *
  * Returns: (transfer full): A new instance of #GdaDdlCreator. The new object should be deallocated
  * using g_object_unref().
@@ -7150,8 +7146,5 @@ gda_connection_create_ddl_creator (GdaConnection *cnc)
 {
   g_return_val_if_fail (GDA_IS_CONNECTION (cnc),NULL);
 
-  GdaDdlCreator *creator = gda_ddl_creator_new ();
-  g_object_set (creator,"connection",cnc,NULL);
-
-  return creator;
+  return g_object_new (GDA_TYPE_DDL_CREATOR,"connection",cnc,NULL); 
 }

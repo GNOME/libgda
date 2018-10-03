@@ -78,8 +78,6 @@ test_ddl_creator_start (CheckDdlObject *self,
 
   g_assert_nonnull (self->xmlfile);
 
-  self->creator = gda_ddl_creator_new();
-  
   self->cnc = gda_connection_new_from_string("SQLite",
                                              "DB_DIR=.;DB_NAME=ddl_test",
                                              NULL,
@@ -90,6 +88,10 @@ test_ddl_creator_start (CheckDdlObject *self,
 
   gboolean openres = gda_connection_open(self->cnc,NULL);
   g_assert_true (openres);
+
+  self->creator = gda_connection_create_ddl_creator (self->cnc);
+
+  g_assert_nonnull (self->creator);
 
   self->file = g_file_new_for_path (self->xmlfile); 
   g_print ("GFile is %s\n",g_file_get_path(self->file));
@@ -103,7 +105,6 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
 
   self->cnc = NULL;
   self->creator = NULL;
-  self->creator = gda_ddl_creator_new ();
  
   self->cnc = gda_connection_new_from_string ("SQLite",
                                               "DB_DIR=.;DB_NAME=ddl_types",
@@ -115,6 +116,10 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
   gboolean open_res = gda_connection_open (self->cnc, NULL);
 
   g_assert_true (open_res);
+
+  self->creator = gda_connection_create_ddl_creator (self->cnc);
+
+  g_assert_nonnull (self->creator);
 
   self->table = gda_ddl_table_new ();
   gda_ddl_base_set_name (GDA_DDL_BASE(self->table),"dntypes");
@@ -154,8 +159,6 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
 
   gda_ddl_creator_append_table (self->creator, self->table);
 
-  gda_ddl_creator_set_connection (self->creator,self->cnc);
-
   open_res = gda_ddl_creator_perform_operation (self->creator,NULL);
 
   g_assert_true (open_res);
@@ -176,6 +179,10 @@ static void
 test_ddl_creator_finish_db (DdlCreatorCnc *self,
                             gconstpointer user_data)
 {
+  gboolean res = gda_ddl_creator_drop_table (self->creator,"dntypes",NULL);
+
+  g_assert_true (res);
+
   gda_connection_close(self->cnc,NULL);
   g_object_unref (self->cnc);
   g_object_unref (self->creator);
@@ -230,7 +237,6 @@ test_ddl_creator_create_db (CheckDdlObject *self,
   g_assert_true (res);
 
   GError *error = NULL;
-  gda_ddl_creator_set_connection (self->creator,self->cnc);
 
   gboolean resop = gda_ddl_creator_perform_operation(self->creator,
                                                      &error);  
@@ -276,8 +282,10 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
   model = gda_connection_execute_select_command (self->cnc,"SELECT * FROM dntypes",NULL);
   g_assert_nonnull (model);
 
-  GdaDdlCreator *creator = gda_ddl_creator_new ();
-  open_res = gda_ddl_creator_parse_cnc (creator,self->cnc,NULL);
+  GdaDdlCreator *creator = gda_connection_create_ddl_creator (self->cnc);
+  open_res = gda_ddl_creator_parse_cnc (creator,NULL);
+
+  g_assert_true (open_res);
 
   GList *tables = gda_ddl_creator_get_tables (creator);
   g_assert_nonnull (tables);

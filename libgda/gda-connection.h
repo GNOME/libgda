@@ -41,7 +41,7 @@
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-batch.h>
-#include "gda-ddl-creator.h"
+#include <libgda/gda-ddl-creator.h>
 
 G_BEGIN_DECLS
 

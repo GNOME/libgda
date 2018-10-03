@@ -574,33 +574,32 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
 /** 
  * gda_ddl_creator_parse_cnc:
  * @self: a #GdaDdlCreator instance 
- * @cnc: Connection to parse
  * @error: error storage object
  *
- * Parse cnc to populate @self object. 
+ * Parse cnc to populate @self object. This method should be called every time after database was
+ * modified or @self was just created.  
  *
  * Returns: Returns %TRUE if succeeded, %FALSE otherwise.
  */
 gboolean
 gda_ddl_creator_parse_cnc (GdaDdlCreator *self,
-                           GdaConnection *cnc,
                            GError **error)
 {
   g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (cnc,FALSE);
-
-  if (!gda_connection_is_opened (cnc))
-    return FALSE;
-
-  if(!gda_connection_update_meta_store (cnc, NULL, error))
-    return FALSE;
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
+
+  if (!gda_connection_is_opened (priv->cnc))
+    return FALSE;
+
+  if(!gda_connection_update_meta_store (priv->cnc, NULL, error))
+    return FALSE;
+
 
   GdaMetaStore *mstore = NULL;
   GdaMetaStruct *mstruct = NULL;
 
-  mstore = gda_connection_get_meta_store (cnc);
+  mstore = gda_connection_get_meta_store (priv->cnc);
   mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
   GSList *dblist = NULL;
@@ -997,39 +996,46 @@ on_error:
   return FALSE;
 }
 
-/**
- * gda_ddl_creator_set_connection:
- * @self: a #GdaDdlCreator instance
- * @cnc: a #GdaConnection instance to use
- *
- * Associate the passed @cnc with @self. See gda_ddl_creator_get_connection() to retrieve the
- * associated value
- */
-void
-gda_ddl_creator_set_connection (GdaDdlCreator *self,
-                                GdaConnection *cnc)
+gboolean
+gda_ddl_creator_drop_table (GdaDdlCreator *self,
+                            const gchar* table,
+                            GError **error)
 {
-  g_return_if_fail (GDA_IS_DDL_CREATOR (self));
-  g_return_if_fail (GDA_IS_CONNECTION (cnc));
+  g_return_val_if_fail (GDA_IS_DDL_CREATOR(self),FALSE);
+  g_return_val_if_fail (table,FALSE);
 
-  g_object_set (self,"connection",cnc,NULL);
+  GdaConnection *cnc;
+  g_object_get (self,"connection",&cnc,NULL);
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error,
+                   GDA_DDL_CREATOR_ERROR,
+                   GDA_DDL_CREATOR_CONNECTION_CLOSED,
+                   _("Connection is not open"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE(cnc));
+
+  GdaServerOperation *op = gda_connection_create_operation (cnc,GDA_SERVER_OPERATION_DROP_TABLE,
+                                                            NULL,error);
+  if (!op)
+    return FALSE;
+
+  if (!gda_server_operation_set_value_at (op,table,error,"/TABLE_DESC_P/TABLE_NAME"))
+    goto onerror;
+
+  if (!gda_connection_perform_operation (cnc,op,error))
+    goto onerror;
+
+  gda_lockable_unlock (GDA_LOCKABLE(cnc));
+
+  return TRUE;
+
+onerror:
+  g_object_unref (op);
+  return FALSE;
 }
 
-/**
- * gda_ddl_creator_get_connection:
- * @self: a #GdaDdlCreator instance to use
- *
- * Returns an associated #GdaConnection value
- *
- * Returns: (transfer none): Returns current connection object. The returned object belongs to
- * @self and should nt be freed. 
- */
-GdaConnection*
-gda_ddl_creator_get_connection (GdaDdlCreator *self)
-{
-  g_return_val_if_fail (GDA_IS_DDL_CREATOR (self),NULL);
 
-  GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
-
-  return priv->cnc; 
-}
