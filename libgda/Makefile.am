@@ -4,6 +4,10 @@ lib_LTLIBRARIES = libgda-5.0.la
 
 SUBDIRS = sqlite handlers binreloc sql-parser providers-support thread-wrapper
 
+if ENABLE_VALA_EXTENSIONS
+SUBDIRS+= . data
+endif
+
 DEF_FLAGS=
 if BDB 
 GDA_BDB_H=gda-data-model-bdb.h
@@ -378,8 +382,4 @@ EXTRA_DIST += \
 
 CLEANFILES += $(vapi_DATA)
 
-endif
-
-if ENABLE_VALA_EXTENSIONS
-    SUBDIRS+= . data
 endif

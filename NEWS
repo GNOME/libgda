@@ -1,7 +1,6 @@
 
-libgda-5.2.6
+libgda-5.2.6 2018-10-03
  - Fixed compilation on MacOS
- - Improvements to Continuous Integration
  - All Vala bindings and Vala extensions are built by default using --enable-vala,
    added --disable* switch to disable some or all of them
  - Fixes on outdated unit tests

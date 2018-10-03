@@ -17,10 +17,11 @@ AM_CFLAGS =\
 
 lib_LTLIBRARIES = libgdadata-5.0.la
 
-VALAFLAGS = \
+AM_VALAFLAGS = \
     --vapidir=$(top_builddir)/libgda \
     --vapidir=$(datadir)/vala/vapi \
     --includedir=$(top_srcdir)/libgda \
+    --includedir=$(top_builddir)/libgda \
     --pkg libxml-2.0 \
     --pkg gee-0.8 \
     --pkg libgda-5.0 \
@@ -53,18 +54,24 @@ db_collection_sources = \
 
 include_headers = libgdadata.h
 
-libgdadata_5_0_la_SOURCES = \
-	NamespaceInfo.vala \
+namespace_sources = \
+	NamespaceInfo.vala
+
+vala_sources = \
+	$(namespace_sources) \
 	$(object_persistance_sources) \
 	$(db_collection_sources)
 
-$(include_headers): DataBase.c
+gdadata-5.0.vapi GdaData-5.0.gir $(vala_sources:.vala=.c): $(vala_sources)
+	$(VALAC) $(AM_VALAFLAGS) $^
+
+libgdadata_5_0_la_SOURCES = $(vala_sources:.vala=.c)
+
+$(include_headers): libgdadata-5.0.la
 vapi: gdadata-5.0.vapi
 
 vapidir = $(datadir)/vala/vapi
 vapi_DATA = gdadata-5.0.vapi
-
-gdadata-5.0.vapi GdaData-5.0.gir: libgdadata-5.0.la
 
 CLEANFILES= gdadata-5.0.vapi
 
@@ -115,15 +122,14 @@ typelibs_DATA = GdaData-5.0.typelib
 
 CLEANFILES += \
         $(typelibs_DATA) \
+        $(INTROSPECTION_GIRS) \
         gdadata-5.0.vapi \
         libgdadata-5.0.pc \
         $(include_headers) \
-        $(libgdadata_5_0_la_VALASOURCES:.vala=.c) \
+        $(vala_sources:.vala=.c) \
         $(srcdir)/libgdadata_5_0_la_vala.stamp
 
 EXTRA_DIST = \
-	libgdadata-5.0.pc \
-	$(vapi_DATA) \
-	$(INTROSPECTION_GIRS) \
-	$(typelibs_DATA)
+	$(vala_sources) \
+	libgdadata-5.0.pc.in
 
