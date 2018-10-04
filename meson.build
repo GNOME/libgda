@@ -1,4 +1,4 @@
-project('libgda', 'c',
+project('libgda', 'vala', 'c',
         license: 'LGPL2+',
         version : '5.91.0',
         meson_version: '>= 0.44.1',

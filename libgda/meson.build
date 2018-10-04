@@ -286,10 +286,30 @@ libgda_cargs += binreloc_cargs
 
 libgda_dep += sqlite_deps
 
+vala_sources = [
+	'gda-connection-provider.vala'
+	]
+
+vala_sourcesf = files(vala_sources)
+valac = find_program('valac')
+valacs =[]
+foreach v : vala_sources
+	vcs = v.split('.')
+valacs += custom_target('vala-lib',
+	command: [valac, '-C', '--abi-stability',
+	'-d', '@OUTDIR@',
+	'--pkg', 'gio-2.0',
+	'-H', '@OUTPUT1@', '--vapi='+vcs[0]+'.vapi',
+	'@INPUT@' ],
+	input: vcs[0]+'.vala',
+	output: [vcs[0]+'.c',vcs[0]+'.h'],
+	build_by_default: true
+	)
+endforeach
 
 libgda = library(
 	'gda-'+project_api_version,
-	libgda_source_all,
+	libgda_source_all+valacs,
 	soversion : gda_current,
 	version : gda_revision,
 	dependencies : [
@@ -316,7 +336,8 @@ gi_sources = [
 	psupport_gi_sources,
 	threadwrapper_gi_sources,
 	sql_parser_gi_sources,
-	libgda_handlers_sources
+	libgda_handlers_sources,
+	valacs
 	]
 
 
