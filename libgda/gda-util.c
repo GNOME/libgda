@@ -2876,10 +2876,10 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
 /**
  * gda_connection_string_split:
  * @string: a string in the "[&lt;provider&gt;://][&lt;username&gt;[:&lt;password&gt;]@]&lt;connection_params&gt;" form
- * @out_cnc_params: a place to store the new string containing the &lt;connection_params&gt; part
- * @out_provider: a place to store the new string containing the &lt;provider&gt; part
- * @out_username: a place to store the new string containing the &lt;username&gt; part
- * @out_password: (allow-none): a place to store the new string containing the &lt;password&gt; part, or %NULL
+ * @out_cnc_params: (out): a place to store the new string containing the &lt;connection_params&gt; part
+ * @out_provider: (out): a place to store the new string containing the &lt;provider&gt; part
+ * @out_username: (out): a place to store the new string containing the &lt;username&gt; part
+ * @out_password: (out): (allow-none): a place to store the new string containing the &lt;password&gt; part, or %NULL
  *
  * Extract the provider, connection parameters, username and password from @string. 
  * in @string, the various parts are strings
