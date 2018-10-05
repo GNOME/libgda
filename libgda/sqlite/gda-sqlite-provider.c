@@ -1230,7 +1230,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 			gda_connection_add_event_string (cnc, errmsg);
 			SQLITE3_CALL (sqlite3_free) (errmsg);
 			gda_sqlite_free_cnc_data (cdata);
-			gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+			gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 			return FALSE;
 		}
 	}
@@ -1253,8 +1253,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 	if (res != SQLITE_OK) {
 		if (with_fk) {
 			gda_sqlite_free_cnc_data (cdata);
-			gda_connection_internal_set_provider_data (cnc, NULL,
-							(GDestroyNotify) gda_sqlite_free_cnc_data);
+			gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 			return FALSE;
 		}
 	}
@@ -1265,8 +1264,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 		if (res != SQLITE_DONE) {
 			if (with_fk) {
 				gda_sqlite_free_cnc_data (cdata);
-				gda_connection_internal_set_provider_data (cnc, NULL,
-							(GDestroyNotify) gda_sqlite_free_cnc_data);
+				gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 				return FALSE;
 			}
 		}
@@ -1293,7 +1291,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 				gda_connection_add_event_string (cnc, _("Could not register function '%s'"),
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
-				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+				gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 				return FALSE;
 			}
 		}
@@ -1312,7 +1310,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 				gda_connection_add_event_string (cnc, _("Could not register function '%s'"),
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
-				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+				gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 				return FALSE;
 			}
 		}
@@ -1330,7 +1328,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 								 _("Could not define the %s collation"),
 								 func->name);
 				gda_sqlite_free_cnc_data (cdata);
-				gda_connection_internal_set_provider_data (cnc, NULL, (GDestroyNotify) gda_sqlite_free_cnc_data);
+				gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 				return FALSE;
 			}
 		}
