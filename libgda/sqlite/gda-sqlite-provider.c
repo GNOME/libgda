@@ -17,7 +17,7 @@
  * Copyright (C) 2011,2018 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2011 Marek Černocký <marek@manet.cz>
  * Copyright (C) 2012 Marco Ciampa <ciampix@libero.it>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017-2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1242,11 +1242,11 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 	int res;
 	sqlite3_stmt *pStmt;
 	if (enforce_fk)
-		res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+		res = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection,
 						      "PRAGMA foreign_keys = ON", -1,
 						      &pStmt, NULL);
 	else
-		res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+		res = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection,
 						      "PRAGMA foreign_keys = OFF", -1,
 						      &pStmt, NULL);
 
@@ -1621,7 +1621,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 				/* create some contents */
 				int res;
 				sqlite3_stmt *pStmt;
-				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+				res = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection,
 								      "CREATE TABLE data (id int)", -1,
 								      &pStmt, NULL);
 
@@ -1646,7 +1646,7 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 					/* end */
 				}
 
-				res = SQLITE3_CALL (sqlite3_prepare) (cdata->connection,
+				res = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection,
 								      "DROP TABLE data", -1,
 								      &pStmt, NULL);
 
