@@ -296,7 +296,7 @@ gda_row_invalidate_value (G_GNUC_UNUSED GdaRow *row, GValue *value)
  * gda_row_invalidate_value_e:
  * @row: a #GdaRow
  * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
- * @error: (allow-none) (transfer full): the error which lead to the invalidation
+ * @error: (nullable) (transfer full): the error which lead to the invalidation
  * 
  * Marks @value as being invalid. This method is mainly used by database
  * providers' implementations to report any error while reading a value from the database.
@@ -363,7 +363,7 @@ gda_row_value_is_valid (GdaRow *row, GValue *value)
  * gda_row_value_is_valid_e:
  * @row: a #GdaRow.
  * @value: a #GValue belonging to @row (obtained with gda_row_get_value()).
- * @error: (allow-none): a place to store the invalid error, or %NULL
+ * @error: (nullable): a place to store the invalid error, or %NULL
  *
  * Tells if @value has been marked as being invalid by gda_row_invalidate_value().
  * This method is mainly used by database

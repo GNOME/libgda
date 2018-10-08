@@ -1158,7 +1158,7 @@ t_favorites_delete (TFavorites *bfav, guint session_id,
  * @bfav: a #TFavorites
  * @session_id: 0 for now
  * @contents: the favorite's contents
- * @out_fav: (allow-none): a #TFavoritesAttributes to be filled with the favorite's attributes, or %NULL
+ * @out_fav: (nullable): a #TFavoritesAttributes to be filled with the favorite's attributes, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav
@@ -1184,7 +1184,7 @@ t_favorites_find (TFavorites *bfav, guint session_id, const gchar *contents,
  * @session_id: 0 for now
  * @type: the favorite's type
  * @name: the favorite's name
- * @out_fav: (allow-none): a #TFavoritesAttributes to be filled with the favorite's attributes, or %NULL
+ * @out_fav: (nullable): a #TFavoritesAttributes to be filled with the favorite's attributes, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get all the information about a favorite from its id: fills the @out_fav

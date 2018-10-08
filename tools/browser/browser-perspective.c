@@ -82,8 +82,8 @@ browser_perspective_class_init (G_GNUC_UNUSED gpointer g_class)
 /**
  * browser_perspective_customize:
  * @perspective: an object implementing the #BrowserPerspective interface
- * @toolbar: (allow-none):
- * @header: (allow-none):
+ * @toolbar: (nullable):
+ * @header: (nullable):
  *
  * Add optional custom UI elements to @toolbar, @header and @menu. any call to the
  * browser_perspective_uncustomize() function will undo all the customizations to

@@ -70,8 +70,8 @@ void               base_tool_command_result_free (ToolCommandResult *res);
  * @command: the #ToolCommand to execute
  * @argc: @argv's size
  * @argv: the arguments (not including the command's name itself)
- * @user_data: (allow-none): a pointer to some use data, corresponds to the @user_data argument of base_tool_command_group_execute()
- * @error: (allow-none): a place to store errors
+ * @user_data: (nullable): a pointer to some use data, corresponds to the @user_data argument of base_tool_command_group_execute()
+ * @error: (nullable): a place to store errors
  *
  * Function defining a command's execution code
  */

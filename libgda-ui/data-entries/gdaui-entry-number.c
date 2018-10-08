@@ -149,7 +149,7 @@ gdaui_entry_number_is_type_numeric (GType type)
  * gdaui_entry_number_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
- * @options: (allow-none): some options formatting the new entry, or %NULL
+ * @options: (nullable): some options formatting the new entry, or %NULL
  *
  * Creates a new data entry widget. Known options are: THOUSAND_SEP, NB_DECIMALS and CURRENCY
  *

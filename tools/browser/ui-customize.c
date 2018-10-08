@@ -98,8 +98,8 @@ customization_data_get (GObject *object)
 /**
  * customization_data_init:
  * @object: an object being customized (#BrowserPerspective or #BrowserPage)
- * @toolbar: (allow-none): a #GtkToolbar
- * @header: (allow-none): a #GtkHeaderBar
+ * @toolbar: (nullable): a #GtkToolbar
+ * @header: (nullable): a #GtkHeaderBar
  *
  * Initializes the customization for @object
  */

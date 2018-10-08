@@ -247,7 +247,7 @@ _gda_sql_statement_select_serialize (gpointer stmt)
  * gda_sql_statement_select_take_distinct:
  * @stmt: a #GdaSqlStatement pointer
  * @distinct: a TRUE/FALSE value
- * @distinct_expr: (allow-none): a #GdaSqlExpr pointer representing what the DISTINCT is on, or %NULL
+ * @distinct_expr: (nullable): a #GdaSqlExpr pointer representing what the DISTINCT is on, or %NULL
  *
  * Sets the DISTINCT clause of @stmt. 
  *

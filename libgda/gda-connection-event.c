@@ -201,7 +201,7 @@ gda_connection_event_get_description (GdaConnectionEvent *event)
 /**
  * gda_connection_event_set_description:
  * @event: a #GdaConnectionEvent.
- * @description: (allow-none): a description, or %NULL (to unset current description if any)
+ * @description: (nullable): a description, or %NULL (to unset current description if any)
  *
  * Sets @event's @description. This function should not be called directly.
  */

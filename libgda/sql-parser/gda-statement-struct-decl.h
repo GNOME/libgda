@@ -43,11 +43,6 @@ typedef enum {
 	GDA_SQL_MISSING_IDENTIFIER_ERROR,
 	GDA_SQL_VALIDATION_ERROR
 } GdaSqlError;
-/*
- * GdaSqlErrorType:
- *
- **/
-typedef GdaSqlError GdaSqlErrorType;
 
 /*
  * Struct declarations

@@ -358,7 +358,7 @@ gda_meta_context_get_table (GdaMetaContext *ctx)
  * @ctx: a #GdaMetaContext struct to add column/value pais to
  * @column: (transfer none): the column's name
  * @value: (transfer none): the column's value
- * @cnc: (allow-none): a #GdaConnection to be used when identifier are normalized, or NULL
+ * @cnc: (nullable): a #GdaConnection to be used when identifier are normalized, or NULL
  * 
  * Sets a new column/value pair to the given context @ctx. Column, must be a column in the given table's
  * name setted by #gda_meta_context_set_table () (a table in the <link linkend="information_schema">database
@@ -388,7 +388,7 @@ gda_meta_context_set_column (GdaMetaContext *ctx, const gchar* column, const GVa
  * @ctx: a #GdaMetaContext struct to set colums to
  * @columns: (element-type utf8 GObject.Value): a #GHashTable with the table's columns' name and their values
  * to use in context.
- * @cnc: (allow-none): a #GdaConnection to used to normalize identifiers quoting, or NULL
+ * @cnc: (nullable): a #GdaConnection to used to normalize identifiers quoting, or NULL
  * 
  * Set columns to use in the context. The #GHashTable use column's name as key and a #GValue as value,
  * to represent its value.
@@ -435,7 +435,7 @@ gda_meta_context_set_columns (GdaMetaContext *ctx, GHashTable *columns, GdaConne
 
 /**
  * gda_meta_context_free:
- * @ctx: (allow-none): a #GdaMetaContext struct to free
+ * @ctx: (nullable): a #GdaMetaContext struct to free
  * 
  * Frees any resources taken by @ctx struct. If @ctx is %NULL, then nothing happens.
  *
@@ -1042,7 +1042,7 @@ gda_meta_store_new_with_file (const gchar *file_name)
 
 /**
  * gda_meta_store_new:
- * @cnc_string: (allow-none): a connection string, or %NULL for an in-memory internal database
+ * @cnc_string: (nullable): a connection string, or %NULL for an in-memory internal database
  *
  * Create a new #GdaMetaStore object.
  *
@@ -1266,7 +1266,7 @@ gda_meta_store_set_identifiers_style (GdaMetaStore *store, GdaSqlIdentifierStyle
 /**
  * gda_meta_store_set_reserved_keywords_func:
  * @store: a #GdaMetaStore object
- * @func: (allow-none) (scope call): a #GdaSqlReservedKeywordsFunc function, or %NULL
+ * @func: (nullable) (scope call): a #GdaSqlReservedKeywordsFunc function, or %NULL
  *
  * Specifies a function which @store will use to determine if a keyword is an SQL reserved
  * keyword or not.
@@ -2932,7 +2932,7 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
  * gda_meta_store_extract:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
  * variables mentioned in @select_sql. If there is no variable then this part can be omitted.
  *
@@ -3050,7 +3050,7 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
  * gda_meta_store_extract_v: (rename-to gda_meta_store_extract)
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
- * @vars: (element-type utf8 GObject.Value) (allow-none): a hash table with all variables names as keys and GValue* as
+ * @vars: (element-type utf8 GObject.Value) (nullable): a hash table with all variables names as keys and GValue* as
  * value, representing values for all the variables mentioned in @select_sql. If there is no variable then this part can be
  * omitted.
  * @error: a place to store errors, or %NULL
@@ -3173,10 +3173,10 @@ static gint find_row_in_model (GdaDataModel *find_in, GdaDataModel *data, gint r
  * gda_meta_store_modify:
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table to modify within @store
- * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * @new_data: (nullable): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
  * with no row at all)
- * @condition: (allow-none): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL
+ * @condition: (nullable): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  * @...: a list of (variable name (gchar *), GValue *value) terminated with NULL, representing values for all the
  * variables mentioned in @condition.
  *
@@ -3241,7 +3241,7 @@ gda_meta_store_modify (GdaMetaStore *store, const gchar *table_name,
  * gda_meta_store_modify_with_context:
  * @store: a #GdaMetaStore object
  * @context: (transfer none): a #GdaMetaContext context describing what to modify in @store
- * @new_data: (transfer none) (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * @new_data: (transfer none) (nullable): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
  * with no row at all)
  * @error: a place to store errors, or %NULL
  *
@@ -3292,13 +3292,13 @@ gda_meta_store_modify_with_context (GdaMetaStore *store, GdaMetaContext *context
  * gda_meta_store_modify_v: (rename-to gda_meta_store_modify)
  * @store: a #GdaMetaStore object
  * @table_name: the name of the table to modify within @store
- * @new_data: (allow-none): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
+ * @new_data: (nullable): a #GdaDataModel containing the new data to set in @table_name, or %NULL (treated as a data model
  * with no row at all)
- * @condition: (allow-none): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
+ * @condition: (nullable): SQL expression (which may contain variables) defining the rows which are being obsoleted by @new_data, or %NULL
  * @nvalues: number of values in @value_names and @values
  * @value_names: (array length=nvalues): names of values
  * @values: (array length=nvalues): values
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Propagates an update to @store, the update's contents is represented by @new_data, this function is
  * primarily reserved to database providers.
@@ -3875,7 +3875,7 @@ out:
 /**
  * _gda_meta_store_begin_data_reset:
  * @store: a #GdaMetaStore object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Sets @store in a mode where only the modifications completely overriding a table
  * will be allowed, where no detailed modifications report is made and where the "suggest-update"
@@ -3920,7 +3920,7 @@ _gda_meta_store_begin_data_reset (GdaMetaStore *store, GError **error)
 /**
  * _gda_meta_store_cancel_data_reset:
  * @store: a #GdaMetaStore object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Cancels any modification done since _gda_meta_store_begin_data_reset() was called.
  *
@@ -3953,7 +3953,7 @@ _gda_meta_store_cancel_data_reset (GdaMetaStore *store, GError **error)
 /**
  * _gda_meta_store_finish_data_reset:
  * @store: a #GdaMetaStore object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Commits any modification done since _gda_meta_store_begin_data_reset() was called.
  *
@@ -4127,7 +4127,7 @@ gda_meta_store_schema_get_depend_tables (GdaMetaStore *store, const gchar *table
 /**
  * gda_meta_store_schema_get_structure:
  * @store: a #GdaMetaStore object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates a new #GdaMetaStruct object representing @store's internal database structure.
  *
@@ -4243,7 +4243,7 @@ gda_meta_store_schema_get_structure (GdaMetaStore *store, GError **error)
  * @store: a #GdaMetaStore object
  * @att_name: name of the attribute to get
  * @att_value: (out): the place to store the attribute value
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * The #GdaMetaStore object maintains a list of (name,value) attributes (attributes names starting with a '_'
  * character are for internal use only and cannot be altered). This method and the gda_meta_store_set_attribute_value()
@@ -4315,8 +4315,8 @@ gda_meta_store_get_attribute_value (GdaMetaStore *store, const gchar *att_name, 
  * gda_meta_store_set_attribute_value:
  * @store: a #GdaMetaStore object
  * @att_name: name of the attribute to set
- * @att_value: (allow-none): value of the attribute to set, or %NULL to unset the attribute
- * @error: (allow-none): a place to store errors, or %NULL
+ * @att_value: (nullable): value of the attribute to set, or %NULL to unset the attribute
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Set the value of the attribute named @att_name to @att_value; see gda_meta_store_get_attribute_value() for
  * more information.
@@ -4407,7 +4407,7 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
  * gda_meta_store_schema_add_custom_object:
  * @store: a #GdaMetaStore object
  * @xml_description: an XML description of the table or view to add to @store
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * The internal database used by @store can be 'augmented' with some user-defined database objects
  * (such as tables or views). This method allows one to add a new database object.
@@ -4662,7 +4662,7 @@ gda_meta_store_schema_add_custom_object (GdaMetaStore *store, const gchar *xml_d
  * gda_meta_store_schema_remove_custom_object:
  * @store: a #GdaMetaStore object
  * @obj_name: name of the custom object to remove
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Removes the custom database object named @obj_name.
  *
@@ -5008,18 +5008,18 @@ arguments_to_name (const gchar *catalog, const gchar *schema, const gchar *table
 /**
  * gda_meta_store_declare_foreign_key:
  * @store: a #GdaMetaStore
- * @mstruct: (allow-none): a #GdaMetaStruct, or %NULL
+ * @mstruct: (nullable): a #GdaMetaStruct, or %NULL
  * @fk_name: the name of the foreign key to declare
- * @catalog: (allow-none): the catalog in which the table (for which the foreign key is for) is, or %NULL
- * @schema: (allow-none): the schema in which the table (for which the foreign key is for) is, or %NULL
+ * @catalog: (nullable): the catalog in which the table (for which the foreign key is for) is, or %NULL
+ * @schema: (nullable): the schema in which the table (for which the foreign key is for) is, or %NULL
  * @table: the name of the table (for which the foreign key is for)
- * @ref_catalog: (allow-none): the catalog in which the referenced table is, or %NULL
- * @ref_schema: (allow-none): the schema in which the referenced table is, or %NULL
+ * @ref_catalog: (nullable): the catalog in which the referenced table is, or %NULL
+ * @ref_schema: (nullable): the schema in which the referenced table is, or %NULL
  * @ref_table: the name of the referenced table
  * @nb_cols: the number of columns involved (>0)
  * @colnames: (array length=nb_cols): an array of column names from the table for which the foreign key is for
  * @ref_colnames: (array length=nb_cols): an array of column names from the referenced table
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Defines a new declared foreign key into @store. If another declared foreign key is already defined
  * between the two tables and with the same name, then it is first removed.
@@ -5241,15 +5241,15 @@ gda_meta_store_declare_foreign_key (GdaMetaStore *store, GdaMetaStruct *mstruct,
 /**
  * gda_meta_store_undeclare_foreign_key:
  * @store: a #GdaMetaStore
- * @mstruct: (allow-none): a #GdaMetaStruct, or %NULL
+ * @mstruct: (nullable): a #GdaMetaStruct, or %NULL
  * @fk_name: the name of the foreign key to declare
- * @catalog: (allow-none): the catalog in which the table (for which the foreign key is for) is, or %NULL
- * @schema: (allow-none): the schema in which the table (for which the foreign key is for) is, or %NULL
+ * @catalog: (nullable): the catalog in which the table (for which the foreign key is for) is, or %NULL
+ * @schema: (nullable): the schema in which the table (for which the foreign key is for) is, or %NULL
  * @table: the name of the table (for which the foreign key is for)
- * @ref_catalog: (allow-none): the catalog in which the referenced table is, or %NULL
- * @ref_schema: (allow-none): the schema in which the referenced table is, or %NULL
+ * @ref_catalog: (nullable): the catalog in which the referenced table is, or %NULL
+ * @ref_schema: (nullable): the schema in which the referenced table is, or %NULL
  * @ref_table: the name of the referenced table
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Removes a declared foreign key from @store.
  *

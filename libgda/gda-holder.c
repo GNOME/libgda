@@ -419,7 +419,7 @@ gda_holder_copy (GdaHolder *orig)
 /**
  * gda_holder_new_inline:
  * @type: a valid GLib type
- * @id: (allow-none): the id of the holder to create, or %NULL
+ * @id: (nullable): the id of the holder to create, or %NULL
  * @...: value to set
  *
  * Creates a new #GdaHolder object with an ID set to @id, of type @type, 
@@ -751,7 +751,7 @@ gda_holder_get_id (GdaHolder *holder)
  *
  * If @holder is invalid, then the returned value is %NULL.
  *
- * Returns: (allow-none) (transfer none): the value, or %NULL
+ * Returns: (nullable) (transfer none): the value, or %NULL
  */
 const GValue *
 gda_holder_get_value (GdaHolder *holder)
@@ -784,7 +784,7 @@ gda_holder_get_value (GdaHolder *holder)
 /**
  * gda_holder_get_value_str:
  * @holder: a #GdaHolder object
- * @dh: (allow-none): a #GdaDataHandler to use, or %NULL
+ * @dh: (nullable): a #GdaDataHandler to use, or %NULL
  *
  * Same functionality as gda_holder_get_value() except that it returns the value as a string
  * (the conversion is done using @dh if not %NULL, or the default data handler otherwise).
@@ -821,7 +821,7 @@ static gboolean real_gda_holder_set_value (GdaHolder *holder, GValue *value, gbo
 /**
  * gda_holder_set_value:
  * @holder: a #GdaHolder object
- * @value: (allow-none): a value to set the holder to, or %NULL
+ * @value: (nullable): a value to set the holder to, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Sets the value within the holder. If @holder is an alias for another
@@ -1302,7 +1302,7 @@ gda_holder_force_invalid (GdaHolder *holder)
 /**
  * gda_holder_force_invalid_e:
  * @holder: a #GdaHolder object
- * @error: (allow-none) (transfer full): a #GError explaining why @holder is declared invalid, or %NULL
+ * @error: (nullable) (transfer full): a #GError explaining why @holder is declared invalid, or %NULL
  *
  * Forces a holder to be invalid; to set it valid again, a new value must be assigned
  * to it using gda_holder_set_value() or gda_holder_take_value().
@@ -1368,7 +1368,7 @@ gda_holder_is_valid (GdaHolder *holder)
 /**
  * gda_holder_is_valid_e:
  * @holder: a #GdaHolder object
- * @error: (allow-none): a place to store invalid error, or %NULL
+ * @error: (nullable): a place to store invalid error, or %NULL
  *
  * Get the validity of @holder (that is, of the value held by @holder)
  *

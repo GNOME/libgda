@@ -233,8 +233,8 @@ gdaui_login_dialog_get_type (void)
 
 /**
  * gdaui_login_dialog_new
- * @title: (allow-none): title of the dialog, or %NULL
- * @parent: (allow-none): transient parent of the dialog, or %NULL
+ * @title: (nullable): title of the dialog, or %NULL
+ * @parent: (nullable): transient parent of the dialog, or %NULL
  *
  * Creates a new login dialog widget.
  *

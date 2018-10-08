@@ -31,9 +31,9 @@ struct _GdaLockableInterface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
-	void                 (* lock)       (GdaLockable *lock);
-	gboolean             (* trylock)    (GdaLockable *lock);
-	void                 (* unlock)     (GdaLockable *lock);
+	void                 (* lock)       (GdaLockable *lockable);
+	gboolean             (* trylock)    (GdaLockable *lockable);
+	void                 (* unlock)     (GdaLockable *lockable);
 };
 
 /**

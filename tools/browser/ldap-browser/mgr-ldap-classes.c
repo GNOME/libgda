@@ -120,7 +120,7 @@ mgr_ldap_classes_get_type (void)
  * mgr_ldap_classes_new:
  * @cnc: a #GdaConnection object
  * @flat: %TRUE if listing all the classes, if %TRUE, then @classname is ignored.
- * @classname: (allow-none): an LDAP class or %NULL for the "top" class
+ * @classname: (nullable): an LDAP class or %NULL for the "top" class
  *
  * Creates a new #GdaTreeManager object which will list the children classes
  *

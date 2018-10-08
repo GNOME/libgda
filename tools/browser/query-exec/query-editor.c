@@ -1237,7 +1237,7 @@ get_date_format (time_t time)
 /**
  * query_editor_start_history_batch
  * @editor: a #QueryEditor widget.
- * @hist_batch: (allow-none): a #QueryEditorHistoryBatch to add, or %NULL
+ * @hist_batch: (nullable): a #QueryEditorHistoryBatch to add, or %NULL
  *
  * @hist_hash ref is _NOT_ stolen here
  */
@@ -1354,7 +1354,7 @@ timestamps_update_cb (QueryEditor *editor)
 /**
  * query_editor_add_history_item
  * @editor: a #QueryEditor widget.
- * @hist_item: (allow-none): a #QueryEditorHistoryItem to add, or %NULL
+ * @hist_item: (nullable): a #QueryEditorHistoryItem to add, or %NULL
  *
  * Adds some text. @text_data is useful only if @editor's mode is HISTORY, it will be ignored
  * otherwise.
@@ -1429,7 +1429,7 @@ query_editor_add_history_item (QueryEditor *editor, QueryEditorHistoryItem *hist
 /**
  * query_editor_get_current_history_item
  * @editor: a #QueryEditor widget.
- * @out_in_batch: (allow-none): a pointer to store the #QueryEditorHistoryBatch the returned item is in, or %NULL
+ * @out_in_batch: (nullable): a pointer to store the #QueryEditorHistoryBatch the returned item is in, or %NULL
  *
  * Get the current selected #QueryEditorHistoryItem
  * passed to query_editor_add_history_item().

@@ -21,7 +21,7 @@
 
 /**
  * support_create_pixbuf_for_provider:
- * @pinfo: (allow-none): a #GdaProviderInfo, or %NULL
+ * @pinfo: (nullable): a #GdaProviderInfo, or %NULL
  *
  * Creates a new #GdkPixbuf using @pinfo's icon. The new pixbuf will at most be SUPPORT_ICON_SIZE pixels high.
  *

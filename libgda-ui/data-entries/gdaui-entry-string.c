@@ -154,7 +154,7 @@ gdaui_entry_string_init (GdauiEntryString *mgstr)
  * gdaui_entry_string_new:
  * @dh: the data handler to be used by the new widget
  * @type: the requested data type (compatible with @dh)
- * @options: (allow-none): some options formatting the new entry, or %NULL
+ * @options: (nullable): some options formatting the new entry, or %NULL
  *
  * Creates a new data entry widget. Known options are: MAX_SIZE, MULTILINE, and HIDDEN
  *

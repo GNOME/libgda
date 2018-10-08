@@ -129,7 +129,7 @@ gdaui_provider_selector_get_provider (GdauiProviderSelector *selector)
 /**
  * gdaui_provider_selector_set_provider:
  * @selector: a #GdauiProviderSelector widget
- * @provider: (allow-none): the provider to be selected, or %NULL for the default (SQLite)
+ * @provider: (nullable): the provider to be selected, or %NULL for the default (SQLite)
  *
  * Forces @selector to be set on @provider
  *

@@ -133,7 +133,7 @@ void                              gda_binary_free (GdaBinary *binary);
 /**
  * GdaBlob:
  * @data: data buffer, as a #GdaBinary
- * @op: (allow-none): a pointer to a #GdaBlopOp, or %NULL
+ * @op: (nullable): a pointer to a #GdaBlopOp, or %NULL
  *
  * Represents some binary data, accessed through a #GdaBlobOp object.
  * @op is generally set up by database providers when giving access to an existing BLOB in

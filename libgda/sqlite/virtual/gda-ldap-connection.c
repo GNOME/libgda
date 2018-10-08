@@ -671,9 +671,9 @@ _ldap_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED 
  * gda_ldap_connection_declare_table:
  * @cnc: a #GdaLdapConnection
  * @table_name: a table name, not %NULL
- * @base_dn: (allow-none): the base DN of the LDAP search, or %NULL for @cnc's own base DN
- * @filter: (allow-none): the search filter of the LDAP search, or %NULL for a default filter of "(ObjectClass=*)"
- * @attributes: (allow-none): the search attributes of the LDAP search, or %NULL if only the DN is required
+ * @base_dn: (nullable): the base DN of the LDAP search, or %NULL for @cnc's own base DN
+ * @filter: (nullable): the search filter of the LDAP search, or %NULL for a default filter of "(ObjectClass=*)"
+ * @attributes: (nullable): the search attributes of the LDAP search, or %NULL if only the DN is required
  * @scope: the search scope of the LDAP search
  * @error: a place to store errors, or %NULL
  *
@@ -788,10 +788,10 @@ gda_ldap_connection_undeclare_table (GdaLdapConnection *cnc, const gchar *table_
  * gda_ldap_connection_describe_table:
  * @cnc: a #GdaLdapConnection
  * @table_name: a table name, not %NULL
- * @out_base_dn: (allow-none) (transfer none): a place to store the LDAP search base DN, or %NULL
- * @out_filter: (allow-none) (transfer none): a place to store the LDAP search filter, or %NULL
- * @out_attributes: (allow-none) (transfer none): a place to store the LDAP search attributes, or %NULL
- * @out_scope: (allow-none) (transfer none): a place to store the LDAP search scope, or %NULL
+ * @out_base_dn: (nullable) (transfer none): a place to store the LDAP search base DN, or %NULL
+ * @out_filter: (nullable) (transfer none): a place to store the LDAP search filter, or %NULL
+ * @out_attributes: (nullable) (transfer none): a place to store the LDAP search attributes, or %NULL
+ * @out_scope: (nullable) (transfer none): a place to store the LDAP search scope, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get information about a virtual table, the information which has been passed to
@@ -888,7 +888,7 @@ gda_ldap_entry_free (GdaLdapEntry *entry)
 
 /**
  * gda_ldap_entry_new:
- * @dn: (allow-none): a Distinguished name, or %NULL
+ * @dn: (nullable): a Distinguished name, or %NULL
  *
  * Creates a new #GdaLdapEntry. This function is useful when using gda_ldap_modify_entry()
  *
@@ -991,8 +991,8 @@ GdaLdapEntry **_gda_ldap_get_entry_children (GdaLdapConnection *cnc, const gchar
 /**
  * gda_ldap_describe_entry:
  * @cnc: a #GdaLdapConnection connection
- * @dn: (allow-none): the Distinguished Name of the LDAP entry to describe
- * @error: (allow-none): a place to store errors, or %NULL
+ * @dn: (nullable): the Distinguished Name of the LDAP entry to describe
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Describes the LDAP entry which DN is @dn. If @dn is %NULL, then the top entry (as specified when 
  * the LDAP connection was opened) is described.
@@ -1012,9 +1012,9 @@ gda_ldap_describe_entry (GdaLdapConnection *cnc, const gchar *dn, GError **error
 /**
  * gda_ldap_get_entry_children:
  * @cnc: a #GdaLdapConnection connection
- * @dn: (allow-none): the Distinguished Name of the LDAP entry to get children from
- * @attributes: (allow-none) (array zero-terminated=1) (element-type gchar*): a %NULL terminated array of attributes to fetch for each child, or %NULL if no attribute is requested
- * @error: (allow-none): a place to store errors, or %NULL
+ * @dn: (nullable): the Distinguished Name of the LDAP entry to get children from
+ * @attributes: (nullable) (array zero-terminated=1) (element-type gchar*): a %NULL terminated array of attributes to fetch for each child, or %NULL if no attribute is requested
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Get the list of children entries for the LDAP entry which DN is @dn. If the @dn entry does not have any
  * child, then this function returns an array which first element is %NULL.
@@ -1153,7 +1153,7 @@ gda_ldap_entry_get_attributes_list (GdaLdapConnection *cnc, GdaLdapEntry *entry)
 
 /**
  * gda_ldap_attributes_list_free:
- * @list: (allow-none): a #GSList of #GdaLdapAttributeDefinition pointers, or %NULL
+ * @list: (nullable): a #GSList of #GdaLdapAttributeDefinition pointers, or %NULL
  *
  * Frees the list returned by gda_ldap_entry_get_attributes_list().
  *
@@ -1185,7 +1185,7 @@ _gda_ldap_modify (GdaLdapConnection *cnc, GdaLdapModificationType modtype,
  * gda_ldap_add_entry:
  * @cnc: a #GdaLdapConnection
  * @entry: a #GdaLDapEntry describing the LDAP entry to add
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Creates a new LDAP entry.
  *
@@ -1207,7 +1207,7 @@ gda_ldap_add_entry (GdaLdapConnection *cnc, GdaLdapEntry *entry, GError **error)
  * gda_ldap_remove_entry:
  * @cnc: a #GdaLdapConnection
  * @dn: the DN of the LDAP entry to remove
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Delete an LDAP entry.
  *
@@ -1236,7 +1236,7 @@ _gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const g
  * @cnc: a #GdaLdapConnection
  * @current_dn: the current DN of the entry
  * @new_dn: the new DN of the entry
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Renames an LDAP entry.
  *
@@ -1259,8 +1259,8 @@ gda_ldap_rename_entry (GdaLdapConnection *cnc, const gchar *current_dn, const gc
  * @cnc: a #GdaLdapConnection
  * @modtype: the type of modification to perform
  * @entry: a #GdaLDapEntry describing the LDAP entry to apply modifications, along with the attributes which will be modified
- * @ref_entry: (allow-none): a #GdaLDapEntry describing the reference LDAP entry, if @modtype is %GDA_LDAP_MODIFICATION_ATTR_DIFF
- * @error: (allow-none): a place to store an error, or %NULL
+ * @ref_entry: (nullable): a #GdaLDapEntry describing the reference LDAP entry, if @modtype is %GDA_LDAP_MODIFICATION_ATTR_DIFF
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Modifies an LDAP entry.
  *

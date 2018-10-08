@@ -356,7 +356,7 @@ gda_statement_check_structure (GdaStatement *stmt, GError **error)
 /**
  * gda_statement_check_validity:
  * @stmt: a #GdaStatement object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * If @cnc is not %NULL then checks that every object (table, field, function) used in @stmt 
@@ -493,7 +493,7 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 /**
  * gda_statement_get_parameters:
  * @stmt: a #GdaStatement object
- * @out_params: (out) (allow-none) (transfer full): a place to store a new #GdaSet object, or %NULL
+ * @out_params: (out) (nullable) (transfer full): a place to store a new #GdaSet object, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Get a new #GdaSet object which groups all the execution parameters
@@ -796,10 +796,10 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 /**
  * gda_statement_to_sql_extended:
  * @stmt: a #GdaStatement object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
- * @params: (allow-none): parameters contained in a single #GdaSet object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
+ * @params: (nullable): parameters contained in a single #GdaSet object, or %NULL
  * @flags: a set of flags to control the rendering
- * @params_used: (element-type GdaHolder) (out) (transfer container) (allow-none):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
+ * @params_used: (element-type GdaHolder) (out) (transfer container) (nullable):a place to store the list of actual #GdaHolder objects in @params used to do the rendering, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Renders @stmt as an SQL statement, with some control on how it is rendered.

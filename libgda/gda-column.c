@@ -519,7 +519,7 @@ gda_column_set_position (GdaColumn *column, gint position)
  * gda_column_get_default_value:
  * @column: a #GdaColumn.
  *
- * Returns: (allow-none): @column's default value, as a #GValue object, or %NULL if column does not have a default value
+ * Returns: (nullable): @column's default value, as a #GValue object, or %NULL if column does not have a default value
  */
 const GValue *
 gda_column_get_default_value (GdaColumn *column)
@@ -532,7 +532,7 @@ gda_column_get_default_value (GdaColumn *column)
 /**
  * gda_column_set_default_value:
  * @column: a #GdaColumn.
- * @default_value: (allow-none): default #GValue for the column
+ * @default_value: (nullable): default #GValue for the column
  *
  * Sets @column's default #GValue.
  */
@@ -571,8 +571,8 @@ gda_column_get_attribute (GdaColumn *column, const gchar *attribute)
  * gda_column_set_attribute:
  * @column: a #GdaColumn
  * @attribute: attribute name as a static string
- * @value: (allow-none): a #GValue, or %NULL
- * @destroy: (allow-none): a function to be called when @attribute is not needed anymore, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
+ * @destroy: (nullable): a function to be called when @attribute is not needed anymore, or %NULL
  *
  * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
  * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,

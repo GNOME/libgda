@@ -541,9 +541,9 @@ init_from_table_node (DataSource *source, xmlNodePtr node, GError **error)
  * data_source_add_dependency
  * @source: a #DataSource
  * @table: the name of the referenced table
- * @id: (allow-none): the ID of the referenced data source, or %NULL if its ID is the same as the table name
+ * @id: (nullable): the ID of the referenced data source, or %NULL if its ID is the same as the table name
  * @col_name_size: the size of @col_names
- * @col_names: (allow-none): names of the FK columns involved in the foreign key, or %NULL
+ * @col_names: (nullable): names of the FK columns involved in the foreign key, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Adds a dependency on the @table table, only for DATA_SOURCE_TABLE sources

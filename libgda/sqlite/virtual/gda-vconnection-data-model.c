@@ -268,7 +268,7 @@ gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc,
  * gda_vconnection_data_model_add:
  * @cnc: a #GdaVconnectionDataModel connection
  * @spec: a #GdaVconnectionDataModelSpec structure, used AS IS (not copied) and can be modified
- * @spec_free_func: (allow-none): function to call when freeing @spec, or %NULL
+ * @spec_free_func: (nullable): function to call when freeing @spec, or %NULL
  * @table_name: the name of the table
  * @error: a place to store errors, or %NULL
  *
@@ -431,7 +431,7 @@ gda_vconnection_data_model_remove (GdaVconnectionDataModel *cnc, const gchar *ta
  * Find the #GdaVconnectionDataModelSpec specifying how the table named @table_name is represented
  * in @cnc.
  *
- * Returns: (transfer none) (allow-none): a #GdaVconnectionDataModelSpec pointer, of %NULL if there is no table named @table_name
+ * Returns: (transfer none) (nullable): a #GdaVconnectionDataModelSpec pointer, of %NULL if there is no table named @table_name
  *
  * Since: 4.2.6
  */
@@ -458,7 +458,7 @@ gda_vconnection_data_model_get (GdaVconnectionDataModel *cnc, const gchar *table
  * either if no table named @table_name exists, or if that table actually exists but no #GdaDataModel
  * has yet been created. For a more general approach, use the gda_vconnection_data_model_get().
  *
- * Returns: (transfer none) (allow-none): the #GdaDataModel, or %NULL
+ * Returns: (transfer none) (nullable): the #GdaDataModel, or %NULL
  */
 GdaDataModel *
 gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name)
@@ -483,7 +483,7 @@ gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar 
  *
  * Find the name of the table associated to @model in @cnc
  *
- * Returns: (transfer none) (allow-none): the table name, or %NULL if not found
+ * Returns: (transfer none) (nullable): the table name, or %NULL if not found
  */
 const gchar *
 gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaDataModel *model)

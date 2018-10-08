@@ -30,7 +30,7 @@ void
 gda_lockable_default_init (GdaLockableInterface *iface) {}
 
 /**
- * gda_lockable_lock: (virtual )
+ * gda_lockable_lock:
  * @lockable: a #GdaLockable object.
  *
  * Locks @lockable. If it is already locked by another thread, the current thread will block until it is unlocked 

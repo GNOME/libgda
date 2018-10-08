@@ -146,7 +146,7 @@ gda_repetitive_statement_new (GdaStatement *stmt)
  * gda_repetitive_statement_get_template_set:
  * @rstmt: a #GdaRepetitiveStatement object
  * @set: a place to store the returned template set
- * @error: (allow-none): a place to store error, or %NULL
+ * @error: (nullable): a place to store error, or %NULL
  *
  * Gets a new #GdaSet object with the parameters used by the template statement in the
  * @rstmt object. 

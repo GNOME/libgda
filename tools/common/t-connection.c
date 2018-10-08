@@ -709,11 +709,11 @@ t_connection_name_is_valid (const gchar *name)
 
 /**
  * t_connection_open:
- * @cnc_name: (allow-none): a name to give to the new connection, or %NULL (a new name is automatically chosen)
+ * @cnc_name: (nullable): a name to give to the new connection, or %NULL (a new name is automatically chosen)
  * @cnc_string: a connection string, or DSN name
- * @auth_string: (allow-none): an authentication string, or %NULL
+ * @auth_string: (nullable): an authentication string, or %NULL
  * @use_term: if %TRUE, then standard stdin and stdout are used to read and display missing information (username or password)
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Open a connection.
  *
@@ -1421,7 +1421,7 @@ t_connection_render_pretty_sql (TConnection *tcnc, GdaStatement *stmt)
  * @stmt: a #GdaStatement
  * @params: a #GdaSet as parameters, or %NULL
  * @model_usage: how the returned data model (if any) will be used
- * @last_insert_row: (allow-none): a place to store a new GdaSet object which contains the values of the last inserted row, or %NULL.
+ * @last_insert_row: (nullable): a place to store a new GdaSet object which contains the values of the last inserted row, or %NULL.
  * @error: a place to store errors, or %NULL
  *
  * Executes @stmt by @tcnc.
@@ -2332,10 +2332,10 @@ t_connection_ldap_get_base_dn (TConnection *tcnc)
  * t_connection_describe_table:
  * @tcnc: a #TConnection
  * @table_name: a table name, not %NULL
- * @out_base_dn: (allow-none) (transfer none): a place to store the LDAP search base DN, or %NULL
- * @out_filter: (allow-none) (transfer none): a place to store the LDAP search filter, or %NULL
- * @out_attributes: (allow-none) (transfer none): a place to store the LDAP search attributes, or %NULL
- * @out_scope: (allow-none) (transfer none): a place to store the LDAP search scope, or %NULL
+ * @out_base_dn: (nullable) (transfer none): a place to store the LDAP search base DN, or %NULL
+ * @out_filter: (nullable) (transfer none): a place to store the LDAP search filter, or %NULL
+ * @out_attributes: (nullable) (transfer none): a place to store the LDAP search attributes, or %NULL
+ * @out_scope: (nullable) (transfer none): a place to store the LDAP search scope, or %NULL
  * @error: a place to store errors, or %NULL
  */
 gboolean
@@ -2430,7 +2430,7 @@ t_connection_undeclare_table (TConnection *tcnc,
 /**
  * t_connection_set_query_buffer:
  * @tcnc: a #TConnection
- * @sql: (allow-none): a string, or %NULL
+ * @sql: (nullable): a string, or %NULL
  *
  * Set @tcnc's associated query buffer
  */

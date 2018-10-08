@@ -218,7 +218,7 @@ browser_canvas_column_extra_event  (BrowserCanvasItem *citem, GdkEventType event
 
 /**
  * browser_canvas_column_new:
- * @parent: (allow-none): the parent item, or %NULL
+ * @parent: (nullable): the parent item, or %NULL
  * @mstruct: the #GdaMetaStruct @column is from
  * @column: the represented entity's column
  * @x: the x coordinate of the text

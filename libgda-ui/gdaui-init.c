@@ -104,7 +104,7 @@ gdaui_init (void)
 /**
  * gdaui_new_data_entry:
  * @type: a #GType
- * @plugin_name: (allow-none): the name of an entry plugin, or %NULL
+ * @plugin_name: (nullable): the name of an entry plugin, or %NULL
  *
  * Creates a new #GdauiDataEntry widget, taking into account the requested entry name
  * if @plugin_name is not %NULL (if no entry of that name is found, then the default data
@@ -203,7 +203,7 @@ gdaui_new_data_entry (GType type, const gchar *plugin_name)
 /*
  * _gdaui_new_cell_renderer
  * @type: a #GType
- * @plugin_name: (allow-none): the name of an entry plugin, or %NULL
+ * @plugin_name: (nullable): the name of an entry plugin, or %NULL
  *
  * Creates a new #GtkCellRenderer object which is suitable to use in
  * a #GtkTreeView widget, taking into account the requested entry name
@@ -795,7 +795,7 @@ gdaui_get_default_path (void)
 
 /**
  * gdaui_set_default_path:
- * @path: (allow-none): a path, or %NULL to unset
+ * @path: (nullable): a path, or %NULL to unset
  *
  * Define the default path used when saving a file, or when showing a #GtkFileChooser file chooser.
  *

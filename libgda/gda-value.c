@@ -813,7 +813,7 @@ gda_blob_free (GdaBlob *blob)
 /**
  * gda_blob_set_op:
  * @blob: a #GdaBlob value
- * @op: (allow-none): a #GdaBlobOp object, or %NULL
+ * @op: (nullable): a #GdaBlobOp object, or %NULL
  *
  * Correctly assigns @op to @blob (increases @op's reference count)
  */
@@ -1311,7 +1311,7 @@ gda_numeric_get_precision (const GdaNumeric *numeric)
  *
  * Get the string representation of @numeric, in the C locale format (dot as a fraction separator).
  *
- * Returns: (transfer full) (allow-none): a new string representing the stored valued in @numeric
+ * Returns: (transfer full) (nullable): a new string representing the stored valued in @numeric
  *
  * Since: 5.0.2
  */
@@ -1837,7 +1837,7 @@ gda_value_new_null (void)
 
 /**
  * gda_value_new_default:
- * @default_val: (allow-none): the default value as a string, or %NULL
+ * @default_val: (nullable): the default value as a string, or %NULL
  *
  * Creates a new default value.
  *
@@ -2152,7 +2152,7 @@ gda_value_new_from_xml (const xmlNodePtr node)
 
 /**
  * gda_value_free:
- * @value: (transfer full) (allow-none): the resource to free (or %NULL)
+ * @value: (transfer full) (nullable): the resource to free (or %NULL)
  *
  * Deallocates all memory associated to a #GValue.
  */
@@ -3452,7 +3452,7 @@ gda_binary_to_string (const GdaBinary *bin, guint maxlen)
 
 /**
  * gda_string_to_binary:
- * @str: (allow-none): a string to convert, or %NULL
+ * @str: (nullable): a string to convert, or %NULL
  *
  * Performs the reverse of gda_binary_to_string() (note that for any "\xyz" succession
  * of 4 characters where "xyz" represents a valid octal value, the resulting read value will

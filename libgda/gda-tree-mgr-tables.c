@@ -214,7 +214,7 @@ gda_tree_mgr_tables_get_property (GObject *object,
 /**
  * gda_tree_mgr_tables_new:
  * @cnc: a #GdaConnection object
- * @schema: (allow-none): a schema name or %NULL
+ * @schema: (nullable): a schema name or %NULL
  *
  * Creates a new #GdaTreeManager object which will add one tree node for each table found in the
  * @schema if it is not %NULL, or for each table visible by default in @cnc.

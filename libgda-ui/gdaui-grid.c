@@ -191,7 +191,7 @@ gdaui_grid_dispose (GObject *object)
 
 /**
  * gdaui_grid_new:
- * @model: (allow-none): a #GdaDataModel, or %NULL
+ * @model: (nullable): a #GdaDataModel, or %NULL
  *
  * Creates a new #GdauiGrid widget suitable to display the data in @model
  *

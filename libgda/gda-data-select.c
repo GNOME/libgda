@@ -1121,7 +1121,7 @@ param_name_to_int (const gchar *pname, gint *result, gboolean *old_val)
  * gda_data_select_set_modification_statement_sql:
  * @model: a #GdaDataSelect data model
  * @sql: an SQL text
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Offers the same feature as gda_data_select_set_modification_statement() but using an SQL statement.
  *
@@ -1203,7 +1203,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
  * gda_data_select_set_modification_statement:
  * @model: a #GdaDataSelect data model
  * @mod_stmt: a #GdaStatement (INSERT, UPDATE or DELETE)
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Informs @model that it should allow modifications to the data in some columns and some rows
  * using @mod_stmt to propagate those modifications into the database.
@@ -1534,7 +1534,7 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 /**
  * gda_data_select_compute_modification_statements:
  * @model: a #GdaDataSelect data model
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
@@ -1555,7 +1555,7 @@ gda_data_select_compute_modification_statements (GdaDataSelect *model, GError **
  * gda_data_select_compute_modification_statements_ext:
  * @model: a #GdaDataSelect data model
  * @cond_type: the type of condition for the modifications where one row only should be identified
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Makes @model try to compute INSERT, UPDATE and DELETE statements to be used when modifying @model's contents.
  * Note: any modification statement set using gda_data_select_set_modification_statement() will first be unset
@@ -1653,7 +1653,7 @@ row_selection_condition_foreach_func (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointe
  * gda_data_select_set_row_selection_condition:
  * @model: a #GdaDataSelect data model
  * @expr: (transfer none): a #GdaSqlExpr expression
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Offers the same features as gda_data_select_set_row_selection_condition_sql() but using a #GdaSqlExpr
  * structure instead of an SQL syntax.
@@ -1692,7 +1692,7 @@ gda_data_select_set_row_selection_condition  (GdaDataSelect *model, GdaSqlExpr *
  * gda_data_select_set_row_selection_condition_sql:
  * @model: a #GdaDataSelect data model
  * @sql_where: an SQL condition (without the WHERE keyword)
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Specifies the SQL condition corresponding to the WHERE part of a SELECT statement which would
  * return only 1 row (the expression of the primary key).
@@ -1767,7 +1767,7 @@ gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gch
 /**
  * gda_data_select_compute_row_selection_condition:
  * @model: a #GdaDataSelect object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Offers the same features as gda_data_select_set_row_selection_condition() but the expression
  * is computed from the meta data associated to the connection being used when @model was created.
@@ -3644,7 +3644,7 @@ set_column_properties_from_select_stmt (GdaDataSelect *model, GdaConnection *cnc
 /**
  * gda_data_select_compute_columns_attributes:
  * @model: a #GdaDataSelect data model
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Computes correct attributes for each of @model's columns, which includes the "NOT NULL" attribute, the
  * default value, the precision and scale for numeric values.
@@ -3677,7 +3677,7 @@ gda_data_select_compute_columns_attributes (GdaDataSelect *model, GError **error
 /**
  * gda_data_select_rerun:
  * @model: a #GdaDataSelect data model
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Requests that @model be re-run to have an updated result. If an error occurs,
  * then @model will not be changed.
@@ -3810,7 +3810,7 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 /**
  * gda_data_select_prepare_for_offline:
  * @model: a #GdaDataSelect object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Use this method to make sure all the data contained in the data model are stored on the client
  * side (and that no subsquent call to the server will be necessary to access that data), at the cost of

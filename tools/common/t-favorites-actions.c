@@ -139,7 +139,7 @@ t_favorites_actions_get (TFavorites *bfav, TConnection *tcnc, GdaSet *set)
 
 /**
  * t_favorites_action_free
- * @action: (allow-none): a #TFavoritesAction, or %NULL
+ * @action: (nullable): a #TFavoritesAction, or %NULL
  *
  * Frees @action
  */
@@ -158,7 +158,7 @@ t_favorites_action_free (TFavoritesAction *action)
 
 /**
  * t_favorites_actions_list_free
- * @actions_list: (allow-none): a list of #TFavoritesAction, or %NULL
+ * @actions_list: (nullable): a list of #TFavoritesAction, or %NULL
  *
  * Free a list of #TFavoritesAction (frees the list and each #TFavoritesAction)
  */

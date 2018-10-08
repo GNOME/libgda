@@ -59,7 +59,7 @@ typedef gchar *(*GdaSqlRenderingExpr)      (GdaSqlExpr *expr, GdaSqlRenderingCon
 /**
  * GdaSqlRenderingPSpecFunc:
  * @pspec: #GdaSqlParamSpec to render
- * @expr: (allow-none): #GdaSqlExpr which may hold the default value for the parameter, or %NULL
+ * @expr: (nullable): #GdaSqlExpr which may hold the default value for the parameter, or %NULL
  * @context: the rendering context
  * @is_default: pointer to a #gboolean which is set to TRUE if value should be considered as a default value
  * @is_null: pointer to a #gboolean which is set to TRUE if value should be considered as NULL

@@ -27,10 +27,10 @@
 /**
  * GdaTreeManagerNodesFunc:
  * @manager: a #GdaTreeManager
- * @node: (allow-none): a #GdaTreeNode object, or %NULL
+ * @node: (nullable): a #GdaTreeNode object, or %NULL
  * @children_nodes: (element-type GdaTreeNode): a list of #GdaTreeNode nodes which have previously been created by a similar call and
  * need to be updated ore moved
- * @out_error: (out) (allow-none): a boolean to store if there was an error (can be %NULL)
+ * @out_error: (out) (nullable): a boolean to store if there was an error (can be %NULL)
  * @error: a place to store errors, or %NULL
  *
  * Returns: (transfer container) (element-type GdaTreeNode): a new list of #GdaTreeNode objects.
@@ -39,8 +39,8 @@
 /**
  * GdaTreeManagerNodeFunc:
  * @manager: a #GdaTreeManager
- * @parent: (allow-none): the parent the new node may have, or %NULL
- * @name: (allow-none): name given to the new node, or %NULL
+ * @parent: (nullable): the parent the new node may have, or %NULL
+ * @name: (nullable): name given to the new node, or %NULL
  *
  * Returns: (transfer full): a new #GdaTreeNode
  */
@@ -225,10 +225,10 @@ gda_tree_manager_get_property (GObject *object,
 
 /*
  * @manager: a #GdaTreeManager object
- * @node: (allow-none): a #GdaTreeNode object, or %NULL
+ * @node: (nullable): a #GdaTreeNode object, or %NULL
  * @children_nodes: (element-type GdaTreeNode): a list of #GdaTreeNode nodes which have previously been created by a similar call and
  * need to be updated ore moved
- * @out_error: (out) (allow-none): a boolean to store if there was an error (can be %NULL)
+ * @out_error: (out) (nullable): a boolean to store if there was an error (can be %NULL)
  * @error: a place to store errors, or %NULL
  *
  * Creates (or updates) the list of #GdaTreeNode objects which are placed as children of @node. The returned
@@ -315,7 +315,7 @@ gda_tree_manager_new_with_func (GdaTreeManagerNodesFunc update_func)
  * gda_tree_manager_add_new_node_attribute:
  * @manager: a #GdaTreeManager
  * @attribute: an attribute name
- * @value: (allow-none): the attribute's value, or %NULL
+ * @value: (nullable): the attribute's value, or %NULL
  *
  * Requests that for any new node managed (eg. created) by @manager, a new attribute will be set. This allows
  * one to customize the attributes of new nodes created by an existing #GdaTreeManager.
@@ -358,8 +358,8 @@ gda_tree_manager_add_new_node_attribute (GdaTreeManager *manager, const gchar *a
 /**
  * gda_tree_manager_create_node:
  * @manager: a #GdaTreeManager
- * @parent: (allow-none): the parent the new node may have, or %NULL
- * @name: (allow-none): name given to the new node, or %NULL
+ * @parent: (nullable): the parent the new node may have, or %NULL
+ * @name: (nullable): name given to the new node, or %NULL
  *
  * Requests that @manager creates a new #GdaTreeNode. The new node is not in any
  * way linked to @manager yet, consider this method as a #GdaTreeNode factory.
@@ -469,7 +469,7 @@ gda_tree_manager_get_managers (GdaTreeManager *manager)
 /**
  * gda_tree_manager_set_node_create_func:
  * @manager: a #GdaTreeManager tree manager object
- * @func: (allow-none) (scope call): a #GdaTreeManagerNodeFunc function pointer, or %NULL
+ * @func: (nullable) (scope call): a #GdaTreeManagerNodeFunc function pointer, or %NULL
  *
  * Sets the function to be called when a new node is being created by @manager. If @func is %NULL
  * then each created node will be a #GdaTreeNode object.

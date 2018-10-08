@@ -488,7 +488,7 @@ gda_data_model_get_n_columns (GdaDataModel *model)
  * WARNING: the returned #GdaColumn object belongs to the @model model and
  * and should not be destroyed; any modification will affect the whole data model.
  *
- * Returns: (transfer none) (allow-none): the description of the column.
+ * Returns: (transfer none) (nullable): the description of the column.
  */
 GdaColumn *
 gda_data_model_describe_column (GdaDataModel *model, gint col)
@@ -659,7 +659,7 @@ gda_data_model_set_column_title (GdaDataModel *model, gint col, const gchar *tit
  * Upon errors %NULL will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
- * Returns: (allow-none) (transfer none): a #GValue containing the value stored in the given
+ * Returns: (nullable) (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, etc).
  */
 const GValue *
@@ -698,7 +698,7 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
  * Upon errors %NULL will be returned and @error will be assigned a
  * #GError from the #GDA_DATA_MODEL_ERROR domain.
  *
- * Returns: (allow-none) (transfer none): a #GValue containing the value stored in the given
+ * Returns: (nullable) (transfer none): a #GValue containing the value stored in the given
  * position, or %NULL on error (out-of-bound position, wrong data type, etc).
  */
 const GValue *
@@ -797,7 +797,7 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
  * gda_data_model_set_values:
  * @model: a #GdaDataModel object.
  * @row: row number.
- * @values: (element-type GObject.Value) (transfer none) (allow-none): a list of #GValue (or %NULL), one for at most the number of columns of @model
+ * @values: (element-type GObject.Value) (transfer none) (nullable): a list of #GValue (or %NULL), one for at most the number of columns of @model
  * @error: a place to store errors, or %NULL
  *
  * In a similar way to gda_data_model_set_value_at(), this method modifies a data model's contents
@@ -898,7 +898,7 @@ gda_data_model_create_iter (GdaDataModel *model)
 /**
  * gda_data_model_append_values:
  * @model: a #GdaDataModel object.
- * @values: (element-type GObject.Value) (allow-none): #GList of #GValue* representing the row to add.  The
+ * @values: (element-type GObject.Value) (nullable): #GList of #GValue* representing the row to add.  The
  *          length must match model's column count.  These #GValue
  *	    are value-copied (the user is still responsible for freeing them).
  * @error: a place to store errors, or %NULL
@@ -1071,7 +1071,7 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
  * gda_data_model_send_hint:
  * @model: a #GdaDataModel
  * @hint: (transfer none): a hint to send to the model
- * @hint_value: (allow-none): an optional value to specify the hint, or %NULL
+ * @hint_value: (nullable): an optional value to specify the hint, or %NULL
  *
  * Sends a hint to the data model. The hint may or may not be handled by the data
  * model, depending on its implementation
@@ -1119,9 +1119,9 @@ static gchar *export_to_text_separated (GdaDataModel *model, const gint *cols, g
  * gda_data_model_export_to_string:
  * @model: a #GdaDataModel
  * @format: the format in which to export data
- * @cols: (array length=nb_cols) (allow-none): an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (array length=nb_cols) (nullable): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: (array length=nb_rows) (allow-none): an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (array length=nb_rows) (nullable): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  *
@@ -1432,9 +1432,9 @@ gda_data_model_export_to_string (GdaDataModel *model, GdaDataModelIOFormat forma
  * @model: a #GdaDataModel
  * @format: the format in which to export data
  * @file: the filename to export to
- * @cols: (array length=nb_cols) (allow-none): an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (array length=nb_cols) (nullable): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: (array length=nb_rows) (allow-none): an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (array length=nb_rows) (nullable): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
@@ -1650,11 +1650,11 @@ xml_set_boolean (xmlNodePtr node, const gchar *name, gboolean value)
 /*
  * gda_data_model_to_xml_node
  * @model: a #GdaDataModel object.
- * @cols: (allow-none) (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (nullable) (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: (allow-none) (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (nullable) (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
- * @name: (allow-none): name to use for the XML resulting table or %NULL.
+ * @name: (nullable): name to use for the XML resulting table or %NULL.
  *
  * Converts a #GdaDataModel into a xmlNodePtr (as used in libxml).
  *
@@ -1938,7 +1938,7 @@ gda_data_model_add_data_from_xml_node (GdaDataModel *model, xmlNodePtr node, GEr
  * @to: the destination #GdaDataModel
  * @from: the source #GdaDataModel
  * @overwrite: TRUE if @to is completely overwritten by @from's data, and FALSE if @from's data is appended to @to
- * @cols_trans: (element-type gint gint) (allow-none): a #GHashTable for columns translating, or %NULL
+ * @cols_trans: (element-type gint gint) (nullable): a #GHashTable for columns translating, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Copy the contents of the @from data model to the @to data model. The copy stops as soon as an error
@@ -2202,7 +2202,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
  * gda_data_model_import_from_string:
  * @model: a #GdaDataModel
  * @string: the string to import data from
- * @cols_trans: (element-type gint gint) (allow-none): a hash table containing which columns of @model will be imported, or %NULL for all columns, see gda_data_model_import_from_model()
+ * @cols_trans: (element-type gint gint) (nullable): a hash table containing which columns of @model will be imported, or %NULL for all columns, see gda_data_model_import_from_model()
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *
@@ -2237,7 +2237,7 @@ gda_data_model_import_from_string (GdaDataModel *model,
  * gda_data_model_import_from_file:
  * @model: a #GdaDataModel
  * @file: the filename to import from
- * @cols_trans: (element-type gint gint) (allow-none): a #GHashTable for columns translating, or %NULL, see gda_data_model_import_from_model()
+ * @cols_trans: (element-type gint gint) (nullable): a #GHashTable for columns translating, or %NULL, see gda_data_model_import_from_model()
  * @options: list of options for the export
  * @error: a place to store errors, or %NULL
  *

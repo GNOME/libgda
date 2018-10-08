@@ -187,9 +187,9 @@ gda_data_model_ldap_get_type (void)
 /**
  * gda_data_model_ldap_new_with_config:
  * @cnc: an LDAP opened connection (must be a balid #GdaLdapConnection)
- * @base_dn: (allow-none): the base DN to search on, or %NULL
- * @filter: (allow-none): an LDAP filter, for example "(objectClass=*)"
- * @attributes: (allow-none): the list (CSV format) of attributes to fetch, each in the format &lt;attname&gt;[::&lt;GType&gt;]
+ * @base_dn: (nullable): the base DN to search on, or %NULL
+ * @filter: (nullable): an LDAP filter, for example "(objectClass=*)"
+ * @attributes: (nullable): the list (CSV format) of attributes to fetch, each in the format &lt;attname&gt;[::&lt;GType&gt;]
  * @scope: the search scope
  *
  * Creates a new #GdaDataModel object to extract some LDAP contents. The returned data model will
@@ -238,7 +238,7 @@ gda_data_model_ldap_new_with_config (GdaConnection *cnc,
 /**
  * gda_data_model_ldap_compute_columns:
  * @cnc: a #GdaConnection
- * @attributes: (allow-none): a string describing which LDAP attributes to retreive, or %NULL
+ * @attributes: (nullable): a string describing which LDAP attributes to retreive, or %NULL
  *
  * Computes the #GdaColumn of the data model which would be created using @attributes when calling
  * gda_data_model_ldap_new_with_config().

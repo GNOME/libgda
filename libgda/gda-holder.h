@@ -156,7 +156,7 @@ void                gda_holder_set_attribute            (GdaHolder *holder, cons
  * gda_holder_set_attribute_static:
  * @holder: a #GdaHolder
  * @attribute: attribute's name
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  *
  * This function is similar to gda_holder_set_attribute() but for static strings
  */

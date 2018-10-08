@@ -793,7 +793,7 @@ gda_data_model_import_get_property (GObject *object,
  * gda_data_model_import_new_file:
  * @filename: the file to import data from
  * @random_access: TRUE if random access will be required
- * @options: (transfer none) (allow-none): importing options
+ * @options: (transfer none) (nullable): importing options
  *
  * Creates a new #GdaDataModel object which contains the data stored within the @filename file.
  *
@@ -834,7 +834,7 @@ gda_data_model_import_new_file   (const gchar *filename, gboolean random_access,
  * gda_data_model_import_new_mem:
  * @data: a string containing the data to import
  * @random_access: TRUE if random access will be required
- * @options: (transfer none) (allow-none): importing options, see gda_data_model_import_new_file() for more information
+ * @options: (transfer none) (nullable): importing options, see gda_data_model_import_new_file() for more information
  *
  * Creates a new #GdaDataModel object which contains the data stored in the @data string.
  *

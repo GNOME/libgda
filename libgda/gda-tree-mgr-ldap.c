@@ -207,7 +207,7 @@ gda_tree_mgr_ldap_get_property (GObject *object,
 /**
  * gda_tree_mgr_ldap_new:
  * @cnc: a #GdaConnection object
- * @dn: (allow-none): an LDAP Distinguished Name or %NULL
+ * @dn: (nullable): an LDAP Distinguished Name or %NULL
  *
  * Creates a new #GdaTreeManager object which will list the children of the LDAP entry which Distinguished name
  * is @dn. If @dn is %NULL, then the tree manager will look in the tree itself for an attribute named "dn" and

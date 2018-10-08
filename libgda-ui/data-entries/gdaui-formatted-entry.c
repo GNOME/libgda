@@ -416,7 +416,7 @@ gdaui_formatted_entry_assume_delete (GdauiEntry *entry, gint virt_start_pos, gin
 /**
  * gdaui_formatted_entry_new:
  * @format: a format string
- * @mask: (allow-none): a mask string, or %NULL
+ * @mask: (nullable): a mask string, or %NULL
  *
  * Creates a new #GdauiFormattedEntry widget.
  *
@@ -499,8 +499,8 @@ gdaui_formatted_entry_get_text (GdauiFormattedEntry *entry)
 /**
  * gdaui_formatted_entry_set_insert_func:
  * @entry: a #GdauiFormattedEntry widget
- * @insert_func: (allow-none) (scope notified): a #GdauiFormattedEntryInsertFunc, or %NULL
- * @data: (allow-none): a pointer which will be passed to @insert_func
+ * @insert_func: (nullable) (scope notified): a #GdauiFormattedEntryInsertFunc, or %NULL
+ * @data: (nullable): a pointer which will be passed to @insert_func
  *
  * Specifies that @entry should call @insert_func when the user wants to insert a char
  * which is anot allowed, to perform other actions

@@ -357,7 +357,7 @@ gda_data_model_array_new_with_g_types_v (gint cols, GType *types)
  *
  * Makes a copy of @src into a new #GdaDataModelArray object
  *
- * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new data model, or %NULL if an error occurred
  */
 GdaDataModelArray *
 gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
@@ -412,7 +412,7 @@ gda_data_model_array_copy_model (GdaDataModel *src, GError **error)
  * Like gda_data_model_array_copy_model(), makes a copy of @src, but copies only some
  * columns.
  *
- * Returns: (transfer full) (allow-none): a new data model, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new data model, or %NULL if an error occurred
  *
  * Since: 5.2.0
  */

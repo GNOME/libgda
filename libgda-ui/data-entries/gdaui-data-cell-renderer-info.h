@@ -33,7 +33,6 @@ G_DECLARE_DERIVABLE_TYPE (GdauiDataCellRendererInfo, gdaui_data_cell_renderer_in
 struct _GdauiDataCellRendererInfoClass
 {
 	GtkCellRendererClass parent_class;
-	
 	void (* status_changed) (GdauiDataCellRendererInfo *cell_renderer_info,
 				 const gchar                 *path,
 				 GdaValueAttribute            requested_action);

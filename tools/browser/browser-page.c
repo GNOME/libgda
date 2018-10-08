@@ -70,8 +70,8 @@ browser_page_class_init (G_GNUC_UNUSED gpointer g_class)
 /**
  * browser_page_customize:
  * @page: an object implementing the #BrowserPage interface
- * @toolbar: (allow-none):
- * @header: (allow-none):
+ * @toolbar: (nullable):
+ * @header: (nullable):
  *
  * Add optional custom UI elements to @toolbar, @header and @menu. any call to the
  * browser_page_uncustomize() function will undo all the customizations to

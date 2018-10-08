@@ -150,7 +150,7 @@ gda_dsn_info_copy (const GdaDsnInfo *source)
 
 /**
  * gda_dsn_info_free:
- * @dsn: (allow-none): a #GdaDsnInfo struct to free
+ * @dsn: (nullable): a #GdaDsnInfo struct to free
  *
  * Frees any resources taken by @dsn struct. If @dsn is %NULL, then nothing happens.
  *
@@ -215,8 +215,8 @@ make_cmp_string (const gchar *key_values_string)
 
 /**
  * gda_dsn_info_equal:
- * @dsn1: (allow-none): a #GdaDsnInfo
- * @dsn2: (allow-none): a #GdaDsnInfo
+ * @dsn1: (nullable): a #GdaDsnInfo
+ * @dsn2: (nullable): a #GdaDsnInfo
  *
  * Compares @dsn1 and @dsn2.
  *

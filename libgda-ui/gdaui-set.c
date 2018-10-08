@@ -110,7 +110,7 @@ gdaui_set_group_copy (GdauiSetGroup *sg)
 
 /**
  * gdaui_set_group_free:
- * @sg: (allow-none): a #GdauiSetGroup struct to free
+ * @sg: (nullable): a #GdauiSetGroup struct to free
  * 
  * Frees any resources taken by @sg struct. If @sg is %NULL, then nothing happens.
  *
@@ -126,7 +126,7 @@ gdaui_set_group_free (GdauiSetGroup *sg)
 /**
  * gdaui_set_group_set_source:
  * @sg: a #GdauiSetGroup struct to free
- * @source (allow-none): a #GdauiSetSource struct or NULL
+ * @source (nullable): a #GdauiSetSource struct or NULL
  * 
  * Set source to @source. if @source is #NULL, then @group nodes contains exactly one entry.
  *
@@ -294,7 +294,7 @@ gdaui_set_source_copy (GdauiSetSource *s)
 
 /**
  * gdaui_set_source_free:
- * @s: (allow-none): a #GdauiSetSource struct to free
+ * @s: (nullable): a #GdauiSetSource struct to free
  * 
  * Frees any resources taken by @s struct. If @s is %NULL, then nothing happens.
  *

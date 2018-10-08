@@ -91,7 +91,7 @@ objattrs_unref (ObjAttrs *attrs)
 /**
  * gda_attributes_manager_new:
  * @for_objects: set to TRUE if attributes will be set on objects.
- * @signal_func: (allow-none) (scope call): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
+ * @signal_func: (nullable) (scope call): a function to be called whenever an attribute changes on an object (if @for_objects is TRUE), or %NULL
  * @signal_data: user data passed as last argument of @signal_func when it is called
  *
  * Creates a new #GdaAttributesManager, which can store (name, value) attributes for pointers or GObject objects
@@ -249,7 +249,7 @@ manager_real_set (GdaAttributesManager *mgr, gpointer ptr,
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
- * @value: (transfer none) (allow-none): a #GValue, or %NULL
+ * @value: (transfer none) (nullable): a #GValue, or %NULL
  *
  * Associates an attribute named @att_name to @ptr, with the value @value. Any previous association is replaced by
  * this one, and if @value is %NULL then the association is removed.
@@ -271,7 +271,7 @@ gda_attributes_manager_set (GdaAttributesManager *mgr, gpointer ptr, const gchar
  * @mgr: a #GdaAttributesManager
  * @ptr: a pointer to the resources to which the attribute will apply
  * @att_name: an attribute's name
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  * @destroy: function called when @att_name has to be freed
  *
  * Does the same as gda_attributes_manager_set() except that @destroy is called when @att_name needs

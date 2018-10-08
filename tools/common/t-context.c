@@ -445,7 +445,7 @@ t_context_get_id (TContext *console)
 /**
  * t_context_set_command_group:
  * @console: a #TContext object
- * @group: (allow-none) (transfer none): a #ToolCommandGroup
+ * @group: (nullable) (transfer none): a #ToolCommandGroup
  *
  * Defines @console's commands group
  */
@@ -500,7 +500,7 @@ t_context_set_output_format (TContext *console, ToolOutputFormat format)
 /**
  * t_context_get_output_stream:
  * @console: a #TContext
- * @out_is_pipe: (allow-none): a place to store information about the stream being a pipe or not, or %NULL
+ * @out_is_pipe: (nullable): a place to store information about the stream being a pipe or not, or %NULL
  *
  * Returns: the current output stream, or %NULL if none defined (i.e. stdout)
  */
@@ -516,8 +516,8 @@ t_context_get_output_stream (TContext *console, gboolean *out_is_pipe)
 /**
  * t_context_set_output_file:
  * @console: a #TContext
- * @file: (allow-none): a string representing the output string, or %NULL (i.e. stdout)
- * @error: (allow-none): a place to store errors, or %NULL
+ * @file: (nullable): a string representing the output string, or %NULL (i.e. stdout)
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Note: the "| cmd" is an accepted notation to pipe the outpit stream to another program
  *
@@ -626,7 +626,7 @@ t_connection_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, T
 /**
  * t_context_set_connection:
  * @console: a #TContext
- * @tcnc: (allow-none): the #TConnection to use, or %NULL
+ * @tcnc: (nullable): the #TConnection to use, or %NULL
  *
  * Defines the connection used by @context
  */

@@ -279,7 +279,7 @@ gda_quark_list_clear (GdaQuarkList *qlist)
 
 /**
  * gda_quark_list_free:
- * @qlist: (allow-none): a #GdaQuarkList, or %NULL
+ * @qlist: (nullable): a #GdaQuarkList, or %NULL
  *
  * Releases all memory occupied by the given #GdaQuarkList.
  */
@@ -547,7 +547,7 @@ protect_foreach (G_GNUC_UNUSED gchar *key, ProtectedValue *pvalue, G_GNUC_UNUSED
 
 /**
  * gda_quark_list_protect_values:
- * @qlist: (allow-none): a #GdaQuarkList, or %NULL
+ * @qlist: (nullable): a #GdaQuarkList, or %NULL
  *
  * Call this function to get rid of the clear version of all the values stored in @qlist. If @qlist is %NULL,
  * then this function does nothing.

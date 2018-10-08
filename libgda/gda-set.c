@@ -47,7 +47,7 @@ extern gchar *gda_lang_locale;
 /**
  * GdaSetGroup:
  * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry
- * @nodes_source: (allow-none):  if NULL, then @nodes contains exactly one entry 
+ * @nodes_source: (nullable):  if NULL, then @nodes contains exactly one entry
  *
  * Since 5.2, you must consider this struct as opaque. Any access to its internal must use public API.
  * Don't try to use #gda_set_group_free on a struct that was created manually.
@@ -128,7 +128,7 @@ gda_set_group_copy (GdaSetGroup *sg)
 
 /**
  * gda_set_group_free:
- * @sg: (allow-none): a #GdaSetGroup struct to free
+ * @sg: (nullable): a #GdaSetGroup struct to free
  * 
  * Frees any resources taken by @sg struct. If @sg is %NULL, then nothing happens.
  *
@@ -319,7 +319,7 @@ gda_set_source_copy (GdaSetSource *s)
 	
 /**
  * gda_set_source_free:
- * @s: (allow-none): a #GdaSetSource struct to free
+ * @s: (nullable): a #GdaSetSource struct to free
  * 
  * Frees any resources taken by @s struct. If @s is %NULL, then nothing happens.
  *
@@ -497,7 +497,7 @@ gda_set_node_copy (GdaSetNode *node)
 
 /**
  * gda_set_node_free:
- * @node: (allow-none): a #GdaSetNode struct to free
+ * @node: (nullable): a #GdaSetNode struct to free
  * 
  * Frees any resources taken by @node struct. If @node is %NULL, then nothing happens.
  *
@@ -560,7 +560,7 @@ gda_set_node_get_data_model (GdaSetNode *node)
 /**
  * gda_set_node_set_data_model:
  * @node: a #GdaSetNode struct to set data model to
- * @model: (allow-none): a #GdaDataModel to be used by @node
+ * @model: (nullable): a #GdaDataModel to be used by @node
  * 
  * Set a #GdaDataModel to be used by @node. @model increment its reference
  * counting when set. Internally referenced column number is set to first column
@@ -1177,7 +1177,7 @@ gda_set_new_inline (gint nb, ...)
 /**
  * gda_set_set_holder_value:
  * @set: a #GdaSet object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  * @holder_id: the ID of the holder to set the value
  * @...: value, of the correct type, depending on the requested holder's type (not NULL)
  *
@@ -1267,7 +1267,7 @@ gda_set_set_holder_value (GdaSet *set, GError **error, const gchar *holder_id, .
  *
  * Get the value of the #GdaHolder which ID is @holder_id
  *
- * Returns: (allow-none) (transfer none): the requested GValue, or %NULL (see gda_holder_get_value())
+ * Returns: (nullable) (transfer none): the requested GValue, or %NULL (see gda_holder_get_value())
  */
 const GValue *
 gda_set_get_holder_value (GdaSet *set, const gchar *holder_id)
@@ -1313,7 +1313,7 @@ xml_validity_error_func (void *ctx, const char *msg, ...)
 /**
  * gda_set_new_from_spec_string:
  * @xml_spec: a string
- * @error: (allow-none): a place to store the error, or %NULL
+ * @error: (nullable): a place to store the error, or %NULL
  *
  * Creates a new #GdaSet object from the @xml_spec
  * specifications
@@ -1405,7 +1405,7 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 /**
  * gda_set_new_from_spec_node:
  * @xml_spec: a #xmlNodePtr for a &lt;parameters&gt; tag
- * @error: (allow-none): a place to store the error, or %NULL
+ * @error: (nullable): a place to store the error, or %NULL
  *
  * Creates a new #GdaSet object from the @xml_spec
  * specifications
@@ -2015,7 +2015,7 @@ set_remove_source (GdaSet *set, GdaSetSource *source)
 /**
  * gda_set_is_valid:
  * @set: a #GdaSet object
- * @error: (allow-none): a place to store validation errors, or %NULL
+ * @error: (nullable): a place to store validation errors, or %NULL
  *
  * This method tells if all @set's #GdaHolder objects are valid, and if
  * they represent a valid combination of values, as defined by rules

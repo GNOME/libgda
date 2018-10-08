@@ -139,7 +139,7 @@ gboolean       gda_ldap_connection_describe_table  (GdaLdapConnection *cnc, cons
  * GdaLdapAttribute:
  * @attr_name: the name of the attribute
  * @nb_values: the number of values in @values, or %0
- * @values: (allow-none) (array length=nb_values) (array zero-terminated=1): the attribute' values as #GValue values, (terminated by a %NULL)
+ * @values: (nullable) (array length=nb_values) (array zero-terminated=1): the attribute' values as #GValue values, (terminated by a %NULL)
  *
  * This structure holds information about the values of a single attribute (of a single LDAP entry).
  */
@@ -153,7 +153,7 @@ typedef struct {
  * GdaLdapEntry:
  * @dn: the Distinguished Name of the entry
  * @nb_attributes: the number of attributes in @attributes, or %0
- * @attributes: (allow-none) (array length=nb_attributes) (array zero-terminated=1): the entry's attributes, (terminated by a %NULL)
+ * @attributes: (nullable) (array length=nb_attributes) (array zero-terminated=1): the entry's attributes, (terminated by a %NULL)
  * @attributes_hash: a hash table where the key is an attribute name, and the value the correcponding #GdaLdapAttribute
  *
  * This structure holds information about the attributes of a single LDAP entry.
@@ -207,7 +207,7 @@ typedef enum {
  * @oid: the OID of the class
  * @nb_names: the number of values in @values (always &gt;= 1)
  * @names: all the class names
- * @description: (allow-none): the class's description, or %NULL
+ * @description: (nullable): the class's description, or %NULL
  * @kind: the class kind
  * @obsolete: defines is LDAP class is obsolete
  * @nb_req_attributes: the number of values in @req_attributes

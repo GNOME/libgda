@@ -304,8 +304,8 @@ adjust_display (GdauiEntry *entry, gchar *existing_text)
 
 /**
  * gdaui_entry_new:
- * @prefix: (allow-none): a prefix (not modifiable) string, or %NULL
- * @suffix: (allow-none): a suffix (not modifiable) string, or %NULL
+ * @prefix: (nullable): a prefix (not modifiable) string, or %NULL
+ * @suffix: (nullable): a suffix (not modifiable) string, or %NULL
  *
  * Creates a new #GdauiEntry widget.
  *
@@ -390,7 +390,7 @@ gdaui_entry_get_text (GdauiEntry *entry)
 /**
  * gdaui_entry_set_text:
  * @entry: a #GdauiEntry widget
- * @text: (allow-none): the text to set into @entry, or %NULL
+ * @text: (nullable): the text to set into @entry, or %NULL
  *
  * Sets @text into @entry. 
  *

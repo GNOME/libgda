@@ -246,7 +246,7 @@ typedef struct {
  * @gtype: the detected column's #GType
  * @pkey: tells if the column is part of a primary key
  * @nullok: tells if the column can be %NULL
- * @default_value: (allow-none): the column's default value, represented as a valid SQL value (surrounded by simple quotes for strings, ...), or %NULL if column has no default value
+ * @default_value: (nullable): the column's default value, represented as a valid SQL value (surrounded by simple quotes for strings, ...), or %NULL if column has no default value
  *
  * This structure represents a table of view's column, its contents must not be modified.
  */
@@ -284,7 +284,7 @@ void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, con
  * gda_meta_table_column_set_attribute_static:
  * @column: a #GdaMetaTableColumn
  * @attribute: attribute's name
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  *
  * This function is similar to gda_meta_table_column_set_attribute() but for static strings
  */

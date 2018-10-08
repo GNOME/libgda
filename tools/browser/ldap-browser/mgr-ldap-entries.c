@@ -119,7 +119,7 @@ mgr_ldap_entries_get_type (void)
 /**
  * mgr_ldap_entries_new:
  * @cnc: a #TConnection object
- * @dn: (allow-none): a schema name or %NULL
+ * @dn: (nullable): a schema name or %NULL
  *
  * Creates a new #BrowserTreeManager object which will list the children of the LDAP entry which Distinguished name
  * is @dn. If @dn is %NULL, then the tree manager will look in the tree itself for an attribute named "dn" and

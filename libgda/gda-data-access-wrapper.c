@@ -389,7 +389,7 @@ gda_data_access_wrapper_new (GdaDataModel *model)
 /**
  * gda_data_access_wrapper_set_mapping:
  * @wrapper: a #GdaDataAccessWrapper object
- * @mapping: (allow-none) (array length=mapping_size): an array of #gint which represents the mapping between @wrapper's columns
+ * @mapping: (nullable) (array length=mapping_size): an array of #gint which represents the mapping between @wrapper's columns
  * and the columns of the wrapped data model
  * @mapping_size: the size of @mapping.
  *

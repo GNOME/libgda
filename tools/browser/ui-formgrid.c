@@ -845,7 +845,7 @@ handle_user_prefs_for_sql_statement (UiFormGrid *formgrid, TConnection *tcnc,
 /**
  * ui_formgrid_handle_user_prefs
  * @formgrid: a #UiFormGrid widget
- * @tcnc: (allow-none): a #TConnection, or %NULL to let @formgrid determine it itself
+ * @tcnc: (nullable): a #TConnection, or %NULL to let @formgrid determine it itself
  * @stmt: the #GdaStatement which has been executed to produce the #GdaDataModel displayed in @formgrid
  *
  * Takes into account the UI preferences of the user
@@ -1041,7 +1041,7 @@ ui_formgrid_get_grid_widget (UiFormGrid *formgrid)
 /**
  * ui_formgrid_set_connection
  * @formgrid: a #UiFormGrid widget
- * @tcnc: (allow-none): a #TConnection, or %NULL
+ * @tcnc: (nullable): a #TConnection, or %NULL
  *
  * Tells @formgrid to use @tcnc as connection when actions have to be executed
  */
@@ -1109,8 +1109,8 @@ compute_modification_statements (UiFormGrid *formgrid, GdaDataModel *model)
 /**
  * ui_formgrid_set_refresh_func:
  * @formgrid: a #UiFormGrid widget
- * @callback: (allow-none): a callback, or %NULL
- * @user_data: (allow-none): a pointer passed to the @callback function, or %NULL
+ * @callback: (nullable): a callback, or %NULL
+ * @user_data: (nullable): a pointer passed to the @callback function, or %NULL
  *
  * If @callback is not %NULL, then a "Refresh" button is added to @formgrid which, when clicked,
  * calls @callback. The callback function will have a first argument which is a button, and a second argument

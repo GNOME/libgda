@@ -724,7 +724,7 @@ browser_window_get_connection (BrowserWindow *bwin)
 /*
  * perspective_data_new
  * @bwin: a #BrowserWindow in which the perspective will be
- * @factory: (allow-none): a #BrowserPerspectiveFactory, or %NULL
+ * @factory: (nullable): a #BrowserPerspectiveFactory, or %NULL
  *
  * Creates a new #PerspectiveData structure, it increases @tcnc's reference count.
  *

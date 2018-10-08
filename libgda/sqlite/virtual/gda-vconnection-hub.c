@@ -150,7 +150,7 @@ gda_vconnection_hub_get_type (void)
  * gda_vconnection_hub_add:
  * @hub: a #GdaVconnectionHub connection
  * @cnc: a #GdaConnection
- * @ns: (allow-none): a namespace, or %NULL
+ * @ns: (nullable): a namespace, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Make all the tables of @cnc appear as tables (of the same name) in the @hub connection.
@@ -262,7 +262,7 @@ get_hub_cnc_by_cnc (GdaVconnectionHub *hub, GdaConnection *cnc)
 /**
  * gda_vconnection_hub_get_connection:
  * @hub: a #GdaVconnectionHub connection
- * @ns: (allow-none): a name space, or %NULL
+ * @ns: (nullable): a name space, or %NULL
  *
  * Find the #GdaConnection object in @hub associated to the @ns name space
  *

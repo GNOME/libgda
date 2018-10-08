@@ -143,7 +143,7 @@ gdaui_data_entry_get_value_type (GdauiDataEntry *de)
 /**
  * gdaui_data_entry_set_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  *
  * Push a value into the #GdauiDataEntry. The value parameter must either be:
  * <itemizedlist>
@@ -191,7 +191,7 @@ gdaui_data_entry_get_value (GdauiDataEntry *de)
 /**
  * gdaui_data_entry_validate:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @error: (allow-none): a place to store an erro, or %NULL
+ * @error: (nullable): a place to store an erro, or %NULL
  *
  * Tests the validity of @de's contents. This function must be overrided by implementators.
  *
@@ -215,7 +215,7 @@ gdaui_data_entry_validate (GdauiDataEntry *de, GError **error)
 /**
  * gdaui_data_entry_set_reference_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  *
  * Push a value into the GdauiDataEntry in the same way as gdaui_data_entry_set_value() but
  * also sets this value as the reference value.
@@ -277,7 +277,7 @@ gdaui_data_entry_get_reference_value (GdauiDataEntry *de)
 /**
  * gdaui_data_entry_set_default_value:
  * @de: a #GtkWidget object which implements the #GdauiDataEntry interface
- * @value: (allow-none): a #GValue, or %NULL
+ * @value: (nullable): a #GValue, or %NULL
  *
  * Sets the default value for the GdauiDataEntry which gets displayed when the
  * user forces the default value. If it is not set then it is set to type GDA_TYPE_NULL.

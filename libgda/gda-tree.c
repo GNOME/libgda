@@ -335,7 +335,7 @@ gda_tree_clean (GdaTree *tree)
 /**
  * gda_tree_update_all:
  * @tree: a #GdaTree object
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Requests that @tree be populated with nodes. If an error occurs, then @tree's contents is left
  * unchanged, and otherwise @tree's previous contents is completely replaced by the new one.
@@ -356,7 +356,7 @@ gda_tree_update_all (GdaTree *tree, GError **error)
  * gda_tree_update_part:
  * @tree: a #GdaTree object
  * @node: a #GdaTreeNode node in @tree
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Requests that @tree be populated with nodes, starting from @node
  *
@@ -392,8 +392,8 @@ gda_tree_update_part (GdaTree *tree, GdaTreeNode *node, GError **error)
 /**
  * gda_tree_update_children:
  * @tree: a #GdaTree object
- * @node: (allow-none): a #GdaTreeNode node in @tree, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL
+ * @node: (nullable): a #GdaTreeNode node in @tree, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Update the children of @node in @tree (not recursively, to update recursively, use
  * gda_tree_update_part()). If @node is %NULL then the top level nodes are updated.
@@ -437,8 +437,8 @@ gda_tree_update_children (GdaTree *tree, GdaTreeNode *node, GError **error)
 /**
  * gda_tree_dump:
  * @tree: a #GdaTree
- * @node: (allow-none): a #GdaTreeNode to start the dump from, or %NULL for a full dump
- * @stream: (allow-none): a stream to send the dump to, or %NULL for STDOUT
+ * @node: (nullable): a #GdaTreeNode to start the dump from, or %NULL for a full dump
+ * @stream: (nullable): a stream to send the dump to, or %NULL for STDOUT
  *
  * Dumps the contents of @tree to @stream, using a hierarchical view.
  *
@@ -470,7 +470,7 @@ static GSList *decompose_path_as_segments (const gchar *path, gboolean use_names
 /**
  * gda_tree_get_nodes_in_path:
  * @tree: a #GdaTree object
- * @tree_path: (allow-none): full path to the required nodes (if @use_names is %TRUE, then it must start with '/'), or %NULL
+ * @tree_path: (nullable): full path to the required nodes (if @use_names is %TRUE, then it must start with '/'), or %NULL
  * @use_names: if %TRUE, then @tree_path will be interpreted as a unix style path, and if %FALSE,
  *             then @tree_path will be interpreted similarly to the #GtkTreePath's string representation.
  *
@@ -632,7 +632,7 @@ build_node_path (GdaTree *tree, GdaTreeNode *node, GArray *array)
  *
  * Locates a #GdaTreeNode using the @tree_path path.
  *
- * Returns: (transfer none) (allow-none): the requested #GdaTreeNode pointer, or %NULL if not found
+ * Returns: (transfer none) (nullable): the requested #GdaTreeNode pointer, or %NULL if not found
  *
  * Since: 4.2
  */

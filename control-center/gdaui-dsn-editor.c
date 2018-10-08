@@ -571,7 +571,7 @@ gdaui_dsn_editor_get_dsn (GdauiDsnEditor *config)
 /**
  * gdaui_dsn_editor_set_dsn
  * @editor: a #GdauiDsnEditor widget
- * @dsn_info: (allow-none): a #GdaDsnInfo pointer or %NULL
+ * @dsn_info: (nullable): a #GdaDsnInfo pointer or %NULL
  *
  *
  * Requests that @editor update its contents with @dsn_info's contents

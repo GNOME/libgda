@@ -114,7 +114,7 @@ struct _ITSignaler {
 
 /**
  * itsignaler_ref:
- * @its: (allow-none): a #ITSignaler object
+ * @its: (nullable): a #ITSignaler object
  *
  * Increases the reference count of @its. If @its is %NULL, then nothing happens.
  *
@@ -267,7 +267,7 @@ _itsignaler_unref (ITSignaler *its, gboolean give_to_bg)
 
 /**
  * itsignaler_unref:
- * @its: (allow-none): a #ITSignaler object
+ * @its: (nullable): a #ITSignaler object
  *
  * Decrease the reference count of @its; when the rerefence count reaches zero, the object
  * is freed. If @its is %NULL, then nothing happens.
@@ -584,7 +584,7 @@ itsignaler_unix_get_poll_fd (ITSignaler *its)
  * itsignaler_push_notification:
  * @its: a #ITSignaler pointer
  * @data: a pointer to some data.
- * @destroy_func: (allow-none): a function to be called to free @data, or %NULL
+ * @destroy_func: (nullable): a function to be called to free @data, or %NULL
  *
  * Use this function to push a notification.
  *
@@ -895,10 +895,10 @@ void its_source_finalize (GSource *source)
 /**
  * itsignaler_add:
  * @its: a #ITSignaler object
- * @context: (allow-none): a GMainContext (if %NULL, the default context will be used).
+ * @context: (nullable): a GMainContext (if %NULL, the default context will be used).
  * @func: callback function to be called when a notification is ready
  * @data: data to pass to @func
- * @notify: (allow-none): a function to call when data is no longer in use, or NULL.
+ * @notify: (nullable): a function to call when data is no longer in use, or NULL.
  *
  * Have @its call @func (with @data) in the context of @context. Remove using itsignaler_remove(). This function
  * is similar to itsignaler_create_source() but is packaged for easier usage.
@@ -929,7 +929,7 @@ itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpo
 /**
  * itsignaler_remove:
  * @its: a #ITSignaler object
- * @context: (allow-none): a GMainContext (if NULL, the default context will be used).
+ * @context: (nullable): a GMainContext (if NULL, the default context will be used).
  * @id: the ID of the source as returned by itsignaler_add()
  *
  * Does the reverse of itsignaler_add().

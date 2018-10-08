@@ -166,7 +166,7 @@ gda_pstmt_finalize (GObject *object)
 /**
  * gda_pstmt_set_gda_statement:
  * @pstmt: a #GdaPStmt object
- * @stmt: (allow-none): a #GdaStatement object, or %NULL
+ * @stmt: (nullable): a #GdaStatement object, or %NULL
  *
  * Informs @pstmt that it corresponds to the preparation of the @stmt statement
  */

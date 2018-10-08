@@ -3043,7 +3043,7 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
 /**
  * gda_server_operation_render:
  * @op: a #GdaServerOperation object
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
  * @op operation. Note that the returned string may actually contain more than one SQL statement.
@@ -3051,7 +3051,7 @@ gda_server_operation_create_table_arg_get_fkey_refs (GdaServerOperationCreateTab
  * This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
  * the operation; to actually perform the operation, use gda_server_operation_perform().
  *
- * Returns: (transfer full) (allow-none): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
+ * Returns: (transfer full) (nullable): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
  */
 gchar *
 gda_server_operation_render (GdaServerOperation *op, GError **error)

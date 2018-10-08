@@ -251,7 +251,7 @@ gda_transaction_status_free_events (GdaTransactionStatus *tstatus, GdaTransactio
 /**
  * gda_transaction_status_find:
  *
- * Returns: (transfer full) (allow-none):
+ * Returns: (transfer full) (nullable):
  */
 GdaTransactionStatus *
 gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, GdaTransactionStatusEvent **destev)
@@ -303,7 +303,7 @@ gda_transaction_status_find (GdaTransactionStatus *tstatus, const gchar *str, Gd
  * Find a pointer to the "current" _unnamed_ transaction, which is the last
  * transaction if there are several nested transactions
  *
- * Returns: (transfer full) (allow-none):
+ * Returns: (transfer full) (nullable):
  */
 GdaTransactionStatus *
 gda_transaction_status_find_current (GdaTransactionStatus *tstatus, GdaTransactionStatusEvent **destev, gboolean unnamed_only)

@@ -48,7 +48,7 @@ base_tool_command_result_new (GdaConnection *cnc, ToolCommandResultType type)
 
 /**
  * base_tool_command_result_free:
- * @res: (allow-none): a #ToolCommandResult, or %NULL
+ * @res: (nullable): a #ToolCommandResult, or %NULL
  *
  * Frees any resource used by @res
  */
@@ -118,7 +118,7 @@ base_tool_command_group_new (void)
 
 /**
  * base_tool_command_group_free:
- * @group: (allow-none) (transfer full): a #ToolCommandGroup pointer
+ * @group: (nullable) (transfer full): a #ToolCommandGroup pointer
  *
  * Frees any resource used by @group
  */
@@ -437,8 +437,8 @@ base_tool_command_is_internal (const gchar *cmde)
  * @cmde: an internal command as a string (name + arguments), without the '.' or '\\' beginning
  * @limit_width: pass to %TRUE if, in case the command is a HELP command, the width must be limited by a terminal's width
  * @color_term: pass to %TRUE if, in case the command is a HELP command, the output will be for a terminal color
- * @user_data: (allow-none): a pointer, see the #ToolCommandFunc type
- * @error: (allow-none): a place to store errors, or %NULL
+ * @user_data: (nullable): a pointer, see the #ToolCommandFunc type
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Executes @cmde, which must be an internal command.
  *
@@ -508,7 +508,7 @@ base_tool_command_get_all_commands (ToolCommandGroup *group)
 /**
  * base_tool_command_get_commands:
  * @group: a #ToolCommandGroup group of commands
- * @prefix: (allow-none): a prefix
+ * @prefix: (nullable): a prefix
  *
  * Get a list of all the commands (sorted by group) in @group, starting by @prefix
  *

@@ -323,7 +323,7 @@ gda_server_provider_get_property (GObject *object,
  * gda_server_provider_set_impl_functions:
  * @klass: a #GdaServerProviderClass object
  * @type: a #GdaServerProviderFunctionsType type
- * @functions_set: (allow-none): a pointer to the function set, or %NULL
+ * @functions_set: (nullable): a pointer to the function set, or %NULL
  *
  * Upon creation, used by provider's implementors to set the implementation functions. Passing %NULL
  * as the @functions_set has no effect.
@@ -469,7 +469,7 @@ _gda_server_provider_create_worker (GdaServerProvider *provider, gboolean for_cn
 
 /**
  * gda_server_provider_get_real_main_context:
- * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @cnc: (nullable): a #GdaConnection, or %NULL
  *
  * Obtain a #GMainContext on which to iterate. This function is reserved to database provider's implementations.
  *
@@ -678,9 +678,9 @@ worker_supports_operation (WorkerSupportsOperationData *data, G_GNUC_UNUSED GErr
 /**
  * gda_server_provider_supports_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object which would be used to perform an action, or %NULL
+ * @cnc: (nullable): a #GdaConnection object which would be used to perform an action, or %NULL
  * @type: the type of operation requested
- * @options: (allow-none): a list of named parameters, or %NULL
+ * @options: (nullable): a list of named parameters, or %NULL
  *
  * Tells if @provider supports the @type of operation on the @cnc connection, using the
  * (optional) @options parameters.
@@ -854,10 +854,10 @@ worker_create_operation (WorkerCreateOperationData *data, GError **error)
 /**
  * gda_server_provider_create_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
+ * @cnc: (nullable): a #GdaConnection object which will be used to perform an action, or %NULL
  * @type: the type of operation requested
- * @options: (allow-none): a list of parameters or %NULL
- * @error: (allow-none): a place to store an error, or %NULL
+ * @options: (nullable): a list of parameters or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Creates a new #GdaServerOperation object which can be modified in order to perform the @type type of
  * action. The @options can contain:
@@ -866,7 +866,7 @@ worker_create_operation (WorkerCreateOperationData *data, GError **error)
  *  <listitem>named values which may change the contents of the GdaServerOperation, see <link linkend="gda-server-op-information-std">this section</link> for more information</listitem>
  * </itemizedlist>
  *
- * Returns: (transfer full) (allow-none): a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred
+ * Returns: (transfer full) (nullable): a new #GdaServerOperation object, or %NULL in the provider does not support the @type type of operation or if an error occurred
  */
 GdaServerOperation *
 gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -1013,9 +1013,9 @@ worker_render_operation (WorkerRenderOperationData *data, GError **error)
 /**
  * gda_server_provider_render_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object which will be used to render the action, or %NULL
+ * @cnc: (nullable): a #GdaConnection object which will be used to render the action, or %NULL
  * @op: a #GdaServerOperation object
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Creates an SQL statement (possibly using some specific extensions of the DBMS) corresponding to the
  * @op operation. Note that the returned string may actually contain more than one SQL statement.
@@ -1023,7 +1023,7 @@ worker_render_operation (WorkerRenderOperationData *data, GError **error)
  * This function's purpose is mainly informative to get the actual SQL code which would be executed to perform
  * the operation; to actually perform the operation, use gda_server_provider_perform_operation().
  *
- * Returns: (transfer full) (allow-none): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
+ * Returns: (transfer full) (nullable): a new string, or %NULL if an error occurred or operation cannot be rendered as SQL.
  */
 gchar *
 gda_server_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc, 
@@ -1099,9 +1099,9 @@ worker_perform_operation (WorkerPerformOperationData *data, GError **error)
 /**
  * gda_server_provider_perform_operation:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object which will be used to perform the action, or %NULL
+ * @cnc: (nullable): a #GdaConnection object which will be used to perform the action, or %NULL
  * @op: a #GdaServerOperation object
- * @error: (allow-none): a place to store an error, or %NULL
+ * @error: (nullable): a place to store an error, or %NULL
  *
  * Performs the operation described by @op. Note that @op is not destroyed by this method
  * and can be reused.
@@ -1202,7 +1202,7 @@ worker_supports_feature (WorkerSupportsFeatureData *data, G_GNUC_UNUSED GError *
 /**
  * gda_server_provider_supports_feature:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @feature: #GdaConnectionFeature feature to test
  *
  * Tests if a feature is supported
@@ -1281,7 +1281,7 @@ worker_get_data_handler (WorkerTypeData *data, G_GNUC_UNUSED GError **error)
 /**
  * gda_server_provider_get_data_handler_g_type:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @for_type: a #GType
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type. The returned object must not be modified.
@@ -1339,7 +1339,7 @@ gda_server_provider_get_data_handler_g_type (GdaServerProvider *provider, GdaCon
 /**
  * gda_server_provider_get_data_handler_dbms:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @for_type: a DBMS type definition
  *
  * Find a #GdaDataHandler object to manipulate data of type @for_type.
@@ -1412,7 +1412,7 @@ worker_get_default_dbms_type (WorkerTypeData *data, G_GNUC_UNUSED GError **error
 /**
  * gda_server_provider_get_default_dbms_type:
  * @provider: a server provider.
- * @cnc: (allow-none):  a #GdaConnection object or %NULL
+ * @cnc: (nullable):  a #GdaConnection object or %NULL
  * @type: a #GType value type
  *
  * Get the name of the most common data type which has @type type.
@@ -1421,7 +1421,7 @@ worker_get_default_dbms_type (WorkerTypeData *data, G_GNUC_UNUSED GError **error
  * there is no DBMS data type which could contain data of the @g_type type (for example %NULL may be
  * returned if a DBMS has integers only up to 4 bytes and a #G_TYPE_INT64 is requested).
  *
- * Returns: (transfer none) (allow-none): the name of the DBMS type, or %NULL
+ * Returns: (transfer none) (nullable): the name of the DBMS type, or %NULL
  */
 const gchar *
 gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConnection *cnc, GType type)
@@ -1475,10 +1475,10 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 /**
  * gda_server_provider_string_to_value:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @string: the SQL string to convert to a value
  * @preferred_type: a #GType, or #G_TYPE_INVALID
- * @dbms_type: (allow-none): place to get the actual database type used if the conversion succeeded, or %NULL
+ * @dbms_type: (nullable): place to get the actual database type used if the conversion succeeded, or %NULL
  *
  * Use @provider to create a new #GValue from a single string representation. 
  *
@@ -1593,7 +1593,7 @@ gda_server_provider_string_to_value (GdaServerProvider *provider, GdaConnection 
 /**
  * gda_server_provider_value_to_sql_string:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @from: #GValue to convert from
  *
  * Produces a fully quoted and escaped string from a GValue
@@ -1644,7 +1644,7 @@ worker_escape_string (WorkerEscapeData *data, G_GNUC_UNUSED GError **error)
 /**
  * gda_server_provider_escape_string:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @str: a string to escape
  *
  * Escapes @str for use within an SQL command (to avoid SQL injection attacks). Note that the returned value still needs
@@ -1715,7 +1715,7 @@ worker_unescape_string (WorkerEscapeData *data, G_GNUC_UNUSED GError **error)
 /**
  * gda_server_provider_unescape_string:
  * @provider: a server provider.
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  * @str: a string to escape
  *
  * Unescapes @str for use within an SQL command. This is the exact opposite of gda_server_provider_escape_string().
@@ -1791,7 +1791,7 @@ worker_create_parser (WorkerParserData *data, G_GNUC_UNUSED GError **error)
 /**
  * gda_server_provider_create_parser:
  * @provider: a #GdaServerProvider provider object
- * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @cnc: (nullable): a #GdaConnection, or %NULL
  *
  * Creates a new #GdaSqlParser object which is adapted to @provider (and possibly depending on
  * @cnc for the actual database version).
@@ -2099,11 +2099,11 @@ stage2_open_connection (GdaWorker *worker, GdaConnection *cnc, gpointer result)
  * @provider: a #GdaServerProvider
  * @cnc: a #GdaConnection
  * @params:  (transfer full): parameters specifying the connection's attributes
- * @auth: (allow-none) (transfer full): authentification parameters, or %NULL
- * @cb_func: (allow-none): a #GdaConnectionOpenFunc function, or %NULL
- * @data: (allow-none): data to pass to @cb_func, or %NULL
- * @out_job_id: (allow-none): a place to store the job ID, or %NULL
- * @error: (allow-none): a place to store error, or %NULL
+ * @auth: (nullable) (transfer full): authentification parameters, or %NULL
+ * @cb_func: (nullable): a #GdaConnectionOpenFunc function, or %NULL
+ * @data: (nullable): data to pass to @cb_func, or %NULL
+ * @out_job_id: (nullable): a place to store the job ID, or %NULL
+ * @error: (nullable): a place to store error, or %NULL
  *
  * Call the open_connection() in the worker thread.
  *
@@ -2297,7 +2297,7 @@ stage2_close_connection (GdaConnection *cnc, gpointer result)
  * _gda_server_provider_close_connection:
  * @provider: a #GdaServerProvider
  * @cnc: a #GdaConnection
- * @error: (allow-none): a place to store error, or %NULL
+ * @error: (nullable): a place to store error, or %NULL
  *
  * Call the close_connection() in the worker thread.
  */
@@ -2371,9 +2371,9 @@ worker_statement_prepare (WorkerPrepareStatementData *data, GError **error)
 /*
  * _gda_server_provider_statement_prepare:
  * @provider: a #GdaServerProvider
- * @cnc: (allow-none): a #GdaConnection
+ * @cnc: (nullable): a #GdaConnection
  * @stmt: a #GdaStatement
- * @error: (allow-none): a place to store error, or %NULL
+ * @error: (nullable): a place to store error, or %NULL
  *
  * Call the prepare_statement() in the worker thread
  */
@@ -2480,11 +2480,11 @@ worker_statement_execute (WorkerExecuteStatementData *data, GError **error)
  * @provider: a #GdaServerProvider
  * @cnc: a #GdaConnection
  * @stmt: a #GdaStatement
- * @params: (allow-none): parameters to bind variables in @stmt, or %NULL
+ * @params: (nullable): parameters to bind variables in @stmt, or %NULL
  * @model_usage: the requested usage of the returned #GdaDataModel if @stmt is a SELECT statement
- * @col_types: (allow-none): requested column types of the returned #GdaDataModel if @stmt is a SELECT statement, or %NULL
- * @last_inserted_row: (allow-none): a place to store the last inserted row information, or %NULL
- * @error: (allow-none): a place to store error, or %NULL
+ * @col_types: (nullable): requested column types of the returned #GdaDataModel if @stmt is a SELECT statement, or %NULL
+ * @last_inserted_row: (nullable): a place to store the last inserted row information, or %NULL
+ * @error: (nullable): a place to store error, or %NULL
  *
  * Call the prepare_statement() in the worker thread
  */
@@ -2883,8 +2883,8 @@ get_meta_nb_values_args (GdaServerProviderMetaType type)
 }
 
 /*
- * @call_error: (allow-none)
- * @loc_error: (allow-none)
+ * @call_error: (nullable)
+ * @loc_error: (nullable)
  */
 static gboolean
 meta_finalize_result (gpointer retval, GError **call_error, GError **loc_error)
@@ -3897,7 +3897,7 @@ gda_server_provider_internal_get_parser (GdaServerProvider *prov)
 /**
  * gda_server_provider_perform_operation_default:
  * @provider: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object which will be used to perform an action, or %NULL
+ * @cnc: (nullable): a #GdaConnection object which will be used to perform an action, or %NULL
  * @op: a #GdaServerOperation object
  * @error: a place to store an error, or %NULL
  *
@@ -4048,7 +4048,7 @@ param_to_null_foreach (GdaSqlAnyPart *part, G_GNUC_UNUSED gpointer data, G_GNUC_
 /**
  * gda_select_alter_select_for_empty:
  * @stmt: a SELECT #GdaStatement
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates a new #GdaStatement, selecting the same data as @stmt, but which always returns an
  * empty (no row) data model. This is use dy database providers' implementations.
@@ -4102,9 +4102,9 @@ gda_select_alter_select_for_empty (GdaStatement *stmt, G_GNUC_UNUSED GError **er
 /**
  * gda_server_provider_handler_find:
  * @prov: a #GdaServerProvider
- * @cnc: (allow-none): a #GdaConnection
+ * @cnc: (nullable): a #GdaConnection
  * @g_type: a #GType
- * @dbms_type: (allow-none): a database type
+ * @dbms_type: (nullable): a database type
  *
  * Reserved to database provider's implementations: get the #GdaDataHandler associated to @prov
  * for connection @cnc. You probably want to use gda_server_provider_get_data_handler_g_type().

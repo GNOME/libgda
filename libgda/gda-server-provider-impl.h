@@ -93,9 +93,9 @@ typedef struct {
 	 * @provider: a #GdaServerProvider
 	 * @cnc: a #GdaConnection
 	 * @stmt: a #GdaStatement
-	 * @params: (allow-none): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
+	 * @params: (nullable): a #GdaSet object (which can be obtained using gda_statement_get_parameters()), or %NULL
 	 * @flags: SQL rendering flags, as #GdaStatementSqlFlag OR'ed values
-	 * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
+	 * @params_used: (nullable) (element-type Gda.Holder) (out) (transfer container): a place to store the list of individual #GdaHolder objects within @params which have been used
 	 * @error: a place to store errors, or %NULL
 	 *
 	 * Renders @stmt as an SQL statement, adapted to the SQL dialect used by @cnc
@@ -108,7 +108,7 @@ typedef struct {
 	/**
 	 * identifier_quote:
 	 * @provider: a #GdaServerProvider
-	 * @cnc: (allow-none): a #GdaConnection, or %NULL
+	 * @cnc: (nullable): a #GdaConnection, or %NULL
 	 * @id: a string
 	 * @for_meta_store: if %TRUE, then the result have to respect the #GdaMetaStore convention
 	 * @force_quotes: if %TRUE, then quotes have to be added
@@ -131,7 +131,7 @@ typedef struct {
 	 * @provider: a #GdaServerProvider
 	 * @cnc: a #GdaConnection
 	 * @params: (transfer none): a #GdaQuarkList containing the connection parameters (HOST, DATABASE, etc.)
-	 * @auth: (transfer none) (allow-none): a #GdaQuarkList containing the connection authentification parameters (USERNAME, PASSWORD, etc.), or %NULL
+	 * @auth: (transfer none) (nullable): a #GdaQuarkList containing the connection authentification parameters (USERNAME, PASSWORD, etc.), or %NULL
 	 *
 	 * Open the connection. @params and @auth must be left unchanged.
 	 *

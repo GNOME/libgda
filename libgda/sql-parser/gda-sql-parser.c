@@ -390,7 +390,7 @@ gda_sql_parser_get_property (GObject *object,
  * gda_sql_parser_parse_string:
  * @parser: a #GdaSqlParser object
  * @sql: the SQL string to parse
- * @remain: (out) (allow-none): location to store a pointer to remaining part of @sql in case @sql has multiple statement, or %NULL
+ * @remain: (out) (nullable): location to store a pointer to remaining part of @sql in case @sql has multiple statement, or %NULL
  * @error: location to store error, or %NULL
  *
  * Parses @sql and creates a #GdaStatement statement from the first SQL statement contained in @sql: if @sql
@@ -400,7 +400,7 @@ gda_sql_parser_get_property (GObject *object,
  * To include variables in the @sql string, see the
  * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
  *
- * Returns: (transfer full) (allow-none): a new #GdaStatement object, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new #GdaStatement object, or %NULL if an error occurred
  */
 GdaStatement *
 gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar **remain, GError **error)
@@ -629,7 +629,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * gda_sql_parser_parse_string_as_batch:
  * @parser: a #GdaSqlParser object
  * @sql: the SQL string to parse
- * @remain: (out) (allow-none): location to store a pointer to remaining part of @sql in case an error occurred while parsing @sql, or %NULL
+ * @remain: (out) (nullable): location to store a pointer to remaining part of @sql in case an error occurred while parsing @sql, or %NULL
  * @error: location to store error, or %NULL
  *
  * Parse @sql and creates a #GdaBatch object which contains all the #GdaStatement objects created while parsing (one object
@@ -644,7 +644,7 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
  * To include variables in the @sql string, see the
  * <link linkend="GdaSqlParser.description">GdaSqlParser's object description</link>.
  *
- * Returns: (transfer full) (allow-none): a new #GdaBatch object, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new #GdaBatch object, or %NULL if an error occurred
  */
 GdaBatch *
 gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, const gchar **remain,
@@ -730,7 +730,7 @@ gda_sql_parser_parse_string_as_batch (GdaSqlParser *parser, const gchar *sql, co
  *
  * if @sql is %NULL, then the returned #GdaBatch object will contain no statement.
  *
- * Returns: (transfer full) (allow-none): a new #GdaBatch object, or %NULL if an error occurred
+ * Returns: (transfer full) (nullable): a new #GdaBatch object, or %NULL if an error occurred
  */
 GdaBatch *
 gda_sql_parser_parse_file_as_batch (GdaSqlParser *parser, const gchar *filename, GError **error)

@@ -372,7 +372,7 @@ gda_data_pivot_get_property (GObject *object,
 
 /**
  * gda_data_pivot_new:
- * @model: (allow-none): a #GdaDataModel to analyse data from, or %NULL
+ * @model: (nullable): a #GdaDataModel to analyse data from, or %NULL
  *
  * Creates a new #GdaDataModel which will contain analysed data from @model.
  *
@@ -1312,8 +1312,8 @@ parse_field_spec (GdaDataPivot *pivot, const gchar *field, const gchar *alias, G
  * @pivot: a #GdaDataPivot object
  * @field_type: the type of field to add
  * @field: the field description, see below
- * @alias: (allow-none): the field alias, or %NULL
- * @error: (allow-none): ta place to store errors, or %NULL
+ * @alias: (nullable): the field alias, or %NULL
+ * @error: (nullable): ta place to store errors, or %NULL
  *
  * Specifies that @field has to be included in the analysis.
  * @field is a field specification with the following accepted syntaxes:
@@ -1435,8 +1435,8 @@ gda_data_pivot_add_field (GdaDataPivot *pivot, GdaDataPivotFieldType field_type,
  * @pivot: a #GdaDataPivot object
  * @aggregate_type: the type of aggregate operation to perform
  * @field: the field description, see below
- * @alias: (allow-none): the field alias, or %NULL
- * @error: (allow-none): ta place to store errors, or %NULL
+ * @alias: (nullable): the field alias, or %NULL
+ * @error: (nullable): ta place to store errors, or %NULL
  *
  * Specifies that @field has to be included in the analysis.
  * @field is a field specification with the following accepted syntaxes:
@@ -1548,7 +1548,7 @@ gda_data_pivot_add_data (GdaDataPivot *pivot, GdaDataPivotAggregate aggregate_ty
 /**
  * gda_data_pivot_populate:
  * @pivot: a #GdaDataPivot object
- * @error: (allow-none): ta place to store errors, or %NULL
+ * @error: (nullable): ta place to store errors, or %NULL
  *
  * Acutally populates @pivot by analysing the data from the provided data model.
  *

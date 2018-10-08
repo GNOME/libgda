@@ -1868,7 +1868,7 @@ gdaui_basic_form_widget_grab_focus (GtkWidget *widget)
 /**
  * gdaui_basic_form_entry_grab_focus:
  * @form: a #GdauiBasicForm widget
- * @holder: (allow-none): a #GdaHolder object, or %NULL
+ * @holder: (nullable): a #GdaHolder object, or %NULL
  *
  * Makes the data entry corresponding to @holder grab the focus for the window it's in. If @holder is %NULL,
  * then the focus is on the first entry which needs attention.
@@ -1907,7 +1907,7 @@ gdaui_basic_form_entry_grab_focus (GdauiBasicForm *form, GdaHolder *holder)
 /**
  * gdaui_basic_form_entry_set_editable:
  * @form: a #GdauiBasicForm widget
- * @holder: (allow-none): a #GdaHolder object; or %NULL
+ * @holder: (nullable): a #GdaHolder object; or %NULL
  * @editable: %TRUE if corresponding data entry must be editable
  *
  * Sets the #GdauiDataEntry in @form which corresponds to the
@@ -2093,9 +2093,9 @@ gdaui_basic_form_get_label_widget (GdauiBasicForm *form, GdaHolder *holder)
 /**
  * gdaui_basic_form_new_in_dialog:
  * @data_set: a #GdaSet object
- * @parent: (allow-none): the parent window for the new dialog, or %NULL
- * @title: (allow-none): the title of the dialog window, or %NULL
- * @header: (allow-none): a helper text displayed at the top of the dialog, or %NULL
+ * @parent: (nullable): the parent window for the new dialog, or %NULL
+ * @title: (nullable): the title of the dialog window, or %NULL
+ * @header: (nullable): a helper text displayed at the top of the dialog, or %NULL
  *
  * Creates a new #GdauiBasicForm widget in the same way as gdaui_basic_form_new()
  * and puts it into a #GtkDialog widget. The returned dialog has the "Ok" and "Cancel" buttons

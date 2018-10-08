@@ -250,10 +250,10 @@ sig_closure_new (gpointer instance, GMainContext *context, gboolean swapped, GCa
  * @instance: the instance to connect to
  * @detailed_signal: a string of the form "signal-name::detail"
  * @c_handler: the GCallback to connect
- * @data: (allow-none): data to pass to @c_handler, or %NULL
- * @destroy_data: (allow-none): function to destroy @data when not needed anymore, or %NULL
+ * @data: (nullable): data to pass to @c_handler, or %NULL
+ * @destroy_data: (nullable): function to destroy @data when not needed anymore, or %NULL
  * @connect_flags: a combination of #GConnectFlags.
- * @context: (allow-none): the #GMainContext in which signals will actually be treated, or %NULL for the default one
+ * @context: (nullable): the #GMainContext in which signals will actually be treated, or %NULL for the default one
  *
  * Connects a GCallback function to a signal for a particular object. The difference with g_signal_connect() is that the
  * callback will be called from withing the thread which is the owner of @context. If needed you may have to use g_main_context_acquire()

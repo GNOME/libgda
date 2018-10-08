@@ -211,7 +211,7 @@ gda_provider_render_operation (GdaProvider *provider, GdaConnection *cnc,
  * @stmt:
  * @params: (nullable):
  * @flags:
- * @params_used: (allow-none) (element-type Gda.Holder) (out) (transfer container):
+ * @params_used: (nullable) (element-type Gda.Holder) (out) (transfer container):
  * @error:
  *
  * Returns: (transfer full):

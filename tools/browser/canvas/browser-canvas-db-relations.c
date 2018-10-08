@@ -319,7 +319,7 @@ cloud_object_selected_cb (G_GNUC_UNUSED ObjectsCloud *ocloud, G_GNUC_UNUSED Obje
 
 /**
  * browser_canvas_db_relations_new
- * @mstruct: (allow-none): a #GdaMetaStruct object, or %NULL
+ * @mstruct: (nullable): a #GdaMetaStruct object, or %NULL
  *
  * Creates a new canvas widget to display the relations between the database's tables.
  *
@@ -869,8 +869,8 @@ browser_canvas_db_relations_get_table_item  (BrowserCanvasDbRelations *canvas, G
 /**
  * browser_canvas_db_relations_add_table
  * @canvas: a #BrowserCanvasDbRelations canvas
- * @table_catalog: (allow-none): the catalog in which the table is, or %NULL
- * @table_schema: (allow-none): the schema in which the table is, or %NULL
+ * @table_catalog: (nullable): the catalog in which the table is, or %NULL
+ * @table_schema: (nullable): the schema in which the table is, or %NULL
  * @table_name: the table's name
  *
  * Add a table to @canvas.

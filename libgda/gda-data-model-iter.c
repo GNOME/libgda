@@ -1014,7 +1014,7 @@ gda_data_model_iter_get_holder_for_field (GdaDataModelIter *iter, gint col)
  *
  * Get the value stored at the column @col in @iter. The returned value must not be modified.
  *
- * Returns: (allow-none) (transfer none): the #GValue, or %NULL if the value could not be fetched
+ * Returns: (nullable) (transfer none): the #GValue, or %NULL if the value could not be fetched
  */
 const GValue *
 gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
@@ -1040,11 +1040,11 @@ gda_data_model_iter_get_value_at (GdaDataModelIter *iter, gint col)
  * gda_data_model_iter_get_value_at_e:
  * @iter: a #GdaDataModelIter object
  * @col: the requested column
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Get the value stored at the column @col in @iter. The returned value must not be modified.
  *
- * Returns: (allow-none) (transfer none): the #GValue, or %NULL if the value could not be fetched
+ * Returns: (nullable) (transfer none): the #GValue, or %NULL if the value could not be fetched
  *
  * Since: 4.2.10
  */
@@ -1105,7 +1105,7 @@ gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue
  *
  * Get the value stored at the column @field_name in @iter
  *
- * Returns: (allow-none) (transfer none): the #GValue, or %NULL
+ * Returns: (nullable) (transfer none): the #GValue, or %NULL
  */
 const GValue *
 gda_data_model_iter_get_value_for_field (GdaDataModelIter *iter, const gchar *field_name)

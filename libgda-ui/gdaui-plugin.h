@@ -30,7 +30,7 @@
  * GdauiEntryCreateFunc:
  * @handler: a #GdaDataHandler
  * @type: a #GType
- * @options: (allow-none): options, or %NULL
+ * @options: (nullable): options, or %NULL
  * @Returns: a new #GdauiDataEntry
  *
  * Defines a function which creates a #GdauiDataEntry widget
@@ -41,7 +41,7 @@ typedef GdauiDataEntry   *(*GdauiEntryCreateFunc)(GdaDataHandler *handler, GType
  * GdauiCellCreateFunc:
  * @handler: a #GdaDataHandler
  * @type: a #GType
- * @options: (allow-none): options, or %NULL
+ * @options: (nullable): options, or %NULL
  * @Returns:a new #GtkCellRenderer
  *
  * Defines a function which creates a #GtkCellRenderer object
@@ -52,13 +52,13 @@ typedef GtkCellRenderer  *(*GdauiCellCreateFunc) (GdaDataHandler *handler, GType
 /**
  * GdauiPlugin:
  * @plugin_name: the name of the plugin
- * @plugin_descr: (allow-none): a description for the plugin, or %NULL
- * @plugin_file: (allow-none): the shared object implementing the plugin, can be %NULL for internal plugins
+ * @plugin_descr: (nullable): a description for the plugin, or %NULL
+ * @plugin_file: (nullable): the shared object implementing the plugin, can be %NULL for internal plugins
  * @nb_g_types: number of types the plugin can handle, or %0 for any type
- * @valid_g_types: (allow-none): an array of #GType, containing the accepted types, its size is @nb_g_types, or %NULL if @nb_g_types is %0
- * @options_xml_spec: (allow-none): a string describing the plugin's options, or %NULL
- * @entry_create_func: (allow-none): the function called to create a #GdauiDataEntry, or %NULL
- * @cell_create_func: (allow-none): the function called to create a #GtkCellRenderer, or %NULL
+ * @valid_g_types: (nullable): an array of #GType, containing the accepted types, its size is @nb_g_types, or %NULL if @nb_g_types is %0
+ * @options_xml_spec: (nullable): a string describing the plugin's options, or %NULL
+ * @entry_create_func: (nullable): the function called to create a #GdauiDataEntry, or %NULL
+ * @cell_create_func: (nullable): the function called to create a #GtkCellRenderer, or %NULL
  *
  * Structure representing a plugin.
  *

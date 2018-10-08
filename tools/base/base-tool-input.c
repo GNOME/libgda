@@ -345,10 +345,10 @@ _base_tool_completion (const char *text, int start, int end)
 
 /**
  * base_tool_input_set_completion_func:
- * @group: (allow-none): a #ToolCommandGroup, or %NULL
- * @func: (allow-none): a #ToolInputCompletionFunc, or %NULL
- * @func_data: (allow-none): a pointer to pass when calling @func
- * @start_chars_to_ignore: (allow-none): a list of characters to ignore at the beginning of commands
+ * @group: (nullable): a #ToolCommandGroup, or %NULL
+ * @func: (nullable): a #ToolInputCompletionFunc, or %NULL
+ * @func_data: (nullable): a pointer to pass when calling @func
+ * @start_chars_to_ignore: (nullable): a list of characters to ignore at the beginning of commands
  *
  * Defines the completion function.
  */

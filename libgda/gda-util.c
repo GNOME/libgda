@@ -410,9 +410,9 @@ gda_utility_check_data_model (GdaDataModel *model, gint nbcols, ...)
  * gda_utility_data_model_dump_data_to_xml:
  * @model: a #GdaDataModel
  * @parent: the parent XML node
- * @cols: (allow-none) (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
+ * @cols: (nullable) (array length=nb_cols): an array containing which columns of @model will be exported, or %NULL for all columns
  * @nb_cols: the number of columns in @cols
- * @rows: (allow-none) (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
+ * @rows: (nullable) (array length=nb_rows): an array containing which rows of @model will be exported, or %NULL for all rows
  * @nb_rows: the number of rows in @rows
  * @use_col_ids: set to %TRUE to add column ID information
  *
@@ -911,7 +911,7 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
 
 /**
  * gda_compute_unique_table_row_condition_with_cnc:
- * @cnc: (allow-none): a #GdaConnection, or %NULL
+ * @cnc: (nullable): a #GdaConnection, or %NULL
  * @stsel: a #GdaSqlSelectStatement
  * @mtable: a #GdaMetaTable
  * @require_pk: set to %TRUE if a primary key is required
@@ -1117,10 +1117,10 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  * @cnc: a #GdaConnection
  * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
  * @require_pk: TRUE if the created statement have to use a primary key
- * @insert_stmt: (allow-none) (transfer full): a place to store the created INSERT statement, or %NULL
- * @update_stmt: (allow-none) (transfer full): a place to store the created UPDATE statement, or %NULL
- * @delete_stmt: (allow-none) (transfer full): a place to store the created DELETE statement, or %NULL
- * @error: (allow-none): a place to store errors, or %NULL
+ * @insert_stmt: (nullable) (transfer full): a place to store the created INSERT statement, or %NULL
+ * @update_stmt: (nullable) (transfer full): a place to store the created UPDATE statement, or %NULL
+ * @delete_stmt: (nullable) (transfer full): a place to store the created DELETE statement, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
  * using the database metadata available in @cnc's meta store. Each statements are computed only if
@@ -1516,7 +1516,7 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **e
  * gda_rewrite_sql_statement_for_null_parameters:
  * @sqlst: (transfer full): a #GdaSqlStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
- * @out_modified: (allow-none): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
+ * @out_modified: (nullable): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Modifies @sqlst to take into account any parameter which might be %NULL: if @sqlst contains the
@@ -1604,7 +1604,7 @@ gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *p
  * gda_rewrite_statement_for_null_parameters:
  * @stmt: (transfer none): a #GdaStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
- * @out_stmt: (transfer full) (allow-none): a place to store the new #GdaStatement, or %NULL
+ * @out_stmt: (transfer full) (nullable): a place to store the new #GdaStatement, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Modifies @stmt to take into account any parameter which might be %NULL: if @stmt contains the
@@ -2099,7 +2099,7 @@ cmp_func (gconstpointer a, gconstpointer b)
  * If no completion is available, then the returned array contains just one NULL entry, and
  * if it was not possible to try to compute a completions list, then %NULL is returned.
  *
- * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new array of strings, or %NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (nullable): a new array of strings, or %NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint end)
@@ -2334,7 +2334,7 @@ concat_ident (const char *prefix, const gchar *ident)
  *
  * For example the <![CDATA["test.\"ATable\""]]> string will result in the array: <![CDATA[{"test", "\"ATable\"", NULL}]]>
  *
- * Returns: (transfer full) (array zero-terminated=1) (allow-none): a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
+ * Returns: (transfer full) (array zero-terminated=1) (nullable): a new %NULL-terminated array of strings, or NULL (use g_strfreev() to free the returned array)
  */
 gchar **
 gda_sql_identifier_split (const gchar *id)
@@ -2364,8 +2364,8 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
 /**
  * gda_sql_identifier_quote:
  * @id: an SQL identifier
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
- * @prov: (allow-none): a #GdaServerProvider object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
+ * @prov: (nullable): a #GdaServerProvider object, or %NULL
  * @for_meta_store set to %TRUE if the returned string will be used in a #GdaMetaStore
  * @force_quotes: set to %TRUE to force the returned string to be quoted
  *
@@ -2879,7 +2879,7 @@ gda_dsn_split (const gchar *string, gchar **out_dsn, gchar **out_username, gchar
  * @out_cnc_params: (out): a place to store the new string containing the &lt;connection_params&gt; part
  * @out_provider: (out): a place to store the new string containing the &lt;provider&gt; part
  * @out_username: (out): a place to store the new string containing the &lt;username&gt; part
- * @out_password: (out): (allow-none): a place to store the new string containing the &lt;password&gt; part, or %NULL
+ * @out_password: (out): (nullable): a place to store the new string containing the &lt;password&gt; part, or %NULL
  *
  * Extract the provider, connection parameters, username and password from @string. 
  * in @string, the various parts are strings

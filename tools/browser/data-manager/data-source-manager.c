@@ -372,7 +372,7 @@ data_source_manager_add_source (DataSourceManager *mgr, DataSource *source)
 /**
  * data_source_manager_replace_all
  * @mgr: a #DataSourceManager object
- * @sources_list: (allow-none): a list of #DataSource objects, or %NULL
+ * @sources_list: (nullable): a list of #DataSource objects, or %NULL
  *
  * Replaces all the data sources by the ones in @sources_list.
  */

@@ -61,7 +61,7 @@ gda_handler_string_new (void)
 /**
  * gda_handler_string_new_with_provider:
  * @prov: a #GdaServerProvider object
- * @cnc: (allow-none): a #GdaConnection object, or %NULL
+ * @cnc: (nullable): a #GdaConnection object, or %NULL
  *
  * Creates a data handler for strings, which will use some specific methods implemented
  * by the @prov object (possibly also @cnc).

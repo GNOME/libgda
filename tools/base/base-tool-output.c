@@ -454,8 +454,8 @@ tree_to_string (GdaTree *tree, ToolOutputFormat format, FILE *stream, GdaSet *op
  * base_tool_output_result_to_string:
  * @res: a #ToolCommandResult
  * @format: a #ToolOutputFormat format specification
- * @stream: (allow-none): a stream which the returned string will be put to, or %NULL
- * @options: (allow-none): a #GdaSet containing options, or %NULL
+ * @stream: (nullable): a stream which the returned string will be put to, or %NULL
+ * @options: (nullable): a #GdaSet containing options, or %NULL
  *
  * Converts @res to a string
  *
@@ -742,7 +742,7 @@ check_shell_argument (const gchar *arg)
 
 /**
  * base_tool_output_output_string:
- * @stream: (allow-none): an outout stream, or %NULL
+ * @stream: (nullable): an outout stream, or %NULL
  * @str: a string
  *
  * "Outputs" @str to @stream, or to stdout if @stream is %NULL

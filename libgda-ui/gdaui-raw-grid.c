@@ -898,8 +898,8 @@ remove_formatting_function (GdauiRawGrid *grid, GdauiRawGridFormatFunc func)
  * gdaui_raw_grid_add_formatting_function:
  * @grid: a #GdauiRawGrid widget
  * @func: a #GdauiRawGridFormatFunc function pointer
- * @data: (allow-none): a pointer to pass to the @func function when called
- * @dnotify: (allow-none): destroy notifier for @data
+ * @data: (nullable): a pointer to pass to the @func function when called
+ * @dnotify: (nullable): destroy notifier for @data
  *
  * This function allows you to specify that the @func function needs to be called
  * whenever the rendering of a cell in @grid needs to be done. It is similar in purpose

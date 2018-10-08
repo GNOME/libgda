@@ -133,7 +133,7 @@ t_utils_compute_prompt (TContext *console, gboolean in_command, gboolean for_rea
  * t_utils_split_text_into_single_commands:
  * @console: a #TContext
  * @commands: a string containing one or more internal or SQL commands
- * @error: (allow-none): a place to store errors, or %NULL
+ * @error: (nullable): a place to store errors, or %NULL
  *
  * Splits @commands into separate commands, either internal or SQL.
  * Also this function:

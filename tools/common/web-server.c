@@ -333,7 +333,7 @@ server_callback (G_GNUC_UNUSED SoupServer *server, SoupMessage *msg,
 /**
  * web_server_new:
  * @port: the port to listen on
- * @auth_token: (allow-none): the authentication token, or %NULL
+ * @auth_token: (nullable): the authentication token, or %NULL
  *
  * Creates a new server of type @type
  *

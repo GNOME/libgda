@@ -145,13 +145,20 @@ gdaui_data_cell_renderer_info_class_init (GdauiDataCellRendererInfoClass *class)
 					 PROP_GROUP,
 					 g_param_spec_pointer ("group", NULL, NULL,
                                                                G_PARAM_WRITABLE|G_PARAM_CONSTRUCT_ONLY));
+
+	/**
+	* GdauiDataCellRendererInfo::status-changed:
+	* @cell_renderer_info: Widget that receive the signal
+	* @path: a string with the path of the attribute
+	* @requested_action: (type Gda.ValueAttribute): action made
+	*/
 	info_cell_signals[STATUS_CHANGED] =
 		g_signal_new ("status-changed",
 			      G_OBJECT_CLASS_TYPE (object_class),
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdauiDataCellRendererInfoClass, status_changed),
 			      NULL, NULL,
-			      _gdaui_marshal_VOID__STRING_ENUM,
+			      _gdaui_marshal_VOID__STRING_FLAGS,
 			      G_TYPE_NONE, 2,
 			      G_TYPE_STRING,
 			      GDA_TYPE_VALUE_ATTRIBUTE);
