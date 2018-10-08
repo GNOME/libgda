@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE schema SYSTEM "../../libgda/libgda-ddl-creator.dtd">
+<schema>
+  <table name="employee">
+    <column name="id" type="int" pkey="TRUE"
+            unique="TRUE" nnul="TRUE" autoinc="TRUE">
+    </column>
+    <column name="job_site_id" type="int" nnul="TRUE">
+    </column>
+    <fkey reftable="job_site">
+      <fk_field name="job_site_id" reffield="id"/>
+    </fkey>
+  </table>
+  <table name="job_site">
+    <column name="id" type="int" pkey="TRUE"
+            unique="TRUE" nnul="TRUE" autoinc="TRUE" >
+    </column>
+    <column name="name" type="string">
+      <value size="20"></value>
+    </column>
+  </table>
+</schema>
+

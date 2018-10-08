@@ -69,9 +69,9 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	g_free (tmp);
 	g_string_append (string, " (");
 		
+  GdaServerOperationNode *node;
 	/* FIELDS */
 	if (allok) {
-		GdaServerOperationNode *node;
 
 		node = gda_server_operation_get_node_info (op, "/FIELDS_A");
 		if (node == NULL) {
@@ -247,6 +247,79 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	}
 	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
 	g_slist_free (pkfields);
+
+	node = gda_server_operation_get_node_info (op, "/FKEY_S");
+	if (node) {
+		nrows = gda_server_operation_get_sequence_size (op, "/FKEY_S");
+		for (i = 0; i < nrows; i++) {
+			gint nbfields = 0, j;
+
+			g_string_append (string, ", FOREIGN KEY (");
+			node = gda_server_operation_get_node_info (op, "/FKEY_S/%d/FKEY_FIELDS_A", i);
+			if (!node || ((nbfields = gda_data_model_get_n_rows (node->model)) == 0)) {
+				g_string_free (string, TRUE);
+				g_set_error (error, GDA_SERVER_OPERATION_ERROR,
+					     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+					     "%s", _("No field specified in foreign key constraint"));
+				return NULL;
+			}
+			else {
+				for (j = 0; j < nbfields; j++) {
+					if (j != 0)
+						g_string_append (string, ", ");
+					tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
+											  "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
+											  error, i, j);
+					if (tmp) {
+						g_string_append (string, tmp);
+						g_free (tmp);
+					}
+					else {
+						g_string_free (string, TRUE);
+						return NULL;
+					}
+				}
+			}
+			g_string_append (string, ") REFERENCES ");
+			tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
+									  "/FKEY_S/%d/FKEY_REF_TABLE", error, i);
+			if (tmp) {
+				g_string_append (string, tmp);
+				g_free (tmp);
+			}
+			else {
+				g_string_free (string, TRUE);
+				return NULL;
+			}
+
+			g_string_append (string, " (");
+			for (j = 0; j < nbfields; j++) {
+				if (j != 0)
+					g_string_append (string, ", ");
+				tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
+										  "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
+										  error, i, j);
+				if (tmp) {
+					g_string_append (string, tmp);
+					g_free (tmp);
+				}
+				else {
+					g_string_free (string, TRUE);
+					return NULL;
+				}
+			}
+			g_string_append_c (string, ')');
+			value = gda_server_operation_get_value_at (op, "/FKEY_S/%d/FKEY_MATCH_TYPE", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+				g_string_append_printf (string, " %s", g_value_get_string (value));
+			value = gda_server_operation_get_value_at (op, "/FKEY_S/%d/FKEY_ONUPDATE", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+				g_string_append_printf (string, " ON UPDATE %s", g_value_get_string (value));
+			value = gda_server_operation_get_value_at (op, "/FKEY_S/%d/FKEY_ONDELETE", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
+				g_string_append_printf (string, " ON DELETE %s", g_value_get_string (value));
+		}
+	}
 
 	g_free (conflict_algo);
 	g_string_append (string, ")");
