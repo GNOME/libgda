@@ -3689,6 +3689,17 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 /* actually execute the command */
                 handle = SQLITE3_CALL (sqlite3_db_handle) (ps->sqlite_stmt);
                 status = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
+                guint tries = 0;
+                while (status == SQLITE_BUSY) {
+                        if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMMIT) {
+                                break;
+                        }
+                        status = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
+                        if (tries == 10) {
+                                break;
+                        }
+                        tries++;
+                }
                 changes = SQLITE3_CALL (sqlite3_changes) (handle);
                 if (status != SQLITE_DONE) {
                         if (SQLITE3_CALL (sqlite3_errcode) (handle) != SQLITE_OK) {
