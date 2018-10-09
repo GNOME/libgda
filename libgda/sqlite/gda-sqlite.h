@@ -57,7 +57,6 @@
  */
 typedef struct {
 	GdaServerProviderConnectionData parent;
-	GdaConnection *gdacnc;
 	sqlite3      *connection;
 	gchar        *file;
 	GHashTable   *types_hash; /* key = type name, value = pointer to a GType */
