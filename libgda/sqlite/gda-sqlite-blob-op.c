@@ -142,7 +142,7 @@ _gda_sqlite_blob_op_new (GdaConnection *cnc,
 	SqliteConnectionData *cdata;
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata ||
-	    ! _gda_sqlite_check_transaction_started (cdata->gdacnc, &transaction_started, NULL))
+	    ! _gda_sqlite_check_transaction_started (cnc, &transaction_started, NULL))
 		return NULL;
 
 	rc = SQLITE3_CALL (sqlite3_blob_open) (cdata->connection, db ? db : "main",
@@ -154,7 +154,7 @@ _gda_sqlite_blob_op_new (GdaConnection *cnc,
 		g_print ("ERROR: %s\n", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
 #endif
 		if (transaction_started)
-			gda_connection_rollback_transaction (cdata->gdacnc, NULL, NULL);
+			gda_connection_rollback_transaction (cnc, NULL, NULL);
 		goto out;
 	}
 
