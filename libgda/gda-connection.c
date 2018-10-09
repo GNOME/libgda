@@ -477,9 +477,6 @@ gda_connection_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
 
-	/* free memory */
-	gda_connection_close (cnc, NULL);
-
 	if (priv->context_hash) {
 		g_hash_table_destroy (priv->context_hash);
 		priv->context_hash = NULL;
@@ -535,6 +532,10 @@ gda_connection_dispose (GObject *object)
 		g_array_free (priv->trans_meta_context, TRUE);
 		priv->trans_meta_context = NULL;
 	}
+
+	/* free memory */
+	gda_connection_close (cnc, NULL);
+
 
 	/* chain to parent class */
 	parent_class->dispose (object);
@@ -5939,9 +5940,6 @@ gda_connection_add_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	PreparedStatementRef *ref = _gda_prepared_estatement_new (gda_stmt, prepared_stmt);
 	g_hash_table_insert (priv->prepared_stmts, gda_stmt, ref);
 	
-	g_signal_connect (G_OBJECT (gda_stmt), "reset",
-			  G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
-
 	gda_connection_unlock ((GdaLockable*) cnc);
 	g_object_unref (prepared_stmt);
 	g_object_unref (gda_stmt);
