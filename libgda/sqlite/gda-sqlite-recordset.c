@@ -48,6 +48,7 @@ static void gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass);
 static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
 					     GdaSqliteRecordsetClass *klass);
 static void gda_sqlite_recordset_dispose   (GObject *object);
+static void gda_sqlite_recordset_finalize   (GObject *object);
 
 /* virtual methods */
 static gint    gda_sqlite_recordset_fetch_nb_rows (GdaDataSelect *model);
@@ -90,6 +91,7 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_sqlite_recordset_dispose;
+	object_class->finalize = gda_sqlite_recordset_finalize;
 	pmodel_class->fetch_nb_rows = gda_sqlite_recordset_fetch_nb_rows;
 	pmodel_class->fetch_random = gda_sqlite_recordset_fetch_random;
 
@@ -111,18 +113,35 @@ gda_sqlite_recordset_dispose (GObject *object)
 	if (recset->priv) {
 		GdaSqlitePStmt *ps;
 		ps = GDA_SQLITE_PSTMT (GDA_DATA_SELECT (object)->prep_stmt);
-		ps->stmt_used = FALSE;
-		virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
-		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
-		virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), NULL);
+		if (ps != NULL) {
+			ps->stmt_used = FALSE;
+			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
+			SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), NULL);
+		}
 
-		if (recset->priv->tmp_row)
+		if (recset->priv->tmp_row) {
 			g_object_unref (recset->priv->tmp_row);
+			recset->priv->tmp_row = NULL;
+		}
+	}
+
+	parent_class->dispose (object);
+}
+
+static void
+gda_sqlite_recordset_finalize (GObject *object)
+{
+	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) object;
+
+	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
+
+	if (recset->priv) {
 		g_free (recset->priv);
 		recset->priv = NULL;
 	}
 
-	parent_class->dispose (object);
+	parent_class->finalize (object);
 }
 
 /*
