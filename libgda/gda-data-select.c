@@ -4,8 +4,8 @@
  * Copyright (C) 2008 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2012 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
+ * Copyright (C) 2012,2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -69,7 +69,7 @@ static gint external_to_internal_row (GdaDataSelect *model, gint ext_row, GError
 
 typedef struct {
 	GSList                 *columns; /* list of GdaColumn objects */
-	GArray                 *rows; /* Array of GdaRow pointers */
+	GPtrArray              *rows; /* Array of GdaRow pointers */
 	GHashTable             *index; /* key = model row number, value = index in @rows array*/
 
 	/* Internal iterator's information, if GDA_DATA_MODEL_CURSOR_* based access */
@@ -104,7 +104,7 @@ struct _GdaDataSelectPrivate {
 	GdaConnection          *cnc;
 	GdaWorker              *worker;
 	GdaDataModelIter       *iter;
-	GArray                 *exceptions; /* array of #GError pointers */
+	GPtrArray              *exceptions; /* array of #GError pointers */
 	PrivateShareable       *sh;
 	gulong                  ext_params_changed_sig_id;
 	gdouble                 exec_time;
@@ -113,7 +113,7 @@ struct _GdaDataSelectPrivate {
 /* properties */
 enum
 {
-        PROP_0,
+	PROP_0,
 	PROP_CNC,
 	PROP_PREP_STMT,
 	PROP_FLAGS,
@@ -431,7 +431,7 @@ gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *kl
 	model->priv->exceptions = NULL;
 	model->priv->sh = g_new0 (PrivateShareable, 1);
 	model->priv->sh-> notify_changes = TRUE;
-	model->priv->sh->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
+	model->priv->sh->rows = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	model->priv->sh->index = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	model->prep_stmt = NULL;
 	model->priv->sh->columns = NULL;
@@ -525,12 +525,7 @@ free_private_shared_data (GdaDataSelect *model)
 			model->priv->sh->del_rows = NULL;
 		}
 		if (model->priv->sh->rows) {
-			for (i = 0; i < model->priv->sh->rows->len; i++) {
-				GdaRow *prow;
-				prow = g_array_index (model->priv->sh->rows, GdaRow *, i);
-				g_object_unref (prow);
-			}
-			g_array_free (model->priv->sh->rows, TRUE);
+			g_ptr_array_unref (model->priv->sh->rows);
 			model->priv->sh->rows = NULL;
 		}
 		if (model->priv->sh->index) {
@@ -692,13 +687,8 @@ gda_data_select_finalize (GObject *object)
 	/* free memory */
 	if (model->priv) {
 		if (model->priv->exceptions) {
-			guint i;
-			for (i = 0; i < model->priv->exceptions->len; i++) {
-				GError *e;
-				e = g_array_index (model->priv->exceptions, GError*, i);
-				g_error_free (e);
-			}
-			g_array_free (model->priv->exceptions, TRUE);
+			g_ptr_array_unref (model->priv->exceptions);
+			model->priv->exceptions = NULL;
 		}
 		g_free (model->priv);
 		model->priv = NULL;
@@ -946,7 +936,7 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 	ptr [0] = rownum;
 	ptr [1] = model->priv->sh->rows->len;
 	g_hash_table_insert (model->priv->sh->index, ptr, ptr+1);
-	g_array_append_val (model->priv->sh->rows, row);
+	g_ptr_array_add (model->priv->sh->rows, row);
 	model->nb_stored_rows = model->priv->sh->rows->len;
 }
 
@@ -969,7 +959,7 @@ gda_data_select_get_stored_row (GdaDataSelect *model, gint rownum)
 	irow = rownum;
 	ptr = g_hash_table_lookup (model->priv->sh->index, &irow);
 	if (ptr)
-		return g_array_index (model->priv->sh->rows, GdaRow *, *ptr);
+		return g_ptr_array_index (model->priv->sh->rows, *ptr);
 	else
 		return NULL;
 }
@@ -3402,7 +3392,7 @@ gda_data_select_get_exceptions (GdaDataModel *model)
 	GdaDataSelect *sel;
 	sel =  GDA_DATA_SELECT (model);
 	if (sel->priv->exceptions && (sel->priv->exceptions->len > 0))
-		return (GError **) sel->priv->exceptions->data;
+		return (GError **) sel->priv->exceptions->pdata;
 	else
 		return NULL;
 }
@@ -3425,9 +3415,9 @@ gda_data_select_add_exception (GdaDataSelect *model, GError *error)
 	g_return_if_fail (error);
 	g_return_if_fail (error->message);
 	sel =  GDA_DATA_SELECT (model);
-	if (!sel->priv->exceptions)
-		sel->priv->exceptions = g_array_new (TRUE, FALSE, sizeof (GError*));
-	g_array_append_val (sel->priv->exceptions, error);
+	if (sel->priv->exceptions == NULL)
+		sel->priv->exceptions = g_ptr_array_new_with_free_func ((GDestroyNotify) g_error_free);
+	g_ptr_array_add (sel->priv->exceptions, error);
 }
 
 /*
