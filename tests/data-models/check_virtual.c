@@ -61,6 +61,7 @@ test1 (void)
 	g_print ("===== %s() =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
+	g_object_unref (provider);
 	g_assert (cnc);
 
 	/* create RW data model to store results */
@@ -87,14 +88,18 @@ test1 (void)
 		g_error ("Add city model error: %s\n", error && error->message ? error->message : "no detail");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
 		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
+	g_object_unref (city_model);
+	g_object_unref (country_model);
 
 	/* test */
 	GdaDataModel *model;
 	model = run_sql_select (cnc, "SELECT * FROM city");
 	gda_data_model_dump (model, stdout);
+	g_message ("Removing City Data Model from select: 97");
 	g_object_unref (model);
 	model = run_sql_select (cnc, "SELECT __gda_row_nb, * FROM city");
 	gda_data_model_dump (model, stdout);
+	g_message ("Removing second City Data Model from select :102");
 	g_object_unref (model);
 	
 
@@ -118,10 +123,7 @@ test1 (void)
 	g_free (file);
 	g_free (export);
 	g_free (expected);
-	g_object_unref (city_model);
-	g_object_unref (country_model);
 	g_object_unref (cnc);
-	g_object_unref (provider);
 
 	g_print ("%s() is %s\n", __FUNCTION__, retval ? "Ok" : "NOT Ok");
 	return retval;
@@ -165,6 +167,7 @@ test2 (void)
 	GdaDataModel *model;
 	model = run_sql_select (cnc, "SELECT c.*, o.name FROM city c INNER JOIN country o ON (c.countrycode = o.code)");
 	gda_data_model_dump (model, stdout);
+	g_message ("Removing Data Model from select : 170");
 	g_object_unref (model);
 
 	retval = TRUE;
