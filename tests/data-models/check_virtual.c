@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -138,6 +139,7 @@ test2 (void)
 	g_print ("===== %s () =====\n", __FUNCTION__);
 	provider = gda_vprovider_data_model_new ();
 	cnc = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
+	g_object_unref (provider);
 	g_assert (cnc);
 
 	/* load CSV data models */
@@ -156,6 +158,8 @@ test2 (void)
 		g_error ("Add city model error: %s\n", error && error->message ? error->message : "no detail");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (cnc), country_model, "country", &error)) 
 		g_error ("Add country model error: %s\n", error && error->message ? error->message : "no detail");
+	g_object_unref (city_model);
+	g_object_unref (country_model);
 
 	/* test */
 	GdaDataModel *model;
@@ -165,10 +169,7 @@ test2 (void)
 
 	retval = TRUE;
 
-	g_object_unref (city_model);
-	g_object_unref (country_model);
 	g_object_unref (cnc);
-	g_object_unref (provider);
 
 	g_print ("%s() is %s\n", __FUNCTION__, retval ? "Ok" : "NOT Ok");
 	return retval;
@@ -177,21 +178,18 @@ test2 (void)
 static GdaDataModel *
 run_sql_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaStatement *stmt;
 	GError *error = NULL;
-	GdaDataModel *res;
-	GdaSqlParser *parser;
-
-	parser = gda_connection_create_parser (cnc);
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	g_object_unref (parser);
+	GdaDataModel *res = NULL;
 
 	g_print ("EXECUTING [%s]\n", sql);
-        res = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
-        g_object_unref (stmt);
-	if (!res) 
-		g_error ("Could not execute query: %s\n", 
+	res = gda_connection_execute_select_command (cnc, sql, &error);
+	if (res == NULL) {
+		g_print ("Could not execute query: %s\n",
 			 error && error->message ? error->message : "no detail");
+		if (error != NULL) {
+			g_error_free (error);
+		}
+	}
 	return res;
 }
 
@@ -199,22 +197,13 @@ run_sql_select (GdaConnection *cnc, const gchar *sql)
 static gboolean
 run_sql_non_select (GdaConnection *cnc, const gchar *sql)
 {
-	GdaStatement *stmt;
-        GError *error = NULL;
-        gint nrows;
-        GdaSqlParser *parser;
-
-        parser = gda_connection_create_parser (cnc);
-        stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-        g_object_unref (parser);
+	GError *error = NULL;
 
 	g_print ("EXECUTING [%s]\n", sql);
-        nrows = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
-        g_object_unref (stmt);
-        if (nrows == -1) {
-                g_print ("NON SELECT error: %s\n", error && error->message ? error->message : "no detail");
-		if (error)
-			g_error_free (error);
+	gda_connection_execute_non_select_command (cnc, sql, &error);
+	if (error != NULL) {
+		g_print ("NON SELECT error: %s\n", error->message ? error->message : "no detail");
+		g_error_free (error);
 		return FALSE;
 	}
 
