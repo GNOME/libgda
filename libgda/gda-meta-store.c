@@ -238,29 +238,6 @@ gda_value_get_meta_store_change (GValue *value)
 	return val;
 }
 
-
-
-/*
-   Register GdaMetaContext type
-*/
-GType
-gda_meta_context_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		g_mutex_lock (&registering);
-                if (type == 0)
-			type = g_boxed_type_register_static ("GdaMetaContext",
-							     (GBoxedCopyFunc) gda_meta_context_copy,
-							     (GBoxedFreeFunc) gda_meta_context_free);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
-
 /*
 	IMPLEMENTATION NOTES:
 	In this implementation, for 5.2, the new API for GdaMetaContext struct doesn't touch size, column_names and
@@ -452,6 +429,9 @@ gda_meta_context_free (GdaMetaContext *ctx)
 	g_free (ctx);
 	// REMIND: ctx->column_names and ctx->column_values must not be freed
 }
+
+
+G_DEFINE_BOXED_TYPE(GdaMetaContext, gda_meta_context, gda_meta_context_copy, gda_meta_context_free)
 
 /*
  * Main static functions
