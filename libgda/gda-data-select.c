@@ -487,7 +487,7 @@ ext_params_holder_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, G_GNUC_UNUSED Gda
 static void
 free_private_shared_data (GdaDataSelect *model)
 {
-	if (!model->priv->sh)
+	if (model->priv->sh == NULL)
 		return;
 
 	model->priv->sh->ref_count --;
@@ -537,12 +537,14 @@ free_private_shared_data (GdaDataSelect *model)
 			model->priv->sh->columns = NULL;
 		}
 
-		if (model->priv->sh->current_prow)
+		if (model->priv->sh->current_prow) {
 			g_object_unref (model->priv->sh->current_prow);
+			model->priv->sh->current_prow = NULL;
+		}
 
 		g_free (model->priv->sh);
+		model->priv->sh = NULL;
 	}
-	model->priv->sh = NULL;
 }
 
 static void
@@ -552,13 +554,13 @@ gda_data_select_dispose (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
+		if (model->priv->exceptions) {
+			g_ptr_array_unref (model->priv->exceptions);
+			model->priv->exceptions = NULL;
+		}
 		if (model->priv->worker) {
 			gda_worker_unref (model->priv->worker);
 			model->priv->worker = NULL;
-		}
-		if (model->priv->cnc) {
-			g_object_unref (model->priv->cnc);
-			model->priv->cnc = NULL;
 		}
 		if (model->priv->iter) {
 			g_object_unref (model->priv->iter);
@@ -573,10 +575,11 @@ gda_data_select_dispose (GObject *object)
 						     model->priv->ext_params_changed_sig_id);
 			model->priv->ext_params_changed_sig_id = 0;
 		}
-
 		free_private_shared_data (model);
-		g_free (model->priv);
-		model->priv = NULL;
+		if (model->priv->cnc) {
+			g_object_unref (model->priv->cnc);
+			model->priv->cnc = NULL;
+		}
 	}
 
 	/* chain to parent class */
@@ -621,6 +624,8 @@ _gda_data_select_update_usage_flags (GdaDataSelect *model, GdaDataModelAccessFla
 void
 _gda_data_select_internals_free (GdaDataSelectInternals *inter)
 {
+	g_return_if_fail (inter != NULL);
+
 	ModType i;
 
 	if (inter->unique_row_condition) {
@@ -674,7 +679,6 @@ _gda_data_select_internals_free (GdaDataSelectInternals *inter)
 		inter->one_row_select_stmt = NULL;
 	}
 
-
 	g_free (inter);
 }
 
@@ -685,10 +689,6 @@ gda_data_select_finalize (GObject *object)
 
 	/* free memory */
 	if (model->priv) {
-		if (model->priv->exceptions) {
-			g_ptr_array_unref (model->priv->exceptions);
-			model->priv->exceptions = NULL;
-		}
 		g_free (model->priv);
 		model->priv = NULL;
 	}
@@ -916,6 +916,9 @@ gda_data_select_get_property (GObject *object,
 void
 gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 {
+	g_return_if_fail (GDA_IS_DATA_SELECT (model));
+	g_return_if_fail (GDA_IS_ROW (row));
+
 	gint tmp, *ptr;
 	GdaRow *erow;
 	g_return_if_fail (GDA_IS_DATA_SELECT (model));
@@ -1017,8 +1020,10 @@ compute_modif_set (GdaDataSelect *model, GError **error)
 {
 	gint i;
 
-	if (model->priv->sh->modif_internals->modif_set)
+	if (model->priv->sh->modif_internals->modif_set) {
 		g_object_unref (model->priv->sh->modif_internals->modif_set);
+		model->priv->sh->modif_internals->modif_set = NULL;
+	}
 	if (model->priv->sh->modif_internals->exec_set)
 		model->priv->sh->modif_internals->modif_set = gda_set_copy (model->priv->sh->modif_internals->exec_set);
 	else
@@ -1139,7 +1144,7 @@ gda_data_select_set_modification_statement_sql (GdaDataSelect *model, const gcha
 	if (remain) {
 		g_object_unref (stmt);
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_SQL_ERROR,
-			      "%s", _("Incorrect SQL expression"));
+			      "%s", _("Incorrect SQL expression, only one modification statement is accepted"));
 		return FALSE;
 	}
 
@@ -1608,8 +1613,10 @@ gda_data_select_compute_modification_statements_ext (GdaDataSelect *model,
 	}
 
 	for (mtype = FIRST_QUERY; mtype < NB_QUERIES; mtype++) {
-		if (modif_stmts[mtype])
+		if (modif_stmts[mtype]) {
 			g_object_unref (modif_stmts[mtype]);
+			modif_stmts[mtype] = NULL;
+		}
 		g_free (model->priv->sh->modif_internals->cols_mod[mtype]);
 		model->priv->sh->modif_internals->cols_mod[mtype] = NULL;
 	}
@@ -2414,8 +2421,10 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 		g_object_set (G_OBJECT (iter), "update-model", update_model, NULL);
 
 	if (prow != imodel->priv->sh->current_prow) {
-		if (imodel->priv->sh->current_prow)
+		if (imodel->priv->sh->current_prow) {
 			g_object_unref (imodel->priv->sh->current_prow);
+			imodel->priv->sh->current_prow = NULL;
+		}
 		imodel->priv->sh->current_prow = g_object_ref (prow);
 	}
 	imodel->priv->sh->current_prow_row = imodel->priv->sh->iter_row;
@@ -3258,8 +3267,10 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 			}
 		}
 	}
-	if (last_insert)
+	if (last_insert) {
 		g_object_unref (last_insert);
+		last_insert = NULL;
+	}
 
 	dstmt->row = NULL;
 	if (! imodel->priv->sh->upd_rows)
