@@ -533,8 +533,7 @@ free_private_shared_data (GdaDataSelect *model)
 			model->priv->sh->index = NULL;
 		}
 		if (model->priv->sh->columns) {
-			g_slist_foreach (model->priv->sh->columns, (GFunc) g_object_unref, NULL);
-			g_slist_free (model->priv->sh->columns);
+			g_slist_free_full (model->priv->sh->columns, (GDestroyNotify) g_object_unref);
 			model->priv->sh->columns = NULL;
 		}
 
@@ -722,8 +721,7 @@ create_columns (GdaDataSelect *model)
 	gint i;
 	ModType m;
 	if (model->priv->sh->columns) {
-		g_slist_foreach (model->priv->sh->columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (model->priv->sh->columns);
+		g_slist_free_full (model->priv->sh->columns, (GDestroyNotify) g_object_unref);
 		model->priv->sh->columns = NULL;
 	}
 	for (m = FIRST_QUERY; m < NB_QUERIES; m++) {
@@ -734,8 +732,7 @@ create_columns (GdaDataSelect *model)
 		return;
 
 	if (model->prep_stmt->ncols < 0)
-		g_error ("INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
-			 "set number of columns before using with GdaDataSelect");
+		g_error (_("INTERNAL implementation error: unknown number of columns in GdaPStmt, \nset number of columns before using with GdaDataSelect"));
 	if (model->prep_stmt->tmpl_columns) {
 		/* copy template columns */
 		GSList *list;
@@ -1002,8 +999,7 @@ gda_data_select_set_columns (GdaDataSelect *model, GSList *columns)
 	g_return_if_fail (model->priv);
 
 	if (model->priv->sh->columns) {
-		g_slist_foreach (model->priv->sh->columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (model->priv->sh->columns);
+		g_slist_free_full (model->priv->sh->columns, (GDestroyNotify) g_object_unref);
 		model->priv->sh->columns = NULL;
 	}
 	for (m = FIRST_QUERY; m < NB_QUERIES; m++) {
@@ -3623,7 +3619,7 @@ set_column_properties_from_select_stmt (GdaDataSelect *model, GdaConnection *cnc
 			columns = columns->next;
 	}
 	if (fields || columns)
-		g_warning ("Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d expressions",
+		g_warning (_("Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d expressions"),
 			   g_slist_length (model->priv->sh->columns), g_slist_length (select->expr_list));
 
  out:

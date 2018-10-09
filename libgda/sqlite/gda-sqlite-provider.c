@@ -1124,7 +1124,7 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	if (filename)
 		cdata->file = filename;
 
-	errmsg = SQLITE3_CALL (sqlite3_open) (filename, &cdata->connection);
+	errmsg = SQLITE3_CALL (sqlite3_open_v2) (filename, &cdata->connection, SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 
 	if (errmsg != SQLITE_OK) {
 		gda_connection_add_event_string (cnc, SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
@@ -4197,7 +4197,7 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 	if (cdata->gdacnc)
 		g_object_remove_weak_pointer (G_OBJECT (cdata->gdacnc), (gpointer*) &(cdata->gdacnc));
 	if (cdata->connection)
-		SQLITE3_CALL (sqlite3_close) (cdata->connection);
+		SQLITE3_CALL (sqlite3_close_v2) (cdata->connection);
 	g_free (cdata->file);
 	if (cdata->types_hash)
 		g_hash_table_destroy (cdata->types_hash);

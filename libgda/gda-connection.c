@@ -487,8 +487,6 @@ gda_connection_dispose (GObject *object)
 
 	/* get rid of prepared statements to avoid problems */
 	if (priv->prepared_stmts) {
-		g_hash_table_foreach (priv->prepared_stmts,
-				      (GHFunc) prepared_stms_foreach_func, cnc);
 		g_hash_table_destroy (priv->prepared_stmts);
 		priv->prepared_stmts = NULL;
 	}
@@ -1540,8 +1538,6 @@ gda_connection_close (GdaConnection *cnc, GError **error)
 
 	/* get rid of prepared statements to avoid problems */
 	if (priv->prepared_stmts) {
-		g_hash_table_foreach (priv->prepared_stmts,
-				      (GHFunc) prepared_stms_foreach_func, cnc);
 		g_hash_table_destroy (priv->prepared_stmts);
 		priv->prepared_stmts = NULL;
 	}
@@ -5994,10 +5990,10 @@ gda_connection_del_prepared_statement (GdaConnection *cnc, GdaStatement *gda_stm
 	g_return_if_fail (cnc != NULL);
 
 	gda_connection_lock ((GdaLockable*) cnc);
+	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
 	g_return_if_fail (GDA_IS_CONNECTION (cnc));
 	g_object_ref (gda_stmt);
-	if (gda_connection_get_prepared_statement (cnc, gda_stmt))
-		prepared_stmts_stmt_reset_cb (gda_stmt, cnc);
+	g_hash_table_remove (priv->prepared_stmts, gda_stmt);
 	g_object_unref (gda_stmt);
 	gda_connection_unlock ((GdaLockable*) cnc);
 }

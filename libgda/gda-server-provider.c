@@ -2282,8 +2282,9 @@ stage2_close_connection (GdaConnection *cnc, gpointer result)
 		if (cdata) {
 			gda_connection_internal_set_provider_data (cnc, NULL, NULL);
 
-			if (cdata->provider_data_destroy_func)
+			if (cdata->provider_data_destroy_func) {
 				cdata->provider_data_destroy_func (cdata);
+			}
 		}
 		_gda_connection_set_status (cnc, GDA_CONNECTION_STATUS_CLOSED);
 	}
