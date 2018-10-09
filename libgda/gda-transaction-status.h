@@ -89,6 +89,8 @@ typedef struct {
 	gpointer  _gda_reserved1;
 	gpointer  _gda_reserved2;
 } GdaTransactionStatusEvent;
+
+#define GDA_TYPE_TRANSACTION_STATUS_EVENT (gda_transaction_status_event_get_type ())
 /**
  * SECTION:gda-transaction-status
  * @short_description: Keeps track of the transaction status of a connection
