@@ -37,6 +37,15 @@
 
 #include <sql-parser/gda-sql-parser.h>
 
+/* module error */
+GQuark gda_xslt_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_xslt_error");
+        return quark;
+}
+
 static GHashTable *data_handlers = NULL;	/* key = GType, value = GdaDataHandler obj */
 static xmlChar *value_to_xmlchar (const GValue * value);
 
@@ -359,7 +368,7 @@ get_resultset_nodeset (GdaXsltIntCont * pdata, const char *resultset_name,
 #ifdef GDA_DEBUG_NO
 		g_print ("no resultset found\n");
 #endif
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_XSLT_ERROR, GDA_XSLT_GENERAL_ERROR,
 			     "no resultset found for name [%s]\n",
 			     resultset_name);
 		*nodeset = NULL;
@@ -394,7 +403,7 @@ _utility_data_model_to_nodeset (GdaDataModel * model,
 #ifdef GDA_DEBUG_NO
 		g_print ("xmlNewNode return NULL\n");
 #endif
-		g_set_error (error, 0, 0, "%s", "xmlNewNode return NULL\n");
+		g_set_error (error, GDA_XSLT_ERROR, GDA_XSLT_GENERAL_ERROR, "%s", "xmlNewNode return NULL\n");
 		return -1;
 	}
 	/* compute columns */

@@ -36,6 +36,14 @@ G_BEGIN_DECLS
 #define GDA_XSLT_ELEM_INTERNAL_QUERY      "query"
 #define GDA_XSLT_ELEM_INTERNAL_TEMPLATE   "template"
 
+/* error reporting */
+extern GQuark gda_xslt_error_quark (void);
+#define GDA_XSLT_ERROR gda_xslt_error_quark ()
+
+typedef enum {
+	GDA_XSLT_GENERAL_ERROR
+} GdaXsltError;
+
 struct _GdaXsltIntCont
 {
 	int         init;
