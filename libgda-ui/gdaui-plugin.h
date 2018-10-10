@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2009 - 2012 Vivien Malerba <malerba@gnome-db.org>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013,2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,14 @@
 #include <libgda/gda-value.h>
 #include <libgda-ui/gdaui-data-entry.h>
 #include "gdaui-decl.h"
+
+/* error reporting */
+extern GQuark gdaui_plugin_error_quark (void);
+#define GDAUI_PLUGIN_ERROR gdaui_plugin_error_quark ()
+
+typedef enum {
+	GDAUI_PLUGIN_GENERAL_ERROR
+} GdauiPluginError;
 
 /**
  * GdauiEntryCreateFunc:

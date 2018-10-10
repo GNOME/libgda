@@ -49,7 +49,7 @@ plugin_init (GError **error)
 	file = gda_gbr_get_file_path (GDA_LIB_DIR, "libgda-6.0", "plugins", "custom-entry-password.xml", NULL);
 	if (! g_file_test (file, G_FILE_TEST_EXISTS)) {
 		if (error && !*error)
-			g_set_error (error, 0, 0, "Missing spec. file '%s'", file);
+			g_set_error (error, GDAUI_PLUGIN_ERROR, GDAUI_PLUGIN_GENERAL_ERROR, "Missing spec. file '%s'", file);
         }
 	else {
 		gsize len;

@@ -61,6 +61,7 @@ ui_sources = \
 	gdaui-grid.c \
 	gdaui-cloud.c \
 	gdaui-login.c \
+	gdaui-plugin.c \
 	gdaui-provider-selector.c \
 	gdaui-raw-form.c \
 	gdaui-raw-grid.c \
