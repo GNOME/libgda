@@ -189,13 +189,13 @@ compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean
 				found = TRUE;
 				if (reverse) {
 					if (!string) {
-						string = g_string_new (_("Obtain referenced data in table "));
-						g_string_append_printf (string, "%s from ",
+						string = g_string_new ("");
+						g_string_vprintf (string, _("Obtain referenced data in table %s from "),
 									fkey->depend_on->obj_short_name);
 					}
 					else
 						g_string_append (string, ", ");
-					g_string_append_printf (string, "column n.%d (",
+					g_string_append_printf (string, _("column number %d ("),
 								g_slist_position (selfields, flist) + 1);
 					if (select_field->as)
 						g_string_append (string, select_field->as);
@@ -206,8 +206,8 @@ compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean
 				}
 				else {
 					if (!string) {
-						string = g_string_new (_("List referencing data in "));
-						g_string_append_printf (string, "%s.",
+						string = g_string_new ("");
+						g_string_vprintf (string, _("List referencing data in %s."),
 									fkey->meta_table->obj_short_name);
 					}
 					else
