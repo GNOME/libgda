@@ -29,6 +29,16 @@
 
 G_BEGIN_DECLS
 
+
+/* error reporting */
+extern GQuark gda_dir_blob_op_error_quark (void);
+#define GDA_DIR_BLOB_OP_ERROR gda_dir_blob_op_error_quark ()
+
+typedef enum {
+	GDA_DIR_BLOB_OP_GENERAL_ERROR
+} GdaDirBlobOpError;
+
+
 #define GDA_TYPE_DIR_BLOB_OP            (gda_dir_blob_op_get_type())
 G_DECLARE_DERIVABLE_TYPE(GdaDirBlobOp, gda_dir_blob_op, GDA, DIR_BLOB_OP, GdaBlobOp)
 

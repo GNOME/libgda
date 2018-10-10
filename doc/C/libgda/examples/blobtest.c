@@ -84,7 +84,7 @@ do_store (GdaConnection *cnc, const gchar *filename, GError **error)
 {
 	if (! g_file_test (filename, G_FILE_TEST_EXISTS) ||
 	    g_file_test (filename, G_FILE_TEST_IS_DIR)) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_DIR_BLOB_OP_ERROR, GDA_DIR_BLOB_OP_GENERAL_ERROR,
 			     "%s", "File does not exist or is a directory");
 		return FALSE;
 	}
