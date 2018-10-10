@@ -260,6 +260,34 @@ gda_dsn_info_equal (const GdaDsnInfo *dsn1, const GdaDsnInfo *dsn2)
 		return dsn2 ? FALSE : TRUE;
 }
 
+/* GdaProviderInfo definitions */
+GdaProviderInfo*
+gda_provider_info_copy (GdaProviderInfo *src)
+{
+  GdaProviderInfo *dst = g_new0(GdaProviderInfo, 1);
+  dst->id = g_strdup (src->id);
+  dst->location = g_strdup (src->location);
+  dst->description = g_strdup (src->description);
+  dst->dsn_params = gda_set_copy (src->dsn_params);
+  dst->auth_params = gda_set_copy (src->auth_params);
+  dst->icon_id = g_strdup (src->icon_id);
+}
+
+void
+gda_provider_info_free (GdaProviderInfo *info)
+{
+  g_free (info->id);
+  g_free (info->location);
+  g_free (info->description);
+  g_object_unref (info->dsn_params);
+  g_object_unref (info->auth_params);
+  g_free (info->icon_id);
+  g_free (info);
+}
+
+G_DEFINE_BOXED_TYPE (GdaProviderInfo, gda_provider_info, gda_provider_info_copy, gda_provider_info_free)
+
+/* GdaInternalProvider */
 typedef struct {
 	GdaProviderInfo    pinfo;
 	GModule           *handle;

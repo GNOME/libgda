@@ -40,7 +40,6 @@ G_BEGIN_DECLS
 
 typedef struct _GdaConfigPrivate GdaConfigPrivate;
 typedef struct _GdaDsnInfo GdaDsnInfo;
-typedef struct _GdaProviderInfo GdaProviderInfo;
 
 /* error reporting */
 extern GQuark gda_config_error_quark (void);
@@ -98,7 +97,7 @@ gboolean         gda_dsn_info_equal     (const GdaDsnInfo *dsn1, const GdaDsnInf
  *
  * This structure holds the information associated to a database provider as discovered by Libgda.
  */
-struct _GdaProviderInfo {
+typedef struct {
         gchar             *id;
         gchar             *location;
         gchar             *description;
@@ -112,29 +111,12 @@ struct _GdaProviderInfo {
 	gpointer _gda_reserved2;
 	gpointer _gda_reserved3;
 	gpointer _gda_reserved4;
-};
+} GdaProviderInfo;
 
-struct _GdaConfig {
-	GObject           object;
-	GdaConfigPrivate *priv;
-};
+#define GDA_TYPE_PROVIDER_INFO (gda_provider_info_get_type ())
 
-struct _GdaConfigClass {
-	GObjectClass      object_class;
+GType            gda_provider_info_get_type  (void) G_GNUC_CONST;
 
-	/* signals */
-	void   (*dsn_added)                 (GdaConfig *conf, GdaDsnInfo *new_dsn);
-	void   (*dsn_to_be_removed)         (GdaConfig *conf, GdaDsnInfo *old_dsn);
-	void   (*dsn_removed)               (GdaConfig *conf, GdaDsnInfo *old_dsn);
-	void   (*dsn_changed)               (GdaConfig *conf, GdaDsnInfo *dsn);
-
-	/*< private >*/
-	/* Padding for future expansion */
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-	void (*_gda_reserved3) (void);
-	void (*_gda_reserved4) (void);
-};
 
 /**
  * SECTION:gda-config
@@ -179,6 +161,27 @@ struct _GdaConfigClass {
  * gtk_init() calls setlocale().
  */
 
+struct _GdaConfig {
+	GObject           object;
+	GdaConfigPrivate *priv;
+};
+
+struct _GdaConfigClass {
+	GObjectClass      object_class;
+
+	/* signals */
+	void   (*dsn_added)                 (GdaConfig *conf, GdaDsnInfo *new_dsn);
+	void   (*dsn_to_be_removed)         (GdaConfig *conf, GdaDsnInfo *old_dsn);
+	void   (*dsn_removed)               (GdaConfig *conf, GdaDsnInfo *old_dsn);
+	void   (*dsn_changed)               (GdaConfig *conf, GdaDsnInfo *dsn);
+
+	/*< private >*/
+	/* Padding for future expansion */
+	void (*_gda_reserved1) (void);
+	void (*_gda_reserved2) (void);
+	void (*_gda_reserved3) (void);
+	void (*_gda_reserved4) (void);
+};
 
 GType              gda_config_get_type                 (void) G_GNUC_CONST;
 GdaConfig*         gda_config_get                      (void);
