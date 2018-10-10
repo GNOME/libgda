@@ -57,6 +57,8 @@ typedef struct {
 			      * value = a GValue pointer */
 } GdaDiff;
 
+#define GDA_TYPE_DIFF (gda_diff_get_type ())
+
 /* struct for the object's class */
 struct _GdaDataComparatorClass
 {
@@ -97,6 +99,8 @@ void              gda_data_comparator_set_key_columns (GdaDataComparator *comp, 
 gboolean          gda_data_comparator_compute_diff    (GdaDataComparator *comp, GError **error);
 gint              gda_data_comparator_get_n_diffs     (GdaDataComparator *comp);
 const GdaDiff    *gda_data_comparator_get_diff        (GdaDataComparator *comp, gint pos);
+
+GType             gda_diff_get_type                   (void) G_GNUC_CONST;
 
 G_END_DECLS
 
