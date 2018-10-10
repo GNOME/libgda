@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,22 +23,20 @@
 
 #include <libgda-report/gda-report-document.h>
 
-#define GDA_TYPE_REPORT_RML_DOCUMENT            (gda_report_rml_document_get_type())
-#define GDA_REPORT_RML_DOCUMENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_RML_DOCUMENT, GdaReportRmlDocument))
-#define GDA_REPORT_RML_DOCUMENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_RML_DOCUMENT, GdaReportRmlDocumentClass))
-#define GDA_IS_REPORT_RML_DOCUMENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_RML_DOCUMENT))
-#define GDA_IS_REPORT_RML_DOCUMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_RML_DOCUMENT))
-
 G_BEGIN_DECLS
 
-typedef struct _GdaReportRmlDocument      GdaReportRmlDocument;
-typedef struct _GdaReportRmlDocumentClass GdaReportRmlDocumentClass;
-typedef struct _GdaReportRmlDocumentPrivate GdaReportRmlDocumentPrivate;
 
-struct _GdaReportRmlDocument {
-	GdaReportDocument            base;
-	GdaReportRmlDocumentPrivate *priv;
-};
+/* error reporting */
+extern GQuark gda_report_rml_document_error_quark (void);
+#define GDA_REPORT_RML_DOCUMENT_ERROR gda_report_rml_document_error_quark ()
+
+typedef enum {
+	GDA_REPORT_RML_DOCUMENT_GENERAL_ERROR
+} GdaReportRmlDocumentError;
+
+
+#define GDA_TYPE_REPORT_RML_DOCUMENT            (gda_report_rml_document_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaReportRmlDocument, gda_report_rml_document, GDA, REPORT_RML_DOCUMENT, GdaReportDocument)
 
 struct _GdaReportRmlDocumentClass {
 	GdaReportDocumentClass       parent_class;

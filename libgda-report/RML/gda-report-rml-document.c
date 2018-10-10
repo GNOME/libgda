@@ -2,6 +2,7 @@
  * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Vincent Untz <vuntz@gnome.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,9 +31,21 @@
 #include "gda-report-rml-document.h"
 #include <libgda/binreloc/gda-binreloc.h>
 
-struct _GdaReportRmlDocumentPrivate {
+/* module error */
+GQuark gda_report_rml_document_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_report_rml_document_error");
+        return quark;
+}
+
+
+typedef struct {
 	int foo;
-};
+} GdaReportRmlDocumentPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaReportRmlDocument, gda_report_rml_document, GDA_TYPE_REPORT_DOCUMENT)
 
 /* properties */
 enum
@@ -40,9 +53,6 @@ enum
         PROP_0,
 };
 
-static void gda_report_rml_document_class_init (GdaReportRmlDocumentClass *klass);
-static void gda_report_rml_document_init       (GdaReportRmlDocument *doc, GdaReportRmlDocumentClass *klass);
-static void gda_report_rml_document_dispose   (GObject *object);
 static void gda_report_rml_document_set_property (GObject *object,
 						  guint param_id,
 						  const GValue *value,
@@ -55,8 +65,6 @@ static void gda_report_rml_document_get_property (GObject *object,
 static gboolean gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filename, GError **error);
 static gboolean gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filename, GError **error);
 
-static GObjectClass *parent_class = NULL;
-
 /*
  * GdaReportRmlDocument class implementation
  */
@@ -65,11 +73,6 @@ gda_report_rml_document_class_init (GdaReportRmlDocumentClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaReportDocumentClass *doc_class = GDA_REPORT_DOCUMENT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
-	/* report methods */
-	object_class->dispose = gda_report_rml_document_dispose;
 
 	/* Properties */
         object_class->set_property = gda_report_rml_document_set_property;
@@ -81,55 +84,7 @@ gda_report_rml_document_class_init (GdaReportRmlDocumentClass *klass)
 }
 
 static void
-gda_report_rml_document_init (GdaReportRmlDocument *doc, G_GNUC_UNUSED GdaReportRmlDocumentClass *klass)
-{
-	doc->priv = g_new0 (GdaReportRmlDocumentPrivate, 1);
-}
-
-static void
-gda_report_rml_document_dispose (GObject *object)
-{
-	GdaReportRmlDocument *doc = (GdaReportRmlDocument *) object;
-
-	g_return_if_fail (GDA_IS_REPORT_RML_DOCUMENT (doc));
-
-	/* free memory */
-	if (doc->priv) {
-		g_free (doc->priv);
-		doc->priv = NULL;
-	}
-
-	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-GType
-gda_report_rml_document_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaReportRmlDocumentClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_report_rml_document_class_init,
-			NULL, NULL,
-			sizeof (GdaReportRmlDocument),
-			0,
-			(GInstanceInitFunc) gda_report_rml_document_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_REPORT_DOCUMENT, "GdaReportRmlDocument", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
+gda_report_rml_document_init (GdaReportRmlDocument *doc) {}
 
 static void
 gda_report_rml_document_set_property (GObject *object,
@@ -137,16 +92,11 @@ gda_report_rml_document_set_property (GObject *object,
 				G_GNUC_UNUSED const GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportRmlDocument *doc;
-
-        doc = GDA_REPORT_RML_DOCUMENT (object);
-        if (doc->priv) {
-                switch (param_id) {
+	switch (param_id) {
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -155,16 +105,11 @@ gda_report_rml_document_get_property (GObject *object,
 				G_GNUC_UNUSED GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportRmlDocument *doc;
-
-        doc = GDA_REPORT_RML_DOCUMENT (object);
-        if (doc->priv) {
-		switch (param_id) {
+	switch (param_id) {
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-        }
 }
 
 /**
@@ -206,7 +151,7 @@ gda_report_rml_document_run_as_html (GdaReportDocument *doc, const gchar *filena
 			}
 		}
 		if (!converter) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_REPORT_RML_DOCUMENT_ERROR, GDA_REPORT_RML_DOCUMENT_GENERAL_ERROR,
 				     _("Could not find the '%s' program"), "trml2html.py");
 			g_mutex_unlock (&init_mutex);
 			return FALSE;
@@ -237,7 +182,7 @@ gda_report_rml_document_run_as_pdf (GdaReportDocument *doc, const gchar *filenam
 			}
 		}
 		if (!converter) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_REPORT_RML_DOCUMENT_ERROR, GDA_REPORT_RML_DOCUMENT_GENERAL_ERROR,
 				     _("Could not find the '%s' program"), "trml2pdf.py");
 			g_mutex_unlock (&init_mutex);
 			return FALSE;
