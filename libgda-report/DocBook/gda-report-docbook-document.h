@@ -22,22 +22,19 @@
 
 #include <libgda-report/gda-report-document.h>
 
-#define GDA_TYPE_REPORT_DOCBOOK_DOCUMENT            (gda_report_docbook_document_get_type())
-#define GDA_REPORT_DOCBOOK_DOCUMENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_DOCBOOK_DOCUMENT, GdaReportDocbookDocument))
-#define GDA_REPORT_DOCBOOK_DOCUMENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_DOCBOOK_DOCUMENT, GdaReportDocbookDocumentClass))
-#define GDA_IS_REPORT_DOCBOOK_DOCUMENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_DOCBOOK_DOCUMENT))
-#define GDA_IS_REPORT_DOCBOOK_DOCUMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_DOCBOOK_DOCUMENT))
-
 G_BEGIN_DECLS
 
-typedef struct _GdaReportDocbookDocument      GdaReportDocbookDocument;
-typedef struct _GdaReportDocbookDocumentClass GdaReportDocbookDocumentClass;
-typedef struct _GdaReportDocbookDocumentPrivate GdaReportDocbookDocumentPrivate;
 
-struct _GdaReportDocbookDocument {
-	GdaReportDocument            base;
-	GdaReportDocbookDocumentPrivate *priv;
-};
+/* error reporting */
+extern GQuark gda_report_docbook_document_error_quark (void);
+#define GDA_REPORT_DOCBOOK_DOCUMENT_ERROR gda_report_docbook_document_error_quark ()
+
+typedef enum {
+	GDA_REPORT_DOCBOOK_DOCUMENT_GENERAL_ERROR
+} GdaReportDocbookDocumentError;
+
+#define GDA_TYPE_REPORT_DOCBOOK_DOCUMENT            (gda_report_docbook_document_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaReportDocbookDocument, gda_report_docbook_document, GDA, REPORT_DOCBOOK_DOCUMENT, GdaReportDocument)
 
 struct _GdaReportDocbookDocumentClass {
 	GdaReportDocumentClass       parent_class;
