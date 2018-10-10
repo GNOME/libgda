@@ -35,6 +35,17 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-impl.h>
 
+
+/* module error */
+GQuark gda_vprovider_data_model_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_vprovider_data_model_error");
+        return quark;
+}
+
+
 #define GDA_DEBUG_VIRTUAL
 #undef GDA_DEBUG_VIRTUAL
 
@@ -972,7 +983,7 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 	const GValue *value = NULL;
 
 	if ((col < 0) || (col >= vtable->td->n_columns)) {
-		g_set_error (error, 0, 0, _("Column %d out of range (0-%d)"), col, vtable->td->n_columns - 1);
+		g_set_error (error, GDA_VPROVIDER_DATA_MODEL_ERROR, GDA_VPROVIDER_DATA_MODEL_GENERAL_ERROR, _("Column %d out of range (0-%d)"), col, vtable->td->n_columns - 1);
 		return NULL;
 	}
 	if (cursor) {
@@ -1000,7 +1011,7 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 		value = & g_array_index (data->values_array, GValue, row * data->ncols + col);
 
 	if (!value)
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_VPROVIDER_DATA_MODEL_ERROR, GDA_VPROVIDER_DATA_MODEL_GENERAL_ERROR,
 			     _("Could not find requested value at row %d and col %d"),
 			     row, col);
 #ifdef DEBUG_VCONTEXT

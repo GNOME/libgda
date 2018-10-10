@@ -22,6 +22,16 @@
 
 #include <virtual/gda-virtual-provider.h>
 
+
+/* error reporting */
+extern GQuark gda_vprovider_data_model_error_quark (void);
+#define GDA_VPROVIDER_DATA_MODEL_ERROR gda_vprovider_data_model_error_quark ()
+
+typedef enum {
+	GDA_VPROVIDER_DATA_MODEL_GENERAL_ERROR
+} GdaVproviderDataModelError;
+
+
 #define GDA_TYPE_VPROVIDER_DATA_MODEL            (gda_vprovider_data_model_get_type())
 #define GDA_VPROVIDER_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VPROVIDER_DATA_MODEL, GdaVproviderDataModel))
 #define GDA_VPROVIDER_DATA_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VPROVIDER_DATA_MODEL, GdaVproviderDataModelClass))
