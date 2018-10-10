@@ -99,6 +99,7 @@ gdaui-enum-types.c: s-enum-types-c
 s-enum-types-c: @REBUILD@ $(ui_headers) Makefile
 	( cd $(srcdir) && $(GLIB_MKENUMS) \
 	                --fhead "#include <libgda-ui/libgda-ui.h>\n" \
+	                --fhead "#include <libgda-ui/gdaui-plugin.h>\n" \
 	                --fhead "#include <glib-object.h>" \
 			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" 	\
 			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" }," \
