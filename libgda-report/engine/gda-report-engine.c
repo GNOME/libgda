@@ -2,6 +2,7 @@
  * Copyright (C) 2007 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,13 +42,24 @@
 
 #include <libgda/gda-debug-macros.h>
 
-struct _GdaReportEnginePrivate {
+/* module error */
+GQuark gda_report_engine_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_report_engine_error");
+        return quark;
+}
+
+typedef struct {
 	xmlDocPtr     doc; /* may be %NULL */
 	xmlNodePtr    spec;
 	xmlNodePtr    result;
 	GHashTable   *objects;
 	gchar        *output_dir;
-};
+} GdaReportEnginePrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaReportEngine, gda_report_engine, G_TYPE_OBJECT)
 
 /* properties */
 enum
@@ -59,8 +71,6 @@ enum
 	PROP_OUTPUT_DIR
 };
 
-static void gda_report_engine_class_init (GdaReportEngineClass *klass);
-static void gda_report_engine_init       (GdaReportEngine *eng, GdaReportEngineClass *klass);
 static void gda_report_engine_dispose   (GObject *object);
 static void gda_report_engine_set_property (GObject *object,
 					    guint param_id,
@@ -70,7 +80,7 @@ static void gda_report_engine_get_property (GObject *object,
 					    guint param_id,
 					    GValue *value,
 					    GParamSpec *pspec);
-static GObjectClass *parent_class = NULL;
+
 static GHashTable *data_handlers = NULL; /* key = GType, value = GdaDataHandler obj */
 
 /*
@@ -80,8 +90,6 @@ static void
 gda_report_engine_class_init (GdaReportEngineClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* report methods */
 	object_class->dispose = gda_report_engine_dispose;
@@ -110,11 +118,11 @@ gda_report_engine_class_init (GdaReportEngineClass *klass)
 }
 
 static void
-gda_report_engine_init (GdaReportEngine *eng, G_GNUC_UNUSED GdaReportEngineClass *klass)
+gda_report_engine_init (GdaReportEngine *eng)
 {
-	eng->priv = g_new0 (GdaReportEnginePrivate, 1);
-	eng->priv->objects = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
-	eng->priv->output_dir = NULL;
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (eng);
+	priv->objects = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+	priv->output_dir = NULL;
 }
 
 static void
@@ -123,61 +131,32 @@ gda_report_engine_dispose (GObject *object)
 	GdaReportEngine *eng = (GdaReportEngine *) object;
 
 	g_return_if_fail (GDA_IS_REPORT_ENGINE (eng));
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (eng);
 
 	/* free memory */
-	if (eng->priv) {
-		if (eng->priv->objects) {
-			g_hash_table_destroy (eng->priv->objects);
-			eng->priv->objects = NULL;
-		}
+	if (priv->objects) {
+		g_hash_table_destroy (priv->objects);
+		priv->objects = NULL;
+	}
 
-		if (eng->priv->doc) {
-			xmlFreeDoc (eng->priv->doc);
-			eng->priv->doc = NULL;
-		}
-		
-		if (eng->priv->spec) {
-			xmlFreeNode (eng->priv->spec);
-			eng->priv->spec = NULL;
-		}
+	if (priv->doc) {
+		xmlFreeDoc (priv->doc);
+		priv->doc = NULL;
+	}
 
-		g_free (eng->priv->output_dir);
-
-		g_free (eng->priv);
-		eng->priv = NULL;
+	if (priv->spec) {
+		xmlFreeNode (priv->spec);
+		priv->spec = NULL;
+	}
+	if (priv->output_dir) {
+		g_free (priv->output_dir);
+		priv->output_dir = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_report_engine_parent_class)->dispose (object);
 }
 
-GType
-gda_report_engine_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaReportEngineClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_report_engine_class_init,
-			NULL, NULL,
-			sizeof (GdaReportEngine),
-			0,
-			(GInstanceInitFunc) gda_report_engine_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaReportEngine", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 static void
 gda_report_engine_set_property (GObject *object,
@@ -185,17 +164,18 @@ gda_report_engine_set_property (GObject *object,
 				const GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportEngine *eng;
+	GdaReportEngine *eng;
 
-        eng = GDA_REPORT_ENGINE (object);
-        if (eng->priv) {
-                switch (param_id) {
+	eng = GDA_REPORT_ENGINE (object);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (eng);
+
+	switch (param_id) {
 		case PROP_SPEC_NODE: {
-			if (eng->priv->spec) {
-				xmlFreeNode (eng->priv->spec);
-				eng->priv->spec = NULL;
+			if (priv->spec) {
+				xmlFreeNode (priv->spec);
+				priv->spec = NULL;
 			}
-			eng->priv->spec = g_value_get_pointer (value);
+			priv->spec = g_value_get_pointer (value);
 			break;
 		}
 		case PROP_SPEC_STRING: {
@@ -203,13 +183,13 @@ gda_report_engine_set_property (GObject *object,
 			
 			doc = xmlParseDoc (BAD_CAST g_value_get_string (value));
 			if (doc) {
-				if (eng->priv->spec) 
-					xmlFreeNode (eng->priv->spec);
-				eng->priv->spec = xmlDocGetRootElement (doc);
-				xmlUnlinkNode (eng->priv->spec);
-				if (eng->priv->doc)
-					xmlFreeDoc (eng->priv->doc);
-				eng->priv->doc = doc;
+				if (priv->spec)
+					xmlFreeNode (priv->spec);
+				priv->spec = xmlDocGetRootElement (doc);
+				xmlUnlinkNode (priv->spec);
+				if (priv->doc)
+					xmlFreeDoc (priv->doc);
+				priv->doc = doc;
 			}
 			break;
 		}
@@ -218,25 +198,24 @@ gda_report_engine_set_property (GObject *object,
 			
 			doc = xmlParseFile (g_value_get_string (value));
 			if (doc) {
-				if (eng->priv->spec) 
-					xmlFreeNode (eng->priv->spec);
-				eng->priv->spec = xmlDocGetRootElement (doc);
-				xmlUnlinkNode (eng->priv->spec);
-				if (eng->priv->doc)
-					xmlFreeDoc (eng->priv->doc);
-				eng->priv->doc = doc;
+				if (priv->spec)
+					xmlFreeNode (priv->spec);
+				priv->spec = xmlDocGetRootElement (doc);
+				xmlUnlinkNode (priv->spec);
+				if (priv->doc)
+					xmlFreeDoc (priv->doc);
+				priv->doc = doc;
 			}
 			break;
 		}
 		case PROP_OUTPUT_DIR:
-			g_free (eng->priv->output_dir);
-			eng->priv->output_dir = g_value_dup_string (value);
+			g_free (priv->output_dir);
+			priv->output_dir = g_value_dup_string (value);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -245,22 +224,21 @@ gda_report_engine_get_property (GObject *object,
 				GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportEngine *eng;
+	GdaReportEngine *eng;
 
-        eng = GDA_REPORT_ENGINE (object);
-        if (eng->priv) {
-		switch (param_id) {
+	eng = GDA_REPORT_ENGINE (object);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (eng);
+	switch (param_id) {
 		case PROP_SPEC_NODE: 
-			g_value_set_pointer (value, eng->priv->spec);
+			g_value_set_pointer (value, priv->spec);
 			break;
 		case PROP_OUTPUT_DIR:
-			g_value_set_string (value, eng->priv->output_dir);
+			g_value_set_string (value, priv->output_dir);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
-        }
+	}
 }
 
 /**
@@ -322,9 +300,9 @@ gda_report_engine_declare_object (GdaReportEngine *engine, GObject *object, cons
 	gchar prefix, *real_name;
 	GObject *current_obj;
 	g_return_if_fail (GDA_IS_REPORT_ENGINE (engine));
-	g_return_if_fail (engine->priv);
 	g_return_if_fail (G_IS_OBJECT (object));
 	g_return_if_fail (obj_name);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (engine);
 
 	if (GDA_IS_STATEMENT (object))
 		prefix = 'S';
@@ -338,14 +316,14 @@ gda_report_engine_declare_object (GdaReportEngine *engine, GObject *object, cons
 	}
 	
 	real_name = g_strdup_printf ("%c%s", prefix, obj_name);
-	current_obj = g_hash_table_lookup (engine->priv->objects, real_name);
+	current_obj = g_hash_table_lookup (priv->objects, real_name);
 	if (current_obj) {
 		if (current_obj != object) 
 			g_warning (_("An object with the '%s' name has already been declared"), obj_name);
 	}
 	else {
 		/*g_print ("%s(): declared %p as %s\n", __FUNCTION__, object, real_name);*/
-		g_hash_table_insert (engine->priv->objects, real_name, object);
+		g_hash_table_insert (priv->objects, real_name, object);
 		g_object_ref (object);
 	}
 }
@@ -366,8 +344,8 @@ gda_report_engine_find_declared_object (GdaReportEngine *engine, GType obj_type,
 	gchar prefix, *real_name;
 	GObject *current_obj;
 	g_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), NULL);
-	g_return_val_if_fail (engine->priv, NULL);
 	g_return_val_if_fail (obj_name, NULL);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (engine);
 
 	if (obj_type == GDA_TYPE_STATEMENT)
 		prefix = 'S';
@@ -380,7 +358,7 @@ gda_report_engine_find_declared_object (GdaReportEngine *engine, GType obj_type,
 		return NULL;
 	}
 	real_name = g_strdup_printf ("%c%s", prefix, obj_name);
-	current_obj = g_hash_table_lookup (engine->priv->objects, real_name);
+	current_obj = g_hash_table_lookup (priv->objects, real_name);
 	/*g_print ("%s(): requested %s => %p\n", __FUNCTION__, real_name, current_obj);*/
 	g_free (real_name);
 	return current_obj;
@@ -403,10 +381,10 @@ gda_report_engine_run_as_node (GdaReportEngine *engine, GError **error)
 {
 	xmlNodePtr retnode;
 	g_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), NULL);
-	g_return_val_if_fail (engine->priv, NULL);
-	g_return_val_if_fail (engine->priv->spec, NULL);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (engine);
+	g_return_val_if_fail (priv->spec, NULL);
 
-	retnode = xmlCopyNode (engine->priv->spec, 1);
+	retnode = xmlCopyNode (priv->spec, 1);
 	if (!real_run_at_node (engine, retnode, NULL, error)) {
 		xmlFreeNode (retnode);
 		retnode = NULL;
@@ -429,14 +407,14 @@ gda_report_engine_run_as_doc (GdaReportEngine *engine, GError **error)
 	xmlNodePtr retnode;
 	xmlDocPtr doc;
 	g_return_val_if_fail (GDA_IS_REPORT_ENGINE (engine), NULL);
-	g_return_val_if_fail (engine->priv, NULL);
-	g_return_val_if_fail (engine->priv->spec, NULL);
+	GdaReportEnginePrivate *priv = gda_report_engine_get_instance_private (engine);
+	g_return_val_if_fail (priv->spec, NULL);
 
 	retnode = gda_report_engine_run_as_node (engine, error);
 	if (!retnode)
 		return NULL;
-	if (engine->priv->doc) 
-		doc = xmlCopyDoc (engine->priv->doc, 1);
+	if (priv->doc)
+		doc = xmlCopyDoc (priv->doc, 1);
 	else 
 		doc = xmlNewDoc (BAD_CAST "1.0");
 	xmlDocSetRootElement (doc, retnode);
@@ -594,7 +572,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 		/* find statement */
 		stmt = run_context_find_stmt (engine, context, qname);
 		if (!stmt) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 				     _("Unknown query '%s'"), qname);
 			xmlFree (qname);
 			return FALSE;
@@ -605,12 +583,12 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 		cnc = run_context_find_connection (engine, context, prop);
 		if (!cnc) {
 			if (prop) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 					     _("No connection named '%s' found"), prop);
 				xmlFree (prop);
 			}
 			else
-				g_set_error (error, 0, 0, "%s", 
+				g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR, "%s",
 					     _("No connection specified"));
 			return FALSE;
 		}
@@ -632,12 +610,12 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 				cnc = run_context_find_connection (engine, context, prop);
 				if (!cnc) {
 					if (prop) {
-						g_set_error (error, 0, 0,
+						g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 							     _("No connection named '%s' found"), prop);
 						xmlFree (prop);
 					}
 					else
-						g_set_error (error, 0, 0, "%s", 
+						g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR, "%s",
 							     _("No connection specified"));
 					return FALSE;
 				}
@@ -677,7 +655,7 @@ command_gda_report_section_run (GdaReportEngine *engine, xmlNodePtr node, GSList
 	}
 
 	if (!ctx) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR, "%s",
 			     _("Query is not specified (not named and not defined)"));
 		return FALSE;
 	}
@@ -842,7 +820,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 		
 		param = run_context_find_param (engine, context, prop);
 		if (!param) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 				     _("Unknown parameter '%s'"), prop);
 			return FALSE;
 		}
@@ -868,7 +846,7 @@ command_gda_report_param_value (GdaReportEngine *engine, xmlNodePtr node, GSList
 		return TRUE;
 	}
 	else {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR, "%s",
 			     _("Parameter name not specified"));
 		return FALSE;
 	}
@@ -918,7 +896,7 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 
 	prop = xmlGetProp (node, BAD_CAST "expr");
 	if (!prop) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR, "%s",
 			     _("No expression specified")); 
 		return FALSE;
 	}
@@ -941,7 +919,7 @@ command_gda_report_if (GdaReportEngine *engine, xmlNodePtr node, GSList **create
 			}
 			else {
 				gda_value_free (trans);
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 					     _("Cannot cast value from type '%s' to type '%s'"), 
 					     g_type_name (G_VALUE_TYPE (value)), g_type_name (G_TYPE_BOOLEAN));
 				return FALSE;
@@ -993,7 +971,7 @@ rewrite_statement_foreach_func (GdaSqlAnyPart *node, ForeachData *fdata, GError 
 		GdaHolder *source_param;
 		source_param = run_context_find_param (fdata->engine, fdata->context, BAD_CAST pspec->name);
 		if (!source_param) {
-			g_set_error (error, 0, 0,
+			g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 				     _("Unknown parameter '%s'"), pspec->name);
 			return FALSE;
 		}
@@ -1050,7 +1028,7 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 			source_param = run_context_find_param (engine, context, 
 							       BAD_CAST gda_holder_get_id (GDA_HOLDER (list->data)));
 			if (!source_param) {
-				g_set_error (error, 0, 0,
+				g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 					     _("Unknown parameter '%s'"), 
 					     gda_holder_get_id (GDA_HOLDER (list->data)));
 				return FALSE;
@@ -1079,7 +1057,7 @@ assign_parameters_values (GdaReportEngine *engine, RunContext *context, GdaSet *
 					}
 					else {
 						gda_value_free (trans);
-						g_set_error (error, 0, 0,
+						g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 							     _("Cannot cast parameter from type '%s' to type '%s'"), 
 							     g_type_name (source_ptype), g_type_name (ptype));
 						return FALSE;
@@ -1172,7 +1150,7 @@ evaluate_expression (GdaReportEngine *engine, RunContext *context, const gchar *
 		return NULL;
 
 	if (gda_data_model_get_n_rows (model) != 1) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_REPORT_ENGINE_ERROR, GDA_REPORT_ENGINE_GENERAL_ERROR,
 			     _("Expression '%s' should return exactly one value"), expr);
 		return NULL;
 	}

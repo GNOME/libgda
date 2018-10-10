@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,22 +26,20 @@
 #include <libxml/tree.h>
 #include <libgda/gda-statement.h>
 
-#define GDA_TYPE_REPORT_ENGINE            (gda_report_engine_get_type())
-#define GDA_REPORT_ENGINE(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_ENGINE, GdaReportEngine))
-#define GDA_REPORT_ENGINE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_ENGINE, GdaReportEngineClass))
-#define GDA_IS_REPORT_ENGINE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_ENGINE))
-#define GDA_IS_REPORT_ENGINE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_ENGINE))
-
 G_BEGIN_DECLS
 
-typedef struct _GdaReportEngine      GdaReportEngine;
-typedef struct _GdaReportEngineClass GdaReportEngineClass;
-typedef struct _GdaReportEnginePrivate GdaReportEnginePrivate;
 
-struct _GdaReportEngine {
-	GObject                 base;
-	GdaReportEnginePrivate *priv;
-};
+/* error reporting */
+extern GQuark gda_report_engine_error_quark (void);
+#define GDA_REPORT_ENGINE_ERROR gda_report_engine_error_quark ()
+
+typedef enum {
+	GDA_REPORT_ENGINE_GENERAL_ERROR
+} GdaReportEngineError;
+
+
+#define GDA_TYPE_REPORT_ENGINE            (gda_report_engine_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaReportEngine, gda_report_engine, GDA, REPORT_ENGINE, GObject)
 
 struct _GdaReportEngineClass {
 	GObjectClass            parent_class;
@@ -199,9 +198,6 @@ struct _GdaReportEngineClass {
  *   </tgroup>
  * </table>
  */
-
-
-GType            gda_report_engine_get_type        (void) G_GNUC_CONST;
 
 GdaReportEngine *gda_report_engine_new             (xmlNodePtr spec_node);
 GdaReportEngine *gda_report_engine_new_from_string (const gchar *spec_string);
