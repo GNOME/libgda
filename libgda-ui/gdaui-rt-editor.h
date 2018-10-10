@@ -25,6 +25,15 @@
 
 G_BEGIN_DECLS
 
+/* error reporting */
+extern GQuark gdaui_rt_editor_error_quark (void);
+#define GDAUI_RT_EDITOR_ERROR gdaui_rt_editor_error_quark ()
+
+typedef enum {
+	GDAUI_RT_EDITOR_GENERAL_ERROR
+} GdauiRtEditorError;
+
+
 #define GDAUI_TYPE_RT_EDITOR          (gdaui_rt_editor_get_type())
 G_DECLARE_DERIVABLE_TYPE(GdauiRtEditor, gdaui_rt_editor, GDAUI, RT_EDITOR, GtkBox)
 /* struct for the object's class */

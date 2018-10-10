@@ -26,6 +26,17 @@
 #define MAX_BULLETS 2
 //gchar * bullet_strings[] = {"•", "◦"};
 #include <libgda-ui.h>
+
+
+/* module error */
+GQuark gdaui_rt_editor_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gdaui_rt_editor_error");
+        return quark;
+}
+
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 GdkPixbuf *bullet_pix[MAX_BULLETS] = {NULL};

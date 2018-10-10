@@ -40,7 +40,7 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 		ch1 = gtk_text_iter_get_char (&iter1);
 		ch2 = gtk_text_iter_get_char (&iter2);
 		if (ch1 != ch2) {
-			g_set_error (error, 0, 0, "difference at line %d, offset %d",
+			g_set_error (error, GDAUI_RT_EDITOR_ERROR, GDAUI_RT_EDITOR_GENERAL_ERROR, "difference at line %d, offset %d",
 				     gtk_text_iter_get_line (&iter1),
 				     gtk_text_iter_get_line_offset (&iter1));
 			return FALSE;
@@ -67,7 +67,7 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 				}
 			}
 			if (!p2) {
-				g_set_error (error, 0, 0, "Missing text tag in textbuffer2 "
+				g_set_error (error, GDAUI_RT_EDITOR_ERROR, GDAUI_RT_EDITOR_GENERAL_ERROR, "Missing text tag in textbuffer2 "
 					     "at line %d, offset %d",
 					     gtk_text_iter_get_line (&iter1),
 					     gtk_text_iter_get_line_offset (&iter1));
@@ -80,7 +80,7 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 					break;
 			}
 			if (!p1) {
-				g_set_error (error, 0, 0, "Missing text tag in textbuffer1 "
+				g_set_error (error, GDAUI_RT_EDITOR_ERROR, GDAUI_RT_EDITOR_GENERAL_ERROR, "Missing text tag in textbuffer1 "
 					     "at line %d, offset %d",
 					     gtk_text_iter_get_line (&iter1),
 					     gtk_text_iter_get_line_offset (&iter1));
@@ -97,11 +97,11 @@ textbuffers_equal (GtkTextBuffer *buffer1, GtkTextBuffer *buffer2, GError **erro
 	gtk_text_buffer_get_end_iter (buffer1, &end1);
 	gtk_text_buffer_get_end_iter (buffer2, &end2);
 	if (gtk_text_iter_compare (&iter1, &end1)) {
-		g_set_error (error, 0, 0, "%s", "textbuffer1 is shorter than textbuffer2");
+		g_set_error (error, GDAUI_RT_EDITOR_ERROR, GDAUI_RT_EDITOR_GENERAL_ERROR, "%s", "textbuffer1 is shorter than textbuffer2");
 		return FALSE;
 	}
 	if (gtk_text_iter_compare (&iter2, &end2)) {
-		g_set_error (error, 0, 0, "%s", "textbuffer2 is shorter than textbuffer1");
+		g_set_error (error, GDAUI_RT_EDITOR_ERROR, GDAUI_RT_EDITOR_GENERAL_ERROR, "%s", "textbuffer2 is shorter than textbuffer1");
 		return FALSE;
 	}
 	return TRUE;
