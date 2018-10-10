@@ -15,7 +15,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -271,6 +271,7 @@ gda_provider_info_copy (GdaProviderInfo *src)
   dst->dsn_params = gda_set_copy (src->dsn_params);
   dst->auth_params = gda_set_copy (src->auth_params);
   dst->icon_id = g_strdup (src->icon_id);
+	return dst;
 }
 
 void
@@ -294,7 +295,7 @@ typedef struct {
 	GdaServerProvider *instance;
 } InternalProvider;
 
-struct _GdaConfigPrivate {
+typedef struct {
 	gchar *user_file;
 	gchar *system_file;
 	gboolean system_config_allowed;
@@ -303,13 +304,13 @@ struct _GdaConfigPrivate {
 	gboolean providers_loaded; /* TRUE if providers list has already been scanned */
 
 	gboolean emit_signals;
-};
+} GdaConfigPrivate;
 
-static void gda_config_class_init (GdaConfigClass *klass);
+G_DEFINE_TYPE_WITH_PRIVATE (GdaConfig, gda_config, G_TYPE_OBJECT)
+
 static GObject *gda_config_constructor (GType type,
 					guint n_construct_properties,
 					GObjectConstructParam *construct_properties);
-static void gda_config_init       (GdaConfig *conf, GdaConfigClass *klass);
 static void gda_config_dispose    (GObject *object);
 static void gda_config_set_property (GObject *object,
 				     guint param_id,
@@ -353,8 +354,6 @@ enum {
 	PROP_SYSTEM_FILE
 };
 
-static GObjectClass *parent_class = NULL;
-
 #ifdef HAVE_GIO
 /*
  * GIO static variables
@@ -387,8 +386,6 @@ static void
 gda_config_class_init (GdaConfigClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/**
 	 * GdaConfig::dsn-added:
@@ -483,18 +480,17 @@ gda_config_class_init (GdaConfigClass *klass)
 }
 
 static void
-gda_config_init (GdaConfig *conf, G_GNUC_UNUSED GdaConfigClass *klass)
+gda_config_init (GdaConfig *conf)
 {
 	g_return_if_fail (GDA_IS_CONFIG (conf));
-
-	conf->priv = g_new0 (GdaConfigPrivate, 1);
-	conf->priv->user_file = NULL;
-	conf->priv->system_file = NULL;
-	conf->priv->system_config_allowed = FALSE;
-	conf->priv->prov_list = NULL;
-	conf->priv->dsn_list = NULL;
-	conf->priv->providers_loaded = FALSE;
-	conf->priv->emit_signals = TRUE;
+	GdaConfigPrivate *priv = gda_config_get_instance_private (conf);
+	priv->user_file = NULL;
+	priv->system_file = NULL;
+	priv->system_config_allowed = FALSE;
+	priv->prov_list = NULL;
+	priv->dsn_list = NULL;
+	priv->providers_loaded = FALSE;
+	priv->emit_signals = TRUE;
 }
 
 #ifdef HAVE_LIBSECRET
@@ -515,7 +511,7 @@ secret_password_found_cb (GObject *source_object, GAsyncResult *res, gchar *dsnn
 			dsn->auth_string = g_strdup (auth);
 		}
 		/*g_print ("Loaded auth info for '%s'\n", dsnname);*/
-		if (unique_instance->priv->emit_signals)
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
 		g_free (auth);
 	}
@@ -542,7 +538,7 @@ password_found_cb (GnomeKeyringResult res, const gchar *password, const gchar *d
 			dsn->auth_string = g_strdup (password);
 		}
 		/*g_print ("Loaded auth info for '%s'\n", dsnname);*/
-		if (unique_instance->priv->emit_signals)
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals [DSN_CHANGED], 0, dsn);
 	}
 	else if (res != GNOME_KEYRING_RESULT_NO_MATCH)
@@ -557,6 +553,7 @@ load_config_file (const gchar *file, gboolean is_system)
 {
 	xmlDocPtr doc;
 	xmlNodePtr root;
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
 	if (!g_file_test (file, G_FILE_TEST_EXISTS))
 		return;
@@ -712,12 +709,12 @@ load_config_file (const gchar *file, gboolean is_system)
 #endif
 			/* signals */
 			if (is_new) {
-				unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, info,
+				priv->dsn_list = g_slist_insert_sorted (priv->dsn_list, info,
 											 (GCompareFunc) data_source_info_compare);
-				if (unique_instance->priv->emit_signals)
+				if (priv->emit_signals)
 					g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, info);
 			}
-			else if (unique_instance->priv->emit_signals)
+			else if (priv->emit_signals)
 				g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, info);
 		}
 	}
@@ -733,16 +730,17 @@ save_config_file (gboolean is_system)
 
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 	
-	if ((!is_system && !unique_instance->priv->user_file) ||
-	    (is_system && !unique_instance->priv->system_file)) {
+	if ((!is_system && !priv->user_file) ||
+	    (is_system && !priv->system_file)) {
 		return;
 	}
 
 	doc = xmlNewDoc (BAD_CAST "1.0");
 	root = xmlNewDocNode (doc, NULL, BAD_CAST "libgda-config", NULL);
         xmlDocSetRootElement (doc, root);
-	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
+	for (list = priv->dsn_list; list; list = list->next) {
 		GdaDsnInfo *info = (GdaDsnInfo*) list->data;
 		if (info->is_system != is_system)
 			continue;
@@ -786,13 +784,13 @@ save_config_file (gboolean is_system)
 #ifdef HAVE_GIO
 	lock_notify_changes ();
 #endif
-	if (!is_system && unique_instance->priv->user_file) {
-		if (xmlSaveFormatFile (unique_instance->priv->user_file, doc, TRUE) == -1)
-                        gda_log_error ("Error saving config data to '%s'", unique_instance->priv->user_file);
+	if (!is_system && priv->user_file) {
+		if (xmlSaveFormatFile (priv->user_file, doc, TRUE) == -1)
+                        gda_log_error ("Error saving config data to '%s'", priv->user_file);
 	}
-	else if (is_system && unique_instance->priv->system_file) {
-		if (xmlSaveFormatFile (unique_instance->priv->system_file, doc, TRUE) == -1)
-                        gda_log_error ("Error saving config data to '%s'", unique_instance->priv->system_file);
+	else if (is_system && priv->system_file) {
+		if (xmlSaveFormatFile (priv->system_file, doc, TRUE) == -1)
+                        gda_log_error ("Error saving config data to '%s'", priv->system_file);
 	}
 	fflush (NULL);
 #ifdef HAVE_GIO
@@ -817,7 +815,7 @@ gda_config_constructor (GType type,
 		guint i;
 		gboolean user_file_set = FALSE, system_file_set = FALSE;
 
-		object = G_OBJECT_CLASS (parent_class)->constructor (type,
+		object = G_OBJECT_CLASS (gda_config_parent_class)->constructor (type,
 								     n_construct_properties,
 								     construct_properties);
 		for (i = 0; i< n_construct_properties; i++) {
@@ -833,6 +831,7 @@ gda_config_constructor (GType type,
 		}
 
 		unique_instance = GDA_CONFIG (object);
+		GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 		g_object_ref (object); /* keep one reference for the library */
 
 		/* define user and system dirs. if not already defined */
@@ -912,7 +911,7 @@ gda_config_constructor (GType type,
 				g_free (confdir);
 
 				if (setup_ok)
-					unique_instance->priv->user_file = conffile;
+					priv->user_file = conffile;
 				else
 					g_free (conffile);
 			}
@@ -924,26 +923,26 @@ gda_config_constructor (GType type,
 					g_free (conffile);
 				}
 				else
-					unique_instance->priv->user_file = conffile;
+					priv->user_file = conffile;
 				g_free (confdir);
 			}
 		}
 		if (!system_file_set) 
-			unique_instance->priv->system_file = gda_gbr_get_file_path (GDA_ETC_DIR, 
+			priv->system_file = gda_gbr_get_file_path (GDA_ETC_DIR,
 										    LIBGDA_ABI_NAME, "config", NULL);
-		unique_instance->priv->system_config_allowed = FALSE;
-		if (unique_instance->priv->system_file) {
+		priv->system_config_allowed = FALSE;
+		if (priv->system_file) {
 #ifdef G_OS_WIN32
 
 			FILE *file;
-                        file = fopen (unique_instance->priv->system_file, "a");  /* Flawfinder: ignore */
+                        file = fopen (priv->system_file, "a");  /* Flawfinder: ignore */
                         if (file) {
-                                unique_instance->priv->system_config_allowed = TRUE;
+                                priv->system_config_allowed = TRUE;
                                 fclose (file);
                         }
 #else
 			struct stat stbuf;
-			if (stat (unique_instance->priv->system_file, &stbuf) == 0) {
+			if (stat (priv->system_file, &stbuf) == 0) {
 				/* use effective user and group IDs */
 				uid_t euid;
 				gid_t egid;
@@ -951,23 +950,23 @@ gda_config_constructor (GType type,
 				egid = getegid ();
 				if (euid == stbuf.st_uid) {
 					if ((stbuf.st_mode & S_IWUSR) && (stbuf.st_mode & S_IRUSR))
-						unique_instance->priv->system_config_allowed = TRUE;
+						priv->system_config_allowed = TRUE;
 				}
 				else if (egid == stbuf.st_gid) {
 					if ((stbuf.st_mode & S_IWGRP) && (stbuf.st_mode & S_IRGRP))
-						unique_instance->priv->system_config_allowed = TRUE;
+						priv->system_config_allowed = TRUE;
 				}
 				else if ((stbuf.st_mode & S_IWOTH) && (stbuf.st_mode & S_IROTH))
-					unique_instance->priv->system_config_allowed = TRUE;
+					priv->system_config_allowed = TRUE;
 			}
 #endif
 		}
 
 		/* Setup file monitoring */
 #ifdef HAVE_GIO
-		if (unique_instance->priv->user_file) {
+		if (priv->user_file) {
 			GFile *gf;
-			gf = g_file_new_for_path (unique_instance->priv->user_file);
+			gf = g_file_new_for_path (priv->user_file);
 			mon_conf_user = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
 			if (mon_conf_user)
 				g_signal_connect (G_OBJECT (mon_conf_user), "changed",
@@ -975,9 +974,9 @@ gda_config_constructor (GType type,
 			g_object_unref (gf);
 		}
 
-		if (unique_instance->priv->system_file) {
+		if (priv->system_file) {
 			GFile *gf;
-			gf = g_file_new_for_path (unique_instance->priv->system_file);
+			gf = g_file_new_for_path (priv->system_file);
 			mon_conf_global = g_file_monitor_file (gf, G_FILE_MONITOR_NONE, NULL, NULL);
 			if (mon_conf_user)
 				g_signal_connect (G_OBJECT (mon_conf_global), "changed",
@@ -986,10 +985,10 @@ gda_config_constructor (GType type,
 		}
 #endif
 		/* load existing DSN definitions */
-		if (unique_instance->priv->system_file)
-			load_config_file (unique_instance->priv->system_file, TRUE);
-		if (unique_instance->priv->user_file)
-			load_config_file (unique_instance->priv->user_file, FALSE);
+		if (priv->system_file)
+			load_config_file (priv->system_file, TRUE);
+		if (priv->user_file)
+			load_config_file (priv->user_file, FALSE);
 	}
 	else
 		object = g_object_ref (G_OBJECT (unique_instance));
@@ -1003,25 +1002,32 @@ gda_config_dispose (GObject *object)
 	GdaConfig *conf = (GdaConfig *) object;
 
 	g_return_if_fail (GDA_IS_CONFIG (conf));
+	GdaConfigPrivate *priv = gda_config_get_instance_private (conf);
 
-	if (conf->priv) {
-		g_free (conf->priv->user_file);
-		g_free (conf->priv->system_file);
+	if (priv) {
+		if (priv->user_file) {
+			g_free (priv->user_file);
+			priv->user_file = NULL;
+		}
+		if (priv->system_file) {
+			g_free (priv->system_file);
+			priv->system_file = NULL;
+		}
 
-		if (conf->priv->dsn_list) {
-			g_slist_foreach (conf->priv->dsn_list, (GFunc) gda_dsn_info_free, NULL);
-			g_slist_free (conf->priv->dsn_list);
+		if (priv->dsn_list) {
+			g_slist_foreach (priv->dsn_list, (GFunc) gda_dsn_info_free, NULL);
+			g_slist_free (priv->dsn_list);
+			priv->dsn_list = NULL;
 		}
-		if (conf->priv->prov_list) {
-			g_slist_foreach (conf->priv->prov_list, (GFunc) internal_provider_free, NULL);
-			g_slist_free (conf->priv->prov_list);
+		if (priv->prov_list) {
+			g_slist_foreach (priv->prov_list, (GFunc) internal_provider_free, NULL);
+			g_slist_free (priv->prov_list);
+			priv->prov_list = NULL;
 		}
-		g_free (conf->priv);
-		conf->priv = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_config_parent_class)->dispose (object);
 }
 
 
@@ -1034,38 +1040,6 @@ GQuark gda_config_error_quark (void)
         return quark;
 }
 
-/**
- * gda_config_get_type:
- * 
- * Registers the #GdaConfig class on the GLib type system.
- * 
- * Returns: the GType identifying the class.
- */
-GType
-gda_config_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GTypeInfo info = {
-			sizeof (GdaConfigClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_config_class_init,
-			NULL, NULL,
-			sizeof (GdaConfig),
-			0,
-			(GInstanceInitFunc) gda_config_init,
-			0
-		};
-		GDA_CONFIG_LOCK ();
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaConfig", &info, 0);
-		GDA_CONFIG_UNLOCK ();
-	}
-
-	return type;
-}
 
 static void
 gda_config_set_property (GObject *object,
@@ -1076,41 +1050,40 @@ gda_config_set_property (GObject *object,
 	GdaConfig *conf;
 	const gchar *cstr;
 
-        conf = GDA_CONFIG (object);
-        if (conf->priv) {
-                switch (param_id) {
+	conf = GDA_CONFIG (object);
+	GdaConfigPrivate *priv = gda_config_get_instance_private (conf);
+	switch (param_id) {
 		case PROP_USER_FILE:
 			cstr = g_value_get_string (value);
-			if ((cstr && conf->priv->user_file &&
-			     !strcmp (cstr, conf->priv->user_file)) ||
-			    (! cstr && !conf->priv->user_file)) {
+			if ((cstr && priv->user_file &&
+			     !strcmp (cstr, priv->user_file)) ||
+			    (! cstr && !priv->user_file)) {
 				/* nothing to do */
 				break;
 			}
-			g_free (conf->priv->user_file);
-			conf->priv->user_file = NULL;
+			g_free (priv->user_file);
+			priv->user_file = NULL;
 			if (g_value_get_string (value))
-				conf->priv->user_file = g_strdup (cstr);
+				priv->user_file = g_strdup (cstr);
 			reload_dsn_configuration ();
 			break;
                 case PROP_SYSTEM_FILE:
 			cstr = g_value_get_string (value);
-			if ((cstr && conf->priv->system_file &&
-			     !strcmp (cstr, conf->priv->system_file)) ||
-			    (! cstr && !conf->priv->system_file)) {
+			if ((cstr && priv->system_file &&
+			     !strcmp (cstr, priv->system_file)) ||
+			    (! cstr && !priv->system_file)) {
 				/* nothing to do */
 				break;
 			}
-			g_free (conf->priv->system_file);
-			conf->priv->system_file = NULL;
+			g_free (priv->system_file);
+			priv->system_file = NULL;
 			if (g_value_get_string (value))
-				conf->priv->system_file = g_strdup (cstr);
+				priv->system_file = g_strdup (cstr);
 			reload_dsn_configuration ();
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}	
 	}
 }
 
@@ -1123,19 +1096,18 @@ gda_config_get_property (GObject *object,
 	GdaConfig *conf;
 	
 	conf = GDA_CONFIG (object);
-	if (conf->priv) {
-		switch (param_id) {
+	GdaConfigPrivate *priv = gda_config_get_instance_private (conf);
+	switch (param_id) {
 		case PROP_USER_FILE:
-			g_value_set_string (value, conf->priv->user_file);
+			g_value_set_string (value, priv->user_file);
 			break;
 		case PROP_SYSTEM_FILE:
-			g_value_set_string (value, conf->priv->system_file);
+			g_value_set_string (value, priv->system_file);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
-	}	
+	}
 }
 
 /**
@@ -1187,8 +1159,9 @@ gda_config_get_dsn_info (const gchar *dsn_name)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
-	for (list = unique_instance->priv->dsn_list; list; list = list->next)
+	for (list = priv->dsn_list; list; list = list->next)
 		if (!strcmp (((GdaDsnInfo*) list->data)->name, real_dsn)) {
 			GDA_CONFIG_UNLOCK ();
 			g_free (real_dsn);
@@ -1247,8 +1220,9 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
-	if (info->is_system && !unique_instance->priv->system_config_allowed) {
+	if (info->is_system && !priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
 			      "%s", _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
@@ -1279,7 +1253,7 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			save_user = TRUE;
 			einfo->is_system = info->is_system ? TRUE : FALSE;
 		}
-		if (unique_instance->priv->emit_signals)
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, einfo);
 	}
 	else {
@@ -1295,9 +1269,9 @@ gda_config_define_dsn (const GdaDsnInfo *info, GError **error)
 			einfo->auth_string = g_strdup (info->auth_string);
 		einfo->is_system = info->is_system ? TRUE : FALSE;
 
-		unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, einfo,
+		priv->dsn_list = g_slist_insert_sorted (priv->dsn_list, einfo,
 									 (GCompareFunc) data_source_info_compare);
-		if (unique_instance->priv->emit_signals)
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, einfo);
 	}
 
@@ -1411,6 +1385,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	gboolean save_system = FALSE;
 
 	g_return_val_if_fail (dsn_name, FALSE);
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
@@ -1423,7 +1398,7 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 		GDA_CONFIG_UNLOCK ();
 		return FALSE;
 	}
-	if (info->is_system && !unique_instance->priv->system_config_allowed) {
+	if (info->is_system && !priv->system_config_allowed) {
 		g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PERMISSION_ERROR,
 			      "%s", _("Can't manage system-wide configuration"));
 		GDA_CONFIG_UNLOCK ();
@@ -1435,10 +1410,10 @@ gda_config_remove_dsn (const gchar *dsn_name, GError **error)
 	else
 		save_user = TRUE;
 
-	if (unique_instance->priv->emit_signals)
+	if (priv->emit_signals)
 		g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
-	unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-	if (unique_instance->priv->emit_signals)
+	priv->dsn_list = g_slist_remove (priv->dsn_list, info);
+	if (priv->emit_signals)
 		g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 
 #ifdef HAVE_LIBSECRET
@@ -1567,8 +1542,9 @@ gda_config_get_nb_dsn (void)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
-	ret = g_slist_length (unique_instance->priv->dsn_list);
+	ret = g_slist_length (priv->dsn_list);
 	GDA_CONFIG_UNLOCK ();
 	return ret;
 }
@@ -1591,10 +1567,11 @@ gda_config_get_dsn_info_index (const gchar *dsn_name)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
 	info = gda_config_get_dsn_info (dsn_name);
 	if (info)
-		ret = g_slist_index (unique_instance->priv->dsn_list, info);
+		ret = g_slist_index (priv->dsn_list, info);
 
 	GDA_CONFIG_UNLOCK ();
 	return ret;
@@ -1615,7 +1592,8 @@ gda_config_get_dsn_info_at_index (gint index)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
-	ret = g_slist_nth_data (unique_instance->priv->dsn_list, index);
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
+	ret = g_slist_nth_data (priv->dsn_list, index);
 	GDA_CONFIG_UNLOCK ();
 	return ret;
 }
@@ -1635,7 +1613,8 @@ gda_config_can_modify_system_config (void)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
-	retval = unique_instance->priv->system_config_allowed;
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
+	retval = priv->system_config_allowed;
 	GDA_CONFIG_UNLOCK ();
 	return retval;
 }
@@ -1656,8 +1635,9 @@ gda_config_get_provider_info (const gchar *provider_name)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
-	if (!unique_instance->priv->providers_loaded) 
+	if (!priv->providers_loaded)
 		load_all_providers ();
 
 	if (!g_ascii_strcasecmp (provider_name, "MS Access")) {
@@ -1665,7 +1645,7 @@ gda_config_get_provider_info (const gchar *provider_name)
 		return gda_config_get_provider_info ("MSAccess");
 	}
 
-	for (list = unique_instance->priv->prov_list; list; list = list->next)
+	for (list = priv->prov_list; list; list = list->next)
 		if (!g_ascii_strcasecmp (((GdaProviderInfo*) list->data)->id, provider_name)) {
 			GDA_CONFIG_UNLOCK ();
 			return (GdaProviderInfo*) list->data;
@@ -1771,8 +1751,9 @@ gda_config_list_providers (void)
 	GDA_CONFIG_LOCK ();
 	if (!unique_instance)
 		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
-	if (!unique_instance->priv->providers_loaded) 
+	if (!priv->providers_loaded)
 		load_all_providers ();
 
 	model = gda_data_model_array_new_with_g_types (5,
@@ -1788,7 +1769,7 @@ gda_config_list_providers (void)
 	gda_data_model_set_column_title (model, 4, _("File"));
 	g_object_set_data (G_OBJECT (model), "name", _("List of installed providers"));
 
-	for (list = unique_instance->priv->prov_list; list; list = list->next) {
+	for (list = priv->prov_list; list; list = list->next) {
 		GdaProviderInfo *info = (GdaProviderInfo *) list->data;
 		GValue *value;
 		gint row;
@@ -1864,6 +1845,7 @@ load_all_providers (void)
 {
 	const gchar *dirname;
 	g_assert (unique_instance);
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
 	dirname = g_getenv ("GDA_TOP_BUILD_DIR");
 	if (dirname) {
@@ -1878,7 +1860,7 @@ load_all_providers (void)
 		load_providers_from_dir (str, FALSE);
 		g_free (str);
 	}
-	unique_instance->priv->providers_loaded = TRUE;
+	priv->providers_loaded = TRUE;
 
 	/* find SQLite provider, and instantiate it if not installed */
 	_gda_config_sqlite_provider = gda_config_get_provider ("SQLite", NULL);
@@ -1888,7 +1870,7 @@ load_all_providers (void)
 	}
 
 	/* sort providers by name */
-	unique_instance->priv->prov_list = g_slist_sort (unique_instance->priv->prov_list,
+	priv->prov_list = g_slist_sort (priv->prov_list,
 							 (GCompareFunc) internal_provider_sort_func);
 }
 
@@ -1987,6 +1969,10 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 	GError *err = NULL;
 	const gchar *name;
 
+	GDA_CONFIG_LOCK ();
+	if (!unique_instance)
+		gda_config_get ();
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 	/* read the plugin directory */
 #ifdef GDA_DEBUG
 	g_print ("Loading providers in %s\n", dirname);
@@ -2095,8 +2081,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 							       plugin_get_sub_icon_id ?
 							       plugin_get_sub_icon_id (*ptr) : NULL);
 				if (ip) {
-					unique_instance->priv->prov_list =
-						g_slist_prepend (unique_instance->priv->prov_list, ip);
+					priv->prov_list =
+						g_slist_prepend (priv->prov_list, ip);
 #ifdef GDA_DEBUG
 					g_print ("Loaded '%s' sub-provider\n", ((GdaProviderInfo*) ip)->id);
 #endif
@@ -2117,8 +2103,8 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 						       plugin_get_auth_spec ? plugin_get_auth_spec () : NULL,
 						       plugin_get_icon_id ? plugin_get_icon_id () : NULL);
 			if (ip) {
-				unique_instance->priv->prov_list =
-					g_slist_prepend (unique_instance->priv->prov_list, ip);
+				priv->prov_list =
+					g_slist_prepend (priv->prov_list, ip);
 #ifdef GDA_DEBUG
 				g_print ("Loaded '%s' provider\n", ((GdaProviderInfo*) ip)->id);
 #endif
@@ -2135,6 +2121,7 @@ load_providers_from_dir (const gchar *dirname, gboolean recurs)
 
 	/* free memory */
 	g_dir_close (dir);
+	GDA_CONFIG_UNLOCK ();
 }
 
 
@@ -2202,34 +2189,35 @@ reload_dsn_configuration (void)
 		/* object not yet created */
 		return;
 	}
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
 
         GDA_CONFIG_LOCK ();
 #ifdef GDA_DEBUG_NO
 	gboolean is_system = (mon == mon_conf_global) ? TRUE : FALSE;
 	g_print ("Reloading config files (%s config has changed)\n", is_system ? "global" : "user");
-	for (list = unique_instance->priv->dsn_list; list; list = list->next) {
+	for (list = priv->dsn_list; list; list = list->next) {
 		GdaDsnInfo *info = (GdaDsnInfo *) list->data;
 		g_print ("[info %p]: %s/%s\n", info, info->provider, info->name);
 	}
 #endif
-	current_dsn_list = unique_instance->priv->dsn_list;
-	unique_instance->priv->dsn_list = NULL;
+	current_dsn_list = priv->dsn_list;
+	priv->dsn_list = NULL;
 
-	unique_instance->priv->emit_signals = FALSE;
+	priv->emit_signals = FALSE;
 #ifdef HAVE_GIO
 	lock_notify_changes ();
 #endif
-	if (unique_instance->priv->system_file)
-		load_config_file (unique_instance->priv->system_file, TRUE);
-	if (unique_instance->priv->user_file)
-		load_config_file (unique_instance->priv->user_file, FALSE);
+	if (priv->system_file)
+		load_config_file (priv->system_file, TRUE);
+	if (priv->user_file)
+		load_config_file (priv->user_file, FALSE);
 #ifdef HAVE_GIO
 	unlock_notify_changes ();
 #endif
-	unique_instance->priv->emit_signals = TRUE;
+	priv->emit_signals = TRUE;
 
-	new_dsn_list = unique_instance->priv->dsn_list;
-	unique_instance->priv->dsn_list = current_dsn_list;
+	new_dsn_list = priv->dsn_list;
+	priv->dsn_list = current_dsn_list;
 	current_dsn_list = NULL;
 
 	/* handle new or updated DSN */
@@ -2240,9 +2228,9 @@ reload_dsn_configuration (void)
 		oinfo = gda_config_get_dsn_info (ninfo->name);
 		if (!oinfo) {
 			/* add ninfo */
-			unique_instance->priv->dsn_list = g_slist_insert_sorted (unique_instance->priv->dsn_list, ninfo,
+			priv->dsn_list = g_slist_insert_sorted (priv->dsn_list, ninfo,
 										 (GCompareFunc) data_source_info_compare);
-			if (unique_instance->priv->emit_signals)
+			if (priv->emit_signals)
 				g_signal_emit (unique_instance, gda_config_signals[DSN_ADDED], 0, ninfo);
 			g_hash_table_insert (hash, ninfo->name, (gpointer) 0x1);
 		}
@@ -2263,7 +2251,7 @@ reload_dsn_configuration (void)
 				tmp = *oinfo;
 				*oinfo = *ninfo;
 				*ninfo = tmp;
-				if (unique_instance->priv->emit_signals)
+				if (priv->emit_signals)
 					g_signal_emit (unique_instance, gda_config_signals[DSN_CHANGED], 0, oinfo);
 				gda_dsn_info_free (ninfo);
 			}
@@ -2273,17 +2261,17 @@ reload_dsn_configuration (void)
 	g_slist_free (new_dsn_list);
 
 	/* remove old DSN */
-	for (list = unique_instance->priv->dsn_list; list; ) {
+	for (list = priv->dsn_list; list; ) {
 		GdaDsnInfo *info;
 		info = (GdaDsnInfo *) list->data;
 		list = list->next;
 		if (g_hash_table_lookup (hash, info->name))
 			continue;
 
-		if (unique_instance->priv->emit_signals)
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_TO_BE_REMOVED], 0, info);
-		unique_instance->priv->dsn_list = g_slist_remove (unique_instance->priv->dsn_list, info);
-		if (unique_instance->priv->emit_signals)
+		priv->dsn_list = g_slist_remove (priv->dsn_list, info);
+		if (priv->emit_signals)
 			g_signal_emit (unique_instance, gda_config_signals[DSN_REMOVED], 0, info);
 		gda_dsn_info_free (info);
 	}

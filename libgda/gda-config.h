@@ -6,7 +6,7 @@
  * Copyright (C) 2003 Laurent Sansonetti <laurent@datarescue.be>
  * Copyright (C) 2003 - 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2005 Andrew Hill <andru@src.gnome.org>
- * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,13 +32,6 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_CONFIG            (gda_config_get_type())
-#define GDA_CONFIG(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONFIG, GdaConfig))
-#define GDA_CONFIG_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONFIG, GdaConfigClass))
-#define GDA_IS_CONFIG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONFIG))
-#define GDA_IS_CONFIG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONFIG))
-
-typedef struct _GdaConfigPrivate GdaConfigPrivate;
 typedef struct _GdaDsnInfo GdaDsnInfo;
 
 /* error reporting */
@@ -46,7 +39,7 @@ extern GQuark gda_config_error_quark (void);
 #define GDA_CONFIG_ERROR gda_config_error_quark ()
 
 typedef enum {
-        GDA_CONFIG_DSN_NOT_FOUND_ERROR,
+	GDA_CONFIG_DSN_NOT_FOUND_ERROR,
 	GDA_CONFIG_PERMISSION_ERROR,
 	GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
 	GDA_CONFIG_PROVIDER_CREATION_ERROR
@@ -161,13 +154,12 @@ GType            gda_provider_info_get_type  (void) G_GNUC_CONST;
  * gtk_init() calls setlocale().
  */
 
-struct _GdaConfig {
-	GObject           object;
-	GdaConfigPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaConfig, gda_config, GDA, CONFIG, GObject)
+
+#define GDA_TYPE_CONFIG (gda_config_get_type ())
 
 struct _GdaConfigClass {
-	GObjectClass      object_class;
+	GObjectClass      parent_class;
 
 	/* signals */
 	void   (*dsn_added)                 (GdaConfig *conf, GdaDsnInfo *new_dsn);
@@ -183,7 +175,6 @@ struct _GdaConfigClass {
 	void (*_gda_reserved4) (void);
 };
 
-GType              gda_config_get_type                 (void) G_GNUC_CONST;
 GdaConfig*         gda_config_get                      (void);
 
 GdaDsnInfo        *gda_config_get_dsn_info             (const gchar *dsn_name);
