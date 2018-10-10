@@ -2,6 +2,7 @@
  * Copyright (C) 2007 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2008 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,10 +30,20 @@
 #include "gda-report-document-private.h"
 #include <libgda/binreloc/gda-binreloc.h>
 
-struct _GdaReportDocumentPrivate {
+
+/* module error */
+GQuark gda_report_document_error_quark (void)
+{
+        static GQuark quark;
+        if (!quark)
+                quark = g_quark_from_static_string ("gda_report_document_error");
+        return quark;
+}
+
+typedef struct {
 	GdaReportEngine *engine;
 	xmlDocPtr        doc;
-};
+} GdaReportDocumentPrivate;
 
 /* properties */
 enum
@@ -42,8 +53,6 @@ enum
 	PROP_TEMPLATE,
 };
 
-static void gda_report_document_class_init (GdaReportDocumentClass *klass);
-static void gda_report_document_init       (GdaReportDocument *doc, GdaReportDocumentClass *klass);
 static void gda_report_document_dispose   (GObject *object);
 static void gda_report_document_set_property (GObject *object,
 						  guint param_id,
@@ -53,8 +62,8 @@ static void gda_report_document_get_property (GObject *object,
 						  guint param_id,
 						  GValue *value,
 						  GParamSpec *pspec);
-static GObjectClass *parent_class = NULL;
-#define CLASS(obj) (GDA_REPORT_DOCUMENT_CLASS (G_OBJECT_GET_CLASS (obj)))
+
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (GdaReportDocument, gda_report_document, G_TYPE_OBJECT)
 
 /*
  * GdaReportDocument class implementation
@@ -63,8 +72,6 @@ static void
 gda_report_document_class_init (GdaReportDocumentClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* report methods */
 	object_class->dispose = gda_report_document_dispose;
@@ -81,10 +88,7 @@ gda_report_document_class_init (GdaReportDocumentClass *klass)
 }
 
 static void
-gda_report_document_init (GdaReportDocument *doc, G_GNUC_UNUSED GdaReportDocumentClass *klass)
-{
-	doc->priv = g_new0 (GdaReportDocumentPrivate, 1);
-}
+gda_report_document_init (GdaReportDocument *doc) {}
 
 static void
 gda_report_document_dispose (GObject *object)
@@ -92,53 +96,21 @@ gda_report_document_dispose (GObject *object)
 	GdaReportDocument *doc = (GdaReportDocument *) object;
 
 	g_return_if_fail (GDA_IS_REPORT_DOCUMENT (doc));
+	GdaReportDocumentPrivate *priv = gda_report_document_get_instance_private (doc);
 
 	/* free memory */
-	if (doc->priv) {
-		if (doc->priv->doc) {
-			xmlFreeDoc (doc->priv->doc);
-			doc->priv->doc = NULL;
-		}
+	if (priv->doc) {
+		xmlFreeDoc (priv->doc);
+		priv->doc = NULL;
+	}
 
-		if (doc->priv->engine) {
-			g_object_unref (doc->priv->engine);
-			doc->priv->engine = NULL;
-		}
-
-		g_free (doc->priv);
-		doc->priv = NULL;
+	if (priv->engine) {
+		g_object_unref (priv->engine);
+		priv->engine = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-GType
-gda_report_document_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaReportDocumentClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_report_document_class_init,
-			NULL, NULL,
-			sizeof (GdaReportDocument),
-			0,
-			(GInstanceInitFunc) gda_report_document_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaReportDocument", &info, G_TYPE_FLAG_ABSTRACT);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
+	G_OBJECT_CLASS (gda_report_document_parent_class)->dispose (object);
 }
 
 static void
@@ -147,28 +119,28 @@ gda_report_document_set_property (GObject *object,
 				const GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportDocument *doc;
+	GdaReportDocument *doc;
 
-        doc = GDA_REPORT_DOCUMENT (object);
-        if (doc->priv) {
-                switch (param_id) {
+	doc = GDA_REPORT_DOCUMENT (object);
+	GdaReportDocumentPrivate *priv = gda_report_document_get_instance_private (doc);
+
+	switch (param_id) {
 		case PROP_ENGINE:
-			if (doc->priv->engine)
-				g_object_unref (doc->priv->engine);
-			doc->priv->engine = g_value_get_object (value);
-			if (doc->priv->engine)
-				g_object_ref (doc->priv->engine);
+			if (priv->engine)
+				g_object_unref (priv->engine);
+			priv->engine = g_value_get_object (value);
+			if (priv->engine)
+				g_object_ref (priv->engine);
 			break;
 		case PROP_TEMPLATE: 
-			if (doc->priv->doc)
-				xmlFreeDoc (doc->priv->doc);
-			doc->priv->doc = xmlParseFile (g_value_get_string (value));
+			if (priv->doc)
+				xmlFreeDoc (priv->doc);
+			priv->doc = xmlParseFile (g_value_get_string (value));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+	}
 }
 
 static void
@@ -177,21 +149,20 @@ gda_report_document_get_property (GObject *object,
 				GValue *value,
 				GParamSpec *pspec)
 {
-        GdaReportDocument *doc;
+	GdaReportDocument *doc;
 
-        doc = GDA_REPORT_DOCUMENT (object);
-        if (doc->priv) {
-		switch (param_id) {
+	doc = GDA_REPORT_DOCUMENT (object);
+	GdaReportDocumentPrivate *priv = gda_report_document_get_instance_private (doc);
+	switch (param_id) {
 		case PROP_ENGINE:
-			if (!doc->priv->engine) 
-				doc->priv->engine = gda_report_engine_new (NULL);
-			g_value_set_object (value, doc->priv->engine);
+			if (!priv->engine)
+				priv->engine = gda_report_engine_new (NULL);
+			g_value_set_object (value, priv->engine);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-		}
-        }
+	}
 }
 
 /**
@@ -250,19 +221,21 @@ _gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *fi
 	/* execute engine */
 	xmlNodePtr node, res;
 	xmlDocPtr res_doc;
-	if (!doc->priv->doc || !(node = xmlDocGetRootElement (doc->priv->doc))) {
-		g_set_error (error, 0, 0, "%s", 
+	GdaReportDocumentPrivate *priv = gda_report_document_get_instance_private (doc);
+
+	if (!priv->doc || !(node = xmlDocGetRootElement (priv->doc))) {
+		g_set_error (error, GDA_REPORT_DOCUMENT_ERROR, GDA_REPORT_DOCUMENT_GENERAL_ERROR, "%s",
 			     _("Document not specified"));
 		return FALSE;
 	}
-	g_object_set (G_OBJECT (doc->priv->engine), "spec", xmlCopyNode (node, 1), NULL);
-	res = gda_report_engine_run_as_node (doc->priv->engine, error);
+	g_object_set (G_OBJECT (priv->engine), "spec", xmlCopyNode (node, 1), NULL);
+	res = gda_report_engine_run_as_node (priv->engine, error);
 	if (!res) 
 		return FALSE;
-	node = xmlDocGetRootElement (doc->priv->doc);
+	node = xmlDocGetRootElement (priv->doc);
 	xmlUnlinkNode (node);
-	res_doc = xmlCopyDoc (doc->priv->doc, 1);
-	xmlDocSetRootElement (doc->priv->doc, node);
+	res_doc = xmlCopyDoc (priv->doc, 1);
+	xmlDocSetRootElement (priv->doc, node);
 	xmlDocSetRootElement (res_doc, res);
 
 	/* save document to a temp. XML file */
@@ -278,7 +251,7 @@ _gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *fi
 	FILE *file;
 	file = fdopen (fd, "w");
 	if (xmlDocDump (file, res_doc) < 0) {
-		g_set_error (error, 0, 0, "%s", 
+		g_set_error (error, GDA_REPORT_DOCUMENT_ERROR, GDA_REPORT_DOCUMENT_GENERAL_ERROR, "%s",
 			     _("Cannot create temporary file"));
 		DO_UNLINK (tmp_filename);
 		g_free (tmp_filename);
@@ -305,7 +278,7 @@ _gda_report_document_run_converter_argv (GdaReportDocument *doc, const gchar *fi
 	DO_UNLINK (tmp_filename);
 
 	if (exit_status != 0) {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_REPORT_DOCUMENT_ERROR, GDA_REPORT_DOCUMENT_GENERAL_ERROR,
 			     _("Execution of the %s program failed: %s"), converter_name, err);
 		g_free (out);
 		g_free (err);
@@ -340,13 +313,12 @@ gda_report_document_run_as_html (GdaReportDocument *doc, const gchar *filename, 
 	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (doc), FALSE);
 	g_return_val_if_fail (filename && *filename, FALSE);
 
-	if (CLASS (doc)->run_as_html)
-		return CLASS (doc)->run_as_html (doc, filename, error);
-	else {
-		g_set_error (error, 0, 0,
-			     _("This report document does not handle %s output"), "HTML");
-		return FALSE;
-	}
+	if (GDA_REPORT_DOCUMENT_CLASS (doc)->run_as_html)
+		return GDA_REPORT_DOCUMENT_CLASS (doc)->run_as_html (doc, filename, error);
+
+	g_set_error (error, GDA_REPORT_DOCUMENT_ERROR, GDA_REPORT_DOCUMENT_GENERAL_ERROR,
+		     _("This report document does not handle %s output"), "HTML");
+	return FALSE;
 }
 
 /**
@@ -365,10 +337,10 @@ gda_report_document_run_as_pdf (GdaReportDocument *doc, const gchar *filename, G
 	g_return_val_if_fail (GDA_IS_REPORT_DOCUMENT (doc), FALSE);
 	g_return_val_if_fail (filename && *filename, FALSE);
 
-	if (CLASS (doc)->run_as_pdf)
-		return CLASS (doc)->run_as_pdf (doc, filename, error);
+	if (GDA_REPORT_DOCUMENT_CLASS (doc)->run_as_pdf)
+		return GDA_REPORT_DOCUMENT_CLASS (doc)->run_as_pdf (doc, filename, error);
 	else {
-		g_set_error (error, 0, 0,
+		g_set_error (error, GDA_REPORT_DOCUMENT_ERROR, GDA_REPORT_DOCUMENT_GENERAL_ERROR,
 			     _("This report document does not handle %s output"), "PDF");
 		return FALSE;
 	}

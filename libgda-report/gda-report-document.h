@@ -5,6 +5,7 @@
  * Copyright (C) 2003 Santi Camps <santi@gnome-db.org>
  * Copyright (C) 2003 Santi Camps Taltavull <santi@src.gnome.org>
  * Copyright (C) 2007 - 2011 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,22 +29,20 @@
 #include <glib-object.h>
 #include <libxml/tree.h>
 
-#define GDA_TYPE_REPORT_DOCUMENT            (gda_report_document_get_type())
-#define GDA_REPORT_DOCUMENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_REPORT_DOCUMENT, GdaReportDocument))
-#define GDA_REPORT_DOCUMENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_REPORT_DOCUMENT, GdaReportDocumentClass))
-#define GDA_IS_REPORT_DOCUMENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_REPORT_DOCUMENT))
-#define GDA_IS_REPORT_DOCUMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPORT_DOCUMENT))
-
 G_BEGIN_DECLS
 
-typedef struct _GdaReportDocument      GdaReportDocument;
-typedef struct _GdaReportDocumentClass GdaReportDocumentClass;
-typedef struct _GdaReportDocumentPrivate GdaReportDocumentPrivate;
+/* error reporting */
+extern GQuark gda_report_document_error_quark (void);
+#define GDA_REPORT_DOCUMENT_ERROR gda_report_document_error_quark ()
 
-struct _GdaReportDocument {
-	GObject                   base;
-	GdaReportDocumentPrivate *priv;
-};
+typedef enum {
+	GDA_REPORT_DOCUMENT_GENERAL_ERROR
+} GdaReportDocumentError;
+
+
+
+#define GDA_TYPE_REPORT_DOCUMENT            (gda_report_document_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaReportDocument, gda_report_document, GDA, REPORT_DOCUMENT, GObject)
 
 struct _GdaReportDocumentClass {
 	GObjectClass              parent_class;
@@ -70,8 +69,6 @@ struct _GdaReportDocumentClass {
  * The #GdaReportDocument wraps the usage of a #GdaReportEngine for specific HTML or PDF targets. This class is
  * abstract (no instance be created directly), and one of its subclasses has to be used.
  */
-
-GType                 gda_report_document_get_type        (void) G_GNUC_CONST;
 
 void                  gda_report_document_set_template    (GdaReportDocument *doc, const gchar *file);
 gboolean              gda_report_document_run_as_html     (GdaReportDocument *doc, const gchar *filename, GError **error);
