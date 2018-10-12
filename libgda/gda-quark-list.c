@@ -368,17 +368,17 @@ name_is_protected (const gchar *name)
 void
 gda_quark_list_add_from_string (GdaQuarkList *qlist, const gchar *string, gboolean cleanup)
 {
-	gchar **arr;
-
 	g_return_if_fail (qlist != NULL);
-	if (!string || !*string)
-		return;
+	g_return_if_fail (string != NULL);
+	g_return_if_fail (g_strrstr (string, ";") != NULL);
+
+	gchar **arr;
 
 	if (cleanup)
 		gda_quark_list_clear (qlist);
 
-	arr = (gchar **) g_strsplit (string, ";", 0);
-	if (arr) {
+	arr = g_strsplit (string, ";", -1);
+	if (arr != NULL) {
 		guint n;
 		for (n = 0; arr[n] && (* (arr[n])); n++) {
 			gchar **pair;

@@ -115,11 +115,17 @@ struct _GdaProviderMetaInterface
                                          GError **error);
 
   /* _tables or _views */
-  GdaDataModel *(*tables_views)         (GdaProviderMeta *prov, GError **error);
-  GdaRow       *(*table_view)           (GdaProviderMeta *prov,
+  GdaDataModel *(*tables_columns)           (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*tables)         (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*table)           (GdaProviderMeta *prov,
                                          const gchar *table_catalog,
                                          const gchar *table_schema,
                                          const gchar *table_name_n, GError **error);
+  GdaDataModel *(*views)         (GdaProviderMeta *prov, GError **error);
+  GdaRow       *(*view)           (GdaProviderMeta *prov,
+                                         const gchar *view_catalog,
+                                         const gchar *view_schema,
+                                         const gchar *view_name_n, GError **error);
 
   /* _columns */
   GdaDataModel *(*columns)              (GdaProviderMeta *prov, GError **error);
@@ -136,12 +142,12 @@ struct _GdaProviderMetaInterface
                                          GError **error);
 
   /* _view_column_usage */
-  GdaDataModel *(*views_cols)           (GdaProviderMeta *prov, GError **error);
-  GdaDataModel *(*view_cols)            (GdaProviderMeta *prov,
+  GdaDataModel *(*views_columns)           (GdaProviderMeta *prov, GError **error);
+  GdaDataModel *(*view_columns)            (GdaProviderMeta *prov,
                                          const gchar *view_catalog,
                                          const gchar *view_schema,
                                          const gchar *view_name, GError **error);
-  GdaRow       *(*view_col)             (GdaProviderMeta *prov,
+  GdaRow       *(*view_column)             (GdaProviderMeta *prov,
                                          const gchar *view_catalog,
                                          const gchar *view_schema,
                                          const gchar *view_name,
@@ -320,14 +326,21 @@ GdaRow       *gda_provider_meta_schemata              (GdaProviderMeta *prov,
                               const gchar *catalog_name, const gchar *schema_name_n, GError **error);
 
 /* _tables or _views */
-GdaDataModel *gda_provider_meta_tables_views          (GdaProviderMeta *prov,
+GdaDataModel *gda_provider_meta_tables          (GdaProviderMeta *prov,
                               GError **error);
-GdaRow       *gda_provider_meta_table_view            (GdaProviderMeta *prov,
+GdaRow       *gda_provider_meta_table            (GdaProviderMeta *prov,
                               const gchar *table_catalog, const gchar *table_schema,
                               const gchar *table_name_n, GError **error);
+GdaDataModel *gda_provider_meta_views          (GdaProviderMeta *prov,
+                              GError **error);
+GdaRow       *gda_provider_meta_view            (GdaProviderMeta *prov,
+                              const gchar *view_catalog, const gchar *view_schema,
+                              const gchar *view_name_n, GError **error);
 
 /* _columns */
 GdaDataModel *gda_provider_meta_columns               (GdaProviderMeta *prov,
+                              GError **error);
+GdaDataModel *gda_provider_meta_tables_columns            (GdaProviderMeta *prov,
                               GError **error);
 GdaDataModel *gda_provider_meta_table_columns         (GdaProviderMeta *prov,
                               const gchar *table_catalog, const gchar *table_schema,
@@ -338,12 +351,12 @@ GdaRow       *gda_provider_meta_table_column          (GdaProviderMeta *prov,
                               const gchar *column_name, GError **error);
 
 /* _view_column_usage */
-GdaDataModel *gda_provider_meta_views_cols            (GdaProviderMeta *prov,
+GdaDataModel *gda_provider_meta_views_columns            (GdaProviderMeta *prov,
                               GError **error);
-GdaDataModel *gda_provider_meta_view_cols             (GdaProviderMeta *prov,
+GdaDataModel *gda_provider_meta_view_columns             (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name, GError **error);
-GdaRow       *gda_provider_meta_view_col   (GdaProviderMeta *prov,
+GdaRow       *gda_provider_meta_view_column   (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name,
                               const gchar *column_name,

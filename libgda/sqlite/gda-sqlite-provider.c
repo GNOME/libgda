@@ -443,12 +443,17 @@ static GdaDataModel *gda_sqlite_provider_meta_schematas             (GdaProvider
                               GError **error);
 static GdaRow       *gda_sqlite_provider_meta_schemata              (GdaProviderMeta *prov,
                               const gchar *catalog_name, const gchar *schema_name_n, GError **error);
-static GdaDataModel *gda_sqlite_provider_meta_tables_views          (GdaProviderMeta *prov,
+static GdaDataModel *gda_sqlite_provider_meta_tables          (GdaProviderMeta *prov,
                               GError **error);
-static GdaRow       *gda_sqlite_provider_meta_table_view            (GdaProviderMeta *prov,
+static GdaRow       *gda_sqlite_provider_meta_table            (GdaProviderMeta *prov,
                               const gchar *table_catalog, const gchar *table_schema,
                               const gchar *table_name_n, GError **error);
-static GdaDataModel *gda_sqlite_provider_meta_columns               (GdaProviderMeta *prov,
+static GdaDataModel *gda_sqlite_provider_meta_views          (GdaProviderMeta *prov,
+                              GError **error);
+static GdaRow       *gda_sqlite_provider_meta_view            (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_tables_columns               (GdaProviderMeta *prov,
                               GError **error);
 static GdaDataModel *gda_sqlite_provider_meta_table_columns         (GdaProviderMeta *prov,
                               const gchar *table_catalog, const gchar *table_schema,
@@ -457,12 +462,12 @@ static GdaRow       *gda_sqlite_provider_meta_table_column          (GdaProvider
                               const gchar *table_catalog, const gchar *table_schema,
                               const gchar *table_name,
                               const gchar *column_name, GError **error);
-static GdaDataModel *gda_sqlite_provider_meta_views_cols            (GdaProviderMeta *prov,
+static GdaDataModel *gda_sqlite_provider_meta_views_columns            (GdaProviderMeta *prov,
                               GError **error);
-static GdaDataModel *gda_sqlite_provider_meta_view_cols             (GdaProviderMeta *prov,
+static GdaDataModel *gda_sqlite_provider_meta_view_columns             (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name, GError **error);
-static GdaRow       *gda_sqlite_provider_meta_view_col   (GdaProviderMeta *prov,
+static GdaRow       *gda_sqlite_provider_meta_view_column   (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name,
                               const gchar *column_name,
@@ -476,6 +481,8 @@ static GdaRow       *gda_sqlite_provider_meta_constraint_table      (GdaProvider
                              const gchar *table_catalog, const gchar *table_schema,
                              const gchar *table_name,
                              const gchar *constraint_name_n, GError **error);
+static GdaDataModel *gda_sqlite_provider_meta_columns (GdaProviderMeta *prov,
+                             GError **error);
 static GdaDataModel *gda_sqlite_provider_meta_constraints_ref       (GdaProviderMeta *prov,
                              GError **error);
 static GdaDataModel *gda_sqlite_provider_meta_constraints_ref_table (GdaProviderMeta *prov,
@@ -559,14 +566,17 @@ gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface) {
   iface->character_set = gda_sqlite_provider_meta_character_set;
   iface->schematas = gda_sqlite_provider_meta_schematas;
   iface->schemata = gda_sqlite_provider_meta_schemata;
-  iface->tables_views = gda_sqlite_provider_meta_tables_views;
-  iface->table_view = gda_sqlite_provider_meta_table_view;
+  iface->tables_columns = gda_sqlite_provider_meta_tables_columns;
+  iface->tables = gda_sqlite_provider_meta_tables;
+  iface->table = gda_sqlite_provider_meta_table;
+  iface->views = gda_sqlite_provider_meta_views;
+  iface->view = gda_sqlite_provider_meta_view;
   iface->columns = gda_sqlite_provider_meta_columns;
   iface->table_columns = gda_sqlite_provider_meta_table_columns;
   iface->table_column = gda_sqlite_provider_meta_table_column;
-  iface->views_cols = gda_sqlite_provider_meta_views_cols;
-  iface->view_cols = gda_sqlite_provider_meta_view_cols;
-  iface->view_col = gda_sqlite_provider_meta_view_col;
+  iface->views_columns = gda_sqlite_provider_meta_views_columns;
+  iface->view_columns = gda_sqlite_provider_meta_view_columns;
+  iface->view_column = gda_sqlite_provider_meta_view_column;
   iface->constraints_tables = gda_sqlite_provider_meta_constraints_tables;
   iface->constraints_table = gda_sqlite_provider_meta_constraints_table;
   iface->constraint_table = gda_sqlite_provider_meta_constraint_table;
@@ -4465,22 +4475,22 @@ gda_sqlite_provider_meta_schemata (GdaProviderMeta *prov,
   return NULL;
 }
 static GdaDataModel*
-gda_sqlite_provider_meta_tables_views (GdaProviderMeta *prov,
+gda_sqlite_provider_meta_tables (GdaProviderMeta *prov,
                               GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
 
   return gda_provider_meta_execute_query (prov,
-        "SELECT name as 'Table', 'system' as 'Owner',"
+        "SELECT name, 'system' as 'Owner',"
         " ' ' as 'Description', sql as 'Definition' "
         "FROM (SELECT * FROM sqlite_master "
         "UNION ALL SELECT * FROM sqlite_temp_master) "
-        "WHERE name not like 'sqlite_%%' ORDER BY name",
+        "WHERE name not like 'sqlite_%%' AND type='table' ORDER BY name",
         NULL, error);
 }
 static GdaRow*
-gda_sqlite_provider_meta_table_view (GdaProviderMeta *prov,
+gda_sqlite_provider_meta_table (GdaProviderMeta *prov,
                               const gchar *table_catalog, const gchar *table_schema,
                               const gchar *table_name_n, GError **error)
 {
@@ -4507,8 +4517,58 @@ gda_sqlite_provider_meta_table_view (GdaProviderMeta *prov,
   return row;
 }
 static GdaDataModel*
+gda_sqlite_provider_meta_views (GdaProviderMeta *prov,
+                              GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+
+  return gda_provider_meta_execute_query (prov,
+        "SELECT name, 'system' as 'Owner',"
+        " ' ' as 'Description', sql as 'Definition' "
+        "FROM (SELECT * FROM sqlite_master "
+        "UNION ALL SELECT * FROM sqlite_temp_master) "
+        "WHERE name not like 'sqlite_%%' AND type='view' ORDER BY name",
+        NULL, error);
+}
+static GdaRow*
+gda_sqlite_provider_meta_view (GdaProviderMeta *prov,
+                              const gchar *table_catalog, const gchar *table_schema,
+                              const gchar *table_name_n, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  GdaRow *row;
+  GdaSet *params;
+
+  params = gda_set_new_inline (1, "name", G_TYPE_STRING, NULL);
+  gda_set_set_holder_value (params, error, "name", table_name_n, NULL);
+  if (*error != NULL) {
+    g_object_unref (params);
+    return NULL;
+  }
+
+  row = gda_provider_meta_execute_query_row (prov,
+          "SELECT name, 'system' as 'Owner',"
+          " ' ' as 'Description', sql as 'Definition' "
+          "FROM (SELECT * FROM sqlite_master UNION ALL "
+          "SELECT * FROM sqlite_temp_master) "
+          "WHERE name = ##name::string name not like 'sqlite_%%' AND type = 'view' ORDER BY name",
+          params, error);
+  g_object_unref (params);
+  return row;
+}
+static GdaDataModel*
 gda_sqlite_provider_meta_columns (GdaProviderMeta *prov,
                               GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
+  return NULL;
+}
+static GdaDataModel*
+gda_sqlite_provider_meta_tables_columns (GdaProviderMeta *prov,
+                                         GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4534,7 +4594,7 @@ gda_sqlite_provider_meta_table_column (GdaProviderMeta *prov,
   return NULL;
 }
 static GdaDataModel*
-gda_sqlite_provider_meta_views_cols (GdaProviderMeta *prov,
+gda_sqlite_provider_meta_views_columns (GdaProviderMeta *prov,
                               GError **error)
 {
   g_return_val_if_fail (prov, NULL);
@@ -4542,7 +4602,7 @@ gda_sqlite_provider_meta_views_cols (GdaProviderMeta *prov,
   return NULL;
 }
 static GdaDataModel*
-gda_sqlite_provider_meta_view_cols (GdaProviderMeta *prov,
+gda_sqlite_provider_meta_view_columns (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name, GError **error)
 {
@@ -4551,7 +4611,7 @@ gda_sqlite_provider_meta_view_cols (GdaProviderMeta *prov,
   return NULL;
 }
 static GdaRow*
-gda_sqlite_provider_meta_view_col   (GdaProviderMeta *prov,
+gda_sqlite_provider_meta_view_column   (GdaProviderMeta *prov,
                               const gchar *view_catalog, const gchar *view_schema,
                               const gchar *view_name,
                               const gchar *column_name,

@@ -27,70 +27,80 @@ typedef struct {
   GdaConnection *cnn;
 } CheckProviderMeta;
 
-void init_data (CheckProviderMeta *data, gconstpointer user_data);
-void finish_data (CheckProviderMeta *data, gconstpointer user_data);
-void test_iface (CheckProviderMeta *data, gconstpointer user_data);
+void test_iface (void);
 
 gint
 main (gint   argc,
       gchar *argv[])
 {
+  gchar *duri, *strc, *cstr, *db, *fpath;
+  const gchar *pdir;
+  GdaConnection *cnn;
+  GError *error = NULL;
+  GFile *dir, *dbf;
+  gint num = -1;
+
   setlocale (LC_ALL,"");
 
   gda_init ();
 
 
-  g_test_init (&argc,&argv,NULL);
-
-  g_test_add ("/gda/provider-meta/iface",
-              CheckProviderMeta,
-              NULL,
-              init_data,
-              test_iface,
-              finish_data);
-
-  return g_test_run();
-}
-
-void
-init_data (CheckProviderMeta *data, gconstpointer user_data) {
-  GString *strc, *cstr;
-  GdaConnection *cnn;
-  GError *error = NULL;
-  GFile *dir, *dbf;
-
-  dir = g_file_new_for_path (BUILD_DIR);
-  g_assert (g_file_query_exists (dir, NULL));
-  cstr = g_string_new ("");
-  g_string_printf (cstr, "%s/iter.db", g_file_get_uri (dir));
-  dbf = g_file_new_for_uri (cstr->str);
-  if (g_file_query_exists (dbf, NULL)) {
-    g_file_delete (dbf, NULL, &error);
-    if (error) {
-      g_print ("Error deleting DB file: %s", error->message != NULL ? error->message : "No detail");
-      g_assert_not_reached ();
-    }
+  gchar **penv = g_get_environ ();
+  pdir = g_environ_getenv (penv, "GDA_TOP_BUILD_DIR");
+  GRand *rand = g_rand_new ();
+  dir = g_file_new_for_path (pdir);
+  if (!g_file_query_exists (dir, NULL)) {
+    g_assert_not_reached ();
   }
-  g_object_unref (dbf);
 
-  strc = g_string_new ("");
-  g_string_printf (strc,"DB_DIR=%s;DB_NAME=iter", g_file_get_path (dir));
+  duri = g_file_get_uri (dir);
+  num = g_rand_int (rand);
+  db = g_strdup_printf ("test%d", num);
+  strc = g_strdup_printf ("%s/tests/test%d.db", duri, num);
+  g_free (duri);
+  dbf = g_file_new_for_uri (strc);
+  g_free (strc);
+  while (g_file_query_exists (dbf, NULL)) {
+    g_free (db);
+    num = g_rand_int (rand);
+    db = g_strdup_printf ("test%d", num);
+    strc = g_strdup_printf ("%s/tests/meta-store/test%d.db", duri, num);
+    g_object_unref (dbf);
+    dbf = g_file_new_for_uri (db);
+  }
+  g_free (duri);
+  fpath = g_strdup_printf ("%s/tests", pdir);
+  cstr = g_strdup_printf ("DB_NAME=%s;DB_DIR=%s", db, fpath);
 
+  g_message ("Initializing Connection");
   cnn = gda_connection_open_from_string ("SQLite",
-                                         strc->str,
+                                         cstr,
                                          NULL,
                                          GDA_CONNECTION_OPTIONS_NONE,
                                          &error);
 
-  g_string_free (strc, TRUE);
+  g_free (cstr);
+  g_free (fpath);
+  g_free (db);
+  g_object_unref (dbf);
 
   if (error) {
     g_print ("Error creating/opening database: %s", error->message != NULL ? error->message : "No detail");
     g_assert_not_reached ();
   }
-  g_print ("Initializing DB\n");
+  /* Initializing DB */
   gint rows = 0;
-  gda_connection_execute_non_select_command (cnn, "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)", &error);
+  gda_connection_execute_non_select_command (cnn, "CREATE TABLE countries (id INTEGER PRIMARY KEY, name TEXT)", &error);
+  if (error) {
+    g_print ("Error creating table users: %s", error->message != NULL ? error->message : "No detail");
+    g_assert_not_reached ();
+  }
+  gda_connection_execute_non_select_command (cnn, "CREATE TABLE cities (id INTEGER PRIMARY KEY, name TEXT, city INTEGER REFERENCES cities(id))", &error);
+  if (error) {
+    g_print ("Error creating table users: %s", error->message != NULL ? error->message : "No detail");
+    g_assert_not_reached ();
+  }
+  gda_connection_execute_non_select_command (cnn, "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, city INTEGER REFERENCES cities(id)", &error);
   if (error) {
     g_print ("Error creating table users: %s", error->message != NULL ? error->message : "No detail");
     g_assert_not_reached ();
@@ -113,20 +123,20 @@ init_data (CheckProviderMeta *data, gconstpointer user_data) {
     g_print ("Error inserting data into table users: %s", error->message != NULL ? error->message : "No detail");
     g_assert_not_reached ();
   }
-  data->cnn = cnn;
-}
+  /* Testing */
 
-
-void
-finish_data (CheckProviderMeta *data, gconstpointer user_data) {
-  g_object_unref (data->cnn);
-}
-
-
-void test_iface (CheckProviderMeta *data, gconstpointer user_data) {
-  GdaConnection *cnn = data->cnn;
-  GdaServerProvider *prov = gda_connection_get_provider (cnn);
+  GdaProviderMeta *prov = GDA_PROVIDER_META (gda_connection_get_provider (cnn));
+  GdaDataModel *model = NULL;
 
   g_assert (prov != NULL);
   g_assert (GDA_IS_PROVIDER_META (prov));
+  model = gda_provider_meta_tables (prov, &error);
+  if (model == NULL) {
+    g_message ("Error: %s", error->message);
+    g_assert_not_reached ();
+  }
+  g_assert (gda_data_model_get_n_rows (model) == 3);
+  g_message ("Tables:\n%s", gda_data_model_dump_as_string (model));
+  g_object_unref (cnn);
 }
+

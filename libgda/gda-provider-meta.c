@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
- * Boston, MA  02110-1301, USA.
  */
 #include <libgda/gda-provider-meta.h>
 #include <libgda/gda-connection.h>
@@ -543,31 +542,31 @@ gda_provider_meta_schemata (GdaProviderMeta *prov,
 
 /* _tables or _views */
 /**
- * gda_provider_meta_tables_views:
+ * gda_provider_meta_tables:
  *
  * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
 GdaDataModel*
-gda_provider_meta_tables_views (GdaProviderMeta *prov, GError **error)
+gda_provider_meta_tables (GdaProviderMeta *prov, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
-  if (iface->tables_views) {
-    return iface->tables_views (prov, error);
+  if (iface->tables) {
+    return iface->tables (prov, error);
   }
   return NULL;
 }
 /**
- * gda_provider_meta_table_view:
+ * gda_provider_meta_table:
  *
  * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
 GdaRow*
-gda_provider_meta_table_view (GdaProviderMeta *prov,
+gda_provider_meta_table (GdaProviderMeta *prov,
                                      const gchar *table_catalog,
                                      const gchar *table_schema,
                                      const gchar *table_name_n,
@@ -575,9 +574,48 @@ gda_provider_meta_table_view (GdaProviderMeta *prov,
 {
   g_return_val_if_fail (prov, NULL);
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
-  if (iface->table_view) {
-    return iface->table_view (prov, table_catalog,
+  if (iface->table) {
+    return iface->table (prov, table_catalog,
                               table_schema, table_name_n, error);
+  }
+  return NULL;
+}
+/**
+ * gda_provider_meta_views:
+ *
+ * Returns: (transfer full):
+ * Since: 6.0
+ * Stability: Unstable
+ */
+GdaDataModel*
+gda_provider_meta_views (GdaProviderMeta *prov, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
+  if (iface->views) {
+    return iface->views (prov, error);
+  }
+  return NULL;
+}
+/**
+ * gda_provider_meta_view:
+ *
+ * Returns: (transfer full):
+ * Since: 6.0
+ * Stability: Unstable
+ */
+GdaRow*
+gda_provider_meta_view (GdaProviderMeta *prov,
+                                     const gchar *view_catalog,
+                                     const gchar *view_schema,
+                                     const gchar *view_name_n,
+                                     GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
+  if (iface->view) {
+    return iface->view (prov, view_catalog,
+                              view_schema, view_name_n, error);
   }
   return NULL;
 }
@@ -601,6 +639,24 @@ gda_provider_meta_columns (GdaProviderMeta *prov, GError **error)
   return NULL;
 }
 
+/* _tables_column_usage */
+/**
+ * gda_provider_meta_tables_columns:
+ *
+ * Returns: (transfer full):
+ * Since: 6.0
+ * Stability: Unstable
+ */
+GdaDataModel*
+gda_provider_meta_tables_columns (GdaProviderMeta *prov, GError **error)
+{
+  g_return_val_if_fail (prov, NULL);
+  GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
+  if (iface->views_columns) {
+    return iface->views_columns (prov, error);
+  }
+  return NULL;
+}
 /**
  * gda_provider_meta_table_columns:
  *
@@ -650,31 +706,31 @@ gda_provider_meta_table_column (GdaProviderMeta *prov,
 
 /* _view_column_usage */
 /**
- * gda_provider_meta_views_cols:
+ * gda_provider_meta_views_columns:
  *
  * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
 GdaDataModel*
-gda_provider_meta_views_cols (GdaProviderMeta *prov, GError **error)
+gda_provider_meta_views_columns (GdaProviderMeta *prov, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
-  if (iface->views_cols) {
-    return iface->views_cols (prov, error);
+  if (iface->views_columns) {
+    return iface->views_columns (prov, error);
   }
   return NULL;
 }
 /**
- * gda_provider_meta_view_cols:
+ * gda_provider_meta_view_colums:
  *
  * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
 GdaDataModel*
-gda_provider_meta_view_cols (GdaProviderMeta *prov,
+gda_provider_meta_view_columns (GdaProviderMeta *prov,
                             const gchar *view_catalog,
                             const gchar *view_schema,
                             const gchar *view_name,
@@ -682,21 +738,21 @@ gda_provider_meta_view_cols (GdaProviderMeta *prov,
 {
   g_return_val_if_fail (prov, NULL);
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
-  if (iface->view_cols) {
-    return iface->view_cols (prov, view_catalog,
+  if (iface->view_columns) {
+    return iface->view_columns (prov, view_catalog,
                              view_schema, view_name, error);
   }
   return NULL;
 }
 /**
- * gda_provider_meta_view_col:
+ * gda_provider_meta_view_column:
  *
  * Returns: (transfer full):
  * Since: 6.0
  * Stability: Unstable
  */
 GdaRow*
-gda_provider_meta_view_col (GdaProviderMeta *prov,
+gda_provider_meta_view_column (GdaProviderMeta *prov,
                             const gchar *view_catalog,
                             const gchar *view_schema,
                             const gchar *view_name,
@@ -705,8 +761,8 @@ gda_provider_meta_view_col (GdaProviderMeta *prov,
 {
   g_return_val_if_fail (prov, NULL);
   GdaProviderMetaInterface *iface = GDA_PROVIDER_META_GET_IFACE (prov);
-  if (iface->view_col) {
-    return iface->view_col (prov, view_catalog,
+  if (iface->view_column) {
+    return iface->view_column (prov, view_catalog,
                             view_schema, view_name, column_name, error);
   }
   return NULL;
