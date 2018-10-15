@@ -85,7 +85,10 @@ struct _GdaProviderInterface
   GObject            *(* statement_execute)   (GdaProvider *provider, GdaConnection *cnc,
                                                GdaStatement *stmt, GdaSet *params,
                                                GdaStatementModelUsage model_usage,
-                                               GType *col_types, GdaSet **last_inserted_row, GError **error);
+                                               GType *col_types, GdaSet **last_inserted_row,
+                                               GError **error);
+  GdaSet             *(* get_last_inserted)    (GdaProvider *provider, GdaConnection *cnc,
+                                               GError **error);
 
   /* Padding for future expansion */
   gpointer padding[12];
@@ -149,6 +152,8 @@ GObject            *gda_provider_statement_execute     (GdaProvider *provider, G
                                                         GdaStatement *stmt, GdaSet *params,
                                                         GdaStatementModelUsage model_usage,
                                                         GType *col_types, GdaSet **last_inserted_row,
+                                                        GError **error);
+GdaSet             *gda_provider_get_last_inserted     (GdaProvider *provider, GdaConnection *cnc,
                                                         GError **error);
 
 G_END_DECLS

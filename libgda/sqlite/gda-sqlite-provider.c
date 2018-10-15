@@ -66,6 +66,7 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-provider-meta.h>
+#include <libgda/gda-provider.h>
 
 #define FILE_EXTENSION ".db"
 static gchar *get_table_nth_column_name (GdaServerProvider *prov, GdaConnection *cnc, const gchar *table_name, gint pos);
@@ -334,6 +335,8 @@ static gchar               *gda_sqlite_provider_escape_string (GdaServerProvider
 							       const gchar *string);
 static gchar               *gda_sqlite_provider_unescape_string (GdaServerProvider *provider, GdaConnection *cnc,
 								 const gchar *string);
+GdaSet                     *gda_sqlite_provider_get_last_inserted (GdaServerProvider *provider,
+                 GdaConnection *cnc, GError **error);
 
 /*
  * private connection data destroy
@@ -600,6 +603,102 @@ gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface) {
   iface->index_table = gda_sqlite_provider_meta_index_table;
   iface->index_cols = gda_sqlite_provider_meta_index_cols;
   iface->index_col = gda_sqlite_provider_meta_index_col;
+}
+
+static const gchar        *gda_sqlite_provider_iface_get_name              (GdaProvider *provider);
+static const gchar        *gda_sqlite_provider_iface_get_version           (GdaProvider *provider);
+static const gchar        *gda_sqlite_provider_iface_get_server_version    (GdaProvider *provider, GdaConnection *cnc);
+static gboolean            gda_sqlite_provider_iface_supports_feature      (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaConnectionFeature feature);
+static GdaSqlParser       *gda_sqlite_provider_iface_create_parser         (GdaProvider *provider, GdaConnection *cnc); /* may be NULL */
+static GdaConnection      *gda_sqlite_provider_iface_create_connection     (GdaProvider *provider);
+static GdaDataHandler     *gda_sqlite_provider_iface_get_data_handler      (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                                                        GType g_type, const gchar *dbms_type);
+static const gchar        *gda_sqlite_provider_iface_get_def_dbms_type     (GdaProvider *provider, GdaConnection *cnc,
+                                                        GType g_type); /* may be NULL */
+static gboolean            gda_sqlite_provider_iface_supports_operation    (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaServerOperationType type, GdaSet *options);
+static GdaServerOperation *gda_sqlite_provider_iface_create_operation      (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaServerOperationType type, GdaSet *options,
+                                                        GError **error);
+static gchar              *gda_sqlite_provider_iface_render_operation      (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaServerOperation *op, GError **error);
+static gchar              *gda_sqlite_provider_iface_statement_to_sql      (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaStatement *stmt, GdaSet *params,
+                                                        GdaStatementSqlFlag flags,
+                                                        GSList **params_used, GError **error);
+static gchar              *gda_sqlite_provider_iface_identifier_quote      (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                                                        const gchar *id,
+                                                        gboolean for_meta_store, gboolean force_quotes);
+static GdaSqlStatement    *gda_sqlite_provider_iface_statement_rewrite     (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaStatement *stmt, GdaSet *params, GError **error);
+static gboolean            gda_sqlite_provider_iface_open_connection       (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean            gda_sqlite_provider_iface_prepare_connection          (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaQuarkList *params, GdaQuarkList *auth);
+static gboolean            gda_sqlite_provider_iface_close_connection      (GdaProvider *provider, GdaConnection *cnc);
+static gchar              *gda_sqlite_provider_iface_escape_string         (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *str); /* may be NULL */
+static gchar              *gda_sqlite_provider_iface_unescape_string       (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *str); /* may be NULL */
+static gboolean            gda_sqlite_provider_iface_perform_operation     (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                                                        GdaServerOperation *op, GError **error);
+static gboolean            gda_sqlite_provider_iface_begin_transaction     (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GdaTransactionIsolation level,
+                                                        GError **error);
+static gboolean            gda_sqlite_provider_iface_commit_transaction    (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_iface_rollback_transaction  (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_iface_add_savepoint         (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_iface_rollback_savepoint    (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_iface_delete_savepoint      (GdaProvider *provider, GdaConnection *cnc,
+                                                        const gchar *name, GError **error);
+static gboolean            gda_sqlite_provider_iface_statement_prepare     (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaStatement *stmt, GError **error);
+static GObject            *gda_sqlite_provider_iface_statement_execute     (GdaProvider *provider, GdaConnection *cnc,
+                                                        GdaStatement *stmt, GdaSet *params,
+                                                        GdaStatementModelUsage model_usage,
+                                                        GType *col_types, GdaSet **last_inserted_row,
+                                                        GError **error);
+static GdaSet             *gda_sqlite_provider_iface_get_last_inserted     (GdaProvider *provider, GdaConnection *cnc,
+                                                        GError **error);
+
+
+static void
+gda_sqlite_provider_iface_init (GdaProviderInterface *iface)
+{
+  iface->get_name = gda_sqlite_provider_iface_get_name;
+  iface->get_version = gda_sqlite_provider_iface_get_version;
+  iface->get_server_version = gda_sqlite_provider_iface_get_server_version;
+  iface->supports_feature = gda_sqlite_provider_iface_supports_feature;
+  iface->create_parser = gda_sqlite_provider_iface_create_parser;
+  iface->create_connection = gda_sqlite_provider_iface_create_connection;
+  iface->get_data_handler = gda_sqlite_provider_iface_get_data_handler;
+  iface->get_def_dbms_type = gda_sqlite_provider_iface_get_def_dbms_type;
+  iface->supports_operation = gda_sqlite_provider_iface_supports_operation;
+  iface->create_operation = gda_sqlite_provider_iface_create_operation;
+  iface->render_operation = gda_sqlite_provider_iface_render_operation;
+  iface->statement_to_sql = gda_sqlite_provider_iface_statement_to_sql;
+  iface->identifier_quote = gda_sqlite_provider_iface_identifier_quote;
+  iface->statement_rewrite = gda_sqlite_provider_iface_statement_rewrite;
+  iface->open_connection = gda_sqlite_provider_iface_open_connection;
+  iface->prepare_connection = gda_sqlite_provider_iface_prepare_connection;
+  iface->close_connection = gda_sqlite_provider_iface_close_connection;
+  iface->escape_string = gda_sqlite_provider_iface_escape_string;
+  iface->unescape_string = gda_sqlite_provider_iface_unescape_string;
+  iface->perform_operation = gda_sqlite_provider_iface_perform_operation;
+  iface->begin_transaction = gda_sqlite_provider_iface_begin_transaction;
+  iface->commit_transaction = gda_sqlite_provider_iface_commit_transaction;
+  iface->rollback_transaction = gda_sqlite_provider_iface_rollback_transaction;
+  iface->add_savepoint = gda_sqlite_provider_iface_add_savepoint;
+  iface->rollback_savepoint = gda_sqlite_provider_iface_rollback_savepoint;
+  iface->delete_savepoint = gda_sqlite_provider_iface_delete_savepoint;
+  iface->statement_prepare = gda_sqlite_provider_iface_statement_prepare;
+  iface->statement_execute = gda_sqlite_provider_iface_statement_execute;
+  iface->get_last_inserted = gda_sqlite_provider_iface_get_last_inserted;
 }
 
 /*
@@ -904,6 +1003,12 @@ gda_sqlite_provider_get_type (void)
 				NULL
 			};
 			g_type_add_interface_static (type, GDA_TYPE_PROVIDER_META, &ifaceinfo);
+			static GInterfaceInfo ifaceproviderinfo = {
+				(GInterfaceInitFunc) gda_sqlite_provider_iface_init,
+				NULL,
+				NULL
+			};
+			g_type_add_interface_static (type, GDA_TYPE_PROVIDER, &ifaceproviderinfo);
 		}
 		g_mutex_unlock (&registering);
 	}
@@ -4829,4 +4934,185 @@ gda_sqlite_provider_meta_index_col (GdaProviderMeta *prov,
   return NULL;
 }
 
+/* GdaProvider Implementation */
+
+const gchar*
+gda_sqlite_provider_iface_get_name (GdaProvider *provider) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+const gchar*
+gda_sqlite_provider_iface_get_version (GdaProvider *provider) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+const gchar*
+gda_sqlite_provider_iface_get_server_version (GdaProvider *provider, GdaConnection *cnc) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+gboolean
+gda_sqlite_provider_iface_supports_feature (GdaProvider *provider, GdaConnection *cnc,
+                               GdaConnectionFeature feature) {
+  g_return_val_if_fail (provider, TRUE);
+  return TRUE;
+}
+GdaSqlParser*
+gda_sqlite_provider_iface_create_parser (GdaProvider *provider, GdaConnection *cnc) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+} /* may be NULL */
+GdaConnection*
+gda_sqlite_provider_iface_create_connection (GdaProvider *provider) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+GdaDataHandler*
+gda_sqlite_provider_iface_get_data_handler (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                                    GType g_type, const gchar *dbms_type) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+const gchar*
+gda_sqlite_provider_iface_get_def_dbms_type (GdaProvider *provider, GdaConnection *cnc,
+                                    GType g_type) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+} /* may be NULL */
+gboolean
+gda_sqlite_provider_iface_supports_operation (GdaProvider *provider, GdaConnection *cnc,
+                                    GdaServerOperationType type, GdaSet *options) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+GdaServerOperation*
+gda_sqlite_provider_iface_create_operation (GdaProvider *provider, GdaConnection *cnc,
+                                    GdaServerOperationType type, GdaSet *options,
+                                    GError **error) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+gchar*
+gda_sqlite_provider_iface_render_operation (GdaProvider *provider, GdaConnection *cnc,
+                                    GdaServerOperation *op, GError **error) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+gchar*
+gda_sqlite_provider_iface_statement_to_sql (GdaProvider *provider, GdaConnection *cnc,
+                               GdaStatement *stmt, GdaSet *params,
+                               GdaStatementSqlFlag flags,
+                               GSList **params_used, GError **error) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+gchar*
+gda_sqlite_provider_iface_identifier_quote (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                               const gchar *id,
+                               gboolean for_meta_store, gboolean force_quotes) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+GdaSqlStatement*
+gda_sqlite_provider_iface_statement_rewrite (GdaProvider *provider, GdaConnection *cnc,
+                                GdaStatement *stmt, GdaSet *params, GError **error) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+gboolean
+gda_sqlite_provider_iface_open_connection (GdaProvider *provider, GdaConnection *cnc,
+                              GdaQuarkList *params, GdaQuarkList *auth) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_prepare_connection (GdaProvider *provider, GdaConnection *cnc,
+                                 GdaQuarkList *params, GdaQuarkList *auth) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_close_connection (GdaProvider *provider, GdaConnection *cnc) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gchar*
+gda_sqlite_provider_iface_escape_string (GdaProvider *provider, GdaConnection *cnc,
+                            const gchar *str) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+} /* may be NULL */
+gchar*
+gda_sqlite_provider_iface_unescape_string (GdaProvider *provider, GdaConnection *cnc,
+                              const gchar *str) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+} /* may be NULL */
+gboolean
+gda_sqlite_provider_iface_perform_operation (GdaProvider *provider, GdaConnection *cnc, /* may be NULL */
+                                GdaServerOperation *op, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_begin_transaction (GdaProvider *provider, GdaConnection *cnc,
+                                const gchar *name, GdaTransactionIsolation level,
+                                GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_commit_transaction (GdaProvider *provider, GdaConnection *cnc,
+                                 const gchar *name, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_rollback_transaction (GdaProvider *provider, GdaConnection *cnc,
+                                   const gchar *name, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_add_savepoint (GdaProvider *provider, GdaConnection *cnc,
+                            const gchar *name, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_rollback_savepoint (GdaProvider *provider, GdaConnection *cnc,
+                                 const gchar *name, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_delete_savepoint (GdaProvider *provider, GdaConnection *cnc,
+                               const gchar *name, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+gboolean
+gda_sqlite_provider_iface_statement_prepare (GdaProvider *provider, GdaConnection *cnc,
+                                GdaStatement *stmt, GError **error) {
+  g_return_val_if_fail (provider, FALSE);
+  return FALSE;
+}
+GObject*
+gda_sqlite_provider_iface_statement_execute (GdaProvider *provider, GdaConnection *cnc,
+                                GdaStatement *stmt, GdaSet *params,
+                                GdaStatementModelUsage model_usage,
+                                GType *col_types, GdaSet **last_inserted_row,
+                                GError **error) {
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
+
+GdaSet*
+gda_sqlite_provider_iface_get_last_inserted (GdaProvider *provider,
+                                GdaConnection *cnc,
+                                GError **error)
+{
+  g_return_val_if_fail (provider, NULL);
+  return NULL;
+}
 

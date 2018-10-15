@@ -500,3 +500,26 @@ gda_provider_statement_execute (GdaProvider *provider, GdaConnection *cnc,
   }
   return NULL;
 }
+
+/**
+ * gda_provider_get_last_inserted:
+ * @provider: a #GdaProvider object
+ * @cnc: a #GdaConnection to get last inserted from
+ * @error: a place to put errors
+ *
+ * This command should be called inmediately called after a INSERT SQL command
+ *
+ * Return: (transfer full): a #GdaSet with all data of the last inserted row
+ */
+GdaSet*
+gda_provider_get_last_inserted (GdaProvider *provider,
+                                GdaConnection *cnc,
+                                GError **error)
+{
+  g_return_val_if_fail (provider, NULL);
+  GdaProviderInterface *iface = GDA_PROVIDER_GET_IFACE (provider);
+  if (iface->get_last_inserted) {
+    return iface->get_last_inserted (provider, cnc, error);
+  }
+  return NULL;
+}

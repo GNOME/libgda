@@ -723,7 +723,7 @@ gda_provider_meta_views_columns (GdaProviderMeta *prov, GError **error)
   return NULL;
 }
 /**
- * gda_provider_meta_view_colums:
+ * gda_provider_meta_view_columns:
  *
  * Returns: (transfer full):
  * Since: 6.0

@@ -273,11 +273,6 @@ gda_init (void)
 
 	g_free (file);
 
-  /* Initializing global GdaConfig */
-  GdaConfig *config = gda_config_get ();
-  g_assert (config != NULL);
-  g_object_unref (config);
-
   initialized = TRUE;
 	g_mutex_unlock (&init_mutex);
 }
