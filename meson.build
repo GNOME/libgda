@@ -223,6 +223,13 @@ if soup_dep.found() and get_option('with-libsoup')
   libgda_dep += [soup_dep]
 endif
 
+
+libsecret_dep = dependency('libsecret-1', required: false)
+if libsecret_dep.found() and get_option('with-libsecret')
+  libgda_dep += [libsecret_dep]
+  c_args += '-DHAVE_LIBSECRET'
+endif
+
 if get_option('enable-debug')
   c_args += '-DGDA_DEBUG'
 endif

@@ -500,7 +500,8 @@ secret_password_found_cb (GObject *source_object, GAsyncResult *res, gchar *dsnn
 	gchar *auth;
 	GError *error = NULL;
 	auth = secret_password_lookup_finish (res, &error);
-        if (auth) {
+	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
+	if (auth) {
 		GdaDsnInfo *dsn;
 		dsn = gda_config_get_dsn_info (dsnname);
 		if (dsn) {
