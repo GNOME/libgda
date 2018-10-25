@@ -3226,6 +3226,7 @@ fill_blob_data (GdaConnection *cnc, GdaSet *params,
 		}
 		g_object_unref (select);
 	}
+	g_object_unref (stmt);
 
 	/* actual blob filling */
 	GSList *list;

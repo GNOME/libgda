@@ -259,7 +259,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
  * Note: if that statement has been modified since the creation of @pstmt, then this method
  * will return %NULL
  *
- * Returns: (transfer none): the #GdaStatement
+ * Returns: (transfer full): the #GdaStatement
  */
 GdaStatement *
 gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
@@ -268,8 +268,6 @@ gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
 	g_rec_mutex_lock (& pstmt->priv->mutex);
 	GdaStatement *stmt;
 	stmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
-	if (stmt)
-		g_object_unref (stmt);
 	g_rec_mutex_unlock (& pstmt->priv->mutex);
 	return stmt;
 }

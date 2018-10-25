@@ -778,8 +778,10 @@ gda_data_select_set_property (GObject *object,
 				g_object_ref (model->prep_stmt);
 				sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
 				if (sel_stmt &&
-				    gda_statement_get_statement_type (sel_stmt) == GDA_SQL_STATEMENT_SELECT)
+				    gda_statement_get_statement_type (sel_stmt) == GDA_SQL_STATEMENT_SELECT) {
 					model->priv->sh->sel_stmt = gda_statement_copy (sel_stmt);
+					g_object_unref (sel_stmt);
+						}
 			}
 			create_columns (model);
 			break;
@@ -1187,6 +1189,7 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 	}
 
 	model->priv->sh->sel_stmt = gda_statement_copy (sel_stmt);
+	g_object_unref (sel_stmt);
 	return model->priv->sh->sel_stmt;
 }
 
