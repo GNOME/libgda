@@ -43,6 +43,7 @@ main (gint   argc,
   setlocale (LC_ALL,"");
 
   gda_init ();
+  g_assert_not_reached ();
 
 
   gchar **penv = g_get_environ ();

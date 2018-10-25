@@ -126,6 +126,7 @@ tchkpm = executable('check_pmodel',
 	install: false
 	)
 test('PModel', tchkpm,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -197,6 +198,7 @@ tchkvcnc = executable('check_vcnc',
 	install: false
 	)
 test('VirtualConnection', tchkvcnc,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()

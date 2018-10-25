@@ -43,6 +43,7 @@ tchkmstsqlite = executable('check_meta_store_sqlite',
 	install: false
 	)
 test('MetaStoreSqlite', tchkmstsqlite,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -66,6 +67,7 @@ tchkmstspg = executable('check_meta_store_postgresql',
 	install: false
 	)
 test('MetaStorePostgres', tchkmstspg,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -89,9 +91,9 @@ tchkmstsmysql = executable('check_meta_store_mysql',
 	install: false
 	)
 test('MetaStoreMySQL', tchkmstsmysql,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
-
