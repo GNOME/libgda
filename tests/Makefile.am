@@ -110,12 +110,12 @@ test_server_operation_LDADD = \
         $(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)
 
-test_provider_meta_SOURCES = \
-        test-provider-meta.c
+# test_provider_meta_SOURCES = \
+#         test-provider-meta.c
 
-test_provider_meta_LDADD = \
-        $(top_builddir)/libgda/libgda-6.0.la \
-        $(COREDEPS_LIBS)
+# test_provider_meta_LDADD = \
+#         $(top_builddir)/libgda/libgda-6.0.la \
+#         $(COREDEPS_LIBS)
 
 EXTRA_DIST = dbstruct.xml
 
