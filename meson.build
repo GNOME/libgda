@@ -98,6 +98,16 @@ if sqlite_dep.found()
 	endif
 endif
 
+
+sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4.1', required: false)
+sqlcipher_internal = true
+if sqlcipher_dep.found() and get_option('system-sqlcipher')
+	sqlcipher_table_column_metadata = compiler.find_library('sqlcipher_table_column_metadata', required: false)
+	if sqlcipher_table_column_metadata.found()
+		sqlcipher_internal = false
+	endif
+endif
+
 if sqlite_internal
 	ldl = compiler.find_library('dl')
 endif
@@ -217,6 +227,8 @@ libcryp_config = find_program('libcryp-config', required : false)
 if libcryp_config.found()
   conf.set('HAVE_LIBCRYPT_CONFIG', 1)
 endif
+
+libcrypto_dep = dependency('libcrypto', version : '>=1.1', required: false)
 
 soup_dep = dependency('libsoup-2.4', required: false)
 if soup_dep.found() and get_option('with-libsoup')

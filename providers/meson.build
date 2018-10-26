@@ -4,6 +4,10 @@ subdir('reuseable')
 subdir('sqlite')
 subdir('skel-implementation')
 
+if libcrypto_dep.found ()
+subdir('sqlcipher')
+endif
+
 if postgres_dep.found()
 subdir('postgres')
 endif

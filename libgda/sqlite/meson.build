@@ -20,7 +20,7 @@ sqlitehanderbinc = files([
 sqlitehanderbinh = files([
 	'gda-sqlite-handler-bin.h'
 	])
-sqlitesources = files([
+sqlitesources_provider = files([
 	'gda-sqlite-blob-op.c',
 	'gda-sqlite-blob-op.h',
 	'gda-sqlite-ddl.c',
@@ -41,6 +41,8 @@ sqlitesources = files([
 	'gda-symbols-util.h',
 	'gda-symbols-util.c'
 	])
+sqlitesources = []
+sqlitesources += sqlitesources_provider
 sqlitesources += sqliteheaders
 sqlitesources += xml_embeddedh
 sqlitesources += sqlitehanderbinc
@@ -69,3 +71,32 @@ else
 endif
 
 sqlite_cargs += ['-DSEARCH_LIB_PATH="'+sqlite_path+'"']
+
+if libcrypto_dep.found ()
+sqlcipher_deps = []
+
+sqlcipher_sources = []
+sqlcipher_sources += sqlitesources_provider
+sqlcipher_sources += sqliteheaders
+sqlcipher_sources += sqlitehanderbinc
+sqlcipher_sources += sqlitehanderbinh
+
+sqlcipher_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DPNAME="SQLCipher"', '-DCLASS_PREFIX="GdaSQLCipher"',
+		'-DSTATIC_SQLITE', '-DSQLITE_HAS_CODEC'
+	]
+
+sqlcipher_path = ''
+if sqlcipher_internal
+else
+	sqlcipher_path = sqlcipher_dep.get_pkgconfig_variable('libdir')
+	sqlcipher_cargs += ['-DHAVE_SQLITE']
+	sqlcipher_deps += sqlcipher_dep
+endif
+
+
+sqlcipher_cargs += ['-DSEARCH_LIB_PATH="'+sqlcipher_path+'"']
+
+endif

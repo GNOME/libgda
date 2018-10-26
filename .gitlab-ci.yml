@@ -21,6 +21,7 @@ variables:
                 libxslt1-dev
                 libjson-glib-dev
                 libgcrypt20-dev
+                libssl-dev
                 libldap2-dev
                 libgoocanvas-2.0-dev
                 libhsqldb1.8.0-java
