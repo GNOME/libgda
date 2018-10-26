@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES = libgda-test-6.0.la
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation test-provider-meta
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation test-provider-meta
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation
 
 if HAVE_UI
 UI_EXTENSION = ui

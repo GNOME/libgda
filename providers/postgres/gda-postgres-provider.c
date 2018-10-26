@@ -855,15 +855,8 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
 		g_free (file);
 	}
 
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
 
-  if (!file) 
-    file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
+  file = g_strdup_printf ("/spec/postgres/%s.raw.xml", str);
 
   op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, 
                                            "op-type", type, 
