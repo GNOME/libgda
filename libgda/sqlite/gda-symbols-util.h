@@ -83,6 +83,7 @@ typedef struct {
 	void *(*sqlite3_malloc)(int);
 	char * (*sqlite3_mprintf)(const char*,...);
 	int  (*sqlite3_open)(const char*,sqlite3**);
+	int  (*sqlite3_open_v2)(const char *filename, sqlite3 **ppDb, int flags, const char *zVfs);
 	int  (*sqlite3_prepare)(sqlite3*,const char*,int,sqlite3_stmt**,const char**);
 	int (*sqlite3_prepare_v2)(sqlite3*,const char*,int,sqlite3_stmt**,const char**);
 

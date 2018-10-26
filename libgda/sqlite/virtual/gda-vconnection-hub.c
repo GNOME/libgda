@@ -89,7 +89,7 @@ gda_vconnection_hub_dispose (GObject *object)
 	if (cnc->priv) {
 		gda_connection_close ((GdaConnection *) cnc, NULL);
 		if (cnc->priv->hub_connections) {
-			g_slist_free_full (cnc->priv->hub_connections, hub_connection_free);
+			g_slist_free_full (cnc->priv->hub_connections, (GDestroyNotify) hub_connection_free);
 			cnc->priv->hub_connections = NULL;
 		}
 		if (cnc->priv->internal_parser)

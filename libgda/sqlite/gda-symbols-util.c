@@ -238,6 +238,8 @@ load_symbols (GModule *module)
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_open", (gpointer*) &(s3r->sqlite3_open)))
 		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_open_v2", (gpointer*) &(s3r->sqlite3_open_v2)))
+		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_prepare", (gpointer*) &(s3r->sqlite3_prepare)))
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_prepare_v2", (gpointer*) &(s3r->sqlite3_prepare_v2)))

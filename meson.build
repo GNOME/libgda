@@ -89,11 +89,11 @@ lbdb_cargs = []
 # 	endif
 # endforeach
 
-sqlite_dep = dependency ('sqlite3', version: '>= 3.6.11', required: false)
+sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: false)
 sqlite_internal = true
 if sqlite_dep.found()
-	sqlite3_table_column_metadata = compiler.find_library('sqlite3_table_column_metadata', required: false)
-	if sqlite3_table_column_metadata.found()
+	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata', required: false)
+	if not sqlite3_table_column_metadata
 		sqlite_internal = false
 	endif
 endif
@@ -102,15 +102,13 @@ endif
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4.1', required: false)
 sqlcipher_internal = true
 if sqlcipher_dep.found() and get_option('system-sqlcipher')
-	sqlcipher_table_column_metadata = compiler.find_library('sqlcipher_table_column_metadata', required: false)
-	if sqlcipher_table_column_metadata.found()
+	sqlcipher_table_column_metadata = compiler.find_function('sqlcipher_table_column_metadata', required: false)
+	if sqlcipher_table_column_metadata
 		sqlcipher_internal = false
 	endif
 endif
 
-if sqlite_internal
-	ldl = compiler.find_library('dl')
-endif
+ldl = compiler.find_library('dl', required: false)
 
 sed = find_program('sed')
 compile_resources = find_program('glib-compile-resources')

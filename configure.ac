@@ -731,7 +731,7 @@ else
         	[use_syst_sqlite=$enableval], [use_syst_sqlite="yes"])
 
 	if test "x$use_syst_sqlite" = "xyes"; then
-		SQLITE_MODULES="sqlite3 >= 3.6.11"
+		SQLITE_MODULES="sqlite3 >= 3.22.0"
 		PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
 		if test x"$have_sqlite" = "xyes"
 		then

@@ -73,6 +73,7 @@ libgda_sqlite_provider = library ('gda-sqlite-'+project_api_version,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
+		'-I'+join_paths(get_option ('prefix'), get_option('includedir'))
 		],
 	link_with: libgda,
 	install: true,
