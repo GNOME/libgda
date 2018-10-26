@@ -72,9 +72,6 @@ AC_CHECK_FUNCS(localtime_r localtime_s)
 AC_CHECK_HEADER(sys/mman.h,
     AC_CHECK_FUNC(mlock, [AC_DEFINE(USE_MLOCK, 1, [Use POSIX memory locking])]))
 
-GDA_BUILDDATE=`date -u -r ChangeLog '+%F'`
-AC_SUBST(GDA_BUILDDATE, $GDA_BUILDDATE)
-
 dnl **********************
 dnl Cross compilation test
 dnl **********************
@@ -989,7 +986,6 @@ doc/Makefile
 doc/C/Makefile
 doc/C/libgda.types
 doc/C/version.xml
-doc/C/builddate.xml
 data/Makefile
 stamp.h
 ])
@@ -1000,8 +996,6 @@ dnl Dirty work to be able to build documentation
 chmod -R u+w ${srcdir}/doc/C
 cp doc/C/version.xml ${srcdir}/doc/C/version.xml.tmp
 mv ${srcdir}/doc/C/version.xml.tmp ${srcdir}/doc/C/version.xml
-cp doc/C/builddate.xml ${srcdir}/doc/C/builddate.xml.tmp
-mv ${srcdir}/doc/C/builddate.xml.tmp ${srcdir}/doc/C/builddate.xml
 
 cp ${srcdir}/doc/C/libgda-sections.txt doc/C/libgda-5.0-sections.txt
 echo "" >> doc/C/libgda-5.0-sections.txt

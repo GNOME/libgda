@@ -54,7 +54,7 @@ endif
 MKDB_OPTIONS=--sgml-mode --output-format=xml --name-space=gda --ignore-files="parser.c delimiter.c binreloc.c libcsv.c md5c.c providers tools control-center tests tmp samples plugins"
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
-content_files = fdl-appendix.sgml version.xml builddate.xml
+content_files = fdl-appendix.sgml version.xml
 
 # Images to copy into HTML directory
 HTML_IMAGES = DataModels.png \
@@ -85,7 +85,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	DataModels.svg \
 	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
 	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
-	version.xml.in builddate.xml.in \
+	version.xml.in \
 	visual_index.xml prov-notes.xml \
 	libgda-sections.txt libgda-ui-sections.txt libgda.types libgda.types.in libgda-ui.types \
 	examples/blobtest.c \

@@ -1,4 +1,4 @@
-.TH gda-sql 1 "@GDA_BUILDDATE@" "Version @PACKAGE_VERSION@" "LIBGDA Manual Pages"
+.TH gda-sql 1 "" "Version @PACKAGE_VERSION@" "LIBGDA Manual Pages"
 
 .SH NAME
 gda-sql - an SQL console based on Libgda

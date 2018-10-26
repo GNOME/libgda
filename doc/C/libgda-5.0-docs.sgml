@@ -3,7 +3,6 @@
      "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
 <!ENTITY copy           "The GNOME Foundation">
 <!ENTITY version SYSTEM "version.xml">
-<!ENTITY builddate SYSTEM "builddate.xml">
 <!ENTITY LIBGDA          "<application>Libgda</application>">
 <!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
 <!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
@@ -98,7 +97,6 @@
         </contrib>
       </author>
     </authorgroup>
-    <date>&builddate;</date>
     <copyright>
       <year>1999 - 2011</year>
       <holder>&copy;</holder>
