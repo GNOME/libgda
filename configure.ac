@@ -728,7 +728,7 @@ then
 else
 	AC_ARG_ENABLE(system-sqlite,
 		AS_HELP_STRING([--enable-system-sqlite], [Use SQLite installed on the system [default=no]]),
-        	[use_syst_sqlite=$enableval], [use_syst_sqlite="no"])
+        	[use_syst_sqlite=$enableval], [use_syst_sqlite="yes"])
 
 	if test "x$use_syst_sqlite" = "xyes"; then
 		SQLITE_MODULES="sqlite3 >= 3.6.11"
