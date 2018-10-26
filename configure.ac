@@ -492,11 +492,6 @@ fi
 
 AM_CONDITIONAL(ENABLE_GDAUI_GI, [test x$disable_gdaui_gi != xyes])
 
-AC_ARG_ENABLE([gi-system-install],
-    AS_HELP_STRING([--enable-gi-system-install[=@<:@no/auto/yes@:>@]], [Install GObject Introspection files along with system installed files [default=yes]]),
-    [enable_gi_system_install=$enableval],[enable_gi_system_install=yes])
-AM_CONDITIONAL(ENABLE_GI_SYSTEM_INSTALL, [test x"$enable_gi_system_install" = "xyes"])
-
 dnl ******************************
 dnl Check for Vala Compiler
 dnl ******************************
