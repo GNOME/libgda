@@ -1,6 +1,6 @@
 if HAVE_SQLITE
 SUBDIRS=
-sqlitelibs= 
+sqlitelibs= $(SQLITE_LIBS)
 sqliteinc= $(SQLITE_CFLAGS)
 else
 SUBDIRS= sqlite-src
