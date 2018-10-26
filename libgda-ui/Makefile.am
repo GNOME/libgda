@@ -239,13 +239,8 @@ Gdaui_6_0_gir_FILES = $(addprefix $(srcdir)/,$(introspection_sources))
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/libgda
 INTROSPECTION_GIRS += Gdaui-6.0.gir
 
-if ENABLE_GI_SYSTEM_INSTALL
-girdir = $(INTROSPECTION_GIRDIR)
-typelibsdir = $(INTROSPECTION_TYPELIBDIR)
-else
 girdir = $(datadir)/gir-1.0
 typelibsdir = $(libdir)/girepository-1.0
-endif
 
 gir_DATA = $(INTROSPECTION_GIRS)
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
