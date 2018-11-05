@@ -25,8 +25,8 @@
 #include <gmodule.h>
 #include "gda-ddl-base.h"
 #include "gda-ddl-buildable.h"
-#include "gda-connection.h"
 #include "gda-meta-struct.h"
+#include "gda-server-operation.h"
 
 
 G_BEGIN_DECLS

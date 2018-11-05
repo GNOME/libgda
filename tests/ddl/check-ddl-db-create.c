@@ -57,8 +57,6 @@ test_ddl_db_create_start(CheckCreatedb *self,
 
   g_assert_nonnull (self->xmlfile);
 
-  self->creator = gda_ddl_creator_new();
-
   self->cnc = gda_connection_new_from_string ("SQLite",
                                               "DB_DIR=.;DB_NAME=ddl_test_create",
                                               NULL,
@@ -70,6 +68,10 @@ test_ddl_db_create_start(CheckCreatedb *self,
   gboolean res = gda_connection_open (self->cnc,NULL);
   g_assert_true (res);
 
+  self->creator = gda_connection_create_ddl_creator (self->cnc);
+
+  g_assert_nonnull (self->creator);
+
   res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
   g_assert_true (res);
 
@@ -80,7 +82,6 @@ test_ddl_db_create_start(CheckCreatedb *self,
   g_assert_true (res);
   
   res = gda_ddl_creator_perform_operation (self->creator,
-                                           self->cnc,
                                            NULL);
   g_assert_true (res);
 }
