@@ -40,7 +40,8 @@ libgda_ui_headers = files([
 	'gdaui-rt-editor.h',
 	'gdaui-server-operation.h',
 	'gdaui-tree-store.h',
-	'gdaui-plugin.h'
+	'gdaui-plugin.h',
+        'libgda-ui.h'
 	])
 
 libgda_ui_sources = files([
@@ -128,6 +129,8 @@ gdaui_enums = gnome_module.mkenums_simple('gdaui-enum-types',
 	)
 libgda_ui_sources_all += gdaui_enums
 
+install_headers(libgda_ui_headers,
+        install_dir: join_paths(get_option('includedir'), project_package,'libgda-ui') )
 
 libgdaui = library('gda-ui-'+project_api_version,
 	libgda_ui_sources_all,
