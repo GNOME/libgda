@@ -1,3 +1,7 @@
+libgda-5.2.7 2018-11-07
+ - SQLite provider uses system installed one by default
+ - Revome build's date from documentation
+ - introspection: removed system install in favor of --prefix
 
 libgda-5.2.6 2018-10-03
  - Fixed compilation on MacOS
