@@ -59,8 +59,8 @@ GList*          gda_ddl_table_get_fkeys         (GdaDdlTable *self);
 void            gda_ddl_table_append_column     (GdaDdlTable *self,
                                                  GdaDdlColumn *column);
 
-gboolean        gda_ddl_table_is_temp           (GdaDdlTable *self);
-void            gda_ddl_table_set_temp          (GdaDdlTable *self,
+gboolean        gda_ddl_table_get_is_temp       (GdaDdlTable *self);
+void            gda_ddl_table_is_temp           (GdaDdlTable *self,
                                                  gboolean istemp);
 
 gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
