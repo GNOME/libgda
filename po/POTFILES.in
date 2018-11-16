@@ -259,6 +259,8 @@ providers/sqlite/sqlite_specs_drop_table.xml.in
 providers/sqlite/sqlite_specs_drop_view.xml.in
 providers/sqlite/sqlite_specs_dsn.xml.in
 providers/sqlite/sqlite_specs_rename_table.xml.in
+providers/sqlite/sqlite_specs_add_fkey.xml.in
+providers/sqlite/sqlite_specs_drop_fkey.xml.in
 providers/web/gda-web-ddl.c
 providers/web/gda-web-meta.c
 providers/web/gda-web-provider.c
