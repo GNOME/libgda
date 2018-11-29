@@ -84,7 +84,9 @@ endif
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
-HTML_IMAGES=
+HTML_IMAGES= vi-basic-form.png vi-cloud.png vi-combo.png vi-data-entry.png vi-filter.png \
+            vi-info.png vi-login.png vi-provider-selector.png vi-raw-grid.png vi-rte.png \
+            vi-server-op.png
 
 # Extra files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.xml building.xml changes-2.0.xml

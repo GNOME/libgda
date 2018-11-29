@@ -36,17 +36,6 @@ gda_html_images = files([
 	'tree-overview2.png',
 	'SqlIdentifiers.png',
 	'thread-wrapper.png',
-	'vi-basic-form.png',
-	'vi-combo.png',
-	'vi-data-entry.png',
-	'vi-login.png',
-	'vi-cloud.png',
-	'vi-provider-selector.png',
-	'vi-raw-grid.png',
-	'vi-info.png',
-	'vi-filter.png',
-	'vi-server-op.png',
-	'vi-rte.png',
 	'connection-status.png'
 	])
 
