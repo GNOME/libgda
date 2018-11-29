@@ -344,7 +344,7 @@ gda_ddl_table_set_comment (GdaDdlTable *self,
 }
 
 /**
- * gda_ddl_table_set_temp:
+ * gda_ddl_table_set_is_temp:
  * @self: a #GdaDdlTable object
  * @istemp: Set if the table should be temporary
  *
@@ -353,8 +353,8 @@ gda_ddl_table_set_comment (GdaDdlTable *self,
  * Since: 6.0
  */
 void
-gda_ddl_table_set_temp (GdaDdlTable *self,
-                        gboolean istemp)
+gda_ddl_table_set_is_temp (GdaDdlTable *self,
+                           gboolean istemp)
 {
   g_return_if_fail (self);
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
@@ -463,7 +463,7 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
  * Since: 6.0
  */
 gboolean
-gda_ddl_table_is_temp (GdaDdlTable *self)
+gda_ddl_table_get_is_temp (GdaDdlTable *self)
 {
   g_return_val_if_fail (GDA_IS_DDL_TABLE(self), FALSE);
 
