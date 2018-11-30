@@ -5616,7 +5616,7 @@ msgid ""
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
 "Användarnamn, som ett DN eller enkelt användarnamn, för Active Directory kan "
-"det vara användarnamn@DOMÄN eller DOMÄN\användarnamn"
+"det vara användarnamn@DOMÄN eller DOMÄN\\användarnamn"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
