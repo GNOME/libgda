@@ -16,16 +16,16 @@
       <ulink role="online-location" url="https://gitlab.gnome.org/GNOME/libgda/pipelines">https://gitlab.gnome.org/GNOME/libgda/pipelines</ulink>,
       from latest successful pipeline build.
     </releaseinfo>
+    <xi:include href="author-list.xml"/>
   </bookinfo>
 
+  <part id="Getting Started">
+    <title>Getting Started</title>
+    <xi:include href="xml/libgda.xml"/>
+  </part>
 
   <part id="api">
     <title>API Reference</title>
-
-    <chapter id="Getting Started">
-      <title>Getting Started</title>
-      <xi:include href="xml/libgda.xml"/>
-    </chapter>
 
     <chapter id="Connection">
       <title>Connection</title>

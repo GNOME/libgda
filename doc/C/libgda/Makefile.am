@@ -89,7 +89,7 @@ EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration
 	version.xml.in builddate.xml.in \
 	visual_index.xml prov-notes.xml \
 	examples/blobtest.c \
-	data-model-writing.xml ddl-creator.xml
+	data-model-writing.xml ddl-creator.xml author-list.xml
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types

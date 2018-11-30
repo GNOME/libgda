@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE authorgroup PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+
+<!ENTITY igalia          '<emphasis><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></emphasis>'>
+<!ENTITY xobas           '<emphasis><ulink url="http://www.xobas.com">Xobas Software</ulink></emphasis>'>
+]>
+
+<authorgroup>
+  <author>
+    <firstname>Michael</firstname>
+    <surname>Lausch</surname>
+    <affiliation>
+      <address><email>michael.lausch@1012surf.net</email></address>
+    </affiliation>
+  </author>
+  <author>
+    <firstname>Rodrigo</firstname>
+    <surname>Moya</surname>
+    <affiliation>
+      <address><email>rodrigo@gnome-db.org</email></address>
+    </affiliation>
+  </author>
+  <author role="clean up">
+    <firstname>Sean</firstname>
+    <surname>Allen</surname>
+    <affiliation>
+      <address><email>zeroone@worldonline.co.za</email></address>
+    </affiliation>
+    <contrib>GDP compliance, FDL, added mark-up, English and syntax</contrib>
+  </author>
+  <author>
+    <firstname>Xabier</firstname>
+    <surname>Rodriguez Calvar</surname>
+    <affiliation>
+      <orgname>&igalia;</orgname>
+      <address><email>xrcalvar@igalia.com</email></address>
+    </affiliation>
+    <contrib>How to begin and migration formulae</contrib>
+  </author>
+  <author>
+    <firstname>Jose</firstname>
+    <surname>Dapena Paz</surname>
+    <affiliation>
+      <orgname>&igalia;</orgname>
+      <address><email>jdapena@igalia.com</email></address>
+    </affiliation>
+    <contrib>Some examples</contrib>
+  </author>
+  <author>
+    <firstname>Bas</firstname>
+    <surname>Driessen</surname>
+    <affiliation>
+      <orgname>&xobas;</orgname>
+      <address><email>bas.driessen@xobas.com</email></address>
+    </affiliation>
+    <contrib>libgda, gda-postgres, gda-mysql</contrib>
+  </author>
+  <author>
+    <firstname>Daniel</firstname>
+    <surname>Espinosa Ortiz</surname>
+    <affiliation>
+      <orgname></orgname>
+      <address><email>esodan@gmail.com</email></address>
+    </affiliation>
+    <contrib>libgda, Vala, GObject Introspection, Current maintainer</contrib>
+  </author>
+  <author>
+    <firstname>Pavlo</firstname>
+    <surname>Solntsev</surname>
+    <affiliation>
+      <address><email>p.sun.fun@gmail.com</email></address>
+    </affiliation>
+    <contrib>libgda</contrib>
+  </author>
+  <author>
+    <firstname>Vivien</firstname>
+    <surname>Malerba</surname>
+    <affiliation>
+      <address><email>malerba@gnome-db.org</email></address>
+    </affiliation>
+    <contrib>libgda, libgdaui</contrib>
+  </author>
+</authorgroup>
