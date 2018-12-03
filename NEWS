@@ -1,9 +1,14 @@
-libgda-5.2.7 2018-11-07
+libgda 5.2.8 2018-12-03
+ - Fix a typo on sv translation
+ - Please note: releases 5.2.6 and 5.2.7 were unable to be published at
+   downdload.gnome.org
+
+libgda 5.2.7 2018-11-07
  - SQLite provider uses system installed one by default
  - Revome build's date from documentation
  - introspection: removed system install in favor of --prefix
 
-libgda-5.2.6 2018-10-03
+libgda 5.2.6 2018-10-03
  - Fixed compilation on MacOS
  - All Vala bindings and Vala extensions are built by default using --enable-vala,
    added --disable* switch to disable some or all of them
@@ -421,7 +426,7 @@ libgda 4.1.7, 2010-06-27
  - Corrected memory leak in SQLite provider
  - Renamed configure.in to configure.ac
  - Corrections in the Gda-Sql tool regarding username and password
- - Misc. corrections: connection locking issues, honor the 
+ - Misc. corrections: connection locking issues, honor the
    GDA_EASY_CREATE_TABLE_UNIQUE_FLAG flag, some optimizations
  - Documentation corrections, and code cleanups
  - Translations:
@@ -641,7 +646,7 @@ libgda 3.99.6, 2008-11-10
  - better control of exported symbols in the final library and providers
  - better binreloc behaviour in 64 bits
  - use custom marshallers for GError, GType and GValue in signals (bug #555905)
- - bug fixes: #541991, #546339, #555905, #556258, #556327, #556960, #529794 (Johannes Schmid, 
+ - bug fixes: #541991, #546339, #555905, #556258, #556327, #556960, #529794 (Johannes Schmid,
    Massimo Cora', Vivien Malerba)
  - Translations:
 	- es (Jorge Gonzalez)
@@ -692,8 +697,8 @@ libgda 3.99.4, 2008-09-16
 libgda 3.99.3, 2008-07-06
 
  This version includes:
- - lots of bug fixed, memory leaks fixes and general performance improvements 
-   (Murray Cumming, Daniel Espinosa, Cygwin Ports maintainer, Phil Longstaff, 
+ - lots of bug fixed, memory leaks fixes and general performance improvements
+   (Murray Cumming, Daniel Espinosa, Cygwin Ports maintainer, Phil Longstaff,
    Carlos Savoretti, Johannes Schmid, Yuriy Penkin, Vivien Malerba)
  - MySQL support starting to work again (Carlos Savoretti)
  - documentation improvements
@@ -796,7 +801,7 @@ libgda 3.1.1, 2007-09-02
  - New code examples (BDB usage, virtual connections)
  - New command line tool (similar to psql)
  - Reworked reports engine (breaks API -- the previous implemention did not work)
- - Bug fixes: #432798, #432798, #433687, #316698, #449725, #450043, #454896, #467273 (Armin Burgmeier, 
+ - Bug fixes: #432798, #432798, #433687, #316698, #449725, #450043, #454896, #467273 (Armin Burgmeier,
    Marc-Andre Lureau, Piotr Pokora, Vivien Malerba)
  - Translations:
 	- ar (Djihed Afifi)
@@ -816,23 +821,23 @@ libgda 3.0.0, 2007-04-20
  - removed dependecy and test for popt (Baris Cicek)
  - fixed SQLite provider's error reporting, and implemented the get_last_insert_id() virtuel
    method (Vivien Malerba)
- - fixed MySQL's provider error where the same column would be reported several times in 
+ - fixed MySQL's provider error where the same column would be reported several times in
    the TABLE_FIELDS schema (Vivien Malerba)
  - fixed a misbehaviour in the data model import of XML files (Vivien Malerba)
  - docs improvements
  - removed ambiguities in the source files: mention LGPL everywhere in the library, and
    GPL for the executables (Murray Cumming)
  - allow dictionary XML file to specify its own DTD file (Vivien Malerba)
- - Bug fixes: #421986, #421986, #420306, #410200, #427605, #407908, #417249 (Carsten Clark, Baris Cicek, 
+ - Bug fixes: #421986, #421986, #420306, #410200, #427605, #407908, #417249 (Carsten Clark, Baris Cicek,
    Vivien Malerba
  - Translations:
 	- dz (Pema Geyleg)
 	- lt (Gintautas Miliauskas)
 	- ar (Djihed Afifi)
- 
+
 libgda 2.99.6, 2007-03-23
 
- - Merged several libraries into one for efficiency and because of inter-dependencies (yselkowitz, 
+ - Merged several libraries into one for efficiency and because of inter-dependencies (yselkowitz,
    Gustavo R. Montesino, Christopher Taylor)
  - More explicit API function names (Murray Cumming)
  - Applications can now check installed DBMS providers (yselkowitz)
@@ -854,28 +859,28 @@ libgda 2.99.6, 2007-03-23
 
 libgda 2.99.5, 2007-02-12
 
- - Correct a linker error when using the (recently renamed to) 
+ - Correct a linker error when using the (recently renamed to)
    gda_query_field_value_get_is_parameter() function.
-   I'm doing a quick extra release because I imagine that the effects of using 
+   I'm doing a quick extra release because I imagine that the effects of using
    an implicitly-declared function could be odd.
- 
+
 libgda 2.99.4, 2007-02-12
 
  - GdaQuery: Renamed gda_query_is_modif_query() to gda_query_is_modify_query().
    (Murray Cumming)
- - GdaQueryFieldValue: Added the is_parameter property 
+ - GdaQueryFieldValue: Added the is_parameter property
    (Daniel Espinosa)
  - GdaEntityField: Renamed get_data_type() vfunc to get_dict_type().
    (Daniel Espinosa)
  - GdaQueryField: Renamed get_data_type() vfunc to get_dict_type().
    (Daniel Espinosa)
- - GdaObject: Added the option for GdaObject sub-classes to copy the 
+ - GdaObject: Added the option for GdaObject sub-classes to copy the
    "name" property to the "id" one if the "id" is not set (used by the GdaParameter object)
    (Vivien Malerba)
  - GdaDataModelQuery:
    - Correctly detect when it's not possible to get information about columns.
-   - Added a "use_transaction" property to allow the object to start a transaction before 
-     running the modification SQL queries and to end it afterwards (so all the modifications are atomic). 
+   - Added a "use_transaction" property to allow the object to start a transaction before
+     running the modification SQL queries and to end it afterwards (so all the modifications are atomic).
    (Vivien Malerba)
  - GdaDataModel: Added "reset" signal, emitted when the data model has completely changed.
    (Vivien Malerba)
@@ -886,9 +891,9 @@ libgda 2.99.4, 2007-02-12
    (Vivien Malerba)
  - Improvements to _new() functions for language bindings, such as C++:
    GdaParameterList,  (Johannes Schmid, Openismus)
- - Make type checks more flexible, allowing use of derived GTypes by 
+ - Make type checks more flexible, allowing use of derived GTypes by
    language bindings: (Armin Burgmeier, Openismus)
- - Use enum types instead of guint or gulong for flags, matching the 
+ - Use enum types instead of guint or gulong for flags, matching the
    conventions used in GTK+, and making the API clearer: GdaQuery, GdaObjectRef
    (Murray Cumming, Openismus)
  - Use specific types for property and signal parameter registrations, and use specific signal marshallers.
@@ -918,13 +923,13 @@ libgda 2.99.3, 2007-01-23
    - Win32 build fixes. (yselkowitz, Bug #314732)
    - Darwin (MacOS X) build fixes. (Min Sik Kim, Bug #382933)
  - GdaConfig: Handle the GDA_DSN_LIST_IN_MEMORY environment variable.
-   When defined, initial DSN list will be loaded from the filename specified 
-   in that environment variable, and the DSN list modifications will not be 
+   When defined, initial DSN list will be loaded from the filename specified
+   in that environment variable, and the DSN list modifications will not be
    written to a file. (Vivien Malerba)
- - GdaQueryFieldValue: can now render parameters in SQL with the :param_name 
+ - GdaQueryFieldValue: can now render parameters in SQL with the :param_name
    syntax, as used by Oracle. (Vivien Malerba)
  - GdaBlobOp: New object, for improved blob handling. (Vivien Malerba)
- - GdaQuarkList: gda_quark_list_add_from_string(): 
+ - GdaQuarkList: gda_quark_list_add_from_string():
    Prevent a crash when the connection string has a final ; character.
    (Andrea Zagli, Bug #317831)
  - GdaQuery:
@@ -933,7 +938,7 @@ libgda 2.99.3, 2007-01-23
  - GdaQueryFieldField: The field_name property is now readable. (Vivien Malerba)
  - GdaServerProvider:
    - Added the escape_string() and unescape_string() virtual methods. (Vivien Malerba)
-   - Removed unimplemented gda_server_provider_create_blob() and 
+   - Removed unimplemented gda_server_provider_create_blob() and
      gda_server_provider_fetch_blob_by_id() functions.  (Murray Cumming)
  - Removed unused "prop" properties. (Murray Cumming)
  - Spelling and grammar corrections. (Clytie Siddall, bug #352122)
@@ -948,7 +953,7 @@ libgda 2.99.3, 2007-01-23
        (Vivien Malerba)
    - Oracle: Major improvments, including blob handling. (Vivien Malerba)
    - Postgres
-     - Fix failure of current transaction when trying to delete a 
+     - Fix failure of current transaction when trying to delete a
      nonexisting blob Oid
      - Improved GdaBinary handling.
      (Vivien Malerba)
@@ -1007,7 +1012,7 @@ libgda 1.9.103, 2006-09-03
 --------------------------
 
  - Added Data Definition queries to be handled by the providers as no SQL standard exists
-   in this area (for the PostgreSQL, MySQL and SQLite providers which now implement database 
+   in this area (for the PostgreSQL, MySQL and SQLite providers which now implement database
    creation and destruction, table creation and destruction, table renaming, and column addition
    and removal) (Vivien, Bas)
  - Reworked the database creation and destruction in a simpler way, and updated the API (Vivien)
@@ -1607,7 +1612,7 @@ libgda 0.9, 2002-12-10
    provider (holger)
  - Fixed #97669 (holger (FreeTDS part), rodrigo (Oracle part))
  - Updated translations:
-        - cs (Michal Bukovjan)	
+        - cs (Michal Bukovjan)
 	- de (cneumair)
 	- es (pablodc)
 	- ms (sebol)
@@ -1896,4 +1901,4 @@ libgda 0.8.100, 2002-01-06
  - extended test suite with new connection tests (Gonzalo)
  - fixed #67242 orbit-idl not generating files when IDL changes (Gonzalo)
  - fixed lost-counter in data retrieval (Gonzalo)
- 
+
