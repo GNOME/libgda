@@ -116,7 +116,6 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	have_all_java=yes
 	if test -z "$JAVA_PROG"; then have_all_java=no; fi
 	if test -z "$JAVAC"; then have_all_java=no; fi
-	if test -z "$JAVAH"; then have_all_java=no; fi
 	if test -z "$JAR"; then have_all_java=no; fi
 	if test ${have_all_java} = no; then
 	    AC_MSG_WARN([one or more Java tools are missing (JRE is not sufficient)])
