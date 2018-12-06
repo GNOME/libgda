@@ -22,6 +22,7 @@
   <part id="Getting Started">
     <title>Getting Started</title>
     <xi:include href="xml/libgda.xml"/>
+    <xi:include href="installation.xml"/>
   </part>
 
   <part id="api">

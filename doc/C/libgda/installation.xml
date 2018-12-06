@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
           "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
 <!ENTITY LIBGDA          "<application>Libgda</application>">
 <!ENTITY GNOMEDB         "<acronym>Gnome-Db</acronym>">
@@ -15,9 +15,8 @@
     </para>
     <para>
       Also &LIBGDA;'s sources are available for download from the 
-      <ulink url="http://ftp.gnome.org/pub/GNOME/sources/libgda/">GNOME ftp servers</ulink>, and from
-      the GNOME SVN repositories; see the <ulink url="http://www.gnome-db.org">Gnome-DB web site</ulink> for
-      more information.
+      <ulink url="http://gitlab.gnome.org/GNOME/libgda">GNOME GitLab</ulink> repository. For 
+      additional information see the <ulink url="http://www.gnome-db.org">Gnome-DB</ulink> web site.
     </para>
   </sect1>
   <sect1 id="installation-installing">
@@ -120,13 +119,13 @@
       to use the <command>pkg-config</command> command.
     </para>
     <programlisting>
-<systemitem class="prompt">$ </systemitem>gcc -c full_example.c `pkg-config --cflags libgda-6.0`
-<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --libs libgda-6.0` full_example.o
+<prompt>$ </prompt>gcc -c full_example.c `pkg-config --cflags libgda-6.0`
+<prompt>$ </prompt>gcc -o full_example `pkg-config --libs libgda-6.0` full_example.o
     </programlisting>
     <para>
       or more simply:
       <programlisting>
-<systemitem class="prompt">$ </systemitem>gcc -o full_example `pkg-config --cflags --libs libgda-4.0` full_example.c
+<prompt>$ </prompt>gcc -o full_example `pkg-config --cflags --libs libgda-6.0` full_example.c
     </programlisting>
     </para>
     <para>
@@ -179,8 +178,6 @@
 #include &lt;virtual/libgda-virtual.h&gt;
       </programlisting>
     </sect2>
-
-
     <sect2 id="installation-client">
       <title>Configuration for accessing a database</title>
       <para>
@@ -251,7 +248,7 @@
 	  <userinput>-L &lt;provider name&gt;</userinput> option. For example for PostgreSQL (strings truncated
 	  for better readability):
 	  <programlisting>
-<systemitem class="prompt">$ </systemitem>gda-sql -L PostgreSQL
+<prompt>$ </prompt>gda-sql -L PostgreSQL
                    Provider 'PostgreSQL' description
 Attribute      | Value                                                   
 ---------------+-------------------------------------------------------------
