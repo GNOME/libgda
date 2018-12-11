@@ -1,6 +1,6 @@
 m4_define(major, 5)
 m4_define(minor, 2)
-m4_define(micro, 8)
+m4_define(micro, 9)
 m4_define([gda_stable],
 	m4_if(m4_eval(minor % 2), [0], [yes], [no]))
 AC_CONFIG_MACRO_DIR([m4])
@@ -428,7 +428,7 @@ if test x"$have_gio" = "xyes"
 then
         GIO_CFLAGS="$GIO_CFLAGS -DHAVE_GIO"
 else
-        AC_MSG_WARN([Libgda depends on Gio to provide notification when configuration files are changed, without Gio support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes]) 
+        AC_MSG_WARN([Libgda depends on Gio to provide notification when configuration files are changed, without Gio support any application using Libgda will have to be restarted when configuration files are changed to take into account those changes])
 fi
 AC_SUBST(GIO_CFLAGS)
 AC_SUBST(GIO_LIBS)
@@ -862,17 +862,17 @@ AC_ARG_ENABLE(default-binary,
 
 AM_CONDITIONAL(DEFAULT_BINARY, test "x$enable_default_binary" = xyes)
 
-# We use -Wno-address because SQLITE3_CALL() has an ifdefed definition that 
+# We use -Wno-address because SQLITE3_CALL() has an ifdefed definition that
 #   makes it hard to always avoid the warning.
 # We use -Wno-unused-variable because the lemon parser generator (in libgda's sources),
-#   creates some generic macros that declare variables that are not always used. 
+#   creates some generic macros that declare variables that are not always used.
 # We use -Wno-unused-parameter because the lemon parser generator (in libgda's sources),
 #   produces generic code, and it's hard to fix that generated code.
 # We use -Wno-pointer-sign because the sqlite source code (copied into libgda's sources)
 #   has problems but we do not want to patch that code.
-# We use -Wno-missing-field-initializers because recent glib versions introduced this 
+# We use -Wno-missing-field-initializers because recent glib versions introduced this
 #  and they refuse to fix it: https://bugzilla.gnome.org/show_bug.cgi?id=662797
-#  We should remove -Wno-missing-field-initializers when we replace the use of 
+#  We should remove -Wno-missing-field-initializers when we replace the use of
 #  the deprecated G_STATIC_MUTEX_INIT macro.
 DK_ARG_ENABLE_WARNINGS([COREDEPS_WFLAGS],
 	[-Wall],
