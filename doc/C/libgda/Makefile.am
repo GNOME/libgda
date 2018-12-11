@@ -79,25 +79,65 @@ FIXXREF_OPTIONS=
 include $(top_srcdir)/gtk-doc.make
 
 # Other files to distribute
-EXTRA_DIST += examples/full_example.c installation.xml limitations.xml migration.xml migration2.xml migration3.xml migration4.xml \
-	server-operation.xml gettingstarted.xml abstraction.xml virtual.xml virtual-notice.xml store-meta-type.xml \
-	prov-writing-virtual-methods.xml prov-writing-recordsets.xml prov-writing-blobs.xml prov-writing-parser.xml prov-writing-assembly.xml \
-	packaging.xml packaging_ui.xml i_s_doc.xml howto.xml gda-sql-manual.xml data_validation.xml data_select.xml \
-	DataModels.svg \
-	architecture.svg parts.svg stmt-unknown.svg stmt-select.svg stmt-insert1.svg stmt-insert2.svg \
-	stmt-update.svg stmt-compound.svg information_schema.svg howto-exec.svg thread-wrapper.svg \
-	version.xml.in builddate.xml.in \
-	visual_index.xml prov-notes.xml \
-	examples/blobtest.c \
-	data-model-writing.xml ddl-creator.xml
+EXTRA_SVG_FILES = DataModels.svg \
+		  architecture.svg \
+		  parts.svg \
+		  stmt-unknown.svg \
+		  stmt-select.svg \
+		  stmt-insert1.svg \
+		  stmt-insert2.svg \
+		  stmt-update.svg \
+		  stmt-compound.svg \
+		  information_schema.svg \
+		  howto-exec.svg \
+		  thread-wrapper.svg
+
+EXTRA_CODE_FILES = examples/full_example.c \
+		   examples/blobtest.c 
+
+EXTRA_XML_FILES = abstraction.xml \
+		  author-list.xml \
+		  data-model-writing.xml \
+		  data_select.xml \
+		  data_validation.xml \
+		  ddl-creator.xml \
+		  builddate.xml.in \
+		  gda-sql-manual.xml \
+		  gettingstarted.xml \
+		  howto.xml \
+		  installation.xml \
+		  i_s_doc.xml \
+		  limitations.xml \
+		  migration.xml \
+		  migration2.xml \
+		  migration3.xml \
+		  migration4.xml \
+		  prov-notes.xml \
+		  prov-writing-virtual-methods.xml \
+		  prov-writing-recordsets.xml \
+		  prov-writing-blobs.xml \
+		  prov-writing-parser.xml \
+		  prov-writing-assembly.xml \
+		  packaging.xml \
+		  packaging_ui.xml \
+		  server-operation.xml \
+		  store-meta-type.xml \
+		  version.xml.in \
+		  visual_index.xml \
+		  virtual.xml \
+		  virtual-notice.xml
+
+EXTRA_DIST += $(EXTRA_SVG_FILES) \
+	      $(EXTRA_CODE_FILES) \
+	      $(EXTRA_XML_FILES)
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
 # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-6.0.types libgda-6.0-sections.txt
+DISTCLEANFILES = $(DOC_MODULE)-doc.pdf libgda-6.0.types 
 
 DOC_STAMPS += pdf-build.stamp
-CLEANFILES += $(DOC_STAMPS) libgda-6.0-sections.txt
+CLEANFILES += $(DOC_STAMPS) 
 
 if ENABLE_GTK_DOC
 TESTS_ENVIRONMENT = \
