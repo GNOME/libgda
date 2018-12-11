@@ -116,7 +116,6 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	have_all_java=yes
 	if test -z "$JAVA_PROG"; then have_all_java=no; fi
 	if test -z "$JAVAC"; then have_all_java=no; fi
-	if test -z "$JAVAH"; then have_all_java=no; fi
 	if test -z "$JAR"; then have_all_java=no; fi
 	if test ${have_all_java} = no; then
 	    AC_MSG_WARN([one or more Java tools are missing (JRE is not sufficient)])
@@ -174,6 +173,11 @@ m4_define([_JAVA_CHECK_INTERNAL],
 		    JTYPE="Sun JRE 1.7"
 		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
 		    ;;
+                JRE1.8.*)
+		    try_java=true
+		    JTYPE="Sun JRE 1.8"
+		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
+		    ;;
                 JREgcj-4*)
 		    try_java=true
 		    JTYPE="GCJ"
@@ -225,7 +229,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	    fi
 	else
 	    AC_MSG_RESULT([no])
-	    AC_MSG_WARN([Java not found. Please install JDK 1.4 or later, make sure that the binaries are on the PATH and re-try. If that doesn't work, set JAVA_HOME correspondingly.])
+	    AC_MSG_WARN([Java not found. Please install JDK 1.5 or later, make sure that the binaries are on the PATH and re-try. If that doesn't work, set JAVA_HOME correspondingly.])
 	    try_java=false
 	fi
     fi
