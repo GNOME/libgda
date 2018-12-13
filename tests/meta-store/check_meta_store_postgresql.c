@@ -26,20 +26,24 @@ main(int argc, char ** argv)
 {
 	GdaConnection *cnc;
 	GdaMetaStore *store;
+	gchar *cnc_string = NULL;
 	GError *error = NULL;
-#ifdef CI_ENVIRONMENT
-  const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
-#else
-  const gchar *cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
-#endif
 
 	gda_init ();
 
+	/*cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";*/
+	cnc_string = getenv ("POSTGRESQL_META_CNC");
+	if (!cnc_string)
+    {
+      g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment variable \n"
+               "For example 'DB_NAME=meta'\n");
+      return EXIT_SUCCESS;
+    }
 	/* connection try */
 	cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (cnc == NULL) {
 		if (error) {
-			g_print ("Connection no stablished. Error: %s\n", error->message);
+			g_print ("Connection no established. Error: %s\n", error->message);
 			g_error_free (error);
 		}
 		g_print ("Postgres test not run, please setup a database 'test', owned by 'test' role with password 'test1' at localhost\n");
@@ -47,7 +51,7 @@ main(int argc, char ** argv)
 		return EXIT_SUCCESS;
 	}
 	g_object_unref (cnc);
-	/* Clean eveything which might exist in the store */
+	/* Clean everything which might exist in the store */
 	gchar *str;
 	str = g_strdup_printf ("PostgreSQL://%s", cnc_string);
 	store = gda_meta_store_new (str);
