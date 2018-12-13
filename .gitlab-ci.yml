@@ -45,6 +45,7 @@ variables:
   SQLITE_CNC_PARAMS: "DB_DIR=."
   POSTGRESQL_DBCREATE_PARAMS: "HOST=$GDA_PSQ_HOST;PORT=5432;ADM_LOGIN=$GDA_PSQ_USER;ADM_PASSWORD='$GDA_PSQ_PASSWORD'"
   POSTGRESQL_CNC_PARAMS: "HOST=$GDA_PSQ_HOST;PORT=5432;USERNAME=$GDA_PSQ_USER;PASSWORD='$GDA_PSQ_PASSWORD'"
+  POSTGRESQL_META_CNC: "DB_NAME=postgres;HOST=postgres;USERNAME=postgres"
   
 before_script:
   - apt update && apt -y install $DEPENDENCIES
@@ -67,6 +68,7 @@ autotools_build:
     - libgda/test-suite.log
     - tests/data-models/test-suite.log
     - tests/meta-store/test-suite.log
+    - tests/meta-store/check_meta_store_postgresql.log
     - tests/value-holders/test-suite.log
     - tests/parser/test-suite.log
     - tests/providers/test-suite.log
