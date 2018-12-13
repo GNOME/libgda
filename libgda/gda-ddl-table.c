@@ -490,40 +490,40 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
 {
   GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
 
-  if (!gda_server_operation_set_value_at(op,
-                                         gda_ddl_base_get_name(GDA_DDL_BASE(self)),
-                                         error,
-                                         "/TABLE_DEF_P/TABLE_NAME"))
+  if (!gda_server_operation_set_value_at (op,
+                                          gda_ddl_base_get_name (GDA_DDL_BASE(self)),
+                                          error,
+                                          "/TABLE_DEF_P/TABLE_NAME"))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at(op,
-                                         GDA_BOOL_TO_STR(priv->m_istemp),
-                                         error,
-                                         "/TABLE_DEF_P/TABLE_TEMP"))
+  if (!gda_server_operation_set_value_at (op,
+                                          GDA_BOOL_TO_STR(priv->m_istemp),
+                                          error,
+                                          "/TABLE_DEF_P/TABLE_TEMP"))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at(op,
-                                         priv->mp_comment,
-                                         error,
-                                         "/TABLE_DEF_P/TABLE_COMMENT"))
+  if (!gda_server_operation_set_value_at (op,
+                                          priv->mp_comment,
+                                          error,
+                                          "/TABLE_DEF_P/TABLE_COMMENT"))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at(op,
-                                         GDA_BOOL_TO_STR(ifnotexists),
-                                         error,
-                                         "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
+  if (!gda_server_operation_set_value_at (op,
+                                          GDA_BOOL_TO_STR (ifnotexists),
+                                          error,
+                                          "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
     return FALSE;
 
   GList *it = NULL;
   gint i = 0; /* column order counter */
 
   for (it = priv->mp_columns;it;it=it->next)
-    if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN(it->data),op,i++,error))
+    if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN (it->data), op, i++, error))
       return FALSE;
 
   i = 0;
   for (it = priv->mp_fkeys;it;it=it->next)
-    if(!gda_ddl_fkey_prepare_create (GDA_DDL_FKEY(it->data),op,i++,error))
+    if(!gda_ddl_fkey_prepare_create (GDA_DDL_FKEY(it->data), op, i++, error))
       return FALSE;
 
   return TRUE;
@@ -657,16 +657,22 @@ gda_ddl_table_create (GdaDdlTable *self,
                       gboolean ifnotexists,
                       GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (cnc,FALSE);
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (cnc, FALSE);
 
-  if (!gda_connection_is_opened(cnc))
-    return FALSE;
-
+ if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error,
+                   GDA_DDL_CREATOR_ERROR,
+                   GDA_DDL_CREATOR_CONNECTION_CLOSED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
   gda_lockable_lock(GDA_LOCKABLE(cnc));
 
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
+  gboolean res = FALSE;
 
   provider = gda_connection_get_provider (cnc);
 
@@ -675,25 +681,21 @@ gda_ddl_table_create (GdaDdlTable *self,
                                             GDA_SERVER_OPERATION_CREATE_TABLE,
                                             NULL,
                                             error);
-  if (!op)
-    goto on_error;
-
-
-  if (!gda_ddl_table_prepare_create(self,op,ifnotexists,error))
-    goto on_error;
-
-  if(!gda_server_provider_perform_operation(provider,cnc,op,error))
-    goto on_error;
-
-  g_object_unref (op);
+  if (op) {
+    g_object_set_data_full (G_OBJECT (op), "connection", g_object_ref (cnc), g_object_unref);
+    if (gda_ddl_table_prepare_create(self, op, ifnotexists, error)) {
+#ifdef GDA_DEBUG_NO
+      gchar* str = gda_server_operation_render (op, error);
+      g_message ("Operation: %s", str);
+      g_free (str);
+#endif
+      res = gda_server_provider_perform_operation(provider, cnc, op, error);
+    }
+    g_object_unref (op);
+  }
   gda_lockable_unlock(GDA_LOCKABLE(cnc));
 
-  return TRUE;
-
-on_error:
-  g_object_unref (op);
-  gda_lockable_unlock(GDA_LOCKABLE(cnc));
-  return FALSE;
+  return res;
 }
 
 /**

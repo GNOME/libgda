@@ -615,22 +615,22 @@ gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
 {
   GdaDdlFkeyPrivate *priv = gda_ddl_fkey_get_instance_private (self);
 
-  if (!gda_server_operation_set_value_at(op,
-                                         priv->mp_ref_table,
-                                         error,
-                                         "/FKEY_S/%d/FKEY_REF_TABLE",i))
+  if (!gda_server_operation_set_value_at (op,
+                                          priv->mp_ref_table,
+                                          error,
+                                          "/FKEY_S/%d/FKEY_REF_TABLE", i))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at(op,
-                                         OnAction[priv->m_ondelete],
-                                         error,
-                                         "/FKEY_S/%d/FKEY_ONDELETE",i))
+  if (!gda_server_operation_set_value_at (op,
+                                          OnAction[priv->m_ondelete],
+                                          error,
+                                          "/FKEY_S/%d/FKEY_ONDELETE", i))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at(op,
-                                         OnAction[priv->m_onupdate],
-                                         error,
-                                         "/FKEY_S/%d/FKEY_ONUPDATE",i))
+  if (!gda_server_operation_set_value_at (op,
+                                          OnAction[priv->m_onupdate],
+                                          error,
+                                          "/FKEY_S/%d/FKEY_ONUPDATE", i))
     return FALSE;
 
   GList *itfield = NULL;
@@ -642,18 +642,18 @@ gda_ddl_fkey_prepare_create  (GdaDdlFkey *self,
 
   for (;itfield && itreffield;)
     {
-      if (!gda_server_operation_set_value_at(op,
-                                             itfield->data,
-                                             error,
-                                             "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
-                                             i,fkeycount))
+      if (!gda_server_operation_set_value_at (op,
+                                              itfield->data,
+                                              error,
+                                              "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
+                                              i, fkeycount))
         return FALSE;
 
-      if (!gda_server_operation_set_value_at(op,
-                                             itreffield->data,
-                                             error,
-                                             "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
-                                             i,fkeycount))
+      if (!gda_server_operation_set_value_at (op,
+                                              itreffield->data,
+                                              error,
+                                              "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
+                                              i, fkeycount))
         return FALSE;
 
       fkeycount++;

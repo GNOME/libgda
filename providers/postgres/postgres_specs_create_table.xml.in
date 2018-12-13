@@ -11,6 +11,9 @@
     <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
+    <parameter id="TABLE_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create table only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
     <parameter id="TABLE_COMMENT" _name="Temporary table" gdatype="gchararray" nullok="TRUE"/>
   </parameters>
 
@@ -143,3 +146,4 @@
     </gda_array>
   </sources>
 </serv_op>
+

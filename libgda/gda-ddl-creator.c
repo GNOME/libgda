@@ -573,7 +573,6 @@ gda_ddl_creator_get_view (GdaDdlCreator *self,
 /** 
  * gda_ddl_creator_parse_cnc:
  * @self: a #GdaDdlCreator instance 
- * @cnc: Connection to parse
  * @error: error storage object
  *
  * Parse cnc to populate @self object. This method should be called every time after database was
@@ -688,7 +687,6 @@ gda_ddl_creator_append_view (GdaDdlCreator *self,
 /**
  * gda_ddl_creator_perform_operation:
  * @self: a #GdaDdlCreator object
- * @cnc: a connection object to work with
  * @error: object to store error
  *
  * After population @self with all data this method may be
@@ -715,7 +713,8 @@ gboolean
 gda_ddl_creator_perform_operation (GdaDdlCreator *self,
                                    GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (self, FALSE);
+  gboolean st = TRUE;
 
   GdaDdlCreatorPrivate *priv = gda_ddl_creator_get_instance_private (self);
 
@@ -724,7 +723,7 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
       g_set_error (error,
                    GDA_DDL_CREATOR_ERROR,
                    GDA_DDL_CREATOR_CONNECTION_CLOSED,
-                   _("Connection is not open"));
+                   _("Connection is not opened"));
       return FALSE;
     }
 
@@ -755,48 +754,44 @@ gda_ddl_creator_perform_operation (GdaDdlCreator *self,
        * Other databases may also ignore schema and reference objects only by database and
        * name, e.g. db_name.table_name 
        * */
-      g_value_set_string (catalog,gda_ddl_base_get_catalog(it->data));
-      g_value_set_string (schema ,gda_ddl_base_get_schema (it->data));
-      g_value_set_string (name   ,gda_ddl_base_get_name   (it->data));
+      g_value_set_string (catalog, gda_ddl_base_get_catalog(it->data));
+      g_value_set_string (schema , gda_ddl_base_get_schema (it->data));
+      g_value_set_string (name   , gda_ddl_base_get_name   (it->data));
 
-      mobj = gda_meta_struct_complement (mstruct,GDA_META_DB_TABLE,catalog,schema,name,NULL);
+      mobj = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, catalog, schema,name, NULL);
 
-      if (mobj)
-        {
-          if(!gda_ddl_table_update (it->data,GDA_META_TABLE(mobj),priv->cnc,error))
-            goto on_error;
+      if (mobj) {
+        st = gda_ddl_table_update (it->data,GDA_META_TABLE(mobj), priv->cnc, error);
+        if (!st) {
+          break;
         }
-      else
-        {
-          if(!gda_ddl_table_create (it->data,priv->cnc,TRUE,error))
-            goto on_error;
+      }
+      else {
+        if(st = gda_ddl_table_create (it->data,priv->cnc, TRUE, error))
+        if (!st) {
+          break;
         }
+      }
     } /* End of for loop */
 
   gda_value_free (catalog);
   gda_value_free (schema);
   gda_value_free (name);
 
-/*TODO: add update option for views */
-  for (it = priv->mp_views; it; it = it->next)
-    {
-      if(!gda_ddl_view_create (it->data,priv->cnc,error))
-        goto on_error;
+  if (st) {
+  /*TODO: add update option for views */
+    for (it = priv->mp_views; it; it = it->next) {
+        st = gda_ddl_view_create (it->data, priv->cnc, error);
+        if (!st) {
+          break;
+        }
     } /* End of for loop */
+  }
 
   g_object_unref (mstruct);
-  gda_lockable_unlock ((GdaLockable*)priv->cnc);
+  gda_lockable_unlock ((GdaLockable*) priv->cnc);
 
-  return TRUE;
-
-on_error:
-  gda_value_free (catalog);
-  gda_value_free (schema);
-  gda_value_free (name);
-  g_object_unref (mstruct);
-  gda_lockable_unlock ((GdaLockable*)priv->cnc);
-
-  return FALSE;
+  return st;
 }
 
 /**

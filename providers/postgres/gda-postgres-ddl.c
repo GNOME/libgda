@@ -115,6 +115,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 {
 	GString *string;
 	const GValue *value;
+	const GValue *valuex;
 	const GValue *value1 = NULL;
 	gboolean hasfields = FALSE;
 	gint nrows;
@@ -130,6 +131,9 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "TEMP ");
 	g_string_append (string, "TABLE ");
+	valuex = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_IFNOTEXISTS");
+	if (valuex && G_VALUE_HOLDS (valuex, G_TYPE_BOOLEAN) && g_value_get_boolean (valuex))
+		g_string_append (string, "IF NOT EXISTS ");
 
 	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
 							  "/TABLE_DEF_P/TABLE_NAME", error);

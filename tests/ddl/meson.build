@@ -142,3 +142,30 @@ test('ddlcreate', ddlcreate,
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
+
+ddl_creator_pg_sources = files([
+	'check-ddl-creator-postgresql.c'
+	])
+
+tcpg = executable('check-ddl-creator-postgresql',
+	ddl_creator_pg_sources,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ddlcreator-postgresql', tcpg,
+	env: [
+		'GDA_TOP_SRC_DIR='+meson.source_root(),
+		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		]
+	)

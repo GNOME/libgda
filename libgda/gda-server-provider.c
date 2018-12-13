@@ -1158,7 +1158,7 @@ gda_server_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 
 	gpointer retval = NULL;
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_perform_operation, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_perform_operation, (gpointer) &data, NULL, NULL, error);
 	if (context)
 		g_main_context_unref (context);
 
@@ -1439,7 +1439,7 @@ gda_server_provider_get_default_dbms_type (GdaServerProvider *provider, GdaConne
 		cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (!cdata) {
 			gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
-			g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
+			g_warning (_("Internal error: connection reported as opened, yet no provider's data has been setted"));
 			return FALSE;
 		}
 		worker = gda_worker_ref (cdata->worker);

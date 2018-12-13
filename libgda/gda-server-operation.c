@@ -2328,6 +2328,10 @@ gda_server_operation_set_value_at_path (GdaServerOperation *op, const gchar *val
 
 	g_free (extension);
 	g_free (colname);
+  if (!allok && (*error) == NULL) {
+    g_warning ("gda_server_operation_set_value_at_path: No Error set");
+  }
+
 	return allok;
 }
 
@@ -2583,8 +2587,7 @@ gda_server_operation_perform_create_database (GdaServerOperation *op, const gcha
 	if (prov)
 		return gda_server_provider_perform_operation (prov, NULL, op, error);
 	else {
-		g_warning ("Could not find operation's associated provider, "
-			   "did you use gda_server_operation_prepare_create_database() ?");
+		g_warning (_("Could not find operation's associated provider, did you use gda_server_operation_prepare_create_database() ?"));
 		return FALSE;
 	}
 }

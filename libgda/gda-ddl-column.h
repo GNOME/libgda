@@ -46,7 +46,7 @@ struct _GdaDdlColumnClass
  */
 typedef  enum {
   GDA_DDL_COLUMN_ERROR_TYPE
-}GdaDdlColumnError;
+} GdaDdlColumnError;
 
 #define GDA_DDL_COLUMN_ERROR gda_ddl_column_error_quark()
 GQuark gda_ddl_column_error_quark (void);

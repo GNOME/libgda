@@ -23,6 +23,7 @@
 #include "gda-util.h"
 #include "gda-ddl-buildable.h"
 #include "gda-ddl-base.h"
+#include "gda-server-provider.h"
 
 G_DEFINE_QUARK (gda-ddl-column-error, gda_ddl_column_error)
 
@@ -984,23 +985,33 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
                                 guint order,
                                 GError **error)
 {
+  GdaConnection *cnc;
+  const gchar *strtype;
+
   g_return_val_if_fail(self,FALSE);
   g_return_val_if_fail(op,FALSE);
 
   GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
 
-  if(!gda_server_operation_set_value_at(op,priv->mp_name,error,"/FIELDS_A/@COLUMN_NAME/%d",order))
+  if(!gda_server_operation_set_value_at (op, priv->mp_name, error, "/FIELDS_A/@COLUMN_NAME/%d", order))
     return FALSE;
-
-  if(!gda_server_operation_set_value_at(op,priv->mp_type,error,"/FIELDS_A/@COLUMN_TYPE/%d",order))
+  cnc = (GdaConnection*) g_object_get_data (G_OBJECT (op), "connection");
+  if (cnc == NULL) {
+    g_set_error (error, GDA_DDL_COLUMN_ERROR, GDA_DDL_COLUMN_ERROR_TYPE,
+                 _("Internal error: Operation should be prepared, setting a connection data"));
+    return FALSE;
+  }
+  strtype = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (cnc),
+                                                       cnc, priv->m_gtype);
+  if(!gda_server_operation_set_value_at (op, strtype, error, "/FIELDS_A/@COLUMN_TYPE/%d", order))
     return FALSE;
 
   gchar *numstr = NULL;
-  numstr = g_strdup_printf ("%d",priv->m_size);
+  numstr = g_strdup_printf ("%d", priv->m_size);
 
-  if (g_type_is_a (priv->m_gtype,G_TYPE_STRING))
+  if (g_type_is_a (priv->m_gtype, G_TYPE_STRING))
     {
-      if(!gda_server_operation_set_value_at(op,numstr,error,"/FIELDS_A/@COLUMN_SIZE/%d",order))
+      if(!gda_server_operation_set_value_at (op, numstr, error, "/FIELDS_A/@COLUMN_SIZE/%d", order))
         {
           g_free (numstr);
           return FALSE;
@@ -1031,28 +1042,28 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
         }
     }
 
-  if(!gda_server_operation_set_value_at(op,GDA_BOOL_TO_STR (priv->m_nnul), error,
+  if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_nnul), error,
                                         "/FIELDS_A/@COLUMN_NNUL/%d",order))
     return FALSE;
 
-  if(!gda_server_operation_set_value_at(op,GDA_BOOL_TO_STR (priv->m_autoinc),error,
+  if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_autoinc), error,
                                         "/FIELDS_A/@COLUMN_AUTOINC/%d",order))
     return FALSE;
 
-  if(!gda_server_operation_set_value_at(op,GDA_BOOL_TO_STR (priv->m_unique),error,
+  if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_unique), error,
                                         "/FIELDS_A/@COLUMN_UNIQUE/%d",order))
     return FALSE;
 
-  if(!gda_server_operation_set_value_at(op,GDA_BOOL_TO_STR (priv->m_pkey),error,
+  if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_pkey), error,
                                         "/FIELDS_A/@COLUMN_PKEY/%d",order))
     return FALSE;
 
-  if(!gda_server_operation_set_value_at(op,priv->mp_default,error,
-                                        "/FIELDS_A/@COLUMN_DEFAULT/%d",order))
+  if(!gda_server_operation_set_value_at (op,priv->mp_default, error,
+                                        "/FIELDS_A/@COLUMN_DEFAULT/%d", order))
     return FALSE;
 
-  if(!gda_server_operation_set_value_at(op,priv->mp_check,error,
-                                        "/FIELDS_A/@COLUMN_CHECK/%d",order))
+  if(!gda_server_operation_set_value_at (op,priv->mp_check,error,
+                                        "/FIELDS_A/@COLUMN_CHECK/%d", order))
     return FALSE;
 
   return TRUE;
