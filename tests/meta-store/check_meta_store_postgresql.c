@@ -37,7 +37,7 @@ main(int argc, char ** argv)
     {
       g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment variable \n"
                "For example 'DB_NAME=meta'\n");
-      return EXIT_SUCCESS;
+      return EXIT_FAILURE;
     }
 	/* connection try */
 	cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
@@ -48,7 +48,7 @@ main(int argc, char ** argv)
 		}
 		g_print ("Postgres test not run, please setup a database 'test', owned by 'test' role with password 'test1' at localhost\n");
 		g_print ("Test Skip.\n");
-		return EXIT_SUCCESS;
+		return EXIT_FAILURE;
 	}
 	g_object_unref (cnc);
 	/* Clean everything which might exist in the store */
