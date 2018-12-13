@@ -36,14 +36,12 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 
 	string = g_string_new ("CREATE DATABASE ");
 
-	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/DB_DEF_P/DB_NAME", error);
-	if (!tmp) {
-		g_string_free (string, TRUE);
-		return NULL;
-	}
+	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
+  if (!value)
+    return NULL;
 
-	g_string_append (string, tmp);
-	g_free (tmp);
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) 
+		g_string_append (string, g_value_get_string (value));
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/OWNER");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
