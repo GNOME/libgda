@@ -13,4 +13,5 @@ option('enable-debug', type : 'boolean', value : false, description : 'Enable de
 option('system-sqlite', type : 'boolean', value : true, description : 'Use SQLite installed on the system [default=false')
 option('with-examples', type : 'boolean', value : false, description : 'Compile examples [default=false')
 option('system-sqlcipher', type : 'boolean', value : true, description : 'Use SQLCipher installed on the system [default=false')
+option('enable-tools', type : 'boolean', value : false, description : 'Enable build GUI Tools')
 

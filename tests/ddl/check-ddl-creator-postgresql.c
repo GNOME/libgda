@@ -31,6 +31,189 @@ typedef struct {
   gboolean started_db;
 } CheckDdlObject;
 
+
+
+static void create_users_table (CheckDdlObject *self) {
+  GError *error = NULL;
+  gboolean res = FALSE;
+  GdaDdlTable *table = NULL;
+  GdaDdlColumn *column_id;
+  GdaDdlColumn *column_name;
+  GdaDdlColumn *column_ctime;
+  GdaDdlColumn *column_ts;
+  GdaDdlColumn *column_state;
+
+  if (self->cnc == NULL) {
+    return;
+  }
+
+  g_assert_nonnull (self->creator);
+
+  table = gda_ddl_table_new ();
+  gda_ddl_base_set_name (GDA_DDL_BASE(table), "users");
+
+  column_id = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_id,"id");
+  gda_ddl_column_set_type (column_id, G_TYPE_INT);
+  gda_ddl_column_set_autoinc (column_id, TRUE);
+  gda_ddl_column_set_pkey (column_id, TRUE);
+
+  gda_ddl_table_append_column (table, column_id);
+
+  column_name = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_name, "name");
+  gda_ddl_column_set_type (column_name, G_TYPE_STRING);
+  gda_ddl_column_set_size (column_name, 50);
+
+  gda_ddl_table_append_column (table, column_name);
+
+  column_ctime = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ctime, "create_time");
+  gda_ddl_column_set_type (column_ctime, GDA_TYPE_TIME);
+
+  gda_ddl_table_append_column (table, column_ctime);
+
+  column_state = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_state, "state");
+  gda_ddl_column_set_type (column_state, G_TYPE_BOOLEAN);
+
+  gda_ddl_table_append_column (table,column_state);
+
+  column_ts = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ts, "mytimestamp");
+  gda_ddl_column_set_type (column_ts, G_TYPE_DATE_TIME);
+
+  gda_ddl_table_append_column (table, column_ts);
+
+  gda_ddl_creator_append_table (self->creator, table);
+  res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+  if (!res) {
+    g_warning ("Error Creating table: %s", error->message);
+  }
+  g_assert_true (res);
+}
+
+static void create_companies_table (CheckDdlObject *self) {
+  GError *error = NULL;
+  gboolean res = FALSE;
+  GdaDdlTable *table = NULL;
+  GdaDdlColumn *column_id;
+  GdaDdlColumn *column_name;
+  GdaDdlColumn *column_ctime;
+  GdaDdlColumn *column_ts;
+  GdaDdlColumn *column_state;
+
+  if (self->cnc == NULL) {
+    return;
+  }
+
+  g_assert_nonnull (self->creator);
+
+  table = gda_ddl_table_new ();
+  gda_ddl_base_set_name (GDA_DDL_BASE(table), "companies");
+
+  column_id = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_id,"id");
+  gda_ddl_column_set_type (column_id, G_TYPE_INT);
+  gda_ddl_column_set_autoinc (column_id, TRUE);
+  gda_ddl_column_set_pkey (column_id, TRUE);
+
+  gda_ddl_table_append_column (table, column_id);
+
+  column_name = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_name, "name");
+  gda_ddl_column_set_type (column_name, G_TYPE_STRING);
+  gda_ddl_column_set_size (column_name, 50);
+
+  gda_ddl_table_append_column (table, column_name);
+
+  column_ctime = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ctime, "create_time");
+  gda_ddl_column_set_type (column_ctime, GDA_TYPE_TIME);
+
+  gda_ddl_table_append_column (table, column_ctime);
+
+  column_state = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_state, "state");
+  gda_ddl_column_set_type (column_state, G_TYPE_BOOLEAN);
+
+  gda_ddl_table_append_column (table,column_state);
+
+  column_ts = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ts, "mytimestamp");
+  gda_ddl_column_set_type (column_ts, G_TYPE_DATE_TIME);
+
+  gda_ddl_table_append_column (table, column_ts);
+
+  gda_ddl_creator_append_table (self->creator, table);
+  res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+  if (!res) {
+    g_warning ("Error Creating table: %s", error->message);
+  }
+  g_assert_true (res);
+}
+
+
+static void create_countries_table (CheckDdlObject *self) {
+  GError *error = NULL;
+  gboolean res = FALSE;
+  GdaDdlTable *table = NULL;
+  GdaDdlColumn *column_id;
+  GdaDdlColumn *column_name;
+  GdaDdlColumn *column_ctime;
+  GdaDdlColumn *column_ts;
+  GdaDdlColumn *column_state;
+
+  if (self->cnc == NULL) {
+    return;
+  }
+
+  g_assert_nonnull (self->creator);
+
+  table = gda_ddl_table_new ();
+  gda_ddl_base_set_name (GDA_DDL_BASE(table), "countries");
+
+  column_id = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_id,"id");
+  gda_ddl_column_set_type (column_id, G_TYPE_INT);
+  gda_ddl_column_set_autoinc (column_id, TRUE);
+  gda_ddl_column_set_pkey (column_id, TRUE);
+
+  gda_ddl_table_append_column (table, column_id);
+
+  column_name = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_name, "name");
+  gda_ddl_column_set_type (column_name, G_TYPE_STRING);
+  gda_ddl_column_set_size (column_name, 50);
+
+  gda_ddl_table_append_column (table, column_name);
+
+  column_ctime = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ctime, "create_time");
+  gda_ddl_column_set_type (column_ctime, GDA_TYPE_TIME);
+
+  gda_ddl_table_append_column (table, column_ctime);
+
+  column_state = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_state, "state");
+  gda_ddl_column_set_type (column_state, G_TYPE_BOOLEAN);
+
+  gda_ddl_table_append_column (table,column_state);
+
+  column_ts = gda_ddl_column_new ();
+  gda_ddl_column_set_name (column_ts, "mytimestamp");
+  gda_ddl_column_set_type (column_ts, G_TYPE_DATE_TIME);
+
+  gda_ddl_table_append_column (table, column_ts);
+
+  gda_ddl_creator_append_table (self->creator, table);
+  res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+  if (!res) {
+    g_warning ("Error Creating table: %s", error->message);
+  }
+  g_assert_true (res);
+}
+
 static void
 test_ddl_creator_start (CheckDdlObject *self,
                      gconstpointer user_data)
@@ -74,64 +257,9 @@ test_ddl_creator_start (CheckDdlObject *self,
   g_assert_nonnull (self->creator);
 
   /* Create DataBase structure */
-
-  GError *error = NULL;
-  gboolean res = FALSE;
-  GdaDdlTable *table = NULL;
-  GdaDdlColumn *column_id;
-  GdaDdlColumn *column_name;
-  GdaDdlColumn *column_ctime;
-  GdaDdlColumn *column_ts;
-  GdaDdlColumn *column_state;
-
-  if (self->cnc == NULL) {
-    return;
-  }
-
-  g_assert_nonnull (self->creator);
-
-  table = gda_ddl_table_new ();
-  gda_ddl_base_set_name (GDA_DDL_BASE(table),"dntypes");
-
-  column_id = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column_id,"id");
-  gda_ddl_column_set_type (column_id, G_TYPE_INT);
-  gda_ddl_column_set_autoinc (column_id, TRUE);
-  gda_ddl_column_set_pkey (column_id, TRUE);
-
-  gda_ddl_table_append_column (table,column_id);
-
-  column_name = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column_name,"name");
-  gda_ddl_column_set_type (column_name, G_TYPE_STRING);
-  gda_ddl_column_set_size (column_name, 50);
-
-  gda_ddl_table_append_column (table,column_name);
-
-  column_ctime = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column_ctime,"create_time");
-  gda_ddl_column_set_type (column_ctime, GDA_TYPE_TIME);
-
-  gda_ddl_table_append_column (table,column_ctime);
-
-  column_state = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column_state,"state");
-  gda_ddl_column_set_type (column_state, G_TYPE_BOOLEAN);
-
-  gda_ddl_table_append_column (table,column_state);
-
-  column_ts = gda_ddl_column_new ();
-  gda_ddl_column_set_name (column_ts,"mytimestamp");
-  gda_ddl_column_set_type (column_ts, G_TYPE_DATE_TIME);
-
-  gda_ddl_table_append_column (table,column_ts);
-
-  gda_ddl_creator_append_table (self->creator, table);
-  res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
-  if (!res) {
-    g_warning ("Error Creating table: %s", error->message);
-  }
-  g_assert_true (res);
+  create_users_table (self);
+  create_companies_table (self);
+  create_countries_table (self);
 }
 
 static void
@@ -156,9 +284,9 @@ test_tables (CheckDdlObject *self,
   GList *tables = gda_ddl_creator_get_tables (self->creator);
   g_assert (tables != NULL);
   g_assert (g_list_length (tables) != 0);
-  g_assert (g_list_length (tables) == 1);
+  g_assert (g_list_length (tables) == 3);
   GList *lt = NULL;
-  for (lt = tables; lt; lt = tables->next) {
+  for (lt = tables; lt; lt = lt->next) {
     GdaDdlTable *table = (GdaDdlTable *) lt->data;
     g_message ("Table found: %s", gda_ddl_base_get_full_name (GDA_DDL_BASE (table)));
   }

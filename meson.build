@@ -372,7 +372,9 @@ libgda_report_pc = configure_file(
 	)
 endif
 
+if get_option('enable-tools')
 subdir('tools')
+endif
 subdir('tests')
 subdir('testing')
 if get_option('with-examples')
