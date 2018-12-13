@@ -4,6 +4,9 @@
 # see https://hub.docker.com/_/gcc/
 image: ubuntu:devel
 
+services:
+        - postgres:latest
+
 stages:
      - build
 
@@ -31,9 +34,18 @@ variables:
                 libgee-0.8-dev
                 valadoc
                 libgladeui-dev
+                postgresql-client
+                postgresql-client-common
 
   GIT_SUBMODULE_STRATEGY: normal
-
+  GDA_PSQ_HOST: postgres
+  GDA_PSQ_PASSWORD: "postgres"
+  GDA_PSQ_USER: postgres 
+  SQLITE_DBCREATE_PARAMS: "DB_DIR=."
+  SQLITE_CNC_PARAMS: "DB_DIR=."
+  POSTGRESQL_DBCREATE_PARAMS: "HOST=$GDA_PSQ_HOST;PORT=5432;ADM_LOGIN=$GDA_PSQ_USER;ADM_PASSWORD='$GDA_PSQ_PASSWORD'"
+  POSTGRESQL_CNC_PARAMS: "HOST=$GDA_PSQ_HOST;PORT=5432;USERNAME=$GDA_PSQ_USER;PASSWORD='$GDA_PSQ_PASSWORD'"
+  
 before_script:
   - apt update && apt -y install $DEPENDENCIES
 
