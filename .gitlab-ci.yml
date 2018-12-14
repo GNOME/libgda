@@ -78,7 +78,7 @@ autotools_build:
 meson_build:
   stage: build
   script:
-  - meson _build --prefix=/usr
+  - meson _build --prefix=/usr -Denable-ci-environment=true
   - cd _build
   - ninja
   - broadwayd &

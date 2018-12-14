@@ -1,3 +1,13 @@
+
+ci_args = []
+
+if get_option('enable-ci-environment')
+	ci_args += [
+		'-DCI_ENVIRONMENT'
+		]
+endif
+
+
 test_headers = files([
 	'raw-ddl-creator.h'
 	])

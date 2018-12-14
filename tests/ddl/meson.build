@@ -153,7 +153,8 @@ tcpg = executable('check-ddl-creator-postgresql',
 		'-include',
 		meson.build_root() + '/config.h',
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"',
+		ci_args
 		],
 	link_with: libgda,
 	dependencies: [

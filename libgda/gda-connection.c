@@ -5190,7 +5190,7 @@ prepare_meta_statements_hash (void)
 }
 
 /**
- * gda_connection_get_meta_store_data:
+ * gda_connection_get_meta_store_data: (skip)
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL
@@ -5270,7 +5270,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_get_meta_store_data_v:
+ * gda_connection_get_meta_store_data_v: (rename-to get_meta_store_data)
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL

@@ -26,9 +26,9 @@
 
 typedef struct {
   GdaDdlCreator *creator;
-  gchar *xmlfile;
   GdaConnection *cnc;
   gboolean started_db;
+  gboolean cont;
 } CheckDdlObject;
 
 
@@ -219,22 +219,10 @@ test_ddl_creator_start (CheckDdlObject *self,
                      gconstpointer user_data)
 {
   gda_init();
-  self->xmlfile = NULL;
   self->creator = NULL;
   self->cnc = NULL;
   self->started_db = FALSE;
-
-  const gchar *topsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
-
-  g_print ("ENV: %s\n",topsrcdir);
-  g_assert_nonnull (topsrcdir);
-
-  self->xmlfile = g_build_filename(topsrcdir,
-                                   "tests",
-                                   "ddl",
-                                   "ddl-db.xml",NULL);
-
-  g_assert_nonnull (self->xmlfile);
+  self->cont = FALSE;
 
 #ifdef CI_ENVIRONMENT
   const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
@@ -266,16 +254,18 @@ test_ddl_creator_start (CheckDdlObject *self,
   create_users_table (self);
   create_companies_table (self);
   create_countries_table (self);
+  self->cont = TRUE;
 }
 
 static void
 test_ddl_creator_finish (CheckDdlObject *self,
                       gconstpointer user_data)
 {
-  gda_connection_close(self->cnc,NULL);
-  g_free (self->xmlfile);
-  g_object_unref (self->creator);
-  g_object_unref (self->cnc);
+  if (self->cnc != NULL) {
+    gda_connection_close(self->cnc,NULL);
+    g_object_unref (self->creator);
+    g_object_unref (self->cnc);
+  }
 }
 
 
@@ -283,6 +273,9 @@ static void
 test_tables (CheckDdlObject *self,
              gconstpointer user_data)
 {
+  if (!self->cont) {
+    g_message ("Test skiped");
+  }
   g_message ("Testing Tables...");
   if (self->cnc == NULL) {
       return;
