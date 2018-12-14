@@ -88,6 +88,7 @@ meson_build:
   artifacts:
     when: on_failure
     paths:
+    - _build/meson-logs/testlog.txt
     - _build/meson-logs/meson-log.txt
     - _build/doc/C/libgda/html
     - _build/doc/C/libgdaui/html
