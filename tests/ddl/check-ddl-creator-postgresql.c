@@ -236,8 +236,14 @@ test_ddl_creator_start (CheckDdlObject *self,
 
   g_assert_nonnull (self->xmlfile);
 
+#ifdef CI_ENVIRONMENT
+  const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
+#else
+  const gchar *cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
+#endif
+
   self->cnc = gda_connection_new_from_string("Postgresql",
-                                             "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1",
+                                             cnc_string,
                                              NULL,
                                              GDA_CONNECTION_OPTIONS_NONE,
                                              NULL);

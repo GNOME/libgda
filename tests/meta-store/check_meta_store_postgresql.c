@@ -26,12 +26,15 @@ main(int argc, char ** argv)
 {
 	GdaConnection *cnc;
 	GdaMetaStore *store;
-	gchar *cnc_string;
 	GError *error = NULL;
+#ifdef CI_ENVIRONMENT
+  const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
+#else
+  const gchar *cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
+#endif
 
 	gda_init ();
 
-	cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
 	/* connection try */
 	cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (cnc == NULL) {
