@@ -63,15 +63,18 @@ autotools_build:
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
+  - cd ..
   artifacts:
     when: on_failure
     paths:
-    - _build/libgda/test-cnc-meta.log
-    - _build/libgda/test-cnc-open.log
-    - _build/libgda/test-cnc-exec.log
-    - _build/tests/providers/check_mysql.log
-    - _build/tests/providers/check_postgres.log
-    - _build/tests/providers/check_sqlite.log
+    - _build/tests/test-suite.log
+    - _build/libgda/test-suite.log
+    - _build/tests/data-models/test-suite.log
+    - _build/tests/meta-store/test-suite.log
+    - _build/tests/meta-store/check_meta_store_postgresql.log
+    - _build/tests/value-holders/test-suite.log
+    - _build/tests/parser/test-suite.log
+    - _build/tests/providers/test-suite.log
     expire_in: 1 week
 
 meson_build:
