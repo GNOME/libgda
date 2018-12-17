@@ -61,13 +61,12 @@ autotools_build:
   artifacts:
     when: on_failure
     paths:
-    - tests/test-suite.log
-    - libgda/test-suite.log
-    - tests/data-models/test-suite.log
-    - tests/meta-store/test-suite.log
-    - tests/value-holders/test-suite.log
-    - tests/parser/test-suite.log
-    - tests/providers/test-suite.log
+    - _build/libgda/test-cnc-meta.log
+    - _build/libgda/test-cnc-open.log
+    - _build/libgda/test-cnc-exec.log
+    - _build/tests/providers/check_mysql.log
+    - _build/tests/providers/check_postgres.log
+    - _build/tests/providers/check_sqlite.log
     expire_in: 1 week
 
 meson_build:
