@@ -197,7 +197,7 @@ _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, 
 	if (!cvalue) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
                              GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-                             _("Can't import data from web server"));
+                             _("Can't get version data from server"));
 		g_object_unref (model);
 		return FALSE;
 	}
@@ -222,24 +222,19 @@ _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, 
 		sscanf (ptr, "%d.%d.%d", &(prdata->major),  &(prdata->minor),  &(prdata->micro));
 
 		/* elaborate the version number as a float */
-		gfloat div = 1;
-		while (*ptr != ' ') {
-			if (*ptr != '.') {
-				rdata->version_float += (*ptr - '0')/div;
-				div *= 10;
-			}
-			ptr++;
-		}
+		rdata->version_float = ((gdouble) ((GdaProviderReuseable*)rdata)->major) +
+		((gdouble) ((GdaProviderReuseable*)rdata)->minor) / 10.0 +
+		((gdouble) ((GdaProviderReuseable*)rdata)->micro) / 100.0;
 	}
 
 	g_object_unref (model);
-	
-	/*
+
+/*
 	g_print ("VERSIONS: [%f] [%d.%d.%d]\n", rdata->version_float,
 		 ((GdaProviderReuseable*)rdata)->major,
 		 ((GdaProviderReuseable*)rdata)->minor,
 		 ((GdaProviderReuseable*)rdata)->micro);
-	*/
+*/
 	return TRUE;
 }
 
