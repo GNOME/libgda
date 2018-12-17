@@ -87,6 +87,14 @@ static void create_users_table (CheckDdlObject *self) {
 
   gda_ddl_creator_append_table (self->creator, table);
   res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+
+  g_object_unref (table);
+  g_object_unref (column_id);
+  g_object_unref (column_name);
+  g_object_unref (column_ctime);
+  g_object_unref (column_ts);
+  g_object_unref (column_state);
+
   if (!res) {
     g_warning ("Error Creating table: %s", error->message);
   }
@@ -147,6 +155,14 @@ static void create_companies_table (CheckDdlObject *self) {
 
   gda_ddl_creator_append_table (self->creator, table);
   res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+
+  g_object_unref (table);
+  g_object_unref (column_id);
+  g_object_unref (column_name);
+  g_object_unref (column_ctime);
+  g_object_unref (column_ts);
+  g_object_unref (column_state);
+
   if (!res) {
     g_warning ("Error Creating table: %s", error->message);
   }
@@ -208,6 +224,14 @@ static void create_countries_table (CheckDdlObject *self) {
 
   gda_ddl_creator_append_table (self->creator, table);
   res = gda_ddl_table_create (table, self->cnc, TRUE, &error);
+
+  g_object_unref (table);
+  g_object_unref (column_id);
+  g_object_unref (column_name);
+  g_object_unref (column_ctime);
+  g_object_unref (column_ts);
+  g_object_unref (column_state);
+
   if (!res) {
     g_warning ("Error Creating table: %s", error->message);
   }
