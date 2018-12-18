@@ -133,38 +133,24 @@ test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **e
 					data.requested_db_name ? data.requested_db_name : dbname);
 		g_print ("Open connection string: %s\n", data.string->str);
 
-		gchar *auth_string = NULL;
-		GSList *current = gda_set_get_holders (prov_info->auth_params);
-		while (current) {
-			GdaHolder *holder = (GdaHolder *) current->data;
+		GString *auth_string = g_string_new ("");
 
-			const gchar *id = gda_holder_get_id (holder);
-			const gchar *env = NULL;
-			if (g_strrstr (id, "USER") != NULL) {
-				str = g_strdup_printf ("%s_USER", upname);
-				env = getenv (str);
-				g_free (str);
-			} else if (g_strrstr (id, "PASS") != NULL) {
-				str = g_strdup_printf ("%s_PASS", upname);
-				env = getenv (str);
-				g_free (str);
-			}
+    const gchar *qlvalue = gda_quark_list_find (cnc_quark_list,"USERNAME");
 
-			if (env) {
-				str = g_strdup_printf ("%s=%s;", id, env);
+    if (qlvalue)
+      g_string_append_printf (auth_string,"USERNAME=%s;",qlvalue);
+   
+    qlvalue = gda_quark_list_find (cnc_quark_list,"PASSWORD");
 
-				gchar *tmp = auth_string;
-				auth_string = g_strconcat (auth_string, str, NULL);
-				g_free (str);
-				g_free (tmp);
-			}
+    if (qlvalue)
+      g_string_append_printf (auth_string,"PASSWORD=%s;",qlvalue);
 
-			current = g_slist_next (current);
-		}
+    g_message ("Connection string: %s\n",data.string->str);
+    g_message ("Auth string: %s\n",auth_string->str);
 
-		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth_string,
+		cnc = gda_connection_open_from_string (prov_info->id, data.string->str, auth_string->str,
  						       GDA_CONNECTION_OPTIONS_NONE, error);
-		g_free (auth_string);
+		g_string_free (auth_string,TRUE);
 		g_string_free (data.string, TRUE);
 	}
 
@@ -226,6 +212,7 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
 	db_params = getenv (str);
 	g_free (str);
+  g_message ("Creating database - step\n");
 	if (db_params) {
 		GdaServerOperation *op;
 
@@ -242,6 +229,7 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 		db_created = TRUE;
 	}
 
+  g_message ("Opening connection\n");
 	/* open connection to database */
 	cnc = test_cnc_open_connection (provider, dbname, error);
 
