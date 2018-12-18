@@ -40,8 +40,8 @@ variables:
                 postgresql-client-common
 
   GIT_SUBMODULE_STRATEGY: normal
-  POSTGRESQL_DBCREATE_PARAMS: "HOST=postgres;PORT=5432;ADM_LOGIN=test;ADM_PASSWORD='test1'"
-  POSTGRESQL_CNC_PARAMS: "HOST=postgres;USERNAME=test;PASSWORD='test1'"
+  POSTGRESQL_DBCREATE_PARAMS: "HOST=postgres;PORT=5432;ADM_LOGIN=test;ADM_PASSWORD=test1"
+  POSTGRESQL_CNC_PARAMS: "HOST=postgres;USERNAME=test;PASSWORD=test1"
   
 before_script:
   - apt update && apt -y install $DEPENDENCIES
