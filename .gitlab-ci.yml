@@ -5,15 +5,14 @@
 image: ubuntu:devel
 
 services:
-        - postgres:latest
+  - postgres
 
 stages:
-     - build
+  - build
 
 variables:
-  POSTGRES_DB: test
   POSTGRES_USER: test
-  POSTGRES_PASSWORD: "test1"
+  POSTGRES_PASSWORD: test1
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
@@ -41,8 +40,8 @@ variables:
                 postgresql-client-common
 
   GIT_SUBMODULE_STRATEGY: normal
-  POSTGRESQL_DBCREATE_PARAMS: "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1"
-  POSTGRESQL_CNC_PARAMS: "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1"
+  POSTGRESQL_DBCREATE_PARAMS: "HOST=postgres;PORT=5432;ADM_LOGIN=test;ADM_PASSWORD='test1'"
+  POSTGRESQL_CNC_PARAMS: "HOST=postgres;USERNAME=test;PASSWORD='test1'"
   
 before_script:
   - apt update && apt -y install $DEPENDENCIES
@@ -72,6 +71,8 @@ autotools_build:
 meson_build:
   stage: build
   script:
+  - export PGPASSWORD=$POSTGRES_PASSWORD
+  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   - meson _build --prefix=/usr -Denable-ci-environment=true
   - cd _build
   - ninja

@@ -87,18 +87,13 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 {
 	GString *string;
 	gchar *sql = NULL;
-	gchar *tmp;
+  GValue *value = NULL;
 
 	string = g_string_new ("DROP DATABASE ");
 
-	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/DB_DESC_P/DB_NAME", error);
-	if (!tmp) {
-		g_string_free (string, TRUE);
-		return NULL;
-	}
-
-	g_string_append (string, tmp);
-	g_free (tmp);
+	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string(value))
+		g_string_append (string, g_value_get_string (value));
 
 	sql = string->str;
 	g_string_free (string, FALSE);
@@ -428,19 +423,13 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
-	gchar *tmp;
 
-	string = g_string_new ("DROP TABLE ");
+	string = g_string_new ("DROP TABLE IF EXISTS ");
 
-	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
-							  "/TABLE_DESC_P/TABLE_NAME", error);
-	if (!tmp) {
-		g_string_free (string, TRUE);
-		return NULL;
+  value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/TABLE_NAME");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		g_string_append (string, g_value_get_string (value));
 	}
-
-	g_string_append (string, tmp);
-	g_free (tmp);
 
 	value = gda_server_operation_get_value_at (op, "/TABLE_DESC_P/REFERENCED_ACTION");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
