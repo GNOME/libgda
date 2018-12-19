@@ -41,7 +41,6 @@ typedef struct {
 
     xmlDocPtr doc;
     xmlTextWriterPtr writer;
-    xmlBufferPtr buffer;
 } CheckDdlObject;
 
 static void
@@ -87,28 +86,34 @@ test_ddl_fkey_run2 (CheckDdlObject *self,
 static void
 test_ddl_fkey_run1 (void)
 {
-  g_print ("Run 1 start\n");
   GdaDdlFkey *self = gda_ddl_fkey_new ();
-
   g_object_unref (self);
-  g_print ("Run 1 end\n");
 }
 
 static void
 test_ddl_fkey_run3 (CheckDdlObject *self,
                     gconstpointer user_data)
 {
+  xmlNodePtr node = NULL;
+  xmlDocPtr doc = NULL;
+  xmlChar *xmlbuffer = NULL;
+  int buffersize;
+
+  node = xmlNewNode (NULL, BAD_CAST "root");
   int res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->fkey),
-                                         self->writer,NULL);
+                                         node,NULL);
 
   g_assert_true (res >= 0);
 
-  //	res = xmlTextWriterEndDocument (self->writer);
+  doc = xmlNewDoc (BAD_CAST "1.0");
+  xmlDocSetRootElement (doc,node);
 
-  //	g_assert_true (res >= 0);
-  xmlFreeTextWriter (self->writer);
+  xmlDocDumpFormatMemory (doc,&xmlbuffer,&buffersize,1);
 
-  g_print ("%s\n",(gchar*)self->buffer->content);
+  g_print ("%s\n",(gchar*)xmlbuffer);
+
+  xmlFree (xmlbuffer);
+  xmlFreeDoc (doc);
 }
 
 static void
@@ -157,23 +162,10 @@ test_ddl_fkey_start (CheckDdlObject *self,
   self->fkey = gda_ddl_fkey_new ();
 
   g_assert_nonnull(self->fkey);
-  g_print("Before parse node\n");
+
   gboolean res = gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE(self->fkey),
                                               node,NULL);
-  g_print("After parse node\n");
   g_assert_true (res);
-
-  self->buffer = xmlBufferCreate ();
-
-  g_assert_nonnull (self->buffer);
-
-  self->writer = xmlNewTextWriterMemory (self->buffer,0);
-
-  g_assert_nonnull (self->writer);
-
-  res = xmlTextWriterStartDocument (self->writer, NULL, NULL, NULL);
-
-  g_assert_true (res >= 0);
 }
 
 static void
@@ -188,8 +180,6 @@ test_ddl_fkey_finish (CheckDdlObject *self,
   g_free (self->reftable);
   g_free (self->ondelete);
   g_free (self->onupdate);
-
-  xmlBufferFree (self->buffer);
 }
 
 gint
