@@ -57,7 +57,7 @@
 xmlDtdPtr       _gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       _gda_server_op_dtd = NULL;
-xmlDtdPtr		_gda_ddl_creator_dtd = NULL;
+xmlDtdPtr		_gda_db_catalog_dtd = NULL;
 
 static gboolean numeric_locale_dyn = FALSE;
 gchar          *gda_numeric_locale = "";
@@ -247,29 +247,29 @@ gda_init (void)
 		_gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
 	g_free (file);
 
-  /* GdaDdlCreator DTD */
-  _gda_ddl_creator_dtd = NULL;
+  /* GdaDbCreator DTD */
+  _gda_db_catalog_dtd = NULL;
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd",
-                                "libgda-ddl-creator.dtd", NULL);
+                                "libgda-db-catalog.dtd", NULL);
 	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		_gda_ddl_creator_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+		_gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
   else
     {
 	    if (g_getenv ("GDA_TOP_SRC_DIR"))
         {
           g_free (file);
           file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda",
-                                   "libgda-ddl-creator.dtd", NULL);
-          _gda_ddl_creator_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+                                   "libgda-db-catalog.dtd", NULL);
+          _gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 		    }
 	  }
 
-  if (!_gda_ddl_creator_dtd)
+  if (!_gda_db_catalog_dtd)
 	  g_message (_("Could not parse '%s': "
-                 "Validation for XML files for GdaDdlCreator will not be performed (some weird errors may occur)"),
+                 "Validation for XML files for GdaDbCreator will not be performed (some weird errors may occur)"),
                file);
   else
-		_gda_ddl_creator_dtd->name = xmlStrdup((xmlChar*) "ddl-creator");
+		_gda_db_catalog_dtd->name = xmlStrdup((xmlChar*) "db-catalog");
 
 	g_free (file);
 

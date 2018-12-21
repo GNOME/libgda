@@ -1,4 +1,4 @@
-/* gda-ddl-view.c
+/* gda-db-view.c
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -19,9 +19,9 @@
  */
 
 #include <glib/gi18n-lib.h>
-#include "gda-ddl-view.h"
-#include "gda-ddl-buildable.h"
-#include "gda-ddl-base.h"
+#include "gda-db-view.h"
+#include "gda-db-buildable.h"
+#include "gda-db-base.h"
 #include "gda-lockable.h"
 #include "gda-server-provider.h"
 
@@ -31,39 +31,39 @@ typedef struct
   gboolean m_istemp;
   gboolean m_ifnoexist;
   gboolean m_replace;
-} GdaDdlViewPrivate;
+} GdaDbViewPrivate;
 
 /**
- * SECTION:gda-ddl-view
+ * SECTION:gda-db-view
  * @short_description: Object to represent view database object
- * @see_also: GdaDdlTable, GdaDdlCreator
+ * @see_also: GdaDbTable, GdaDbCreator
  * @stability: Stable
  * @include: libgda/libgda.h
  *
  * This object represents a view of a database. The view can be constracted manually
- * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
- * #GdaDdlView implements #GdaDdlBuildable interface for parsing xml file.
+ * using API or generated from xml file together with other databse objects. See #GdaDbCreator.
+ * #GdaDbView implements #GdaDbBuildable interface for parsing xml file.
  */
 
-static void gda_ddl_view_buildable_interface_init (GdaDdlBuildableInterface *iface);
+static void gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GdaDdlView, gda_ddl_view, GDA_TYPE_DDL_BASE,
-                         G_ADD_PRIVATE (GdaDdlView)
-                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
-                                                gda_ddl_view_buildable_interface_init))
+G_DEFINE_TYPE_WITH_CODE (GdaDbView, gda_db_view, GDA_TYPE_DB_BASE,
+                         G_ADD_PRIVATE (GdaDbView)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
+                                                gda_db_view_buildable_interface_init))
 
 /* This is convenient way to name all nodes from xml file */
 enum {
-  GDA_DDL_VIEW_NODE,
-  GDA_DDL_VIEW_IFNOEXIST,
-  GDA_DDL_VIEW_TEMP,
-  GDA_DDL_VIEW_REPLACE,
-  GDA_DDL_VIEW_NAME,
-  GDA_DDL_VIEW_DEFSTR,
-  GDA_DDL_VIEW_N_NODES
+  GDA_DB_VIEW_NODE,
+  GDA_DB_VIEW_IFNOEXIST,
+  GDA_DB_VIEW_TEMP,
+  GDA_DB_VIEW_REPLACE,
+  GDA_DB_VIEW_NAME,
+  GDA_DB_VIEW_DEFSTR,
+  GDA_DB_VIEW_N_NODES
 };
 
-const gchar *gdaddlviewnodes[GDA_DDL_VIEW_N_NODES] = {
+const gchar *gdadbviewnodes[GDA_DB_VIEW_N_NODES] = {
   "view",
   "ifnoexist",
   "temp",
@@ -84,37 +84,37 @@ enum {
 static GParamSpec *properties [N_PROPS] = {NULL};
 
 /**
- * gda_ddl_view_new:
+ * gda_db_view_new:
  *
- * Returns: A new instance of #GdaDdlView.
+ * Returns: A new instance of #GdaDbView.
  *
  * Since: 6.0
  */
-GdaDdlView*
-gda_ddl_view_new (void)
+GdaDbView*
+gda_db_view_new (void)
 {
-  return g_object_new (GDA_TYPE_DDL_VIEW, NULL);
+  return g_object_new (GDA_TYPE_DB_VIEW, NULL);
 }
 
 static void
-gda_ddl_view_finalize (GObject *object)
+gda_db_view_finalize (GObject *object)
 {
-  GdaDdlView *self = GDA_DDL_VIEW(object);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbView *self = GDA_DB_VIEW(object);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   g_free (priv->mp_defstring);
 
-  G_OBJECT_CLASS (gda_ddl_view_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_db_view_parent_class)->finalize (object);
 }
 
 static void
-gda_ddl_view_get_property (GObject    *object,
+gda_db_view_get_property (GObject    *object,
                            guint       prop_id,
                            GValue     *value,
                            GParamSpec *pspec)
 {
-  GdaDdlView *self = GDA_DDL_VIEW (object);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbView *self = GDA_DB_VIEW (object);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   switch (prop_id) {
     case PROP_VIEW_TEMP:
@@ -136,13 +136,13 @@ gda_ddl_view_get_property (GObject    *object,
 }
 
 static void
-gda_ddl_view_set_property (GObject      *object,
+gda_db_view_set_property (GObject      *object,
                            guint         prop_id,
                            const GValue *value,
                            GParamSpec   *pspec)
 {
-  GdaDdlView *self = GDA_DDL_VIEW (object);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbView *self = GDA_DB_VIEW (object);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   switch (prop_id){
     case PROP_VIEW_TEMP:
@@ -165,13 +165,13 @@ gda_ddl_view_set_property (GObject      *object,
 }
 
 static void
-gda_ddl_view_class_init (GdaDdlViewClass *klass)
+gda_db_view_class_init (GdaDbViewClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->finalize = gda_ddl_view_finalize;
-  object_class->get_property = gda_ddl_view_get_property;
-  object_class->set_property = gda_ddl_view_set_property;
+  object_class->finalize = gda_db_view_finalize;
+  object_class->get_property = gda_db_view_get_property;
+  object_class->set_property = gda_db_view_set_property;
 
   properties[PROP_VIEW_TEMP] =
     g_param_spec_boolean ("istemp",
@@ -202,9 +202,9 @@ gda_ddl_view_class_init (GdaDdlViewClass *klass)
 }
 
 static void
-gda_ddl_view_init (GdaDdlView *self)
+gda_db_view_init (GdaDbView *self)
 {
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   priv->mp_defstring = NULL;
   priv->mp_defstring = NULL;
@@ -212,11 +212,11 @@ gda_ddl_view_init (GdaDdlView *self)
 }
 
 static gboolean
-gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
+gda_db_view_parse_node (GdaDbBuildable *buildable,
                          xmlNodePtr node,
                          GError **error)
 {
-  GdaDdlView *self = GDA_DDL_VIEW (buildable);
+  GdaDbView *self = GDA_DB_VIEW (buildable);
   g_return_val_if_fail (node, FALSE);
 
 /*
@@ -227,28 +227,28 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
   
   xmlChar *prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_NAME]);
+  prop = xmlGetProp (node,(xmlChar *)gdadbviewnodes[GDA_DB_VIEW_NAME]);
   g_assert (prop); /* Bug with xml valdation */
 
-  gda_ddl_base_set_name(GDA_DDL_BASE(self),(gchar*)prop);
+  gda_db_base_set_name(GDA_DB_BASE(self),(gchar*)prop);
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_REPLACE]);
+  prop = xmlGetProp (node,(xmlChar *)gdadbviewnodes[GDA_DB_VIEW_REPLACE]);
   if (prop)
     g_object_set (G_OBJECT(self),"replace",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_TEMP]);
+  prop = xmlGetProp (node,(xmlChar *)gdadbviewnodes[GDA_DB_VIEW_TEMP]);
   if (prop)
     g_object_set (G_OBJECT(self),"istemp",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST]);
+  prop = xmlGetProp (node,(xmlChar *)gdadbviewnodes[GDA_DB_VIEW_IFNOEXIST]);
   if (prop)
     g_object_set (G_OBJECT(self),"ifnoexist",*prop == 't' || *prop == 'T' ? TRUE : FALSE, NULL);
 
@@ -259,10 +259,10 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
  */
   for (xmlNodePtr it = node->children; it ; it = it->next)
     {
-      if (!g_strcmp0 ((char *)it->name,gdaddlviewnodes[GDA_DDL_VIEW_DEFSTR]))
+      if (!g_strcmp0 ((char *)it->name,gdadbviewnodes[GDA_DB_VIEW_DEFSTR]))
         {
           xmlChar *def = xmlNodeGetContent (it);
-          gda_ddl_view_set_defstring (self,(gchar*)def);
+          gda_db_view_set_defstring (self,(gchar*)def);
           xmlFree (def);
         }
     }
@@ -271,150 +271,150 @@ gda_ddl_view_parse_node (GdaDdlBuildable *buildable,
 }
 
 static gboolean
-gda_ddl_view_write_node (GdaDdlBuildable *buildable,
+gda_db_view_write_node (GdaDbBuildable *buildable,
                          xmlNodePtr rootnode,
                          GError **error)
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
 
-  GdaDdlView *self = GDA_DDL_VIEW (buildable);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbView *self = GDA_DB_VIEW (buildable);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   xmlNodePtr node = NULL;
   node  = xmlNewChild (rootnode,
                        NULL,
-                       BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_NODE],
+                       BAD_CAST gdadbviewnodes[GDA_DB_VIEW_NODE],
                        NULL);
   
   xmlNewProp (node,
-              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_NODE],
-              BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+              BAD_CAST gdadbviewnodes[GDA_DB_VIEW_NODE],
+              BAD_CAST gda_db_base_get_name (GDA_DB_BASE(self)));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_REPLACE],
+              BAD_CAST gdadbviewnodes[GDA_DB_VIEW_REPLACE],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_replace));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_TEMP],
+              BAD_CAST gdadbviewnodes[GDA_DB_VIEW_TEMP],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_istemp));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_IFNOEXIST],
+              BAD_CAST gdadbviewnodes[GDA_DB_VIEW_IFNOEXIST],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_ifnoexist));
 
   xmlNewChild (node,
                NULL,
-               BAD_CAST gdaddlviewnodes[GDA_DDL_VIEW_DEFSTR],
+               BAD_CAST gdadbviewnodes[GDA_DB_VIEW_DEFSTR],
                BAD_CAST priv->mp_defstring);
 
   return TRUE;
 }
 
 static void
-gda_ddl_view_buildable_interface_init (GdaDdlBuildableInterface *iface)
+gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface)
 {
-  iface->parse_node = gda_ddl_view_parse_node;
-  iface->write_node = gda_ddl_view_write_node;
+  iface->parse_node = gda_db_view_parse_node;
+  iface->write_node = gda_db_view_write_node;
 }
 
 /**
- * gda_ddl_view_get_istemp:
- * @self: a #GdaDdlView object
+ * gda_db_view_get_istemp:
+ * @self: a #GdaDbView object
  *
  * Returns: %TRUE if the view is temporary, %FALSE otherwise
  * Since: 6.0
  */
 gboolean
-gda_ddl_view_get_istemp (GdaDdlView *self)
+gda_db_view_get_istemp (GdaDbView *self)
 {
   g_return_val_if_fail (self, FALSE);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   return priv->m_istemp;
 }
 
 /**
- * gda_ddl_view_set_istemp:
- * @self: a #GdaDdlView object
+ * gda_db_view_set_istemp:
+ * @self: a #GdaDbView object
  * @temp: value to set
  *
  * Since: 6.0
  */
 void
-gda_ddl_view_set_istemp (GdaDdlView *self,gboolean temp)
+gda_db_view_set_istemp (GdaDbView *self,gboolean temp)
 {
   g_return_if_fail (self);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   priv->m_istemp = temp;
 }
 
 /**
- * gda_ddl_view_get_ifnoexist:
- * @self: a #GdaDdlView object
+ * gda_db_view_get_ifnoexist:
+ * @self: a #GdaDbView object
  *
  * Returns: %TRUE if th view should be created with "IF NOT EXISTS" key, %FALSE
  * otherwise
  * Since: 6.0
  */
 gboolean
-gda_ddl_view_get_ifnoexist (GdaDdlView *self)
+gda_db_view_get_ifnoexist (GdaDbView *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   return priv->m_ifnoexist;
 }
 
 /**
- * gda_ddl_view_set_ifnoexist:
- * @self: a #GdaDdlView object
+ * gda_db_view_set_ifnoexist:
+ * @self: a #GdaDbView object
  * @noexist: a value to set
  *
  * Since: 6.0
  */
 void
-gda_ddl_view_set_ifnoexist (GdaDdlView *self,
+gda_db_view_set_ifnoexist (GdaDbView *self,
                             gboolean noexist)
 {
   g_return_if_fail (self);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   priv->m_ifnoexist = noexist;
 }
 
 /**
- * gda_ddl_view_get_defstring:
- * @self: a #GdaDdlView object
+ * gda_db_view_get_defstring:
+ * @self: a #GdaDbView object
  *
  * Returns: view definition string
  * Sinc: 6.0
  */
 const gchar*
-gda_ddl_view_get_defstring (GdaDdlView *self)
+gda_db_view_get_defstring (GdaDbView *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   return priv->mp_defstring;
 }
 
 /**
- * gda_ddl_view_set_defstring:
- * @self: a #GdaDdlView object
+ * gda_db_view_set_defstring:
+ * @self: a #GdaDbView object
  * @str: view definition string to set. Should be valid SQL string
  *
  * Since: 6.0
  */
 void
-gda_ddl_view_set_defstring (GdaDdlView *self,
+gda_db_view_set_defstring (GdaDbView *self,
                             const gchar *str)
 {
   g_return_if_fail (self);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
   g_free (priv->mp_defstring);
   priv->mp_defstring = g_strdup (str);
 }
 
 /**
- * gda_ddl_view_get_replace:
- * @self: a #GdaDdlView object
+ * gda_db_view_get_replace:
+ * @self: a #GdaDbView object
  *
  * Returns: %TRUE if the current view should replace the existing one in the
  * database, %FALSE otherwise.
@@ -422,39 +422,39 @@ gda_ddl_view_set_defstring (GdaDdlView *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_view_get_replace (GdaDdlView *self)
+gda_db_view_get_replace (GdaDbView *self)
 {
   g_return_val_if_fail (self, FALSE);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   return priv->m_replace;
 }
 
 /**
- * gda_ddl_view_set_replace:
- * @self: a #GdaDdlView object
+ * gda_db_view_set_replace:
+ * @self: a #GdaDbView object
  * @replace: a value to set
  *
  * Since: 6.0
  */
 void
-gda_ddl_view_set_replace (GdaDdlView *self,
+gda_db_view_set_replace (GdaDbView *self,
                           gboolean replace)
 {
   g_return_if_fail (self);
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   priv->m_replace = replace;
 }
 
 /**
- * gda_ddl_view_create:
- * @self: a #GdaDdlView instance
+ * gda_db_view_create:
+ * @self: a #GdaDbView instance
  * @cnc: open connection for the operation
  * @error: error container
  *
  * This method performs CREATE_VIEW operation over @cnc using data stored in @self
- * It is a convenient method to perform operation. See gda_ddl_view_prepare_create() if better
+ * It is a convenient method to perform operation. See gda_db_view_prepare_create() if better
  * flexibility is needed. 
  *
  * Returns: %TRUE if no error, %FASLE otherwise
@@ -462,7 +462,7 @@ gda_ddl_view_set_replace (GdaDdlView *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_view_create (GdaDdlView *self,
+gda_db_view_create (GdaDbView *self,
                      GdaConnection *cnc,
                      GError **error)
 {
@@ -485,7 +485,7 @@ gda_ddl_view_create (GdaDdlView *self,
   if (!op)
     goto on_error;
 
-  if (!gda_ddl_view_prepare_create(self,op,error))
+  if (!gda_db_view_prepare_create(self,op,error))
     goto on_error;
 
   if(!gda_server_provider_perform_operation(provider,cnc,op,error))
@@ -502,8 +502,8 @@ on_error:
 }
 
 /**
- * gda_ddl_view_prepare_create:
- * @self: a #GdaDdlView instance
+ * gda_db_view_prepare_create:
+ * @self: a #GdaDbView instance
  * @op: #GdaServerOperation instance to populate
  * @error: error container
  *
@@ -512,17 +512,17 @@ on_error:
  * Returns: %TRUE if succeeded and %FALSE otherwise. 
  */
 gboolean
-gda_ddl_view_prepare_create (GdaDdlView *self,
+gda_db_view_prepare_create (GdaDbView *self,
                              GdaServerOperation *op,
                              GError **error)
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (op,FALSE);
 
-  GdaDdlViewPrivate *priv = gda_ddl_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at(op,
-                                         gda_ddl_base_get_name(GDA_DDL_BASE(self)),
+                                         gda_db_base_get_name(GDA_DB_BASE(self)),
                                          error,
                                          "/VIEW_DEF_P/VIEW_NAME"))
     return FALSE;
@@ -555,25 +555,25 @@ gda_ddl_view_prepare_create (GdaDdlView *self,
 }
 
 /**
- * gda_ddl_view_new_from_meta:
+ * gda_db_view_new_from_meta:
  * @view: a #GdaMetaView instance
  *
- * Create new #GdaDdlView object from the corresponding #GdaMetaView object
+ * Create new #GdaDbView object from the corresponding #GdaMetaView object
  *
- * Returns: New instance of #GdaDdlView 
+ * Returns: New instance of #GdaDbView 
  */
-GdaDdlView*
-gda_ddl_view_new_from_meta (GdaMetaView *view)
+GdaDbView*
+gda_db_view_new_from_meta (GdaMetaView *view)
 {
   if (!view)
-    return gda_ddl_view_new();
+    return gda_db_view_new();
 
-  GdaDdlView *ddlview = gda_ddl_view_new();
+  GdaDbView *dbview = gda_db_view_new();
 
-  gda_ddl_view_set_defstring (ddlview,view->view_def);
-  gda_ddl_view_set_replace (ddlview,view->is_updatable);
+  gda_db_view_set_defstring (dbview,view->view_def);
+  gda_db_view_set_replace (dbview,view->is_updatable);
 
-  return ddlview;
+  return dbview;
 }
 
 

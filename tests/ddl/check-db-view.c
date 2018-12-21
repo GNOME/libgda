@@ -1,4 +1,4 @@
-/* check-ddl-view.c
+/* check-db-view.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -22,14 +22,14 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
-#include <libgda/gda-ddl-view.h>
+#include <libgda/gda-db-view.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlwriter.h>
 
 typedef struct {
-    GdaDdlView *view;
+    GdaDbView *view;
 
     gchar *name;
     gchar *defstring;
@@ -39,72 +39,72 @@ typedef struct {
      
     xmlDocPtr doc;
     gchar *xmlfile;
-} CheckDdlObject;
+} CheckDbObject;
 
 static void
-test_ddl_view_name (CheckDdlObject *self,
+test_db_view_name (CheckDbObject *self,
                     gconstpointer user_data)
 {
   const gchar *name = NULL;
 
-  name = gda_ddl_base_get_name (GDA_DDL_BASE(self->view));
+  name = gda_db_base_get_name (GDA_DB_BASE(self->view));
 
   g_assert_cmpstr (name, ==, "Summary");
 }
 
 static void
-test_ddl_view_temp (CheckDdlObject *self,
+test_db_view_temp (CheckDbObject *self,
                     gconstpointer user_data)
 {
   gboolean istemp = FALSE;
 
-  istemp = gda_ddl_view_get_istemp(self->view);
+  istemp = gda_db_view_get_istemp(self->view);
 
   g_assert_true (istemp);
 }
 
 static void
-test_ddl_view_replace (CheckDdlObject *self,
+test_db_view_replace (CheckDbObject *self,
                        gconstpointer user_data)
 {
   gboolean replace = FALSE;
 
-  replace = gda_ddl_view_get_replace (self->view);
+  replace = gda_db_view_get_replace (self->view);
 
   g_assert_true (replace);
 }
 
 static void
-test_ddl_view_ifnoexist (CheckDdlObject *self,
+test_db_view_ifnoexist (CheckDbObject *self,
                          gconstpointer user_data)
 {
   gboolean ifnoexist = FALSE;
 
-  ifnoexist = gda_ddl_view_get_ifnoexist (self->view);
+  ifnoexist = gda_db_view_get_ifnoexist (self->view);
 
   g_assert_true (ifnoexist);
 }
 
 static void
-test_ddl_view_defstr (CheckDdlObject *self,
+test_db_view_defstr (CheckDbObject *self,
                       gconstpointer user_data)
 {
   const gchar *defstr = NULL;
 
-  defstr = gda_ddl_view_get_defstring (self->view);
+  defstr = gda_db_view_get_defstring (self->view);
 
   g_assert_cmpstr (defstr, ==, "SELECT id,name FROM CUSTOMER");
 }
 static void
-test_ddl_view_general (void)
+test_db_view_general (void)
 {
-  GdaDdlView *self = gda_ddl_view_new ();
+  GdaDbView *self = gda_db_view_new ();
 
   g_object_unref (self);
 }
 
 static void
-test_ddl_view_start (CheckDdlObject *self,
+test_db_view_start (CheckDbObject *self,
                      gconstpointer user_data)
 {
   self->doc = NULL;
@@ -135,18 +135,18 @@ test_ddl_view_start (CheckDdlObject *self,
   xmlNodePtr node = xmlDocGetRootElement (self->doc);
   g_assert_nonnull (node);
 
-  self->view = gda_ddl_view_new ();
+  self->view = gda_db_view_new ();
 
   g_assert_nonnull(self->view);
   g_print("Before parse node\n");
-  gboolean res = gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE(self->view),
+  gboolean res = gda_db_buildable_parse_node(GDA_DB_BUILDABLE(self->view),
                                               node,NULL);
   g_print("After parse node\n");
   g_assert_true (res);
 }
 
 static void
-test_ddl_view_finish (CheckDdlObject *self,
+test_db_view_finish (CheckDbObject *self,
                       gconstpointer user_data)
 {
   g_free (self->xmlfile);
@@ -164,43 +164,43 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add_func ("/test-ddl/view-basic",
-                   test_ddl_view_general);
+  g_test_add_func ("/test-db/view-basic",
+                   test_db_view_general);
 
-  g_test_add ("/test-ddl/view-name",
-              CheckDdlObject,
+  g_test_add ("/test-db/view-name",
+              CheckDbObject,
               NULL,
-              test_ddl_view_start,
-              test_ddl_view_name,
-              test_ddl_view_finish);
+              test_db_view_start,
+              test_db_view_name,
+              test_db_view_finish);
 
-  g_test_add ("/test-ddl/view-temp",
-              CheckDdlObject,
+  g_test_add ("/test-db/view-temp",
+              CheckDbObject,
               NULL,
-              test_ddl_view_start,
-              test_ddl_view_temp,
-              test_ddl_view_finish);
+              test_db_view_start,
+              test_db_view_temp,
+              test_db_view_finish);
 
-  g_test_add ("/test-ddl/view-ifnoexist",
-              CheckDdlObject,
+  g_test_add ("/test-db/view-ifnoexist",
+              CheckDbObject,
               NULL,
-              test_ddl_view_start,
-              test_ddl_view_ifnoexist,
-              test_ddl_view_finish);
+              test_db_view_start,
+              test_db_view_ifnoexist,
+              test_db_view_finish);
 
-  g_test_add ("/test-ddl/view-replace",
-              CheckDdlObject,
+  g_test_add ("/test-db/view-replace",
+              CheckDbObject,
               NULL,
-              test_ddl_view_start,
-              test_ddl_view_replace,
-              test_ddl_view_finish);
+              test_db_view_start,
+              test_db_view_replace,
+              test_db_view_finish);
   
-  g_test_add ("/test-ddl/view-defstr",
-              CheckDdlObject,
+  g_test_add ("/test-db/view-defstr",
+              CheckDbObject,
               NULL,
-              test_ddl_view_start,
-              test_ddl_view_defstr,
-              test_ddl_view_finish);
+              test_db_view_start,
+              test_db_view_defstr,
+              test_db_view_finish);
   
   return g_test_run();
 }

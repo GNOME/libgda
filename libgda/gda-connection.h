@@ -41,7 +41,7 @@
 #include <libgda/gda-meta-store.h>
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-batch.h>
-#include <libgda/gda-ddl-creator.h>
+#include <libgda/gda-db-catalog.h>
 
 G_BEGIN_DECLS
 
@@ -394,7 +394,7 @@ GdaDataModel        *gda_connection_get_meta_store_data  (GdaConnection *cnc, Gd
 							  GError **error, gint nb_filters, ...);
 GdaDataModel        *gda_connection_get_meta_store_data_v(GdaConnection *cnc, GdaConnectionMetaType meta_type,
 							  GList* filters, GError **error);
-GdaDdlCreator       *gda_connection_create_ddl_creator (GdaConnection *cnc);
+GdaDbCatalog        *gda_connection_create_db_catalog    (GdaConnection *cnc);
 G_END_DECLS
 
 #endif

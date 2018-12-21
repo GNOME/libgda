@@ -1,5 +1,5 @@
 /*
- * gda-ddl-buildable.h
+ * gda-db-buildable.h
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -18,8 +18,8 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#ifndef GDA_DDL_BUILDABLE_H
-#define GDA_DDL_BUILDABLE_H
+#ifndef GDA_DB_BUILDABLE_H
+#define GDA_DB_BUILDABLE_H
 
 #include <glib-object.h>
 #include <glib.h>
@@ -28,32 +28,32 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DDL_BUILDABLE gda_ddl_buildable_get_type ()
-G_DECLARE_INTERFACE(GdaDdlBuildable, gda_ddl_buildable,GDA, DDL_BUILDABLE,GObject)
+#define GDA_TYPE_DB_BUILDABLE gda_db_buildable_get_type ()
+G_DECLARE_INTERFACE(GdaDbBuildable, gda_db_buildable,GDA, DB_BUILDABLE,GObject)
 
-struct _GdaDdlBuildableInterface
+struct _GdaDbBuildableInterface
 {
   GTypeInterface parent_iface;
 
-  gboolean (*parse_node)(GdaDdlBuildable *self,
+  gboolean (*parse_node)(GdaDbBuildable *self,
                          xmlNodePtr node,
                          GError **error);
 
-  gboolean (*write_node)(GdaDdlBuildable *self,
+  gboolean (*write_node)(GdaDbBuildable *self,
                          xmlNodePtr node,
                          GError **error);
 };
 
-gboolean gda_ddl_buildable_parse_node (GdaDdlBuildable *self,
+gboolean gda_db_buildable_parse_node (GdaDbBuildable *self,
                                        xmlNodePtr node,
                                        GError **error);
 
-gboolean gda_ddl_buildable_write_node (GdaDdlBuildable *self,
+gboolean gda_db_buildable_write_node (GdaDbBuildable *self,
                                        xmlNodePtr node,
                                        GError **error);
 
 G_END_DECLS
 
-#endif /* end of include guard: GDA-DDL-BUILDABLE_H */
+#endif /* end of include guard: GDA-DB-BUILDABLE_H */
 
 

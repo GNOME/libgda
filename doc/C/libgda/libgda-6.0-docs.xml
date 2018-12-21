@@ -88,15 +88,15 @@
       <xi:include href="xml/gda-attributes-manager.xml"/>
     </chapter>
 
-    <chapter id="DDL">
-      <title>DDL</title>
-      <xi:include href="xml/gda-ddl-base.xml"/>
-      <xi:include href="xml/gda-ddl-buildable.xml"/>
-      <xi:include href="xml/gda-ddl-column.xml"/>
-      <xi:include href="xml/gda-ddl-creator.xml"/>
-      <xi:include href="xml/gda-ddl-fkey.xml"/>
-      <xi:include href="xml/gda-ddl-table.xml"/>
-      <xi:include href="xml/gda-ddl-view.xml"/>
+    <chapter id="DB Catalog">
+      <title>DB Catalog</title>
+      <xi:include href="xml/gda-db-base.xml"/>
+      <xi:include href="xml/gda-db-buildable.xml"/>
+      <xi:include href="xml/gda-db-column.xml"/>
+      <xi:include href="xml/gda-db-catalog.xml"/>
+      <xi:include href="xml/gda-db-fkey.xml"/>
+      <xi:include href="xml/gda-db-table.xml"/>
+      <xi:include href="xml/gda-db-view.xml"/>
     </chapter>
 
     <chapter id="Statement">
