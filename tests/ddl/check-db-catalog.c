@@ -1,4 +1,4 @@
-/* check-ddl-creator.c
+/* check-db-catalog.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -22,8 +22,8 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
-#include <libgda/gda-ddl-creator.h>
-#include <libgda/gda-ddl-base.h>
+#include <libgda/gda-db-catalog.h>
+#include <libgda/gda-db-base.h>
 #include <sql-parser/gda-sql-parser.h>
 
 #include <libxml/parser.h>
@@ -39,30 +39,30 @@ enum {
 
 
 typedef struct {
-    GdaDdlCreator *creator;
+    GdaDbCatalog *catalog;
     gchar *xmlfile;
     GdaConnection *cnc;
     GFile *file;
-} CheckDdlObject;
+} CheckDbObject;
 
 typedef struct {
-    GdaDdlCreator *creator;
+    GdaDbCatalog *catalog;
     GdaConnection *cnc;
-    GdaDdlColumn *column_id;
-    GdaDdlColumn *column_name;
-    GdaDdlColumn *column_ctime;
-    GdaDdlColumn *column_ts;
-    GdaDdlColumn *column_state;
-    GdaDdlTable *table;
-} DdlCreatorCnc;
+    GdaDbColumn *column_id;
+    GdaDbColumn *column_name;
+    GdaDbColumn *column_ctime;
+    GdaDbColumn *column_ts;
+    GdaDbColumn *column_state;
+    GdaDbTable *table;
+} DbCatalogCnc;
 
 static void
-test_ddl_creator_start (CheckDdlObject *self,
+test_db_catalog_start (CheckDbObject *self,
                      gconstpointer user_data)
 {
   gda_init();
   self->xmlfile = NULL;
-  self->creator = NULL;
+  self->catalog = NULL;
   self->cnc = NULL;
   self->file = NULL;
 
@@ -79,7 +79,7 @@ test_ddl_creator_start (CheckDdlObject *self,
   g_assert_nonnull (self->xmlfile);
 
   self->cnc = gda_connection_new_from_string("SQLite",
-                                             "DB_DIR=.;DB_NAME=ddl_test",
+                                             "DB_DIR=.;DB_NAME=db_test",
                                              NULL,
                                              GDA_CONNECTION_OPTIONS_NONE,
                                              NULL);
@@ -89,25 +89,25 @@ test_ddl_creator_start (CheckDdlObject *self,
   gboolean openres = gda_connection_open(self->cnc,NULL);
   g_assert_true (openres);
 
-  self->creator = gda_connection_create_ddl_creator (self->cnc);
+  self->catalog = gda_connection_create_db_catalog (self->cnc);
 
-  g_assert_nonnull (self->creator);
+  g_assert_nonnull (self->catalog);
 
   self->file = g_file_new_for_path (self->xmlfile); 
   g_print ("GFile is %s\n",g_file_get_path(self->file));
 }
 
 static void
-test_ddl_creator_start_db (DdlCreatorCnc *self,
+test_db_catalog_start_db (DbCatalogCnc *self,
                            gconstpointer user_data)
 {
   gda_init();
 
   self->cnc = NULL;
-  self->creator = NULL;
+  self->catalog = NULL;
  
   self->cnc = gda_connection_new_from_string ("SQLite",
-                                              "DB_DIR=.;DB_NAME=ddl_types",
+                                              "DB_DIR=.;DB_NAME=db_types",
                                               NULL,
                                               GDA_CONNECTION_OPTIONS_NONE,
                                               NULL);
@@ -117,71 +117,71 @@ test_ddl_creator_start_db (DdlCreatorCnc *self,
 
   g_assert_true (open_res);
 
-  self->creator = gda_connection_create_ddl_creator (self->cnc);
+  self->catalog = gda_connection_create_db_catalog (self->cnc);
 
-  g_assert_nonnull (self->creator);
+  g_assert_nonnull (self->catalog);
 
-  self->table = gda_ddl_table_new ();
-  gda_ddl_base_set_name (GDA_DDL_BASE(self->table),"dntypes");
+  self->table = gda_db_table_new ();
+  gda_db_base_set_name (GDA_DB_BASE(self->table),"dntypes");
 
-  self->column_id = gda_ddl_column_new ();
-  gda_ddl_column_set_name (self->column_id,"id");
-  gda_ddl_column_set_type (self->column_id, G_TYPE_INT);
-  gda_ddl_column_set_autoinc (self->column_id, TRUE);
-  gda_ddl_column_set_pkey (self->column_id, TRUE);
+  self->column_id = gda_db_column_new ();
+  gda_db_column_set_name (self->column_id,"id");
+  gda_db_column_set_type (self->column_id, G_TYPE_INT);
+  gda_db_column_set_autoinc (self->column_id, TRUE);
+  gda_db_column_set_pkey (self->column_id, TRUE);
 
-  gda_ddl_table_append_column (self->table,self->column_id);
+  gda_db_table_append_column (self->table,self->column_id);
 
-  self->column_name = gda_ddl_column_new ();
-  gda_ddl_column_set_name (self->column_name,"name");
-  gda_ddl_column_set_type (self->column_name, G_TYPE_STRING);
-  gda_ddl_column_set_size (self->column_name, 50);
+  self->column_name = gda_db_column_new ();
+  gda_db_column_set_name (self->column_name,"name");
+  gda_db_column_set_type (self->column_name, G_TYPE_STRING);
+  gda_db_column_set_size (self->column_name, 50);
 
-  gda_ddl_table_append_column (self->table,self->column_name);
+  gda_db_table_append_column (self->table,self->column_name);
 
-  self->column_ctime = gda_ddl_column_new ();
-  gda_ddl_column_set_name (self->column_ctime,"create_time");
-  gda_ddl_column_set_type (self->column_ctime, GDA_TYPE_TIME);
+  self->column_ctime = gda_db_column_new ();
+  gda_db_column_set_name (self->column_ctime,"create_time");
+  gda_db_column_set_type (self->column_ctime, GDA_TYPE_TIME);
 
-  gda_ddl_table_append_column (self->table,self->column_ctime);
+  gda_db_table_append_column (self->table,self->column_ctime);
 
-  self->column_state = gda_ddl_column_new ();
-  gda_ddl_column_set_name (self->column_state,"state");
-  gda_ddl_column_set_type (self->column_state, G_TYPE_BOOLEAN);
+  self->column_state = gda_db_column_new ();
+  gda_db_column_set_name (self->column_state,"state");
+  gda_db_column_set_type (self->column_state, G_TYPE_BOOLEAN);
 
-  gda_ddl_table_append_column (self->table,self->column_state);
+  gda_db_table_append_column (self->table,self->column_state);
 
-  self->column_ts = gda_ddl_column_new ();
-  gda_ddl_column_set_name (self->column_ts,"mytimestamp");
-  gda_ddl_column_set_type (self->column_ts, G_TYPE_DATE_TIME);
+  self->column_ts = gda_db_column_new ();
+  gda_db_column_set_name (self->column_ts,"mytimestamp");
+  gda_db_column_set_type (self->column_ts, G_TYPE_DATE_TIME);
 
-  gda_ddl_table_append_column (self->table,self->column_ts);
+  gda_db_table_append_column (self->table,self->column_ts);
 
-  gda_ddl_creator_append_table (self->creator, self->table);
+  gda_db_catalog_append_table (self->catalog, self->table);
 
-  open_res = gda_ddl_creator_perform_operation (self->creator,NULL);
+  open_res = gda_db_catalog_perform_operation (self->catalog,NULL);
 
   g_assert_true (open_res);
 }
 
 static void
-test_ddl_creator_finish (CheckDdlObject *self,
+test_db_catalog_finish (CheckDbObject *self,
                       gconstpointer user_data)
 {
   gda_connection_close(self->cnc,NULL);
   g_free (self->xmlfile);
   g_object_unref (self->file);
-  g_object_unref (self->creator);
+  g_object_unref (self->catalog);
   g_object_unref (self->cnc);
 }
 
 static void
-test_ddl_creator_finish_db (DdlCreatorCnc *self,
+test_db_catalog_finish_db (DbCatalogCnc *self,
                             gconstpointer user_data)
 {
   gda_connection_close(self->cnc,NULL);
   g_object_unref (self->cnc);
-  g_object_unref (self->creator);
+  g_object_unref (self->catalog);
   g_object_unref (self->column_id);
   g_object_unref (self->column_name);
   g_object_unref (self->column_ctime);
@@ -190,10 +190,10 @@ test_ddl_creator_finish_db (DdlCreatorCnc *self,
 }
 
 static void
-test_ddl_creator_parse_xml_path (CheckDdlObject *self,
+test_db_catalog_parse_xml_path (CheckDbObject *self,
                                 gconstpointer user_data)
 {
-  gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
+  gboolean res = gda_db_catalog_parse_file_from_path(self->catalog,
                                                       self->xmlfile,
                                                       NULL);
 
@@ -201,39 +201,39 @@ test_ddl_creator_parse_xml_path (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creator_parse_xml_file (CheckDdlObject *self,
+test_db_catalog_parse_xml_file (CheckDbObject *self,
                                 gconstpointer user_data)
 {
-  gboolean res = gda_ddl_creator_parse_file (self->creator,self->file,NULL);
+  gboolean res = gda_db_catalog_parse_file (self->catalog,self->file,NULL);
   g_assert_true (res);
 }
 
 static void
-test_ddl_creator_validate_xml (CheckDdlObject *self,
+test_db_catalog_validate_xml (CheckDbObject *self,
                               gconstpointer user_data)
 {
-  gboolean res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
+  gboolean res = gda_db_catalog_validate_file_from_path (self->xmlfile,NULL);
   g_assert_true (res);
 }
 
 static void
-test_ddl_creator_create_db (CheckDdlObject *self,
+test_db_catalog_create_db (CheckDbObject *self,
                            gconstpointer user_data)
 {
-  gboolean res = gda_ddl_creator_parse_file_from_path(self->creator,
+  gboolean res = gda_db_catalog_parse_file_from_path(self->catalog,
                                                       self->xmlfile,
                                                       NULL);
 
   g_assert_true (res);
  
-  res = gda_ddl_creator_write_to_path (self->creator,
-                                       "ddl-test-out.xml",
+  res = gda_db_catalog_write_to_path (self->catalog,
+                                       "db-test-out.xml",
                                              NULL);
 
   g_assert_true (res);
 
   GError *error = NULL;
-  gboolean resop = gda_ddl_creator_perform_operation(self->creator,
+  gboolean resop = gda_db_catalog_perform_operation(self->catalog,
                                                      &error);  
 
   if (!resop)
@@ -243,7 +243,7 @@ test_ddl_creator_create_db (CheckDdlObject *self,
 }
 
 static void
-test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
+test_db_catalog_parse_cnc (DbCatalogCnc *self,
                             gconstpointer user_data)
 {
   gboolean open_res;
@@ -276,31 +276,31 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
   model = gda_connection_execute_select_command (self->cnc,"SELECT * FROM dntypes",NULL);
   g_assert_nonnull (model);
 
-  GdaDdlCreator *creator = gda_connection_create_ddl_creator (self->cnc);
-  open_res = gda_ddl_creator_parse_cnc (creator,NULL);
+  GdaDbCatalog *catalog = gda_connection_create_db_catalog (self->cnc);
+  open_res = gda_db_catalog_parse_cnc (catalog,NULL);
 
   g_assert_true (open_res);
 
-  GList *tables = gda_ddl_creator_get_tables (creator);
+  GList *tables = gda_db_catalog_get_tables (catalog);
   g_assert_nonnull (tables);
   gint raw = 0;
   gint column_count = 0;
 
   for (GList *it = tables; it; it = it->next)
     {
-      g_assert_cmpstr (dntypes,==,gda_ddl_base_get_name (GDA_DDL_BASE(it->data)));
-      GList *columns = gda_ddl_table_get_columns (GDA_DDL_TABLE(it->data));
+      g_assert_cmpstr (dntypes,==,gda_db_base_get_name (GDA_DB_BASE(it->data)));
+      GList *columns = gda_db_table_get_columns (GDA_DB_TABLE(it->data));
       g_assert_nonnull (columns);
 
       column_count = 0;
 
       for (GList *jt = columns;jt;jt=jt->next)
         {
-          GdaDdlColumn *column = GDA_DDL_COLUMN (jt->data);
-          GType column_type = gda_ddl_column_get_gtype (column);
+          GdaDbColumn *column = GDA_DB_COLUMN (jt->data);
+          GType column_type = gda_db_column_get_gtype (column);
           g_assert_true (column_type != G_TYPE_NONE);
           
-          if (!g_strcmp0 ("id",gda_ddl_column_get_name (column))) 
+          if (!g_strcmp0 ("id",gda_db_column_get_name (column))) 
             {
               GError *error = NULL;
               const GValue *value = gda_data_model_get_typed_value_at (model,
@@ -321,7 +321,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
               
             }
           
-          if (!g_strcmp0 ("name",gda_ddl_column_get_name (column))) 
+          if (!g_strcmp0 ("name",gda_db_column_get_name (column))) 
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                        column_count++,
@@ -338,7 +338,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
               
             }
 
-          if (!g_strcmp0 ("state",gda_ddl_column_get_name (column))) 
+          if (!g_strcmp0 ("state",gda_db_column_get_name (column))) 
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -354,7 +354,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
               g_assert_true (TRUE && g_value_get_boolean (value));
             }
 
-          if (!g_strcmp0 ("create_time",gda_ddl_column_get_name (column))) 
+          if (!g_strcmp0 ("create_time",gda_db_column_get_name (column))) 
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -371,7 +371,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
               
             }
 
-          if (!g_strcmp0 ("mytimestamp",gda_ddl_column_get_name (column))) 
+          if (!g_strcmp0 ("mytimestamp",gda_db_column_get_name (column))) 
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -395,7 +395,7 @@ test_ddl_creator_parse_cnc (DdlCreatorCnc *self,
       raw++;
     }
 
-  g_object_unref (creator);
+  g_object_unref (catalog);
   g_assert_true (open_res);
 
   gda_value_free (value_name);
@@ -413,39 +413,39 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add ("/test-ddl/creator-parse-file",
-              CheckDdlObject,
+  g_test_add ("/test-db/catalog-parse-file",
+              CheckDbObject,
               NULL,
-              test_ddl_creator_start,
-              test_ddl_creator_parse_xml_file,
-              test_ddl_creator_finish);
+              test_db_catalog_start,
+              test_db_catalog_parse_xml_file,
+              test_db_catalog_finish);
 
-  g_test_add ("/test-ddl/creator-parse-path",
-              CheckDdlObject,
+  g_test_add ("/test-db/catalog-parse-path",
+              CheckDbObject,
               NULL,
-              test_ddl_creator_start,
-              test_ddl_creator_parse_xml_path,
-              test_ddl_creator_finish);
+              test_db_catalog_start,
+              test_db_catalog_parse_xml_path,
+              test_db_catalog_finish);
 
-  g_test_add ("/test-ddl/creator-create-db",
-              CheckDdlObject,
+  g_test_add ("/test-db/catalog-create-db",
+              CheckDbObject,
               NULL,
-              test_ddl_creator_start,
-              test_ddl_creator_create_db,
-              test_ddl_creator_finish);
+              test_db_catalog_start,
+              test_db_catalog_create_db,
+              test_db_catalog_finish);
 
-  g_test_add ("/test-ddl/creator-validate-xml",
-              CheckDdlObject,
+  g_test_add ("/test-db/catalog-validate-xml",
+              CheckDbObject,
               NULL,
-              test_ddl_creator_start,
-              test_ddl_creator_validate_xml,
-              test_ddl_creator_finish);
-  g_test_add ("/test-ddl/creator-parse-cnc",
-              DdlCreatorCnc, 
+              test_db_catalog_start,
+              test_db_catalog_validate_xml,
+              test_db_catalog_finish);
+  g_test_add ("/test-db/catalog-parse-cnc",
+              DbCatalogCnc, 
               NULL,
-              test_ddl_creator_start_db,
-              test_ddl_creator_parse_cnc,
-              test_ddl_creator_finish_db);
+              test_db_catalog_start_db,
+              test_db_catalog_parse_cnc,
+              test_db_catalog_finish_db);
  
   return g_test_run();
 }

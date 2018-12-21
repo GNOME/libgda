@@ -9,8 +9,8 @@ utility_holder_load_attributes.node type="Xml.Node*"
 DataModelImport.new_xml_node.node type="Xml.Node*"
 value_new_from_xml.node type="Xml.Node"
 ServerOperation.load_data_from_xml.node type="Xml.Node*"
-DdlBuildable.parse_node.node type="Xml.Node*"
-DdlBuildable.write_node.node type="Xml.Node*"
+DbBuildable.parse_node.node type="Xml.Node*"
+DbBuildable.write_node.node type="Xml.Node*"
 
 // Rename methods
 Numeric.get_string nullable=true

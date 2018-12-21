@@ -1,12 +1,12 @@
 inc_testsh = include_directories ('.')
 inc_testsh_dep = declare_dependency (include_directories : inc_testsh)
 
-ddl_sources = files([
-	'check-ddl-creator.c'
+db_sources = files([
+	'check-db-catalog.c'
 	])
 
-tbc = executable('check-ddl-creator',
-	ddl_sources,
+tbc = executable('check-db-catalog',
+	db_sources,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -21,15 +21,15 @@ tbc = executable('check-ddl-creator',
 		],
 	install: false
 	)
-test('ddlcreator', tbc,
+test('dbcatalog', tbc,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
 
-ddltb = executable('check_ddl_base',
-	'check-ddl-base.c',
+dbtb = executable('check_db_base',
+	'check-db-base.c',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -44,7 +44,7 @@ ddltb = executable('check_ddl_base',
 		],
 	install: false
 	)
-test('ddlbase', ddltb,
+test('dbbase', dbtb,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -53,8 +53,8 @@ test('ddlbase', ddltb,
 
 
 
-ddltc = executable('check_ddl_column',
-	'check-ddl-column.c',
+dbtc = executable('check_db_column',
+	'check-db-column.c',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -69,15 +69,15 @@ ddltc = executable('check_ddl_column',
 		],
 	install: false
 	)
-test('ddlcolumn', ddltc,
+test('dbcolumn', dbtc,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
 
-ddltv = executable('check_ddl_view',
-	'check-ddl-view.c',
+dbtv = executable('check_db_view',
+	'check-db-view.c',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -92,14 +92,14 @@ ddltv = executable('check_ddl_view',
 		],
 	install: false
 	)
-test('ddlview', ddltv,
+test('dbview', dbtv,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
-ddlfkey = executable('check_ddl_fkey',
-	'check-ddl-fkey.c',
+dbfkey = executable('check_db_fkey',
+	'check-db-fkey.c',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -114,14 +114,14 @@ ddlfkey = executable('check_ddl_fkey',
 		],
 	install: false
 	)
-test('ddlfkey', ddlfkey,
+test('dbfkey', dbfkey,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
-ddlcreate = executable('check_ddl_create',
-	'check-ddl-db-create.c',
+dbcreate = executable('check_db_create',
+	'check-db-db-create.c',
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -136,19 +136,19 @@ ddlcreate = executable('check_ddl_create',
 		],
 	install: false
 	)
-test('ddlcreate', ddlcreate,
+test('dbcreate', dbcreate,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
 		]
 	)
 
-ddl_creator_pg_sources = files([
-	'check-ddl-creator-postgresql.c'
+db_catalog_pg_sources = files([
+	'check-db-catalog-postgresql.c'
 	])
 
-tcpg = executable('check-ddl-creator-postgresql',
-	ddl_creator_pg_sources,
+tcpg = executable('check-db-catalog-postgresql',
+	db_catalog_pg_sources,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -164,7 +164,7 @@ tcpg = executable('check-ddl-creator-postgresql',
 		],
 	install: false
 	)
-test('ddlcreator-postgresql', tcpg,
+test('dbcatalog-postgresql', tcpg,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()

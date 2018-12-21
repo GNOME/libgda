@@ -1,4 +1,4 @@
-/* gda-ddl-table.c
+/* gda-db-table.c
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -18,9 +18,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "gda-ddl-table.h"
-#include "gda-ddl-fkey.h"
-#include "gda-ddl-column.h"
+#include "gda-db-table.h"
+#include "gda-db-fkey.h"
+#include "gda-db-column.h"
 #include <libgda/sql-parser/gda-sql-statement.h>
 #include <libgda/gda-lockable.h>
 #include "gda-server-provider.h"
@@ -28,36 +28,36 @@
 #include "gda-meta-struct.h"
 #include <glib/gi18n-lib.h>
 
-G_DEFINE_QUARK (gda_ddl_table_error,gda_ddl_table_error)
+G_DEFINE_QUARK (gda_db_table_error,gda_db_table_error)
 
 typedef struct
 {
   gchar *mp_comment;
 
   gboolean m_istemp;
-  GList *mp_columns; /* Type GdaDdlColumn*/
-  GList *mp_fkeys; /* List of all fkeys, GdaDdlFkey */
-} GdaDdlTablePrivate;
+  GList *mp_columns; /* Type GdaDbColumn*/
+  GList *mp_fkeys; /* List of all fkeys, GdaDbFkey */
+} GdaDbTablePrivate;
 
 /**
- * SECTION:gda-ddl-table
- * @title: GdaDdlTable
+ * SECTION:gda-db-table
+ * @title: GdaDbTable
  * @short_description: Object to represent table database object
- * @see_also: #GdaDdlView, #GdaDdlCreator
+ * @see_also: #GdaDbView, #GdaDbCreator
  * @stability: Stable
  * @include: libgda/libgda.h
  *
  * This object represents a table of a database. The table view can be constracted manually
- * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
- * #GdaDdlTable implements #GdaDdlBuildable interface for parsing xml file.
+ * using API or generated from xml file together with other databse objects. See #GdaDbCreator.
+ * #GdaDbTable implements #GdaDbBuildable interface for parsing xml file.
  */
 
-static void gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface);
+static void gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GdaDdlTable, gda_ddl_table, GDA_TYPE_DDL_BASE,
-                         G_ADD_PRIVATE (GdaDdlTable)
-                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
-                                                gda_ddl_table_buildable_interface_init))
+G_DEFINE_TYPE_WITH_CODE (GdaDbTable, gda_db_table, GDA_TYPE_DB_BASE,
+                         G_ADD_PRIVATE (GdaDbTable)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
+                                                gda_db_table_buildable_interface_init))
 
 enum {
     PROP_0,
@@ -71,16 +71,16 @@ static GParamSpec *properties [N_PROPS] = {NULL};
 
 /* This is a convenient way to name all nodes from xml file */
 enum {
-  GDA_DDL_TABLE_NODE,
-  GDA_DDL_TABLE_NAME,
-  GDA_DDL_TABLE_TEMP,
-  GDA_DDL_TABLE_SPACE,
-  GDA_DDL_TABLE_COMMENT,
+  GDA_DB_TABLE_NODE,
+  GDA_DB_TABLE_NAME,
+  GDA_DB_TABLE_TEMP,
+  GDA_DB_TABLE_SPACE,
+  GDA_DB_TABLE_COMMENT,
 
-  GDA_DDL_TABLE_N_NODES
+  GDA_DB_TABLE_N_NODES
 };
 
-const gchar *gdaddltablenodes[GDA_DDL_TABLE_N_NODES] = {
+const gchar *gdadbtablenodes[GDA_DB_TABLE_N_NODES] = {
   "table",
   "name",
   "temptable",
@@ -89,49 +89,49 @@ const gchar *gdaddltablenodes[GDA_DDL_TABLE_N_NODES] = {
 };
 
 /**
- * gda_ddl_table_new:
+ * gda_db_table_new:
  *
- * Returns: New instance of #GdaDdlTable.
+ * Returns: New instance of #GdaDbTable.
  */
-GdaDdlTable *
-gda_ddl_table_new (void)
+GdaDbTable *
+gda_db_table_new (void)
 {
-  return g_object_new (GDA_TYPE_DDL_TABLE, NULL);
+  return g_object_new (GDA_TYPE_DB_TABLE, NULL);
 }
 
 static void
-gda_ddl_table_finalize (GObject *object)
+gda_db_table_finalize (GObject *object)
 {
-  GdaDdlTable *self = (GdaDdlTable *)object;
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTable *self = (GdaDbTable *)object;
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   g_free (priv->mp_comment);
 
-  G_OBJECT_CLASS (gda_ddl_table_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_db_table_parent_class)->finalize (object);
 }
 
 static void
-gda_ddl_table_dispose (GObject *object)
+gda_db_table_dispose (GObject *object)
 {
-  GdaDdlTable *self = (GdaDdlTable *)object;
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTable *self = (GdaDbTable *)object;
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   if (priv->mp_fkeys)
     g_list_free_full (priv->mp_fkeys, (GDestroyNotify) g_object_unref);
   if (priv->mp_columns)
     g_list_free_full (priv->mp_columns, (GDestroyNotify)g_object_unref);
 
-  G_OBJECT_CLASS (gda_ddl_table_parent_class)->dispose (object);
+  G_OBJECT_CLASS (gda_db_table_parent_class)->dispose (object);
 }
 
 static void
-gda_ddl_table_get_property (GObject    *object,
+gda_db_table_get_property (GObject    *object,
                             guint       prop_id,
                             GValue     *value,
                             GParamSpec *pspec)
 {
-  GdaDdlTable *self = GDA_DDL_TABLE (object);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTable *self = GDA_DB_TABLE (object);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   switch (prop_id) {
     case PROP_COMMENT:
@@ -147,13 +147,13 @@ gda_ddl_table_get_property (GObject    *object,
 }
 
 static void
-gda_ddl_table_set_property (GObject      *object,
+gda_db_table_set_property (GObject      *object,
                             guint         prop_id,
                             const GValue *value,
                             GParamSpec   *pspec)
 {
-  GdaDdlTable *self = GDA_DDL_TABLE (object);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTable *self = GDA_DB_TABLE (object);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   switch (prop_id) {
     case PROP_COMMENT:
@@ -169,14 +169,14 @@ gda_ddl_table_set_property (GObject      *object,
 }
 
 static void
-gda_ddl_table_class_init (GdaDdlTableClass *klass)
+gda_db_table_class_init (GdaDbTableClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->finalize = gda_ddl_table_finalize;
-  object_class->dispose = gda_ddl_table_dispose;
-  object_class->get_property = gda_ddl_table_get_property;
-  object_class->set_property = gda_ddl_table_set_property;
+  object_class->finalize = gda_db_table_finalize;
+  object_class->dispose = gda_db_table_dispose;
+  object_class->get_property = gda_db_table_get_property;
+  object_class->set_property = gda_db_table_set_property;
 
   properties[PROP_COMMENT] = g_param_spec_string ("comment",
                                                   "Comment",
@@ -193,9 +193,9 @@ gda_ddl_table_class_init (GdaDdlTableClass *klass)
 }
 
 static void
-gda_ddl_table_init (GdaDdlTable *self)
+gda_db_table_init (GdaDbTable *self)
 {
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   priv->mp_columns = NULL;
   priv->m_istemp = FALSE;
@@ -204,8 +204,8 @@ gda_ddl_table_init (GdaDdlTable *self)
 }
 
 /**
- * gda_ddl_table_parse_node:
- * @self: a #GdaDdlTable object
+ * gda_db_table_parse_node:
+ * @self: a #GdaDbTable object
  * @node: instance of #xmlNodePtr to parse
  * @error: #GError to handle an error
  *
@@ -216,23 +216,23 @@ gda_ddl_table_init (GdaDdlTable *self)
  * Since: 6.0
  */
 static gboolean
-gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
+gda_db_table_parse_node (GdaDbBuildable *buildable,
                           xmlNodePtr	node,
                           GError      **error)
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node, FALSE);
 
-  GdaDdlTable *self = GDA_DDL_TABLE (buildable);
+  GdaDbTable *self = GDA_DB_TABLE (buildable);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   xmlChar *name = NULL;
-  name = xmlGetProp (node,(xmlChar *)gdaddltablenodes[GDA_DDL_TABLE_NAME]);
+  name = xmlGetProp (node,(xmlChar *)gdadbtablenodes[GDA_DB_TABLE_NAME]);
   g_assert (name); /* If here bug with xml validation */
-  gda_ddl_base_set_name(GDA_DDL_BASE(self),(gchar *)name);
+  gda_db_base_set_name(GDA_DB_BASE(self),(gchar *)name);
 
-  xmlChar *tempt = xmlGetProp (node,(xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_TEMP]);
+  xmlChar *tempt = xmlGetProp (node,(xmlChar*)gdadbtablenodes[GDA_DB_TABLE_TEMP]);
 
   if (tempt && (*tempt == 't' || *tempt == 't'))
     {
@@ -242,7 +242,7 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
 
   for (xmlNodePtr it = node->children; it ; it = it->next)
     {
-      if (!g_strcmp0 ((gchar *) it->name,gdaddltablenodes[GDA_DDL_TABLE_COMMENT]))
+      if (!g_strcmp0 ((gchar *) it->name,gdadbtablenodes[GDA_DB_TABLE_COMMENT]))
         {
           xmlChar *comment = xmlNodeGetContent (it);
 
@@ -254,9 +254,9 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
         }
       else if (!g_strcmp0 ((gchar *) it->name, "column"))
         {
-          GdaDdlColumn *column = gda_ddl_column_new ();
+          GdaDbColumn *column = gda_db_column_new ();
 
-          if (!gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE (column),
+          if (!gda_db_buildable_parse_node(GDA_DB_BUILDABLE (column),
                                             it, error))
             {
               g_object_unref(column);
@@ -267,10 +267,10 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
         }
       else if (!g_strcmp0 ((gchar *) it->name, "fkey"))
         {
-          GdaDdlFkey *fkey;
-          fkey = gda_ddl_fkey_new ();
+          GdaDbFkey *fkey;
+          fkey = gda_db_fkey_new ();
 
-          if (!gda_ddl_buildable_parse_node (GDA_DDL_BUILDABLE(fkey), it, error)) {
+          if (!gda_db_buildable_parse_node (GDA_DB_BUILDABLE(fkey), it, error)) {
               g_object_unref (fkey);
               return FALSE;
           } else
@@ -278,35 +278,35 @@ gda_ddl_table_parse_node (GdaDdlBuildable *buildable,
         } /* end of else if */
     } /* End of for loop */
   return TRUE;
-} /* End of gda_ddl_column_parse_node */
+} /* End of gda_db_column_parse_node */
 
 static gboolean
-gda_ddl_table_write_node (GdaDdlBuildable *buildable,
+gda_db_table_write_node (GdaDbBuildable *buildable,
                           xmlNodePtr       rootnode,
                           GError         **error)
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
 
-  GdaDdlTable *self = GDA_DDL_TABLE (buildable);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTable *self = GDA_DB_TABLE (buildable);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   xmlNodePtr node = NULL;
-  node  = xmlNewChild (rootnode,NULL,(xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_NODE],NULL);
-  xmlNewProp (node,BAD_CAST gdaddltablenodes[GDA_DDL_TABLE_NAME],
-              BAD_CAST gda_ddl_base_get_name (GDA_DDL_BASE(self)));
+  node  = xmlNewChild (rootnode,NULL,(xmlChar*)gdadbtablenodes[GDA_DB_TABLE_NODE],NULL);
+  xmlNewProp (node,BAD_CAST gdadbtablenodes[GDA_DB_TABLE_NAME],
+              BAD_CAST gda_db_base_get_name (GDA_DB_BASE(self)));
 
-  xmlNewProp (node,BAD_CAST gdaddltablenodes[GDA_DDL_TABLE_TEMP],
+  xmlNewProp (node,BAD_CAST gdadbtablenodes[GDA_DB_TABLE_TEMP],
               BAD_CAST GDA_BOOL_TO_STR (priv->m_istemp));
 
   xmlNewChild (node,NULL,
-               (xmlChar*)gdaddltablenodes[GDA_DDL_TABLE_COMMENT],
+               (xmlChar*)gdadbtablenodes[GDA_DB_TABLE_COMMENT],
                (xmlChar*)priv->mp_comment);
 
   GList *it = NULL;
 
   for (it = priv->mp_columns; it; it=it->next)
-    if(!gda_ddl_buildable_write_node (GDA_DDL_BUILDABLE(GDA_DDL_COLUMN(it->data)),
+    if(!gda_db_buildable_write_node (GDA_DB_BUILDABLE(GDA_DB_COLUMN(it->data)),
                                       node,error))
       return FALSE;
 
@@ -314,15 +314,15 @@ gda_ddl_table_write_node (GdaDdlBuildable *buildable,
 }
 
 static void
-gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface)
+gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface)
 {
-  iface->parse_node = gda_ddl_table_parse_node;
-  iface->write_node = gda_ddl_table_write_node;
+  iface->parse_node = gda_db_table_parse_node;
+  iface->write_node = gda_db_table_write_node;
 }
 
 /**
- * gda_ddl_table_set_comment:
- * @self: an #GdaDdlTable object
+ * gda_db_table_set_comment:
+ * @self: an #GdaDbTable object
  * @tablecomment: Comment to set as a string
  *
  * If @tablecomment is %NULL nothing is happened. @tablecomment will not be set
@@ -331,21 +331,21 @@ gda_ddl_table_buildable_interface_init (GdaDdlBuildableInterface *iface)
  * Since: 6.0
  */
 void
-gda_ddl_table_set_comment (GdaDdlTable *self,
+gda_db_table_set_comment (GdaDbTable *self,
                            const char  *tablecomment)
 {
   g_return_if_fail (self);
 
   if (tablecomment) {
-      GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+      GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
       g_free (priv->mp_comment);
       priv->mp_comment = g_utf8_strup (tablecomment,g_utf8_strlen (tablecomment,-1));
   }
 }
 
 /**
- * gda_ddl_table_set_is_temp:
- * @self: a #GdaDdlTable object
+ * gda_db_table_set_is_temp:
+ * @self: a #GdaDbTable object
  * @istemp: Set if the table should be temporary
  *
  * Set if the table should be temporary or not.  False is set by default.
@@ -353,31 +353,31 @@ gda_ddl_table_set_comment (GdaDdlTable *self,
  * Since: 6.0
  */
 void
-gda_ddl_table_set_is_temp (GdaDdlTable *self,
+gda_db_table_set_is_temp (GdaDbTable *self,
                            gboolean istemp)
 {
   g_return_if_fail (self);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   priv->m_istemp = istemp;
 }
 
 /**
- * gda_ddl_table_get_comment:
- * @self: a #GdaDdlTable object
+ * gda_db_table_get_comment:
+ * @self: a #GdaDbTable object
  *
  * Returns: A comment string or %NULL if comment wasn't set.
  */
 const char*
-gda_ddl_table_get_comment (GdaDdlTable *self)
+gda_db_table_get_comment (GdaDbTable *self)
 {
   g_return_val_if_fail (self, NULL);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   return priv->mp_comment;
 }
 
 /**
- * gda_ddl_table_get_temp:
- * @self: a #GdaDdlTable object
+ * gda_db_table_get_temp:
+ * @self: a #GdaDbTable object
  *
  * Returns temp key. If %TRUE table should be temporary, %FALSE otherwise.
  * If @self is %NULL, this function aborts. So check @self before calling this
@@ -386,20 +386,20 @@ gda_ddl_table_get_comment (GdaDdlTable *self)
  * Since: 6.0
  */
 gboolean
-gda_ddl_table_get_temp (GdaDdlTable *self)
+gda_db_table_get_temp (GdaDbTable *self)
 {
   g_return_val_if_fail (self,FALSE);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   return priv->m_istemp;
 }
 
 gboolean
-gda_ddl_table_is_valid (GdaDdlTable *self)
+gda_db_table_is_valid (GdaDbTable *self)
 {
   g_return_val_if_fail (self,FALSE);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
 /* TODO: It may be worthwhile to have the same method for all children elements and
  * call this method on each children member to make sure whole table is valid
@@ -411,50 +411,50 @@ gda_ddl_table_is_valid (GdaDdlTable *self)
 }
 
 /**
- * gda_ddl_table_get_columns:
- * @self: an #GdaDdlTable object
+ * gda_db_table_get_columns:
+ * @self: an #GdaDbTable object
  *
  * Use this method to obtain internal list of all columns. The internal list
  * should not be freed.
  *
- * Returns: (element-type Gda.DdlColumn) (transfer none): A list of #GdaDdlColumn objects or %NULL if the internal list is
+ * Returns: (element-type Gda.DbColumn) (transfer none): A list of #GdaDbColumn objects or %NULL if the internal list is
  * not set or if %NULL is passed.
  *
  * Since: 6.0
  */
 GList*
-gda_ddl_table_get_columns (GdaDdlTable *self)
+gda_db_table_get_columns (GdaDbTable *self)
 {
   g_return_val_if_fail (self, NULL);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   return priv->mp_columns;
 }
 
 /**
- * gda_ddl_table_get_fkeys:
- * @self: A #GdaDdlTable object
+ * gda_db_table_get_fkeys:
+ * @self: A #GdaDbTable object
  *
  * Use this method to obtain internal list of all fkeys. The internal list
  * should not be freed.
  *
- * Returns: (transfer none) (element-type Gda.DdlFkey): A list of #GdaDdlFkey objects or %NULL if the internal list is not
+ * Returns: (transfer none) (element-type Gda.DbFkey): A list of #GdaDbFkey objects or %NULL if the internal list is not
  * set or %NULL is passed
  *
  * Since: 6.0
  */
 GList*
-gda_ddl_table_get_fkeys (GdaDdlTable *self)
+gda_db_table_get_fkeys (GdaDbTable *self)
 {
   g_return_val_if_fail (self, NULL);
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   return priv->mp_fkeys;
 }
 
 /**
- * gda_ddl_table_is_temp:
- * @self: a #GdaDdlTable object
+ * gda_db_table_is_temp:
+ * @self: a #GdaDbTable object
  *
  * Checks if the table is temporary
  *
@@ -463,17 +463,17 @@ gda_ddl_table_get_fkeys (GdaDdlTable *self)
  * Since: 6.0
  */
 gboolean
-gda_ddl_table_get_is_temp (GdaDdlTable *self)
+gda_db_table_get_is_temp (GdaDbTable *self)
 {
-  g_return_val_if_fail (GDA_IS_DDL_TABLE(self), FALSE);
+  g_return_val_if_fail (GDA_IS_DB_TABLE(self), FALSE);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   return priv->m_istemp;
 }
 
 /**
- * gda_ddl_table_prepare_create:
- * @self: a #GdaDdlTable instance
+ * gda_db_table_prepare_create:
+ * @self: a #GdaDbTable instance
  * @op: an instance of #GdaServerOperation to populate.
  * @error: error container
  *
@@ -483,15 +483,15 @@ gda_ddl_table_get_is_temp (GdaDdlTable *self)
  * Since: 6.0
  */
 gboolean
-gda_ddl_table_prepare_create (GdaDdlTable *self,
+gda_db_table_prepare_create (GdaDbTable *self,
                               GdaServerOperation *op,
                               gboolean ifnotexists,
                               GError **error)
 {
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at (op,
-                                          gda_ddl_base_get_name (GDA_DDL_BASE(self)),
+                                          gda_db_base_get_name (GDA_DB_BASE(self)),
                                           error,
                                           "/TABLE_DEF_P/TABLE_NAME"))
     return FALSE;
@@ -518,19 +518,19 @@ gda_ddl_table_prepare_create (GdaDdlTable *self,
   gint i = 0; /* column order counter */
 
   for (it = priv->mp_columns;it;it=it->next)
-    if(!gda_ddl_column_prepare_create (GDA_DDL_COLUMN (it->data), op, i++, error))
+    if(!gda_db_column_prepare_create (GDA_DB_COLUMN (it->data), op, i++, error))
       return FALSE;
 
   i = 0;
   for (it = priv->mp_fkeys;it;it=it->next)
-    if(!gda_ddl_fkey_prepare_create (GDA_DDL_FKEY(it->data), op, i++, error))
+    if(!gda_db_fkey_prepare_create (GDA_DB_FKEY(it->data), op, i++, error))
       return FALSE;
 
   return TRUE;
 }
 
 static gint
-_gda_ddl_compare_column_meta(GdaMetaTableColumn *a,GdaDdlColumn *b)
+_gda_db_compare_column_meta(GdaMetaTableColumn *a,GdaDbColumn *b)
 {
   if (a && !b)
     return 1;
@@ -540,14 +540,14 @@ _gda_ddl_compare_column_meta(GdaMetaTableColumn *a,GdaDdlColumn *b)
     return 0;
 
   const gchar *namea = a->column_name;
-  const gchar *nameb = gda_ddl_column_get_name(b);
+  const gchar *nameb = gda_db_column_get_name(b);
 
   return g_strcmp0(namea,nameb);
 }
 
 /**
- * gda_ddl_table_update:
- * @self: a #GdaDdlTable instance
+ * gda_db_table_update:
+ * @self: a #GdaDbTable instance
  * @obj: The corresponding meta object to take data from
  * @cnc: opened connection
  * @error: error container
@@ -558,7 +558,7 @@ _gda_ddl_compare_column_meta(GdaMetaTableColumn *a,GdaDdlColumn *b)
  * Returns: %TRUE if no error and %FALSE otherwise
  */
 gboolean
-gda_ddl_table_update (GdaDdlTable *self,
+gda_db_table_update (GdaDbTable *self,
                       GdaMetaTable *obj,
                       GdaConnection *cnc,
                       GError **error)
@@ -570,11 +570,11 @@ gda_ddl_table_update (GdaDdlTable *self,
   if (!gda_connection_is_opened(cnc))
     return FALSE;
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   if (!obj->columns)
     {
-      g_set_error (error,GDA_DDL_TABLE_ERROR,GDA_DDL_TABLE_COLUMN_EMPTY,_("Empty column list"));
+      g_set_error (error,GDA_DB_TABLE_ERROR,GDA_DB_TABLE_COLUMN_EMPTY,_("Empty column list"));
       return FALSE;
     }
 
@@ -599,7 +599,7 @@ gda_ddl_table_update (GdaDdlTable *self,
     goto on_error;
 
   if(!gda_server_operation_set_value_at(op,
-                                        gda_ddl_base_get_full_name(GDA_DDL_BASE(self)),
+                                        gda_db_base_get_full_name(GDA_DB_BASE(self)),
                                         error,
                                         "/COLUMN_DEF_P/TABLE_NAME"))
     goto on_error;
@@ -609,14 +609,14 @@ gda_ddl_table_update (GdaDdlTable *self,
     {
       GSList *res = g_slist_find_custom (dbcolumns,
                                          it->data,
-                                         (GCompareFunc)_gda_ddl_compare_column_meta);
+                                         (GCompareFunc)_gda_db_compare_column_meta);
 
       if (res) /* If object is present we need go to next element */
         continue;
       else
         newcolumncount++; /* We need to count new column. See below */
 
-      if(!gda_ddl_column_prepare_add(it->data,op,error))
+      if(!gda_db_column_prepare_add(it->data,op,error))
         {
           g_slist_free (res);
           goto on_error;
@@ -638,8 +638,8 @@ on_error:
 }
 
 /**
- * gda_ddl_table_create:
- * @self: a #GdaDdlTable object
+ * gda_db_table_create:
+ * @self: a #GdaDbTable object
  * @cnc: a #GdaConnection object
  * @ifnotexists: Set to %TRUE if table should be created with "IFNOTEXISTS" option
  * @error: container for error storage
@@ -652,7 +652,7 @@ on_error:
  * Since: 6.0
  */
 gboolean
-gda_ddl_table_create (GdaDdlTable *self,
+gda_db_table_create (GdaDbTable *self,
                       GdaConnection *cnc,
                       gboolean ifnotexists,
                       GError **error)
@@ -663,8 +663,8 @@ gda_ddl_table_create (GdaDdlTable *self,
  if (!gda_connection_is_opened (cnc))
     {
       g_set_error (error,
-                   GDA_DDL_CREATOR_ERROR,
-                   GDA_DDL_CREATOR_CONNECTION_CLOSED,
+                   GDA_DB_CATALOG_ERROR,
+                   GDA_DB_CATALOG_CONNECTION_CLOSED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -683,7 +683,7 @@ gda_ddl_table_create (GdaDdlTable *self,
                                             error);
   if (op) {
     g_object_set_data_full (G_OBJECT (op), "connection", g_object_ref (cnc), g_object_unref);
-    if (gda_ddl_table_prepare_create(self, op, ifnotexists, error)) {
+    if (gda_db_table_prepare_create(self, op, ifnotexists, error)) {
 #ifdef GDA_DEBUG_NO
       gchar* str = gda_server_operation_render (op, error);
       g_message ("Operation: %s", str);
@@ -699,28 +699,28 @@ gda_ddl_table_create (GdaDdlTable *self,
 }
 
 /**
- * gda_ddl_table_new_from_meta:
+ * gda_db_table_new_from_meta:
  * @obj: a #GdaMetaDbObject
  *
- * Create new #GdaDdlTable instance from the corresponding #GdaMetaDbObject
+ * Create new #GdaDbTable instance from the corresponding #GdaMetaDbObject
  * object. If %NULL is passed this function works exactly as
- * gda_ddl_table_new()
+ * gda_db_table_new()
  *
  * Since: 6.0
  */
-GdaDdlTable*
-gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
+GdaDbTable*
+gda_db_table_new_from_meta (GdaMetaDbObject *obj)
 {
   if (!obj)
-    return gda_ddl_table_new();
+    return gda_db_table_new();
 
   if (obj->obj_type != GDA_META_DB_TABLE)
     return NULL;
 
   GdaMetaTable *metatable = GDA_META_TABLE(obj);
-  GdaDdlTable *table = gda_ddl_table_new();
+  GdaDbTable *table = gda_db_table_new();
 
-  gda_ddl_base_set_names(GDA_DDL_BASE(table),
+  gda_db_base_set_names(GDA_DB_BASE(table),
                          obj->obj_catalog,
                          obj->obj_schema,
                          obj->obj_name);
@@ -728,9 +728,9 @@ gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
   GSList *it = NULL;
   for (it = metatable->columns; it; it = it->next)
     {
-      GdaDdlColumn *column = gda_ddl_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
+      GdaDbColumn *column = gda_db_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
 
-      gda_ddl_table_append_column(table,column);
+      gda_db_table_append_column(table,column);
     }
 
   it = NULL;
@@ -739,9 +739,9 @@ gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
       if (!GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(GDA_META_TABLE_FOREIGN_KEY(it->data)))
         continue;
 
-      GdaDdlFkey *fkey = gda_ddl_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
+      GdaDbFkey *fkey = gda_db_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
 
-      gda_ddl_table_append_fkey (table,fkey);
+      gda_db_table_append_fkey (table,fkey);
 
     }
 
@@ -749,8 +749,8 @@ gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
 }
 
 /**
- * gda_ddl_table_append_column:
- * @self: a #GdaDdlTable instance
+ * gda_db_table_append_column:
+ * @self: a #GdaDbTable instance
  * @column: column to add
  *
  * Append @column to the internal list of columns
@@ -758,19 +758,19 @@ gda_ddl_table_new_from_meta (GdaMetaDbObject *obj)
  * Since: 6.0
  */
 void
-gda_ddl_table_append_column (GdaDdlTable *self,
-                             GdaDdlColumn *column)
+gda_db_table_append_column (GdaDbTable *self,
+                             GdaDbColumn *column)
 {
   g_return_if_fail (self);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   priv->mp_columns = g_list_append (priv->mp_columns,g_object_ref(column));
 }
 
 /**
- * gda_ddl_table_append_fkey:
- * @self: a #GdaDdlTable instance
+ * gda_db_table_append_fkey:
+ * @self: a #GdaDbTable instance
  * @fkey: fkry to add
  *
  * Append @fkey to the internal list of columns
@@ -778,12 +778,12 @@ gda_ddl_table_append_column (GdaDdlTable *self,
  * Since: 6.0
  */
 void
-gda_ddl_table_append_fkey (GdaDdlTable *self,
-                           GdaDdlFkey *fkey)
+gda_db_table_append_fkey (GdaDbTable *self,
+                           GdaDbFkey *fkey)
 {
   g_return_if_fail (self);
 
-  GdaDdlTablePrivate *priv = gda_ddl_table_get_instance_private (self);
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   priv->mp_fkeys = g_list_append (priv->mp_fkeys,g_object_ref(fkey));
 }
