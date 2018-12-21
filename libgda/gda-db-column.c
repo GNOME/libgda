@@ -1,4 +1,4 @@
-/* gda-ddl-column.c
+/* gda-db-column.c
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -18,14 +18,14 @@
  * Boston, MA  02110-1301, USA.
  */
 #include <stdlib.h>
-#include "gda-ddl-column.h"
+#include "gda-db-column.h"
 #include <glib/gi18n-lib.h>
 #include "gda-util.h"
-#include "gda-ddl-buildable.h"
-#include "gda-ddl-base.h"
+#include "gda-db-buildable.h"
+#include "gda-db-base.h"
 #include "gda-server-provider.h"
 
-G_DEFINE_QUARK (gda-ddl-column-error, gda_ddl_column_error)
+G_DEFINE_QUARK (gda-db-column-error, gda_db_column_error)
 
 typedef struct
 {
@@ -44,38 +44,38 @@ typedef struct
   gboolean m_autoinc; /* property */
   gboolean m_unique; /* property */
   gboolean m_pkey; /* property */
-}GdaDdlColumnPrivate;
+}GdaDbColumnPrivate;
 
 /**
- * SECTION:gda-ddl-column
+ * SECTION:gda-db-column
  * @short_description: Object to represent table column 
- * @see_also: #GdaDdlTable, #GdaDdlView, #GdaDdlBuildable
+ * @see_also: #GdaDbTable, #GdaDbView, #GdaDbBuildable
  * @stability: Stable
  * @include: libgda/libgda.h
  *
  * This object represents a column of a table or a view. The column can be constracted manually
- * using API or generated from xml file together with other databse objects. See #GdaDdlCreator.
- * #GdaDdlColumn implements #GdaDdlBuildable interface for parsing xml file.
+ * using API or generated from xml file together with other databse objects. See #GdaDbCreator.
+ * #GdaDbColumn implements #GdaDbBuildable interface for parsing xml file.
  */
 
 /* All nodes in xml should be accessed using enum below */
 enum {
-  GDA_DDL_COLUMN_NODE,
-  GDA_DDL_COLUMN_NAME,
-  GDA_DDL_COLUMN_ATYPE,
-  GDA_DDL_COLUMN_PKEY,
-  GDA_DDL_COLUMN_UNIQUE,
-  GDA_DDL_COLUMN_AUTOINC,
-  GDA_DDL_COLUMN_NNUL,
-  GDA_DDL_COLUMN_COMMENT,
-  GDA_DDL_COLUMN_SIZE,
-  GDA_DDL_COLUMN_CHECK,
-  GDA_DDL_COLUMN_VALUE,
-  GDA_DDL_COLUMN_SCALE,
-  GDA_DDL_COLUMN_N_NODES
+  GDA_DB_COLUMN_NODE,
+  GDA_DB_COLUMN_NAME,
+  GDA_DB_COLUMN_ATYPE,
+  GDA_DB_COLUMN_PKEY,
+  GDA_DB_COLUMN_UNIQUE,
+  GDA_DB_COLUMN_AUTOINC,
+  GDA_DB_COLUMN_NNUL,
+  GDA_DB_COLUMN_COMMENT,
+  GDA_DB_COLUMN_SIZE,
+  GDA_DB_COLUMN_CHECK,
+  GDA_DB_COLUMN_VALUE,
+  GDA_DB_COLUMN_SCALE,
+  GDA_DB_COLUMN_N_NODES
 };
 
-const gchar *gdaddlcolumnnode[GDA_DDL_COLUMN_N_NODES] = {
+const gchar *gdadbcolumnnode[GDA_DB_COLUMN_N_NODES] = {
   "column",
   "name",
   "type",
@@ -91,12 +91,12 @@ const gchar *gdaddlcolumnnode[GDA_DDL_COLUMN_N_NODES] = {
 };
 
 static void
-gda_ddl_column_buildable_interface_init (GdaDdlBuildableInterface *iface);
+gda_db_column_buildable_interface_init (GdaDbBuildableInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GdaDdlColumn, gda_ddl_column, G_TYPE_OBJECT,
-                         G_ADD_PRIVATE (GdaDdlColumn)
-                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_BUILDABLE,
-                                                gda_ddl_column_buildable_interface_init))
+G_DEFINE_TYPE_WITH_CODE (GdaDbColumn, gda_db_column, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDbColumn)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
+                                                gda_db_column_buildable_interface_init))
 enum {
     PROP_0,
     PROP_COLUMN_NAME,
@@ -114,48 +114,48 @@ enum {
 };
 
 static void
-_gda_ddl_column_set_type (GdaDdlColumn *self,
-                          const gchar *type,
-                          GError **error);
+_gda_db_column_set_type (GdaDbColumn *self,
+                         const gchar *type,
+                         GError **error);
 
 static GParamSpec *properties [N_PROPS] = {NULL};
 
 /**
- * gda_ddl_column_new:
+ * gda_db_column_new:
  *
- * Returns: New instance of #GdaDdlColumn
+ * Returns: New instance of #GdaDbColumn
  *
  * Since: 6.0
  *
  */
-GdaDdlColumn *
-gda_ddl_column_new (void)
+GdaDbColumn *
+gda_db_column_new (void)
 {
-  return g_object_new (GDA_TYPE_DDL_COLUMN, NULL);
+  return g_object_new (GDA_TYPE_DB_COLUMN, NULL);
 }
 
 static void
-gda_ddl_column_finalize (GObject *object)
+gda_db_column_finalize (GObject *object)
 {
-  GdaDdlColumn *self = GDA_DDL_COLUMN (object);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumn *self = GDA_DB_COLUMN (object);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   g_free (priv->mp_name);
   g_free (priv->mp_type);
   g_free (priv->mp_default);
   g_free (priv->mp_check);
 
-  G_OBJECT_CLASS (gda_ddl_column_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_db_column_parent_class)->finalize (object);
 }
 
 static void
-gda_ddl_column_get_property (GObject    *object,
-                             guint       prop_id,
-                             GValue     *value,
-                             GParamSpec *pspec)
+gda_db_column_get_property (GObject    *object,
+                            guint       prop_id,
+                            GValue     *value,
+                            GParamSpec *pspec)
 {
-  GdaDdlColumn *self = GDA_DDL_COLUMN (object);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumn *self = GDA_DB_COLUMN (object);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   switch (prop_id) {
     case PROP_COLUMN_NAME:
@@ -195,13 +195,13 @@ gda_ddl_column_get_property (GObject    *object,
 }
 
 static void
-gda_ddl_column_set_property (GObject      *object,
-                             guint         prop_id,
-                             const GValue *value,
-                             GParamSpec   *pspec)
+gda_db_column_set_property (GObject      *object,
+                            guint         prop_id,
+                            const GValue *value,
+                            GParamSpec   *pspec)
 {
-  GdaDdlColumn *self = GDA_DDL_COLUMN (object);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumn *self = GDA_DB_COLUMN (object);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   switch (prop_id){
     case PROP_COLUMN_NAME:
@@ -245,13 +245,13 @@ gda_ddl_column_set_property (GObject      *object,
 }
 
 static void
-gda_ddl_column_class_init (GdaDdlColumnClass *klass)
+gda_db_column_class_init (GdaDbColumnClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->finalize = gda_ddl_column_finalize;
-  object_class->get_property = gda_ddl_column_get_property;
-  object_class->set_property = gda_ddl_column_set_property;
+  object_class->finalize = gda_db_column_finalize;
+  object_class->get_property = gda_db_column_get_property;
+  object_class->set_property = gda_db_column_set_property;
 
   properties[PROP_COLUMN_NAME] =
     g_param_spec_string ("name","Name","Column name",NULL,G_PARAM_READWRITE);
@@ -288,9 +288,9 @@ gda_ddl_column_class_init (GdaDdlColumnClass *klass)
 }
 
 static void
-gda_ddl_column_init (GdaDdlColumn *self)
+gda_db_column_init (GdaDbColumn *self)
 {
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   priv->mp_type = NULL;
   priv->m_scale = 0;
@@ -306,8 +306,8 @@ gda_ddl_column_init (GdaDdlColumn *self)
 }
 
 /**
- * gda_ddl_column_parse_node: (skip)
- * @self: #GdaDdlColumn object to store parsed data
+ * gda_db_column_parse_node: (skip)
+ * @self: #GdaDbColumn object to store parsed data
  * @node: instance of #xmlNodePtr to parse
  * @error: error container
  *
@@ -318,9 +318,9 @@ gda_ddl_column_init (GdaDdlColumn *self)
  * Since: 6.0
  */
 static gboolean
-gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
-                           xmlNodePtr   node,
-                           GError       **error)
+gda_db_column_parse_node (GdaDbBuildable *buildable,
+                          xmlNodePtr   node,
+                          GError       **error)
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (node,FALSE);
@@ -328,24 +328,24 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
   /*TODO: Appropriate error should be set an returned. 
    * It should be added to the header file first 
    */
-  if (g_strcmp0 ((gchar *)node->name,gdaddlcolumnnode[GDA_DDL_COLUMN_NODE]))
+  if (g_strcmp0 ((gchar *)node->name,gdadbcolumnnode[GDA_DB_COLUMN_NODE]))
     return FALSE;
 
-  GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumn *self = GDA_DB_COLUMN (buildable);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
-  xmlChar *name = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_NAME]);
+  xmlChar *name = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_NAME]);
   g_assert (name); /* If here bug with xml validation */
   g_object_set (G_OBJECT(self),"name",(gchar*)name,NULL);
   xmlFree (name);
 
-  xmlChar *type = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_ATYPE]);
+  xmlChar *type = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_ATYPE]);
   g_assert (type); /* If here buf with validation */
-  _gda_ddl_column_set_type (self,(const gchar *)type,error);
+  _gda_db_column_set_type (self,(const gchar *)type,error);
   xmlFree (type);
 
   xmlChar *cprop = NULL;
-  cprop = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_PKEY]);
+  cprop = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_PKEY]);
   if (cprop)
     {
       g_object_set (G_OBJECT(self),"pkey",*cprop == 't' || *cprop == 'T' ? TRUE : FALSE, NULL);
@@ -353,7 +353,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
     }
 
   /* We need scale only for NUMBERIC data type, e.g. float, double  */
-  cprop = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_UNIQUE]);
+  cprop = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_UNIQUE]);
 
   if (cprop)
     {
@@ -361,7 +361,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
       xmlFree (cprop);
     }
 
-  cprop = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_AUTOINC]);
+  cprop = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_AUTOINC]);
 
   if (cprop)
     {
@@ -369,7 +369,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
       xmlFree (cprop);
     }
 
-  cprop = xmlGetProp (node,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_NNUL]);
+  cprop = xmlGetProp (node,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_NNUL]);
 
   if (cprop)
     {
@@ -379,7 +379,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
 
   for (xmlNodePtr it = node->children; it; it = it->next)
     {
-      if (!g_strcmp0 ((char *)it->name,gdaddlcolumnnode[GDA_DDL_COLUMN_VALUE]))
+      if (!g_strcmp0 ((char *)it->name,gdadbcolumnnode[GDA_DB_COLUMN_VALUE]))
         {
           xmlChar *value = xmlNodeGetContent (it);
 
@@ -389,7 +389,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
               xmlFree (value);
             }
 
-          xmlChar *nprop = xmlGetProp (it,BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_SIZE]); 
+          xmlChar *nprop = xmlGetProp (it,BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_SIZE]); 
           guint64 tint = 0;
           if (nprop)
             {
@@ -402,7 +402,7 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
               priv->m_gtype == G_TYPE_DOUBLE ||
               priv->m_gtype == GDA_TYPE_NUMERIC)
             {
-              nprop = xmlGetProp (it,(xmlChar *)gdaddlcolumnnode[GDA_DDL_COLUMN_SCALE]);
+              nprop = xmlGetProp (it,(xmlChar *)gdadbcolumnnode[GDA_DB_COLUMN_SCALE]);
               if (nprop)
                 {
                   guint64 tint = g_ascii_strtoull ((gchar*)nprop,NULL,10);
@@ -412,14 +412,14 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
             }
         }
 
-      if (!g_strcmp0 ((char *)it->name,gdaddlcolumnnode[GDA_DDL_COLUMN_CHECK]))
+      if (!g_strcmp0 ((char *)it->name,gdadbcolumnnode[GDA_DB_COLUMN_CHECK]))
         {
           xmlChar *check = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"check",check,NULL);
           xmlFree (check);
         }
 
-      if (!g_strcmp0 ((char *)it->name,gdaddlcolumnnode[GDA_DDL_COLUMN_COMMENT]))
+      if (!g_strcmp0 ((char *)it->name,gdadbcolumnnode[GDA_DB_COLUMN_COMMENT]))
         {
           xmlChar *comment = xmlNodeGetContent (it);
           g_object_set (G_OBJECT (self),"comment",comment,NULL);
@@ -427,53 +427,53 @@ gda_ddl_column_parse_node (GdaDdlBuildable *buildable,
         }
     } /* End of for loop */
   return TRUE;
-} /* End of gda_ddl_column_parse_node */
+} /* End of gda_db_column_parse_node */
 
 static gboolean
-gda_ddl_column_write_node (GdaDdlBuildable *buildable,
-                           xmlNodePtr rootnode,
-                           GError       **error)
+gda_db_column_write_node (GdaDbBuildable *buildable,
+                          xmlNodePtr rootnode,
+                          GError       **error)
 {
   g_return_val_if_fail (buildable,FALSE);
   g_return_val_if_fail (rootnode,FALSE);
 
-  GdaDdlColumn *self = GDA_DDL_COLUMN (buildable);
+  GdaDbColumn *self = GDA_DB_COLUMN (buildable);
 
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   xmlNodePtr node = NULL;
   node  = xmlNewChild (rootnode,
                        NULL,
-                       BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_NODE],
+                       BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_NODE],
                        NULL);
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_NAME],
-              BAD_CAST gda_ddl_column_get_name (self));
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_NAME],
+              BAD_CAST gda_db_column_get_name (self));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_ATYPE],
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_ATYPE],
               BAD_CAST priv->mp_type);
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_PKEY],
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_PKEY],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_pkey));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_UNIQUE],
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_UNIQUE],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_unique));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_AUTOINC],
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_AUTOINC],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_autoinc));
 
   xmlNewProp (node,
-              BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_NNUL],
+              BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_NNUL],
               BAD_CAST GDA_BOOL_TO_STR(priv->m_nnul));
 
   if (priv->mp_comment)
     xmlNewChild (node,NULL,
-                 BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_COMMENT],
+                 BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_COMMENT],
                  BAD_CAST priv->mp_comment);
     
   xmlNodePtr nodevalue = NULL;
@@ -482,7 +482,7 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
     {
       nodevalue = xmlNewChild (node,
                                NULL,
-                               BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_VALUE],
+                               BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_VALUE],
                                BAD_CAST priv->mp_default);
     
       if (priv->m_size > 0)
@@ -492,7 +492,7 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
           g_string_printf (sizestr,"%d",priv->m_size);
         
           xmlNewProp (nodevalue,
-                      BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_SIZE],
+                      BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_SIZE],
                       BAD_CAST sizestr->str);
         
           g_string_free (sizestr,TRUE);
@@ -506,7 +506,7 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
               g_string_printf (scale_str,"%d",priv->m_scale);
             
               xmlNewProp (nodevalue,
-                          BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_SCALE],
+                          BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_SCALE],
                           BAD_CAST scale_str->str);
             
               g_string_free (scale_str,TRUE);
@@ -516,28 +516,28 @@ gda_ddl_column_write_node (GdaDdlBuildable *buildable,
 
   if (priv->mp_check)
     xmlNewChild (node,NULL,
-                 BAD_CAST gdaddlcolumnnode[GDA_DDL_COLUMN_CHECK],
+                 BAD_CAST gdadbcolumnnode[GDA_DB_COLUMN_CHECK],
                  BAD_CAST priv->mp_check);
 
   return TRUE;
 }
 
 static void
-gda_ddl_column_buildable_interface_init (GdaDdlBuildableInterface *iface)
+gda_db_column_buildable_interface_init (GdaDbBuildableInterface *iface)
 {
-    iface->parse_node = gda_ddl_column_parse_node;
-    iface->write_node = gda_ddl_column_write_node;
+    iface->parse_node = gda_db_column_parse_node;
+    iface->write_node = gda_db_column_write_node;
 }
 
 static void
-_gda_ddl_column_set_type (GdaDdlColumn *self,
-                          const char *type,
-                          GError **error)
+_gda_db_column_set_type (GdaDbColumn *self,
+                         const char *type,
+                         GError **error)
 {
   g_return_if_fail (self);
   g_return_if_fail (type);
   //	g_return_if_fail (!*error);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   GType ttype = gda_g_type_from_string (type);
   if (ttype != G_TYPE_INVALID){
       priv->mp_type = g_strdup (type);
@@ -545,16 +545,16 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
   }
   else {
       g_set_error (error,
-                   GDA_DDL_COLUMN_ERROR,
-                   GDA_DDL_COLUMN_ERROR_TYPE,
+                   GDA_DB_COLUMN_ERROR,
+                   GDA_DB_COLUMN_ERROR_TYPE,
                    _("Invalid column type %s. See API for gda_g_type_from_string ().\n"),
                    type);
   }
 }
 
 /**
- * gda_ddl_column_get_name:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_get_name:
+ * @self: a #GdaDbColumn instance
  *
  * Returns name of the column 
  *
@@ -563,17 +563,17 @@ _gda_ddl_column_set_type (GdaDdlColumn *self,
  * Since: 6.0
  */
 const gchar*
-gda_ddl_column_get_name (GdaDdlColumn *self)
+gda_db_column_get_name (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   return priv->mp_name;
 }
 
 /**
- * gda_ddl_column_set_name:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_set_name:
+ * @self: a #GdaDbColumn object
  * @name: name as a string
  *
  * Set column name.
@@ -581,35 +581,35 @@ gda_ddl_column_get_name (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_name (GdaDdlColumn *self,
-                         const gchar *name)
+gda_db_column_set_name (GdaDbColumn *self,
+                        const gchar *name)
 {
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   g_free (priv->mp_name);
   priv->mp_name = g_strdup (name);
 }
 
 /**
- * gda_ddl_column_get_gtype:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_gtype:
+ * @self: a #GdaDbColumn object
  *
  * Return of column type as #GType
  *
  * Since: 6.0
  */
 GType
-gda_ddl_column_get_gtype (GdaDdlColumn *self)
+gda_db_column_get_gtype (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,GDA_TYPE_NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   return priv->m_gtype;
 }
 
 /**
- * gda_ddl_column_get_ctype:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_ctype:
+ * @self: a #GdaDbColumn object
  * 
  * Returns column type as a string derivied from #GType 
  *
@@ -618,16 +618,16 @@ gda_ddl_column_get_gtype (GdaDdlColumn *self)
  * Since: 6.0
  */
 const gchar*
-gda_ddl_column_get_ctype (GdaDdlColumn *self)
+gda_db_column_get_ctype (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->mp_type;
 }
 
 /**
- * gda_ddl_column_set_type:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_set_type:
+ * @self: a #GdaDbColumn instance
  * @type: #GType for column
  *
  * Set type of the column as a #GType
@@ -635,19 +635,19 @@ gda_ddl_column_get_ctype (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_type (GdaDdlColumn *self,
-                         GType type)
+gda_db_column_set_type (GdaDbColumn *self,
+                        GType type)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_gtype = type;
   g_free (priv->mp_type);
   priv->mp_type = g_strdup (gda_g_type_to_string (type));
 }
 
 /**
- * gda_ddl_column_get_scale:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_scale:
+ * @self: a #GdaDbColumn object
  *
  * Scale is used for float number representation to specify a number of decimal digits.
  * This value is ignore for column types except float or double.
@@ -656,16 +656,16 @@ gda_ddl_column_set_type (GdaDdlColumn *self,
  * Since: 6.0
  */
 guint
-gda_ddl_column_get_scale (GdaDdlColumn *self)
+gda_db_column_get_scale (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,0);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_scale;
 }
 
 /**
- * gda_ddl_column_set_scale:
- * @self: a #GdaDdlColumn
+ * gda_db_column_set_scale:
+ * @self: a #GdaDbColumn
  * @scale: scale value to set
  *
  * Scale is used for float number representation to specify a number of decimal digits.
@@ -674,17 +674,17 @@ gda_ddl_column_get_scale (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_scale (GdaDdlColumn *self,
-                          guint scale)
+gda_db_column_set_scale (GdaDbColumn *self,
+                         guint scale)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_scale = scale;
 }
 
 /**
- * gda_ddl_column_get_pkey:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_pkey:
+ * @self: a #GdaDbColumn object
  *
  * Returns a primary key flag
  *
@@ -693,32 +693,32 @@ gda_ddl_column_set_scale (GdaDdlColumn *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_get_pkey (GdaDdlColumn *self)
+gda_db_column_get_pkey (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_pkey;
 }
 
 /**
- * gda_ddl_column_set_pkey:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_set_pkey:
+ * @self: a #GdaDbColumn object
  * @pkey: value to set
  *
  * Since: 6.0
  */
 void
-gda_ddl_column_set_pkey (GdaDdlColumn *self,
-                         gboolean pkey)
+gda_db_column_set_pkey (GdaDbColumn *self,
+                        gboolean pkey)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   priv->m_pkey = pkey;
 }
 /**
- * gda_ddl_column_get_nnul:
- * @self: a @GdaDdlColumn object
+ * gda_db_column_get_nnul:
+ * @self: a @GdaDbColumn object
  *
  * Specify if the column's value can be NULL. 
  *
@@ -727,32 +727,32 @@ gda_ddl_column_set_pkey (GdaDdlColumn *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_get_nnul (GdaDdlColumn *self)
+gda_db_column_get_nnul (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_nnul;
 }
 
 /**
- * gda_ddl_column_set_nnul:
- * @self: a GdaDdlColumn object
+ * gda_db_column_set_nnul:
+ * @self: a GdaDbColumn object
  * @nnul: value to set for nnul
  *
  * Since: 6.0
  */
 void
-gda_ddl_column_set_nnul (GdaDdlColumn *self,
-                         gboolean nnul)
+gda_db_column_set_nnul (GdaDbColumn *self,
+                        gboolean nnul)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_nnul = nnul;
 }
 
 /**
- * gda_ddl_column_get_autoinc:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_autoinc:
+ * @self: a #GdaDbColumn object
  *
  * Get value for autoinc key
  * 
@@ -761,16 +761,16 @@ gda_ddl_column_set_nnul (GdaDdlColumn *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_get_autoinc (GdaDdlColumn *self)
+gda_db_column_get_autoinc (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_autoinc;
 }
 
 /**
- * gda_ddl_column_set_autoinc:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_set_autoinc:
+ * @self: a #GdaDbColumn object
  * @autoinc: value to set 
  *
  * Set value for auto-incremented key.
@@ -778,17 +778,17 @@ gda_ddl_column_get_autoinc (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_autoinc (GdaDdlColumn *self,
-                            gboolean autoinc)
+gda_db_column_set_autoinc (GdaDbColumn *self,
+                           gboolean autoinc)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_autoinc = autoinc;
 }
 
 /**
- * gda_ddl_column_get_unique:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_unique:
+ * @self: a #GdaDbColumn object
  *
  * Get value for unique key
  * 
@@ -797,16 +797,16 @@ gda_ddl_column_set_autoinc (GdaDdlColumn *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_get_unique (GdaDdlColumn *self)
+gda_db_column_get_unique (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,FALSE);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_unique;
 }
 
 /**
- * gda_ddl_column_set_unique:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_set_unique:
+ * @self: a #GdaDbColumn object
  * @unique: value to set 
  *
  * Set value for unique key.
@@ -814,17 +814,17 @@ gda_ddl_column_get_unique (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_unique (GdaDdlColumn *self,
-                           gboolean unique)
+gda_db_column_set_unique (GdaDbColumn *self,
+                          gboolean unique)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_unique = unique;
 }
 
 /**
- * gda_ddl_column_get_comment:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_get_comment:
+ * @self: a #GdaDbColumn object
  *
  * Get value for column comment. 
  * 
@@ -834,17 +834,17 @@ gda_ddl_column_set_unique (GdaDdlColumn *self,
  * Since: 6.0
  */
 const gchar*
-gda_ddl_column_get_comment (GdaDdlColumn *self)
+gda_db_column_get_comment (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   return priv->mp_comment;
 }
 
 /**
- * gda_ddl_column_set_comment:
- * @self: a #GdaDdlColumn object
+ * gda_db_column_set_comment:
+ * @self: a #GdaDbColumn object
  * @comnt: comment to set
  *
  * Set value for column comment. 
@@ -852,34 +852,34 @@ gda_ddl_column_get_comment (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_comment (GdaDdlColumn *self,
-                            const gchar *comnt)
+gda_db_column_set_comment (GdaDbColumn *self,
+                           const gchar *comnt)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   g_free (priv->mp_comment);
   priv->mp_comment = g_strdup (comnt);
 }
 
 /**
- * gda_ddl_column_get_size:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_get_size:
+ * @self: a #GdaDbColumn instance
  *
  * Returns: Current value for column size. 
  *
  * Since: 6.0
  */
 guint
-gda_ddl_column_get_size (GdaDdlColumn *self)
+gda_db_column_get_size (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,0);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->m_size;
 }
 
 /**
- * gda_ddl_column_set_size:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_set_size:
+ * @self: a #GdaDbColumn instance
  * @size: value to set
  *
  * Set value for column size. This is relevant only for string column type.
@@ -887,17 +887,17 @@ gda_ddl_column_get_size (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_size (GdaDdlColumn *self,
-                         guint size)
+gda_db_column_set_size (GdaDbColumn *self,
+                        guint size)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   priv->m_size = size;
 }
 
 /**
- * gda_ddl_column_get_default:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_get_default:
+ * @self: a #GdaDbColumn instance
  * 
  * Returns default value for the column. Can be %NULL if the default value hasn't been set.
  *
@@ -906,33 +906,33 @@ gda_ddl_column_set_size (GdaDdlColumn *self,
  * Since: 6.0
  */
 const gchar*
-gda_ddl_column_get_default (GdaDdlColumn *self)
+gda_db_column_get_default (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->mp_default;
 }
 
 /**
- * gda_ddl_column_set_default:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_set_default:
+ * @self: a #GdaDbColumn instance
  * @value: default value to set for column as a string
  *
  * Since: 6.0
  */
 void
-gda_ddl_column_set_default (GdaDdlColumn *self,
-                            const gchar *value)
+gda_db_column_set_default (GdaDbColumn *self,
+                           const gchar *value)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   g_free(priv->mp_default);
   priv->mp_default = g_strdup(value);
 }
 
 /**
- * gda_ddl_column_get_check:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_get_check:
+ * @self: a #GdaDbColumn instance
  * 
  * Returns value of the check field.
  *
@@ -941,16 +941,16 @@ gda_ddl_column_set_default (GdaDdlColumn *self,
  * Since: 6.0
  */
 const gchar*
-gda_ddl_column_get_check (GdaDdlColumn *self)
+gda_db_column_get_check (GdaDbColumn *self)
 {
   g_return_val_if_fail (self,NULL);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   return priv->mp_check;
 }
 
 /**
- * gda_ddl_column_set_check:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_set_check:
+ * @self: a #GdaDbColumn instance
  * @value: value to set
  *
  * Sets check string to the column.
@@ -958,18 +958,18 @@ gda_ddl_column_get_check (GdaDdlColumn *self)
  * Since: 6.0
  */
 void
-gda_ddl_column_set_check (GdaDdlColumn *self,
-                          const gchar *value)
+gda_db_column_set_check (GdaDbColumn *self,
+                         const gchar *value)
 {
   g_return_if_fail (self);
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
   g_free(priv->mp_check);
   priv->mp_check = g_strdup(value);
 }
 
 /**
- * gda_ddl_column_prepare_create:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_prepare_create:
+ * @self: a #GdaDbColumn instance
  * @op: a #GdaServerOperation instance to update for TABLE_CREATE operation
  * @error: a #GError container
  *
@@ -980,10 +980,10 @@ gda_ddl_column_set_check (GdaDdlColumn *self,
  * Since: 6.0
  */
 gboolean
-gda_ddl_column_prepare_create  (GdaDdlColumn *self,
-                                GdaServerOperation *op,
-                                guint order,
-                                GError **error)
+gda_db_column_prepare_create  (GdaDbColumn *self,
+                               GdaServerOperation *op,
+                               guint order,
+                               GError **error)
 {
   GdaConnection *cnc;
   const gchar *strtype;
@@ -991,13 +991,13 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
   g_return_val_if_fail(self,FALSE);
   g_return_val_if_fail(op,FALSE);
 
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   if(!gda_server_operation_set_value_at (op, priv->mp_name, error, "/FIELDS_A/@COLUMN_NAME/%d", order))
     return FALSE;
   cnc = (GdaConnection*) g_object_get_data (G_OBJECT (op), "connection");
   if (cnc == NULL) {
-    g_set_error (error, GDA_DDL_COLUMN_ERROR, GDA_DDL_COLUMN_ERROR_TYPE,
+    g_set_error (error, GDA_DB_COLUMN_ERROR, GDA_DB_COLUMN_ERROR_TYPE,
                  _("Internal error: Operation should be prepared, setting a connection data"));
     return FALSE;
   }
@@ -1070,8 +1070,8 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
 }
 
 /**
- * gda_ddl_column_prepare_add:
- * @self: a #GdaDdlColumn instance
+ * gda_db_column_prepare_add:
+ * @self: a #GdaDbColumn instance
  * @op: #GdaServerOperation to add information
  * @error: error storage container
  *
@@ -1081,11 +1081,11 @@ gda_ddl_column_prepare_create  (GdaDdlColumn *self,
  * Returns: %TRUE if success, %FALSE otherwise.
  */
 gboolean
-gda_ddl_column_prepare_add (GdaDdlColumn *self,
-                            GdaServerOperation *op,
-                            GError **error)
+gda_db_column_prepare_add (GdaDbColumn *self,
+                           GdaServerOperation *op,
+                           GError **error)
 {
-  GdaDdlColumnPrivate *priv = gda_ddl_column_get_instance_private (self);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   if(!gda_server_operation_set_value_at(op,priv->mp_name,error,
                                         "/COLUMN_DEF_P/COLUMN_NAME/%d",priv->m_scale))
@@ -1135,22 +1135,22 @@ gda_ddl_column_prepare_add (GdaDdlColumn *self,
 }
 
 /**
- * gda_ddl_column_new_from_meta:
+ * gda_db_column_new_from_meta:
  * @column: a #GdaMetaTableColumn instance
  *
- * Create new #GdaDdlColumn instance from the corresponding #GdaMetaTableColumn
+ * Create new #GdaDbColumn instance from the corresponding #GdaMetaTableColumn
  * object. If %NULL is passed this function works exactly as
- * gda_ddl_column_new()
+ * gda_db_column_new()
  *
- * Returns: New object that should be freed with gda_ddl_column_free()
+ * Returns: New object that should be freed with gda_db_column_free()
  */
-GdaDdlColumn*
-gda_ddl_column_new_from_meta (GdaMetaTableColumn *column)
+GdaDbColumn*
+gda_db_column_new_from_meta (GdaMetaTableColumn *column)
 {
   if (!column)
-    return gda_ddl_column_new();
+    return gda_db_column_new();
 
-  GdaDdlColumn *gdacolumn = gda_ddl_column_new();
+  GdaDbColumn *gdacolumn = gda_db_column_new();
 
   g_object_set (gdacolumn,
                 "name",column->column_name,
@@ -1159,7 +1159,7 @@ gda_ddl_column_new_from_meta (GdaMetaTableColumn *column)
                 "default",column->default_value,
                 NULL);
 
-  gda_ddl_column_set_type (gdacolumn, column->gtype);
+  gda_db_column_set_type (gdacolumn, column->gtype);
   return gdacolumn;
 }
 

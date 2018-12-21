@@ -111,13 +111,13 @@ gda_headers = \
 	gda-xa-transaction.h \
 	libgda-global-variables.h \
 	gda-data-pivot.h \
-	gda-ddl-base.h \
-	gda-ddl-fkey.h \
-	gda-ddl-column.h \
-	gda-ddl-table.h \
-	gda-ddl-buildable.h \
-	gda-ddl-view.h \
-	gda-ddl-creator.h
+	gda-db-base.h \
+	gda-db-fkey.h \
+	gda-db-column.h \
+	gda-db-table.h \
+	gda-db-buildable.h \
+	gda-db-view.h \
+	gda-db-catalog.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h
@@ -173,13 +173,13 @@ gda_sources= \
 	gda-value.c \
 	gda-xa-transaction.c \
 	gda-data-pivot.c \
-	gda-ddl-base.c \
-	gda-ddl-fkey.c \
-	gda-ddl-column.c \
-	gda-ddl-table.c \
-	gda-ddl-buildable.c \
-	gda-ddl-view.c \
-	gda-ddl-creator.c
+	gda-db-base.c \
+	gda-db-fkey.c \
+	gda-db-column.c \
+	gda-db-table.c \
+	gda-db-buildable.c \
+	gda-db-view.c \
+	gda-db-catalog.c
 
 libgda_sources =  \
 	csv.h \
@@ -307,7 +307,7 @@ xml_DATA = $(srcdir)/information_schema.xml
 DTD_FILES = libgda-array.dtd \
 	    libgda-paramlist.dtd  \
 	    libgda-server-operation.dtd \
-	    libgda-ddl-creator.dtd
+	    libgda-db-catalog.dtd
 
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)

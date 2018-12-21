@@ -1,4 +1,4 @@
-/* gda-ddl-base.c
+/* gda-db-base.c
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -17,7 +17,7 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-#include "gda-ddl-base.h"
+#include "gda-db-base.h"
 #include <glib/gi18n.h>
 
 typedef struct
@@ -26,60 +26,60 @@ typedef struct
   gchar *m_schema;
   gchar *m_name;
   gchar *m_fullname;
-} GdaDdlBasePrivate;
+} GdaDbBasePrivate;
 
 /**
- * SECTION:gda-ddl-base 
+ * SECTION:gda-db-base 
  * @short_description: The basic class for all database objects
- * @see_also: #GdaDdlTable, #GdaDdlView
+ * @see_also: #GdaDbTable, #GdaDbView
  * @stability: Stable
  * @include: libgda/libgda.h
  *
- * This is a basic class for database objects, e.g. #GdaDdlTable and #GdaDdlView. It is not common to
+ * This is a basic class for database objects, e.g. #GdaDbTable and #GdaDbView. It is not common to
  * use it directly. 
  */
 
-G_DEFINE_TYPE_WITH_PRIVATE (GdaDdlBase, gda_ddl_base, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (GdaDbBase, gda_db_base, G_TYPE_OBJECT)
 
 /**
- * gda_ddl_base_new:
+ * gda_db_base_new:
  *
- * Create a new #GdaDdlBase instance
+ * Create a new #GdaDbBase instance
  *
- * Returns: a new #GdaDdlBase instance 
+ * Returns: a new #GdaDbBase instance 
  */
-GdaDdlBase*
-gda_ddl_base_new (void)
+GdaDbBase*
+gda_db_base_new (void)
 {
-  return g_object_new (GDA_TYPE_DDL_BASE, NULL);
+  return g_object_new (GDA_TYPE_DB_BASE, NULL);
 }
 
 static void
-gda_ddl_base_finalize (GObject *object)
+gda_db_base_finalize (GObject *object)
 {
-  GdaDdlBase *self = (GdaDdlBase *)object;
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBase *self = (GdaDbBase *)object;
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   g_free (priv->m_catalog);
   g_free (priv->m_schema);
   g_free (priv->m_name);
   g_free (priv->m_fullname);
 
-  G_OBJECT_CLASS (gda_ddl_base_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_db_base_parent_class)->finalize (object);
 }
 
 static void
-gda_ddl_base_class_init (GdaDdlBaseClass *klass)
+gda_db_base_class_init (GdaDbBaseClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  object_class->finalize = gda_ddl_base_finalize;
+  object_class->finalize = gda_db_base_finalize;
 }
 
 static void
-gda_ddl_base_init (GdaDdlBase *self)
+gda_db_base_init (GdaDbBase *self)
 {
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   priv->m_catalog = NULL;
   priv->m_schema  = NULL;
@@ -88,8 +88,8 @@ gda_ddl_base_init (GdaDdlBase *self)
 }
 
 /**
- * gda_ddl_base_set_names:
- * @self: a #GdaDdlBase object
+ * gda_db_base_set_names:
+ * @self: a #GdaDbBase object
  * @catalog: (nullable): a catalog name associated with the table
  * @schema: (nullable): a schema name associated with the table
  * @name: a table name associated with the table
@@ -102,15 +102,15 @@ gda_ddl_base_init (GdaDdlBase *self)
  * Since: 6.0
  */
 void
-gda_ddl_base_set_names (GdaDdlBase *self,
-                        const gchar* catalog,
-                        const gchar* schema,
-                        const gchar* name)
+gda_db_base_set_names (GdaDbBase *self,
+                       const gchar* catalog,
+                       const gchar* schema,
+                       const gchar* name)
 {
   g_return_if_fail (self);
   g_return_if_fail (name);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   g_free (priv->m_name);
   g_free (priv->m_schema);
@@ -144,8 +144,8 @@ gda_ddl_base_set_names (GdaDdlBase *self,
 }
 
 /**
- * gda_ddl_base_get_full_name:
- * @self: an instance of #GdaDdlBase
+ * gda_db_base_get_full_name:
+ * @self: an instance of #GdaDbBase
  *
  * This method returns a full name in the format catalog.schema.name.
  * If schema is %NULL but catalog and name are not, then only name is
@@ -157,11 +157,11 @@ gda_ddl_base_set_names (GdaDdlBase *self,
  * Since: 6.0
  */
 const gchar*
-gda_ddl_base_get_full_name (GdaDdlBase *self)
+gda_db_base_get_full_name (GdaDbBase *self)
 {
   g_return_val_if_fail (self,NULL);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   GString *fullnamestr = NULL;
 
@@ -184,8 +184,8 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
 }
 
 /**
- * gda_ddl_base_get_catalog:
- * @self: a #GdaDdlBase object
+ * gda_db_base_get_catalog:
+ * @self: a #GdaDbBase object
  *
  * Returns current catalog name. The returned string should not be freed.
  *
@@ -194,18 +194,18 @@ gda_ddl_base_get_full_name (GdaDdlBase *self)
  * Since: 6.0
  */
 const gchar*
-gda_ddl_base_get_catalog (GdaDdlBase  *self)
+gda_db_base_get_catalog (GdaDbBase  *self)
 {
   g_return_val_if_fail (self,NULL);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   return priv->m_catalog;
 }
 
 /**
- * gda_ddl_base_get_schema:
- * @self: GdaDdlBase object
+ * gda_db_base_get_schema:
+ * @self: GdaDbBase object
  *
  * Returns current schema name. The returned string should not be freed.
  *
@@ -214,18 +214,18 @@ gda_ddl_base_get_catalog (GdaDdlBase  *self)
  * Since: 6.0
  */
 const gchar*
-gda_ddl_base_get_schema (GdaDdlBase  *self)
+gda_db_base_get_schema (GdaDbBase  *self)
 {
   g_return_val_if_fail (self,NULL);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   return priv->m_schema;
 }
 
 /**
- * gda_ddl_base_get_name:
- * @self: GdaDdlBase object
+ * gda_db_base_get_name:
+ * @self: GdaDbBase object
  *
  * Returns current object name. The returned string should not be freed.
  *
@@ -234,18 +234,18 @@ gda_ddl_base_get_schema (GdaDdlBase  *self)
  * Since: 6.0
  */
 const gchar*
-gda_ddl_base_get_name (GdaDdlBase  *self)
+gda_db_base_get_name (GdaDbBase  *self)
 {
   g_return_val_if_fail (self,NULL);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   return priv->m_name;
 }
 
 /**
- * gda_ddl_base_set_catalog:
- * @self: a #GdaDdlBase instance
+ * gda_db_base_set_catalog:
+ * @self: a #GdaDbBase instance
  * @catalog: Catalog name as a string
  * 
  * Set catalog name
@@ -253,20 +253,20 @@ gda_ddl_base_get_name (GdaDdlBase  *self)
  * Since: 6.0
  */
 void
-gda_ddl_base_set_catalog (GdaDdlBase  *self,
-                          const gchar *catalog)
+gda_db_base_set_catalog (GdaDbBase  *self,
+                         const gchar *catalog)
 {
   g_return_if_fail (self);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   g_free (priv->m_catalog);
   priv->m_catalog = g_strdup (catalog);
 }
 
 /**
- * gda_ddl_base_set_schema:
- * @self: a #GdaDdlBase instance
+ * gda_db_base_set_schema:
+ * @self: a #GdaDbBase instance
  * @schema: Schema name as a string
  *
  * Set object schema.
@@ -274,20 +274,20 @@ gda_ddl_base_set_catalog (GdaDdlBase  *self,
  * Since: 6.0
  */
 void
-gda_ddl_base_set_schema (GdaDdlBase  *self,
-                         const gchar *schema)
+gda_db_base_set_schema (GdaDbBase  *self,
+                        const gchar *schema)
 {
   g_return_if_fail (self);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   g_free (priv->m_schema);
   priv->m_schema = g_strdup (schema);
 }
 
 /**
- * gda_ddl_base_set_name:
- * @self: a #GdaDdlBase instance
+ * gda_db_base_set_name:
+ * @self: a #GdaDbBase instance
  * @name: Object name as a string
  * 
  * Set object name
@@ -295,21 +295,21 @@ gda_ddl_base_set_schema (GdaDdlBase  *self,
  * Since: 6.0
  */
 void
-gda_ddl_base_set_name (GdaDdlBase  *self,
-                       const gchar *name)
+gda_db_base_set_name (GdaDbBase  *self,
+                      const gchar *name)
 {
   g_return_if_fail (self);
 
-  GdaDdlBasePrivate *priv = gda_ddl_base_get_instance_private (self);
+  GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   g_free (priv->m_name);
   priv->m_name = g_strdup (name);
 }
 
 /**
- * gda_ddl_base_compare:
- * @a: first #GdaDdlBase object
- * @b: second #GdaDdlBase object
+ * gda_db_base_compare:
+ * @a: first #GdaDbBase object
+ * @b: second #GdaDbBase object
  *
  * Compares two objects similar to g_strcmp(). 
  *
@@ -318,7 +318,8 @@ gda_ddl_base_set_name (GdaDdlBase  *self,
  * Since: 6.0
  */
 gint
-gda_ddl_base_compare (GdaDdlBase *a, GdaDdlBase *b)
+gda_db_base_compare (GdaDbBase *a,
+                     GdaDbBase *b)
 {
   if (!a && !b)
     return 0;
@@ -327,18 +328,17 @@ gda_ddl_base_compare (GdaDdlBase *a, GdaDdlBase *b)
   else if (a && !b)
     return 1;
  
-  gint res = g_strcmp0 (gda_ddl_base_get_name(a),gda_ddl_base_get_name(b));
+  gint res = g_strcmp0 (gda_db_base_get_name(a),gda_db_base_get_name(b));
 
   if (!res)
     {
-      res = g_strcmp0 (gda_ddl_base_get_catalog(a),gda_ddl_base_get_catalog(b));
+      res = g_strcmp0 (gda_db_base_get_catalog(a),gda_db_base_get_catalog(b));
       
       if (!res)
-        return g_strcmp0(gda_ddl_base_get_schema(a),gda_ddl_base_get_schema(b));  
+        return g_strcmp0(gda_db_base_get_schema(a),gda_db_base_get_schema(b));  
       else
         return res;
     }
   else
     return res;
-
 }

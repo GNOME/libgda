@@ -17,12 +17,12 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#ifndef __GDA_DDL_TABLE_H__
-#define __GDA_DDL_TABLE_H__
+#ifndef __GDA_DB_TABLE_H__
+#define __GDA_DB_TABLE_H__
 
-#include "gda-ddl-base.h"
-#include "gda-ddl-column.h" 
-#include "gda-ddl-fkey.h"
+#include "gda-db-base.h"
+#include "gda-db-column.h" 
+#include "gda-db-fkey.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 #include "gda-server-operation.h"
@@ -31,59 +31,59 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DDL_TABLE (gda_ddl_table_get_type())
+#define GDA_TYPE_DB_TABLE (gda_db_table_get_type())
 
-G_DECLARE_DERIVABLE_TYPE(GdaDdlTable, gda_ddl_table, GDA, DDL_TABLE, GdaDdlBase)
+G_DECLARE_DERIVABLE_TYPE(GdaDbTable, gda_db_table, GDA, DB_TABLE, GdaDbBase)
 
-struct _GdaDdlTableClass {
-    GdaDdlBaseClass parent_class;
+struct _GdaDbTableClass {
+    GdaDbBaseClass parent_class;
 };
 
 /**
- * GdaDdlTableError:
- * @GDA_DDL_TABLE_COLUMN_EMPTY: Table doesn't contain columns
+ * GdaDbTableError:
+ * @GDA_DB_TABLE_COLUMN_EMPTY: Table doesn't contain columns
  *
  */
 typedef enum {
-    GDA_DDL_TABLE_COLUMN_EMPTY,
-}GdaDdlTableError;
+    GDA_DB_TABLE_COLUMN_EMPTY,
+}GdaDbTableError;
 
-#define GDA_DDL_TABLE_ERROR gda_ddl_table_error_quark()
-GQuark gda_ddl_table_error_quark(void);
+#define GDA_DB_TABLE_ERROR gda_db_table_error_quark()
+GQuark gda_db_table_error_quark(void);
 
-GdaDdlTable*    gda_ddl_table_new               (void);
-gboolean        gda_ddl_table_is_valid          (GdaDdlTable *self);
-GList*          gda_ddl_table_get_columns       (GdaDdlTable *self);
-GList*          gda_ddl_table_get_fkeys         (GdaDdlTable *self);
+GdaDbTable*    gda_db_table_new               (void);
+gboolean        gda_db_table_is_valid          (GdaDbTable *self);
+GList*          gda_db_table_get_columns       (GdaDbTable *self);
+GList*          gda_db_table_get_fkeys         (GdaDbTable *self);
 
-void            gda_ddl_table_append_column     (GdaDdlTable *self,
-                                                 GdaDdlColumn *column);
+void            gda_db_table_append_column     (GdaDbTable *self,
+                                                 GdaDbColumn *column);
 
-gboolean        gda_ddl_table_get_is_temp       (GdaDdlTable *self);
-void            gda_ddl_table_set_is_temp       (GdaDdlTable *self,
+gboolean        gda_db_table_get_is_temp       (GdaDbTable *self);
+void            gda_db_table_set_is_temp       (GdaDbTable *self,
                                                  gboolean istemp);
 
-gboolean        gda_ddl_table_prepare_create (GdaDdlTable *self,
+gboolean        gda_db_table_prepare_create (GdaDbTable *self,
                                               GdaServerOperation *op,
                                               gboolean ifnotexists,
                                               GError **error);
 
-gboolean        gda_ddl_table_update          (GdaDdlTable *self,
+gboolean        gda_db_table_update          (GdaDbTable *self,
                                                GdaMetaTable *obj,
                                                GdaConnection *cnc,
                                                GError **error);
 
-gboolean        gda_ddl_table_create          (GdaDdlTable *self,
+gboolean        gda_db_table_create          (GdaDbTable *self,
                                                GdaConnection *cnc,
                                                gboolean ifnotexists,
                                                GError **error);
 
-GdaDdlTable    *gda_ddl_table_new_from_meta    (GdaMetaDbObject *obj);
+GdaDbTable    *gda_db_table_new_from_meta    (GdaMetaDbObject *obj);
 
-void            gda_ddl_table_append_fkey (GdaDdlTable *self,
-                                           GdaDdlFkey *fkey);
+void            gda_db_table_append_fkey (GdaDbTable *self,
+                                           GdaDbFkey *fkey);
 G_END_DECLS
 
-#endif /* end of include guard: GDA-DDL-TABLE_H */
+#endif /* end of include guard: GDA-DB-TABLE_H */
 
 

@@ -1,5 +1,5 @@
 /*
- * gda-ddl-buildable.c
+ * gda-db-buildable.c
  *
  * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -19,31 +19,31 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "gda-ddl-buildable.h"
+#include "gda-db-buildable.h"
 
-G_DEFINE_INTERFACE (GdaDdlBuildable, gda_ddl_buildable, G_TYPE_OBJECT)
+G_DEFINE_INTERFACE (GdaDbBuildable, gda_db_buildable, G_TYPE_OBJECT)
 
 /**
- * SECTION:gda-ddl-buildable
- * @title: GdaDdlBuildable
+ * SECTION:gda-db-buildable
+ * @title: GdaDbBuildable
  * @short: Represents interface for parsing and writing xml nodes
- * @see_also: #GdaDdlTable, #GdaDdlView
+ * @see_also: #GdaDbTable, #GdaDbView
  * @stability: Stable
- * @include: libgda/gda-ddl-buildable.h
+ * @include: libgda/gda-db-buildable.h
  *
- * #GdaDdlBuildable represents an interface for writing and reading xml nodes. #GdaDdlTable and
- * #GdaDdlView implement this interface.  
+ * #GdaDbBuildable represents an interface for writing and reading xml nodes. #GdaDbTable and
+ * #GdaDbView implement this interface.  
  */
 
 static void
-gda_ddl_buildable_default_init (GdaDdlBuildableInterface *iface)
+gda_db_buildable_default_init (GdaDbBuildableInterface *iface)
 {
   /* add properties and signals to the interface here */
 }
 
 /**
- * gda_ddl_buildable_parse_node:
- * @self: an instance of #GdaDdlBuildable where parsed data should be storred
+ * gda_db_buildable_parse_node:
+ * @self: an instance of #GdaDbBuildable where parsed data should be storred
  * @node: a node to parse
  * @error: (nullable): an object to store error
  *
@@ -54,23 +54,23 @@ gda_ddl_buildable_default_init (GdaDdlBuildableInterface *iface)
  * Stability: stable
  */
 gboolean
-gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
-                              xmlNodePtr        node,
-                              GError         **error)
+gda_db_buildable_parse_node (GdaDbBuildable  *self,
+                             xmlNodePtr        node,
+                             GError         **error)
 {
-  GdaDdlBuildableInterface *iface;
+  GdaDbBuildableInterface *iface;
 
-  g_return_val_if_fail (GDA_IS_DDL_BUILDABLE (self),FALSE);
+  g_return_val_if_fail (GDA_IS_DB_BUILDABLE (self),FALSE);
   g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
-  iface = GDA_DDL_BUILDABLE_GET_IFACE (self);
+  iface = GDA_DB_BUILDABLE_GET_IFACE (self);
   g_return_val_if_fail (iface->parse_node != NULL,FALSE);
   return iface->parse_node (self, node, error);
 }
 
 /**
- * gda_ddl_buildable_write_node:
- * @self: an instance of #GdaDdlBuildable where data should be taken 
+ * gda_db_buildable_write_node:
+ * @self: an instance of #GdaDbBuildable where data should be taken 
  * @node: a node to write data in
  * @error: (nullable): an object to store error
  *
@@ -81,16 +81,16 @@ gda_ddl_buildable_parse_node (GdaDdlBuildable  *self,
  * Stability: stable
  */
 gboolean
-gda_ddl_buildable_write_node (GdaDdlBuildable *self,
-                              xmlNodePtr node,
-                              GError **error)
+gda_db_buildable_write_node (GdaDbBuildable *self,
+                             xmlNodePtr node,
+                             GError **error)
 {
-  GdaDdlBuildableInterface *iface;
+  GdaDbBuildableInterface *iface;
 
-  g_return_val_if_fail (GDA_IS_DDL_BUILDABLE (self),FALSE);
+  g_return_val_if_fail (GDA_IS_DB_BUILDABLE (self),FALSE);
   g_return_val_if_fail (error == NULL || *error == NULL,FALSE);
 
-  iface = GDA_DDL_BUILDABLE_GET_IFACE (self);
+  iface = GDA_DB_BUILDABLE_GET_IFACE (self);
   g_return_val_if_fail (iface->write_node != NULL,FALSE);
   return iface->write_node (self, node, error);
 }

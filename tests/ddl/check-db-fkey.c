@@ -1,4 +1,4 @@
-/* check-ddl-fkey.c
+/* check-db-fkey.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -22,14 +22,14 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
-#include <libgda/gda-ddl-fkey.h>
+#include <libgda/gda-db-fkey.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlwriter.h>
 
 typedef struct {
-    GdaDdlFkey *fkey;
+    GdaDbFkey *fkey;
 
     GList *fkfield;
     GList *reffield;
@@ -42,21 +42,21 @@ typedef struct {
     xmlDocPtr doc;
     xmlTextWriterPtr writer;
     xmlBufferPtr buffer;
-} CheckDdlObject;
+} CheckDbObject;
 
 static void
-test_ddl_fkey_run2 (CheckDdlObject *self,
+test_db_fkey_run2 (CheckDbObject *self,
                     gconstpointer user_data)
 {
   const gchar *reftable = NULL;
 
-  reftable = gda_ddl_fkey_get_ref_table (self->fkey);
+  reftable = gda_db_fkey_get_ref_table (self->fkey);
 
   g_assert_cmpstr (reftable, ==, self->reftable);
 
   const GList *fkfield = NULL;
 
-  fkfield = gda_ddl_fkey_get_field_name (self->fkey);
+  fkfield = gda_db_fkey_get_field_name (self->fkey);
 
   g_assert_nonnull (fkfield);
 
@@ -68,37 +68,37 @@ test_ddl_fkey_run2 (CheckDdlObject *self,
 
   const GList *reffield = NULL;
 
-  reffield = gda_ddl_fkey_get_ref_field(self->fkey);
+  reffield = gda_db_fkey_get_ref_field(self->fkey);
 
   g_assert_nonnull (reffield);
 
   for (it = reffield, jt = self->reffield; it && jt; it = it->next, jt = jt->next)
     g_assert_cmpstr(it->data, ==, jt->data);
 
-  const gchar *onupdate = gda_ddl_fkey_get_onupdate (self->fkey);
+  const gchar *onupdate = gda_db_fkey_get_onupdate (self->fkey);
 
   g_assert_cmpstr(onupdate, ==, self->onupdate);
 
-  const gchar *ondelete = gda_ddl_fkey_get_ondelete (self->fkey);
+  const gchar *ondelete = gda_db_fkey_get_ondelete (self->fkey);
 
   g_assert_cmpstr(ondelete, ==, self->ondelete);
 }
 
 static void
-test_ddl_fkey_run1 (void)
+test_db_fkey_run1 (void)
 {
   g_print ("Run 1 start\n");
-  GdaDdlFkey *self = gda_ddl_fkey_new ();
+  GdaDbFkey *self = gda_db_fkey_new ();
 
   g_object_unref (self);
   g_print ("Run 1 end\n");
 }
 
 static void
-test_ddl_fkey_run3 (CheckDdlObject *self,
+test_db_fkey_run3 (CheckDbObject *self,
                     gconstpointer user_data)
 {
-  int res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->fkey),
+  int res = gda_db_buildable_write_node(GDA_DB_BUILDABLE(self->fkey),
                                          self->writer,NULL);
 
   g_assert_true (res >= 0);
@@ -112,7 +112,7 @@ test_ddl_fkey_run3 (CheckDdlObject *self,
 }
 
 static void
-test_ddl_fkey_start (CheckDdlObject *self,
+test_db_fkey_start (CheckDbObject *self,
                      gconstpointer user_data)
 {
   self->doc = NULL;
@@ -143,7 +143,7 @@ test_ddl_fkey_start (CheckDdlObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
+                                   "db",
                                    "fkey_test.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);
@@ -154,11 +154,11 @@ test_ddl_fkey_start (CheckDdlObject *self,
   xmlNodePtr node = xmlDocGetRootElement (self->doc);
   g_assert_nonnull (node);
 
-  self->fkey = gda_ddl_fkey_new ();
+  self->fkey = gda_db_fkey_new ();
 
   g_assert_nonnull(self->fkey);
   g_print("Before parse node\n");
-  gboolean res = gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE(self->fkey),
+  gboolean res = gda_db_buildable_parse_node(GDA_DB_BUILDABLE(self->fkey),
                                               node,NULL);
   g_print("After parse node\n");
   g_assert_true (res);
@@ -177,7 +177,7 @@ test_ddl_fkey_start (CheckDdlObject *self,
 }
 
 static void
-test_ddl_fkey_finish (CheckDdlObject *self,
+test_db_fkey_finish (CheckDbObject *self,
                       gconstpointer user_data)
 {
   g_free (self->xmlfile);
@@ -200,22 +200,22 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add_func ("/test-ddl/fkey-basic",
-                   test_ddl_fkey_run1);
+  g_test_add_func ("/test-db/fkey-basic",
+                   test_db_fkey_run1);
 
-  g_test_add ("/test-ddl/fkey-parse",
-              CheckDdlObject,
+  g_test_add ("/test-db/fkey-parse",
+              CheckDbObject,
               NULL,
-              test_ddl_fkey_start,
-              test_ddl_fkey_run2,
-              test_ddl_fkey_finish);
+              test_db_fkey_start,
+              test_db_fkey_run2,
+              test_db_fkey_finish);
 
-  g_test_add ("/test-ddl/fkey-write",
-              CheckDdlObject,
+  g_test_add ("/test-db/fkey-write",
+              CheckDbObject,
               NULL,
-              test_ddl_fkey_start,
-              test_ddl_fkey_run3,
-              test_ddl_fkey_finish);
+              test_db_fkey_start,
+              test_db_fkey_run3,
+              test_db_fkey_finish);
 
   return g_test_run();
 }

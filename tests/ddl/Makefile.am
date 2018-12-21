@@ -8,37 +8,42 @@ AM_CPPFLAGS = \
 	-DROOT_DIR=\""$(top_srcdir)"\"
 
 test_programs = \
-    check_ddl_creator \
-    check_ddl_base \
-    check_ddl_column \
-    check_ddl_view
+    check_db_catalog \
+    check_db_base \
+    check_db_column \
+    check_db_view \
+    check_db_catalog_postgresql
 
-check_ddl_creator_SOURCES = check-ddl-creator.c
-check_ddl_creator_LDADD = \
+check_db_catalog_SOURCES = check-db-catalog.c
+check_db_catalog_LDADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS)
 
-check_ddl_base_SOURCES = check-ddl-base.c
-check_ddl_base_LDADD = \
+check_db_base_SOURCES = check-db-base.c
+check_db_base_LDADD = \
        $(top_builddir)/libgda/libgda-6.0.la \
        $(COREDEPS_LIBS)
 
-check_ddl_column_SOURCES = check-ddl-column.c
-check_ddl_column_LDADD = \
+check_db_column_SOURCES = check-db-column.c
+check_db_column_LDADD = \
        $(top_builddir)/libgda/libgda-6.0.la \
        $(COREDEPS_LIBS)
 
-check_ddl_view_SOURCES = check-ddl-view.c
-check_ddl_view_LDADD = \
+check_db_view_SOURCES = check-db-view.c
+check_db_view_LDADD = \
        $(top_builddir)/libgda/libgda-6.0.la \
        $(COREDEPS_LIBS)
 
+check_db_catalog_postgresql_SOURCES = check-db-catalog-postgresql.c
+check_db_catalog_postgresql_LDADD = \
+       $(top_builddir)/libgda/libgda-6.0.la \
+       $(COREDEPS_LIBS)
 
 include $(top_srcdir)/glib-tap.mk
 
 EXTRA_DIST += column_test.xml \
-	     ddl-db.xml \
+	     db-db.xml \
 	     fkey_test.xml \
 	     view_test.xml
 
-DISTCLEANFILES=ddl-test-out.xml ddl_test.db
+DISTCLEANFILES=db-test-out.xml db_test.db

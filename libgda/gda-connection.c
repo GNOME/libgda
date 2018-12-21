@@ -7127,25 +7127,25 @@ gda_connection_operation_get_sql_identifier_at_path (GdaConnection *cnc, GdaServ
 }
 
 /**
- * gda_connection_create_ddl_creator:
+ * gda_connection_create_db_catalog:
  * @cnc: A #GdaConnection object to use
  *
- * A convenient method to create a new #GdaDdlCreator instance and set the current @cnc as a
+ * A convenient method to create a new #GdaDbCreator instance and set the current @cnc as a
  * property.  If for some reason, this approach doesn't fit well, the same task can be achieved 
  * by the following code:
  *
- * GdaDdlCreator *creator = gda_ddl_creator_new ();
- * g_object_set (creator, "connection", cnc, NULL);
+ * GdaDbCatalog *catalog = gda_db_catalog_new ();
+ * g_object_set (catalog, "connection", cnc, NULL);
  *
- * Returns: (transfer full): A new instance of #GdaDdlCreator. The new object should be deallocated
+ * Returns: (transfer full): A new instance of #GdaDbCatalog. The new object should be deallocated
  * using g_object_unref().
  *
  * Since: 6.0
  */
-GdaDdlCreator*
-gda_connection_create_ddl_creator (GdaConnection *cnc)
+GdaDbCatalog*
+gda_connection_create_db_catalog (GdaConnection *cnc)
 {
   g_return_val_if_fail (GDA_IS_CONNECTION (cnc),NULL);
 
-  return g_object_new (GDA_TYPE_DDL_CREATOR,"connection",cnc,NULL);
+  return g_object_new (GDA_TYPE_DB_CATALOG,"connection",cnc,NULL);
 }
