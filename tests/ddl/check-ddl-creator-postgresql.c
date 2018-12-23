@@ -33,7 +33,9 @@ typedef struct {
 
 
 
-static void create_users_table (CheckDdlObject *self) {
+static void 
+create_users_table (CheckDdlObject *self) 
+{
   GError *error = NULL;
   gboolean res = FALSE;
   GdaDdlTable *table = NULL;
@@ -101,7 +103,9 @@ static void create_users_table (CheckDdlObject *self) {
   g_assert_true (res);
 }
 
-static void create_companies_table (CheckDdlObject *self) {
+static void 
+create_companies_table (CheckDdlObject *self) 
+{
   GError *error = NULL;
   gboolean res = FALSE;
   GdaDdlTable *table = NULL;
@@ -170,7 +174,8 @@ static void create_companies_table (CheckDdlObject *self) {
 }
 
 
-static void create_countries_table (CheckDdlObject *self) {
+static void create_countries_table (CheckDdlObject *self) 
+{
   GError *error = NULL;
   gboolean res = FALSE;
   GdaDdlTable *table = NULL;
@@ -247,23 +252,25 @@ test_ddl_creator_start (CheckDdlObject *self,
   self->cnc = NULL;
   self->started_db = FALSE;
   self->cont = FALSE;
+  const gchar *cnc_string = NULL;
 
-#ifdef CI_ENVIRONMENT
-  const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
-#else
-  const gchar *cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
-#endif
+  cnc_string = g_getenv ("POSTGRES_CNC_PARAMS");
 
-  self->cnc = gda_connection_new_from_string("Postgresql",
-                                             cnc_string,
-                                             NULL,
-                                             GDA_CONNECTION_OPTIONS_NONE,
-                                             NULL);
-  if (self->cnc == NULL) {
-    g_print ("Postgres test not run, please setup a database 'test', owned by 'test' role with password 'test1' at localhost\n");
-    g_print ("Test Skip.\n");
-    return;
-  }
+  if (cnc_string)
+    {
+      self->cnc = gda_connection_new_from_string("Postgresql",
+                                                 cnc_string,
+                                                 NULL,
+                                                 GDA_CONNECTION_OPTIONS_NONE,
+                                                 NULL);
+    }
+  else
+    {
+      g_print ("Postgres test not run\n");
+      g_print ("Please set the variable POSTGRES_CNC_PARAMS with an appropriate user, host, and database\n");
+      g_print ("Test Skip.\n");
+      return;
+    }
 
   g_assert_nonnull (self->cnc);
 
@@ -283,7 +290,7 @@ test_ddl_creator_start (CheckDdlObject *self,
 
 static void
 test_ddl_creator_finish (CheckDdlObject *self,
-                      gconstpointer user_data)
+                         gconstpointer user_data)
 {
   if (self->cnc != NULL) {
     gda_connection_close(self->cnc,NULL);
