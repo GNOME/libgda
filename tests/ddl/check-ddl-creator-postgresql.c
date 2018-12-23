@@ -270,7 +270,6 @@ test_ddl_creator_start (CheckDdlObject *self,
       g_print ("Please set the variable POSTGRES_CNC_PARAMS with an appropriate user, host, and database\n");
       g_print ("Test Skip.\n");
       return;
-      }
     }
 
   g_assert_nonnull (self->cnc);
