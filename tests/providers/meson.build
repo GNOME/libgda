@@ -73,6 +73,7 @@ tchkpg = executable('check_postgres',
 	install: false
 	)
 test('ProviderPostgreSQL', tchkpg,
+	timeout: 200,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()

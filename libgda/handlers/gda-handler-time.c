@@ -622,9 +622,14 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 
 	if (type == G_TYPE_DATE) {
 		const GDate *date;
-
+		GTimeZone *tz = g_time_zone_new_utc ();
+		GDateTime *dt;
 		date = (GDate *) g_value_get_boxed (value);
-		retval = render_date_locale (date, hdl->str_locale);
+		dt = g_date_time_new (tz, g_date_get_year (date),
+		                      g_date_get_month (date),
+		                      g_date_get_day (date),
+		                      0, 0, 0.0);
+		retval = g_date_time_format (dt, "%F");
 		if (!retval)
 			retval = g_strdup ("");
 	}
@@ -638,7 +643,7 @@ gda_handler_time_get_str_from_value (GdaDataHandler *iface, const GValue *value)
 
 		gdats = (GDateTime*) g_value_get_boxed ((GValue *) value);
 		if (gdats != NULL)
-			retval = g_date_time_format (gdats, "%xT%H:%M:%S%:::z");
+			retval = g_date_time_format (gdats, "%FT%H:%M:%S%:::z");
 		else
 			retval = g_strdup ("");
 	}
@@ -1052,52 +1057,32 @@ static GValue *
 gda_handler_time_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, GType type)
 {
 	GValue *value = NULL;
-	
-	time_t now;
-	struct tm *stm;
+	GDateTime *gdate;
 
-	g_return_val_if_fail (GDA_IS_HANDLER_TIME (iface), NULL);
-
-	now = time (NULL);
-#ifdef HAVE_LOCALTIME_R
-	struct tm tmpstm;
-	stm = localtime_r (&now, &tmpstm);
-#elif HAVE_LOCALTIME_S
-	struct tm tmpstm;
-	g_assert (localtime_s (&tmpstm, &now) == 0);
-	stm = &tmpstm;
-#else
-	stm = localtime (&now);
-#endif
+	gdate = g_date_time_new_now_local ();
 
 	if (type == G_TYPE_DATE) {
-		GDate *gdate;
-
-		gdate = g_date_new_dmy (stm->tm_mday, stm->tm_mon + 1, stm->tm_year + 1900);
+		GDate *date = g_date_new_dmy ((GDateDay) g_date_time_get_day_of_month (gdate),
+		                             (GDateMonth) g_date_time_get_month (gdate),
+		                             (GDateYear) g_date_time_get_year (gdate));
 		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE);
-		g_value_take_boxed (value, gdate);
+		g_value_take_boxed (value, date);
 	}
 	else if (type == GDA_TYPE_TIME) {
 		GdaTime* gtime;
 
-		gtime = gda_time_new ();
+		gtime = gda_time_new_from_values (
+                            g_date_time_get_hour (gdate),
+                            g_date_time_get_minute (gdate),
+                            g_date_time_get_second (gdate),
+                            g_date_time_get_seconds (gdate) - (gdouble) g_date_time_get_second (gdate),
+                            (glong) g_date_time_get_utc_offset (gdate));
 
-                gda_time_set_hour (gtime, stm->tm_hour);
-		gda_time_set_minute (gtime, stm->tm_min);
-		gda_time_set_second (gtime, stm->tm_sec);
-		gda_time_set_timezone (gtime, GDA_TIMEZONE_INVALID);
 		value = g_value_init (g_new0 (GValue, 1), GDA_TYPE_TIME);
 		gda_value_set_time (value, gtime);
 	}
 	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-		GTimeZone *tz = g_time_zone_new ("Z");
-		GDateTime* gts = g_date_time_new (tz,
-																			stm->tm_year + 1900,
-																			stm->tm_mon + 1,
-																			stm->tm_mday,
-																			stm->tm_hour,
-																			stm->tm_min,
-																			stm->tm_sec);
+		GDateTime* gts = g_date_time_new_now_utc ();
 
 		if (gts != NULL) {
       value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
@@ -1106,15 +1091,6 @@ gda_handler_time_get_sane_init_value (G_GNUC_UNUSED GdaDataHandler *iface, GType
     } else {
       g_warning (_("Invalid values from statement to create a timestamp"));
     }
-	}
-	else if (type == G_TYPE_DATE_TIME) { // FIXME: Remove
-		GDateTime *ts;
-		GTimeZone *tz;
-		tz = g_time_zone_new_local ();
-		ts = g_date_time_new_now (tz);
-		g_time_zone_unref (tz);
-		value = g_value_init (g_new0 (GValue, 1), G_TYPE_DATE_TIME);
-		g_value_take_boxed (value, ts);
 	}
 	else
 		g_assert_not_reached ();

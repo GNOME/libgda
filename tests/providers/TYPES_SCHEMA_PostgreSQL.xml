@@ -56,7 +56,7 @@
     <gda_array_row>
       <gda_value>date</gda_value>
       <gda_value>GDate</gda_value>
-      <gda_value>ANSI SQL date</gda_value>
+      <gda_value>date</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
