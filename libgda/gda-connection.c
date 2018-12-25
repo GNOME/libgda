@@ -4082,6 +4082,7 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 			     _("Missing or wrong arguments for table '%s': %s"),
 			     context->table_name, str);
 		g_free (str);
+		retval = -1;
 	}
 
 	/*g_print ("Check arguments context => found %d\n", retval);*/
@@ -4293,6 +4294,9 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			i = check_parameters (context, error, 1,
 					      &name, G_TYPE_STRING, NULL,
 					      "specific_name", &name, NULL);
+			if (error && *error) {
+				return FALSE;
+			}
 			ASSERT_TABLE_NAME (tname, "element_types");
 			if (i < 0) {
 				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
