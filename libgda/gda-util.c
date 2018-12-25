@@ -3249,9 +3249,7 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 		endptr++;
 	if (sep == 0 && (*endptr == ' ' || *endptr == ':'))
 		return FALSE;
-	g_print ("Seconds string to parse: %s\n", endptr);
 	seconds = g_strtod ((const gchar*) endptr, &stz);
-	g_print ("Parsed seconds: %f\n", seconds);
 	if (seconds >= 60.0) {
 		*out_endptr = stz;
 		return FALSE;
@@ -3259,16 +3257,12 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	gda_time_set_second (timegda, (gint) seconds);
 	/* Strip fraction */
 	fraction = (glong) ((seconds - (gint) seconds) * 1000000);
-	g_print ("Parsed Fractions of Seconds: %ld\n", fraction);
 	g_free (fs);
 	gda_time_set_fraction (timegda, fraction);
-	g_print ("check for TZ\n");
 	if (stz != NULL) {
-		g_print ("TZ to parse: %s\n", stz);
 		g_time_zone_unref (tz);
 		tz = g_time_zone_new (stz);
 		if (tz != NULL) {
-			g_print ("Parsed TZ: %d\n", g_time_zone_get_offset (tz, 0));
 			gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
 		}
 		for (; *endptr; endptr++);
@@ -3403,7 +3397,6 @@ gda_parse_formatted_timestamp (const gchar *value,
 	g_free (stz);
 	if (tz == NULL)
 		return NULL;
-	g_print ("Time Zone: %d", g_time_zone_get_offset (tz, 0));
 	gdouble seconds;
 	seconds = (gdouble) gda_time_get_second (timegda) + gda_time_get_fraction (timegda) / 1000000;
 	return g_date_time_new (tz,
