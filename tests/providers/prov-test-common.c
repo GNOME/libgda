@@ -334,6 +334,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 							  GDA_SERVER_OPERATION_CREATE_TABLE, NULL, &error);
         g_assert (operation);
         gda_server_operation_set_value_at (operation, table_name, NULL, "/TABLE_DEF_P/TABLE_NAME");
+        gda_server_operation_set_value_at (operation, "TRUE", NULL, "/TABLE_DEF_P/TABLE_IFNOTEXISTS");
         gda_server_operation_set_value_at (operation, "id", NULL, "/FIELDS_A/@COLUMN_NAME/0");
         gda_server_operation_set_value_at (operation, "int", NULL, "/FIELDS_A/@COLUMN_TYPE/0");
         gda_server_operation_set_value_at (operation, "TRUE", NULL, "/FIELDS_A/@COLUMN_PKEY/0");

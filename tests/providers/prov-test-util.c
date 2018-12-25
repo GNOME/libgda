@@ -53,7 +53,9 @@ compare_data_model_with_expected (GdaDataModel *model, const gchar *expected_fil
 		g_object_unref (compare_m);
 		return FALSE;
 	}
-	
+	gchar *dmodel = gda_data_model_dump_as_string (compare_m);
+	g_message ("Expected file: %s\nExpected schema:\n%s", expected_file, dmodel);
+	g_free (dmodel);
 	/* compare number of rows and columns */
 	gint ncols, nrows, row, col;
 	ncols = gda_data_model_get_n_columns (model);
@@ -183,6 +185,9 @@ prov_test_check_types_schema (GdaConnection *cnc)
 #endif
 		return FALSE;
 	}
+	gchar *dmod = gda_data_model_dump_as_string (schema_m);
+	g_message ("Meta Types from connection:\n%s", dmod);
+	g_free (dmod);
 
 	str = g_strdup_printf ("TYPES_SCHEMA_%s.xml", gda_connection_get_provider_name (cnc));
 	if (CREATE_FILES) {

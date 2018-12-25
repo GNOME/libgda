@@ -108,6 +108,12 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>information_schema.yes_or_no</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>int2</gda_value>
       <gda_value>GdaShort</gda_value>
       <gda_value>-32 thousand to 32 thousand, 2-byte storage</gda_value>
@@ -132,9 +138,27 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>json</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value isnull="t"/>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>jsonb</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>Binary JSON</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>macaddr</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>XX:XX:XX:XX:XX:XX, MAC address</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>macaddr8</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>XX:XX:XX:XX:XX:XX:XX:XX, MAC address</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
@@ -156,6 +180,30 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>pg_dependencies</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>multivariate dependencies</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>pg_lsn</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>PostgreSQL LSN datatype</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>pg_ndistinct</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>multivariate ndistinct coefficients</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>pg_node_tree</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>string representing an internal node tree</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>polygon</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>geometric polygon '(pt1,...)'</gda_value>
@@ -174,6 +222,18 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>regnamespace</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>registered namespace</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
+      <gda_value>regrole</gda_value>
+      <gda_value>gchararray</gda_value>
+      <gda_value>registered role</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>reltime</gda_value>
       <gda_value>gchararray</gda_value>
       <gda_value>relative, limited-range time interval (Unix delta time)</gda_value>
@@ -188,25 +248,25 @@
     <gda_array_row>
       <gda_value>time</gda_value>
       <gda_value>GdaTime</gda_value>
-      <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
+      <gda_value>time of day</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamp</gda_value>
-      <gda_value>GdaTimestamp</gda_value>
+      <gda_value>GDateTime</gda_value>
       <gda_value>date and time</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timestamptz</gda_value>
-      <gda_value>GdaTimestamp</gda_value>
+      <gda_value>GDateTime</gda_value>
       <gda_value>date and time with time zone</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
       <gda_value>timetz</gda_value>
       <gda_value>GdaTime</gda_value>
-      <gda_value>hh:mm:ss, ANSI SQL time</gda_value>
+      <gda_value>time of day with time zone</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>

@@ -310,7 +310,7 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 	if (destroy_db) {
 		GdaServerOperation *op;
 		gchar *dbname;
-		
+
 		const gchar *db_params;
 		GdaQuarkList *db_quark_list = NULL;
 
@@ -330,13 +330,18 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 		g_free (str);
 		g_assert (db_params);
 
-		op = gda_server_operation_prepare_drop_database (prov_id, dbname, NULL);
+		op = gda_server_operation_prepare_drop_database (prov_id, dbname, error);
+		if (op == NULL) {
+			g_warning ("Error Dropping Database: %s", (*error)->message ? (*error)->message : "No Datails");
+			g_free (dbname);
+			return FALSE;
+		}
 		g_free (dbname);
 		db_quark_list = gda_quark_list_new_from_string (db_params);
 		gda_quark_list_foreach (db_quark_list, (GHFunc) db_drop_quark_foreach_func, op);
 		gda_quark_list_free (db_quark_list);
 
-		if (!gda_server_operation_perform_drop_database (op, NULL, error))
+		if (!gda_server_operation_perform_drop_database (op, prov_id, error))
 			retval = FALSE;
 		g_object_unref (op);
 	}
