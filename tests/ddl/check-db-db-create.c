@@ -1,4 +1,4 @@
-/* check-ddl-creator.c
+/* check-db-db-create.c
  *
  * Copyright 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
@@ -22,15 +22,15 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
-#include <libgda/gda-ddl-creator.h>
-#include <libgda/gda-ddl-base.h>
+#include <libgda/gda-db-catalog.h>
+#include <libgda/gda-db-base.h>
 #include <sql-parser/gda-sql-parser.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
 typedef struct {
-  GdaDdlCreator *creator;
+  GdaDbCatalog *catalog;
   GdaConnection *cnc;
   gchar *xmlfile;
 
@@ -38,11 +38,11 @@ typedef struct {
 }CheckCreatedb;
 
 static void
-test_ddl_db_create_start(CheckCreatedb *self,
+test_db_db_create_start(CheckCreatedb *self,
                          gconstpointer user_data)
 {
   gda_init ();
-  self->creator = NULL;
+  self->catalog = NULL;
   self->cnc = NULL;
 
   const gchar *topsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
@@ -52,13 +52,13 @@ test_ddl_db_create_start(CheckCreatedb *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
+                                   "db",
                                    "check_db.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);
 
   self->cnc = gda_connection_new_from_string ("SQLite",
-                                              "DB_DIR=.;DB_NAME=ddl_test_create",
+                                              "DB_DIR=.;DB_NAME=db_test_create",
                                               NULL,
                                               GDA_CONNECTION_OPTIONS_NONE,
                                               NULL);
@@ -68,26 +68,26 @@ test_ddl_db_create_start(CheckCreatedb *self,
   gboolean res = gda_connection_open (self->cnc,NULL);
   g_assert_true (res);
 
-  self->creator = gda_connection_create_ddl_creator (self->cnc);
+  self->catalog = gda_connection_create_db_catalog (self->cnc);
 
-  g_assert_nonnull (self->creator);
+  g_assert_nonnull (self->catalog);
 
-  res = gda_ddl_creator_validate_file_from_path (self->xmlfile,NULL);
+  res = gda_db_catalog_validate_file_from_path (self->xmlfile,NULL);
   g_assert_true (res);
 
-  res = gda_ddl_creator_parse_file_from_path (self->creator,
+  res = gda_db_catalog_parse_file_from_path (self->catalog,
                                               self->xmlfile,
                                               NULL);
 
   g_assert_true (res);
   
-  res = gda_ddl_creator_perform_operation (self->creator,
+  res = gda_db_catalog_perform_operation (self->catalog,
                                            NULL);
   g_assert_true (res);
 }
 
 static void
-test_ddl_db_create_finish (CheckCreatedb *self,
+test_db_db_create_finish (CheckCreatedb *self,
                            gconstpointer user_data)
 {
 /* Dropping all tables */
@@ -112,12 +112,12 @@ test_ddl_db_create_finish (CheckCreatedb *self,
 
   gda_connection_close (self->cnc, NULL);
   g_free (self->xmlfile);
-  g_object_unref (self->creator);
+  g_object_unref (self->catalog);
   g_object_unref (self->cnc);
 }
 
 static void
-test_ddl_db_create_test1 (CheckCreatedb *self,
+test_db_db_create_test1 (CheckCreatedb *self,
                           gconstpointer user_data)
 {
   GValue *value_name = gda_value_new (G_TYPE_STRING);
@@ -169,12 +169,12 @@ main (gint   argc,
 
   g_test_init (&argc,&argv,NULL);
 
-  g_test_add ("/test-ddl/CheckCreatedb",
+  g_test_add ("/test-db/CheckCreatedb",
               CheckCreatedb,
               NULL,
-              test_ddl_db_create_start,
-              test_ddl_db_create_test1,
-              test_ddl_db_create_finish);
+              test_db_db_create_start,
+              test_db_db_create_test1,
+              test_db_db_create_finish);
  
   return g_test_run();
 }
