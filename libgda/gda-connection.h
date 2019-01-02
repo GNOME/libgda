@@ -46,10 +46,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CONNECTION            (gda_connection_get_type())
-#define GDA_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CONNECTION, GdaConnection))
-#define GDA_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CONNECTION, GdaConnectionClass))
-#define GDA_IS_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CONNECTION))
-#define GDA_IS_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CONNECTION))
+
+G_DECLARE_DERIVABLE_TYPE (GdaConnection, gda_connection, GDA,CONNECTION, GObject)
 
 /* error reporting */
 extern GQuark gda_connection_error_quark (void);
@@ -97,10 +95,6 @@ typedef enum {
  * specified using gda_connection_set_main_context(), then the events will continue to be processed while the
  * lock on the connection is being acquired.
  */
-
-struct _GdaConnection {
-	GObject               object;
-};
 
 /**
  * GdaConnectionStatus:
@@ -264,7 +258,6 @@ typedef enum {
 } GdaConnectionMetaType;
 
 
-GType                gda_connection_get_type             (void) G_GNUC_CONST;
 GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
 GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name,

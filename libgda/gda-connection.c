@@ -60,17 +60,17 @@
 #include <libgda/gda-enum-types.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-set.h>
-#include <sql-parser/gda-sql-parser.h>
-#include <sql-parser/gda-statement-struct-trans.h>
+#include <libgda/sql-parser/gda-sql-parser.h>
+#include <libgda/sql-parser/gda-statement-struct-trans.h>
 #include <libgda/gda-meta-store-extra.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-lockable.h>
 #include <libgda/gda-repetitive-statement.h>
-#include <gda-statement-priv.h>
-#include <sqlite/virtual/gda-vconnection-data-model.h>
+#include "gda-statement-priv.h"
+#include <libgda/sqlite/virtual/gda-vconnection-data-model.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-data-handler.h>
-#include <thread-wrapper/itsignaler.h>
+#include <libgda/thread-wrapper/itsignaler.h>
 #include <libgda/gda-marshal.h>
 
 #include <glib/gstdio.h>
@@ -81,6 +81,12 @@
 static GMutex global_mutex;
 static GdaSqlParser *internal_parser = NULL;
 static GHashTable *all_context_hash = NULL; /* key = a #GThread, value = a #GMainContext (ref held) */
+
+/* GdaLockable interface */
+static void                 gda_connection_lockable_init (GdaLockableInterface *iface);
+static void                 gda_connection_lock      (GdaLockable *lockable);
+static gboolean             gda_connection_trylock   (GdaLockable *lockable);
+static void                 gda_connection_unlock    (GdaLockable *lockable);
 
 /* number of GdaConnectionEvent kept by each connection. Should be enough to avoid losing any
  * event, considering that the events are reseted after each statement execution */
@@ -123,7 +129,10 @@ typedef struct {
 	guint                 exec_slowdown;
 } GdaConnectionPrivate;
 
-#define gda_connection_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_CONNECTION, GdaConnectionPrivate)
+G_DEFINE_TYPE_WITH_CODE (GdaConnection, gda_connection, G_TYPE_OBJECT, 
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_LOCKABLE, gda_connection_lockable_init)
+                         G_ADD_PRIVATE (GdaConnection))
+
 
 static void add_exec_time_to_object (GObject *obj, GTimer *timer);
 
@@ -140,11 +149,6 @@ static void gda_connection_get_property (GObject *object,
 					 GValue *value,
 					 GParamSpec *pspec);
 
-/* GdaLockable interface */
-static void                 gda_connection_lockable_init (GdaLockableInterface *iface);
-static void                 gda_connection_lock      (GdaLockable *lockable);
-static gboolean             gda_connection_trylock   (GdaLockable *lockable);
-static void                 gda_connection_unlock    (GdaLockable *lockable);
 
 static void update_meta_store_after_statement_exec (GdaConnection *cnc, GdaStatement *stmt, GdaSet *params);
 static void change_events_array_max_size (GdaConnection *cnc, gint size);
@@ -176,7 +180,6 @@ enum
 	PROP_EXEC_SLOWDOWN
 };
 
-static GObjectClass *parent_class = NULL;
 extern GdaServerProvider *_gda_config_sqlite_provider; /* defined in gda-config.c */
 
 static gint debug_level = -1;
@@ -219,9 +222,6 @@ gda_connection_class_init (GdaConnectionClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	g_type_class_add_private (object_class, sizeof (GdaConnectionPrivate));
 	/**
 	 * GdaConnection::error:
 	 * @cnc: the #GdaConnection
@@ -537,7 +537,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+  G_OBJECT_CLASS (gda_connection_parent_class)->dispose (object);
 }
 
 static void
@@ -556,7 +556,7 @@ gda_connection_finalize (GObject *object)
 	g_rec_mutex_clear (&priv->rmutex);
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+  G_OBJECT_CLASS (gda_connection_parent_class)->finalize (object);
 }
 
 /* module error */
@@ -566,49 +566,6 @@ GQuark gda_connection_error_quark (void)
         if (!quark)
                 quark = g_quark_from_static_string ("gda_connection_error");
         return quark;
-}
-
-/**
- * gda_connection_get_type:
- * 
- * Registers the #GdaConnection class on the GLib type system.
- * 
- * Returns: the GType identifying the class.
- */
-GType
-gda_connection_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaConnectionClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_connection_class_init,
-			NULL, NULL,
-			sizeof (GdaConnection),
-			0,
-			(GInstanceInitFunc) gda_connection_init,
-			0
-		};
-
-		static GInterfaceInfo lockable_info = {
-                        (GInterfaceInitFunc) gda_connection_lockable_init,
-			NULL,
-                        NULL
-                };
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaConnection", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_LOCKABLE, &lockable_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 static void
@@ -5852,14 +5809,6 @@ prepared_stmts_stmt_reset_cb (GdaStatement *gda_stmt, GdaConnection *cnc)
 	g_object_unref (gda_stmt);
 
 	gda_connection_unlock ((GdaLockable*) cnc);
-}
-
-static void
-prepared_stms_foreach_func (GdaStatement *gda_stmt, G_GNUC_UNUSED GdaPStmt *prepared_stmt, GdaConnection *cnc)
-{
-	g_object_ref (gda_stmt);
-	g_signal_handlers_disconnect_by_func (gda_stmt, G_CALLBACK (prepared_stmts_stmt_reset_cb), cnc);
-	g_object_unref (gda_stmt);
 }
 
 typedef struct {
