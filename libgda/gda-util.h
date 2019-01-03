@@ -31,7 +31,7 @@
 #include "gda-holder.h"
 #include "gda-row.h"
 #include "gda-connection.h"
-#include <sql-parser/gda-sql-statement.h>
+#include <libgda/sql-parser/gda-sql-statement.h>
 #include <libgda/gda-data-select.h>
 
 G_BEGIN_DECLS

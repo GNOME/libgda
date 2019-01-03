@@ -27,6 +27,7 @@
 
 #include <glib.h>
 #include <libgda/libgda.h>
+#include <libgda/gda-data-handler.h>
 #include <libgda/gda-connection-private.h>
 
 #ifdef WITH_BDBSQLITE

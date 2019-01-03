@@ -21,7 +21,7 @@
 #define __GDA_CONNECTION_PRIVATE_H_
 
 #include <libgda/gda-meta-store.h>
-#include <providers-support/gda-pstmt.h>
+#include <libgda/providers-support/gda-pstmt.h>
 #include <libgda/thread-wrapper/gda-worker.h>
 #include <libgda/gda-transaction-status.h>
 #include <libgda/gda-connection-event.h>

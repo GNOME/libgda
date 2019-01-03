@@ -55,14 +55,14 @@ G_BEGIN_DECLS
  * provide the examples in this section of the documentation.
  */
 
-#include <sql-parser/gda-statement-struct-select.h>
-#include <sql-parser/gda-statement-struct-insert.h>
-#include <sql-parser/gda-statement-struct-update.h>
-#include <sql-parser/gda-statement-struct-delete.h>
-#include <sql-parser/gda-statement-struct-compound.h>
-#include <sql-parser/gda-statement-struct-trans.h>
-#include <sql-parser/gda-statement-struct-unknown.h>
-#include <sql-parser/gda-statement-struct-parts.h>
+#include <libgda/sql-parser/gda-statement-struct-select.h>
+#include <libgda/sql-parser/gda-statement-struct-insert.h>
+#include <libgda/sql-parser/gda-statement-struct-update.h>
+#include <libgda/sql-parser/gda-statement-struct-delete.h>
+#include <libgda/sql-parser/gda-statement-struct-compound.h>
+#include <libgda/sql-parser/gda-statement-struct-trans.h>
+#include <libgda/sql-parser/gda-statement-struct-unknown.h>
+#include <libgda/sql-parser/gda-statement-struct-parts.h>
 
 G_END_DECLS
 

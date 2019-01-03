@@ -20,7 +20,7 @@
 #ifndef __GDA_VPROVIDER_DATA_MODEL_H__
 #define __GDA_VPROVIDER_DATA_MODEL_H__
 
-#include <virtual/gda-virtual-provider.h>
+#include "gda-virtual-provider.h"
 
 
 /* error reporting */

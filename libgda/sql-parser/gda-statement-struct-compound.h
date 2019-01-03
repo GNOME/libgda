@@ -24,8 +24,8 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <sql-parser/gda-statement-struct-decl.h>
-#include <sql-parser/gda-statement-struct-select.h>
+#include <libgda/sql-parser/gda-statement-struct-decl.h>
+#include <libgda/sql-parser/gda-statement-struct-select.h>
 
 G_BEGIN_DECLS
 

@@ -42,10 +42,13 @@
 #include "gda-marshal.h"
 #include "gda-data-access-wrapper.h"
 #include "gda-enum-types.h"
-#include <virtual/libgda-virtual.h>
-#include <sql-parser/gda-sql-parser.h>
-#include <sql-parser/gda-sql-statement.h>
-#include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/sqlite/virtual/libgda-virtual.h>
+#include <libgda/sqlite/virtual/gda-virtual-provider.h>
+#include <libgda/sqlite/virtual/gda-vconnection-data-model.h>
+#include <libgda/sqlite/virtual/gda-vprovider-data-model.h>
+#include <libgda/sql-parser/gda-sql-parser.h>
+#include <libgda/sql-parser/gda-sql-statement.h>
+#include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-custom-marshal.h>
 
 /*
@@ -905,7 +908,6 @@ gda_data_proxy_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_DATA_PROXY (object));
 
 	proxy = GDA_DATA_PROXY (object);
-	GdaDataProxyPrivate *priv = gda_data_proxy_get_instance_private (proxy);
 	clean_proxy (proxy);
 
 	clean_cached_changes (proxy);
@@ -917,13 +919,9 @@ gda_data_proxy_dispose (GObject *object)
 static void
 gda_data_proxy_finalize (GObject *object)
 {
-	GdaDataProxy *proxy;
-
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_DATA_PROXY (object));
 
-	proxy = GDA_DATA_PROXY (object);
-	GdaDataProxyPrivate *priv = gda_data_proxy_get_instance_private (proxy);
 	/* parent class */
 	G_OBJECT_CLASS (gda_data_proxy_parent_class)->finalize (object);
 }

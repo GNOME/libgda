@@ -23,7 +23,7 @@
 #include <glib/gi18n-lib.h>
 #include "gda-ldap.h"
 #include "gda-ldap-util.h"
-#include <gda-util.h>
+#include <libgda/gda-util.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-private.h> /* for gda_server_provider_get_real_main_context () */
 #include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */

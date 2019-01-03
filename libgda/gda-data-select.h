@@ -22,8 +22,8 @@
 
 #include <glib-object.h>
 #include <libgda/gda-row.h>
-#include <providers-support/gda-pstmt.h>
-#include <sql-parser/gda-sql-statement.h>
+#include <libgda/providers-support/gda-pstmt.h>
+#include <libgda/sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 

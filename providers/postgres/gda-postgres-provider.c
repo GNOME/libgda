@@ -828,7 +828,6 @@ gda_postgres_provider_create_operation (GdaServerProvider *provider, GdaConnecti
         gchar *file;
         GdaServerOperation *op;
         gchar *str;
-	gchar *dir;
 	PostgresConnectionData *cdata = NULL;
 
 	if (cnc) {
