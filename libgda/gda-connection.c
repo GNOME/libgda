@@ -468,7 +468,6 @@ gda_connection_init (GdaConnection *cnc)
 }
 
 static void auto_update_meta_context_free (GdaMetaContext *context);
-static void prepared_stms_foreach_func (GdaStatement *gda_stmt, GdaPStmt *prepared_stmt, GdaConnection *cnc);
 static void
 gda_connection_dispose (GObject *object)
 {

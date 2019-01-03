@@ -61,7 +61,7 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/gda-set.h>
 #include <libgda/gda-statement-extra.h>
-#include <sql-parser/gda-sql-parser.h>
+#include <libgda/sql-parser/gda-sql-parser.h>
 #include <stdio.h>
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 #include <libgda/gda-debug-macros.h>
@@ -870,15 +870,11 @@ enum {
 
 
 static void
-gda_sqlite_provider_get_property (GObject    *object,
+gda_sqlite_provider_get_property (G_GNUC_UNUSED GObject    *object,
                           guint       property_id,
                           GValue     *value,
-                          GParamSpec *pspec)
+                          G_GNUC_UNUSED GParamSpec *pspec)
 {
-
-  GdaConnection *cnc;
-  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
   switch (property_id) {
   case PROP_CONNECTION:
 		g_value_set_object (value, NULL);
@@ -887,14 +883,11 @@ gda_sqlite_provider_get_property (GObject    *object,
 }
 
 static void
-gda_sqlite_provider_set_property (GObject      *object,
+gda_sqlite_provider_set_property (G_GNUC_UNUSED GObject      *object,
                           guint         property_id,
-                          const GValue *value,
-                          GParamSpec   *pspec)
+                          G_GNUC_UNUSED const GValue *value,
+                          G_GNUC_UNUSED GParamSpec   *pspec)
 {
-  GdaConnection *cnc = NULL;
-  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
   switch (property_id) {
   case PROP_CONNECTION:
     break;
@@ -1018,7 +1011,7 @@ gda_sqlite_provider_get_type (void)
 
 
 static GdaWorker *
-gda_sqlite_provider_create_worker (GdaServerProvider *provider, gboolean for_cnc)
+gda_sqlite_provider_create_worker (G_GNUC_UNUSED GdaServerProvider *provider, gboolean for_cnc)
 {
 	/* see http://www.sqlite.org/threadsafe.html */
 
@@ -1538,7 +1531,7 @@ gda_sqlite_provider_supports_operation (G_GNUC_UNUSED GdaServerProvider *provide
 static GdaServerOperation *
 gda_sqlite_provider_create_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaServerOperationType type,
-				      G_GNUC_UNUSED GdaSet *options, GError **error)
+				      G_GNUC_UNUSED GdaSet *options, G_GNUC_UNUSED GError **error)
 {
   gchar *file;
   GdaServerOperation *op;
@@ -2067,7 +2060,7 @@ gda_sqlite_provider_supports_feature (GdaServerProvider *provider,
  */
 static GdaDataHandler *
 gda_sqlite_provider_get_data_handler (GdaServerProvider *provider, GdaConnection *cnc,
-				      GType type, const gchar *dbms_type)
+				      GType type, G_GNUC_UNUSED const gchar *dbms_type)
 {
 	GdaDataHandler *dh = NULL;
 
@@ -2970,8 +2963,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 			else {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
 					      "%s", _("Unnamed parameter is not allowed in prepared statements"));
-				g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-				g_slist_free (param_ids);
+				g_slist_free_full (param_ids, (GDestroyNotify) g_free);
 				goto out_err;
 			}
 		}
@@ -3151,8 +3143,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
 			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
 				if (holders) {
-					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-					g_slist_free (holders);
+					g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 					holders = NULL;
 				}
 				break;
@@ -3164,8 +3155,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 		if (holders) {
 			holders = g_slist_reverse (holders);
 			set = gda_set_new_read_only (holders);
-			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-			g_slist_free (holders);
+			g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 		}
 
 		return set;
@@ -3566,8 +3556,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 									     col_types,
 									     last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
-				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
-				g_slist_free (prep_param_ids);
+				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
 				gtps->param_ids = copied_param_ids;
 
@@ -4414,7 +4403,7 @@ gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, 
 
 static GdaDataModel*
 gda_sqlite_provider_meta_btypes (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4422,7 +4411,7 @@ gda_sqlite_provider_meta_btypes (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_udts (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4430,8 +4419,8 @@ gda_sqlite_provider_meta_udts (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_udt (GdaProviderMeta *prov,
-                              const gchar *udt_catalog, const gchar *udt_schema,
-                              GError **error)
+                              G_GNUC_UNUSED const gchar *udt_catalog, G_GNUC_UNUSED const gchar *udt_schema,
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4439,7 +4428,7 @@ gda_sqlite_provider_meta_udt (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_udt_cols (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4447,8 +4436,8 @@ gda_sqlite_provider_meta_udt_cols (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_udt_col (GdaProviderMeta *prov,
-                              const gchar *udt_catalog, const gchar *udt_schema,
-                              const gchar *udt_name, GError **error)
+                              G_GNUC_UNUSED const gchar *udt_catalog, G_GNUC_UNUSED const gchar *udt_schema,
+                              G_GNUC_UNUSED const gchar *udt_name, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4456,7 +4445,7 @@ gda_sqlite_provider_meta_udt_col (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_enums_type (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4464,8 +4453,8 @@ gda_sqlite_provider_meta_enums_type (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_enum_type (GdaProviderMeta *prov,
-                                    const gchar *udt_catalog,
-                                    const gchar *udt_schema, const gchar *udt_name, GError **error)
+                                    G_GNUC_UNUSED const gchar *udt_catalog,
+                                    G_GNUC_UNUSED const gchar *udt_schema, G_GNUC_UNUSED const gchar *udt_name, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4473,7 +4462,7 @@ gda_sqlite_provider_meta_enum_type (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_domains (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4481,7 +4470,7 @@ gda_sqlite_provider_meta_domains (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_domain (GdaProviderMeta *prov,
-                              const gchar *domain_catalog, const gchar *domain_schema, GError **error)
+                              G_GNUC_UNUSED const gchar *domain_catalog, G_GNUC_UNUSED const gchar *domain_schema, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4489,7 +4478,7 @@ gda_sqlite_provider_meta_domain (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_domains_constraints (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4497,8 +4486,8 @@ gda_sqlite_provider_meta_domains_constraints (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_domain_constraints (GdaProviderMeta *prov,
-                              const gchar *domain_catalog, const gchar *domain_schema,
-                              const gchar *domain_name, GError **error)
+                              G_GNUC_UNUSED const gchar *domain_catalog, G_GNUC_UNUSED const gchar *domain_schema,
+                              G_GNUC_UNUSED const gchar *domain_name, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4506,9 +4495,9 @@ gda_sqlite_provider_meta_domain_constraints (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_domain_constraint (GdaProviderMeta *prov,
-                              const gchar *domain_catalog, const gchar *domain_schema,
-                              const gchar *domain_name, const gchar *contraint_name,
-                              GError **error)
+                              G_GNUC_UNUSED const gchar *domain_catalog, G_GNUC_UNUSED const gchar *domain_schema,
+                              G_GNUC_UNUSED const gchar *domain_name, G_GNUC_UNUSED const gchar *contraint_name,
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4516,7 +4505,7 @@ gda_sqlite_provider_meta_domain_constraint (GdaProviderMeta *prov,
 }
 static GdaDataModel*
 gda_sqlite_provider_meta_element_types (GdaProviderMeta *prov,
-                              GError **error)
+                              G_GNUC_UNUSED GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);
@@ -4524,7 +4513,7 @@ gda_sqlite_provider_meta_element_types (GdaProviderMeta *prov,
 }
 static GdaRow*
 gda_sqlite_provider_meta_element_type (GdaProviderMeta *prov,
-                              const gchar *specific_name, GError **error)
+                              G_GNUC_UNUSED const gchar *specific_name, GError **error)
 {
   g_return_val_if_fail (prov, NULL);
   g_return_val_if_fail (GDA_IS_PROVIDER_META (prov), NULL);

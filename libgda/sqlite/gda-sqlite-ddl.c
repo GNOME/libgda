@@ -245,8 +245,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 			g_string_append (string, conflict_algo);
 		}
 	}
-	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
-	g_slist_free (pkfields);
+	g_slist_free_full (pkfields, (GDestroyNotify) g_free);
 
 	node = gda_server_operation_get_node_info (op, "/FKEY_S");
 	if (node) {
@@ -342,7 +341,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 }
 
 gchar *
-_gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_DROP_TABLE (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			       GdaServerOperation *op, GError **error)
 {
 	GString *string;
@@ -373,7 +372,7 @@ _gda_sqlite_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 }
 
 gchar *
-_gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_RENAME_TABLE (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 				 GdaServerOperation *op, GError **error)
 {
 	GString *string;
@@ -407,7 +406,7 @@ _gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 }
 
 gchar *
-_gda_sqlite_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_ADD_COLUMN (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			      GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
@@ -483,7 +482,7 @@ _gda_sqlite_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 
 
 gchar *
-_gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_CREATE_INDEX (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
@@ -576,7 +575,7 @@ _gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc
 }
 
 gchar *
-_gda_sqlite_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_DROP_INDEX (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
@@ -606,7 +605,7 @@ _gda_sqlite_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 }
 
 gchar *
-_gda_sqlite_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_CREATE_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			       GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
@@ -654,7 +653,7 @@ _gda_sqlite_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 }
 	
 gchar *
-_gda_sqlite_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc, 
+_gda_sqlite_render_DROP_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaConnection *cnc, 
 			     GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;

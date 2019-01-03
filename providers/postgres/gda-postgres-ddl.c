@@ -32,7 +32,6 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	GString *string;
 	const GValue *value;
 	gchar *sql = NULL;
-	gchar *tmp;
 
 	string = g_string_new ("CREATE DATABASE ");
 
