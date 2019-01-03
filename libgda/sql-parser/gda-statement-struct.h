@@ -23,7 +23,7 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <sql-parser/gda-statement-struct-decl.h>
+#include <libgda/sql-parser/gda-statement-struct-decl.h>
 #include <libgda/gda-meta-store.h>
 
 G_BEGIN_DECLS
@@ -32,7 +32,7 @@ G_BEGIN_DECLS
  * GdaSqlStatement:
  * @sql: 
  * @stmt_type: type of statement 
- * @contents: contents, cast it depending on @stmt_type (for example to a #GdaSqlStatementSelect).
+ * contents: contents, cast it depending on @stmt_type (for example to a #GdaSqlStatementSelect).
  * @validity_meta_struct:
  *
  * This structure is the top level structure encapsulating several type of statements.

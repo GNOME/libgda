@@ -21,8 +21,8 @@
  */
 
 #include <string.h>
-#include <gda-attributes-manager.h>
-#include <gda-value.h>
+#include <libgda/gda-attributes-manager.h>
+#include <libgda/gda-value.h>
 
 /*
  * Structure for the attribute names

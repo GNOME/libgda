@@ -21,7 +21,7 @@
 #ifndef __GDA_STATEMENT_EXTRA__
 #define __GDA_STATEMENT_EXTRA__
 
-#include <sql-parser/gda-sql-statement.h>
+#include <libgda/sql-parser/gda-sql-statement.h>
 
 G_BEGIN_DECLS
 
