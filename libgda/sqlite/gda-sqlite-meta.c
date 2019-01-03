@@ -2253,10 +2253,10 @@ fill_routines (GdaDataModel *mod_model,
 #endif
 
 gboolean
-_gda_sqlite_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
-			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
+_gda_sqlite_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
+			   G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context, G_GNUC_UNUSED  GError **error,
 			   G_GNUC_UNUSED const GValue *routine_catalog,
-			   G_GNUC_UNUSED const GValue *routine_schema, const GValue *routine_name_n)
+			   G_GNUC_UNUSED const GValue *routine_schema, G_GNUC_UNUSED const GValue *routine_name_n)
 {
 	gboolean retval = TRUE;
 	

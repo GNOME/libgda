@@ -20,7 +20,6 @@
 
 #include <libgda/gda-lockable.h>
 
-static GRecMutex init_rmutex;
 #define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
 #define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
 
