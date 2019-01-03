@@ -25,12 +25,13 @@
 #include <string.h>
 #include "gda-vconnection-hub.h"
 #include "gda-virtual-provider.h"
-#include <sql-parser/gda-sql-parser.h>
+#include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-data-select.h>
-#include <gda-sql-builder.h>
+#include <libgda/gda-sql-builder.h>
 #include "../gda-sqlite.h"
 #include <libgda/gda-connection-internal.h>
+#include <libgda/gda-log.h>
 
 typedef struct {
 	GdaVconnectionHub *hub;

@@ -22,7 +22,7 @@
 #include <glib/gi18n-lib.h>
 #include <string.h>
 #include "gda-virtual-connection.h"
-#include <gda-connection-private.h>
+#include <libgda/gda-connection-private.h>
 #include <libgda/gda-server-provider-private.h>
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-debug-macros.h>
