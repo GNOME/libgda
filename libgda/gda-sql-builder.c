@@ -30,7 +30,7 @@
 #include <libgda/gda-sql-builder.h>
 #include <libgda/gda-statement.h>
 #include <libgda/gda-data-handler.h>
-#include <sql-parser/gda-sql-parser-enum-types.h>
+#include <libgda/sql-parser/gda-sql-parser-enum-types.h>
 #include <libgda/gda-debug-macros.h>
 
 /*
@@ -38,7 +38,6 @@
  */
 static void gda_sql_builder_class_init (GdaSqlBuilderClass *klass);
 static void gda_sql_builder_init (GdaSqlBuilder *builder);
-static void gda_sql_builder_dispose (GObject *object);
 static void gda_sql_builder_finalize (GObject *object);
 
 static void gda_sql_builder_set_property (GObject *object,
@@ -164,7 +163,7 @@ gda_sql_builder_finalize (GObject *object)
     }
 
   /* parent class */
-  G_OBJECT_CLASS(gda_sql_builder_parent_class)->dispose (object);
+  G_OBJECT_CLASS(gda_sql_builder_parent_class)->finalize(object);
 }
 
 static void
