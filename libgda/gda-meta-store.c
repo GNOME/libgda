@@ -1864,13 +1864,16 @@ create_table_object (GdaMetaStoreClass *klass, GdaMetaStore *store, xmlNodePtr n
 	}
 
 	/* determine object's complete name */
-	if (store) {
-		priv = gda_meta_store_get_instance_private (store);
-		if (priv->schema) {
-			complete_obj_name = g_strdup_printf ("%s.%s", priv->schema, (gchar *) table_name);
-		}
-	} else
-		complete_obj_name = g_strdup ((gchar *) table_name);
+  if (store)
+    {
+      priv = gda_meta_store_get_instance_private (store);
+      if (priv->schema)
+        complete_obj_name = g_strdup_printf ("%s.%s", priv->schema, (gchar *) table_name);
+      else
+        complete_obj_name = g_strdup ((gchar *) table_name);
+    }
+  else
+    complete_obj_name = g_strdup ((gchar *) table_name);
 
 	/* DbObject structure */
 	if (store) {
