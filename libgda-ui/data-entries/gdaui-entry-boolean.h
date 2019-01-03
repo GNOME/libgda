@@ -23,6 +23,7 @@
 
 #include "gdaui-entry-wrapper.h"
 #include <libgda/gda-data-handler.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
