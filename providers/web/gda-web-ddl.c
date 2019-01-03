@@ -40,7 +40,7 @@ gda_web_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	/* CREATE TABLE */
 	string = g_string_new ("CREATE TABLE ");
 
-	tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider, "/TABLE_DEF_P/TABLE_NAME", error);
+	tmp = gda_server_operation_get_sql_identifier_at (op, "/TABLE_DEF_P/TABLE_NAME", error);
 	if (!tmp) {
 		g_string_free (string, TRUE);
 		return NULL;
@@ -62,7 +62,7 @@ gda_web_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		for (i = 0; i < nrows; i++) {
 			value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_PKEY/%d", i);
 			if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
-				tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+				tmp = gda_server_operation_get_sql_identifier_at (op,
 										  "/FIELDS_A/@COLUMN_NAME/%d",
 										  error, i);
 				if (!tmp) {
@@ -84,7 +84,7 @@ gda_web_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			else
 				g_string_append (string, ", ");
 				
-			tmp = gda_server_operation_get_sql_identifier_at (op, cnc, provider,
+			tmp = gda_server_operation_get_sql_identifier_at (op,
 									  "/FIELDS_A/@COLUMN_NAME/%d", error, i);
 			if (!tmp) {
 				g_string_free (string, TRUE);
