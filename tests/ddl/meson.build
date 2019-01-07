@@ -22,6 +22,7 @@ tbc = executable('check-db-catalog',
 	install: false
 	)
 test('dbcatalog', tbc,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -45,6 +46,7 @@ dbtb = executable('check_db_base',
 	install: false
 	)
 test('dbbase', dbtb,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -70,6 +72,7 @@ dbtc = executable('check_db_column',
 	install: false
 	)
 test('dbcolumn', dbtc,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -93,6 +96,7 @@ dbtv = executable('check_db_view',
 	install: false
 	)
 test('dbview', dbtv,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -115,6 +119,7 @@ dbfkey = executable('check_db_fkey',
 	install: false
 	)
 test('dbfkey', dbfkey,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -137,6 +142,7 @@ dbcreate = executable('check_db_create',
 	install: false
 	)
 test('dbcreate', dbcreate,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -165,6 +171,7 @@ tcpg = executable('check-db-catalog-postgresql',
 	install: false
 	)
 test('dbcatalog-postgresql', tcpg,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()

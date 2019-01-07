@@ -22,6 +22,7 @@ tchksqlite = executable('check_sqlite',
 	install: false
 	)
 test('ProviderSQLite', tchksqlite,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
@@ -73,7 +74,7 @@ tchkpg = executable('check_postgres',
 	install: false
 	)
 test('ProviderPostgreSQL', tchkpg,
-	timeout: 200,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
