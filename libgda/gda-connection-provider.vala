@@ -19,8 +19,8 @@
 /**
  * An interface to be implemented by database providers
  */
-public interface Gda.ConnectionProvider : GLib.Object {
-  public abstract ConnectionParams cnc_params { get; set; }
+public interface Gda.ConnectionModel : GLib.Object {
+  public abstract ConnectionModelParams cnc_params { get; set; }
   public abstract bool is_opened { get; }
 
   public abstract signal void closed ();
@@ -45,7 +45,7 @@ public interface Gda.ConnectionProvider : GLib.Object {
 /**
  * A class to hold and parse connection string
  */
-public class Gda.ConnectionParams : GLib.Object {
+public class Gda.ConnectionModelParams : GLib.Object {
   public string user { get; set; }
   public string pasword { get; set; }
   public string cnc_string { get; set; }
@@ -56,7 +56,7 @@ public class Gda.ConnectionParams : GLib.Object {
  */
 public interface Gda.Query : GLib.Object {
   public abstract string sql { get; }
-  public abstract Gda.ConnectionProvider connection { get; }
+  public abstract Gda.ConnectionModel connection { get; }
   public abstract async Gda.Result execute () throws GLib.Error;
   public abstract async void cancel ();
 }
@@ -83,7 +83,7 @@ public interface Gda.TableModel : GLib.Object, GLib.ListModel, Gda.Result {
  */
 public interface Gda.Inserted : GLib.Object, Gda.Result {
   public abstract int number { get; }
-  public abstract Gda.DbRow last_insertd { get; }
+  public abstract Gda.RowModel last_insertd { get; }
 }
 
 /**
@@ -95,15 +95,15 @@ public interface Gda.AfectedRows : GLib.Object, Gda.Result {
 /**
  * Represent a row in a table model.
  */
-public interface Gda.DbRow : GLib.Object, GLib.ListModel {
+public interface Gda.RowModel : GLib.Object, GLib.ListModel {
   public abstract int n_columns { get; }
-  public abstract Gda.DbColumn get_column (string name);
+  public abstract Gda.ColumnModel get_column (string name);
 }
 
 /**
  * Represent a column in a row of a table model
  */
-public interface Gda.DbColumn : GLib.Object {
+public interface Gda.ColumnModel : GLib.Object {
   public abstract string name { get; }
   public abstract GLib.Type data_type { get; }
 }

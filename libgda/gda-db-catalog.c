@@ -768,7 +768,7 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
         }
       }
       else {
-        if(st = gda_db_table_create (it->data,priv->cnc, TRUE, error))
+        st = gda_db_table_create (it->data,priv->cnc, TRUE, error);
         if (!st) {
           break;
         }
