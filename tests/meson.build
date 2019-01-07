@@ -290,7 +290,7 @@ subdir('multi-threading')
 subdir('parser')
 subdir('providers')
 subdir('value-holders')
-subdir('ddl')
+subdir('db')
 if enable_ui
 subdir('ui')
 endif

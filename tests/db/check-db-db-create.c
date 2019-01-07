@@ -44,6 +44,7 @@ test_db_db_create_start(CheckCreatedb *self,
   gda_init ();
   self->catalog = NULL;
   self->cnc = NULL;
+  GError *error = NULL;
 
   const gchar *topsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
 
@@ -61,29 +62,47 @@ test_db_db_create_start(CheckCreatedb *self,
                                               "DB_DIR=.;DB_NAME=db_test_create",
                                               NULL,
                                               GDA_CONNECTION_OPTIONS_NONE,
-                                              NULL);
+                                              &error);
+  if (self->cnc == NULL) {
+    g_warning ("Error creating connection from string: %s",
+               error && error->message ? error->message : "(No message was set)");
+
+  }
 
   g_assert_nonnull (self->cnc);
 
-  gboolean res = gda_connection_open (self->cnc,NULL);
+  gboolean res = gda_connection_open (self->cnc, &error);
+  if (!res) {
+    g_warning ("Error openning connection: %s",
+               error && error->message ? error->message : "(No message was set)");
+  }
   g_assert_true (res);
 
   self->catalog = gda_connection_create_db_catalog (self->cnc);
 
   g_assert_nonnull (self->catalog);
 
-  res = gda_db_catalog_validate_file_from_path (self->xmlfile,NULL);
-  g_assert_true (res);
+  res = gda_db_catalog_validate_file_from_path (self->xmlfile, &error);
+  if (!res) {
+    g_warning ("Error validating xml file: %s",
+               error && error->message ? error->message : "(No message was set)");
+  }
 
   res = gda_db_catalog_parse_file_from_path (self->catalog,
                                               self->xmlfile,
-                                              NULL);
+                                              &error);
+  if (!res) {
+    g_warning ("Error parsing file: %s",
+               error && error->message ? error->message : "(No message was set)");
 
-  g_assert_true (res);
+  }
   
   res = gda_db_catalog_perform_operation (self->catalog,
-                                           NULL);
-  g_assert_true (res);
+                                           &error);
+  if (!res) {
+    g_warning ("Error performing operation: %s",
+               error && error->message ? error->message : "(No message was set)");
+  }
 }
 
 static void

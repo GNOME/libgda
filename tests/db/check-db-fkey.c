@@ -148,7 +148,7 @@ test_db_fkey_start (CheckDbObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
+                                   "db",
                                    "fkey_test.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);

@@ -226,7 +226,7 @@ test_db_column_startup (CheckDbObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
+                                   "db",
                                    "column_test.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);

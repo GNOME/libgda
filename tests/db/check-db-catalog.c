@@ -73,8 +73,8 @@ test_db_catalog_start (CheckDbObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
-                                   "ddl-db.xml",NULL);
+                                   "db",
+                                   "db.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);
 
@@ -93,7 +93,7 @@ test_db_catalog_start (CheckDbObject *self,
 
   g_assert_nonnull (self->catalog);
 
-  self->file = g_file_new_for_path (self->xmlfile); 
+  self->file = g_file_new_for_path (self->xmlfile);
   g_print ("GFile is %s\n",g_file_get_path(self->file));
 }
 
@@ -105,7 +105,7 @@ test_db_catalog_start_db (DbCatalogCnc *self,
 
   self->cnc = NULL;
   self->catalog = NULL;
- 
+
   self->cnc = gda_connection_new_from_string ("SQLite",
                                               "DB_DIR=.;DB_NAME=db_types",
                                               NULL,
@@ -225,7 +225,7 @@ test_db_catalog_create_db (CheckDbObject *self,
                                                       NULL);
 
   g_assert_true (res);
- 
+
   res = gda_db_catalog_write_to_path (self->catalog,
                                        "db-test-out.xml",
                                              NULL);
@@ -234,7 +234,7 @@ test_db_catalog_create_db (CheckDbObject *self,
 
   GError *error = NULL;
   gboolean resop = gda_db_catalog_perform_operation(self->catalog,
-                                                     &error);  
+                                                     &error);
 
   if (!resop)
     g_print ("myerr: %s\n",error && error->message ? error->message : "No default");
@@ -299,8 +299,8 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
           GdaDbColumn *column = GDA_DB_COLUMN (jt->data);
           GType column_type = gda_db_column_get_gtype (column);
           g_assert_true (column_type != G_TYPE_NONE);
-          
-          if (!g_strcmp0 ("id",gda_db_column_get_name (column))) 
+
+          if (!g_strcmp0 ("id",gda_db_column_get_name (column)))
             {
               GError *error = NULL;
               const GValue *value = gda_data_model_get_typed_value_at (model,
@@ -318,10 +318,10 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
               GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for ID type is %s\n",g_type_name (ggtype));
-              
+
             }
-          
-          if (!g_strcmp0 ("name",gda_db_column_get_name (column))) 
+
+          if (!g_strcmp0 ("name",gda_db_column_get_name (column)))
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                        column_count++,
@@ -335,10 +335,10 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
               GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for NAME type is %s\n",g_type_name (ggtype));
-              
+
             }
 
-          if (!g_strcmp0 ("state",gda_db_column_get_name (column))) 
+          if (!g_strcmp0 ("state",gda_db_column_get_name (column)))
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -350,11 +350,11 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
               g_assert_nonnull (value);
 
               GType ggtype = G_VALUE_TYPE(value);
-              
+
               g_assert_true (TRUE && g_value_get_boolean (value));
             }
 
-          if (!g_strcmp0 ("create_time",gda_db_column_get_name (column))) 
+          if (!g_strcmp0 ("create_time",gda_db_column_get_name (column)))
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -368,10 +368,10 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
               GType ggtype = G_VALUE_TYPE(value);
 
               g_print ("for created_time type is %s\n",g_type_name (ggtype));
-              
+
             }
 
-          if (!g_strcmp0 ("mytimestamp",gda_db_column_get_name (column))) 
+          if (!g_strcmp0 ("mytimestamp",gda_db_column_get_name (column)))
             {
               const GValue *value = gda_data_model_get_typed_value_at (model,
                                                                            column_count++,
@@ -389,7 +389,7 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
               g_print ("YYYY-MM-DD: %d-%d-%d\n",g_date_time_get_year (dt),
                                                 g_date_time_get_month (dt),
                                                 g_date_time_get_day_of_month (dt));
-               
+
             }
         }
       raw++;
@@ -441,11 +441,11 @@ main (gint   argc,
               test_db_catalog_validate_xml,
               test_db_catalog_finish);
   g_test_add ("/test-db/catalog-parse-cnc",
-              DbCatalogCnc, 
+              DbCatalogCnc,
               NULL,
               test_db_catalog_start_db,
               test_db_catalog_parse_cnc,
               test_db_catalog_finish_db);
- 
+
   return g_test_run();
 }

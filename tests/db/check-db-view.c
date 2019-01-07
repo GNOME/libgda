@@ -36,7 +36,7 @@ typedef struct {
     gboolean istemp;
     gboolean ifnoexist;
     gboolean replace;
-     
+
     xmlDocPtr doc;
     gchar *xmlfile;
 } CheckDbObject;
@@ -124,7 +124,7 @@ test_db_view_start (CheckDbObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "ddl",
+                                   "db",
                                    "view_test.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);
@@ -194,13 +194,13 @@ main (gint   argc,
               test_db_view_start,
               test_db_view_replace,
               test_db_view_finish);
-  
+
   g_test_add ("/test-db/view-defstr",
               CheckDbObject,
               NULL,
               test_db_view_start,
               test_db_view_defstr,
               test_db_view_finish);
-  
+
   return g_test_run();
 }

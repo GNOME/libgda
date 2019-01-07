@@ -48,7 +48,7 @@ check_db_catalog_postgresql_LDADD = \
 include $(top_srcdir)/glib-tap.mk
 
 EXTRA_DIST += column_test.xml \
-	     db-db.xml \
+	     db.xml \
 	     fkey_test.xml \
 	     view_test.xml
 
