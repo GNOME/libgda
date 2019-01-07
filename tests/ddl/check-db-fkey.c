@@ -41,7 +41,7 @@ typedef struct {
 
     xmlDocPtr doc;
     xmlTextWriterPtr writer;
-} CheckDdlObject;
+} CheckDbObject;
 
 static void
 test_db_fkey_run2 (CheckDbObject *self,
@@ -86,7 +86,7 @@ test_db_fkey_run2 (CheckDbObject *self,
 static void
 test_db_fkey_run1 (void)
 {
-  GdaDdlFkey *self = gda_ddl_fkey_new ();
+  GdaDbFkey *self = gda_db_fkey_new ();
   g_object_unref (self);
 }
 
@@ -100,7 +100,7 @@ test_db_fkey_run3 (CheckDbObject *self,
   int buffersize;
 
   node = xmlNewNode (NULL, BAD_CAST "root");
-  int res = gda_ddl_buildable_write_node(GDA_DDL_BUILDABLE(self->fkey),
+  int res = gda_db_buildable_write_node(GDA_DB_BUILDABLE(self->fkey),
                                          node,NULL);
 
   g_assert_true (res >= 0);
@@ -148,7 +148,7 @@ test_db_fkey_start (CheckDbObject *self,
 
   self->xmlfile = g_build_filename(topsrcdir,
                                    "tests",
-                                   "db",
+                                   "ddl",
                                    "fkey_test.xml",NULL);
 
   g_assert_nonnull (self->xmlfile);
@@ -163,7 +163,7 @@ test_db_fkey_start (CheckDbObject *self,
 
   g_assert_nonnull(self->fkey);
 
-  gboolean res = gda_ddl_buildable_parse_node(GDA_DDL_BUILDABLE(self->fkey),
+  gboolean res = gda_db_buildable_parse_node(GDA_DB_BUILDABLE(self->fkey),
                                               node,NULL);
   g_assert_true (res);
 }
