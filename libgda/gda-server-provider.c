@@ -2733,7 +2733,7 @@ typedef struct {
 	GdaMetaContext           *ctx;
 	GdaServerProviderMetaType type;
 	guint                     nargs;
-	const GValue             *values[4]; /* 4 at most */
+	const GValue             *values[5]; /* 5 at most */
 } WorkerMetaData;
 
 typedef gboolean (*Meta0Func) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **);
@@ -2741,6 +2741,7 @@ typedef gboolean (*Meta1Func) (GdaServerProvider *, GdaConnection *, GdaMetaStor
 typedef gboolean (*Meta2Func) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, const GValue *, const GValue *);
 typedef gboolean (*Meta3Func) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, const GValue *, const GValue *, const GValue *);
 typedef gboolean (*Meta4Func) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, const GValue *, const GValue *, const GValue *, const GValue *);
+typedef gboolean (*Meta5Func) (GdaServerProvider *, GdaConnection *, GdaMetaStore *, GdaMetaContext *, GError **, const GValue *, const GValue *, const GValue *, const GValue *, const GValue *);
 
 
 static gpointer
@@ -2811,6 +2812,18 @@ worker_meta (WorkerMetaData *data, GError **error)
 		}
 		break;
 	}
+	case 5: {/* function with 5 arguments */
+		Meta5Func func;
+		func = (Meta5Func) fset [data->type];
+		if (func)
+			retval = func (data->provider, data->cnc, data->meta, data->ctx, error, data->values [0], data->values [1], data->values [2], data->values [3], data->values [4]);
+		else {
+			retval = FALSE;
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_METHOD_NON_IMPLEMENTED_ERROR,
+				     "%s", _("Not supported"));
+		}
+		break;
+	}
 	default:
 		g_assert_not_reached ();
 	}
@@ -2866,7 +2879,6 @@ get_meta_nb_values_args (GdaServerProviderMetaType type)
 	case GDA_SERVER_META_VIEW_COLS:
 	case GDA_SERVER_META_TRIGGERS:
 	case GDA_SERVER_META_ROUTINES:
-	case GDA_SERVER_META_ROUTINE_COL:
 	case GDA_SERVER_META_ROUTINE_PAR:
 		return 3;
 
@@ -2877,6 +2889,9 @@ get_meta_nb_values_args (GdaServerProviderMetaType type)
 	case GDA_SERVER_META_INDEXES_TAB:
 	case GDA_SERVER_META_INDEX_COLS:
 		return 4;
+
+	case GDA_SERVER_META_ROUTINE_COL:
+		return 5;
 	
 	default:
 		g_assert_not_reached ();
@@ -3212,6 +3227,74 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[1] = value1;
 	data.values[2] = value2;
 	data.values[3] = value3;
+
+	GError *lerror = NULL;
+	if (cnc)
+		gda_connection_increase_usage (cnc); /* USAGE ++ */
+	gda_worker_do_job (worker, context, 0, &retval, NULL,
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
+	if (context)
+		g_main_context_unref (context);
+
+	if (cnc) {
+		gda_connection_decrease_usage (cnc); /* USAGE -- */
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+	}
+
+	gda_worker_unref (worker);
+
+ out:
+	return meta_finalize_result (retval, error, &lerror);
+}
+
+
+gboolean
+_gda_server_provider_meta_5arg (GdaServerProvider *provider, GdaConnection *cnc,
+				GdaMetaStore *meta, GdaMetaContext *ctx,
+				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1,
+				const GValue *value2, const GValue *value3, const GValue *value4, GError **error)
+{
+	gpointer retval = NULL;
+	GdaWorker *worker;
+	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (provider), FALSE);
+
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+	g_return_val_if_fail (gda_connection_is_opened (cnc), FALSE);
+
+	/* check that function at index @type has 5 values arguments */
+	if (get_meta_nb_values_args (type) != 5) {
+		g_warning ("Internal error: function %s() is only for meta data with 5 values arguments", __FUNCTION__);
+		goto out;
+	}
+	gda_lockable_lock ((GdaLockable*) cnc); /* CNC LOCK */
+
+	GdaServerProviderConnectionData *cdata;
+	cdata = gda_connection_internal_get_provider_data_error (cnc, NULL);
+	if (!cdata) {
+		gda_lockable_unlock ((GdaLockable*) cnc); /* CNC UNLOCK */
+		g_warning ("Internal error: connection reported as opened, yet no provider's data has been setted");
+		goto out;
+	}
+
+	worker = gda_worker_ref (cdata->worker);
+
+	GMainContext *context;
+	context = gda_server_provider_get_real_main_context (cnc);
+
+	WorkerMetaData data;
+	data.worker = worker;
+	data.provider = provider;
+	data.cnc = cnc;
+	data.meta = meta;
+	data.ctx = ctx;
+	data.type = type;
+	data.nargs = 4;
+	data.values[0] = value0;
+	data.values[1] = value1;
+	data.values[2] = value2;
+	data.values[3] = value3;
+	data.values[4] = value4;
 
 	GError *lerror = NULL;
 	if (cnc)

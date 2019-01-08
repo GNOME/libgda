@@ -178,7 +178,7 @@ gboolean _gda_jdbc_meta__routine_col     (GdaServerProvider *prov, GdaConnection
 gboolean _gda_jdbc_meta_routine_col      (GdaServerProvider *prov, GdaConnection *cnc, 
 					  GdaMetaStore *store, GdaMetaContext *context, GError **error,
 					  const GValue *rout_catalog, const GValue *rout_schema, 
-					  const GValue *rout_name);
+					  const GValue *rout_name, const GValue *col_name, const GValue *ordinal_position);
 
 /* _parameters */
 gboolean _gda_jdbc_meta__routine_par     (GdaServerProvider *prov, GdaConnection *cnc, 

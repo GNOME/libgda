@@ -247,7 +247,7 @@ static gchar *internal_sql[] = {
 	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], ''), (ss.x).n, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') ORDER BY 1, 2, 3, 4, 5",
 
 	/* I_STMT_ROUTINE_COL */
-	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], ''), (ss.x).n, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') AND current_database() = ##cat::string AND ss.n_nspname = ##schema::string AND ((ss.proname || '_') || ss.p_oid) = ##name::string ORDER BY 1, 2, 3, 4, 5",
+	"SELECT current_database(), ss.n_nspname, ((ss.proname || '_') || ss.p_oid), NULLIF(ss.proargnames[(ss.x).n], '') AS column_name, (ss.x).n AS ordinal_position, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'array_spec' ELSE coalesce (nt.nspname || '.', '') || t.typname END, CASE WHEN t.typelem <> 0 AND t.typlen = -1 THEN 'ROUC' || current_database() || '.' || ss.n_nspname || '.' || ((ss.proname || '_') || ss.p_oid) || '.' || (ss.x).n ELSE NULL END FROM pg_type t, pg_namespace nt, ( SELECT n.nspname AS n_nspname, p.proname, p.oid AS p_oid, p.proargnames, p.proargmodes, information_schema._pg_expandarray(COALESCE(p.proallargtypes, p.proargtypes::oid[])) AS x FROM pg_namespace n, pg_proc p WHERE n.oid = p.pronamespace AND (pg_has_role(p.proowner, 'USAGE') OR has_function_privilege(p.oid, 'EXECUTE'))) ss WHERE t.oid = (ss.x).x AND t.typnamespace = nt.oid AND (ss.proargmodes[(ss.x).n] = 'o' OR ss.proargmodes[(ss.x).n] = 'b') AND current_database() = ##cat::string AND ss.n_nspname = ##schema::string AND ((ss.proname || '_') || ss.p_oid) = ##name::string AND column_name = ##name2::string AND ordinal_position = ##name3::string ORDER BY 1, 2, 3, 4, 5",
 
 	/* I_STMT_INDEXES */
 	"SELECT current_database() AS index_catalog, nc2.nspname AS index_schema, c2.relname AS index_name, current_database() AS table_catalog, nc.nspname AS table_schema, c.relname AS table_name, i.indisunique, pg_get_indexdef (i.indexrelid, 0, false), NULL, NULL, o.rolname, pg_catalog.obj_description (c2.oid), i.indexrelid FROM pg_catalog.pg_class c INNER JOIN pg_namespace nc ON (c.relnamespace = nc.oid), pg_catalog.pg_class c2 INNER JOIN pg_namespace nc2 ON (c2.relnamespace = nc2.oid) LEFT JOIN pg_roles o ON (o.oid=c2.relowner), pg_catalog.pg_index i WHERE c.oid = i.indrelid AND i.indexrelid = c2.oid AND NOT i.indisprimary AND pg_catalog.pg_table_is_visible(c.oid) AND nc.nspname = ##schema::string AND c.relname = ##name::string ORDER BY c.relname",
@@ -301,10 +301,11 @@ _gda_postgres_provider_meta_init (GdaServerProvider *provider)
 		if (!provider)
 			g_object_unref (parser);
 
-		i_set = gda_set_new_inline (5, "cat", G_TYPE_STRING, "",
+		i_set = gda_set_new_inline (6, "cat", G_TYPE_STRING, "",
 					    "name", G_TYPE_STRING, "",
 					    "schema", G_TYPE_STRING, "",
 					    "name2", G_TYPE_STRING, "",
+					    "name3", G_TYPE_STRING, "",
 					    "oid", G_TYPE_UINT, 0);
 	}
 
@@ -1736,7 +1737,7 @@ _gda_postgres_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1846,7 +1847,7 @@ _gda_postgres_meta__routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 	if (retval) {
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-		retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+		retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), proxy, NULL, error, NULL);
 	}
 	g_object_unref (model);
 	g_object_unref (proxy);
@@ -1858,7 +1859,7 @@ gboolean
 _gda_postgres_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				GdaMetaStore *store, GdaMetaContext *context, GError **error,
 				const GValue *rout_catalog, const GValue *rout_schema, 
-				const GValue *rout_name)
+				const GValue *rout_name, const GValue *col_name, const GValue *ordinal_position)
 {
 	GdaDataModel *model, *proxy;
 	gint ordinal_pos, i, nrows;
@@ -1880,6 +1881,10 @@ _gda_postgres_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "schema"), rout_schema, error))
 		return FALSE;
 	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), rout_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name2"), col_name, error))
+		return FALSE;
+	if (! gda_holder_set_value (gda_set_get_holder (i_set, "name3"), col_name, error))
 		return FALSE;
 
 	model = gda_connection_statement_execute_select_full (cnc,
@@ -1915,6 +1920,9 @@ _gda_postgres_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 		if (!retval)
 			break;
 	}
+					gchar *s = gda_meta_context_stringify (context);
+					g_message ("Context used by _routine_col: %s", s);
+					g_free (s);
 
 	if (retval) {
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func

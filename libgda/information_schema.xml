@@ -21,6 +21,7 @@
     <provider name="PostgreSQL">
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint64" replace_with="int"/>
     </provider>
     <provider name="MySQL">
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar (30)"/>

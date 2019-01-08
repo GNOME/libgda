@@ -361,8 +361,10 @@ _gda_mysql_meta_routine_col      (GdaServerProvider  *prov,
 				  GdaMetaContext     *context,
 				  GError            **error,
 				  const GValue       *rout_catalog,
-				  const GValue       *rout_schema, 
-				  const GValue       *rout_name);
+				  const GValue       *rout_schema,
+				  const GValue       *rout_name,
+				  const GValue       *col_name,
+				  const GValue       *ordinal_position);
 
 /* _parameters */
 gboolean

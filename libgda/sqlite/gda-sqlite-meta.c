@@ -2333,7 +2333,8 @@ gboolean
 _gda_sqlite_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, G_GNUC_UNUSED GdaConnection *cnc,
 			      G_GNUC_UNUSED GdaMetaStore *store, G_GNUC_UNUSED GdaMetaContext *context,
 			      G_GNUC_UNUSED GError **error, G_GNUC_UNUSED const GValue *rout_catalog,
-			      G_GNUC_UNUSED const GValue *rout_schema, G_GNUC_UNUSED const GValue *rout_name)
+			      G_GNUC_UNUSED const GValue *rout_schema, G_GNUC_UNUSED const GValue *rout_name,
+			      G_GNUC_UNUSED const GValue *col_name, G_GNUC_UNUSED const GValue *ordinal_position)
 {
 	/* feature not available in SQLite */
 	return TRUE;

@@ -1306,7 +1306,7 @@ gboolean
 _gda_web_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 			   GdaMetaStore *store, GdaMetaContext *context, GError **error,
 			   const GValue *rout_catalog, const GValue *rout_schema, 
-			   const GValue *rout_name)
+			   const GValue *rout_name, const GValue *col_name, const GValue *ordinal_position)
 {
 	WebConnectionData *cdata;
 
@@ -1320,7 +1320,7 @@ _gda_web_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection 
 			return cdata->reuseable->operations->re_meta_funcs.routine_col (NULL, cnc, store,
 											context, error,
 											rout_catalog, rout_schema, 
-											rout_name);
+											rout_name, col_name, ordinal_position);
 		else
 			return TRUE;
 	}

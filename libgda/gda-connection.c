@@ -4367,13 +4367,18 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 				      &schema, G_TYPE_STRING,
 				      &name, G_TYPE_STRING, NULL,
 				      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL);
-		if (i < 0)
-			return FALSE;
-		
+
 		ASSERT_TABLE_NAME (tname, "parameters");
-		retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-							 GDA_SERVER_META_ROUTINE_PAR, catalog, schema, name, error);
-		WARN_META_UPDATE_FAILURE (retval, "routine_par");
+		if (i < 0) {
+			g_clear_error (error);
+			retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+								 GDA_SERVER_META__ROUTINE_PAR, error);
+			WARN_META_UPDATE_FAILURE (retval, "routine_par");
+		} else {
+			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+								 GDA_SERVER_META_ROUTINE_PAR, catalog, schema, name, error);
+			WARN_META_UPDATE_FAILURE (retval, "routine_par");
+		}
 		return retval;
 
 	case 'r': 
@@ -4431,18 +4436,27 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* _routine_columns, params: 
 			 *  -0- @specific_catalog, @specific_schema, @specific_name
 			 */
+			const GValue *col_name = NULL;
+			const GValue *ordinal = NULL;
 			i = check_parameters (context, error, 1,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING, NULL,
-					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL);
-			if (i < 0)
-				return FALSE;
-			
+					      &name, G_TYPE_STRING,
+					      &col_name, G_TYPE_STRING,
+					      &ordinal, G_TYPE_STRING, NULL,
+					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, "column_name", &col_name, "ordinal_position", &ordinal, NULL);
+
 			ASSERT_TABLE_NAME (tname, "routine_columns");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_ROUTINE_COL, catalog, schema, name, error);
-			WARN_META_UPDATE_FAILURE (retval, "routine_col");
+			if (i < 0) {
+				g_clear_error (error);
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__ROUTINE_COL, error);
+				WARN_META_UPDATE_FAILURE (retval, "routine_col");
+			} else {
+				retval = _gda_server_provider_meta_5arg (provider, cnc, store, context,
+									 GDA_SERVER_META_ROUTINE_COL, catalog, schema, name, col_name, ordinal, error);
+				WARN_META_UPDATE_FAILURE (retval, "routine_col");
+			}
 			return retval;
 		}
 		break;

@@ -3587,13 +3587,13 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					g_print ("\n");
 #endif
 					GError *suggest_reports_error = NULL;
+					gchar *s = gda_meta_context_stringify (&context);
+					g_message ("Modify Meta store, using Context: %s", s);
+					g_free (s);
 					g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context,
 						       &suggest_reports_error);
 					g_free (context.column_values);
 					if (suggest_reports_error) {
-						g_print ("SUGGEST META UPDATE Returned FALSE: %s\n",
-							 suggest_reports_error && suggest_reports_error->message ?
-							 suggest_reports_error->message : "???");
 						retval = FALSE;
 						if (error && !(*error))
 							g_propagate_error (error, suggest_reports_error);

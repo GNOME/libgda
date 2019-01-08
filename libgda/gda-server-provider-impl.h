@@ -333,7 +333,7 @@ typedef struct {
 	/* _routine_columns */
 	gboolean (*_routine_col)     (GdaServerProvider *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
 	gboolean (*routine_col)      (GdaServerProvider *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error,
-				      const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name);
+				      const GValue *rout_catalog, const GValue *rout_schema, const GValue *rout_name, const GValue *col_name, const GValue *ordinal_position);
 
 	/* _parameters */
 	gboolean (*_routine_par)     (GdaServerProvider *prov, GdaConnection *cnc, GdaMetaStore *meta, GdaMetaContext *ctx, GError **error);
