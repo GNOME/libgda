@@ -3976,34 +3976,13 @@ build_downstream_context_templates (GdaMetaStore *store, GdaMetaContext *context
 	}
 }
 
-static gchar *
-meta_context_stringify (GdaMetaContext *context)
-{
-	gint i;
-	gchar *str;
-	GString *string = g_string_new ("");
-
-	for (i = 0; i < context->size; i++) {
-		if (i > 0)
-			g_string_append_c (string, ' ');
-		str = gda_value_stringify (context->column_values[i]);
-		g_string_append_printf (string, " [%s => %s]", context->column_names[i], str);
-		g_free (str);
-	}
-	if (i == 0)
-		g_string_append (string, "no constraint in context");
-	str = string->str;
-	g_string_free (string, FALSE);
-	return str;
-}
-
 /*#define GDA_DEBUG_META_STORE_UPDATE*/
 #ifdef GDA_DEBUG_META_STORE_UPDATE
 static void
 meta_context_dump (GdaMetaContext *context)
 {
 	gchar *str;
-	str = meta_context_stringify (context);
+	str = gda_meta_context_stringify (context);
 	g_print ("GdaMetaContext for table %s: %s\n", context->table_name, str);
 	g_free (str);
 }
@@ -4076,7 +4055,7 @@ check_parameters (GdaMetaContext *context, GError **error, gint nb, ...)
 	}
 	else {
 		gchar *str;
-		str = meta_context_stringify (context);
+		str = gda_meta_context_stringify (context);
 		g_set_error (error, GDA_CONNECTION_ERROR,
 			     GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
 			     _("Missing or wrong arguments for table '%s': %s"),

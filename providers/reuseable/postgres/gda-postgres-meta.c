@@ -590,7 +590,9 @@ _gda_postgres_meta__domains (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 							      _col_types_domains, error);
 	if (!model)
 		return FALSE;
-
+  gchar *s = gda_meta_context_stringify (context);
+  g_message ("Context used to update: %s", s);
+  g_free (s);
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
 	retval = gda_meta_store_modify_with_context (store, context, model, error);

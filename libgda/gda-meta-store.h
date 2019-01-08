@@ -218,6 +218,7 @@ void              gda_meta_context_set_column             (GdaMetaContext *ctx, 
 void              gda_meta_context_set_columns            (GdaMetaContext *ctx, GHashTable *columns,
 							   GdaConnection *cnc);
 void              gda_meta_context_free                   (GdaMetaContext *ctx);
+gchar            *gda_meta_context_stringify              (GdaMetaContext *ctx);
 
 G_END_DECLS
 

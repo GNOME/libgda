@@ -430,6 +430,33 @@ gda_meta_context_free (GdaMetaContext *ctx)
 	// REMIND: ctx->column_names and ctx->column_values must not be freed
 }
 
+/**
+ * gda_meta_context_stringify:
+ * @ctx: a #GdaMetaContext
+ *
+ * Creates a string representation of given context.
+ */
+gchar*
+gda_meta_context_stringify (GdaMetaContext *ctx)
+{
+	gint i;
+	gchar *str;
+	GString *string = g_string_new ("");
+
+	for (i = 0; i < ctx->size; i++) {
+		if (i > 0)
+			g_string_append_c (string, ' ');
+		str = gda_value_stringify (ctx->column_values[i]);
+		g_string_append_printf (string, " [%s => %s]", ctx->column_names[i], str);
+		g_free (str);
+	}
+	if (i == 0)
+		g_string_append (string, "no constraint in context");
+	str = string->str;
+	g_string_free (string, FALSE);
+	return str;
+}
+
 
 G_DEFINE_BOXED_TYPE(GdaMetaContext, gda_meta_context, gda_meta_context_copy, gda_meta_context_free)
 
