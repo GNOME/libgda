@@ -441,7 +441,9 @@ gda_meta_context_stringify (GdaMetaContext *ctx)
 {
 	gint i;
 	gchar *str;
-	GString *string = g_string_new ("");
+	GString *string = g_string_new ("{");
+	g_string_append (string, ctx->table_name);
+	g_string_append (string, "}=>{{");
 
 	for (i = 0; i < ctx->size; i++) {
 		if (i > 0)
@@ -451,7 +453,8 @@ gda_meta_context_stringify (GdaMetaContext *ctx)
 		g_free (str);
 	}
 	if (i == 0)
-		g_string_append (string, "no constraint in context");
+		g_string_append (string, "no constraints in context");
+	g_string_append (string, "}}");
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
