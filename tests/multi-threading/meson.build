@@ -45,6 +45,7 @@ tchkmthlk = executable('check_cnc_lock',
 	install: false
 	)
 test('MultiThreadConnectionLock', tchkmthlk,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
