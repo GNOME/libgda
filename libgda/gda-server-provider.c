@@ -2900,7 +2900,7 @@ meta_finalize_result (gpointer retval, GError **call_error, GError **loc_error)
 			     (*loc_error)->message);
   } else {
 		g_set_error (call_error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/issues"));
+			     _("Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/issues No error was reported"));
 	}
 	g_clear_error (loc_error);
 	return FALSE;
@@ -3017,10 +3017,11 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
+	GError *lerror = NULL;
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
 	if (context)
 		g_main_context_unref (context);
 
@@ -3032,7 +3033,7 @@ _gda_server_provider_meta_1arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gda_worker_unref (worker);
 
  out:
-	return meta_finalize_result (retval, error, NULL);
+	return meta_finalize_result (retval, error, &lerror);
 }
 
 gboolean
@@ -3081,10 +3082,11 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = NULL;
 	data.values[3] = NULL;
 
+	GError *lerror = NULL;
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE -- */
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
 	if (context)
 		g_main_context_unref (context);
 
@@ -3096,7 +3098,7 @@ _gda_server_provider_meta_2arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gda_worker_unref (worker);
 
  out:
-	return meta_finalize_result (retval, error, NULL);
+	return meta_finalize_result (retval, error, &lerror);
 }
 
 gboolean
@@ -3146,10 +3148,11 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = value2;
 	data.values[3] = NULL;
 
+	GError *lerror = NULL;
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
 	if (context)
 		g_main_context_unref (context);
 
@@ -3160,7 +3163,7 @@ _gda_server_provider_meta_3arg (GdaServerProvider *provider, GdaConnection *cnc,
 
 	gda_worker_unref (worker);
  out:
-	return meta_finalize_result (retval, error, NULL);
+	return meta_finalize_result (retval, error, &lerror);
 }
 
 gboolean
@@ -3210,10 +3213,11 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	data.values[2] = value2;
 	data.values[3] = value3;
 
+	GError *lerror = NULL;
 	if (cnc)
 		gda_connection_increase_usage (cnc); /* USAGE ++ */
 	gda_worker_do_job (worker, context, 0, &retval, NULL,
-			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, NULL);
+			   (GdaWorkerFunc) worker_meta, (gpointer) &data, NULL, NULL, &lerror);
 	if (context)
 		g_main_context_unref (context);
 
@@ -3225,7 +3229,7 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 	gda_worker_unref (worker);
 
  out:
-	return meta_finalize_result (retval, error, NULL);
+	return meta_finalize_result (retval, error, &lerror);
 }
 
 /***********************************************************************************************************/

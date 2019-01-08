@@ -145,7 +145,7 @@ prov_test_common_check_meta (void)
 	if (! gda_connection_update_meta_store (cnc, NULL, &gerror)) {
 #ifdef CHECK_EXTRA_INFO
 		g_warning ("Can't update meta store (1): %s\n",
-			   gerror && gerror->message ? gerror->message : "???");
+			   gerror && gerror->message ? gerror->message : "No error was set");
 #endif
 		g_error_free (gerror);
 		number_failed++;
@@ -366,8 +366,9 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_object_unref (store);
 	if (! gda_connection_update_meta_store (cnc, update_all ? NULL : &mcontext, &error)) {
 #ifdef CHECK_EXTRA_INFO
-		g_warning ("Can't FULL update meta store: %s\n",
-			   error && error->message ? error->message : "???");
+		g_warning ("Can't %s update meta store: %s\n",
+         update_all ? "FULL" : "PARTIAL",
+			   error && error->message ? error->message : "No error message was set");
 #endif
 		g_clear_error (&error);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);

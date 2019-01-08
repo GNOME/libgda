@@ -3093,7 +3093,7 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		str1 = g_value_get_string (value1);
 		str2 = g_value_get_string (value2);
 		if (str1 && str2)
-			retval = strcmp (str1, str2);
+			retval = g_strcmp0 (str1, str2);
 		else {
 			if (str1)
 				return 1;

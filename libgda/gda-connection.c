@@ -4232,13 +4232,18 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING, NULL,
 					      "domain_catalog", &catalog, "domain_schema", &schema, NULL);
-			if (i < 0)
-				return FALSE;
-			
+
 			ASSERT_TABLE_NAME (tname, "domains");
-			retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
-								 GDA_SERVER_META_DOMAINS, catalog, schema, error);
-			WARN_META_UPDATE_FAILURE (retval, "domains");
+			if (i < 0) {
+				g_clear_error (error);
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__DOMAINS, error);
+				WARN_META_UPDATE_FAILURE (retval, "domains");
+			} else {
+				retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
+									 GDA_SERVER_META_DOMAINS, catalog, schema, error);
+				WARN_META_UPDATE_FAILURE (retval, "domains");
+			}
 			return retval;
 		}
 		else {
@@ -4294,16 +4299,14 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			i = check_parameters (context, error, 1,
 					      &name, G_TYPE_STRING, NULL,
 					      "specific_name", &name, NULL);
-			if (error && *error) {
-				return FALSE;
-			}
+
 			ASSERT_TABLE_NAME (tname, "element_types");
 			if (i < 0) {
+				g_clear_error (error);
 				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
 									 GDA_SERVER_META__EL_TYPES, error);
 				WARN_META_UPDATE_FAILURE (retval, "_el_types");
-			}
-			else {
+			} else {
 				retval = _gda_server_provider_meta_1arg (provider, cnc, store, context,
 									 GDA_SERVER_META_EL_TYPES, name, error);
 				WARN_META_UPDATE_FAILURE (retval, "el_types");
@@ -4337,7 +4340,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 
 			if (i < 0)
 				return FALSE;
-			
+
 			ASSERT_TABLE_NAME (tname, "index_column_usage");
 			retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
 								 GDA_SERVER_META_INDEX_COLS, catalog, schema, name, iname, error);
@@ -4609,13 +4612,17 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 					      &schema, G_TYPE_STRING,
 					      &name, G_TYPE_STRING, NULL,
 					      "udt_catalog", &catalog, "udt_schema", &schema, "udt_name", &name, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "udt_columns");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_UDT_COLS, catalog, schema, name, error);
-			WARN_META_UPDATE_FAILURE (retval, "udt_cols");
+			if (i < 0) {
+				g_clear_error (error);
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__UDT_COLS, error);
+				WARN_META_UPDATE_FAILURE (retval, "_el_types");
+			} else {
+				ASSERT_TABLE_NAME (tname, "udt_columns");
+				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+									 GDA_SERVER_META_UDT_COLS, catalog, schema, name, error);
+				WARN_META_UPDATE_FAILURE (retval, "udt_cols");
+			}
 			return retval;
 		}
 		break;
@@ -4987,6 +4994,7 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		for (i = 0; i < nb; i++) {
 			/*g_print ("%s() %s(cnc=>%p store=>%p)\n", __FUNCTION__, rmeta [i].func_name, cnc, store);*/
 			lcontext.table_name = rmeta [i].table_name;
+      g_message ("Updating FULL mata store at table: %s", gda_meta_context_get_table (&lcontext));
 			if (! _gda_server_provider_meta_0arg (provider, cnc, store, &lcontext,
 							      rmeta[i].func_type, error)) {
 				/*
