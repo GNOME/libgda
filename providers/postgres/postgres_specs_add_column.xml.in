@@ -5,11 +5,17 @@
     <parameter id="TABLE_ONLY" _name="Ignore descendants" _descr="Don't add the column to descendants of the table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
+    <parameter id="TABLE_IFEXISTS" _name="Only if it exist" _descr="Add column only if it exist" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
     <parameter id="COLUMN_NAME" _name="Field name" gdatype="gchararray" nullok="FALSE">
       <gda_value>column_name</gda_value>
     </parameter>
     <parameter id="COLUMN_TYPE" _name="Data type" gdatype="gchararray" hint="datatype" nullok="FALSE">
       <gda_value>integer</gda_value>
+    </parameter>
+    <parameter id="COLUMN_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Add column only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
     </parameter>
     <parameter id="COLUMN_SIZE" _name="Size" gdatype="guint" nullok="TRUE"/>
     <parameter id="COLUMN_SCALE" _name="Scale" gdatype="guint" nullok="TRUE"/>

@@ -358,19 +358,19 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
         gda_server_operation_set_value_at (operation, "id", NULL, "/FIELDS_A/@COLUMN_NAME/0");
         gda_server_operation_set_value_at (operation, "int", NULL, "/FIELDS_A/@COLUMN_TYPE/0");
         gda_server_operation_set_value_at (operation, "TRUE", NULL, "/FIELDS_A/@COLUMN_PKEY/0");
-				gchar *ops = gda_server_operation_render (operation, &error);
-				if (ops == NULL) {
-					g_message ("Error while rendering operation to perform: %s",
-										 error && error->message ? error->message : "No Error was set");
-					g_clear_error (&error);
-					return 1;
-				}
-				g_print ("Operation to perform: %s\n", ops);
-				g_free (ops);
         if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
 #ifdef CHECK_EXTRA_INFO
 					g_message ("perform_operation(CREATE_TABLE) failed: %s\n", error && error->message ?
-					   error->message : "???");
+					   error->message : "No error was set");
+					gchar *ops = gda_server_operation_render (operation, &error);
+					if (ops == NULL) {
+						g_message ("Error while rendering operation to perform: %s",
+											 error && error->message ? error->message : "No Error was set");
+						g_clear_error (&error);
+						return 1;
+					}
+					g_print ("Operation to perform: %s\n", ops);
+					g_free (ops);
 #endif
                 g_clear_error (&error);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
@@ -415,7 +415,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_assert (data);
 	if (gda_data_model_get_n_rows (data) != 1) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Getting Meta Tables: wrong number of rows : %d\n",
+		g_message ("Getting Meta Tables: wrong number of rows: expected 1 got: %d\n",
 		gda_data_model_get_n_rows (data));
 		gchar *sd1 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd1);
@@ -453,13 +453,14 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	}
 	if (gda_data_model_get_n_rows (data) != 1) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Getting Meta for Fields: wrong number of rows : %d\n",
+		g_message ("Getting Meta for Fields: wrong number of rows: expected 1 got: %d\n",
 			gda_data_model_get_n_rows (data));
 		gchar *sd3 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd3);
 		g_free (sd3);
 #endif
 		gda_value_free (value);
+		gda_value_free (value2);
 		g_object_unref (data);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
 		return 1;
@@ -468,13 +469,14 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_assert (cvalue);
 	if (gda_value_compare (value2, cvalue)) {
 #ifdef CHECK_EXTRA_INFO
-                g_message ("Comparing data for returned data in meta data for Fields: expected %s and got %s\n",
-			   gda_value_stringify (cvalue), gda_value_stringify (value));
+		g_message ("Comparing data for returned data in meta data for Fields: expected %s and got %s\n",
+		          gda_value_stringify (cvalue), gda_value_stringify (value));
 		gchar *sd4 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd4);
 		g_free (sd4);
 #endif
 		gda_value_free (value);
+		gda_value_free (value2);
 		g_object_unref (data);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
 		return 1;
@@ -485,32 +487,41 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 
 	/* ALTER table to add a column */
 	operation = gda_server_provider_create_operation (provider, cnc,
-							  GDA_SERVER_OPERATION_ADD_COLUMN, NULL, &error);
-        g_assert (operation);
-        gda_server_operation_set_value_at_path (operation, table_name, "/COLUMN_DEF_P/TABLE_NAME", NULL);
-        gda_server_operation_set_value_at (operation, field_name, NULL, "/COLUMN_DEF_P/COLUMN_NAME", NULL);
-        gda_server_operation_set_value_at (operation, "int", NULL, "/COLUMN_DEF_P/COLUMN_TYPE", NULL);
-        if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
+	                                                  GDA_SERVER_OPERATION_ADD_COLUMN, NULL, &error);
+	g_assert (operation);
+	gda_server_operation_set_value_at_path (operation, table_name, "/COLUMN_DEF_P/TABLE_NAME", NULL);
+	gda_server_operation_set_value_at (operation, "TRUE", NULL, "/COLUMN_DEF_P/TABLE_IFEXISTS");
+	gda_server_operation_set_value_at (operation, field_name, NULL, "/COLUMN_DEF_P/COLUMN_NAME", NULL);
+	gda_server_operation_set_value_at (operation, "int", NULL, "/COLUMN_DEF_P/COLUMN_TYPE", NULL);
+	gda_server_operation_set_value_at (operation, "TRUE", NULL, "/COLUMN_DEF_P/COLUMN_IFNOTEXISTS");
+					gchar *ops = gda_server_operation_render (operation, &error);
+					if (ops == NULL) {
+						g_message ("Error while rendering operation to perform: %s",
+											 error && error->message ? error->message : "No Error was set");
+						g_clear_error (&error);
+						return 1;
+					}
+					g_print ("Operation to perform: %s\n", ops);
+					g_free (ops);
+	if (! gda_server_provider_perform_operation (provider, cnc, operation, &error)) {
 #ifdef CHECK_EXTRA_INFO
-                g_message ("perform_operation(ADD_COLUMN) failed: %s\n", error && error->message ?
-			   error->message : "???");
-		gchar *sd5 = gda_data_model_dump_as_string (data);
-		g_message ("Returned Data Model: \n%s", sd5);
-		g_free (sd5);
+					g_message ("perform_operation(ADD_COLUMN) failed: %s\n", error && error->message ?
+					   error->message : "No error was set");
 #endif
                 g_clear_error (&error);
-		g_object_set (G_OBJECT (cnc), "options", options, NULL);
-                return 1;
-        }
+					g_object_set (G_OBJECT (cnc), "options", options, NULL);
+					return 1;
+				}
 
 	/* update meta store */
 #ifdef CHECK_EXTRA_INFO
-	g_print ("Updating the complete meta store...\n");
+	g_print ("Updating the complete meta store after alter table...\n");
 #endif
+	g_value_set_string ((value2 = gda_value_new (G_TYPE_STRING)), "id");
 	if (! gda_connection_update_meta_store (cnc, update_all ? NULL : &mcontext, &error)) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Can't FULL update meta store: %s\n",
-			   error && error->message ? error->message : "???");
+		g_message ("Can't FULL update meta store after alter table: %s",
+			   error && error->message ? error->message : "No error was set");
 #endif
 		g_clear_error (&error);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
@@ -519,7 +530,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 
 	/* check table */
 #ifdef CHECK_EXTRA_INFO
-	g_print ("Checking fetched meta data...\n");
+	g_print ("Checking fetched meta data after alter table...\n");
 #endif
 	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
 			     gda_meta_store_sql_identifier_quote (table_name, cnc));
@@ -528,8 +539,8 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_assert (data);
 	if (gda_data_model_get_n_rows (data) != 1) {
 #ifdef CHECK_EXTRA_INFO
-                g_message ("Getting meta data for Tables (2): wrong number of rows : %d\n",
-			   gda_data_model_get_n_rows (data));
+		g_message ("Getting meta data for Tables after alter: wrong number of rows: expected 1 got: %d\n",
+		          gda_data_model_get_n_rows (data));
 		gchar *sd6 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd6);
 		g_free (sd6);
@@ -543,10 +554,10 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_assert (cvalue);
 	if (gda_value_compare (value, cvalue)) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Comparing data in meta data fro tables: expected %s and got %s\n",
+		g_message ("Mismatch table's name in meta data after alter table: expected %s and got %s\n",
 			   gda_value_stringify (cvalue), gda_value_stringify (value));
 		gchar *sd6a = gda_data_model_dump_as_string (data);
-		g_message ("Returned Data Model: \n%s", sd6a);
+		g_message ("Returned Data Model after alter: \n%s", sd6a);
 		g_free (sd6a);
 #endif
 		gda_value_free (value);
@@ -557,21 +568,36 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_object_unref (data);
 
 	/* check fields of table */
+	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)),
+			     gda_meta_store_sql_identifier_quote (table_name, cnc));
 	g_value_take_string ((value2 = gda_value_new (G_TYPE_STRING)),
 			     gda_meta_store_sql_identifier_quote (field_name, cnc));
 	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 2,
 						   "name", value, "field_name", value2);
+	g_print ("Searching for column's name: '%s'", gda_value_stringify (value2));
 	g_assert (data);
 	if (gda_data_model_get_n_rows (data) != 1) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Getting meta data for Fields: wrong number of rows : %d\n",
+		g_message ("Getting meta data for Fields after alter: wrong number of rows: expected 1 got: %d\n",
 			   gda_data_model_get_n_rows (data));
 		gchar *sd7 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd7);
 		g_free (sd7);
+		g_object_unref (data);
+		data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 1,
+		                                           "name", value);
+		if (data != NULL) {
+			sd7 = gda_data_model_dump_as_string (data);
+			g_message ("Returned Data Model: \n%s", sd7);
+			g_free (sd7);
+			g_object_unref (data);
+		} else {
+			g_message ("Error getting all fields: %s",
+			          error && error->message ? error->message : "No error was set");
+		}
 #endif
 		gda_value_free (value);
-		g_object_unref (data);
+		gda_value_free (value2);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
 		return 1;
 	}
@@ -579,18 +605,20 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_assert (cvalue);
 	if (gda_value_compare (value2, cvalue)) {
 #ifdef CHECK_EXTRA_INFO
-		g_message ("Comparing meta data from Fields: expected %s and got %s\n",
+		g_message ("Mismatch column's name in meta data: expected %s and got %s\n",
 			   gda_value_stringify (cvalue), gda_value_stringify (value));
 		gchar *sd8 = gda_data_model_dump_as_string (data);
 		g_message ("Returned Data Model: \n%s", sd8);
 		g_free (sd8);
 #endif
 		gda_value_free (value);
+		gda_value_free (value2);
 		g_object_unref (data);
 		g_object_set (G_OBJECT (cnc), "options", options, NULL);
 		return 1;
 	}
 	gda_value_free (value);
+	gda_value_free (value2);
 	g_object_unref (data);
 
 	g_object_set (G_OBJECT (cnc), "options", options, NULL);

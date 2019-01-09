@@ -87,7 +87,7 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 {
 	GString *string;
 	gchar *sql = NULL;
-  GValue *value = NULL;
+  const GValue *value = NULL;
 
 	string = g_string_new ("DROP DATABASE ");
 
@@ -490,6 +490,10 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 
 	string = g_string_new ("ALTER TABLE ");
 
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_IFEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "IF EXISTS ");
+
 	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/TABLE_ONLY");
 	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 		g_string_append (string, "ONLY ");
@@ -504,6 +508,10 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	g_free (tmp);
 
 	g_string_append (string, " ADD COLUMN ");
+
+	value = gda_server_operation_get_value_at (op, "/COLUMN_DEF_P/COLUMN_IFNOTEXISTS");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+		g_string_append (string, "IF NOT EXISTS ");
 
 	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/COLUMN_DEF_P/COLUMN_NAME", error);
 	if (!tmp) {
