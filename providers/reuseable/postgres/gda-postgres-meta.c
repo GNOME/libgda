@@ -921,7 +921,6 @@ gboolean
 _gda_postgres_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 				  GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
-  g_message ("Updating Tables Views meta data");
 	GdaDataModel *tables_model, *views_model;
 	gboolean retval = TRUE;
 
