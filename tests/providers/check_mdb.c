@@ -43,7 +43,8 @@ main (int argc, char **argv)
 
 	if (cnc) {
 		/* don't test create tables because it does not work for that provider */
-		number_failed += prov_test_common_check_meta ();
+		number_failed += prov_test_common_check_meta_full ();
+		number_failed += prov_test_common_check_meta_partial ();
 		number_failed += prov_test_common_clean ();
 	}
 

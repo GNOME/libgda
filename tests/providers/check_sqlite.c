@@ -47,7 +47,8 @@ main (int argc, char **argv)
 		number_failed += prov_test_common_check_timestamp ();
 		number_failed += prov_test_common_check_date ();
 		number_failed += prov_test_common_check_bigint ();
-		number_failed += prov_test_common_check_meta ();
+		number_failed += prov_test_common_check_meta_full ();
+		number_failed += prov_test_common_check_meta_partial ();
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, TRUE);
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, FALSE);
 		number_failed += prov_test_common_check_meta_identifiers (FALSE, TRUE);

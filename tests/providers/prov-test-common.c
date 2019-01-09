@@ -124,7 +124,7 @@ prov_test_common_clean (void)
  */
 
 int
-prov_test_common_check_meta (void)
+prov_test_common_check_meta_full (void)
 {
 	int number_failed = 0;
 	GSList *tables = NULL, *list;
@@ -189,8 +189,28 @@ prov_test_common_check_meta (void)
 
 	if (!dump_ok) {
 		number_failed++;
-		goto theend;
 	}
+theend:
+	/* remove tmp files */
+	if (dump1)
+		g_strfreev (dump1);
+	g_slist_free (tables);
+	return number_failed;
+}
+
+/* Partial Meta Store update */
+int
+prov_test_common_check_meta_partial (void)
+{
+	int number_failed = 0;
+	GSList *tables = NULL, *list;
+	gboolean dump_ok = TRUE;
+	GdaMetaStore *store;
+	gchar **dump1 = NULL;
+	GError *gerror = NULL;
+	gint ntables, i;
+
+	store = gda_connection_get_meta_store (cnc);
 
 	/* update meta store */
 #ifdef CHECK_EXTRA_INFO

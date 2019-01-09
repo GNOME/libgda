@@ -43,7 +43,8 @@ main (int argc, char **argv)
 
 	if (cnc) {
 		number_failed += prov_test_common_check_timestamp ();
-		number_failed += prov_test_common_check_meta ();
+		number_failed += prov_test_common_check_meta_full ();
+		number_failed += prov_test_common_check_meta_partial ();
 		number_failed += prov_test_common_clean ();
 	}
 

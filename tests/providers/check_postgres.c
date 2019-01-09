@@ -56,7 +56,8 @@ main (int argc, char **argv)
 		// Timestamp format can't be changed by provider because it doesn't render the text
     // once the value has been retorned
     // number_failed += test_timestamp_change_format ();
-		number_failed += prov_test_common_check_meta ();
+		number_failed += prov_test_common_check_meta_full ();
+		// number_failed += prov_test_common_check_meta_partial (); FIXME: Disable because timeouts
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, TRUE);
 		number_failed += prov_test_common_check_meta_identifiers (TRUE, FALSE);
 		number_failed += prov_test_common_check_meta_identifiers (FALSE, TRUE);
