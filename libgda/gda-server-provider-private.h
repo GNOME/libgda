@@ -140,6 +140,12 @@ _gda_server_provider_meta_4arg (GdaServerProvider *provider, GdaConnection *cnc,
 				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1, const GValue *value2, const GValue *value3, GError **error);
 
 
+gboolean
+_gda_server_provider_meta_5arg (GdaServerProvider *provider, GdaConnection *cnc,
+				GdaMetaStore *meta, GdaMetaContext *ctx,
+				GdaServerProviderMetaType type, const GValue *value0, const GValue *value1, const GValue *value2, const GValue *value3, const GValue *value4, GError **error);
+
+
 G_END_DECLS
 
 #endif

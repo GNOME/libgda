@@ -432,7 +432,7 @@ _gda_postgres_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *c
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -494,7 +494,7 @@ _gda_postgres_meta__udt_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -655,7 +655,7 @@ _gda_postgres_meta__constraints_dom (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -862,7 +862,7 @@ _gda_postgres_meta__schemata (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 	
 	return retval;
@@ -948,21 +948,16 @@ _gda_postgres_meta__tables_views (G_GNUC_UNUSED GdaServerProvider *prov, GdaConn
 								    GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 								    _col_types_views, error);
 
-	GdaMetaContext c2;
-	c2 = *context; /* copy contents, just because we need to modify @context->table_name */
 	if (tables_model != NULL) {
-    g_message ("Updating Tables: %s", gda_data_model_dump_as_string (tables_model));
-		c2.table_name = "_tables";
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-		retval = gda_meta_store_modify_with_context (store, &c2, tables_model, error);
+		retval = gda_meta_store_modify (store, "_tables", tables_model, NULL, error, NULL);
 	  g_object_unref (tables_model);
 	}
 	if (views_model != NULL) {
-		c2.table_name = "_views";
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-		retval = gda_meta_store_modify_with_context (store, &c2, views_model, error);
+		retval = gda_meta_store_modify (store, "_views", views_model, NULL, error, NULL);
 	  g_object_unref (views_model);
 	}
 
@@ -1136,7 +1131,7 @@ gboolean _gda_postgres_meta__columns (G_GNUC_UNUSED GdaServerProvider *prov, Gda
 	if (retval) {
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-		retval = gda_meta_store_modify_with_context (store, context, proxy, error);
+		retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), proxy, NULL, error, NULL);
 	}
 	g_object_unref (proxy);
 	g_object_unref (model);
@@ -1279,7 +1274,7 @@ _gda_postgres_meta__view_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnect
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 	
 	return retval;
@@ -1344,7 +1339,7 @@ _gda_postgres_meta__constraints_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1435,7 +1430,7 @@ _gda_postgres_meta__constraints_ref (G_GNUC_UNUSED GdaServerProvider *prov, GdaC
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1509,7 +1504,7 @@ _gda_postgres_meta__key_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1583,7 +1578,7 @@ _gda_postgres_meta__check_columns (G_GNUC_UNUSED GdaServerProvider *prov, GdaCon
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1662,7 +1657,7 @@ _gda_postgres_meta__triggers (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 		
 	return retval;
@@ -1920,9 +1915,6 @@ _gda_postgres_meta_routine_col (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 		if (!retval)
 			break;
 	}
-					gchar *s = gda_meta_context_stringify (context);
-					g_message ("Context used by _routine_col: %s", s);
-					g_free (s);
 
 	if (retval) {
 		gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
@@ -2046,7 +2038,7 @@ _gda_postgres_meta__indexes_tab (G_GNUC_UNUSED GdaServerProvider *prov, GdaConne
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, model, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), model, NULL, error, NULL);
 	g_object_unref (model);
 
 	return retval;
@@ -2230,7 +2222,7 @@ _gda_postgres_meta__index_cols (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnec
 	gboolean retval;
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
 						   ((GdaProviderReuseable*) rdata));
-	retval = gda_meta_store_modify_with_context (store, context, concat, error);
+	retval = gda_meta_store_modify (store, gda_meta_context_get_table (context), concat, NULL, error, NULL);
 	g_object_unref (concat);
 
 	return retval;

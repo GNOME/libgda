@@ -435,10 +435,13 @@ gda_meta_context_free (GdaMetaContext *ctx)
  * @ctx: a #GdaMetaContext
  *
  * Creates a string representation of given context.
+ *
+ * Returns: (transfer full): a new string with the representation of the context
  */
 gchar*
 gda_meta_context_stringify (GdaMetaContext *ctx)
 {
+	g_return_val_if_fail (ctx != NULL, g_strdup (""));
 	gint i;
 	gchar *str;
 	GString *string = g_string_new ("{");
@@ -458,6 +461,19 @@ gda_meta_context_stringify (GdaMetaContext *ctx)
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
+}
+
+/**
+ * gda_meta_context_get_n_columns:
+ * @ctx: a #GdaMetaContext
+ *
+ * Returns: the number of columns in the context
+ */
+gint
+gda_meta_context_get_n_columns (GdaMetaContext *ctx)
+{
+	g_return_val_if_fail (ctx != NULL, 0);
+	return ctx->size;
 }
 
 
@@ -3587,9 +3603,6 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					g_print ("\n");
 #endif
 					GError *suggest_reports_error = NULL;
-					gchar *s = gda_meta_context_stringify (&context);
-					g_message ("Modify Meta store, using Context: %s", s);
-					g_free (s);
 					g_signal_emit (store, gda_meta_store_signals[SUGGEST_UPDATE], 0, &context,
 						       &suggest_reports_error);
 					g_free (context.column_values);

@@ -4108,27 +4108,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -1- @character_set_catalog, @character_set_schema, @character_set_name
 			 *  -2- @collation_catalog, @collation_schema, @collation_name
 			 */
-			i = check_parameters (context, error, 3,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, NULL,
-					      "character_set_catalog", &catalog, "character_set_schema", &schema, "character_set_name", &name, NULL,
-					      "collation_catalog", &catalog, "collation_schema", &schema, "collation_name", &name, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "columns");
-			if (i == 0) {
+			if (gda_meta_context_get_n_columns (context) == 3)
+			{
+				i = check_parameters (context, error, 3,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, NULL,
+							    "character_set_catalog", &catalog, "character_set_schema", &schema, "character_set_name", &name, NULL,
+							    "collation_catalog", &catalog, "collation_schema", &schema, "collation_name", &name, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "columns");
 				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
 									 GDA_SERVER_META_COLUMNS, catalog, schema, name, error);
 				WARN_META_UPDATE_FAILURE (retval, "columns");
-				return retval;
 			}
 			else {
-				/* nothing to do */
-				return TRUE;
+				ASSERT_TABLE_NAME (tname, "columns");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__COLUMNS, error);
+				WARN_META_UPDATE_FAILURE (retval, "columns");
 			}
+			return retval;
 		}
 		else if ((tname[1] == 'o') && (tname[2] == 'l')) {
 			/* _collations, params: 
@@ -4987,7 +4990,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		for (i = 0; i < nb; i++) {
 			/*g_print ("%s() %s(cnc=>%p store=>%p)\n", __FUNCTION__, rmeta [i].func_name, cnc, store);*/
 			lcontext.table_name = rmeta [i].table_name;
-      g_message ("Updating FULL mata store at table: %s", gda_meta_context_get_table (&lcontext));
 			if (! _gda_server_provider_meta_0arg (provider, cnc, store, &lcontext,
 							      rmeta[i].func_type, error)) {
 				/*

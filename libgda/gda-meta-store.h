@@ -219,6 +219,7 @@ void              gda_meta_context_set_columns            (GdaMetaContext *ctx, 
 							   GdaConnection *cnc);
 void              gda_meta_context_free                   (GdaMetaContext *ctx);
 gchar            *gda_meta_context_stringify              (GdaMetaContext *ctx);
+gint              gda_meta_context_get_n_columns          (GdaMetaContext *ctx);
 
 G_END_DECLS
 
