@@ -329,14 +329,8 @@ prov_test_common_check_meta_partial2 (void)
 	/* Update meta store by context */
 	GdaMetaContext *ctx;
 	ctx = gda_meta_context_new ();
-	gchar *meta_tables[] = {"_attributes", "_information_schema_catalog_name",
-						"_schemata", "_builtin_data_types", "_udt", "_udt_columns",
-						"_enums", "_element_types", "_domains", "_views", "_collations",
-						"_character_sets", "_routines", "_triggers", "_columns",
-						"_table_constraints", "_referential_constraints",
-						"_key_column_usage", "__declared_fk", "_check_column_usage",
-						"_view_column_usage", "_domain_constraints", "_parameters",
-						"_routine_columns", "_table_indexes", "_index_column_usage",
+	gchar *meta_tables[] = {
+						"_routines",
 						NULL};
 	for (i = 0; meta_tables[i]; i++) {
 		gda_meta_context_set_table (ctx, meta_tables[i]);
@@ -354,12 +348,12 @@ prov_test_common_check_meta_partial2 (void)
 		}
 	}
 	gda_meta_context_free (ctx);
-	
+
 	for (i = 0, list = tables; list; i++, list = list->next) {
 		GdaDataModel *model;
 		gchar *tmp;
 		GError *gerror = NULL;
-		
+
 		tmp = g_strdup_printf ("SELECT * FROM %s", (gchar*) list->data);
 		model = gda_meta_store_extract (store, tmp, &gerror, NULL);
 		g_free (tmp);
@@ -408,6 +402,114 @@ prov_test_common_check_meta_partial2 (void)
 	return number_failed;
 }
 
+
+int
+prov_test_common_check_meta_partial3 (void)
+{
+	int number_failed = 0;
+	GSList *tables = NULL, *list;
+	gboolean dump_ok = TRUE;
+	GdaMetaStore *store;
+	gchar **dump1 = NULL;
+	GError *gerror = NULL;
+	gint ntables, i;
+
+	store = gda_connection_get_meta_store (cnc);
+
+	/* update meta store */
+#ifdef CHECK_EXTRA_INFO
+	g_print ("Updating the complete meta store...\n");
+#endif
+	if (! gda_connection_update_meta_store (cnc, NULL, &gerror)) {
+#ifdef CHECK_EXTRA_INFO
+		g_warning ("Can't update meta store (2): %s\n",
+			   gerror && gerror->message ? gerror->message : "???");
+#endif
+		g_error_free (gerror);
+		number_failed++;
+		goto theend;
+	}
+	/* Update meta store by context */
+	GdaMetaContext *ctx;
+	ctx = gda_meta_context_new ();
+	gchar *meta_tables[] = {"_attributes", "_information_schema_catalog_name",
+						"_schemata", "_builtin_data_types", "_udt", "_udt_columns",
+						"_enums", "_element_types", "_domains", "_views", "_collations",
+						"_character_sets", "_triggers", "_columns",
+						"_table_constraints", "_referential_constraints",
+						"_key_column_usage", "__declared_fk", "_check_column_usage",
+						"_view_column_usage", "_domain_constraints", "_parameters",
+						"_routine_columns", "_table_indexes", "_index_column_usage",
+						NULL};
+	for (i = 0; meta_tables[i]; i++) {
+		gda_meta_context_set_table (ctx, meta_tables[i]);
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Updating the meta store for table '%s'\n", meta_tables[i]);
+#endif
+		if (! gda_connection_update_meta_store (cnc, ctx, &gerror)) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Can't update meta store (on table %s): %s\n",
+				   meta_tables[i], gerror && gerror->message ? gerror->message : "???");
+#endif
+			g_error_free (gerror);
+			number_failed++;
+			goto theend;
+		}
+	}
+	gda_meta_context_free (ctx);
+
+	for (i = 0, list = tables; list; i++, list = list->next) {
+		GdaDataModel *model;
+		gchar *tmp;
+		GError *gerror = NULL;
+
+		tmp = g_strdup_printf ("SELECT * FROM %s", (gchar*) list->data);
+		model = gda_meta_store_extract (store, tmp, &gerror, NULL);
+		g_free (tmp);
+		if (!model) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Can't execute SELECT statement: %s\n",
+				   gerror && gerror->message ? gerror->message : "???");
+#endif
+			g_error_free (gerror);
+			number_failed++;
+			continue;
+		}
+
+		tmp = gda_data_model_export_to_string (model, GDA_DATA_MODEL_IO_DATA_ARRAY_XML,
+						       NULL, 0, NULL, 0, NULL);
+		g_object_unref (model);
+		if (!tmp) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Can't export data model\n");
+#endif
+			number_failed++;
+			continue;
+		}
+		if (strcmp (tmp, dump1[i])) {
+#ifdef CHECK_EXTRA_INFO
+			g_warning ("Meta data has changed after update for table %s\n", (gchar*) list->data);
+			g_print ("===\n%s\n===\n%s\n===\n", tmp, dump1[i]);
+#endif
+			number_failed++;
+			g_free (tmp);
+			continue;
+		}
+#ifdef CHECK_EXTRA_INFO
+		else
+			g_print ("Meta for table '%s' Ok\n", (gchar*) list->data);
+#endif
+		g_free (tmp);
+	}
+
+ theend:
+	/* remove tmp files */
+	if (dump1)
+		g_strfreev (dump1);
+	g_slist_free (tables);
+
+	return number_failed;
+}
 /*
  *
  * CHECK_META_IDENTIFIERS

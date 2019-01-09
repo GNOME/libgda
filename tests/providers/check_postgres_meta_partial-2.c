@@ -48,7 +48,7 @@ main (int argc, char **argv)
 	number_failed = prov_test_common_setup ();
 
 	if (cnc) {
-		number_failed += prov_test_common_check_meta_partial ();
+		number_failed += prov_test_common_check_meta_partial2 ();
 		number_failed += prov_test_common_clean ();
 	}
 

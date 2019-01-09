@@ -30,6 +30,7 @@ int prov_test_common_load_data (void);
 int prov_test_common_check_meta_full (void);
 int prov_test_common_check_meta_partial (void);
 int prov_test_common_check_meta_partial2 (void);
+int prov_test_common_check_meta_partial3 (void);
 int prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean update_all);
 int prov_test_common_check_cursor_models (void);
 int prov_test_common_check_data_select (void);
