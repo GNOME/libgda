@@ -5053,149 +5053,6 @@ meta_key_equal (gconstpointer a, gconstpointer b)
 	return TRUE;
 }
 
-static GHashTable *
-prepare_meta_statements_hash (void)
-{
-	GHashTable *h;
-	MetaKey *key;
-	GdaStatement *stmt;
-	GdaSqlParser *parser = gda_sql_parser_new ();
-	const gchar *sql;
-
-	gchar **name_array = g_new (gchar *, 1);
-	name_array[0] = "name";
-
-	gchar **name_col_array = g_new (gchar *, 2);
-	name_col_array[0] = "name";
-	name_col_array[1] = "field_name";
-
-	gchar **name_index_array = g_new (gchar *, 2);
-	name_index_array[0] = "name";
-	name_index_array[1] = "index_name";
-
-	h = g_hash_table_new (meta_key_hash, meta_key_equal);
-	
-	/* GDA_CONNECTION_META_NAMESPACES */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_NAMESPACES;
-	sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-	
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_NAMESPACES;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata WHERE schema_name=##name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	/* GDA_CONNECTION_META_TYPES */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_TYPES;
-	sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_TYPES;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal AND short_type_name=##name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	/* GDA_CONNECTION_META_TABLES */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_TABLES;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_TABLES;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name AND table_short_name=##name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	/* GDA_CONNECTION_META_VIEWS */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_VIEWS;
-	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_VIEWS;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name AND table_short_name=##name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	/* GDA_CONNECTION_META_FIELDS */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_FIELDS;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string ORDER BY c.ordinal_position";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_FIELDS;
-	key->nb_filters = 2;
-	key->filters = name_col_array;
-	sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string AND c.column_name = ##field_name::string ORDER BY c.ordinal_position";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	/* GDA_CONNECTION_META_INDEXES */
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_INDEXES;
-	key->nb_filters = 1;
-	key->filters = name_array;
-	sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	key = g_new0 (MetaKey, 1);
-	key->meta_type = GDA_CONNECTION_META_INDEXES;
-	key->nb_filters = 2;
-	key->filters = name_index_array;
-	sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string AND i.index_name=##index_name::string";
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-	if (!stmt)
-		g_error ("Could not parse internal statement: %s\n", sql);
-	g_hash_table_insert (h, key, stmt);
-
-	return h;
-}
-
 /**
  * gda_connection_get_meta_store_data: (skip)
  * @cnc: a #GdaConnection object.
@@ -5295,9 +5152,14 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 	GdaMetaStore *store;
 	GdaDataModel *model = NULL;
 	static GHashTable *stmt_hash = NULL;
-	GdaStatement *stmt;
+	GdaStatement *stmt = NULL;
 	GdaSet *set = NULL;
+	GdaSqlParser *parser;
 	GList* node;
+	gchar *sql;
+	gboolean fail = FALSE;
+	GError *lerror = NULL;
+	gint nparams = 0;
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
@@ -5311,33 +5173,137 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 
 	/* Get or create the GdaMetaStore object */
 	store = gda_connection_get_meta_store (cnc);
-	g_assert (store);
-	
-	/* fetch the statement */
-	MetaKey key;
-	gint i;
-	if (!stmt_hash)
-		stmt_hash = prepare_meta_statements_hash ();
-	key.meta_type = meta_type;
-	key.nb_filters = g_list_length (filters);
-	key.filters = NULL;
-	if (key.nb_filters > 0)
-		key.filters = g_new (gchar *, key.nb_filters);
-	for (node = filters, i = 0; 
-	     node; 
-	     node = node->next, i++) {
-		if (!set)
-			set = g_object_new (GDA_TYPE_SET, NULL);
-		gda_set_add_holder (set, GDA_HOLDER (node->data));
-		key.filters[i] = (gchar*) gda_holder_get_id (GDA_HOLDER (node->data));
+	if (store == NULL) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			      _("Internal error: No meta store in connection"));
+		return NULL;
 	}
-	stmt = g_hash_table_lookup (stmt_hash, &key);
-	g_free (key.filters);
-	if (!stmt) {
-		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
-			      "%s", _("Wrong filter arguments"));
-		if (set)
-			g_object_unref (set);
+	set = GDA_SET (g_object_new (GDA_TYPE_SET, NULL));
+	for (node = filters;
+	     node;
+	     node = node->next) {
+		gda_set_add_holder (set, GDA_HOLDER (node->data));
+		nparams++;
+	}
+
+	switch (meta_type) {
+	case GDA_CONNECTION_META_NAMESPACES:
+		sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata";
+		if (nparams > 0) {
+			sql = "SELECT schema_name, schema_owner, schema_internal FROM _schemata WHERE schema_name=##name::string";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter namespaces"));
+				fail = TRUE;
+			}
+		}
+		break;
+	case GDA_CONNECTION_META_TYPES:
+		sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal";
+		if (nparams > 0) {
+			sql = "SELECT short_type_name, gtype, comments, synonyms FROM _all_types WHERE NOT internal AND short_type_name=##name::string";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter data types"));
+				fail = TRUE;
+			}
+		}
+		break;
+	case GDA_CONNECTION_META_TABLES:
+		sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name";
+		if (nparams > 0) {
+			sql = "SELECT table_short_name, table_schema, table_full_name, table_owner, table_comments FROM _tables WHERE table_type LIKE '%TABLE%' AND table_short_name != table_full_name AND table_short_name=##name::string";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter tables"));
+				fail = TRUE;
+			}
+		}
+		break;
+	case GDA_CONNECTION_META_VIEWS:
+		sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name";
+		if (nparams > 0) {
+			sql = "SELECT t.table_short_name, t.table_schema, t.table_full_name, t.table_owner, t.table_comments, v.view_definition FROM _views as v NATURAL JOIN _tables as t WHERE t.table_short_name != t.table_full_name AND table_short_name=##name::string";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter views"));
+				fail = TRUE;
+			}
+		}
+		break;
+	case GDA_CONNECTION_META_FIELDS:
+		if (nparams > 0) {
+			sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string ORDER BY c.ordinal_position";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter fields"));
+				fail = TRUE;
+			} else if (nparams > 1) {
+				sql = "SELECT c.column_name, c.data_type, c.gtype, c.numeric_precision, c.numeric_scale, c.is_nullable AS 'Nullable', c.column_default, c.extra FROM _columns as c NATURAL JOIN _tables as t WHERE t.table_short_name=##name::string AND c.column_name = ##field_name::string ORDER BY c.ordinal_position";
+				if (gda_set_get_holder (set, "field_name") == NULL) {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+					    _("Parameter 'field_name' is required to filter fields"));
+					fail = TRUE;
+				}
+			}
+		} else {
+			sql = "";
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+					    _("Parameters: 'name' and/or 'field_name' are required to filter fields"));
+			fail = TRUE;
+		}
+		break;
+	case GDA_CONNECTION_META_INDEXES:
+		if (nparams > 0) {
+			sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string";
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter indexes"));
+				fail = TRUE;
+			} else if (nparams > 1) {
+				sql = "SELECT i.table_name, i.table_schema, i.index_name, d.column_name, d.ordinal_position, i.index_type FROM _table_indexes as i INNER JOIN _index_column_usage as d ON (d.table_catalog = i.table_catalog AND d.table_schema = i.table_schema AND d.table_name = i.table_name) INNER JOIN _tables t ON (t.table_catalog = i.table_catalog AND t.table_schema = i.table_schema AND t.table_name = i.table_name) WHERE t.table_short_name=##name::string AND i.index_name=##index_name::string";
+				if (gda_set_get_holder (set, "index_name") == NULL) {
+					g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+					    _("Parameter 'index_name' is required to filter indexes"));
+					fail = TRUE;
+				}
+			}
+		} else {
+			sql = "";
+			g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+					    _("Parameters: 'name' and/or 'index_name' are required to filter indexes"));
+			fail = TRUE;
+		}
+
+		if (nparams > 0) {
+
+			if (gda_set_get_holder (set, "name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'name' is required to filter indexes"));
+				fail = TRUE;
+			} else if (gda_set_get_holder (set, "field_name") == NULL) {
+				g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_MISSING_PARAM_ERROR,
+			      _("Parameter 'index_name' is required to filter indexes"));
+				fail = TRUE;
+			}
+		}
+		break;
+	}
+	if (sql == NULL) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			      _("Invalid meta type to get data from store"));
+		fail = TRUE;
+	}
+	if (fail) {
+		return NULL;
+	}
+	parser = gda_sql_parser_new ();
+	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
+	if (stmt == NULL) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+			      _("Internal error while creating statement to retrieve data: %s"),
+			      lerror && lerror->message ? lerror->message : "No internal error reported; please file an issue to https://gitlab.gnome.org/GNOME/libgda/issues");
+		g_clear_error (&lerror);
 		return NULL;
 	}
 
@@ -5349,7 +5315,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 							 stmt, set, error);
 	if (set)
 		g_object_unref (set);
-	
+
 	return model;
 }
 

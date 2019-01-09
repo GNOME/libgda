@@ -362,7 +362,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 				if (ops == NULL) {
 					g_message ("Error while rendering operation to perform: %s",
 										 error && error->message ? error->message : "No Error was set");
-					g_clear_error (error);
+					g_clear_error (&error);
 					return 1;
 				}
 				g_print ("Operation to perform: %s\n", ops);
@@ -444,9 +444,13 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	g_object_unref (data);
 
 	/* check fields of table */
-	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 1,
-						   "name", value);
-	g_assert (data);
+	g_value_set_string ((value2 = gda_value_new (G_TYPE_STRING)), "id");
+	data = gda_connection_get_meta_store_data (cnc, GDA_CONNECTION_META_FIELDS, &error, 2,
+						   "name", value, "field_name", value2, NULL);
+	if (data == NULL) {
+		g_message ("Error getting data for fields: %s",
+		           error && error->message ? error->message : "No error was set");
+	}
 	if (gda_data_model_get_n_rows (data) != 1) {
 #ifdef CHECK_EXTRA_INFO
 		g_message ("Getting Meta for Fields: wrong number of rows : %d\n",
@@ -462,7 +466,6 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	}
 	cvalue = gda_data_model_get_value_at (data, 0, 0, &error);
 	g_assert (cvalue);
-	g_value_set_string ((value2 = gda_value_new (G_TYPE_STRING)), "id");
 	if (gda_value_compare (value2, cvalue)) {
 #ifdef CHECK_EXTRA_INFO
                 g_message ("Comparing data for returned data in meta data for Fields: expected %s and got %s\n",
