@@ -1720,14 +1720,18 @@ _gda_postgres_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 		/* nothing for this version of PostgreSQL */
 		return TRUE;
 	}
+	if (!gda_connection_statement_prepare (cnc, internal_stmt[I_STMT_ROUTINES_ALL], error)) {
+		return FALSE;
+	}
 #ifdef GDA_DEBUG
-		gchar *st = gda_connection_statement_to_sql (cnc, internal_stmt[I_STMT_ROUTINES_ALL], i_set, GDA_STATEMENT_SQL_PARAMS_AS_VALUES, NULL, error);
+		gchar *st = gda_connection_statement_to_sql (cnc, internal_stmt[I_STMT_ROUTINES_ALL], NULL, GDA_STATEMENT_SQL_PARAMS_AS_VALUES, NULL, error);
+		g_message ("Provider: %s", gda_connection_get_provider_name (cnc));
 		if (st == NULL) {
-			g_warning ("Error rendering Routines SQL For ONE Routine: %s",
+			g_warning ("Error rendering Routines SQL For ALL Routines: %s",
 								 (*error) && (*error)->message ? (*error)->message : "No error set");
 			g_clear_error (error);
 		} else {
-			g_message ("Routine SQL: %s", st);
+			g_message ("Routine SQL : %s", st);
 			g_free (st);
 		}
 #endif
