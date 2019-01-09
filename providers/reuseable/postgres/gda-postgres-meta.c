@@ -1720,7 +1720,6 @@ _gda_postgres_meta__routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnecti
 		/* nothing for this version of PostgreSQL */
 		return TRUE;
 	}
-
 	model = gda_connection_statement_execute_select_full (cnc,
 							      internal_stmt[I_STMT_ROUTINES_ALL],
 							      NULL,
@@ -1763,19 +1762,41 @@ _gda_postgres_meta_routines (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnectio
 	if (routine_name_n) {
 		if (! gda_holder_set_value (gda_set_get_holder (i_set, "name"), routine_name_n, error))
 			return FALSE;
+#ifdef GDA_DEBUG
+		gchar *st = gda_connection_statement_to_sql (cnc, internal_stmt[I_STMT_ROUTINES_ONE], i_set, GDA_STATEMENT_SQL_PARAMS_AS_VALUES, NULL, error);
+		if (st == NULL) {
+			g_warning ("Error rendering Routines SQL For ONE Routine: %s",
+								 (*error) && (*error)->message ? (*error)->message : "No error set");
+			g_clear_error (error);
+		} else {
+			g_message ("Routine SQL: %s", st);
+			g_free (st);
+		}
+#endif
 		model = gda_connection_statement_execute_select_full (cnc,
 								      internal_stmt[I_STMT_ROUTINES_ONE],
 								      i_set,
 								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 								      _col_types_routines, error);
-	}
-	else 
+	} else {
+#ifdef GDA_DEBUG
+		gchar *st = gda_connection_statement_to_sql (cnc, internal_stmt[I_STMT_ROUTINES], i_set, GDA_STATEMENT_SQL_PARAMS_AS_VALUES, NULL, error);
+		if (st == NULL) {
+			g_warning ("Error rendering Routines SQL  For Routines In Catalog: %s",
+						     (*error) && (*error)->message ? (*error)->message : "No error set");
+			g_clear_error (error);
+		} else {
+			g_message ("Routine SQL: %s", st);
+			g_free (st);
+		}
+#endif
 		model = gda_connection_statement_execute_select_full (cnc,
 								      internal_stmt[I_STMT_ROUTINES],
 								      i_set,
 								      GDA_STATEMENT_MODEL_RANDOM_ACCESS,
 								      _col_types_routines, error);
-	if (!model)
+	}
+	if (model == NULL)
 		return FALSE;
 
 	gda_meta_store_set_reserved_keywords_func (store, _gda_postgres_reuseable_get_reserved_keywords_func
