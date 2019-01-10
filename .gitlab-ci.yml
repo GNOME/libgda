@@ -13,7 +13,7 @@ stages:
 variables:
   POSTGRES_DB: test
   POSTGRES_USER: test
-  POSTGRES_PASSWORD: "test1"
+  POSTGRES_PASSWORD: test1
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
@@ -64,14 +64,54 @@ autotools_build:
   artifacts:
     when: on_failure
     paths:
-    - tests/test-suite.log
-    - libgda/test-suite.log
-    - tests/data-models/test-suite.log
-    - tests/meta-store/test-suite.log
-    - tests/meta-store/check_meta_store_postgresql.log
-    - tests/value-holders/test-suite.log
-    - tests/parser/test-suite.log
-    - tests/providers/test-suite.log
+    - _build/tests/test-suite.log
+    - _build/tests/test-bin-converter.log
+    - _build/tests/test-ddl-creator.log
+    - _build/tests/test-input-parsers.log
+    - _build/tests/test-server-operation.log
+    - _build/tests/test-sql-identifier.log
+    - _build/tests/test-suite.log
+    - _build/tests/test-connection-string-split.log
+    - _build/tests/test-identifiers-quotes.log
+    - _build/tests/test-quark-list.log
+    - _build/tests/test-sql-builder.log
+    - _build/tests/test-sql-renderer.log
+    - _build/libgda/test-suite.log
+    - _build/libgda/test-cnc-exec.log
+    - _build/libgda/test-cnc-meta.log
+    - _build/libgda/test-cnc-open.log
+    - _build/tests/data-models/test-suite.log
+    - _build/tests/data-models/heck_data_proxy.log
+    - _build/tests/data-models/heck_empty_rs.log
+    - _build/tests/data-models/heck_model_errors.log
+    - _build/tests/data-models/heck_pivot.log
+    - _build/tests/data-models/heck_vcnc.log
+    - _build/tests/data-models/heck_data_select_iter.log
+    - _build/tests/data-models/heck_model_copy.log
+    - _build/tests/data-models/heck_model_import.log
+    - _build/tests/data-models/heck_pmodel.log
+    - _build/tests/data-models/heck_virtual.log
+    - _build/tests/meta-store/test-suite.log
+    - _build/tests/meta-store/check_meta_store_postgresql.log
+    - _build/tests/meta-store/heck_meta_store_memory.log
+    - _build/tests/meta-store/heck_meta_store_mysql.log
+    - _build/tests/meta-store/heck_meta_store_postgresql.log
+    - _build/tests/meta-store/heck_meta_store_sqlite.log
+    - _build/tests/value-holders/test-suite.log
+    - _build/tests/value-holders/heck_holder.log
+    - _build/tests/value-holders/heck_set.log
+    - _build/tests/value-holders/heck_statement.log 
+    - _build/tests/parser/test-suite.log
+    - _build/tests/parser/heck_dml_comp.log
+    - _build/tests/parser/heck_normalization.log
+    - _build/tests/parser/heck_parser.log
+    - _build/tests/parser/heck_rewrite_for_default.log
+    - _build/tests/parser/heck_script.log
+    - _build/tests/parser/heck_validation.log
+    - _build/tests/providers/test-suite.log
+    - _build/tests/providers/heck_mysql.log
+    - _build/tests/providers/heck_postgres.log
+    - _build/tests/providers/heck_sqlite.log 
     expire_in: 1 week
 
 meson_build:
