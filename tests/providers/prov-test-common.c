@@ -46,10 +46,25 @@ prov_test_common_setup (void)
 {
 	int number_failed = 0;
 	GError *error = NULL;
+	GdaServerOperation *opndb;
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
 #endif
+
+	opndb = gda_server_operation_prepare_create_database (pinfo->id, "test", &error);
+	if (opndb == NULL) {
+		g_message ("Provider doesn't support database creation: %s",
+		           error && error->message ? error->message : "No error was set");
+	} else {
+		if (!gda_server_operation_perform_create_database (opndb, pinfo->id, &error)) {
+			g_warning ("Creating database error: %s",
+		           error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			return;
+		}
+	}
+
 
 	cnc = test_cnc_setup_connection (pinfo->id, "testcheckdb", &error);
 	if (!cnc) {
@@ -105,14 +120,44 @@ prov_test_common_create_extra_connection (void)
 int
 prov_test_common_clean (void)
 {
+	GError *error = NULL;
 	int number_failed = 0;
+	GdaServerOperation *opndb;
+	const gchar *prov_id;
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
 #endif
 
-	if (!test_cnc_clean_connection (cnc, NULL))
+	g_message ("Dropping database test...");
+
+	prov_id = gda_connection_get_provider_name (cnc);
+	if (!gda_connection_close (cnc, &error)) {
+		g_warning ("Error clossing connection to database: %s",
+		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		return 1;
+	}
+
+	opndb = gda_server_operation_prepare_drop_database (prov_id, "test", &error);
+	if (opndb == NULL) {
+		g_message ("Provider doesn't support database dropping: %s",
+		           error && error->message ? error->message : "No error was set");
+	} else {
+		if (!gda_server_operation_perform_drop_database (opndb, prov_id, &error)) {
+			g_warning ("Dropping database error: %s",
+		           error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			return 1;
+		}
+	}
+
+
+	if (!test_cnc_clean_connection (cnc, &error)) {
+		g_warning ("Error while cleaning up connection: %s",
+		          error && error->message ? error->message : "No error was set");
 		number_failed++;
+	}
 
 	return number_failed;	
 }
@@ -1334,7 +1379,7 @@ prov_test_common_check_bigint (void)
 	g_value_set_int64 (tso, 4294967296);
 
 	/* insert date */
-	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO bigint (thebigint) VALUES (##thebigint::gint64)", NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO testbigin (thebigint) VALUES (##thebigint::gint64)", NULL, &error);
 	if (!stmt ||
 	    ! gda_statement_get_parameters (stmt, &params, &error) ||
 	    ! gda_set_set_holder_value (params, &error, "thebigint", g_value_get_int64 (tso)) ||
@@ -1346,7 +1391,7 @@ prov_test_common_check_bigint (void)
 	g_print ("Inserted int %s\n", gda_value_stringify (tso));
 
 	/* retreive date */
-	stmt = gda_sql_parser_parse_string (parser, "SELECT thebigint FROM bigint", NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "SELECT thebigint FROM testbigin", NULL, &error);
 	if (!stmt) {
 		number_failed ++;
 		goto out;

@@ -38,6 +38,10 @@ endif
 if POSTGRES
 check_PROGRAMS += check_postgres
 TESTS += check_postgres
+check_PROGRAMS += check_postgres_meta_partial_1
+TESTS += check_postgres_meta_partial_1
+check_PROGRAMS += check_postgres_meta_partial_2
+TESTS += check_postgres_meta_partial_2
 endif
 
 common_sources = \
@@ -93,6 +97,20 @@ check_oracle_LDADD =  \
 check_postgres_SOURCES = $(common_sources) check_postgres.c
 check_postgres_CFLAGS = 
 check_postgres_LDADD =  \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/tests/libgda-test-6.0.la \
+	$(COREDEPS_LIBS)
+
+check_postgres_meta_partial_1_SOURCES = $(common_sources) check_postgres_meta_partial-1.c
+check_postgres_meta_partial_1_CFLAGS =
+check_postgres_meta_partial_1_LDADD =  \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/tests/libgda-test-6.0.la \
+	$(COREDEPS_LIBS)
+
+check_postgres_meta_partial_2_SOURCES = $(common_sources) check_postgres_meta_partial-2.c
+check_postgres_meta_partial_2_CFLAGS =
+check_postgres_meta_partial_2_LDADD =  \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(top_builddir)/tests/libgda-test-6.0.la \
 	$(COREDEPS_LIBS)

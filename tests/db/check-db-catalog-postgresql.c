@@ -247,28 +247,34 @@ test_db_catalog_start (CheckDbObject *self,
   self->cnc = NULL;
   self->started_db = FALSE;
   self->cont = FALSE;
+  GError *error = NULL;
 
-#ifdef CI_ENVIRONMENT
-  const gchar *cnc_string = "DB_NAME=test;HOST=postgres;USERNAME=test;PASSWORD=test1";
-#else
-  const gchar *cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";
-#endif
+  gchar **env = g_get_environ ();
+  const gchar *cnc_string = g_environ_getenv (env, "POSTGRESQL_CNC_PARAMS");
 
-  self->cnc = gda_connection_new_from_string("Postgresql",
-                                             cnc_string,
-                                             NULL,
-                                             GDA_CONNECTION_OPTIONS_NONE,
-                                             NULL);
-  if (self->cnc == NULL) {
-    g_print ("Postgres test not run, please setup a database 'test', owned by 'test' role with password 'test1' at localhost\n");
-    g_print ("Test Skip.\n");
+  g_message ("Connecting using: %s", cnc_string);
+
+  if (cnc_string == NULL) {
+    g_message ("Skipping. Error creating connection");
     return;
   }
 
-  g_assert_nonnull (self->cnc);
+  self->cnc = gda_connection_new_from_string("PostgreSQL",
+                                             cnc_string,
+                                             NULL,
+                                             GDA_CONNECTION_OPTIONS_NONE,
+                                             &error);
+  if (self->cnc == NULL) {
+    g_message ("Skipping. Error creating connection: %s",
+               error && error->message ? error->message : "No error was set");
+    return;
+  }
 
-  gboolean openres = gda_connection_open(self->cnc, NULL);
-  g_assert_true (openres);
+  if (!gda_connection_open(self->cnc, &error)) {
+    g_warning ("Error Opening connection: %s",
+             error && error->message ? error->message : "No error was set");
+    return;
+  }
 
   self->catalog = gda_connection_create_db_catalog (self->cnc);
 
@@ -299,11 +305,12 @@ test_tables (CheckDbObject *self,
 {
   if (!self->cont) {
     g_message ("Test skiped");
+    return;
   }
-  g_message ("Testing Tables...");
   if (self->cnc == NULL) {
       return;
   }
+  g_message ("Testing Tables...");
   GList *tables = gda_db_catalog_get_tables (self->catalog);
   g_assert (tables != NULL);
   g_assert (g_list_length (tables) != 0);

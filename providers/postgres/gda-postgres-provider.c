@@ -1470,9 +1470,9 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
 	}
 
 	if (type == G_TYPE_INT64)
-                return "int8";
+                return "bigint";
         if (type == G_TYPE_UINT64)
-                return "int8";
+                return "bigint";
         if (type == GDA_TYPE_BINARY)
                 return "bytea";
         if (type == GDA_TYPE_BLOB)
