@@ -34,11 +34,12 @@ main(int argc, char ** argv)
 	/*cnc_string = "DB_NAME=test;HOST=localhost;USERNAME=test;PASSWORD=test1";*/
 	cnc_string = getenv ("POSTGRESQL_META_CNC");
 	if (!cnc_string)
-    {
-      g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment variable \n"
-               "For example 'DB_NAME=meta'\n");
-      return EXIT_FAILURE;
-    }
+	{
+		g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment variable \n"
+			        "For example 'DB_NAME=meta'\n");
+		return EXIT_SUCCESS;
+	}
+	test_setup ("PostgreSQL");
 	/* connection try */
 	cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (cnc == NULL) {
@@ -50,6 +51,7 @@ main(int argc, char ** argv)
 		g_print ("Test Skip.\n");
 		return EXIT_FAILURE;
 	}
+	test_finish (cnc);
 	g_object_unref (cnc);
 	/* Clean everything which might exist in the store */
 	gchar *str;
@@ -70,7 +72,7 @@ main(int argc, char ** argv)
 	g_object_unref (store);
 
 	g_print ("Test Ok.\n");
-	
+
 	return EXIT_SUCCESS;
 }
 

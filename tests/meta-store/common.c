@@ -721,3 +721,52 @@ test_parameters (GdaMetaStore *store)
 	TEST_END (import);
 #undef TNAME
 }
+
+gboolean
+test_setup (const gchar *prov_id) {
+	GError *error = NULL;
+	GdaServerOperation *opndb;
+
+	opndb = gda_server_operation_prepare_create_database (prov_id, "test", &error);
+	if (opndb == NULL) {
+		g_message ("Provider doesn't support database creation: %s",
+		           error && error->message ? error->message : "No error was set");
+	} else {
+		if (!gda_server_operation_perform_create_database (opndb, prov_id, &error)) {
+			g_warning ("Creating database error: %s",
+		           error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			return;
+		}
+	}
+}
+
+
+gboolean
+test_finish (GdaConnection *cnc) {
+	GError *error = NULL;
+	GdaServerOperation *opndb;
+	const gchar *prov_id;
+
+	prov_id = gda_connection_get_provider_name (cnc);
+
+	if (!gda_connection_close (cnc, &error)) {
+		g_warning ("Error clossing connection to database: %s",
+		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		return 1;
+	}
+
+	opndb = gda_server_operation_prepare_drop_database (prov_id, "test", &error);
+	if (opndb == NULL) {
+		g_message ("Provider doesn't support database dropping: %s",
+		           error && error->message ? error->message : "No error was set");
+	} else {
+		if (!gda_server_operation_perform_drop_database (opndb, prov_id, &error)) {
+			g_warning ("Dropping database error: %s",
+		           error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			return 1;
+		}
+	}
+}
