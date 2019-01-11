@@ -21,7 +21,7 @@
 #define __GDA_VIRTUAL_CONNECTION_H__
 
 #include <libgda/gda-connection.h>
-#include <virtual/gda-virtual-provider.h>
+#include "gda-virtual-provider.h"
 
 #define GDA_TYPE_VIRTUAL_CONNECTION            (gda_virtual_connection_get_type())
 #define GDA_VIRTUAL_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VIRTUAL_CONNECTION, GdaVirtualConnection))

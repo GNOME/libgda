@@ -492,7 +492,6 @@ free_private_shared_data (GdaDataSelect *model)
 
 	model->priv->sh->ref_count --;
 	if (model->priv->sh->ref_count == 0) {
-		guint i;
 
 		if (model->priv->sh->sel_stmt) {
 			g_object_unref (model->priv->sh->sel_stmt);

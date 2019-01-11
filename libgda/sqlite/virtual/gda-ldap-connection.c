@@ -47,10 +47,9 @@ _ldap_table_map_free (LdapTableMap *map)
 	g_free (map->base_dn);
 	g_free (map->filter);
 	g_free (map->attributes);
-	if (map->columns) {
-		g_list_foreach (map->columns, (GFunc) g_object_unref, NULL);
-		g_list_free (map->columns);
-	}
+	if (map->columns)
+		g_list_free_full (map->columns, (GDestroyNotify) g_object_unref);
+	
 	if (map->filters_hash)
 		g_hash_table_destroy (map->filters_hash);
 	g_free (map);
@@ -243,8 +242,7 @@ conn_opened_cb (GdaLdapConnection *cnc, G_GNUC_UNUSED gpointer data)
 	if (batch) {
 		GSList *list;
 		list = gda_connection_batch_execute (GDA_CONNECTION (cnc), batch, NULL, 0, &lerror);
-		g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-		g_slist_free (list);
+		g_slist_free_full (list, (GDestroyNotify) g_object_unref);
 		g_object_unref (batch);
 	}
 	if (lerror) {

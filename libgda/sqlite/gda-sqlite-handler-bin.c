@@ -228,7 +228,7 @@ static int hex_to_int (int h) {
 }
 
 static GValue *
-gda_sqlite_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, GType type)
+gda_sqlite_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *sql, G_GNUC_UNUSED GType type)
 {
 	g_assert (sql);
 	GValue *value = NULL;
@@ -261,7 +261,7 @@ gda_sqlite_handler_bin_get_value_from_sql (G_GNUC_UNUSED GdaDataHandler *iface, 
 }
 
 static GValue *
-gda_sqlite_handler_bin_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, GType type)
+gda_sqlite_handler_bin_get_value_from_str (G_GNUC_UNUSED GdaDataHandler *iface, const gchar *str, G_GNUC_UNUSED GType type)
 {
 	g_assert (str);
 

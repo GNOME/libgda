@@ -628,7 +628,8 @@ gda_diff_copy (GdaDiff *src)
   dst->new_row = src->new_row;
   dst->values = g_hash_table_new_full (g_str_hash, g_str_equal, (GDestroyNotify) g_free,
                                        (GDestroyNotify) gda_value_free);
-  g_hash_table_foreach (src->values, copy_hash, dst);
+  g_hash_table_foreach (src->values, (GHFunc)copy_hash, dst);
+  return dst;
 }
 
 G_DEFINE_BOXED_TYPE (GdaDiff, gda_diff, gda_diff_copy, gda_diff_free)

@@ -23,7 +23,7 @@
 #define _GDA_STATEMENT_H_
 
 #include <glib-object.h>
-#include <sql-parser/gda-statement-struct.h>
+#include <libgda/sql-parser/gda-statement-struct.h>
 
 G_BEGIN_DECLS
 

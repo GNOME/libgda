@@ -25,9 +25,9 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <sql-parser/gda-statement-struct.h>
-#include <sql-parser/gda-statement-struct-pspec.h>
-#include <sql-parser/gda-statement-struct-decl.h>
+#include <libgda/sql-parser/gda-statement-struct.h>
+#include <libgda/sql-parser/gda-statement-struct-pspec.h>
+#include <libgda/sql-parser/gda-statement-struct-decl.h>
 #include <libgda/gda-meta-struct.h>
 
 G_BEGIN_DECLS

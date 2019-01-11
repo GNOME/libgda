@@ -30,10 +30,12 @@
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-blob-op.h>
-#include <gda-sqlite.h>
-#include <sql-parser/gda-statement-struct-util.h>
+#include <libgda/sqlite/gda-sqlite.h>
+#include <libgda/sql-parser/gda-statement-struct-util.h>
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-impl.h>
+#include <libgda/gda-data-proxy.h>
+#include <libgda/gda-util.h>
 
 
 /* module error */
@@ -1484,7 +1486,7 @@ param_name_to_number (gint maxrows, const gchar *str)
  * optype value: see virtualUpdate()
  */
 static int
-update_data_select_model (sqlite3_vtab *tab, gint optype, int nData, sqlite3_value **apData)
+update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nData, sqlite3_value **apData)
 {
 	VirtualTable *vtable = (VirtualTable *) tab;
 
@@ -1743,8 +1745,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		values = g_list_reverse (values);
 
 		newrow = gda_data_model_append_values (vtable->td->real_model, values, NULL);
-		g_list_foreach (values, (GFunc) gda_value_free, NULL);
-		g_list_free (values);
+		g_list_free_full (values, (GDestroyNotify) gda_value_free);
 		if (newrow < 0)
 			return SQLITE_READONLY;
 
