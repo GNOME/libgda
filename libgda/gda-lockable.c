@@ -20,9 +20,6 @@
 
 #include <libgda/gda-lockable.h>
 
-#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
-#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
-
 G_DEFINE_INTERFACE(GdaLockable, gda_lockable, G_TYPE_OBJECT)
 
 void

@@ -1736,8 +1736,8 @@ gda_holder_set_bind (GdaHolder *holder, GdaHolder *bind_to, GError **error)
 	GValue *value1 = NULL;
 	const GValue *value2 = NULL;
 	GdaHolderPrivate *priv = NULL;
-  GdaHolderPrivate *bpriv = NULL;
- 
+	GdaHolderPrivate *bpriv = NULL;
+
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), FALSE);
 	priv = gda_holder_get_instance_private (holder);
 	g_return_val_if_fail (holder != bind_to, FALSE);

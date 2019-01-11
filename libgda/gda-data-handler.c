@@ -30,8 +30,6 @@
 #include "handlers/gda-handler-time.h"
 #include "handlers/gda-handler-type.h"
 
-#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
-#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
 G_DEFINE_INTERFACE (GdaDataHandler, gda_data_handler, G_TYPE_OBJECT)
 
 char *gda_data_handler_get_sql_from_value_default (GdaDataHandler *dh, const GValue *value);
