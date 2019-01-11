@@ -5075,12 +5075,11 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 {
 	GdaMetaStore *store;
 	GdaDataModel *model = NULL;
-	static GHashTable *stmt_hash = NULL;
 	GdaStatement *stmt = NULL;
 	GdaSet *set = NULL;
 	GdaSqlParser *parser;
 	GList* node;
-	gchar *sql;
+	gchar *sql = NULL;
 	gboolean fail = FALSE;
 	GError *lerror = NULL;
 	gint nparams = 0;
