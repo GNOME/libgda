@@ -57,7 +57,6 @@ struct _GdaDbViewClass
  */
 
 GdaDbView*  gda_db_view_new            (void);
-GdaDbView  *gda_db_view_new_from_meta  (GdaMetaView *view);
 
 gboolean     gda_db_view_get_istemp    (GdaDbView *self);
 void         gda_db_view_set_istemp    (GdaDbView *self,

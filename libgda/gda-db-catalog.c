@@ -571,6 +571,82 @@ gda_db_catalog_get_view (GdaDbCatalog *self,
   return NULL;
 }
 
+/*
+ * _gda_db_table_new_from_meta:
+ * @obj: a #GdaMetaDbObject
+ *
+ * Create new #GdaDbTable instance from the corresponding #GdaMetaDbObject
+ * object. If %NULL is passed this function works exactly as
+ * gda_db_table_new()
+ *
+ * This method should not be part of the public API. 
+ *
+ * Since: 6.0
+ */
+static GdaDbTable*
+_gda_db_table_new_from_meta (GdaMetaDbObject *obj)
+{
+  if (!obj)
+    return gda_db_table_new();
+
+  if (obj->obj_type != GDA_META_DB_TABLE)
+    return NULL;
+
+  GdaMetaTable *metatable = GDA_META_TABLE(obj);
+  GdaDbTable *table = gda_db_table_new();
+
+  gda_db_base_set_names(GDA_DB_BASE(table),
+                         obj->obj_catalog,
+                         obj->obj_schema,
+                         obj->obj_name);
+
+  GSList *it = NULL;
+  for (it = metatable->columns; it; it = it->next)
+    {
+      GdaDbColumn *column = gda_db_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
+
+      gda_db_table_append_column(table,column);
+    }
+
+  it = NULL;
+  for (it = metatable->fk_list;it;it = it->next)
+    {
+      if (!GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(GDA_META_TABLE_FOREIGN_KEY(it->data)))
+        continue;
+
+      GdaDbFkey *fkey = gda_db_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
+
+      gda_db_table_append_fkey (table,fkey);
+
+    }
+
+  return table;
+}
+
+/*
+ * _gda_db_view_new_from_meta:
+ * @view: a #GdaMetaView instance
+ *
+ * Create new #GdaDbView object from the corresponding #GdaMetaView object
+ *
+ * This method should not be part of the public API. 
+ *
+ * Returns: New instance of #GdaDbView 
+ */
+static GdaDbView*
+_gda_db_view_new_from_meta (GdaMetaView *view)
+{
+  if (!view)
+    return gda_db_view_new();
+
+  GdaDbView *dbview = gda_db_view_new();
+
+  gda_db_view_set_defstring (dbview,view->view_def);
+  gda_db_view_set_replace (dbview,view->is_updatable);
+
+  return dbview;
+}
+
 /** 
  * gda_db_catalog_parse_cnc:
  * @self: a #GdaDbCatalog instance 
@@ -618,7 +694,7 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
     {
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_TABLE)
         {
-          GdaDbTable *table = gda_db_table_new_from_meta(it->data);
+          GdaDbTable *table = _gda_db_table_new_from_meta(it->data);
           if (!table)
             continue;
 
@@ -628,7 +704,7 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
 
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_VIEW)
         {
-          GdaDbView *view = gda_db_view_new_from_meta(it->data);
+          GdaDbView *view = _gda_db_view_new_from_meta(it->data);
           priv->mp_views = g_list_append (priv->mp_views,view);
           continue;
         }

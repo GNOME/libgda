@@ -51,7 +51,7 @@ typedef enum {
 #define GDA_DB_TABLE_ERROR gda_db_table_error_quark()
 GQuark gda_db_table_error_quark(void);
 
-GdaDbTable*    gda_db_table_new               (void);
+GdaDbTable*     gda_db_table_new               (void);
 gboolean        gda_db_table_is_valid          (GdaDbTable *self);
 GList*          gda_db_table_get_columns       (GdaDbTable *self);
 GList*          gda_db_table_get_fkeys         (GdaDbTable *self);
@@ -64,24 +64,22 @@ void            gda_db_table_set_is_temp       (GdaDbTable *self,
                                                  gboolean istemp);
 
 gboolean        gda_db_table_prepare_create (GdaDbTable *self,
-                                              GdaServerOperation *op,
+                                             GdaServerOperation *op,
+                                             gboolean ifnotexists,
+                                             GError **error);
+
+gboolean        gda_db_table_update          (GdaDbTable *self,
+                                              GdaMetaTable *obj,
+                                              GdaConnection *cnc,
+                                              GError **error);
+
+gboolean        gda_db_table_create          (GdaDbTable *self,
+                                              GdaConnection *cnc,
                                               gboolean ifnotexists,
                                               GError **error);
 
-gboolean        gda_db_table_update          (GdaDbTable *self,
-                                               GdaMetaTable *obj,
-                                               GdaConnection *cnc,
-                                               GError **error);
-
-gboolean        gda_db_table_create          (GdaDbTable *self,
-                                               GdaConnection *cnc,
-                                               gboolean ifnotexists,
-                                               GError **error);
-
-GdaDbTable    *gda_db_table_new_from_meta    (GdaMetaDbObject *obj);
-
 void            gda_db_table_append_fkey (GdaDbTable *self,
-                                           GdaDbFkey *fkey);
+                                          GdaDbFkey *fkey);
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DB-TABLE_H */

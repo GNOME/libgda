@@ -699,56 +699,6 @@ gda_db_table_create (GdaDbTable *self,
 }
 
 /**
- * gda_db_table_new_from_meta:
- * @obj: a #GdaMetaDbObject
- *
- * Create new #GdaDbTable instance from the corresponding #GdaMetaDbObject
- * object. If %NULL is passed this function works exactly as
- * gda_db_table_new()
- *
- * Since: 6.0
- */
-GdaDbTable*
-gda_db_table_new_from_meta (GdaMetaDbObject *obj)
-{
-  if (!obj)
-    return gda_db_table_new();
-
-  if (obj->obj_type != GDA_META_DB_TABLE)
-    return NULL;
-
-  GdaMetaTable *metatable = GDA_META_TABLE(obj);
-  GdaDbTable *table = gda_db_table_new();
-
-  gda_db_base_set_names(GDA_DB_BASE(table),
-                         obj->obj_catalog,
-                         obj->obj_schema,
-                         obj->obj_name);
-
-  GSList *it = NULL;
-  for (it = metatable->columns; it; it = it->next)
-    {
-      GdaDbColumn *column = gda_db_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
-
-      gda_db_table_append_column(table,column);
-    }
-
-  it = NULL;
-  for (it = metatable->fk_list;it;it = it->next)
-    {
-      if (!GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(GDA_META_TABLE_FOREIGN_KEY(it->data)))
-        continue;
-
-      GdaDbFkey *fkey = gda_db_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
-
-      gda_db_table_append_fkey (table,fkey);
-
-    }
-
-  return table;
-}
-
-/**
  * gda_db_table_append_column:
  * @self: a #GdaDbTable instance
  * @column: column to add
