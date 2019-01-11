@@ -4977,38 +4977,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 	}
 }
 
-/*
- * predefined statements for meta store data retrieval
- */
-typedef struct {
-	GdaConnectionMetaType  meta_type;
-	gint                   nb_filters;
-	gchar                **filters;
-} MetaKey;
-
-static guint
-meta_key_hash (gconstpointer key)
-{
-	return ((((MetaKey*) key)->meta_type) << 2) + ((MetaKey*) key)->nb_filters;
-}
-
-static gboolean
-meta_key_equal (gconstpointer a, gconstpointer b)
-{
-	MetaKey* ak = (MetaKey*) a;
-	MetaKey* bk = (MetaKey*) b;
-	gint i;
-
-	if ((ak->meta_type != bk->meta_type) ||
-	    (ak->nb_filters != bk->nb_filters))
-		return FALSE;
-	for (i = 0; i < ak->nb_filters; i++) 
-		if (strcmp (ak->filters[i], bk->filters[i]))
-			return FALSE;
-
-	return TRUE;
-}
-
 /**
  * gda_connection_get_meta_store_data: (skip)
  * @cnc: a #GdaConnection object.
