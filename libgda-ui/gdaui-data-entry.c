@@ -35,7 +35,6 @@ enum {
 };
 
 static gint gdaui_data_entry_signals[LAST_SIGNAL] = { 0, 0, 0, 0, 0 };
-static void gdaui_data_entry_iface_init (gpointer g_class);
 
 G_DEFINE_INTERFACE (GdauiDataEntry, gdaui_data_entry, GTK_TYPE_WIDGET)
 
