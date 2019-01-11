@@ -731,14 +731,16 @@ test_setup (const gchar *prov_id) {
 	if (opndb == NULL) {
 		g_message ("Provider doesn't support database creation: %s",
 		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
 	} else {
 		if (!gda_server_operation_perform_create_database (opndb, prov_id, &error)) {
 			g_warning ("Creating database error: %s",
 		           error && error->message ? error->message : "No error was set");
 			g_clear_error (&error);
-			return;
+			return FALSE;
 		}
 	}
+	return TRUE;
 }
 
 
@@ -761,12 +763,14 @@ test_finish (GdaConnection *cnc) {
 	if (opndb == NULL) {
 		g_message ("Provider doesn't support database dropping: %s",
 		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
 	} else {
 		if (!gda_server_operation_perform_drop_database (opndb, prov_id, &error)) {
 			g_warning ("Dropping database error: %s",
 		           error && error->message ? error->message : "No error was set");
 			g_clear_error (&error);
-			return 1;
+			return FALSE;
 		}
 	}
+	return TRUE;
 }

@@ -28,6 +28,7 @@ main(int argc, char ** argv)
 	GdaMetaStore *store;
 	gchar *cnc_string = NULL;
 	GError *error = NULL;
+	gboolean db_created = FALSE;
 
 	gda_init ();
 
@@ -36,22 +37,24 @@ main(int argc, char ** argv)
 	if (!cnc_string)
 	{
 		g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment variable \n"
-			        "For example 'DB_NAME=meta'\n");
+			        "For example 'DB_NAME=$POSTGRES_DB;HOST=postgres;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD'\n");
 		return EXIT_SUCCESS;
 	}
-	test_setup ("PostgreSQL");
 	/* connection try */
 	cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
 	if (cnc == NULL) {
-		if (error) {
-			g_print ("Connection no established. Error: %s\n", error->message);
-			g_error_free (error);
+		// Try creating the database first
+		test_setup ("PostgreSQL");
+		g_clear_error (&error);
+		cnc = gda_connection_open_from_string ("PostgreSQL", cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
+		if (cnc == NULL) {
+			g_warning ("Connection no established. Error: %s\n",
+			           error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			return EXIT_FAILURE;
 		}
-		g_print ("Postgres test not run, please setup a database 'test', owned by 'test' role with password 'test1' at localhost\n");
-		g_print ("Test Skip.\n");
-		return EXIT_FAILURE;
+		db_created = TRUE;
 	}
-	test_finish (cnc);
 	g_object_unref (cnc);
 	/* Clean everything which might exist in the store */
 	gchar *str;
@@ -70,6 +73,9 @@ main(int argc, char ** argv)
 	/* Tests */
 	tests_group_1 (store);
 	g_object_unref (store);
+	if (db_created) {
+		test_finish (cnc);
+	}
 
 	g_print ("Test Ok.\n");
 

@@ -5,7 +5,7 @@
 image: ubuntu:devel
 
 services:
-  - postgres
+  - postgres:latest
 
 stages:
   - build

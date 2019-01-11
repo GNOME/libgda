@@ -250,24 +250,42 @@ test_db_catalog_start (CheckDbObject *self,
   GError *error = NULL;
 
   gchar **env = g_get_environ ();
-  const gchar *cnc_string = g_environ_getenv (env, "POSTGRESQL_CNC_PARAMS");
-
-  g_message ("Connecting using: %s", cnc_string);
+  const gchar *cnc_string = g_environ_getenv (env, "POSTGRESQL_META_CNC");
 
   if (cnc_string == NULL) {
-    g_message ("Skipping. Error creating connection");
-    return;
+    g_print ("Environment variable POSTGRESQL_META_CNC was not set. No PostgreSQL provider test will be performed \n"
+			        "You can set it, for example, to 'DB_NAME=$POSTGRES_DB;HOST=postgres;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD'\n");
+		return;
   }
+
+  g_message ("Connecting using: %s", cnc_string);
 
   self->cnc = gda_connection_new_from_string("PostgreSQL",
                                              cnc_string,
                                              NULL,
                                              GDA_CONNECTION_OPTIONS_NONE,
-                                             &error);
+                                             NULL);
   if (self->cnc == NULL) {
-    g_message ("Skipping. Error creating connection: %s",
-               error && error->message ? error->message : "No error was set");
-    return;
+    GdaServerOperation *op;
+    op = gda_server_operation_prepare_create_database ("PostgreSQL", "test", &error);
+    if (op == NULL) {
+      g_message ("Error creating database 'test': %s",
+                 error && error->message ? error->message : "No error was set");
+      g_clear_error (&error);
+      return;
+    } else {
+      self->cnc = gda_connection_new_from_string("PostgreSQL",
+                                             cnc_string,
+                                             NULL,
+                                             GDA_CONNECTION_OPTIONS_NONE,
+                                             &error);
+      if (self->cnc == NULL) {
+        g_message ("Error connecting to created database 'test': %s",
+                 error && error->message ? error->message : "No error was set");
+        g_clear_error (&error);
+        return;
+      }
+    }
   }
 
   if (!gda_connection_open(self->cnc, &error)) {

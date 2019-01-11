@@ -13,8 +13,8 @@ test_programs = \
     check_db_column \
     check_db_view \
     check_db_fkey \
+    check_db_catalog_postgresql \
     $(NULL)
-#    check_db_catalog_postgresql
 
 check_db_catalog_SOURCES = check-db-catalog.c
 check_db_catalog_LDADD = \
@@ -41,10 +41,10 @@ check_db_fkey_LDADD = \
        $(top_builddir)/libgda/libgda-6.0.la \
        $(COREDEPS_LIBS)
 
-# check_db_catalog_postgresql_SOURCES = check-db-catalog-postgresql.c
-# check_db_catalog_postgresql_LDADD = \
-#        $(top_builddir)/libgda/libgda-6.0.la \
-#        $(COREDEPS_LIBS)
+check_db_catalog_postgresql_SOURCES = check-db-catalog-postgresql.c
+check_db_catalog_postgresql_LDADD = \
+       $(top_builddir)/libgda/libgda-6.0.la \
+       $(COREDEPS_LIBS)
 
 include $(top_srcdir)/glib-tap.mk
 

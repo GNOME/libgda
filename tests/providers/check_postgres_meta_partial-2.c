@@ -35,6 +35,17 @@ main (int argc, char **argv)
 {
 	int number_failed = 0;
 	fork_tests = FALSE;
+	gchar **env;
+	const gchar *cnc_string;
+
+	env = g_get_environ ();
+	cnc_string = g_environ_getenv (env, "POSTGRESQL_DBCREATE_PARAMS");
+	if (cnc_string == NULL) {
+		g_message ("No enviroment variable POSTGRESQL_DBCREATE_PARAMS was set. No PostgreSQL provider tests will be performed."
+		          "Set this environment variable in order to get access to your server. Example: export POSTGRESQL_DBCREATE_PARAMS=\"HOST=postgres;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD\"");
+		g_strfreev (env);
+		return EXIT_SUCCESS;
+	}
 
 	gda_init ();
 
