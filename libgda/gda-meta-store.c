@@ -997,9 +997,10 @@ gda_meta_store_constructor (GType type,
 	store = (GdaMetaStore *) object;
 	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
 
-	if (!priv->cnc && !been_specified)
+	if (!priv->cnc && !been_specified) {
 		/* in memory DB */
 		g_object_set (object, "cnc-string", "SQLite://DB_DIR=.;DB_NAME=__gda_tmp", NULL);
+	}
 
 	if (priv->cnc) {
 		gda_lockable_lock (GDA_LOCKABLE (priv->cnc));
@@ -1198,10 +1199,15 @@ gda_meta_store_set_property (GObject *object,
 				if (cnc) {
 					if (!gda_connection_open (cnc, &error)) {
 						g_object_unref (cnc);
+					  g_warning (_("Could not open internal GdaMetaStore connection: %s"),
+						     error && error->message ? error->message : _("No detail"));
+						g_clear_error (&error);
 						cnc = NULL;
 					}
-				}
-				else {
+				} else {
+					g_warning (_("Could not create internal GdaMetaStore connection: %s"),
+						   error && error->message ? error->message : _("No detail"));
+					g_clear_error (&error);
 					if (g_ascii_strcasecmp (cnc_string, "sqlite")) {
 						/* use _gda_config_sqlite_provider */
 						g_clear_error (&error);
@@ -1209,12 +1215,6 @@ gda_meta_store_set_property (GObject *object,
 					}
 				}
 				priv->cnc = cnc;
-				if (!cnc) {
-					g_warning ("Could not create internal GdaMetaStore connection:%s\n"
-						   "GdaMetaStore object will not work as expected",
-						   error && error->message ? error->message : _("No detail"));
-					g_clear_error (&error);
-				}
 			}
 		}
 		break;
@@ -1328,10 +1328,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	if (schema_present)
 		return FALSE;
 
-	if (error && *error) {
-		g_error_free (*error);
-		*error = NULL;
-	}
+	g_clear_error (error);
 
 	/* assume schema not present => create it */
 	klass = (GdaMetaStoreClass *) G_OBJECT_GET_CLASS (store);
@@ -1344,9 +1341,22 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	prov = gda_connection_get_provider (priv->cnc);
 	for (list = klass->cpriv->db_objects; list; list = list->next) {
 		DbObject *dbo = DB_OBJECT (list->data);
-		/*g_print ("Creating object: %s\n", dbo->obj_name);*/
 		if (dbo->create_op) {
 			if (!gda_server_provider_perform_operation (prov, priv->cnc, dbo->create_op, error)) {
+				gchar *sql = NULL;
+				GError *lerror = NULL;
+				sql = gda_server_operation_render (dbo->create_op, &lerror);
+				if (sql == NULL) {
+					g_warning (_("Internal error while trying to render operation in MetaStore creation: %s"),
+				           lerror && lerror->message ? lerror->message : _("No error was set"));
+					g_clear_error (&lerror);
+				} else {
+					g_warning ("Interna Error. Operation tried to create MetaStore table '%s': %s",
+				           dbo->obj_name, sql);
+				}
+				g_warning (_("Internal Error. Couldn't create MetaStore table '%s': %s"),
+				           dbo->obj_name,
+				           (*error) && (*error)->message ? (*error)->message : _("No error was set"));
 				allok = FALSE;
 				break;
 			}

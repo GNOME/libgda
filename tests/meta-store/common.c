@@ -340,12 +340,12 @@ common_drop_all_tables (GdaMetaStore *store)
 		gint res;
 		GError *error = NULL;
 
-		sql = g_strdup_printf ("DROP VIEW %s", view_names[i]);
+		sql = g_strdup_printf ("DROP VIEW IF EXISTS %s", view_names[i]);
 		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 		g_free (sql);
 		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
 		if (res == -1) {
-			g_print ("DROP view '%s' error: %s\n", view_names[i],
+			g_print ("DROP VIEW IF EXISTS'%s' error: %s\n", view_names[i],
 				error && error->message ? error->message : "No detail");
 			if (error)
 				g_error_free (error);
@@ -359,12 +359,12 @@ common_drop_all_tables (GdaMetaStore *store)
 		gint res;
 		GError *error = NULL;
 		
-		sql = g_strdup_printf ("DROP TABLE %s", table_names[i]);
+		sql = g_strdup_printf ("DROP TABLE IF EXISTS %s", table_names[i]);
 		stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 		g_free (sql);
 		res = gda_connection_statement_execute_non_select (cnc, stmt, NULL, NULL, &error);
 		if (res == -1) {
-			g_print ("DROP table '%s' error: %s\n", table_names[i],
+			g_print ("DROP TABLE IF EXISTS '%s' error: %s\n", table_names[i],
 				error && error->message ? error->message : "No detail");
 			if (error)
 				g_error_free (error);

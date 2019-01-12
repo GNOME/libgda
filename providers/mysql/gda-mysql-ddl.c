@@ -384,8 +384,9 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	    g_value_get_string (value) && *g_value_get_string (value)) {
 		g_string_append (string, " CHARACTER SET ");
 		g_string_append (string, g_value_get_string (value));
-
-		if (gda_server_operation_get_value_at_path (op, "/TABLE_OPTIONS_P/TABLE_COLLATION")) {
+		value = gda_server_operation_get_value_at_path (op, "/TABLE_OPTIONS_P/TABLE_COLLATION");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
+	    g_value_get_string (value) && *g_value_get_string (value)) {
 			tmp = gda_connection_operation_get_sql_identifier_at (cnc, op,
 									  "/TABLE_OPTIONS_P/TABLE_COLLATION", error);
 			if (!tmp) {
@@ -501,7 +502,6 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			g_free (str);
 		}
 	}
-
 	sql = string->str;
 	g_string_free (string, FALSE);
 	
