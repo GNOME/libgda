@@ -554,27 +554,6 @@ gda_db_view_prepare_create (GdaDbView *self,
   return  TRUE;
 }
 
-/**
- * gda_db_view_new_from_meta:
- * @view: a #GdaMetaView instance
- *
- * Create new #GdaDbView object from the corresponding #GdaMetaView object
- *
- * Returns: New instance of #GdaDbView 
- */
-GdaDbView*
-gda_db_view_new_from_meta (GdaMetaView *view)
-{
-  if (!view)
-    return gda_db_view_new();
-
-  GdaDbView *dbview = gda_db_view_new();
-
-  gda_db_view_set_defstring (dbview,view->view_def);
-  gda_db_view_set_replace (dbview,view->is_updatable);
-
-  return dbview;
-}
 
 
 
