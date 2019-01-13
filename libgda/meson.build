@@ -279,6 +279,7 @@ libgda_cargs = [
 		meson.build_root() + '/config.h',
 		'-DABI_VERSION='+project_api_version,
 		'-DABI_NAME='+project_api_name,
+                '-DLIBGDAPREFIX='+get_option('datadir')
 	]
 
 libgda_cargs += sqlite_cargs
