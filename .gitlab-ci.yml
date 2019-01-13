@@ -81,37 +81,37 @@ autotools_build:
     - _build/libgda/test-cnc-meta.log
     - _build/libgda/test-cnc-open.log
     - _build/tests/data-models/test-suite.log
-    - _build/tests/data-models/heck_data_proxy.log
-    - _build/tests/data-models/heck_empty_rs.log
-    - _build/tests/data-models/heck_model_errors.log
-    - _build/tests/data-models/heck_pivot.log
-    - _build/tests/data-models/heck_vcnc.log
-    - _build/tests/data-models/heck_data_select_iter.log
-    - _build/tests/data-models/heck_model_copy.log
-    - _build/tests/data-models/heck_model_import.log
-    - _build/tests/data-models/heck_pmodel.log
-    - _build/tests/data-models/heck_virtual.log
+    - _build/tests/data-models/check_data_proxy.log
+    - _build/tests/data-models/check_empty_rs.log
+    - _build/tests/data-models/check_model_errors.log
+    - _build/tests/data-models/check_pivot.log
+    - _build/tests/data-models/check_vcnc.log
+    - _build/tests/data-models/check_data_select_iter.log
+    - _build/tests/data-models/check_model_copy.log
+    - _build/tests/data-models/check_model_import.log
+    - _build/tests/data-models/check_pmodel.log
+    - _build/tests/data-models/check_virtual.log
     - _build/tests/meta-store/test-suite.log
     - _build/tests/meta-store/check_meta_store_postgresql.log
-    - _build/tests/meta-store/heck_meta_store_memory.log
-    - _build/tests/meta-store/heck_meta_store_mysql.log
-    - _build/tests/meta-store/heck_meta_store_postgresql.log
-    - _build/tests/meta-store/heck_meta_store_sqlite.log
+    - _build/tests/meta-store/check_meta_store_memory.log
+    - _build/tests/meta-store/check_meta_store_mysql.log
+    - _build/tests/meta-store/check_meta_store_postgresql.log
+    - _build/tests/meta-store/check_meta_store_sqlite.log
     - _build/tests/value-holders/test-suite.log
-    - _build/tests/value-holders/heck_holder.log
-    - _build/tests/value-holders/heck_set.log
-    - _build/tests/value-holders/heck_statement.log 
+    - _build/tests/value-holders/check_holder.log
+    - _build/tests/value-holders/check_set.log
+    - _build/tests/value-holders/check_statement.log 
     - _build/tests/parser/test-suite.log
-    - _build/tests/parser/heck_dml_comp.log
-    - _build/tests/parser/heck_normalization.log
-    - _build/tests/parser/heck_parser.log
-    - _build/tests/parser/heck_rewrite_for_default.log
-    - _build/tests/parser/heck_script.log
-    - _build/tests/parser/heck_validation.log
+    - _build/tests/parser/check_dml_comp.log
+    - _build/tests/parser/check_normalization.log
+    - _build/tests/parser/check_parser.log
+    - _build/tests/parser/check_rewrite_for_default.log
+    - _build/tests/parser/check_script.log
+    - _build/tests/parser/check_validation.log
     - _build/tests/providers/test-suite.log
-    - _build/tests/providers/heck_mysql.log
-    - _build/tests/providers/heck_postgres.log
-    - _build/tests/providers/heck_sqlite.log 
+    - _build/tests/providers/check_mysql.log
+    - _build/tests/providers/check_postgres.log
+    - _build/tests/providers/check_sqlite.log 
     expire_in: 1 week
 
 meson_build:
