@@ -3054,12 +3054,17 @@ gda_meta_store_extract (GdaMetaStore *store, const gchar *select_sql, GError **e
 			if (!h)
 				g_warning (_("Parameter '%s' is not present in statement"), pname);
 			else {
-				if (!gda_holder_set_value (h, value, error)) {
+				GError *lerror = NULL;
+				if (!gda_holder_set_value (h, value, &lerror)) {
 					g_object_unref (stmt);
 					g_object_unref (params);
 					va_end (ap);
 					g_slist_free (params_set);
 					g_rec_mutex_unlock (& (priv->mutex));
+					g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+					     _("While extracting data from Meta Store: %s"),
+					     lerror && lerror->message ? lerror->message : "No error message was set");
+					g_clear_error (&lerror);
 					return NULL;
 				}
 				params_set = g_slist_prepend (params_set, h);
@@ -3174,9 +3179,14 @@ gda_meta_store_extract_v (GdaMetaStore *store, const gchar *select_sql, GHashTab
 			if (!h)
 				g_message (_("Parameter '%s' is not present in statement"), pname);
 			else {
-				if (!gda_holder_set_value (h, value, error)) {
+				GError *lerror = NULL;
+				if (!gda_holder_set_value (h, value, &lerror)) {
 					g_object_unref (stmt);
 					g_object_unref (params);
+					g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+					     _("While extracting data from store: %s"),
+					     lerror && lerror->message ? lerror->message : "No error message was set");
+					g_clear_error (&lerror);
 					g_rec_mutex_unlock (& (priv->mutex));
 					return NULL;
 				}
@@ -3484,6 +3494,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 				h = gda_set_get_holder (schema_set->params, pid);
 				if (h) {
 					const GValue *value;
+					GError *lerror = NULL;
 					value = gda_data_model_get_value_at (wrapped_data, j, i, error);
 					if (!value) {
 						g_free (pid);
@@ -3503,10 +3514,27 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						}
 					}
 
-					if (! gda_holder_set_value (h, value, error)) {
+					if (! gda_holder_set_value (h, value, &lerror)) {
 						g_free (pid);
 						retval = FALSE;
+						g_message ("New Data: Column: '%s' : '%s' - ncol: %d - type: %s - Val: %s", gda_data_model_get_column_name (wrapped_data, j),
+											 gda_data_model_get_column_title (wrapped_data, j), j, g_type_name (G_VALUE_TYPE (value)),
+											 gda_value_stringify (value));
+						g_message ("Holder: '%s' type: %s", gda_holder_get_id (h), g_type_name (gda_holder_get_g_type (h)));
+						/* if (new_data != wrapped_data) { */
+						/* 	g_print ("NEW for table %s:\n", table_name); */
+						/* 	gda_data_model_dump (new_data, stdout); */
+
+						/* 	g_print ("wrapped as:\n"); */
+						/* 	gda_data_model_dump (wrapped_data, stdout); */
+						/* } else { */
+						/* 	g_message ("DATA NO WRAPPED"); */
+						/* } */
 						g_object_unref (wrapped_data);
+						g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
+					     _("Internal error, while updating internal meta store table '%s': Parameter value type error: %s"),
+					     table_name, lerror && lerror->message ? lerror->message : "No error message was set");
+						g_clear_error (&lerror);
 						goto out;
 					}
 					if (change) {

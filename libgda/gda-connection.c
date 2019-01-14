@@ -4134,29 +4134,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -1- @table_catalog, @table_schema, @table_name, @column_name
 			 */
-			const GValue *tabname = NULL;
-			const GValue *cname = NULL;
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &tabname, G_TYPE_STRING,
-					      &cname, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "check_column_usage");
-			if (i == 0) {
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "check_column_usage");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__CHECK_COLUMNS, error);
+				WARN_META_UPDATE_FAILURE (retval, "check_columns");
+			} else {
+				const GValue *tabname = NULL;
+				const GValue *cname = NULL;
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &tabname, G_TYPE_STRING,
+							    &cname, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "check_column_usage");
 				retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
 									 GDA_SERVER_META_CHECK_COLUMNS, catalog, schema, tabname, cname, error);
 				WARN_META_UPDATE_FAILURE (retval, "check_columns");
-				return retval;
 			}
-			else {
-				/* nothing to do */
-				return TRUE;
-			}
+			return retval;
 		}
 		break;
 
@@ -4189,23 +4190,31 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @domain_catalog, @domain_schema, @domain_name
 			 *  -1- @constraint_catalog, @constraint_schema
 			 */
-			const GValue *domname = NULL;
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &domname, G_TYPE_STRING, NULL,
-					      "domain_catalog", &catalog, "domain_schema", &schema, "domain_name", &domname, NULL,
-					      "constraint_catalog", &catalog, "constraint_schema", &schema, NULL);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "domain_constraints");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__CONSTRAINTS_DOM, error);
+				WARN_META_UPDATE_FAILURE (retval, "constraints_dom");
+			} else {
+				const GValue *domname = NULL;
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &domname, G_TYPE_STRING, NULL,
+							    "domain_catalog", &catalog, "domain_schema", &schema, "domain_name", &domname, NULL,
+							    "constraint_catalog", &catalog, "constraint_schema", &schema, NULL);
 
-			if (i < 0)
-				return FALSE;
-			if (i == 1)
-				return TRUE; /* nothing to do */
+				if (i < 0)
+					return FALSE;
+				if (i == 1)
+					return TRUE; /* nothing to do */
 
-			ASSERT_TABLE_NAME (tname, "domain_constraints");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_CONSTRAINTS_DOM, catalog, schema, domname, error);
-			WARN_META_UPDATE_FAILURE (retval, "constraints_dom");
+				ASSERT_TABLE_NAME (tname, "domain_constraints");
+				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+									 GDA_SERVER_META_CONSTRAINTS_DOM, catalog, schema, domname, error);
+				WARN_META_UPDATE_FAILURE (retval, "constraints_dom");
+			}
+
 			return retval;
 		}
 		break;
@@ -4215,18 +4224,26 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* _enums, params: 
 			 *  -0- @udt_catalog, @udt_schema, @udt_name
 			 */
-			i = check_parameters (context, error, 1,
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "enums");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__ENUMS, error);
+				WARN_META_UPDATE_FAILURE (retval, "enums");
+			} else {
+				i = check_parameters (context, error, 1,
 					      &catalog, G_TYPE_STRING,
 					      &schema, G_TYPE_STRING,
 					      &name, G_TYPE_STRING, NULL,
 					      "udt_catalog", &catalog, "udt_schema", &schema, "udt_name", &name, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "enums");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_ENUMS, catalog, schema, name, error);
-			WARN_META_UPDATE_FAILURE (retval, "enums");
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "enums");
+				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+									 GDA_SERVER_META_ENUMS, catalog, schema, name, error);
+				WARN_META_UPDATE_FAILURE (retval, "enums");
+			}
+
 			return retval;
 		}
 		else {
@@ -4268,21 +4285,28 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* _index_column_usage, params: 
 			 *  -0- @table_catalog, @table_schema, @table_name, @index_name
 			 */
-			const GValue *iname = NULL;
-			i = check_parameters (context, error, 1,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING,
-					      &iname, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, "index_name", &iname, NULL);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "index_column_usage");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__INDEX_COLS, error);
+				WARN_META_UPDATE_FAILURE (retval, "index_cols");
+			} else {
+				const GValue *iname = NULL;
+				i = check_parameters (context, error, 1,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING,
+							    &iname, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, "index_name", &iname, NULL);
 
-			if (i < 0)
-				return FALSE;
+				if (i < 0)
+					return FALSE;
 
-			ASSERT_TABLE_NAME (tname, "index_column_usage");
-			retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
-								 GDA_SERVER_META_INDEX_COLS, catalog, schema, name, iname, error);
-			WARN_META_UPDATE_FAILURE (retval, "index_cols");
+				ASSERT_TABLE_NAME (tname, "index_column_usage");
+				retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
+									 GDA_SERVER_META_INDEX_COLS, catalog, schema, name, iname, error);
+				WARN_META_UPDATE_FAILURE (retval, "index_cols");
+			}
 			return retval;
 		}
 		break;
@@ -4291,29 +4315,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 		 *  -0- @ref_table_catalog, @ref_table_schema, @ref_table_name, @ref_constraint_name
 		 */
-		const GValue *tabname = NULL;
-		const GValue *cname = NULL;
-		i = check_parameters (context, error, 2,
-				      &catalog, G_TYPE_STRING,
-				      &schema, G_TYPE_STRING,
-				      &tabname, G_TYPE_STRING,
-				      &cname, G_TYPE_STRING, NULL,
-				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
-				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
-		if (i < 0)
-			return FALSE;
-		
-		ASSERT_TABLE_NAME (tname, "key_column_usage");
-		if (i == 0) {
+		if (gda_meta_context_get_n_columns (context) == 0) {
+			ASSERT_TABLE_NAME (tname, "key_column_usage");
+			retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+								 GDA_SERVER_META__KEY_COLUMNS, error);
+			WARN_META_UPDATE_FAILURE (retval, "key_columns");
+		} else {
+			const GValue *tabname = NULL;
+			const GValue *cname = NULL;
+			i = check_parameters (context, error, 2,
+						    &catalog, G_TYPE_STRING,
+						    &schema, G_TYPE_STRING,
+						    &tabname, G_TYPE_STRING,
+						    &cname, G_TYPE_STRING, NULL,
+						    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+						    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "column_name", &cname, NULL);
+			if (i < 0)
+				return FALSE;
+
+			ASSERT_TABLE_NAME (tname, "key_column_usage");
 			retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
 								 GDA_SERVER_META_KEY_COLUMNS, catalog, schema, tabname, cname, error);
 			WARN_META_UPDATE_FAILURE (retval, "key_columns");
-			return retval;
 		}
-		else {
-			/* nothing to do */
-			return TRUE;
-		}
+		return retval;
 		break;
 	}
 
@@ -4346,29 +4371,38 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -0- @ref_table_catalog, @ref_table_schema, @ref_table_name, @ref_constraint_name
 			 */
-			const GValue *tabname = NULL;
-			const GValue *cname = NULL;
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &tabname, G_TYPE_STRING,
-					      &cname, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
-					      "ref_table_catalog", &catalog, "ref_table_schema", &schema, "ref_table_name", &tabname, "ref_constraint_name", &cname, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "referential_constraints");
-			if (i == 0) {
-				retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
-									 GDA_SERVER_META_CONSTRAINTS_REF, catalog, schema, tabname, cname, error);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "referential_constraints");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+										 GDA_SERVER_META__CONSTRAINTS_REF, error);
 				WARN_META_UPDATE_FAILURE (retval, "constraints_ref");
 				return retval;
+			} else {
+				const GValue *tabname = NULL;
+				const GValue *cname = NULL;
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &tabname, G_TYPE_STRING,
+							    &cname, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+							    "ref_table_catalog", &catalog, "ref_table_schema", &schema, "ref_table_name", &tabname, "ref_constraint_name", &cname, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "referential_constraints");
+				if (i == 0) {
+					retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
+										 GDA_SERVER_META_CONSTRAINTS_REF, catalog, schema, tabname, cname, error);
+					WARN_META_UPDATE_FAILURE (retval, "constraints_ref");
+					return retval;
+				}
+				else {
+					/* nothing to do */
+					return TRUE;
+				}
 			}
-			else {
-				/* nothing to do */
-				return TRUE;
-			}
+			return TRUE;
 		}
 		if ((tname[1] == 'o') && (tname[2] == 'u') && (tname[3] == 't') && (tname[4] == 'i') &&
 		    (tname[5] == 'n') && (tname[6] == 'e') && (tname[7] == 's')) {
@@ -4395,23 +4429,26 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* _routine_columns, params: 
 			 *  -0- @specific_catalog, @specific_schema, @specific_name
 			 */
-			const GValue *col_name = NULL;
-			const GValue *ordinal = NULL;
-			i = check_parameters (context, error, 1,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING,
-					      &col_name, G_TYPE_STRING,
-					      &ordinal, G_TYPE_STRING, NULL,
-					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, "column_name", &col_name, "ordinal_position", &ordinal, NULL);
-
-			ASSERT_TABLE_NAME (tname, "routine_columns");
-			if (i < 0) {
-				g_clear_error (error);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "routine_columns");
 				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
 									 GDA_SERVER_META__ROUTINE_COL, error);
 				WARN_META_UPDATE_FAILURE (retval, "routine_col");
 			} else {
+				const GValue *col_name = NULL;
+				const GValue *ordinal = NULL;
+				i = check_parameters (context, error, 1,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING,
+							    &col_name, G_TYPE_STRING,
+							    &ordinal, G_TYPE_INT, NULL,
+							    "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, "column_name", &col_name, "ordinal_position", &ordinal, NULL);
+				if (i < 0) {
+					g_message ("Fail _routine_columns");
+					return FALSE;
+				}
+				ASSERT_TABLE_NAME (tname, "routine_columns");
 				retval = _gda_server_provider_meta_5arg (provider, cnc, store, context,
 									 GDA_SERVER_META_ROUTINE_COL, catalog, schema, name, col_name, ordinal, error);
 				WARN_META_UPDATE_FAILURE (retval, "routine_col");
@@ -4425,17 +4462,23 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		 *  -0- @catalog_name, @schema_name 
 		 *  -1- @catalog_name
 		 */
-		i = check_parameters (context, error, 2,
-				      &schema, G_TYPE_STRING, NULL,
-				      "catalog_name", &catalog, "schema_name", &schema, NULL,
-				      "catalog_name", &catalog, NULL);
-		if (i < 0)
-			return FALSE;
 		ASSERT_TABLE_NAME (tname, "schemata");
+		if (gda_meta_context_get_n_columns (context) == 0) {
+			retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+							 GDA_SERVER_META__SCHEMATA, error);
+			WARN_META_UPDATE_FAILURE (retval, "schemata");
+		} else {
+			i = check_parameters (context, error, 2,
+						    &schema, G_TYPE_STRING, NULL,
+						    "catalog_name", &catalog, "schema_name", &schema, NULL,
+						    "catalog_name", &catalog, NULL);
+			if (i < 0)
+			return FALSE;
 
-		retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
-							 GDA_SERVER_META_SCHEMATA, catalog, schema, error);
-		WARN_META_UPDATE_FAILURE (retval, "schemata");
+			retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
+								 GDA_SERVER_META_SCHEMATA, catalog, schema, error);
+			WARN_META_UPDATE_FAILURE (retval, "schemata");
+		}
 		return retval;
 	}
 	case 't': 
@@ -4444,19 +4487,28 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name
 			 *  -1- @table_catalog, @table_schema
 			 */
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, NULL);
-			if (i < 0)
-				return FALSE;
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "tables");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__TABLES_VIEWS, error);
+				WARN_META_UPDATE_FAILURE (retval, "tables_views");
+			} else {
+				i = check_parameters (context, error, 3,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, NULL,
+							    "table_name", &name, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "tables");
+				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+									 GDA_SERVER_META_TABLES_VIEWS, catalog, schema, name, error);
+				WARN_META_UPDATE_FAILURE (retval, "tables_views");
+			}
 			
-			ASSERT_TABLE_NAME (tname, "tables");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_TABLES_VIEWS, catalog, schema, name, error);
-			WARN_META_UPDATE_FAILURE (retval, "tables_views");
 			return retval;
 		}
 		else if ((tname[1] == 'a') && (tname[2] == 'b') && (tname[3] == 'l') && (tname[4] == 'e') && 
@@ -4465,23 +4517,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @constraint_name
 			 *  -1- @table_catalog, @table_schema, @table_name
 			 */
-			const GValue *cname = NULL;
-			const GValue *tabname = NULL;
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &cname, G_TYPE_STRING,
-					      &tabname, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, NULL);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+								 GDA_SERVER_META__CONSTRAINTS_TAB, error);
+				WARN_META_UPDATE_FAILURE (retval, "constraints_tab");
+			} else {
+				const GValue *cname = NULL;
+				const GValue *tabname = NULL;
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &cname, G_TYPE_STRING,
+							    &tabname, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "constraint_name", &cname, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, NULL);
 
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "table_constraints");
-			retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
-								 GDA_SERVER_META_CONSTRAINTS_TAB, catalog, schema, tabname, cname, error);
-			WARN_META_UPDATE_FAILURE (retval, "constraints_tab");
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "table_constraints");
+				retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
+									 GDA_SERVER_META_CONSTRAINTS_TAB, catalog, schema, tabname, cname, error);
+				WARN_META_UPDATE_FAILURE (retval, "constraints_tab");
+			}
+
 			return retval;
 		}
 		else if ((tname[1] == 'a') && (tname[2] == 'b') && (tname[3] == 'l') && (tname[4] == 'e') && 
@@ -4490,23 +4549,31 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @table_catalog, @table_schema, @table_name, @index_name
 			 *  -1- @table_catalog, @table_schema, @table_name
 			 */
-			const GValue *iname = NULL;
-			const GValue *tabname = NULL;
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &iname, G_TYPE_STRING,
-					      &tabname, G_TYPE_STRING, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "index_name", &iname, NULL,
-					      "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, NULL);
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "table_indexes");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__INDEXES_TAB, error);
+				WARN_META_UPDATE_FAILURE (retval, "indexes_tab");
+			} else {
+				const GValue *iname = NULL;
+				const GValue *tabname = NULL;
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &iname, G_TYPE_STRING,
+							    &tabname, G_TYPE_STRING, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, "index_name", &iname, NULL,
+							    "table_catalog", &catalog, "table_schema", &schema, "table_name", &tabname, NULL);
 
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "table_indexes");
-			retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
-								 GDA_SERVER_META_INDEXES_TAB, catalog, schema, tabname, iname, error);
-			WARN_META_UPDATE_FAILURE (retval, "indexes_tab");
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "table_indexes");
+				retval = _gda_server_provider_meta_4arg (provider, cnc, store, context,
+									 GDA_SERVER_META_INDEXES_TAB, catalog, schema, tabname, iname, error);
+				WARN_META_UPDATE_FAILURE (retval, "indexes_tab");
+			}
+
 			return retval;
 		}
 		else if ((tname[1] == 'r') && (tname[2] == 'i')) {
@@ -4514,25 +4581,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @trigger_catalog, @trigger_schema
 			 *  -1- @event_object_catalog, @event_object_schema, @event_object_table
 			 */
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING, NULL,
-					      "trigger_catalog", &catalog, "trigger_schema", &schema, NULL,
-					      "event_object_catalog", &catalog, "event_object_schema", &schema, "event_object_table", &name, NULL);
-			if (i < 0)
-				return FALSE;
-			
+
 			ASSERT_TABLE_NAME (tname, "triggers");
-			if (i == 1) {
-				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-									 GDA_SERVER_META_TRIGGERS, catalog, schema, name, error);
-				WARN_META_UPDATE_FAILURE (retval, "triggers");
-				return retval;
-			}
-			else {
-				/* nothing to do */
-				return TRUE;
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+										 GDA_SERVER_META__TRIGGERS, error);
+			} else {
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING, NULL,
+							    "trigger_catalog", &catalog, "trigger_schema", &schema, NULL,
+							    "event_object_catalog", &catalog, "event_object_schema", &schema, "event_object_table", &name, NULL);
+				if (i < 0)
+					return FALSE;
+				if (i == 1) {
+					retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+										 GDA_SERVER_META_TRIGGERS, catalog, schema, name, error);
+					WARN_META_UPDATE_FAILURE (retval, "triggers");
+					return retval;
+				}
+				else {
+					/* nothing to do */
+					return TRUE;
+				}
 			}
 		}
 		break;
@@ -4542,17 +4614,24 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			/* _udt, params: 
 			 *  -0- @udt_catalog, @udt_schema
 			 */
-			i = check_parameters (context, error, 1,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING, NULL,
-					      "udt_catalog", &catalog, "udt_schema", &schema, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "udt");
-			retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
-								 GDA_SERVER_META_UDT, catalog, schema, error);
-			WARN_META_UPDATE_FAILURE (retval, "udt");
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "udt");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__UDT, error);
+				WARN_META_UPDATE_FAILURE (retval, "udt");
+			} else {
+				i = check_parameters (context, error, 1,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING, NULL,
+							    "udt_catalog", &catalog, "udt_schema", &schema, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "udt");
+				retval = _gda_server_provider_meta_2arg (provider, cnc, store, context,
+									 GDA_SERVER_META_UDT, catalog, schema, error);
+				WARN_META_UPDATE_FAILURE (retval, "udt");
+			}
 			return retval;
 		}
 		else if ((tname[1] == 'd') && (tname[2] == 't') && (tname[3] == '_')) {
@@ -4584,29 +4663,30 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		 *  -0- @view_catalog, @view_schema, @view_name
 		 *  -1- @table_catalog, @table_schema, @table_name, @column_name
 		 */
-		const GValue *colname = NULL;
-		i = check_parameters (context, error, 2,
-				      &catalog, G_TYPE_STRING,
-				      &schema, G_TYPE_STRING,
-				      &colname, G_TYPE_STRING,
-				      &name, G_TYPE_STRING, NULL,
-				      "view_catalog", &catalog, "view_schema", &schema, "view_name", &name, NULL,
-				      "table_catalog", &catalog, "table_schema", &schema, "table_name", &name, 
-				      "column_name", &colname, NULL);
-		if (i < 0)
-			return FALSE;
-		
-		ASSERT_TABLE_NAME (tname, "view_column_usage");
-		if (i == 0) {
+		if (gda_meta_context_get_n_columns (context) == 0) {
 			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
 								 GDA_SERVER_META_VIEW_COLS, catalog, schema, name, error);
 			WARN_META_UPDATE_FAILURE (retval, "view_cols");
-			return retval;
+		} else {
+			const GValue *colname = NULL;
+			i = check_parameters (context, error, 2,
+						    &catalog, G_TYPE_STRING,
+						    &schema, G_TYPE_STRING,
+						    &colname, G_TYPE_STRING,
+						    &name, G_TYPE_STRING, NULL,
+						    "view_catalog", &catalog, "view_schema", &schema, "view_name", &name, NULL,
+						    "table_catalog", &catalog, "table_schema", &schema, "table_name", &name,
+						    "column_name", &colname, NULL);
+			if (i < 0)
+				return FALSE;
+
+			ASSERT_TABLE_NAME (tname, "view_column_usage");
+			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+								 GDA_SERVER_META_VIEW_COLS, catalog, schema, name, error);
+			WARN_META_UPDATE_FAILURE (retval, "view_cols");
 		}
-		else {
-			/* nothing to do */
-			return TRUE;
-		}
+
+		return retval;
 		break;
 	}
 	default:
@@ -4861,15 +4941,17 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		cbd.error = NULL;
 		cbd.context_templates = g_slist_concat (g_slist_append (up_templates, lcontext), dn_templates);
 		cbd.context_templates_hash = g_hash_table_new (g_str_hash, g_str_equal);
-		for (list = cbd.context_templates; list; list = list->next) 
-			g_hash_table_insert (cbd.context_templates_hash, ((GdaMetaContext*)list->data)->table_name,
-					     list->data);
-
-		signal_id = g_signal_connect (store, "suggest-update",
-					      G_CALLBACK (suggest_update_cb_downstream), &cbd);
 		retval = local_meta_update (priv->provider_obj, cnc,
-					    (GdaMetaContext*) (cbd.context_templates->data), error);
-		g_signal_handler_disconnect (store, signal_id);
+					    lcontext, error);
+		if (retval) {
+			for (list = cbd.context_templates; list; list = list->next) {
+				retval = local_meta_update (priv->provider_obj, cnc,
+				         (GdaMetaContext*) (list->data), error);
+				if (!retval) {
+					break;
+				}
+			}
+		}
 
 		/* free the memory associated with each template */
 		for (list = cbd.context_templates; list; list = list->next) {
@@ -5032,7 +5114,8 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 			GdaHolder *h;
 			GValue *v;
 			gchar* fname;
-      
+			GError *lerror = NULL;
+
 			fname = va_arg (ap, gchar*);
 			if (!fname)
 				break;
@@ -5041,7 +5124,11 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 				continue;
 			h = g_object_new (GDA_TYPE_HOLDER, "g-type", G_VALUE_TYPE (v), "id", fname, NULL);
 			filters = g_list_append (filters, h);
-			if (!gda_holder_set_value (h, v, error)) {
+			if (!gda_holder_set_value (h, v, &lerror)) {
+				g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
+				             _("While extracting data from Data Store: %s"),
+										 lerror && lerror->message ? lerror->message : "No error message was set");
+				g_clear_error (&lerror);
 				va_end (ap);
 				goto onerror;
 			}
