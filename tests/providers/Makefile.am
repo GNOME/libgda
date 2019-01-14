@@ -42,6 +42,9 @@ check_PROGRAMS += check_postgres_meta_partial_1
 TESTS += check_postgres_meta_partial_1
 check_PROGRAMS += check_postgres_meta_partial_2
 TESTS += check_postgres_meta_partial_2
+check_PROGRAMS += check_postgresql_ddl
+TESTS += check_postgresql_ddl
+
 endif
 
 common_sources = \
@@ -111,6 +114,13 @@ check_postgres_meta_partial_1_LDADD =  \
 check_postgres_meta_partial_2_SOURCES = $(common_sources) check_postgres_meta_partial-2.c
 check_postgres_meta_partial_2_CFLAGS =
 check_postgres_meta_partial_2_LDADD =  \
+	$(top_builddir)/libgda/libgda-6.0.la \
+	$(top_builddir)/tests/libgda-test-6.0.la \
+	$(COREDEPS_LIBS)
+
+check_postgresql_ddl_SOURCES = $(common_sources) check_postgresql_ddl.c
+check_postgresql_ddl_CFLAGS =
+check_postgresql_ddl_LDADD =  \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(top_builddir)/tests/libgda-test-6.0.la \
 	$(COREDEPS_LIBS)
