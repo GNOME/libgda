@@ -329,14 +329,6 @@ gda_null_get_type (void)
                type = g_boxed_type_register_static ("GdaNull",
                                                     (GBoxedCopyFunc) gda_null_copy,
                                                     (GBoxedFreeFunc) gda_null_free);
-
-               g_value_register_transform_func (G_TYPE_STRING,
-                                                type,
-                                                string_to_null);
-
-               g_value_register_transform_func (type,
-                                                G_TYPE_STRING,
-                                                null_to_string);
        }
 
        return type;
@@ -398,6 +390,139 @@ gda_default_get_type (void)
        return type;
 }
 
+// Declare GDA_TYPE_TEXT
+
+struct _GdaText {
+	gchar *str;
+};
+
+/**
+ * gda_text_new:
+ *
+ * Creates a new #GdaText object, initialy with no string.
+ * Use #gda_text_set_string() to set a string to.
+ *
+ * Returns: (transfer full): a new #GdaText object
+ */
+GdaText*
+gda_text_new () {
+	GdaText *t = g_new0 (GdaText, 1);
+	t->str = NULL;
+	return t;
+}
+
+
+/**
+ * gda_text_free:
+ * @text: a #GdaText object
+ *
+ * Free resources on #GdaText object.
+ */
+void
+gda_text_free (GdaText *text)
+{
+	g_return_if_fail (text);
+	if (text->str != NULL) {
+		g_free (text);
+	}
+}
+
+/**
+ * gda_text_get_string:
+ * @text: a #GdaText object
+ *
+ * Returns: (transfer none): a string represented by #GdaText
+ */
+const gchar*
+gda_text_get_string (GdaText *text) {
+	return (const gchar*) text->str;
+}
+
+/**
+ * gda_text_set_string:
+ * @text: a #GdaText object
+ * @str: a string to set from
+ *
+ * Set string. The string is duplicated.
+ */
+void
+gda_text_set_string (GdaText *text, const gchar *str) {
+  g_return_if_fail (text);
+  if (text->str != NULL) {
+    g_free (text->str);
+  }
+  if (str != NULL) {
+    text->str = g_strdup (str);
+  } else {
+    text->str = NULL;
+  }
+}
+
+/**
+ * gda_text_take_string:
+ * @text: a #GdaText object
+ * @str: a string to take ownership on
+ *
+ * Takes ownership on a given string, so you don't need to free it.
+ */
+void
+gda_text_take_string (GdaText *text, gchar *str) {
+  g_return_if_fail (text);
+  if (text->str != NULL) {
+    g_free (text->str);
+  }
+  text->str = NULL;
+}
+static void
+string_to_text (const GValue *src, GValue *dest)
+{
+	GdaText *t;
+
+	g_return_if_fail (G_VALUE_HOLDS_STRING (src) && GDA_VALUE_HOLDS_TEXT (dest));
+
+	t = gda_text_new ();
+	if (t->str) {
+		g_free (t->str);
+	}
+	gda_text_set_string (t, g_value_get_string (src));
+	g_value_take_boxed (dest, t);
+}
+
+static void
+text_to_string (const GValue *src, GValue *dest)
+{
+	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) && GDA_VALUE_HOLDS_TEXT (src));
+
+	GdaText *text;
+
+	text = (GdaText*) g_value_get_boxed (src);
+	if (text != NULL) {
+		g_value_set_string (dest, gda_text_get_string (text));
+	} else {
+		g_value_set_string (dest, NULL);
+	}
+}
+
+static GdaText*
+gda_text_copy (GdaText *boxed)
+{
+	GdaText *t = gda_text_new ();
+	t->str = g_strdup (boxed->str);
+	return t;
+}
+
+static void
+register_transformation_func (GType type) {
+	g_value_register_transform_func (G_TYPE_STRING,
+	                                 type,
+	                                 string_to_text);
+	g_value_register_transform_func (type,
+	                                 G_TYPE_STRING,
+	                                 text_to_string);
+}
+
+G_DEFINE_BOXED_TYPE_WITH_CODE(GdaText, gda_text, gda_text_copy, gda_text_free,
+                               register_transformation_func(g_define_type_id))
 
 // GdaBinary
 
@@ -2703,6 +2828,14 @@ gda_value_stringify (const GValue *value)
     ts = (GDateTime*) g_value_get_boxed (value);
     return g_date_time_format (ts, "%FT%H:%M:%S%:::z");
   }
+  else if (g_type_is_a (type, GDA_TYPE_NULL)) {
+    return g_strdup ("NULL");
+  }
+  else if (g_type_is_a (type, GDA_TYPE_TEXT)) {
+    GdaText *text;
+    text = (GdaText*) g_value_get_boxed (value);
+    return g_strdup (gda_text_get_string (text));
+  }
 	else if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
 		GValue *string;
 		gchar *str;
@@ -2826,7 +2959,19 @@ gda_value_differ (const GValue *value1, const GValue *value2)
 		str1 = g_value_get_string (value1);
 		str2 = g_value_get_string (value2);
 		if (str1 && str2)
-			return strcmp (str1, str2);
+			return g_strcmp0 (str1, str2);
+		return 1;
+	}
+
+	else if (type == GDA_TYPE_TEXT)	{
+		GdaText *t1, *t2;
+		const gchar *str1, *str2;
+		t1 = g_value_get_boxed (value1);
+		t2 = g_value_get_boxed (value2);
+		str1 = gda_text_get_string (t1);
+		str2 = gda_text_get_string (t2);
+		if (str1 && str2)
+			return g_strcmp0 (str1, str2);
 		return 1;
 	}
 
@@ -3092,6 +3237,29 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 		const gchar *str1, *str2;
 		str1 = g_value_get_string (value1);
 		str2 = g_value_get_string (value2);
+		if (str1 && str2)
+			retval = g_strcmp0 (str1, str2);
+		else {
+			if (str1)
+				return 1;
+			else {
+				if (str2)
+					return -1;
+				else
+					return 0;
+			}
+		}
+
+		return retval;
+	}
+
+	else if (type == GDA_TYPE_TEXT)	{
+		GdaText *t1, *t2;
+		t1 = g_value_get_boxed (value1);
+		t2 = g_value_get_boxed (value2);
+		const gchar *str1, *str2;
+		str1 = gda_text_get_string (t1);
+		str2 = gda_text_get_string (t2);
 		if (str1 && str2)
 			retval = g_strcmp0 (str1, str2);
 		else {

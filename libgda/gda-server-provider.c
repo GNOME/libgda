@@ -51,6 +51,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/handlers/gda-handler-boolean.h>
 #include <libgda/handlers/gda-handler-string.h>
+#include <libgda/handlers/gda-handler-text.h>
 #include <libgda/handlers/gda-handler-type.h>
 #include <libgda/handlers/gda-handler-numerical.h>
 #include "providers-support/gda-data-select-priv.h"
@@ -4091,6 +4092,14 @@ gda_server_provider_handler_use_default (GdaServerProvider *provider, GType type
 		if (!dh) {
 			dh = gda_handler_string_new ();
 			gda_server_provider_handler_declare (provider, dh, NULL, G_TYPE_STRING, NULL);
+			g_object_unref (dh);
+		}
+	}
+	else if (type == GDA_TYPE_TEXT) {
+		dh = gda_server_provider_handler_find (provider, NULL, type, NULL);
+		if (!dh) {
+			dh = gda_handler_text_new ();
+			gda_server_provider_handler_declare (provider, dh, NULL, GDA_TYPE_TEXT, NULL);
 			g_object_unref (dh);
 		}
 	}

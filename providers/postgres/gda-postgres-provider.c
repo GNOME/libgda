@@ -1498,6 +1498,8 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
                 return "int2";
         if (type == G_TYPE_STRING)
                 return "varchar";
+        if (type == GDA_TYPE_TEXT)
+                return "text";
         if (type == GDA_TYPE_TIME)
                 return "time";
         if (type == G_TYPE_DATE_TIME)

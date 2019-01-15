@@ -1,9 +1,12 @@
 libgda 5.91.0
+ - Added support for PostgreSQL version up to 11.0
+ - Added new GdaText type for large texts types support
+ - Added new GdaHandlerText type for large texts types handler support
+ - GdaHandler now supports value transformation, if possible, before set it
  - Ported almost all public API to use g_autoptr() and remove public private struct
  - Fixed segfaults
  - Fixed meta data generation engine
  - Fixed PostgresSQL provider meta data generation integration
- - Added support for PostgreSQL version up to 11.0
  - Fixed open connections to SQLite, PostgreSQL and MySQL providers
  - Blacklisted providers: FireBird, Oracle, Java ODBC, MS Access, BDB, LDAP, MySQL
  - Fixed warnings

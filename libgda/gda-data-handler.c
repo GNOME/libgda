@@ -27,6 +27,7 @@
 #include "handlers/gda-handler-boolean.h"
 #include "handlers/gda-handler-numerical.h"
 #include "handlers/gda-handler-string.h"
+#include "handlers/gda-handler-text.h"
 #include "handlers/gda-handler-time.h"
 #include "handlers/gda-handler-type.h"
 
@@ -291,6 +292,7 @@ gda_data_handler_get_default (GType for_type)
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
+                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TEXT, gda_handler_text_new ());
                 g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_DATE_TIME, gda_handler_time_new ());
                 g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());

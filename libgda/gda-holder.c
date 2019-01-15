@@ -947,6 +947,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	const GValue *current_val;
 	gboolean newnull;
 	gboolean was_valid;
+	GValue *new_value = NULL;
 #define DEBUG_HOLDER
 #undef DEBUG_HOLDER
 
@@ -961,17 +962,27 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		g_warning (_("Can't use this method to set value because there is already a static value"));
 		return FALSE;
 	}
-		
+	// If value's type is compatible to current holder's value's type transform it
+	if (value && priv->g_type != G_VALUE_TYPE (value)
+	   && g_value_type_transformable (G_VALUE_TYPE (value), priv->g_type))
+	{
+		new_value = gda_value_new (priv->g_type);
+		g_value_transform (value, new_value);
+		if (!do_copy && value)
+			gda_value_free (value);
+	} else {
+		new_value = value;
+	}
 	/* holder will be changed? */
-	newnull = !value || GDA_VALUE_HOLDS_NULL (value);
+	newnull = !new_value || GDA_VALUE_HOLDS_NULL (new_value);
 	current_val = gda_holder_get_value (holder);
-	if (current_val == value)
+	if (current_val == new_value)
 		changed = FALSE;
 	else if ((!current_val || GDA_VALUE_HOLDS_NULL ((GValue *)current_val)) && newnull)
 		changed = FALSE;
-	else if (value && current_val &&
-		 (G_VALUE_TYPE (value) == G_VALUE_TYPE ((GValue *)current_val)))
-		changed = gda_value_differ (value, (GValue *)current_val);
+	else if (new_value && current_val &&
+		 (G_VALUE_TYPE (new_value) == G_VALUE_TYPE ((GValue *)current_val)))
+		changed = gda_value_differ (new_value, (GValue *)current_val);
 		
 	/* holder's validity */
 	newvalid = TRUE;
@@ -982,12 +993,12 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		newvalid = FALSE;
 		changed = TRUE;
 	}
-	else if (!newnull && (G_VALUE_TYPE (value) != priv->g_type)) {
+	else if (!newnull && (G_VALUE_TYPE (new_value) != priv->g_type)) {
 		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_TYPE_ERROR,
 			     _("(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"),
 			     priv->id,
 			     gda_g_type_to_string (priv->g_type),
-			     gda_g_type_to_string (G_VALUE_TYPE (value)));
+			     gda_g_type_to_string (G_VALUE_TYPE (new_value)));
 		newvalid = FALSE;
 		changed = TRUE;
 	}
@@ -999,16 +1010,16 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	g_print ("Holder to change %p (%s): value %s --> %s \t(type %d -> %d) VALID: %d->%d CHANGED: %d\n", 
 		 holder, priv->id,
 		 gda_value_stringify ((GValue *)current_val),
-		 gda_value_stringify ((value)),
+		 gda_value_stringify ((new_value)),
 		 current_val ? G_VALUE_TYPE ((GValue *)current_val) : 0,
-		 value ? G_VALUE_TYPE (value) : 0, 
+		 new_value ? G_VALUE_TYPE (new_value) : 0,
 		 was_valid, newvalid, changed);
 #endif
 
 	/* end of procedure if the value has not been changed, after calculating the holder's validity */
 	if (!changed) {
-		if (!do_copy && value)
-			gda_value_free (value);
+		if (!do_copy && new_value)
+			gda_value_free (new_value);
 		priv->invalid_forced = FALSE;
 		if (priv->invalid_error) {
 			g_error_free (priv->invalid_error);
@@ -1022,7 +1033,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	/* check if we are allowed to change value */
 	if (priv->validate_changes) {
 		GError *lerror = NULL;
-		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, value, &lerror);
+		g_signal_emit (holder, gda_holder_signals[VALIDATE_CHANGE], 0, new_value, &lerror);
 		if (lerror) {
 			/* change refused by signal callback */
 #ifdef DEBUG_HOLDER
@@ -1031,7 +1042,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 #endif
 			g_propagate_error (error, lerror);
 			if (!do_copy) 
-				gda_value_free (value);
+				gda_value_free (new_value);
 			gda_holder_unlock ((GdaLockable*) holder);
 			return FALSE;
 		}
@@ -1053,8 +1064,8 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 		if ((G_VALUE_TYPE (priv->default_value) == GDA_TYPE_NULL) && newnull)
 			priv->default_forced = TRUE;
 		else if ((G_VALUE_TYPE (priv->default_value) == priv->g_type) &&
-			 value && (G_VALUE_TYPE (value) == priv->g_type))
-			priv->default_forced = !gda_value_compare (priv->default_value, value);
+			 new_value && (G_VALUE_TYPE (new_value) == priv->g_type))
+			priv->default_forced = !gda_value_compare (priv->default_value, new_value);
 	}
 	GValue att_value = {0};
 	g_value_init (&att_value, G_TYPE_BOOLEAN);
@@ -1068,7 +1079,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			 holder, priv->full_bind, priv->full_bind);
 #endif
 		gda_holder_unlock ((GdaLockable*) holder);
-		return real_gda_holder_set_value (priv->full_bind, value, do_copy, error);
+		return real_gda_holder_set_value (priv->full_bind, new_value, do_copy, error);
 	}
 	else {
 		if (priv->value) {
@@ -1076,15 +1087,15 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			priv->value = NULL;
 		}
 
-		if (value) {
+		if (new_value) {
 			if (newvalid) {
 				if (do_copy)
-					priv->value = gda_value_copy (value);
+					priv->value = gda_value_copy (new_value);
 				else
-					priv->value = value;
+					priv->value = new_value;
 			}
 			else if (!do_copy) 
-				gda_value_free (value);
+				gda_value_free (new_value);
 		}
 
 		gda_holder_unlock ((GdaLockable*) holder);

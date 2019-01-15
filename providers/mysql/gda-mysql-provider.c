@@ -1340,7 +1340,7 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 		return "double";
 	if (type == GDA_TYPE_GEOMETRIC_POINT)
 		return "point";
-	if (type == G_TYPE_OBJECT)
+	if (type == GDA_TYPE_TEXT)
 		return "text";
 	if (type == G_TYPE_INT)
 		return "int";
@@ -2616,8 +2616,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									     G_VALUE_TYPE (value));
 			if (data_handler == NULL) {
 				/* there is an error here */
-				str = g_strdup_printf(_("Unhandled data type '%s', please report this bug to "
-							"http://gitlab.gnome.org/GNOME/libgda/issues"),
+				str = g_strdup_printf(_("Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/GNOME/libgda/issues"),
 						      gda_g_type_to_string (G_VALUE_TYPE (value)));
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event, str);

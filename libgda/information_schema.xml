@@ -24,7 +24,7 @@
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint64" replace_with="int"/>
     </provider>
     <provider name="MySQL">
-      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar (30)"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar(35)"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
       <ignore context="/FKEY_S"/>
       <ignore context="/FIELDS_A/@COLUMN_PKEY"/>
@@ -59,7 +59,7 @@
     <column name="short_type_name" descr="Short name of the data type"/>
     <column name="full_type_name" pkey="TRUE" descr="Full name of the data type"/>
     <column name="gtype" nullok="TRUE"/>
-    <column name="comments" nullok="TRUE"/>
+    <column name="comments" type="text" nullok="TRUE"/>
     <column name="synonyms" nullok="TRUE"/>
     <column name="internal" type="boolean" descr="Tells if the data type is reserved for the database implementation and should not be used in applications"/>
     <unique>
@@ -72,7 +72,7 @@
     <column name="udt_schema" pkey="TRUE" descr="Name of the schema that contains the data type" ident="TRUE"/>
     <column name="udt_name" pkey="TRUE" descr="Name of the data type" ident="TRUE"/>
     <column name="udt_gtype" nullok="TRUE" descr="GType associated to the data type"/>
-    <column name="udt_comments" nullok="TRUE"/>
+    <column name="udt_comments" type="text" nullok="TRUE"/>
     <column name="udt_short_name" ident="TRUE"/>
     <column name="udt_full_name" ident="TRUE"/>
     <column name="udt_internal" type="boolean" descr="Tells if the data type is reserved for the database implementation and should not be used in applications"/>
@@ -163,7 +163,7 @@
     <column name="numeric_precision" type="gint" nullok="TRUE"/>
     <column name="numeric_scale" type="gint" nullok="TRUE"/>
     <column name="domain_default" nullok="TRUE"/>
-    <column name="domain_comments" nullok="TRUE"/>
+    <column name="domain_comments" type="text" nullok="TRUE"/>
     <column name="domain_short_name" ident="TRUE"/>
     <column name="domain_full_name" ident="TRUE"/>
     <column name="domain_internal" type="boolean"/>
@@ -191,7 +191,7 @@
     <column name="table_name" pkey="TRUE" descr="Name of the table" ident="TRUE"/>
     <column name="table_type" descr="Type of table: BASE TABLE, VIEW, LOCAL TEMPORARY, SYSTEM TABLE, GLOBAL TEMPORARY, ALIAS or SYNONYM"/>
     <column name="is_insertable_into" type="boolean" nullok="TRUE" descr="Tells if the table's contents can be modified"/>
-    <column name="table_comments" nullok="TRUE"/>
+    <column name="table_comments" type="text" nullok="TRUE"/>
     <column name="table_short_name" ident="TRUE"/>
     <column name="table_full_name" ident="TRUE"/>
     <column name="table_owner" nullok="TRUE"/>
@@ -222,7 +222,7 @@
     <column name="collation_catalog" pkey="TRUE" ident="TRUE"/>
     <column name="collation_schema" pkey="TRUE" ident="TRUE"/>
     <column name="collation_name" pkey="TRUE" ident="TRUE"/>
-    <column name="collation_comments" nullok="TRUE"/>
+    <column name="collation_comments" type="text" nullok="TRUE"/>
     <column name="collation_short_name" ident="TRUE"/>
     <column name="collation_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
@@ -241,7 +241,7 @@
     <column name="default_collate_catalog" nullok="TRUE"/>
     <column name="default_collate_schema" nullok="TRUE" ident="TRUE"/>
     <column name="default_collate_name" nullok="TRUE" ident="TRUE"/>
-    <column name="character_set_comments" nullok="TRUE"/>
+    <column name="character_set_comments" type="text" nullok="TRUE"/>
     <column name="character_set_short_name" ident="TRUE"/>
     <column name="character_set_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
@@ -277,7 +277,7 @@
     <column name="is_deterministic" type="boolean" nullok="TRUE" descr="Tells if the routine returns the same results given the same arguments forever"/>
     <column name="sql_data_access" nullok="TRUE" descr="Whether the routine contains SQL and whether it reads or modifies data (NONE, CONTAINS, READS, MODIFIES)"/>
     <column name="is_null_call" type="boolean" nullok="TRUE" descr="Tells if the routine will be called if any one of its arguments is NULL"/>
-    <column name="routine_comments" nullok="TRUE"/>
+    <column name="routine_comments" type="text" nullok="TRUE"/>
     <column name="routine_short_name" ident="TRUE"/>
     <column name="routine_full_name" ident="TRUE"/>
     <column name="routine_owner" nullok="TRUE"/>
@@ -302,7 +302,7 @@
     <column name="action_statement" nullok="TRUE" descr="Statement that is executed by the trigger"/>
     <column name="action_orientation" descr="Identifies whether the trigger fires once for each processed row or once for each statement (ROW or STATEMENT)"/>
     <column name="condition_timing" descr="Time at which the trigger fires (BEFORE or AFTER)"/>
-    <column name="trigger_comments" nullok="TRUE"/>
+    <column name="trigger_comments" type="text" nullok="TRUE"/>
     <column name="trigger_short_name" ident="TRUE"/>
     <column name="trigger_full_name" ident="TRUE"/>
     <fkey ref_table="_schemata">
@@ -343,7 +343,7 @@
     <column name="collation_name" nullok="TRUE" ident="TRUE"/>
     <column name="extra" nullok="TRUE" descr="CSV string with: AUTO_INCREMENT"/> <!-- set the gda-enums.h file -->
     <column name="is_updatable" type="boolean" nullok="TRUE"/>
-    <column name="column_comments" nullok="TRUE"/>
+    <column name="column_comments" type="text" nullok="TRUE"/>
     <fkey ref_table="_tables">
       <part column="table_catalog"/>
       <part column="table_schema"/>
@@ -595,7 +595,7 @@
     <column name="index_type" nullok="TRUE" descr="Database specific type of index such as BTREE, ..."/>
     <column name="extra" nullok="TRUE" descr="CSV string with: ASCENDING, ..."/>
     <column name="index_owner" nullok="TRUE"/>
-    <column name="index_comments" nullok="TRUE"/>
+    <column name="index_comments" type="text" nullok="TRUE"/>
     <fkey ref_table="_tables">
       <part column="table_catalog"/>
       <part column="table_schema"/>

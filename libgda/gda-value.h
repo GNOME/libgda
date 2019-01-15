@@ -48,7 +48,7 @@ G_BEGIN_DECLS
 #define	GDA_TYPE_SHORT (gda_short_get_type()) 
 #define	GDA_TYPE_USHORT (gda_ushort_get_type())
 #define GDA_TYPE_TIME (gda_time_get_type())
-
+#define GDA_TYPE_TEXT (gda_text_get_type())
 
 /* Definition of the GDA_VALUE_HOLDS macros */
 #define GDA_VALUE_HOLDS_NULL(value)            G_VALUE_HOLDS(value, GDA_TYPE_NULL)
@@ -58,7 +58,18 @@ G_BEGIN_DECLS
 #define GDA_VALUE_HOLDS_SHORT(value)           G_VALUE_HOLDS(value, GDA_TYPE_SHORT)
 #define GDA_VALUE_HOLDS_USHORT(value)          G_VALUE_HOLDS(value, GDA_TYPE_USHORT)
 #define GDA_VALUE_HOLDS_TIME(value)            G_VALUE_HOLDS(value, GDA_TYPE_TIME)
+#define GDA_VALUE_HOLDS_TEXT(value)            G_VALUE_HOLDS(value, GDA_TYPE_TEXT)
 
+/* GdaText */
+
+typedef struct _GdaText GdaText;
+
+GType                             gda_text_get_type (void) G_GNUC_CONST;
+GdaText                          *gda_text_new ();
+void                              gda_text_free (GdaText *text);
+const gchar                      *gda_text_get_string (GdaText *text);
+void                              gda_text_set_string (GdaText *text, const gchar *str);
+void                              gda_text_take_string (GdaText *text, gchar *str);
 
 /* GdaNumeric */
 typedef struct _GdaNumeric GdaNumeric;

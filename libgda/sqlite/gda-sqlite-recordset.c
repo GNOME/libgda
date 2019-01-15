@@ -484,6 +484,12 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else if (type == G_TYPE_STRING)
 					g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
 												  real_col));
+				else if (type == GDA_TYPE_TEXT) {
+					GdaText *text = gda_text_new ();
+					gda_text_set_string (text, (const gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
+												  real_col));
+					g_value_take_boxed (value, text);
+				}
 				else if (type == GDA_TYPE_BINARY) {
 					GdaBinary *bin;
 					

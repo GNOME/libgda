@@ -93,7 +93,7 @@ gda_g_type_to_string (GType type)
 		return "date";			
 	else if (type == GDA_TYPE_TIME)
 		return "time";
-	else if (g_type_is_a (type, G_TYPE_DATE_TIME))
+	else if (type == G_TYPE_DATE_TIME)
 		return "timestamp";
 	else if (type == G_TYPE_BOOLEAN)
 		return "boolean";
@@ -101,6 +101,8 @@ gda_g_type_to_string (GType type)
 		return "blob";
 	else if (type == GDA_TYPE_BINARY)
 		return "binary";
+	else if (type == GDA_TYPE_TEXT)
+		return "text";
   else
 		return g_type_name (type);
 }
@@ -148,6 +150,8 @@ gda_g_type_from_string (const gchar *str)
 			type = G_TYPE_UINT;
 		else if (!g_ascii_strcasecmp (str, "string"))
 			type = G_TYPE_STRING;
+		else if (!g_ascii_strcasecmp (str, "text"))
+			type = GDA_TYPE_TEXT;
 		else if (!g_ascii_strcasecmp (str, "date"))
 			type = G_TYPE_DATE;
 		else if (!g_ascii_strcasecmp (str, "time"))

@@ -20,7 +20,7 @@
  * Copyright (C) 2008 Johannes Schmid <jschmid@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011, 2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011, 2018-2019 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  * Copyright (C) 2014 Anders Jonsson <anders.jonsson@norsjovallen.se>
  *
@@ -4410,19 +4410,27 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 			 *  -0- @specific_catalog, @specific_schema, @specific_name
 			 *  -1- @specific_catalog, @specific_schema
 			 */
-			i = check_parameters (context, error, 2,
-					      &catalog, G_TYPE_STRING,
-					      &schema, G_TYPE_STRING,
-					      &name, G_TYPE_STRING, NULL,
-					      "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL,
-					      "specific_catalog", &catalog, "specific_schema", &schema, NULL);
-			if (i < 0)
-				return FALSE;
-			
-			ASSERT_TABLE_NAME (tname, "routines");
-			retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
-								 GDA_SERVER_META_ROUTINES, catalog, schema, name, error);
-			WARN_META_UPDATE_FAILURE (retval, "routines");
+			if (gda_meta_context_get_n_columns (context) == 0) {
+				ASSERT_TABLE_NAME (tname, "routines");
+				retval = _gda_server_provider_meta_0arg (provider, cnc, store, context,
+									 GDA_SERVER_META__ROUTINES, error);
+				WARN_META_UPDATE_FAILURE (retval, "routines");
+			} else {
+				i = check_parameters (context, error, 2,
+							    &catalog, G_TYPE_STRING,
+							    &schema, G_TYPE_STRING,
+							    &name, G_TYPE_STRING, NULL,
+							    "specific_catalog", &catalog, "specific_schema", &schema, "specific_name", &name, NULL,
+							    "specific_catalog", &catalog, "specific_schema", &schema, NULL);
+				if (i < 0)
+					return FALSE;
+
+				ASSERT_TABLE_NAME (tname, "routines");
+				retval = _gda_server_provider_meta_3arg (provider, cnc, store, context,
+									 GDA_SERVER_META_ROUTINES, catalog, schema, name, error);
+				WARN_META_UPDATE_FAILURE (retval, "routines");
+			}
+
 			return retval;
 		}
 		else {

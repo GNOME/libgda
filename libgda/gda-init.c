@@ -167,6 +167,8 @@ gda_init (void)
 	g_assert (type);
 	type = GDA_TYPE_TIME;
 	g_assert (type);
+	type = GDA_TYPE_TEXT;
+	g_assert (type);
 	type = G_TYPE_DATE;
 	g_assert (type);
 	type = G_TYPE_DATE_TIME;

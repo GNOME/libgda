@@ -12,6 +12,7 @@ libgda_handlers_headers = \
 	gda-handler-numerical.h \
 	gda-handler-string.h \
 	gda-handler-time.h \
+	gda-handler-text.h \
 	gda-handler-type.h
 
 libgda_handlersincludedir=$(includedir)/libgda-$(GDA_ABI_MAJOR_VERSION).$(GDA_ABI_MINOR_VERSION)/libgda/handlers
@@ -23,5 +24,6 @@ libgda_handlers_6_0_la_SOURCES = \
 	gda-handler-boolean.c \
 	gda-handler-numerical.c \
 	gda-handler-string.c \
+	gda-handler-text.c \
 	gda-handler-time.c \
 	gda-handler-type.c

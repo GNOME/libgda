@@ -2153,6 +2153,7 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 	if ((type == GDA_TYPE_GEOMETRIC_POINT) ||
 	    (type == G_TYPE_OBJECT) ||
 	    (type == G_TYPE_STRING) ||
+	    (type == GDA_TYPE_TEXT) ||
 	    (type == G_TYPE_INVALID))
 		return "string";
 
@@ -3574,6 +3575,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else if (G_VALUE_TYPE (value) == G_TYPE_STRING)
 			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i,
 							  g_value_get_string (value), -1, SQLITE_TRANSIENT);
+		else if (G_VALUE_TYPE (value) == GDA_TYPE_TEXT) {
+			GdaText *text = (GdaText*) g_value_get_boxed (value);
+			const gchar *tstr = gda_text_get_string (text);
+			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i,
+							  tstr, -1, SQLITE_TRANSIENT);
+    }
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT)
 			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_int (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_LONG)
