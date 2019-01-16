@@ -53,10 +53,12 @@ jsonglib_dep = dependency('json-glib-1.0',required : false)
 postgres_dep = dependency ('libpq', required: false)
 mysql_dep = dependency ('mysqlclient', required: false)
 mysql_args = []
-if mysql_dep.version ().version_compare ('>8.0.1')
+if mysql_dep.found ()
+if mysql_dep.version ().version_compare ('>21.0.0')
 mysql_args += [
 	'-DMYSQL8'
 	]
+endif
 endif
 
 # Platform data
