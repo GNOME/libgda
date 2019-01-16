@@ -69,9 +69,9 @@ appicons_DATA= \
 	gda-control-center.png
 
 @INTLTOOL_XML_RULE@
-appdatadir = $(datadir)/appdata
-appdata_DATA = $(appdata_in_files:.xml.in=.xml)
-appdata_in_files = gda-control-center-6.0.appdata.xml.in
+metainfodir = $(datadir)/metainfo
+metainfo_DATA = $(metainfo_in_files:.xml.in=.xml)
+metainfo_in_files = gda-control-center-6.0.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir=$(datadir)/applications
@@ -82,12 +82,12 @@ EXTRA_DIST = \
 	$(RESOURCES) \
 	control-center-res.rc \
 	gda-control-center.ico \
-	$(appdata_in_files) \
+	$(metainfo_in_files) \
 	$(Desktop_in_files)
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
-	$(appdata_DATA)
+	$(metainfo_DATA)
 
 CLEANFILES = \
 	control-center.gresources.c

@@ -88,9 +88,9 @@ appicons_DATA= \
 	data/256x256/gda-browser-6.0.png
 
 @INTLTOOL_XML_RULE@
-appdatadir = $(datadir)/appdata
-appdata_DATA = $(appdata_in_files:.xml.in=.xml)
-appdata_in_files = gda-browser-6.0.appdata.xml.in
+metainfodir = $(datadir)/metainfo
+metainfo_DATA = $(metainfo_in_files:.xml.in=.xml)
+metainfo_in_files = gda-browser-6.0.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir=$(datadir)/applications
@@ -100,11 +100,11 @@ desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 EXTRA_DIST = \
 	browser-marshal.list \
 	$(Desktop_in_files) \
-	$(appdata_in_files) \
+	$(metainfo_in_files) \
 	$(appicons_DATA)
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
 	gda-browser-6.0.desktop.in \
-	$(appdata_DATA)
+	$(metainfo_DATA)
 
