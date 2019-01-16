@@ -422,6 +422,8 @@ gda_text_free (GdaText *text)
  */
 const gchar*
 gda_text_get_string (GdaText *text) {
+	g_return_val_if_fail (text != NULL, NULL);
+
 	return (const gchar*) text->str;
 }
 

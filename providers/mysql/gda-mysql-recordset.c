@@ -944,8 +944,14 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				bvalue [length] = 0;
 			}
 			
-			if (type == G_TYPE_STRING)
+			if (type == G_TYPE_STRING) {
 				g_value_set_string (value, bvalue);
+			}
+			else if (type == GDA_TYPE_TEXT) {
+				GdaText *text = gda_text_new ();
+				gda_text_set_string (text, bvalue);
+				g_value_take_boxed (value, text);
+			}
 			else if (type == GDA_TYPE_BINARY) {
 				GdaBinary *bin;
 				bin = gda_binary_new ();

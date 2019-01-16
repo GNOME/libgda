@@ -50,4 +50,10 @@ typedef struct {
 	MYSQL             *mysql;	
 } MysqlConnectionData;
 
+// Makes back my_bool
+#ifdef MYSQL8
+
+typedef bool my_bool;
+
+#endif
 #endif

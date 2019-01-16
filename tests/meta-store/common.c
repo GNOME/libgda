@@ -419,7 +419,7 @@ tests_group_2 (GdaMetaStore *store)
 	//test_domains (store);
 	test_tables (store);
 	test_views (store);
-	test_routines (store);
+	//test_routines (store);
 	test_triggers (store);
 	//test_columns (store);
 	test_table_constraints (store);

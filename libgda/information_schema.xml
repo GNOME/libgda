@@ -270,8 +270,8 @@
     <column name="return_type" nullok="TRUE" descr="Data type returned by the routine (may be NULL if routine does not return any value)"/>
     <column name="returns_set" type="boolean" descr="True if routine returns a set (i.e., multiple values of the specified data type or if data type may vary)"/>
     <column name="nb_args" type="gint" descr="Number of arguments (-1 for variable number of arguments)"/>
-    <column name="routine_body" nullok="TRUE" descr="If the routine is an SQL function, then SQL, else EXTERNAL"/>
-    <column name="routine_definition" nullok="TRUE" descr="The source text of the routine"/>
+    <column name="routine_body" type="text" nullok="TRUE" descr="If the routine is an SQL function, then SQL, else EXTERNAL"/>
+    <column name="routine_definition" type="text" nullok="TRUE" descr="The source text of the routine"/>
     <column name="external_name" nullok="TRUE" descr="If the routine is an external function, then the external name (link symbol) of the function"/>
     <column name="external_language" nullok="TRUE" descr="The language the routine is written in"/>
     <column name="parameter_style" nullok="TRUE" descr="Parameter style (GENERAL, JAVA, SQL, GENERAL WITH NULLS)"/>
@@ -279,8 +279,8 @@
     <column name="sql_data_access" nullok="TRUE" descr="Whether the routine contains SQL and whether it reads or modifies data (NONE, CONTAINS, READS, MODIFIES)"/>
     <column name="is_null_call" type="boolean" nullok="TRUE" descr="Tells if the routine will be called if any one of its arguments is NULL"/>
     <column name="routine_comments" type="text" nullok="TRUE"/>
-    <column name="routine_short_name" ident="TRUE"/>
-    <column name="routine_full_name" ident="TRUE"/>
+    <column name="routine_short_name" type="text" ident="TRUE"/>
+    <column name="routine_full_name" type="text" ident="TRUE"/>
     <column name="routine_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="specific_catalog" ref_column="catalog_name"/>
@@ -300,7 +300,7 @@
     <column name="event_object_schema" pkey="TRUE" descr="Name of the schema that contains the table that the trigger is defined on" ident="TRUE"/>
     <column name="event_object_table" pkey="TRUE" descr="Name of the table that the trigger is defined on" ident="TRUE"/>
 
-    <column name="action_statement" nullok="TRUE" descr="Statement that is executed by the trigger"/>
+    <column name="action_statement" type="text" nullok="TRUE" descr="Statement that is executed by the trigger"/>
     <column name="action_orientation" descr="Identifies whether the trigger fires once for each processed row or once for each statement (ROW or STATEMENT)"/>
     <column name="condition_timing" descr="Time at which the trigger fires (BEFORE or AFTER)"/>
     <column name="trigger_comments" type="text" nullok="TRUE"/>
@@ -379,7 +379,7 @@
     <column name="table_schema" pkey="TRUE" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" ident="TRUE"/>
     <column name="constraint_type" descr="CHECK, FOREIGN KEY, PRIMARY KEY or UNIQUE"/>
-    <column name="check_clause" nullok="TRUE" descr="The check expression if the constraint is a check constraint, NULL otherwise"/>
+    <column name="check_clause" type="text" nullok="TRUE" descr="The check expression if the constraint is a check constraint, NULL otherwise"/>
     <column name="is_deferrable" type="boolean" nullok="TRUE"/>
     <column name="initially_deferred" type="boolean" nullok="TRUE"/>
     <fkey ref_table="_tables">

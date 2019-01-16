@@ -123,6 +123,12 @@ libgda_mysql_sources += mysql_resources
 
 libgda_mysql_sources += libgda_reusable_mysql_sources
 
+mysql_args += [
+	'-include',
+	meson.build_root() + '/config.h',
+	'-DCLASS_PREFIX="GdaMySQL"'
+	]
+
 libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 	libgda_mysql_sources,
 	dependencies: [
@@ -134,11 +140,7 @@ libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 		inc_sqliteh_dep,
 		inc_mysqlh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCLASS_PREFIX="GdaMySQL"'
-		],
+	c_args: mysql_args,
 	link_args: [
 		'-export-dynamic',
 		],
