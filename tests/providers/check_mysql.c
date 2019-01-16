@@ -29,6 +29,18 @@ int
 main (int argc, char **argv)
 {
 	int number_failed = 0;
+	gchar **env;
+	const gchar *cnc_string;
+	GError *error = NULL;
+
+	env = g_get_environ ();
+	cnc_string = g_environ_getenv (env, "MYSQL_CNC_PARAMS");
+	if (cnc_string == NULL) {
+		g_message ("No enviroment variable MYSQL_CNC_PARAMS was set. No PostgreSQL provider tests will be performed."
+		          "Set this environment variable in order to get access to your server. Example: export MYSQL_CNC_PARAMS=\"DB_NAME=$MYSQL_DB;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_PASSWORD\"");
+		g_strfreev (env);
+		return EXIT_SUCCESS;
+	}
 
 	gda_init ();
 
@@ -38,13 +50,19 @@ main (int argc, char **argv)
 		return EXIT_SUCCESS;
 	}
 	g_print ("Provider now tested: %s\n", pinfo->id);
-	
-	number_failed = prov_test_common_setup ();
 
+	cnc = gda_connection_open_from_string (pinfo->id, cnc_string, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
+	if (cnc == NULL) {
+		g_warning ("Error opening connection: %s",
+			         error && error->message ? error->message : "No error was set");
+		return EXIT_FAILURE;
+	}
 	if (cnc) {
 		number_failed += prov_test_common_check_timestamp ();
 		number_failed += prov_test_common_check_meta_full ();
 		number_failed += prov_test_common_check_meta_partial ();
+		number_failed += prov_test_common_check_meta_partial2 ();
+		number_failed += prov_test_common_check_meta_partial3 ();
 		number_failed += prov_test_common_clean ();
 	}
 

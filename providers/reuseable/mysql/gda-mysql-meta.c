@@ -329,6 +329,10 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 			 GdaMetaContext     *context,
 			 GError            **error)
 {
+#if MYSQL8
+	// No supported
+	return TRUE;
+#else
 	typedef struct
 	{
 		gchar  *tname;
@@ -426,7 +430,8 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 		g_object_unref (G_OBJECT(model));
 	}
 
-        return retval;
+	return retval;
+#endif
 }
 
 gboolean
