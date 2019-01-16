@@ -61,6 +61,7 @@ libgda/handlers/gda-handler-bin.c
 libgda/handlers/gda-handler-boolean.c
 libgda/handlers/gda-handler-numerical.c
 libgda/handlers/gda-handler-string.c
+libgda/handlers/gda-handler-text.c
 libgda/handlers/gda-handler-time.c
 libgda/handlers/gda-handler-type.c
 libgda/providers-support/gda-pstmt.c
