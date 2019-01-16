@@ -19,7 +19,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011 - 2019 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -3067,20 +3067,35 @@ gda_value_compare (const GValue *value1, const GValue *value2)
 
 	type = G_VALUE_TYPE (value1);
 
-	if (value1 == value2)
+	if (value1 == value2) {
 		return 0;
-
-	/* handle GDA_TYPE_NULL comparisons with other types */
+	}
 	else if (type == GDA_TYPE_NULL) {
+		/* handle GDA_TYPE_NULL comparisons with other types */
 		if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
 			return 0;
 		else
 			return -1;
 	}
-
-	else if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL)
+	else if (G_VALUE_TYPE (value2) == GDA_TYPE_NULL) {
 		return 1;
-
+	}
+	/* GdaText vs. string */
+	if (G_VALUE_TYPE (value1) == GDA_TYPE_TEXT && G_VALUE_TYPE (value2) == G_TYPE_STRING) {
+		GdaText *text1, *text2;
+		GValue *v2;
+		text1 = g_value_get_boxed (value1);
+		v2 = gda_value_new (GDA_TYPE_TEXT);
+		g_value_transform (value2, v2);
+		text2 = g_value_get_boxed (v2);
+		if (text2 == NULL) {
+			retval = -1;
+		} else {
+			retval = g_strcmp0 (gda_text_get_string (text1), gda_text_get_string (text2));
+		}
+		gda_value_free (v2);
+		return retval;
+	}
 	/* general case */
 	g_return_val_if_fail (G_VALUE_TYPE (value1) == G_VALUE_TYPE (value2), -1);
 
