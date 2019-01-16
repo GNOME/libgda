@@ -64,7 +64,7 @@
   <!-- other table options -->
   <parameters id="TABLE_OPTIONS_P" _name="Table's options">
     <parameter id="TABLE_ENGINE" _name="Engine" _descr="Table's engine (or type)" gdatype="gchararray" nullok="TRUE" source="engines:0">
-      <gda_value>MyISAM</gda_value>
+      <gda_value>InnoDB</gda_value>
     </parameter>
     <parameter id="TABLE_AUTOINC_VALUE" _name="Auto increment value" _descr="Counter for auto incremented fields is incremented by this value + 1 (DEFAULT: 0)" gdatype="gint" nullok="TRUE"/>
     <parameter id="TABLE_AVG_ROW_LENGTH" _name="Average row length" _descr="An approximation of the average row length for your table" gdatype="gint" nullok="TRUE"/>

@@ -24,7 +24,7 @@
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint64" replace_with="int"/>
     </provider>
     <provider name="MySQL">
-      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar(35)"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar(100)"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gboolean" replace_with="boolean"/>
       <ignore context="/FKEY_S"/>
