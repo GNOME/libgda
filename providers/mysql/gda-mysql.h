@@ -52,8 +52,11 @@ typedef struct {
 
 // Makes back my_bool
 #ifdef MYSQL8
+#ifndef __MY_BOOL__
+#define __MY_BOOL__
 
 typedef _Bool my_bool;
-
 #endif
+#endif
+
 #endif
