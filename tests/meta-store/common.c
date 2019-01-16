@@ -94,7 +94,7 @@ find_expected_change (const gchar *change_as_str)
 	GSList *el;
 	for (el = expected_changes; el; el = el->next) {
 		gchar *estr = (gchar *) el->data;
-		if (!strcmp (estr, change_as_str)) {
+		if (!g_strcmp0 (estr, change_as_str)) {
 			g_free (estr);
 			expected_changes = g_slist_delete_link (expected_changes, el);
 			return TRUE;
@@ -386,6 +386,36 @@ tests_group_1 (GdaMetaStore *store)
 	test_schemata_1 (store);
 	test_schemata_2 (store);
 	test_builtin_data_types (store);
+	//test_domains (store);
+	test_tables (store);
+	test_views (store);
+	test_routines (store);
+	test_triggers (store);
+	//test_columns (store);
+	test_table_constraints (store);
+	test_referential_constraints (store);
+	/*test_key_column_usage (store);*/
+	test_domain_constraints (store);
+	test_parameters (store);
+}
+
+
+/*
+ *
+ * Test groups
+ *
+ * Apply Group 2 for MySQL provider
+ *
+ */
+void
+tests_group_2 (GdaMetaStore *store)
+{
+	common_declare_meta_store (store);
+
+	test_information_schema_catalog_name (store);
+	test_schemata_1 (store);
+	test_schemata_2 (store);
+	//test_builtin_data_types (store);
 	//test_domains (store);
 	test_tables (store);
 	test_views (store);

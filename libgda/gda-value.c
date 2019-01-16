@@ -295,19 +295,6 @@ set_from_string (GValue *value, const gchar *as_string)
 /*
  * Register the NULL type in the GType system
  */
-static void
-string_to_null (const GValue *src, GValue *dest)
-{
-       g_return_if_fail (G_VALUE_HOLDS_STRING (src) && GDA_VALUE_HOLDS_NULL (dest));
-       /* Do nothing just a dummy function to register */
-}
-
-static void
-null_to_string (const GValue *src, GValue *dest)
-{
-       g_return_if_fail (G_VALUE_HOLDS_STRING (dest) && GDA_VALUE_HOLDS_NULL (src));
-       g_value_set_string (dest, "NULL");
-}
 
 static gpointer
 gda_null_copy (G_GNUC_UNUSED gpointer boxed)

@@ -4056,7 +4056,7 @@ local_meta_update (GdaServerProvider *provider, GdaConnection *cnc, GdaMetaConte
 		WARN_META_UPDATE_FAILURE (retval, "_btypes");
 		return retval;
 	}
-	
+	break;
 	case 'c': 
 		if ((tname[1] == 'o') && (tname[2] == 'l') && (tname[3] == 'u')) {
 			/* _columns,  params: 

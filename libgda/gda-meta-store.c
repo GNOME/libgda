@@ -3517,19 +3517,6 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 					if (! gda_holder_set_value (h, value, &lerror)) {
 						g_free (pid);
 						retval = FALSE;
-						g_message ("New Data: Column: '%s' : '%s' - ncol: %d - type: %s - Val: %s", gda_data_model_get_column_name (wrapped_data, j),
-											 gda_data_model_get_column_title (wrapped_data, j), j, g_type_name (G_VALUE_TYPE (value)),
-											 gda_value_stringify (value));
-						g_message ("Holder: '%s' type: %s", gda_holder_get_id (h), g_type_name (gda_holder_get_g_type (h)));
-						/* if (new_data != wrapped_data) { */
-						/* 	g_print ("NEW for table %s:\n", table_name); */
-						/* 	gda_data_model_dump (new_data, stdout); */
-
-						/* 	g_print ("wrapped as:\n"); */
-						/* 	gda_data_model_dump (wrapped_data, stdout); */
-						/* } else { */
-						/* 	g_message ("DATA NO WRAPPED"); */
-						/* } */
 						g_object_unref (wrapped_data);
 						g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_EXTRACT_SQL_ERROR,
 					     _("Internal error, while updating internal meta store table '%s': Parameter value type error: %s"),

@@ -367,7 +367,8 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 		{ "TINYTEXT", "GdaBinary", "A TEXT column with a maximum length of 255 (28 - 1) characters. The effective maximum length is less if the value contains multi-byte characters. Each TINYTEXT value is stored using a one-byte length prefix that indicates the number of bytes in the value.", "" },
 		{ "VARBINARY", "GdaBinary", "The VARBINARY type is similar to the VARCHAR type, but stores binary byte strings rather than non-binary character strings. M represents the maximum column length in bytes.", "" },
 		{ "VARCHAR", "gchararray", "A variable-length string. M represents the maximum column length in characters. In MySQL 5.0, the range of M is 0 to 255 before MySQL 5.0.3, and 0 to 65,535 in MySQL 5.0.3 and later. The effective maximum length of a VARCHAR in MySQL 5.0.3 and later is subject to the maximum row size (65,535 bytes, which is shared among all columns) and the character set used. For example, utf8 characters can require up to three bytes per character, so a VARCHAR column that uses the utf8 character set can be declared to be a maximum of 21,844 characters.", "" },
-		{ "YEAR DATA TYPE", "gint", "A year in two-digit or four-digit format. The default is four-digit format. In four-digit format, the allowable values are 1901 to 2155, and 0000. In two-digit format, the allowable values are 70 to 69, representing years from 1970 to 2069. MySQL displays YEAR values in YYYY format, but allows you to assign values to YEAR columns using either strings or numbers.", "" } 
+		{ "YEAR DATA TYPE", "gint", "A year in two-digit or four-digit format. The default is four-digit format. In four-digit format, the allowable values are 1901 to 2155, and 0000. In two-digit format, the allowable values are 70 to 69, representing years from 1970 to 2069. MySQL displays YEAR values in YYYY format, but allows you to assign values to YEAR columns using either strings or numbers.", "" },
+		{ "POINT", "GdaGeometricPoint", "A point with x and y coordinates", "" }
 	};
         GdaDataModel *model;
         gboolean retval = TRUE;
@@ -395,7 +396,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 			g_value_set_string (tmp_value = gda_value_new (G_TYPE_STRING), data_type->gtype);
 			values = g_list_append (values, tmp_value); 
 
-			g_value_set_string (tmp_value = gda_value_new (G_TYPE_STRING), data_type->comments);
+			g_value_set_string (tmp_value = gda_value_new (GDA_TYPE_TEXT), data_type->comments);
 			values = g_list_append (values, tmp_value); 
 
 			if (data_type->synonyms && *(data_type->synonyms))
@@ -404,7 +405,7 @@ _gda_mysql_meta__btypes (G_GNUC_UNUSED GdaServerProvider  *prov,
 				tmp_value = gda_value_new_null ();
 			values = g_list_append (values, tmp_value); 
 
-			g_value_set_boolean (tmp_value = gda_value_new (G_TYPE_BOOLEAN), FALSE);
+			g_value_set_int (tmp_value = gda_value_new (G_TYPE_INT), 0);
 			values = g_list_append (values, tmp_value); 
 
 			if (gda_data_model_append_values (model, values, NULL) < 0) {
@@ -1013,7 +1014,7 @@ map_mysql_type_to_gda (const GValue *value, const gchar *vlength)
 	else if (!strcmp (string, "smallint unsigned"))
 		newstring = "gushort";
 	else if (!strcmp (string, "text"))
-		newstring = "GdaBinary";
+		newstring = "GdaText";
 	else if (!strcmp (string, "tinyint"))
 		newstring = "gchar";
 	else if (!strcmp (string, "tinyint unsigned"))

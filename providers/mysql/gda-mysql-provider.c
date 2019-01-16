@@ -1327,13 +1327,13 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 	if (type == G_TYPE_INT64)
 		return "bigint";
 	if (type == G_TYPE_UINT64)
-		return "bigint unsigned";
+		return "bigint";
 	if (type == GDA_TYPE_BINARY)
 		return "varbinary";
 	if (type == GDA_TYPE_BLOB)
-		return "blob";
+		return "longblob";
 	if (type == G_TYPE_BOOLEAN)
-		return "bool";
+		return "tinyint";
 	if (type == G_TYPE_DATE)
 		return "date";
 	if (type == G_TYPE_DOUBLE)
@@ -1345,27 +1345,27 @@ gda_mysql_provider_get_default_dbms_type (GdaServerProvider  *provider,
 	if (type == G_TYPE_INT)
 		return "int";
 	if (type == GDA_TYPE_NUMERIC)
-		return "numeric";
+		return "decimal";
 	if (type == G_TYPE_FLOAT)
 		return "float";
 	if (type == GDA_TYPE_SHORT)
 		return "smallint";
 	if (type == GDA_TYPE_USHORT)
-		return "smallint unsigned";
+		return "smallint";
 	if (type == G_TYPE_STRING)
 		return "varchar";
 	if (type == GDA_TYPE_TIME)
 		return "time";
 	if (type == G_TYPE_DATE_TIME)
-		return "timestamp";
+		return "datetime";
 	if (type == G_TYPE_CHAR)
-		return "tinyint";
+		return "char(1)";
 	if (type == G_TYPE_UCHAR)
-		return "tinyint unsigned";
+		return "char(1)";
 	if (type == G_TYPE_ULONG)
-		return "bigint unsigned";
+		return "mediumtext";
 	if (type == G_TYPE_UINT)
-		return "int unsigned";
+		return "int";
 
 	if ((type == GDA_TYPE_NULL) ||
 	    (type == G_TYPE_GTYPE))

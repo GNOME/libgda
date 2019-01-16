@@ -26,6 +26,7 @@
     <provider name="MySQL">
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="string" replace_with="varchar(35)"/>
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gboolean" replace_with="boolean"/>
       <ignore context="/FKEY_S"/>
       <ignore context="/FIELDS_A/@COLUMN_PKEY"/>
     </provider>
@@ -193,7 +194,7 @@
     <column name="is_insertable_into" type="boolean" nullok="TRUE" descr="Tells if the table's contents can be modified"/>
     <column name="table_comments" type="text" nullok="TRUE"/>
     <column name="table_short_name" ident="TRUE"/>
-    <column name="table_full_name" ident="TRUE"/>
+    <column name="table_full_name" type="text" ident="TRUE"/>
     <column name="table_owner" nullok="TRUE"/>
     <fkey ref_table="_schemata">
       <part column="table_catalog" ref_column="catalog_name"/>
@@ -208,7 +209,7 @@
     <column name="table_catalog" pkey="TRUE" descr="Name of catalog that contains the view" ident="TRUE"/>
     <column name="table_schema" pkey="TRUE" descr="Name of schema that contains the view" ident="TRUE"/>
     <column name="table_name" pkey="TRUE" descr="Name of the view" ident="TRUE"/>
-    <column name="view_definition" nullok="TRUE" descr="View as SQL"/>
+    <column name="view_definition" type="text" nullok="TRUE" descr="View as SQL"/>
     <column name="check_option" nullok="TRUE" descr="CASCADE if the statement used to create the view included the WITH CHECK OPTION; otherwise, NONE"/>
     <column name="is_updatable" type="boolean" nullok="TRUE" descr="Tells if the view's contents can be modified"/>
     <fkey ref_table="_tables">

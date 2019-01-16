@@ -50,7 +50,7 @@ main(int argc, char ** argv)
 	g_print ("STORE: %p, version: %d\n", store, store ? gda_meta_store_get_version (store) : 0);
 
 	/* Tests */
-	tests_group_1 (store);
+	tests_group_2 (store);
 	g_object_unref (store);
 	
 	g_print ("Test Ok.\n");
