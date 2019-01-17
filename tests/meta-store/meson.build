@@ -92,7 +92,7 @@ tchkmstsmysql = executable('check_meta_store_mysql',
 	install: false
 	)
 test('MetaStoreMySQL', tchkmstsmysql,
-	timeout: 200,
+	timeout: 300,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()

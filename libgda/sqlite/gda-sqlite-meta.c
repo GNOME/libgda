@@ -767,10 +767,12 @@ fill_tables_views_model (GdaConnection *cnc,
         gint nrows, i;
         GdaStatement *stmt;
         GType col_types[] = {G_TYPE_STRING, G_TYPE_STRING, G_TYPE_NONE};
-        const gchar *schema_name;
+        const gchar *schema_name = TMP_DATABASE_NAME;
+        if (p_table_schema != NULL) {
+          schema_name = g_value_get_string (p_table_schema);
+        }
 
-        schema_name = g_value_get_string (p_table_schema);
-        if (!strcmp (schema_name, TMP_DATABASE_NAME))
+        if (!g_strcmp0 (schema_name, TMP_DATABASE_NAME))
                 return TRUE; /* nothing to do */
 
         str = g_strdup_printf (SELECT_TABLES_VIEWS, schema_name);
