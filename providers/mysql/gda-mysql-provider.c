@@ -811,41 +811,29 @@ gda_mysql_provider_create_operation (GdaServerProvider       *provider,
 				     G_GNUC_UNUSED GdaSet    *options,
 				     GError                 **error)
 {
-        gchar *file;
+        gchar *opname;
         GdaServerOperation *op;
         gchar *str;
-	gchar *dir;
 
-	if (cnc) {
-		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-	}
+  if (cnc) {
+    g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+    g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
+  }
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("mysql_specs_%s", file);
-        g_free (file);
-
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
-
-  if (!file)
-    file = g_strdup_printf ("/spec/mysql/%s.raw.xml", str);
+  opname = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+  str = g_strdup_printf ("/spec/mysql/mysql_specs_%s.raw.xml", opname);
+  g_free (opname);
 
   op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, 
                                            "op-type", type, 
-                                           "spec-resource", file, 
-                                           "connection",cnc,
-                                           "provider",provider,
+                                           "spec-resource", str,
+                                           "connection", cnc,
+                                           "provider", provider,
                                            NULL));
 
   g_free (str);
-  g_free (file);
 
-        return op;
+  return op;
 }
 
 /*
