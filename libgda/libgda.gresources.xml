@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/libgda">
+    <file compressed="true">information_schema.xml</file>
+    <file compressed="true">libgda-array.dtd</file>
+    <file compressed="true">libgda-db-catalog.dtd</file>
+    <file compressed="true">libgda-paramlist.dtd</file>
+    <file compressed="true">libgda-server-operation.dtd</file>
+  </gresource>
+</gresources>

@@ -1570,31 +1570,44 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	xmlNodePtr node;
 	GError *lerror = NULL;
 	GError **error = &lerror;
-	gchar *file;
+	GOutputStream *ostream;
+	GInputStream *istream;
+	GFile *res;
 	xmlDocPtr doc = NULL;
+	gssize size;
+	gchar *schema;
 	GdaMetaStorePrivate *priv;
 
 	/* load information schema's structure XML file */
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "information_schema.xml", NULL);
-	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		doc = xmlParseFile (file);
-	if (!doc) {
-		if (g_getenv ("GDA_TOP_SRC_DIR")) {
-			g_free (file);
-			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "information_schema.xml", NULL);
-			doc = xmlParseFile (file);
-		}
-		if (!doc) {
-			g_warning ("Missing or malformed file '%s', check your installation", file);
-			g_free (file);
-			return;
-		}
+	ostream = g_memory_output_stream_new_resizable ();
+	res = g_file_new_for_uri ("resource:///libgda/information_schema.xml");
+	istream = g_file_read (res, NULL, lerror);
+	if (istream == NULL) {
+		g_warning (_("Internal error: no information schema was found: %s"),
+							 lerror && lerror->message ? lerror->message : "No error message was set");
+		g_clear_error (lerror);
+		return;
 	}
+	g_clear_error (lerror);
+	size = g_output_stream_splice (ostream, istream, G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE, NULL, lerror);
+	if (size == -1) {
+		g_warning (_("Internal error: can't read information schema: %s"),
+							 lerror && lerror->message ? lerror->message : "No error message was set");
+		g_clear_error (lerror);
+		return;
+	}
+	g_clear_error (lerror);
+	schema = (gchar*) g_memory_output_stream_get_data (ostream);
+	doc = xmlReadDoc (schema, "", NULL, XML_PARSE_RECOVER);
+	g_object_unref (ostream);
+	g_object_unref (istream);
+	g_object_unref (res);
 
 	node = xmlDocGetRootElement (doc);
-	if (!node || strcmp ((gchar *) node->name, "schema"))
-		g_error ("Root node of file '%s' should be <schema>.", file);
-	g_free (file);
+	if (!node || strcmp ((gchar *) node->name, "schema")) {
+		g_warning ("Root node of current information schema should be <schema>.");
+		return;
+	}
 
 	/* walk through the xmlDoc */
 	if (store) {

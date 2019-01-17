@@ -218,12 +218,43 @@ libgda_source_all = files([
 	'gda-statement-priv.h',
 	])
 
+libgda_resourcesc = custom_target('libgda_resourcesc',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_source_dir(),
+		'--generate-source',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'libgda.gresources.xml',
+	output: 'libgda_resource.c',
+	install: false
+	)
+
+libgda_resourcesh = custom_target('libgda_resourcesh',
+	command: [compile_resources,
+		'--sourcedir='+meson.current_source_dir(),
+		'--generate-header',
+		'--target', '@OUTPUT@',
+		'--internal',
+		'@INPUT@'
+		],
+	input: 'libgda.gresources.xml',
+	output: 'libgda_resource.h',
+	install: false
+	)
+libgda_resources = [
+	libgda_resourcesc,
+	libgda_resourcesh
+	]
+
 libgda_source_all += [
 	libgda_sources,
 	libgda_headers_all,
 	gda_enums,
 	gda_marshalls,
-	libgda_source_csvh
+	libgda_source_csvh,
+	libgda_resources
 	]
 libgda_source_all += [
 	sqlitesources,
