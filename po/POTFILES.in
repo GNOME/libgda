@@ -7,7 +7,7 @@ control-center/gdaui-dsn-assistant.c
 control-center/gdaui-dsn-editor.c
 control-center/gdaui-login-dialog.c
 control-center/main.c
-[type: gettext/glade]control-center/menus.ui
+control-center/menus.ui
 control-center/provider-config.c
 libgda/gda-batch.c
 libgda/gda-config.c
@@ -347,4 +347,4 @@ tools/common/t-utils.c
 tools/common/t-virtual-connection.c
 tools/common/web-server.c
 tools/misc/gda-list-server-op.c
-[type: gettext/glade]tools/resources/menus.ui
+tools/resources/menus.ui

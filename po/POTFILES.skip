@@ -40,3 +40,4 @@ testing/html.c
 tests/raw-ddl-creator.c
 tools/browser/dummy-perspective/perspective-menus.ui
 tools/browser/gda-browser-6.0.desktop.in
+tools/resources/menus.ui
