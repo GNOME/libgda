@@ -105,7 +105,7 @@ custom_target('gda-browser-6.0.appdata',
 		input: 'gda-browser-6.0.appdata.xml.in',
 		output: 'gda-browser-6.0.appdata.xml',
 		install: true,
-		install_dir: join_paths(get_option('datadir'),'appdata')
+		install_dir: join_paths(get_option('datadir'),'metainfo')
 		)
 
 browser_deps += inc_browserdirh_dep
