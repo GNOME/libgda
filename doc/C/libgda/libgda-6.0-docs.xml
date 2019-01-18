@@ -1,30 +1,101 @@
-<?xml version="1.0"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
-               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
-[
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE book [
   <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
   <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
   %gtkdocentities;
-  <!ENTITY LIBGDA "libgda-6.0">
 ]>
-<book id="index">
-  <bookinfo>
-    <title>&package_name; Reference Manual</title>
+<book xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0"> 
+  <info>
+    <title>&LIBGDA; reference manual</title>
     <releaseinfo>
-      for &package_string;.
-      The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="https://gitlab.gnome.org/GNOME/libgda/pipelines">https://gitlab.gnome.org/GNOME/libgda/pipelines</ulink>,
-      from latest successful pipeline build.
+      for &LIBGDA; The latest version of this documentation can be found on-line at 
+      <ulink role="online-location" url="https://gitlab.gnome.org/GNOME/libgda/pipelines">Git repo</ulink>, 
+      from latest successful pipeline build. 
     </releaseinfo>
-    <xi:include href="author-list.xml"/>
-  </bookinfo>
-
+    <authorgroup>
+      <author>
+        <firstname>Michael</firstname>
+        <surname>Lausch</surname>
+        <affiliation>
+          <address><email>michael.lausch@1012surf.net</email></address>
+        </affiliation>
+      </author>
+      <author>
+        <firstname>Rodrigo</firstname>
+        <surname>Moya</surname>
+        <affiliation>
+          <address><email>rodrigo@gnome-db.org</email></address>
+        </affiliation>
+      </author>
+      <author role="clean up">
+        <firstname>Sean</firstname>
+        <surname>Allen</surname>
+        <affiliation>
+          <address><email>zeroone@worldonline.co.za</email></address>
+        </affiliation>
+        <contrib>GDP compliance, FDL, added mark-up, English and syntax</contrib>
+      </author>
+      <author>
+        <firstname>Xabier</firstname>
+        <surname>Rodriguez Calvar</surname>
+        <affiliation>
+          <orgname><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></orgname>
+          <address><email>xrcalvar@igalia.com</email></address>
+        </affiliation>
+        <contrib>How to begin and migration formulae</contrib>
+      </author>
+      <author>
+        <firstname>Jose</firstname>
+        <surname>Dapena Paz</surname>
+        <affiliation>
+          <orgname><ulink url="http://www.igalia.com">Igalia, S.L.</ulink></orgname>
+          <address><email>jdapena@igalia.com</email></address>
+        </affiliation>
+        <contrib>Some examples</contrib>
+      </author>
+      <author>
+        <firstname>Bas</firstname>
+        <surname>Driessen</surname>
+        <affiliation>
+          <orgname><ulink url="http://www.xobas.com">Xobas Software</ulink></orgname>
+          <address><email>bas.driessen@xobas.com</email></address>
+        </affiliation>
+        <contrib>libgda, gda-postgres, gda-mysql</contrib>
+      </author>
+      <author>
+        <firstname>Daniel</firstname>
+        <surname>Espinosa Ortiz</surname>
+        <affiliation>
+          <orgname></orgname>
+          <address><email>esodan@gmail.com</email></address>
+        </affiliation>
+        <contrib>libgda, Vala, GObject Introspection, Current maintainer</contrib>
+      </author>
+      <author>
+        <firstname>Pavlo</firstname>
+        <surname>Solntsev</surname>
+        <affiliation>
+          <address><email>p.sun.fun@gmail.com</email></address>
+        </affiliation>
+        <contrib>libgda</contrib>
+      </author>
+      <author>
+        <firstname>Vivien</firstname>
+        <surname>Malerba</surname>
+        <affiliation>
+          <address><email>malerba@gnome-db.org</email></address>
+        </affiliation>
+        <contrib>libgda, libgdaui</contrib>
+      </author>
+    </authorgroup>
+  </info>
   <part id="Getting Started">
     <title>Getting Started</title>
     <xi:include href="xml/libgda.xml"/>
     <xi:include href="installation.xml"/>
   </part>
-
   <part id="api">
     <title>API Reference</title>
 
@@ -146,12 +217,12 @@
 
       <xi:include href="xml/gda-config.xml"/>
       <xi:include href="xml/gda-connect.xml"/>
-      
+
       <xi:include href="xml/gda-worker.xml"/>
     </chapter>
   </part>
 
-  <chapter id="object-tree">
+ <chapter id="object-tree">
     <title>Object Hierarchy</title>
     <xi:include href="xml/tree_index.sgml"/>
   </chapter>

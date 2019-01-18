@@ -1,3 +1,5 @@
+subdir('xml')
+
 libgda_typesdoc = configure_file(
 		input: 'libgda.types.in',
 		output : 'libgda.types',
@@ -60,31 +62,50 @@ contentf = [
 	doc_builddate
 	]
 contentf += files([
-	'fdl-appendix.sgml'
+	'fdl-appendix.sgml',
+        'author-list.xml', 
+        'installation.xml'
 	])
 
-# ignore_bdb = []
-# if bdb_found
-# else
-# 	ignore_bdb += ['gda-data-model-bdb.h']
-# endif
+#ignore_bdb = []
+#if bdb_found
+#else
+	#ignore_bdb += ['gda-data-model-bdb.h']
+#endif
 
-# gnome_module.gtkdoc(project_package,
-# 	main_xml: project_package+'-docs.xml',
-# 	scan_args: [
-# 		'--deprecated-guards="GDA_DISABLE_DEPRECATED"',
-# 		'--rebuild-types',
-# 		'--ignore-headers',
-# 		'gda-marshal.h', 'gda-custom-marshal.h', 'gda-enum-types.h', 'sqlite3.h',
-# 		'csv.h', 'md5.h', 'jni-wrapper.h', 'gda-jdbc-recordset.h',
-# 		'gda-jdbc-blob-op.h', 'gda-jdbc-provider.h', 'gda-jdbc-pstmt.h',
-# 		'providers', 'tools control-center', 'tests', 'examples', 'plugins', 'tmp',
-# 		ignore_bdb
-# 		 ],
-# 	src_dir: join_paths(meson.source_root(),'libgda'),
-# 	mkdb_args: [
-# 		'--xml-mode',
-# 		'--output-format=xml',
-# 		'--name-space=gda'
-# 		],
-# 	)
+libgda_doc_dep = declare_dependency(link_with: [libgda])
+#glib_prefix = dependency('glib-2.0').get_pkgconfig_variable('prefix')
+glib_prefix = glib_dep.get_pkgconfig_variable('prefix')
+glib_docpath = join_paths(glib_prefix, 'share', 'gtk-doc', 'html')
+
+
+gnome_module.gtkdoc(
+        project_package,
+        content_files: contentf,
+        main_xml: project_package+'-docs.xml',
+        ignore_headers: [
+                'gda-data-model-bdb.h',
+                'dummy-object.h',
+                'sqlite3.h'
+        ],
+        scan_args: [
+                '--deprecated-guards="GDA_DISABLE_DEPRECATED"',
+                '--rebuild-types'
+        ],
+        gobject_typesfile: libgda_typesdoc,
+        src_dir: join_paths(meson.source_root(),'libgda'),
+        mkdb_args: [
+                '--xml-mode',
+                '--output-format=xml',
+                '--name-space=gda'
+        ],
+        fixxref_args: [
+                '--extra-dir=@0@'.format(join_paths(glib_docpath, 'glib')),
+                '--extra-dir=@0@'.format(join_paths(glib_docpath, 'gobject')),
+                '--extra-dir=@0@'.format(join_paths(glib_docpath, 'gio')),
+        ],
+        
+        html_assets: gda_html_images,
+        dependencies: [libgda_doc_dep, libgda_dep],
+        install: true
+    )
