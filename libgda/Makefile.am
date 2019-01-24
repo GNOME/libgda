@@ -121,7 +121,8 @@ gda_headers = \
 	gda-db-catalog.h
 
 gda_built_sources= \
-	$(builddir)/libgda.h
+	$(builddir)/libgda.h \
+	$(builddir)/libgda.gresources.c
 
 gda_sources= \
 	gda-batch.c \
@@ -310,6 +311,10 @@ DTD_FILES = libgda-array.dtd \
 	    libgda-server-operation.dtd \
 	    libgda-db-catalog.dtd
 
+libgda.gresources.c: libgda.gresources.xml $(xml_DATA) $(DTD_FILES)
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(builddir) --generate-source $(srcdir)/libgda.gresources.xml
+
+
 dtddir=$(LIBGDA_DTDDIR)
 dtd_DATA=$(DTD_FILES)
 EXTRA_DIST = \
@@ -317,9 +322,13 @@ EXTRA_DIST = \
 	$(xml_DATA) \
 	gda-marshal.list \
 	libgda.symbols \
-	keywords.list
+	keywords.list \
+	libgda.gresources.xml
 
-DISTCLEANFILES  = .deps/*.P
+DISTCLEANFILES  = \
+	.deps/*.P \
+	libgda.gresources.c
+
 if ENABLE_GDA_GI
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
