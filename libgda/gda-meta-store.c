@@ -1371,7 +1371,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 	GdaSet *params;
 	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_SET_VERSION], &params, NULL)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			"%s", _ ("Could not set the internal schema's version"));
+			"%s", _ ("Could not set the internal schema's version. No prepared statement's parameters were found"));
 		return FALSE;
 	}
 	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
@@ -1380,7 +1380,7 @@ initialize_cnc_struct (GdaMetaStore *store, GError **error)
 							 params, NULL, NULL) == -1) {
 		g_object_unref (params);
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			"%s", _ ("Could not set the internal schema's version"));
+			"%s", _ ("Could not set the internal schema's version. Statement execution fails"));
 		return FALSE;
 	}
 	g_object_unref (params);
@@ -2614,7 +2614,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 
 	if (! gda_statement_get_parameters (klass->cpriv->prep_stmts[STMT_UPD_VERSION], &params, NULL)) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			"%s", _ ("Could not set the internal schema's version"));
+			"%s", _ ("Could not update the internal schema's version. No prepared statement's parameters were found"));
 		return FALSE;
 	}
 	g_assert (gda_set_set_holder_value (params, NULL, "version", CURRENT_SCHEMA_VERSION));
@@ -2623,7 +2623,7 @@ update_schema_version (GdaMetaStore *store, G_GNUC_UNUSED const gchar *version, 
 							 params, NULL, NULL) == -1) {
 		g_object_unref (params);
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_INCORRECT_SCHEMA_ERROR,
-			"%s", _ ("Could not set the internal schema's version"));
+			"%s", _ ("Could not update the internal schema's version. Statement execution fails"));
 		return FALSE;
 	}
 	g_object_unref (params);
