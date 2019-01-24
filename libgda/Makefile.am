@@ -312,7 +312,7 @@ DTD_FILES = libgda-array.dtd \
 	    libgda-db-catalog.dtd
 
 libgda.gresources.c: libgda.gresources.xml $(xml_DATA) $(DTD_FILES)
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(builddir) --generate-source $(srcdir)/libgda.gresources.xml
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/libgda.gresources.xml
 
 
 dtddir=$(LIBGDA_DTDDIR)
