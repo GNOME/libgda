@@ -349,7 +349,9 @@ int main() {
 	subdir('control-center')
 endif
 
-subdir('doc')
+if get_option('enable-gtk-doc')
+        subdir('doc')
+endif
 
 if libxslt_dep.found()
 	subdir('libgda-xslt')
