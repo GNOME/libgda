@@ -15,4 +15,5 @@ option('with-examples', type : 'boolean', value : false, description : 'Compile 
 option('system-sqlcipher', type : 'boolean', value : true, description : 'Use SQLCipher installed on the system [default=false')
 option('enable-tools', type : 'boolean', value : false, description : 'Enable build GUI Tools')
 option('enable-ci-environment', type : 'boolean', value : false, description : 'Enable Continous Integration Environment test')
+option('enable-gtk-doc', type : 'boolean', value : false, description : 'Enable documentation generation [default = false]')
 
