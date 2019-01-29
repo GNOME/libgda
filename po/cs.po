@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2019-01-17 17:28+0000\n"
-"PO-Revision-Date: 2019-01-29 11:22+0100\n"
+"POT-Creation-Date: 2019-01-29 10:27+0000\n"
+"PO-Revision-Date: 2019-01-29 11:36+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -1704,7 +1704,6 @@ msgstr "Neplatný typ sloupce %s. Viz API pro gda_g_type_from_string().\n"
 
 #: ../libgda/gda-db-column.c:1001
 #, c-format
-#| msgid "Internal error: can't get the prepared statement's actual statement"
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Interní chyba: Operace by měla být připravená, nastavují se údaje připojení"
@@ -1927,10 +1926,18 @@ msgstr "Nebyla nastavena žádná chyba"
 msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
 msgstr "Interní chyba: Nelze vytvořit tabulku MetaStore „%s“: %s"
 
-#: ../libgda/gda-meta-store.c:1374 ../libgda/gda-meta-store.c:1383
-#: ../libgda/gda-meta-store.c:2617 ../libgda/gda-meta-store.c:2626
-msgid "Could not set the internal schema's version"
-msgstr "Nelze nastavit verzi interního schématu"
+#: ../libgda/gda-meta-store.c:1374
+msgid ""
+"Could not set the internal schema's version. No prepared statement's "
+"parameters were found"
+msgstr ""
+"Nelze nastavit verzi interního schématu. Nebyly nalezeny žádné parametry v "
+"předpřipraveném příkazu."
+
+#: ../libgda/gda-meta-store.c:1383
+msgid "Could not set the internal schema's version. Statement execution fails"
+msgstr ""
+"Nelze nastavit verzi interního schématu. Selhalo provedení příkazu."
 
 #: ../libgda/gda-meta-store.c:1586
 #, c-format
@@ -1988,6 +1995,20 @@ msgstr "Sloupec „%s“ nebyl v tabulce „%s“ nelezen"
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Sloupec cizího klíče „%s“ nebyl nalezen v tabulce „%s“"
+
+#: ../libgda/gda-meta-store.c:2617
+msgid ""
+"Could not update the internal schema's version. No prepared statement's "
+"parameters were found"
+msgstr ""
+"Nelze aktualizovat verzi interního schématu. Nebyly nalezeny žádné parametry "
+"v předpřipraveném příkazu."
+
+#: ../libgda/gda-meta-store.c:2626
+msgid ""
+"Could not update the internal schema's version. Statement execution fails"
+msgstr ""
+"Nelze aktualizovat verzi interního schématu. Selhalo provedení příkazu."
 
 #: ../libgda/gda-meta-store.c:2675 ../libgda/gda-meta-store.c:2708
 #, c-format
