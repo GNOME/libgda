@@ -39,7 +39,7 @@
     <xi:include href="xml/gdaui-data-cell-renderer-boolean.xml"/>
     <xi:include href="xml/gdaui-data-cell-renderer-combo.xml"/>
     <xi:include href="xml/gdaui-data-cell-renderer-info.xml"/>
-    <xi:include href="xml/gdaui-data-cell-renderer-password.xml"/>
+<!--    <xi:include href="xml/gdaui-data-cell-renderer-password.xml"/> -->
   </chapter>
 
   <chapter id="Entry">
@@ -52,7 +52,7 @@
     <xi:include href="xml/gdaui-entry-format.xml"/>
     <xi:include href="xml/gdaui-entry-none.xml"/>
     <xi:include href="xml/gdaui-entry-number.xml"/>
-    <xi:include href="xml/gdaui-entry-password.xml"/>
+<!--    <xi:include href="xml/gdaui-entry-password.xml"/> -->
     <xi:include href="xml/gdaui-entry-wrapper.xml"/>
     <xi:include href="xml/gdaui-entry-string.xml"/>
     <xi:include href="xml/gdaui-entry-rt.xml"/>
