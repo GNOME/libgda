@@ -136,9 +136,10 @@ meson_build:
   - mkdir ../public
   - mv doc/index.html ../public/
   - mkdir ../public/C
-  - mv doc/C/* ../public/C/
-  - mv doc/C/libgda/html public/C/libgda-6.0
-  - mv doc/C/libgdaui/html public/C/libgdaui-6.0
+  - mkdir ../public/C/libgda-6.0
+  - mkdir ../public/C/libgdaui-6.0
+  - mv doc/C/libgda/html/* ../public/C/libgda-6.0
+  - mv doc/C/libgdaui/html/* ../public/C/libgdaui-6.0
   - mkdir ../public/vala
   - mv doc/Gda-6.0 ../public/vala
   - mv doc/Gdaui-6.0 ../public/vala
