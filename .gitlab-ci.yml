@@ -133,7 +133,18 @@ meson_build:
   - broadwayd &
   - GDK_BACKEND=broadway meson test
   - ninja install
-  - cd ..
+  - mkdir ../public
+  - mv doc/index.html ../public/
+  - mkdir ../public/C
+  - mv doc/C/* ../public/C/
+  - mkdir ../public/vala
+  - mv doc/Gda-6.0 ../public/vala
+  - mv doc/Gdaui-6.0 ../public/vala
+  - cp libgda/libgda-6.0.vapi ../public/vala
+  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
+  artifacts:
+    paths:
+    - public
   artifacts:
     when: on_failure
     paths:
@@ -144,28 +155,3 @@ meson_build:
     - _build/doc/Gda-6.0
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
-pages:
-  stage: build
-  script:
-  - meson -Denable-gtk-doc=true _build
-  - cd _build
-  - ninja
-  - ninja install
-  - mkdir ../public
-  - mv doc/index.html ../public/
-  - mkdir ../public/C
-  - mv doc/C/* ../public/C/
-  - mkdir ../public/vala
-  - mv doc/Gda-6.0 ../public/vala
-  - mv doc/Gdaui-6.0 ../public/vala
-  - cp libgda/libgda-6.0.vapi ../public/vala
-  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
-  # Fix meson gtk-doc generation to remove next
-  - cd ..
-  - ./autogen.sh --enable-gtk-doc
-  - make
-  - mv doc/C/libgda/html public/C/libgda-6.0
-  - mv doc/C/libgdaui/html public/C/libgdaui-6.0
-  artifacts:
-    paths:
-    - public
