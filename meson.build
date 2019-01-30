@@ -329,8 +329,19 @@ int main() {
 	endif
 
 	if glade_dep.found()
-		glade_catalog = glade_dep.get_pkgconfig_variable('catalogdir')
-		glade_pixmap = glade_dep.get_pkgconfig_variable('pixmapdir')
+                option_glade_catalog = get_option('glade-catalog-dir')
+                option_glade_pixmap = get_option('glade-pixmap-dir')
+                if option_glade_catalog != ''
+                        glade_catalog = option_glade_catalog
+                else
+		        glade_catalog = glade_dep.get_pkgconfig_variable('catalogdir')
+                endif
+
+                if option_glade_pixmap != ''
+                        glade_pixmap = option_glade_pixmap
+                else
+		        glade_pixmap = glade_dep.get_pkgconfig_variable('pixmapdir')
+                endif
 	endif
 	subdir('libgda-ui')
 	subdir('libgda-report')
