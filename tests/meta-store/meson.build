@@ -56,7 +56,6 @@ tchkmstspg = executable('check_meta_store_postgresql',
 		'-include',
 		meson.build_root() + '/config.h',
 		'-DTOP_SRC_DIR="'+meson.source_root()+'"',
-		ci_args
 		],
 	link_with: libgda,
 	dependencies: [

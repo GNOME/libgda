@@ -14,7 +14,6 @@ option('system-sqlite', type : 'boolean', value : true, description : 'Use SQLit
 option('with-examples', type : 'boolean', value : false, description : 'Compile examples [default=false')
 option('system-sqlcipher', type : 'boolean', value : true, description : 'Use SQLCipher installed on the system [default=false')
 option('enable-tools', type : 'boolean', value : false, description : 'Enable build GUI Tools')
-option('enable-ci-environment', type : 'boolean', value : false, description : 'Enable Continous Integration Environment test')
 option('glade-catalog-dir', type : 'string', value : '', description : 'Use the given directory to install glade catalog files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
 option('glade-pixmap-dir', type : 'string', value : '', description : 'Use the given directory to install glade pixmap files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
 
