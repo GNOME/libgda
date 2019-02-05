@@ -17,4 +17,5 @@ option('enable-tools', type : 'boolean', value : false, description : 'Enable bu
 option('enable-ci-environment', type : 'boolean', value : false, description : 'Enable Continous Integration Environment test')
 option('glade-catalog-dir', type : 'string', value : '', description : 'Use the given directory to install glade catalog files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
 option('glade-pixmap-dir', type : 'string', value : '', description : 'Use the given directory to install glade pixmap files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
+option('enable-gtk-doc', type : 'boolean', value : false, description : 'Enable documentation generation [default = false]')
 

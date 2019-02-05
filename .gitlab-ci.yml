@@ -127,7 +127,7 @@ meson_build:
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson _build --prefix=/usr -Denable-ci-environment=true -Denable-debug=true
+  - meson _build --prefix=/usr -Denable-ci-environment=true -Denable-debug=true -Denable-gtk-doc=true
   - cd _build
   - ninja
   - broadwayd &
@@ -147,7 +147,7 @@ meson_build:
 pages:
   stage: build
   script:
-  - meson _build
+  - meson -Denable-gtk-doc=true _build
   - cd _build
   - ninja
   - ninja install
