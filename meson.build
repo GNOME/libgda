@@ -21,9 +21,18 @@ project_abi_name = '"' + meson.project_name() + '-' + project_abi_version + '"'
 project_api_name = '"' + meson.project_name() + '-' + project_api_version + '"'
 project_package = meson.project_name() + '-' + project_api_version
 
-gda_current = '5'
-gda_revision ='91'
-gda_age = '1'
+# LT_VERSION for ABI related changes
+# From: https://autotools.io/libtool/version.html
+# This rules applies to Meson 0.43
+# If interfaces have been changed or added, set GDA_CURRENT += 1 and GDA_AGE += 1, set GDA_REVISION to 0.
+# If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
+# If interfaces is the same as the previous version, set GDA_REVISION += 1
+# Set version to the value of subtract age from current
+# Reset current and version to 1 and, age and version to 0 if library's name is changed
+LT_CURRENT='6'
+LT_REVISION='0'
+LT_AGE='0'
+LT_VERSION='6'
 
 compiler = meson.get_compiler('c')
 

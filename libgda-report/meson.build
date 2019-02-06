@@ -24,8 +24,8 @@ libgda_report_sources += libgda_report_rml_sources
 libgda_report = library(
 	'gda-report-'+project_api_version,
 	libgda_report_sources,
-	soversion : gda_current,
-	version : gda_revision,
+	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
+	version : LT_VERSION,
 	dependencies : [libgda_dep,
 			gdkpixbuf_dep,
 			inc_libgda_reporth_dep,

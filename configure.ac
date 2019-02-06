@@ -58,9 +58,9 @@ m4_define([req_ver_glib],[2.38.0])
 # - If binary compatibility has been broken (e.g. removed or changed interfaces), set GDA_CURRENT += 1, GDA_REVISION and GDA_AGE to 0
 # - If interfaces is the same as the previous version, set GDA_REVISION += 1
 #
-GDA_CURRENT=5
-GDA_REVISION=1
-GDA_AGE=1
+GDA_CURRENT=6
+GDA_REVISION=0
+GDA_AGE=0
 
 AC_SUBST(GDA_CURRENT)
 AC_SUBST(GDA_REVISION)

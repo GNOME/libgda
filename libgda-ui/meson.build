@@ -134,6 +134,8 @@ install_headers(libgda_ui_headers,
 
 libgdaui = library('gda-ui-'+project_api_version,
 	libgda_ui_sources_all,
+	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
+	version : LT_VERSION,
 	dependencies: [
 		libgda_ui_deps,
 		inc_rooth_dep

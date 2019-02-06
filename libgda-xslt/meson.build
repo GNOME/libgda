@@ -17,8 +17,8 @@ libgda_xslt_sources += gda_xslt_headers
 libgda_xslt = library(
 	'gda-xslt-'+project_api_version,
 	libgda_xslt_sources,
-	soversion : gda_current,
-	version : gda_revision,
+	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
+	version : LT_VERSION,
 	dependencies : [libgda_dep,
 			libxslt_dep,
 			inc_libgda_xslth_dep,
