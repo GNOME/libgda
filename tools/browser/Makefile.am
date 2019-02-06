@@ -85,16 +85,16 @@ $(OBJECTS): marshal.c marshal.h
 # app icon
 appiconsdir=$(datadir)/pixmaps
 appicons_DATA= \
-	data/256x256/gda-browser-6.0.png
+	data/256x256/org.gnome.gda.Browser.png
 
 @INTLTOOL_XML_RULE@
 metainfodir = $(datadir)/metainfo
 metainfo_DATA = $(metainfo_in_files:.xml.in=.xml)
-metainfo_in_files = gda-browser-6.0.appdata.xml.in
+metainfo_in_files = org.gnome.gda.Browser.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir=$(datadir)/applications
-Desktop_in_files = gda-browser-6.0.desktop.in
+Desktop_in_files = org.gnome.gda.Browser.desktop.in
 desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
 
 EXTRA_DIST = \
@@ -105,6 +105,6 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
-	gda-browser-6.0.desktop.in \
+	org.gnome.gda.Browser.desktop.in \
 	$(metainfo_DATA)
 

@@ -4,6 +4,9 @@
     <file compressed="yes">menus.ui</file>
   </gresource>
   <gresource prefix="/images">
+    <file compressed="no">org.gnome.gda.Browser.png</file>
+  </gresource>
+  <gresource prefix="/images">
     <file compressed="no">gda-browser-action.png</file>
   </gresource>
   <gresource prefix="/images">

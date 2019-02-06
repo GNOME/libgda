@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Ryan Lerch <rlerch@redhat.com> -->
+<!-- Copyright 2019 Daniel Espinosa <esodan@gmail.com> -->
 
 <application>
-  <id type="desktop">gda-browser-6.0.desktop</id>
+  <id type="desktop">org.gnome.gda.Browser.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <_summary>View the schema and data of databases</_summary>
   <description>
@@ -26,6 +27,6 @@
     <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=GdaBrowser-query1.png</screenshot>
     <screenshot>http://www.gnome-db.org/GdaBrowser?action=AttachFile&amp;do=view&amp;target=dataman-persp.png</screenshot>
   </screenshots>
-  <updatecontact>vmalerba_at_gmail.com</updatecontact>
+  <updatecontact>esodan_at_gmail.com</updatecontact>
   <project_group>GNOME</project_group>
 </application>

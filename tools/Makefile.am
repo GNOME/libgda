@@ -9,7 +9,7 @@ bin_PROGRAMS = \
 	gda-sql-6.0
 
 if HAVE_UI
-bin_PROGRAMS+=gda-browser-6.0
+bin_PROGRAMS+=org.gnome.gda.Browser
 SUBDIRS+=browser
 noinst_LTLIBRARIES = libbrowser.la
 endif
@@ -48,13 +48,13 @@ gda_sql_6_0_LDADD += $(LIBSOUP_LIBS)
 endif
 
 if HAVE_UI
-gda_browser_6_0_SOURCES = \
+org_gnome_gda_Browser_SOURCES = \
 	tools-main.c \
 	tools.gresources.c
 
 if PLATFORM_WIN32
 EXTRALDFLAGS=-mwindows
-gda_browser_6_0_SOURCES += gda-browser-res.rc
+org_gnome_gda_Browser_SOURCES += gda-browser-res.rc
 else
 EXTRALDFLAGS=
 endif
@@ -76,16 +76,16 @@ libbrowser_la_LIBADD = \
 	browser/query-exec/libperspective.la \
 	browser/data-manager/libperspective.la
 
-gda_browser_6_0_CPPFLAGS = \
+org_gnome_gda_Browser_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(GTK_CFLAGS) \
         $(GTKSOURCEVIEW_CFLAGS) \
         $(MAC_INTEGRATION_CFLAGS) \
 	-DIS_BROWSER
 
-gda_browser_6_0_LDFLAGS = $(EXTRALDFLAGS)
+org_gnome_gda_Browser_LDFLAGS = $(EXTRALDFLAGS)
 
-gda_browser_6_0_LDADD = \
+org_gnome_gda_Browser_LDADD = \
 	libbrowser.la \
         $(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS) \
@@ -96,7 +96,7 @@ gda_browser_6_0_LDADD = \
 	$(GTK_LIBS) $(GTKSOURCEVIEW_LIBS) $(MAC_INTEGRATION_LIBS)
 
 if LIBSOUP
-gda_browser_6_0_LDADD += $(LIBSOUP_LIBS)
+org_gnome_gda_Browser_LDADD += $(LIBSOUP_LIBS)
 endif
 endif
 
@@ -132,7 +132,8 @@ RESOURCES=\
 	resources/gda-browser-reference.png \
 	resources/gda-browser-schema.png \
 	resources/gda-browser-table.png \
-	resources/gda-browser-view.png
+	resources/gda-browser-view.png \
+	resources/org.gnome.gda.Browser.png
 
 tools.gresources.c: $(RESOURCES)
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(top_srcdir)/tools/resources --generate-source $(top_srcdir)/tools/tools.gresource.xml

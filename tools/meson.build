@@ -126,7 +126,7 @@ if windows
 	gda_browser_sources += win_res
 endif
 
-executable('gda-browser-'+project_api_version,
+executable('org.gnome.gda.Browser',
 	gda_browser_sources,
 	link_with: [
 		libgda,

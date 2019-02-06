@@ -78,12 +78,12 @@ gda_browser_sources += gda_browser_sourcesf
 
 subdir('data')
 
-desktopf = files(['gda-browser.desktop.in.in'])
+desktopf = files(['org.gnome.gda.Browser.desktop.in.in'])
 desktopconf = configuration_data()
 desktopconf.set('GDA_VERSION', project_version)
 desktopfin = configure_file(
-	input: 'gda-browser.desktop.in.in',
-	output: 'gda-browser-'+project_api_version+'.desktop.in',
+	input: 'org.gnome.gda.Browser.desktop.in.in',
+	output: 'org.gnome.gda.Browser.desktop.in',
 	configuration: desktopconf
 	)
 
@@ -91,19 +91,19 @@ i18n.merge_file('browser_desktop',
 	po_dir: join_paths(meson.source_root(),'po'),
 	type: 'desktop',
 	input: desktopfin,
-	output: 'gda-browser-'+project_api_version+'.desktop',
+	output: 'org.gnome.gda.Browser.desktop',
 	install: true,
 	install_dir: join_paths(get_option('datadir'),'applications')
 	)
 
-custom_target('gda-browser-6.0.appdata',
+custom_target('org.gnome.gda.Browser.appdata',
 		command: [intlmerge,
 			'-u', '-x',
 			join_paths(meson.source_root(),'po'),
 			'@INPUT@', '@OUTPUT@'
 			],
-		input: 'gda-browser-6.0.appdata.xml.in',
-		output: 'gda-browser-6.0.appdata.xml',
+		input: 'org.gnome.gda.Browser.appdata.xml.in',
+		output: 'org.gnome.gda.Browser.appdata.xml',
 		install: true,
 		install_dir: join_paths(get_option('datadir'),'metainfo')
 		)

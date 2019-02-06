@@ -1,0 +1,11 @@
+[Desktop Entry]
+_GenericName=Database browser
+_Name=GdaBrowser
+_Comment=Browse database's contents
+Icon=org.gnome.gda.Browser
+Exec=org.gnome.gda.Browser
+Terminal=false
+Type=Application
+Categories=GTK;Development;Database;
+StartupNotify=true
+_Keywords=SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;
