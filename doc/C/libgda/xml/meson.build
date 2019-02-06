@@ -1,0 +1,11 @@
+ent_conf = configuration_data()
+ent_conf.set('PACKAGE', 'libgda')
+ent_conf.set('PACKAGE_BUGREPORT', 'https://gitlab.gnome.org/GNOME/libgda/issues')
+ent_conf.set('PACKAGE_NAME', 'libgda')
+ent_conf.set('PACKAGE_STRING', 'libgda')
+ent_conf.set('PACKAGE_TARNAME', 'libgda-' + meson.project_version())
+ent_conf.set('PACKAGE_URL', 'http://gitlab.gnome.org/GNOME/libgda')
+ent_conf.set('PACKAGE_VERSION', meson.project_version())
+ent_conf.set('PACKAGE_API_VERSION', project_api_version)
+configure_file(input: 'gtkdocentities.ent.in', output: 'gtkdocentities.ent', configuration: ent_conf)
+

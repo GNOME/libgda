@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+               "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+
+<book id="index-libgdaui"> 
+  <bookinfo>
+    <title>libgda-ui Reference Manual</title>
+    <releaseinfo>
+      for libgda-ui.
+      The latest version of this documentation can be found on-line at
+      <ulink role="online-location" url="https://gitlab.gnome.org/GNOME/libgda/pipelines">https://gitlab.gnome.org/GNOME/libgda/pipelines</ulink>,
+      from latest successful pipeline build.
+    </releaseinfo>
+  </bookinfo>
+  <chapter id="Getting Started">
+    <title>Connection</title>
+    <xi:include href="xml/libgda-ui.xml"/>
+  </chapter>
+
+  <chapter id="Data">
+    <title>Data</title>
+    <xi:include href="xml/gdaui-data-entry.xml"/>
+    <xi:include href="xml/gdaui-data-selector.xml"/>
+    <xi:include href="xml/gdaui-data-filter.xml"/>
+    <xi:include href="xml/gdaui-data-proxy-info.xml"/>
+    <xi:include href="xml/gdaui-data-proxy.xml"/>
+    <xi:include href="xml/gdaui-data-store.xml"/>
+  </chapter>
+
+  <chapter id="Data Cell Renderer">
+    <title>Data Cell Renderer</title>
+    <xi:include href="xml/gdaui-data-cell-renderer-pict.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-textual.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-util.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-bin.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-boolean.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-combo.xml"/>
+    <xi:include href="xml/gdaui-data-cell-renderer-info.xml"/>
+<!--    <xi:include href="xml/gdaui-data-cell-renderer-password.xml"/> -->
+  </chapter>
+
+  <chapter id="Entry">
+    <title>Entry</title>
+    <xi:include href="xml/gdaui-entry.xml"/>
+    <xi:include href="xml/gdaui-entry-combo.xml"/>
+    <xi:include href="xml/gdaui-entry-common-time.xml"/>
+    <xi:include href="xml/gdaui-entry-date.xml"/>
+    <xi:include href="xml/gdaui-entry-filesel.xml"/>
+    <xi:include href="xml/gdaui-entry-format.xml"/>
+    <xi:include href="xml/gdaui-entry-none.xml"/>
+    <xi:include href="xml/gdaui-entry-number.xml"/>
+<!--    <xi:include href="xml/gdaui-entry-password.xml"/> -->
+    <xi:include href="xml/gdaui-entry-wrapper.xml"/>
+    <xi:include href="xml/gdaui-entry-string.xml"/>
+    <xi:include href="xml/gdaui-entry-rt.xml"/>
+    <xi:include href="xml/gdaui-entry-shell.xml"/>
+    <xi:include href="xml/gdaui-entry-bin.xml"/>
+    <xi:include href="xml/gdaui-entry-text.xml"/>
+    <xi:include href="xml/gdaui-entry-timestamp.xml"/>
+    <xi:include href="xml/gdaui-entry-cidr.xml"/>
+    <xi:include href="xml/gdaui-entry-time.xml"/>
+    <xi:include href="xml/gdaui-entry-boolean.xml"/>
+    <xi:include href="xml/gdaui-entry-pict.xml"/>
+  </chapter>
+
+  <chapter id="Misc">
+    <title>Misc</title>
+    <xi:include href="xml/gdaui-cloud.xml"/>
+    <xi:include href="xml/gdaui-plugin.xml"/>
+    <xi:include href="xml/gdaui-basic-form.xml"/>
+    <xi:include href="xml/gdaui-enums.xml"/>
+    <xi:include href="xml/gdaui-form.xml"/>
+    <xi:include href="xml/gdaui-grid.xml"/>
+    <xi:include href="xml/gdaui-login.xml"/>
+    <xi:include href="xml/gdaui-combo.xml"/>
+    <xi:include href="xml/gdaui-decl.xml"/>
+    <xi:include href="xml/gdaui-numeric-entry.xml"/>
+    <xi:include href="xml/gdaui-formatted-entry.xml"/>
+    <xi:include href="xml/gdaui-dsn-selector.xml"/>
+    <xi:include href="xml/gdaui-provider-selector.xml"/>
+    <xi:include href="xml/gdaui-easy.xml"/>
+    <xi:include href="xml/gdaui-provider-spec-editor.xml"/>
+    <xi:include href="xml/gdaui-raw-form.xml"/>
+    <xi:include href="xml/gdaui-raw-grid.xml"/>
+    <xi:include href="xml/gdaui-rt-editor.xml"/>
+    <xi:include href="xml/gdaui-server-operation.xml"/>
+    <xi:include href="xml/gdaui-set.xml"/>
+    <xi:include href="xml/gdaui-tree-store.xml"/>
+    <xi:include href="xml/gdaui-widget-embedder.xml"/>
+    <xi:include href="xml/gdaui-provider-auth-editor.xml"/>
+    <xi:include href="xml/common-bin.xml"/>
+    <xi:include href="xml/common-pict.xml"/>
+    <xi:include href="xml/popup-container.xml"/>
+    <xi:include href="xml/demo-common.xml"/>
+  </chapter>
+
+  <chapter id="object-tree">
+    <title>Object Hierarchy</title>
+    <xi:include href="xml/tree_index.sgml"/>
+  </chapter>
+
+  <index id="api-index-full">
+    <title>API Index</title>
+    <xi:include href="xml/api-index-full.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="deprecated-api-index" role="deprecated">
+    <title>Index of deprecated API</title>
+    <xi:include href="xml/api-index-deprecated.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2" role="4.2">
+    <title>Index of new API in 4.2</title>
+    <xi:include href="xml/api-index-4.2.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-2" role="4.2.2">
+    <title>Index of new API in 4.2.2</title>
+    <xi:include href="xml/api-index-4.2.2.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-4" role="4.2.4">
+    <title>Index of new API in 4.2.4</title>
+    <xi:include href="xml/api-index-4.2.4.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-8" role="4.2.8">
+    <title>Index of new API in 4.2.8</title>
+    <xi:include href="xml/api-index-4.2.8.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-4-2-9" role="4.2.9">
+    <title>Index of new API in 4.2.9</title>
+    <xi:include href="xml/api-index-4.2.9.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-5-0-3" role="5.0.3">
+    <title>Index of new API in 5.0.3</title>
+    <xi:include href="xml/api-index-5.0.3.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-5-2" role="5.2">
+    <title>Index of new API in 5.2</title>
+    <xi:include href="xml/api-index-5.2.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-6-0" role="6.0">
+    <title>Index of new API in 6.0</title>
+    <xi:include href="xml/api-index-6.0.xml"><xi:fallback /></xi:include>
+  </index>
+  <xi:include href="xml/annotation-glossary.xml"><xi:fallback /></xi:include>
+</book>
