@@ -22,7 +22,7 @@ project_api_name = '"' + meson.project_name() + '-' + project_api_version + '"'
 project_package = meson.project_name() + '-' + project_api_version
 
 gda_current = '5'
-gda_revision ='1'
+gda_revision ='91'
 gda_age = '1'
 
 compiler = meson.get_compiler('c')

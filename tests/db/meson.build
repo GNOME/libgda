@@ -159,8 +159,7 @@ tcpg = executable('check-db-catalog-postgresql',
 		'-include',
 		meson.build_root() + '/config.h',
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"',
-		ci_args
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
 		],
 	link_with: libgda,
 	dependencies: [
