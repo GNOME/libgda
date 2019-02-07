@@ -1,7 +1,7 @@
 [Desktop Entry]
-_GenericName=Database browser
-_Name=GdaBrowser
-_Comment=Browse database's contents
+GenericName=Database browser
+Name=GdaBrowser
+Comment=Browse database's contents
 Icon=org.gnome.gda.Browser
 Exec=org.gnome.gda.Browser
 Terminal=false

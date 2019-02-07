@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" width="512" height="512">
+    <defs>
+	<filter id="filter1" y="0" filterUnits="userSpaceOnUse" width="1000" height="520" x="0">
+	  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+	  <feOffset dy="4" in="blur" result="offsetBlur" dx="4"/>
+	  <feSpecularLighting in="blur" surfaceScale="5" lighting-color="#bbbbbb" result="specOut" specularConstant=".75" specularExponent="20">
+	    <fePointLight y="500" z="500" x="100"/>
+	  </feSpecularLighting>
+	  <feComposite in="specOut" operator="in" in2="SourceAlpha" result="specOut"/>
+	  <feComposite in="SourceGraphic" operator="arithmetic" k1="0" in2="specOut" k2="1" k3="1" k4="0" result="litPaint"/>
+	  <feMerge>
+	    <feMergeNode in="offsetBlur"/>
+	    <feMergeNode in="litPaint"/>
+	  </feMerge>
+	</filter>
+    </defs>
+    <svg xmlns="http://www.w3.org/2000/svg" transform="translate(10)">
+	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)" transform="translate(0,200)">
+	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
+	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	</svg>
+	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)" transform="translate(0,100)">
+	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
+	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	</svg>
+	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)">
+	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
+	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
+	</svg>
+    </svg>
+    <text filter="url(#filter1)" x="50" y="200" style="font-size: 200; font-family: Times; fill: green; stroke: green; stroke-width: 3;">SQL</text>
+</svg>

@@ -5,6 +5,7 @@ subdir('misc')
 subdir('common')
 subdir('base')
 subdir('help')
+subdir('resources')
 
 gda_sql_sources = files([
 	'tools-main.c'
