@@ -743,7 +743,11 @@ dnl ************************************
 
 AC_ARG_WITH(libsecret,
 	AS_HELP_STRING([--with-libsecret], [Enable libsecret support]),
-	,with_libsecret=auto)
+	[
+		with_libsecret=$withval
+	],[
+		with_libsecret=auto
+	])
 
 AC_ARG_WITH(gnome-keyring,
 	AS_HELP_STRING([--with-gnome-keyring], [Enable gnome-keyring support]),
@@ -1053,6 +1057,7 @@ echo "      SQLCipher = `if test x$enable_crypto != xyes; then echo no; else ech
 echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldap_found = xyes; then echo yes; else echo no; fi`"
+echo "   With LIBSECRET = `if test x$have_libsecret = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"
