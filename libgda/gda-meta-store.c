@@ -1477,6 +1477,12 @@ create_server_operation_for_table (GHashTable *specific_hash,
 	if (! gda_server_operation_set_value_at (op, dbobj->obj_name, error, "/TABLE_DEF_P/TABLE_NAME"))
 		goto onerror;
 
+	if (!gda_server_operation_set_value_at (op,
+                                          GDA_BOOL_TO_STR (TRUE),
+                                          error,
+                                          "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
+    return FALSE;
+
 	/* columns */
 	for (index = 0, list = TABLE_INFO (dbobj)->columns; list; list = list->next, index++) {
 		TableColumn *tcol = TABLE_COLUMN (list->data);
@@ -4760,6 +4766,10 @@ gda_meta_store_schema_remove_custom_object (GdaMetaStore *store, const gchar *ob
 GdaMetaContext *
 _gda_meta_store_validate_context (GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
+	g_return_val_if_fail (store != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_META_STORE (store), NULL);
+	g_return_val_if_fail (context != NULL, NULL);
+
 	GdaMetaStoreClass *klass;
 	gint i;
 	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
