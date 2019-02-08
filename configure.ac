@@ -529,17 +529,6 @@ fi
 
 AM_CONDITIONAL(ENABLE_GDAUI_VALA, test x$disable_gdaui_vala != xyes)
 
-dnl Check for libgee
-found_gee="xyes"
-GEE_REQUIRED="0.8.0"
-PKG_CHECK_MODULES(GEE, gee-0.8 >= $GEE_REQUIRED,[],found_gee=no)
-AC_SUBST(GEE_CFLAGS)
-AC_SUBST(GEE_LIBS)
-
-if test "x$disable_vala_ext" != "xyes" -a "x$found_gee" = "xno"
-then
-	AC_MSG_ERROR([Vala Extensions (Utility GObject clases written in Vala) is requested but GEE library development is not present])
-fi
 
 dnl ******************************
 dnl Checks for libcrypto
