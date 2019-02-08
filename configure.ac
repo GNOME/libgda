@@ -751,7 +751,11 @@ AC_ARG_WITH(libsecret,
 
 AC_ARG_WITH(gnome-keyring,
 	AS_HELP_STRING([--with-gnome-keyring], [Enable gnome-keyring support]),
-	,with_gnome_keyring=auto)
+	[
+		with_gnome_keyring=$withval
+	],[
+		with_gnome_keyring=auto
+	])
 
 if test "$with_libsecret" = "auto" -o "$with_libsecret" = "yes"
 then
@@ -763,19 +767,21 @@ then
 			AC_MSG_ERROR([libsecret support requested but not found.])
 		fi
 		have_libsecret=no])
+else
+	have_libsecret=no
 fi
 AM_CONDITIONAL(LIBSECRET, test "$have_libsecret" = "yes")
 AC_SUBST(LIBSECRET_CFLAGS)
 AC_SUBST(LIBSECRET_LIBS)
 
-if test "$have_libsecret" = "no"
+if test x$have_libsecret = xno
 then
-    if test "$with_gnome_keyring" = "auto" -o "$with_gnome_keyring" = "yes"
+    if test x$with_gnome_keyring = xauto -o x$with_gnome_keyring = xyes
     then
 	PKG_CHECK_MODULES(GNOME_KEYRING, gnome-keyring-1, [
 		AC_DEFINE(HAVE_GNOME_KEYRING, [1], [gnome-keyring support enabled])
 		have_gnome_keyring=yes], [
-		if test "$with_gnome_keyring" = "yes"
+		if test x$with_gnome_keyring = xyes
 		then
 			AC_MSG_ERROR([gnome-keyring support requested but not found.])
 		fi
@@ -1058,6 +1064,7 @@ echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldap_found = xyes; then echo yes; else echo no; fi`"
 echo "   With LIBSECRET = `if test x$have_libsecret = xyes; then echo yes; else echo no; fi`"
+echo "   With GNOME KEYRING = `if test x$have_gnome_keyring = xyes; then echo yes; else echo no; fi`"
 if test x"$br_cv_binreloc" != "xyes" -a x"$platform_win32" != "xyes"
 then
        echo "   Binreloc support is disabled: Libgda will not be relocatable. To enable binreloc support re-run with --enable-binreloc (see http://autopackage.org/docs/binreloc for more information)"
