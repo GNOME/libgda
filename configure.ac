@@ -529,7 +529,17 @@ AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vala = xyes)
 
 AC_ARG_ENABLE([gdaui-vala],
     AS_HELP_STRING([--disable-gdaui-vala[=@<:@yes/no@:>@]], [Generate Vala bindings and extensions]),
-    [disable_gdaui_vala=yes],[disable_gdaui_vala=no])
+    [
+      if test x$enableval = xyes
+      then
+        disable_gdaui_vala=no
+      else
+        disable_gdaui_vala=yes
+      fi
+      ],
+      [
+        disable_gdaui_vala=no
+      ])
 
 if test x$enable_vala != xyes -o x$disable_gdaui_gi = xyes -o x$have_ui = xno
 then
