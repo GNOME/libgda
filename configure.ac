@@ -709,7 +709,12 @@ dnl ************************
 
 AC_ARG_WITH(libsoup,
 	AS_HELP_STRING([--with-libsoup], [Enable libsoup support]),
-	,with_libsoup=auto)
+	[
+		with_libsoup=$withval
+	],
+	[
+		with_libsoup=auto
+	])
 
 if test "$with_libsoup" = "auto" -o "$with_libsoup" = "yes"
 then
