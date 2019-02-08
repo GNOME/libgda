@@ -200,7 +200,7 @@ static void
 gda_handler_string_init (GdaHandlerString * hdl)
 {
 	/* Private structure */
-	g_object_set_data (G_OBJECT (hdl), "name", _("InternalString"));
+	g_object_set_data (G_OBJECT (hdl), "name", "InternalString");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Strings representation"));
 }
 

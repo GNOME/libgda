@@ -203,7 +203,7 @@ gda_handler_text_init (GdaHandlerText * hdl)
   GdaHandlerTextPrivate *priv = gda_handler_text_get_instance_private (hdl);
   g_weak_ref_init (&priv->cnc, NULL);
   /* Handler support */
-  g_object_set_data (G_OBJECT (hdl), "name", _("InternalLargeString"));
+  g_object_set_data (G_OBJECT (hdl), "name", "InternalLargeString");
   g_object_set_data (G_OBJECT (hdl), "descr", _("Large String representation"));
 }
 
