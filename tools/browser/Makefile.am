@@ -105,6 +105,5 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	$(desktop_DATA) \
-	org.gnome.gda.Browser.desktop.in \
 	$(metainfo_DATA)
 

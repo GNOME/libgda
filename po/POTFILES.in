@@ -315,7 +315,7 @@ tools/browser/login-dialog.c
 tools/browser/mgr-favorites.c
 tools/browser/objects-cloud.c
 tools/browser/org.gnome.gda.Browser.appdata.xml.in
-tools/browser/org.gnome.gda.Browser.desktop.in.in
+tools/browser/org.gnome.gda.Browser.desktop.in
 tools/browser/query-exec/perspective-main.c
 tools/browser/query-exec/query-console-page.c
 tools/browser/query-exec/query-editor.c

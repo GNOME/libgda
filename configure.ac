@@ -1034,7 +1034,6 @@ tools/Makefile
 tools/gda-sql-6.0.1:tools/gda-sql.1.in
 tools/base/Makefile
 tools/browser/Makefile
-tools/browser/gda-browser-$API_VERSION.desktop.in:tools/browser/gda-browser.desktop.in.in
 tools/browser/canvas/Makefile
 tools/browser/dummy-perspective/Makefile
 tools/browser/schema-browser/Makefile
