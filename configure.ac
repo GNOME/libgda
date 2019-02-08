@@ -507,7 +507,7 @@ dnl ******************************
 
 AC_ARG_ENABLE([vala],
     AS_HELP_STRING([--enable-vala[=@<:@no/auto/yes@:>@]], [Generate Vala bindings and extensions]),
-    [enable_vala=yes],[enable_vala=no])
+    [enable_vala=$enableval],[enable_vala=no])
 
 AC_PATH_PROG([VALAC], [valac], [no])
 
