@@ -475,7 +475,16 @@ GOBJECT_INTROSPECTION_CHECK([1.30.0])
 
 AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--disable-gdaui-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda-ui [default=no]]),
-    [disable_gdaui_gi=yes],[disable_gdaui_gi=no])
+    [
+      if test x$enableval = xyes
+      then
+        disable_gdaui_gi=no
+      else
+        disable_gdaui_gi=yes
+      fi
+    ],[
+      disable_gdaui_gi=no
+    ])
 
 if test x$found_introspection != xyes
 then
