@@ -17,21 +17,21 @@
 	</filter>
     </defs>
     <svg xmlns="http://www.w3.org/2000/svg" transform="translate(10)">
-	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)" transform="translate(0,200)">
+	<g filter="url(#filter1)" transform="translate(0,200)">
 	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
 	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
 	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
-	</svg>
-	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)" transform="translate(0,100)">
+	</g>
+	<g filter="url(#filter1)" transform="translate(0,100)">
 	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
 	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
 	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
-	</svg>
-	<svg xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)">
+	</g>
+	<g xmlns="http://www.w3.org/2000/svg" filter="url(#filter1)">
 	    <ellipse cx="203" cy="203" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
 	    <rect x="3" y="103" width="400" height="100" d="M3,100 L3,203 403,203 403,103" style="fill:gray; stroke: whithe; stroke-width: 3;"/>
 	    <ellipse cx="203" cy="103" rx="200" ry="100" style="fill:gray; stroke: white; stroke-width: 3;"/>
-	</svg>
+	</g>
     </svg>
     <text filter="url(#filter1)" x="50" y="200" style="font-size: 200; font-family: Times; fill: green; stroke: green; stroke-width: 3;">SQL</text>
 </svg>
