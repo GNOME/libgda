@@ -623,9 +623,9 @@ vcontext_free (VContext *context)
 void
 _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 {
+	g_mutex_lock (& (cnc->priv->lock_context));
 	GSList *list;
 	if (obj) {
-		g_mutex_lock (& (cnc->priv->lock_context));
 		for (list = cnc->priv->table_data_list; list; list = list->next) {
 			GdaVConnectionTableData *td = (GdaVConnectionTableData*) list->data;
 			VContext *vc = NULL;
@@ -660,8 +660,8 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 			 * an exception already occurred */
 			td->context.current_vcontext = NULL;
 		}
-		g_mutex_unlock (& (cnc->priv->lock_context));
 	}
+	g_mutex_unlock (& (cnc->priv->lock_context));
 }
 
 void
