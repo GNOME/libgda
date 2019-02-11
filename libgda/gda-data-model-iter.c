@@ -611,9 +611,8 @@ gda_data_model_iter_get_property (GObject *object,
 		case PROP_DATA_MODEL:
 			{
 				GObject *obj = g_weak_ref_get (&priv->data_model);
-				g_value_set_object (value, obj);
 				if (obj != NULL) {
-					g_object_unref (obj);
+				  g_value_take_object (value, obj);
 				}
 			}
 			break;
@@ -621,9 +620,8 @@ gda_data_model_iter_get_property (GObject *object,
 			{
 				g_warning ("Deprecated property, not to be used");
 				GObject *obj = g_weak_ref_get (&priv->data_model);
-				g_value_set_object (value, obj);
 				if (obj != NULL) {
-					g_object_unref (obj);
+					g_value_take_object (value, obj);
 				}
 			}
 			break;
