@@ -289,9 +289,6 @@ define_holder_for_data_model_column (GdaDataModel *model, gint col, GdaDataModel
 		gda_holder_set_default_value (param, v);
 		gda_value_free (v);
 	}
-	/* copy extra attributes */
-	gda_attributes_manager_copy (_gda_column_attributes_manager, (gpointer) column,
-				     gda_holder_attributes_manager, (gpointer) param);
 	gda_set_add_holder ((GdaSet *) iter, param);
 	g_object_set_data (G_OBJECT (param), "model_col", GINT_TO_POINTER (col + 1));
 	g_object_unref (param);
