@@ -48,7 +48,7 @@ typedef struct  {
 	gint           number_of_columns;
 
 	/* the array of rows, each item is a GdaRow */
-	GArray        *rows;
+	GPtrArray        *rows;
 } GdaDataModelArrayPrivate;
 #define gda_data_model_array_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_MODEL_ARRAY, GdaDataModelArrayPrivate)
 
@@ -192,7 +192,7 @@ gda_data_model_array_init (GdaDataModelArray *model)
 	priv->column_spec = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
 	priv->read_only = FALSE;
 	priv->number_of_columns = 0;
-	priv->rows = g_array_new (FALSE, FALSE, sizeof (GdaRow *));
+	priv->rows = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 }
 
 static void column_g_type_changed_cb (GdaColumn *column, GType old, GType new, GdaDataModelArray *model);
@@ -216,7 +216,7 @@ gda_data_model_array_finalize (GObject *object)
 	/* free memory */
 	gda_data_model_freeze (GDA_DATA_MODEL(model));
 	gda_data_model_array_clear (model);
-	g_array_free (priv->rows, TRUE);
+	g_ptr_array_free (priv->rows, TRUE);
 	g_hash_table_foreach (priv->column_spec, (GHFunc) hash_free_column, model);
         g_hash_table_destroy (priv->column_spec);
         priv->column_spec = NULL;
@@ -511,7 +511,7 @@ gda_data_model_array_get_row (GdaDataModelArray *model, gint row, GError **error
 		return NULL;
 	}
 
-	return g_array_index (priv->rows, GdaRow*, row);
+	return g_ptr_array_index (priv->rows, row);
 }
 
 /**
@@ -675,7 +675,7 @@ gda_data_model_array_get_value_at (GdaDataModel *model, gint col, gint row, GErr
 		return NULL;
 	}
 
-	fields = g_array_index (priv->rows, GdaRow*, row);
+	fields = g_ptr_array_index (priv->rows, row);
 	if (fields) {
 		GValue *field;
 
@@ -852,7 +852,7 @@ gda_data_model_array_append_values (GdaDataModel *model, const GList *values, GE
 			gda_value_set_null (dest);
 	}
 
-	g_array_append_val (priv->rows, row);
+	g_ptr_array_insert (priv->rows, -1, row);
 	gda_data_model_row_inserted (model, priv->rows->len - 1);
 	return priv->rows->len - 1;
 }
@@ -871,7 +871,7 @@ gda_data_model_array_append_row (GdaDataModel *model, GError **error)
         }
 
 	row = gda_row_new (priv->number_of_columns);
-	g_array_append_val (priv->rows, row);
+	g_ptr_array_insert (priv->rows, -1, row);
 	gda_data_model_row_inserted (model, priv->rows->len - 1);
 	return priv->rows->len - 1;
 }
@@ -883,11 +883,10 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 	GdaDataModelArray *amodel = (GdaDataModelArray *) model;
 	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (amodel);
 
-	gdarow = g_array_index (priv->rows, GdaRow*, row);
+	gdarow = g_ptr_array_index (priv->rows, row);
 	if (gdarow) {
-		priv->rows = g_array_remove_index (priv->rows, row);
+		g_ptr_array_remove_index (priv->rows, row);
 		gda_data_model_row_removed ((GdaDataModel *) model, row);
-		g_object_unref (gdarow);
 		return TRUE;
 	}
 
