@@ -40,7 +40,7 @@ extern GdaAttributesManager *gda_holder_attributes_manager;
 /* private structure */
 typedef struct
 {
-	GdaDataModel          *data_model; /* may be %NULL because there is only a weak ref on it */
+	GWeakRef               data_model; /* may be %NULL because there is only a weak ref on it */
 	gulong                 model_changes_signals[3];
 	gboolean               keep_param_changes;
 	gint                   row; /* -1 if row is unknown */
@@ -180,7 +180,7 @@ static void
 gda_data_model_iter_init (GdaDataModelIter *iter)
 {
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	priv->data_model = NULL;
+	g_weak_ref_set (&priv->data_model, NULL);
 	priv->row = -1;
 	priv->model_changes_signals[0] = 0;
 	priv->model_changes_signals[1] = 0;
@@ -191,9 +191,24 @@ gda_data_model_iter_init (GdaDataModelIter *iter)
 static void 
 model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 {
+	g_return_if_fail (model != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (iter != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
+
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	g_assert (model == priv->data_model);
-		
+
+	GdaDataModel *obj = g_weak_ref_get (&priv->data_model);
+	if (obj == NULL) {
+		g_warning (_("Iter has an invalid/non-existent reference to a data model"));
+		return;
+	}
+	if (model != obj) {
+		g_warning (_("Referenced data model in iterator doesn't belong to given data model"));
+		g_object_unref (obj);
+		return;
+	}
+	g_object_unref (obj);
 	/* sync parameters with the new values in row */
 	if (priv->row == row) {
 		priv->keep_param_changes = TRUE;
@@ -205,6 +220,11 @@ model_row_updated_cb (GdaDataModel *model, gint row, GdaDataModelIter *iter)
 static void 
 model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataModelIter *iter)
 {
+	g_return_if_fail (model != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (iter != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
+
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
 
 	if (priv->row < 0)
@@ -227,6 +247,11 @@ model_row_removed_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, GdaDataModelI
 static void
 define_holder_for_data_model_column (GdaDataModel *model, gint col, GdaDataModelIter *iter)
 {
+	g_return_if_fail (model != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (iter != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
+
 	gchar *str;
 	GdaHolder *param;
 	GdaColumn *column;
@@ -297,6 +322,11 @@ define_holder_for_data_model_column (GdaDataModel *model, gint col, GdaDataModel
 static void
 model_reset_cb (GdaDataModel *model, GdaDataModelIter *iter)
 {
+	g_return_if_fail (model != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL (model));
+	g_return_if_fail (iter != NULL);
+	g_return_if_fail (GDA_IS_DATA_MODEL_ITER (iter));
+
 	gint row;
 
 	row = gda_data_model_iter_get_row (iter);
@@ -368,10 +398,13 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 	iter = GDA_DATA_MODEL_ITER (paramlist);
 
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	GdaDataModel *model = g_weak_ref_get (&priv->data_model);
 
-	g_return_val_if_fail (priv->data_model != NULL, NULL);
-
-	g_return_val_if_fail (GDA_IS_DATA_MODEL (priv->data_model), NULL);
+	if (model == NULL) {
+		g_set_error (&error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_INVALID,
+				     _("Invalid data model. Can't validate holder"));
+		return error;
+	}
 
 	if (new_value)
 		nvalue = (GValue*) new_value;
@@ -379,9 +412,9 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 		nvalue = gda_value_new_null();
 
 	iter = (GdaDataModelIter *) paramlist;
-	if (!priv->keep_param_changes && (priv->row >= 0) && (GDA_IS_DATA_MODEL (priv->data_model))) {
-		g_signal_handler_block (priv->data_model, priv->model_changes_signals [0]);
-		g_signal_handler_block (priv->data_model, priv->model_changes_signals [1]);
+	if (!priv->keep_param_changes && (priv->row >= 0) && (GDA_IS_DATA_MODEL (model))) {
+		g_signal_handler_block (model, priv->model_changes_signals [0]);
+		g_signal_handler_block (model, priv->model_changes_signals [1]);
 		
 		/* propagate the value update to the data model */
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
@@ -395,18 +428,22 @@ validate_holder_change_cb (GdaSet *paramlist, GdaHolder *param, const GValue *ne
 		}
 		else {
 			g_print ("using Data Model default set_value_at\n");
-			gda_data_model_set_value_at ((GdaDataModel *) priv->data_model, col, priv->row, nvalue, &error);
+			gda_data_model_set_value_at (model, col, priv->row, nvalue, &error);
 		}
 		
-		g_signal_handler_unblock (priv->data_model, priv->model_changes_signals [0]);
-		g_signal_handler_unblock (priv->data_model, priv->model_changes_signals [1]);
+		g_signal_handler_unblock (model, priv->model_changes_signals [0]);
+		g_signal_handler_unblock (model, priv->model_changes_signals [1]);
 	}
 	if (!new_value)
 		gda_value_free (nvalue);
 
-	if (!error && GDA_SET_CLASS(gda_data_model_iter_parent_class)->validate_holder_change)
+	if (!error && GDA_SET_CLASS(gda_data_model_iter_parent_class)->validate_holder_change) {
+		g_object_unref (model);
 		/* for the parent class */
 		return (GDA_SET_CLASS(gda_data_model_iter_parent_class))->validate_holder_change (paramlist, param, new_value);
+	}
+
+	g_object_unref (model);
 
 	return error;
 }
@@ -430,13 +467,21 @@ holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param, const gchar *att_na
 
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
 
-	if (!GDA_IS_DATA_PROXY (priv->data_model))
+	GdaDataModel *model = g_weak_ref_get (&priv->data_model);
+
+	if (model == NULL) {
 		return;
+	}
+
+	if (!GDA_IS_DATA_PROXY (model)) {
+		g_object_unref (model);
+		return;
+	}
 
 	if (!strcmp (att_name, GDA_ATTRIBUTE_IS_DEFAULT) &&
 	    !priv->keep_param_changes && (priv->row >= 0)) {
-		g_signal_handler_block (priv->data_model, priv->model_changes_signals [0]);
-		g_signal_handler_block (priv->data_model, priv->model_changes_signals [1]);
+		g_signal_handler_block (model, priv->model_changes_signals [0]);
+		g_signal_handler_block (model, priv->model_changes_signals [1]);
 		
 		/* propagate the value update to the data model */
 		col = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (param), "model_col")) - 1;
@@ -445,17 +490,19 @@ holder_attr_changed_cb (GdaSet *paramlist, GdaHolder *param, const gchar *att_na
 		if (att_value && g_value_get_boolean (att_value))
 			toset = TRUE;
 		if (toset && gda_holder_get_default_value (param))
-			gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (priv->data_model),
+			gda_data_proxy_alter_value_attributes (GDA_DATA_PROXY (model),
 							       priv->row, col,
 							       GDA_VALUE_ATTR_CAN_BE_DEFAULT | GDA_VALUE_ATTR_IS_DEFAULT);
 		
-		g_signal_handler_unblock (priv->data_model, priv->model_changes_signals [0]);
-		g_signal_handler_unblock (priv->data_model, priv->model_changes_signals [1]);
+		g_signal_handler_unblock (model, priv->model_changes_signals [0]);
+		g_signal_handler_unblock (model, priv->model_changes_signals [1]);
 	}
 
 	/* for the parent class */
 	if ((GDA_SET_CLASS(gda_data_model_iter_parent_class))->holder_attr_changed)
 		(GDA_SET_CLASS(gda_data_model_iter_parent_class))->holder_attr_changed (paramlist, param, att_name, att_value);
+
+	g_object_unref (model);
 }
 
 static void
@@ -468,13 +515,12 @@ gda_data_model_iter_finalize (GObject *object)
 
 	iter = GDA_DATA_MODEL_ITER (object);
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	if (priv->data_model) {
-		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [0]);
-		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [1]);
-		g_signal_handler_disconnect (priv->data_model, priv->model_changes_signals [2]);
-		g_object_remove_weak_pointer (G_OBJECT (priv->data_model),
-					      (gpointer*) &(priv->data_model));
-		priv->data_model = NULL;
+	GdaDataModel *model = g_weak_ref_get (&priv->data_model);
+	if (model != NULL) {
+		g_signal_handler_disconnect (model, priv->model_changes_signals [0]);
+		g_signal_handler_disconnect (model, priv->model_changes_signals [1]);
+		g_signal_handler_disconnect (model, priv->model_changes_signals [2]);
+		g_object_unref (model);
 	}
 
 	/* parent class */
@@ -496,25 +542,26 @@ gda_data_model_iter_set_property (GObject *object,
 		case PROP_DATA_MODEL: {
 			GdaDataModel *model;
 
-			GObject* ptr = g_value_get_object (value);
-			g_return_if_fail (ptr && GDA_IS_DATA_MODEL (ptr));
+			GObject* ptr = g_value_dup_object (value);
+			if (!GDA_IS_DATA_MODEL (ptr)) {
+				g_object_unref (ptr);
+				g_warning (_("Invalid data model object. Can't set property"));
+				return;
+			}
 			model = GDA_DATA_MODEL (ptr);
-			if (priv->data_model) {
-				if (priv->data_model == model)
+			GdaDataModel *current = g_weak_ref_get (&priv->data_model);
+			if (current != NULL) {
+				if (current == model)
 					return;
-				g_signal_handler_disconnect (priv->data_model,
+				g_signal_handler_disconnect (current,
 							     priv->model_changes_signals [0]);
-				g_signal_handler_disconnect (priv->data_model,
+				g_signal_handler_disconnect (current,
 							     priv->model_changes_signals [1]);
-				g_signal_handler_disconnect (priv->data_model,
+				g_signal_handler_disconnect (current,
 							     priv->model_changes_signals [2]);
-				g_object_remove_weak_pointer (G_OBJECT (priv->data_model),
-							      (gpointer*) &(priv->data_model));
 			}
 
-			priv->data_model = model;
-			g_object_add_weak_pointer (G_OBJECT (priv->data_model),
-						   (gpointer*) &(priv->data_model));
+			g_weak_ref_set (&priv->data_model, model);
 
 			priv->model_changes_signals [0] = g_signal_connect (G_OBJECT (model), "row-updated",
 										  G_CALLBACK (model_row_updated_cb),
@@ -525,6 +572,7 @@ gda_data_model_iter_set_property (GObject *object,
 			priv->model_changes_signals [2] = g_signal_connect (G_OBJECT (model), "reset",
 										  G_CALLBACK (model_reset_cb), iter);
 			model_reset_cb (GDA_DATA_MODEL (ptr), iter);
+			g_object_unref (ptr);
 			break;
 		}
 		case PROP_FORCED_MODEL: {
@@ -561,11 +609,23 @@ gda_data_model_iter_get_property (GObject *object,
 	if (priv) {
 		switch (param_id) {
 		case PROP_DATA_MODEL:
-			g_value_set_object (value, G_OBJECT (priv->data_model));
+			{
+				GObject *obj = g_weak_ref_get (&priv->data_model);
+				g_value_set_object (value, obj);
+				if (obj != NULL) {
+					g_object_unref (obj);
+				}
+			}
 			break;
 		case PROP_FORCED_MODEL:
-			g_warning ("Deprecated property, not to be used");
-			g_value_set_object (value, G_OBJECT (priv->data_model));
+			{
+				g_warning ("Deprecated property, not to be used");
+				GObject *obj = g_weak_ref_get (&priv->data_model);
+				g_value_set_object (value, obj);
+				if (obj != NULL) {
+					g_object_unref (obj);
+				}
+			}
 			break;
 		case PROP_CURRENT_ROW:
 			g_value_set_int (value, priv->row);
@@ -624,12 +684,14 @@ real_gda_data_model_iter_move_to_row (GdaDataModelIter *iter, gint row)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 
 	GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
-	GdaDataModel *model;
+	GdaDataModel *model = g_weak_ref_get (&priv->data_model);
+	gboolean ret = FALSE;
 
-	model = priv->data_model;
-	g_return_val_if_fail (model, FALSE);
-
-	return gda_data_model_iter_move_to_row_default (model, iter, row);
+	ret = gda_data_model_iter_move_to_row_default (model, iter, row);
+	if (model != NULL) {
+		g_object_unref (model);
+	}
+	return ret;
 }
 
 static void
@@ -744,12 +806,15 @@ real_gda_data_model_iter_move_next (GdaDataModelIter *iter)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 
   GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	gboolean ret = FALSE;
 
-	g_return_val_if_fail (priv, FALSE);
-	g_return_val_if_fail (priv->data_model, FALSE);
+	model = g_weak_ref_get (&priv->data_model);
 
-	model = priv->data_model;
-	return gda_data_model_iter_move_next_default (model, iter);
+	ret = gda_data_model_iter_move_next_default (model, iter);
+	if (model != NULL) {
+		g_object_unref (model);
+	}
+	return ret;
 }
 
 /**
@@ -849,13 +914,15 @@ real_gda_data_model_iter_move_prev (GdaDataModelIter *iter)
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ITER (iter), FALSE);
 
   GdaDataModelIterPrivate *priv = gda_data_model_iter_get_instance_private (iter);
+	gboolean ret = FALSE;
 
-	g_return_val_if_fail (priv, FALSE);
-	g_return_val_if_fail (priv->data_model, FALSE);
-
-	model = priv->data_model;
+	model = g_weak_ref_get (&priv->data_model);
 	/* default method */
-	return gda_data_model_iter_move_prev_default (model, iter);
+	ret = gda_data_model_iter_move_prev_default (model, iter);
+	if (model != NULL) {
+		g_object_unref (model);
+	}
+	return ret;
 }
 
 /**
