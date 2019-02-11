@@ -34,7 +34,6 @@
 #include "gda-marshal.h"
 #include "gda-util.h"
 #include <libgda.h>
-#include <libgda/gda-attributes-manager.h>
 #include <libgda/gda-custom-marshal.h>
 
 /*
@@ -65,19 +64,16 @@ static void bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder);
 static void full_bound_holder_changed_cb (GdaHolder *alias_of, GdaHolder *holder);
 static void gda_holder_set_full_bind (GdaHolder *holder, GdaHolder *alias_of);
 
-GdaAttributesManager *gda_holder_attributes_manager;
-
 /* signals */
 enum
 {
 	CHANGED,
-        SOURCE_CHANGED,
+	SOURCE_CHANGED,
 	VALIDATE_CHANGE,
-	ATT_CHANGED,
-        LAST_SIGNAL
+	LAST_SIGNAL
 };
 
-static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0, 0, 0 };
+static gint gda_holder_signals[LAST_SIGNAL] = { 0, 0, 0 };
 
 
 /* properties */
@@ -93,7 +89,8 @@ enum
 	PROP_SOURCE_COLUMN,
 	PROP_GDA_TYPE,
 	PROP_NOT_NULL,
-	PROP_VALIDATE_CHANGES
+	PROP_VALIDATE_CHANGES,
+	PROP_PLUGIN
 };
 
 
@@ -121,6 +118,9 @@ typedef struct {
 	GRecMutex        mutex;
 
 	gboolean         validate_changes;
+	gchar           *name;
+	gchar           *desc;
+	gchar           *plugin;
 } GdaHolderPrivate;
 G_DEFINE_TYPE_WITH_CODE (GdaHolder, gda_holder, G_TYPE_OBJECT,
                          G_ADD_PRIVATE (GdaHolder)
@@ -155,13 +155,6 @@ m_validate_change (G_GNUC_UNUSED GdaHolder *holder, G_GNUC_UNUSED const GValue *
 }
 
 static void
-holder_attribute_set_cb (GObject *obj, const gchar *att_name, const GValue *value,
-			 G_GNUC_UNUSED gpointer data)
-{
-	g_signal_emit (obj, gda_holder_signals[ATT_CHANGED], 0, att_name, value);
-}
-
-static void
 gda_holder_class_init (GdaHolderClass *class)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (class);
@@ -192,22 +185,6 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, changed),
                               NULL, NULL,
                               _gda_marshal_VOID__VOID, G_TYPE_NONE, 0);
-	/**
-	 * GdaHolder::attribute-changed:
-	 * @holder: the #GdaHolder
-	 * @att_name: attribute's name
-	 * @att_value: attribute's value
-	 * 
-	 * Gets emitted when any @holder's attribute has changed
-	 */
-	gda_holder_signals[ATT_CHANGED] =
-                g_signal_new ("attribute-changed",
-                              G_TYPE_FROM_CLASS (object_class),
-                              G_SIGNAL_RUN_FIRST,
-                              G_STRUCT_OFFSET (GdaHolderClass, att_changed),
-                              NULL, NULL,
-                              _gda_marshal_VOID__STRING_VALUE, G_TYPE_NONE, 2, 
-			      G_TYPE_STRING, G_TYPE_VALUE);
 
 	/**
 	 * GdaHolder::validate-change:
@@ -276,6 +253,9 @@ gda_holder_class_init (GdaHolderClass *class)
 							   "with the source-model property",
 							   0, G_MAXINT, 0,
 							   (G_PARAM_READABLE | G_PARAM_WRITABLE)));
+	g_object_class_install_property (object_class, PROP_PLUGIN,
+					 g_param_spec_string ("plugin", NULL, "Holder's plugin", NULL,
+							      (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	/**
 	 * GdaHolder:validate-changes:
@@ -288,9 +268,6 @@ gda_holder_class_init (GdaHolderClass *class)
 	g_object_class_install_property (object_class, PROP_VALIDATE_CHANGES,
 					 g_param_spec_boolean ("validate-changes", NULL, "Defines if the validate-change signal is emitted on value change", TRUE,
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
-	
-	/* extra */
-	gda_holder_attributes_manager = gda_attributes_manager_new (TRUE, holder_attribute_set_cb, NULL);
 }
 
 static void
@@ -306,7 +283,7 @@ gda_holder_init (GdaHolder *holder)
 {
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 
-	priv->id = NULL;
+	priv->id = g_strdup ("id");
 
 	priv->g_type = GDA_TYPE_NULL;
 	priv->full_bind = NULL;
@@ -328,20 +305,25 @@ gda_holder_init (GdaHolder *holder)
 	g_rec_mutex_init (& (priv->mutex));
 
 	priv->validate_changes = TRUE;
+	priv->name = NULL;
+	priv->desc = NULL;
+	priv->plugin = NULL;
 }
 
 /**
  * gda_holder_new:
  * @type: the #GType requested
+ * @id: an identifiation
  *
  * Creates a new holder of type @type
  *
  * Returns: a new #GdaHolder object
  */
 GdaHolder *
-gda_holder_new (GType type)
+gda_holder_new (GType type, const gchar *id)
 {
-	return (GdaHolder*) g_object_new (GDA_TYPE_HOLDER, "g-type", type, NULL);
+	g_return_val_if_fail (id != NULL, NULL);
+	return (GdaHolder*) g_object_new (GDA_TYPE_HOLDER, "g-type", type, "id", id, NULL);
 }
 
 /**
@@ -372,6 +354,12 @@ gda_holder_copy (GdaHolder *orig)
 
 	if (priv->id)
 		cpriv->id = g_strdup (priv->id);
+	if (priv->name)
+		cpriv->name = g_strdup (priv->name);
+	if (priv->desc)
+		cpriv->desc = g_strdup (priv->desc);
+	if (priv->plugin)
+		cpriv->plugin = g_strdup (priv->plugin);
 
 	if (priv->full_bind)
 		gda_holder_set_full_bind (holder, priv->full_bind);
@@ -397,13 +385,6 @@ gda_holder_copy (GdaHolder *orig)
 		if (priv->default_value)
 			cpriv->default_value = gda_value_copy (priv->default_value);
 		cpriv->not_null = priv->not_null;
-		gda_attributes_manager_copy (gda_holder_attributes_manager, (gpointer) orig, gda_holder_attributes_manager, (gpointer) holder);
-
-		GValue *att_value;
-		g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), cpriv->default_forced);
-		gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
-		gda_value_free (att_value);
-
 
 		gda_holder_unlock ((GdaLockable*) orig);
 		return holder;
@@ -438,21 +419,22 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 
 	static GMutex serial_mutex;
 	static guint serial = 0;
+	const gchar *idm = NULL;
 
-	holder = gda_holder_new (type);
+	g_print ("Creating inline: %s", id);
+
+	if (id != NULL) {
+		idm = id;
+	} else {
+		idm = g_strdup_printf ("%d", serial++);
+	}
+
+	holder = gda_holder_new (type, idm);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	if (holder) {
 		GValue *value;
 		va_list ap;
 		GError *lerror = NULL;
-
-		if (id)
-			priv->id = g_strdup (id);
-		else {
-			g_mutex_lock (&serial_mutex);
-			priv->id = g_strdup_printf ("%d", serial++);
-			g_mutex_unlock (&serial_mutex);
-		}
 
 		va_start (ap, id);
 		value = gda_value_new (type);
@@ -565,7 +547,22 @@ gda_holder_finalize (GObject   * object)
 
 	holder = GDA_HOLDER (object);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
-	g_free (priv->id);
+	if (priv->id != NULL) {
+		g_free (priv->id);
+		priv->id = NULL;
+	}
+	if (priv->name != NULL) {
+		g_free (priv->name);
+		priv->name = NULL;
+	}
+	if (priv->desc != NULL) {
+		g_free (priv->desc);
+		priv->desc = NULL;
+	}
+	if (priv->plugin != NULL) {
+		g_free (priv->plugin);
+		priv->plugin = NULL;
+	}
 	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
@@ -586,14 +583,35 @@ gda_holder_set_property (GObject *object,
 	if (priv) {
 		switch (param_id) {
 		case PROP_ID:
-			g_free (priv->id);
+			if (priv->id != NULL) {
+				g_free (priv->id);
+				priv->id = NULL;
+			}
 			priv->id = g_value_dup_string (value);
 			break;
 		case PROP_NAME:
-			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_NAME, value);
+			if (priv->name != NULL) {
+				g_free (priv->name);
+				priv->name = NULL;
+			}
+			priv->name = g_value_dup_string (value);
+      g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 			break;
 		case PROP_DESCR:
-			gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_DESCRIPTION, value);
+			if (priv->desc != NULL) {
+				g_free (priv->desc);
+				priv->desc = NULL;
+			}
+			priv->desc = g_value_dup_string (value);
+      g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+			break;
+		case PROP_PLUGIN:
+			if (priv->plugin != NULL) {
+				g_free (priv->plugin);
+				priv->plugin = NULL;
+			}
+			priv->plugin = g_value_dup_string (value);
+      g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 			break;
 		case PROP_GDA_TYPE:
 			if (priv->g_type == GDA_TYPE_NULL) {
@@ -664,16 +682,14 @@ gda_holder_get_property (GObject *object,
 			g_value_set_string (value, priv->id);
 			break;
 		case PROP_NAME:
-			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_NAME);
-			if (cvalue)
-				g_value_set_string (value, g_value_get_string (cvalue));
+			if (priv->name != NULL)
+				g_value_set_string (value, priv->name);
 			else
 				g_value_set_string (value, priv->id);
 			break;
 		case PROP_DESCR:
-			cvalue = gda_holder_get_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION);
-			if (cvalue)
-				g_value_set_string (value, g_value_get_string (cvalue));
+			if (priv->desc != NULL)
+				g_value_set_string (value, priv->desc);
 			else
 				g_value_set_string (value, NULL);
 			break;
@@ -1067,10 +1083,6 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			 new_value && (G_VALUE_TYPE (new_value) == priv->g_type))
 			priv->default_forced = !gda_value_compare (priv->default_value, new_value);
 	}
-	GValue att_value = {0};
-	g_value_init (&att_value, G_TYPE_BOOLEAN);
-	g_value_set_boolean (&att_value, priv->default_forced);
-	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, &att_value);
 
 	/* real setting of the value */
 	if (priv->full_bind) {
@@ -1213,10 +1225,6 @@ real_gda_holder_set_const_value (GdaHolder *holder, const GValue *value,
 			 value && (G_VALUE_TYPE (value) == priv->g_type))
 			priv->default_forced = !gda_value_compare (priv->default_value, value);
 	}
-	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), priv->default_forced);
-	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
-	gda_value_free (att_value);
 
 	/* real setting of the value */
 	if (priv->full_bind) {
@@ -1451,10 +1459,6 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 		}
 	}
 
-	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
-	gda_value_free (att_value);
 	g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 
 	gda_holder_unlock ((GdaLockable*) holder);
@@ -1534,20 +1538,17 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 
 		/* check if default is equal to current value */
 		if (GDA_VALUE_HOLDS_NULL (value) &&
-		    (!current || GDA_VALUE_HOLDS_NULL (current)))
+		    (!current || GDA_VALUE_HOLDS_NULL (current))) {
 			priv->default_forced = TRUE;
-		else if ((G_VALUE_TYPE (value) == priv->g_type) &&
-			 current && !gda_value_compare (value, current))
+		} else if ((G_VALUE_TYPE (value) == priv->g_type) &&
+			 current && !gda_value_compare (value, current)) {
 			priv->default_forced = TRUE;
+		}
 
 		priv->default_value = gda_value_copy ((GValue *)value);
+		//g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 	}
 	
-	GValue *att_value;
-	g_value_set_boolean ((att_value = gda_value_new (G_TYPE_BOOLEAN)), priv->default_forced);
-	gda_holder_set_attribute_static (holder, GDA_ATTRIBUTE_IS_DEFAULT, att_value);
-	gda_value_free (att_value);
-
 	/* don't emit the "changed" signal */
 	gda_holder_unlock ((GdaLockable*) holder);
 }
@@ -1715,8 +1716,7 @@ bind_to_notify_cb (GdaHolder *bind_to, G_GNUC_UNUSED GParamSpec *pspec, GdaHolde
 	}
 	else if (priv->g_type != bpriv->g_type) {
 		/* break holder's binding because type differ */
-		g_warning (_("Cannot bind holders if their type is not the same, "
-			     "breaking existing bind where '%s' was bound to '%s'"),
+		g_message (_("Cannot bind holders if their type is not the same, breaking existing bind where '%s' was bound to '%s'"),
 			   gda_holder_get_id (holder), gda_holder_get_id (bind_to));
 		gda_holder_set_bind (holder, NULL, NULL);
 	}
@@ -1978,67 +1978,6 @@ gda_holder_get_alphanum_id (GdaHolder *holder)
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	return gda_text_to_alphanum (priv->id);
-}
-
-/**
- * gda_holder_get_attribute:
- * @holder: a #GdaHolder
- * @attribute: attribute name as a string
- *
- * Get the value associated to a named attribute.
- *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
- *
- * Returns: a read-only #GValue, or %NULL if not attribute named @attribute has been set for @holder
- */
-const GValue *
-gda_holder_get_attribute (GdaHolder *holder, const gchar *attribute)
-{
-	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
-	/*g_print ("GdaHolder %p ATTR '%s' get => '%s'\n", holder, attribute, 
-	  gda_value_stringify (gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute))); */
-	return gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
-}
-
-/**
- * gda_holder_set_attribute:
- * @holder: a #GdaHolder
- * @attribute: attribute name
- * @value: a #GValue, or %NULL
- * @destroy: a function to be called when @attribute is not needed anymore, or %NULL
- *
- * Set the value associated to a named attribute. The @attribute string is 'stolen' by this method, and
- * the memory it uses will be freed using the @destroy function when no longer needed (if @destroy is %NULL,
- * then the string will not be freed at all).
- *
- * Attributes can have any name, but Libgda proposes some default names, 
- * see <link linkend="libgda-6.0-Attributes-manager.synopsis">this section</link>.
- *
- * For example one would use it as:
- *
- * <code>gda_holder_set_attribute (holder, g_strdup (my_attribute), my_value, g_free);</code>
- * <code>gda_holder_set_attribute (holder, GDA_ATTRIBUTE_NAME, my_value, NULL);</code>
- *
- * If there is already an attribute named @attribute set, then its value is replaced with the new value (@value is
- * copied), except if @value is %NULL, in which case the attribute is removed.
- */
-void
-gda_holder_set_attribute (GdaHolder *holder, const gchar *attribute, const GValue *value, GDestroyNotify destroy)
-{
-	const GValue *cvalue;
-	g_return_if_fail (GDA_IS_HOLDER (holder));
-
-	gda_holder_lock ((GdaLockable*) holder);
-	cvalue = gda_attributes_manager_get (gda_holder_attributes_manager, holder, attribute);
-	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
-	    (!value && !cvalue)) {
-		gda_holder_unlock ((GdaLockable*) holder);
-		return;
-	}
-
-	gda_attributes_manager_set_full (gda_holder_attributes_manager, holder, attribute, value, destroy);
-	//g_print ("GdaHolder %p ATTR '%s' set to '%s'\n", holder, attribute, gda_value_stringify (value)); 
-	gda_holder_unlock ((GdaLockable*) holder);
 }
 
 static void

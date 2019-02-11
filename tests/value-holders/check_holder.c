@@ -109,7 +109,7 @@ test1 (GError **error)
 	const GValue *cvalue;
 	GValue *value, *copy;
 
-	h = gda_holder_new (G_TYPE_STRING);
+	h = gda_holder_new (G_TYPE_STRING, "id");
 	emitted_signals_monitor_holder (h);
 	cvalue = gda_holder_get_value (h);
 	if (!gda_value_is_null (cvalue)) {
@@ -296,17 +296,20 @@ test4 (GError **error)
 	}
 
 	/***/
+
 	if (gda_holder_set_value_to_default (h)) {
 		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
 			     "Should not set GdaHolder's value to default");
 		return FALSE;
 	}
+  printf ("Checking signals \"changed\" after try to set to default\n");
 	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
 	/** Set a default value to NULL */
 	value = gda_value_new_null ();
 	gda_holder_set_default_value (h, value);
+  printf ("Checking signals \"changed\" after change default value\n");
 	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
@@ -331,8 +334,10 @@ test4 (GError **error)
 			     "Could not set GdaHolder's value to default");
 		return FALSE;
 	}
+  printf ("Find \"changed\" signals after reset to default\n");
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
+  printf ("Checking empty signals \"changed\" after reset to default\n");
 	if (!emitted_signals_check_empty (NULL, "changed", error))
 		return FALSE;
 
@@ -344,10 +349,12 @@ test4 (GError **error)
 		return FALSE;
 	}
 
+  printf ("Changing value to 'hey'\n");
 	/** set value to "hey" */
 	value = gda_value_new_from_string ("hey", G_TYPE_STRING);
 	if (!gda_holder_set_value (h, value, error))
 		return FALSE;
+  printf ("Checking signals \"changed\"");
 	if (!emitted_signals_find (h, "changed", error))
 		return FALSE;
 	if (!emitted_signals_check_empty (NULL, "changed", error))
@@ -724,7 +731,7 @@ test8 (GError **error)
 	GdaHolder *h;
 	GValue *value;
 
-	h = gda_holder_new (G_TYPE_STRING);
+	h = gda_holder_new (G_TYPE_STRING, "id");
 	emitted_signals_monitor_holder (h);
 	emitted_signals_reset ();
 
@@ -758,7 +765,7 @@ test9 (GError **error)
 	gchar *model_data="1,John\n2,Jack";
 	gint col;
 
-	h = gda_holder_new (G_TYPE_STRING);
+	h = gda_holder_new (G_TYPE_STRING, "id");
 	emitted_signals_monitor_holder (h);
 	emitted_signals_reset ();
 
@@ -840,7 +847,7 @@ test10 (GError **error)
 	const GValue *cvalue;
 	GValue *value;
 
-	h = gda_holder_new (G_TYPE_STRING);
+	h = gda_holder_new (G_TYPE_STRING, "id");
 	emitted_signals_monitor_holder (h);
 
 	/***/
@@ -912,7 +919,7 @@ test11 (GError **error)
 	const GValue *cvalue;
 	GValue *value;
 
-	h = gda_holder_new (GDA_TYPE_NULL);
+	h = gda_holder_new (GDA_TYPE_NULL, "id");
 	emitted_signals_monitor_holder (h);
 
 	/***/
@@ -965,48 +972,13 @@ test12 (GError **error)
 	const GValue *cvalue;
 	GValue *value;
 
-	h = gda_holder_new (GDA_TYPE_NULL);
+	h = gda_holder_new (GDA_TYPE_NULL, "id");
 
-	/***/
-	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
-	if (gda_holder_get_attribute (h, "attname1")) {
-		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
-			     "gda_holder_get_attribute() should have retunred NULL");
-		return FALSE;
-	}
-	gda_holder_set_attribute_static (h, "attname1", value);
-	gda_value_free (value);
-	cvalue = gda_holder_get_attribute (h, "attname1");
-	if (!cvalue) {
-		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
-			     "gda_holder_get_attribute() should have retunred a value");
-		return FALSE;
-	}
-	value = gda_value_new_from_string ("my string", G_TYPE_STRING);
-	if (gda_value_differ (cvalue, value)) {
-		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
-			     "gda_holder_get_attribute() retunred a wrong value");
-		return FALSE;
-	}
-
-	/***/
 	GdaHolder *copy;
 	gchar *name;
 
 	g_object_set (G_OBJECT (h), "name", "thename", NULL);
 	copy = gda_holder_copy (h);
-	cvalue = gda_holder_get_attribute (copy, "attname1");
-	if (!cvalue) {
-		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
-			     "gda_holder_get_attribute() should have retunred a value");
-		return FALSE;
-	}
-	if (gda_value_differ (cvalue, value)) {
-		g_set_error (error, TEST_ERROR, TEST_ERROR_GENERIC, "%s", 
-			     "gda_holder_get_attribute() retunred a wrong value");
-		return FALSE;
-	}
-	gda_value_free (value);
 
 	g_object_get (G_OBJECT (copy), "name", &name, NULL);
 	if (strcmp (name, "thename")) {
@@ -1027,8 +999,8 @@ static gboolean
 test13 (GError **error)
 {
 	GdaHolder *h1, *h2;
-	h1 = gda_holder_new (GDA_TYPE_NULL);
-	h2 = gda_holder_new (GDA_TYPE_NULL);
+	h1 = gda_holder_new (GDA_TYPE_NULL, "id1");
+	h2 = gda_holder_new (GDA_TYPE_NULL, "id2");
 	if (! gda_holder_set_bind (h1, h2, error)) {
 		g_object_unref (h1);
 		g_object_unref (h2);
@@ -1046,8 +1018,8 @@ test13 (GError **error)
 	g_object_unref (h2);
 	
 	/* another test */
-	h1 = gda_holder_new (GDA_TYPE_NULL);
-	h2 = gda_holder_new (G_TYPE_INT);
+	h1 = gda_holder_new (GDA_TYPE_NULL, "1");
+	h2 = gda_holder_new (G_TYPE_INT, "2");
 	if (! gda_holder_set_bind (h1, h2, error)) {
 		g_object_unref (h1);
 		g_object_unref (h2);
@@ -1064,8 +1036,8 @@ test13 (GError **error)
 	g_object_unref (h2);
 
 	/* another test */
-	h1 = gda_holder_new (G_TYPE_STRING);
-	h2 = gda_holder_new (GDA_TYPE_NULL);
+	h1 = gda_holder_new (G_TYPE_STRING, "1");
+	h2 = gda_holder_new (GDA_TYPE_NULL, "2");
 	if (! gda_holder_set_bind (h1, h2, error)) {
 		g_object_unref (h1);
 		g_object_unref (h2);
@@ -1090,8 +1062,8 @@ test13 (GError **error)
 	g_object_unref (h2);
 
 	/* another test */
-	h1 = gda_holder_new (G_TYPE_STRING);
-	h2 = gda_holder_new (GDA_TYPE_NULL);
+	h1 = gda_holder_new (G_TYPE_STRING, "1");
+	h2 = gda_holder_new (GDA_TYPE_NULL, "2");
 	if (! gda_holder_set_bind (h1, h2, error)) {
 		g_object_unref (h1);
 		g_object_unref (h2);

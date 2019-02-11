@@ -166,10 +166,9 @@ common_load_csv_file (const gchar *data_file, ...)
 		GdaHolder *holder;
 		GValue *v;
 		gchar *id;
-		
-		holder = gda_holder_new (G_TYPE_GTYPE);
+
 		id = g_strdup_printf ("G_TYPE_%d", cnum);
-		g_object_set (G_OBJECT (holder), "id", id, NULL);
+		holder = gda_holder_new (G_TYPE_GTYPE, id);
 		g_free (id);
 		
 		v = gda_value_new (G_TYPE_GTYPE);

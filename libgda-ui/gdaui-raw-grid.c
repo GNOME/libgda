@@ -707,14 +707,7 @@ create_columns_data (GdauiRawGrid *grid)
 			if (!title)
 				title = g_strdup (_("No title"));
 
-			plugin_val = gda_holder_get_attribute (param, GDAUI_ATTRIBUTE_PLUGIN);
-			if (plugin_val) {
-				if (G_VALUE_TYPE (plugin_val) == G_TYPE_STRING)
-					plugin = g_value_get_string (plugin_val);
-				else
-					g_warning (_("The '%s' attribute should be a G_TYPE_STRING value"),
-						   GDAUI_ATTRIBUTE_PLUGIN);
-			}
+			g_object_get (param, "plugin", &plugin, NULL);
 			renderer = _gdaui_new_cell_renderer (g_type, plugin);
 			cdata->data_cell = GTK_CELL_RENDERER (g_object_ref_sink ((GObject*) renderer));
 			g_hash_table_insert (priv->columns_hash, renderer, cdata);
@@ -856,8 +849,7 @@ reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_node)
 			if (plugin && cdata->single_param) {
 				GValue *value;
 				value = gda_value_new_from_string ((gchar*) plugin, G_TYPE_STRING);
-				gda_holder_set_attribute_static (cdata->single_param,
-								 GDAUI_ATTRIBUTE_PLUGIN, value);
+				g_object_set (cdata->single_param, "plugin", value, NULL);
 				gda_value_free (value);
 			}
 			if (plugin)

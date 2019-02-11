@@ -55,6 +55,7 @@ catch_css_parsing_errors (GtkCssProvider *provider,
   g_warning (_("Error parsing CSS: %s"), error->message);
 }
 
+extern void _gdaui_register_resource (void);
 /**
  * gdaui_init:
  *

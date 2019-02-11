@@ -40,16 +40,15 @@ make_options_set_from_string (const gchar *context, GdaSet *options)
 	if (options) {
 		for (list = gda_set_get_holders (options); list; list = list->next) {
 			GdaHolder *param = GDA_HOLDER (list->data);
-			const GValue *cvalue;
-			cvalue = gda_holder_get_attribute (param, context);
-			if (!cvalue)
+			gchar *val;
+			val = g_object_get_data ((GObject*) param, context);
+			if (!val)
 				continue;
 
 			GdaHolder *nparam;
 			const GValue *cvalue2;
 			cvalue2 = gda_holder_get_value (param);
-			nparam = gda_holder_new (G_VALUE_TYPE (cvalue2));
-			g_object_set ((GObject*) nparam, "id", g_value_get_string (cvalue), NULL);
+			nparam = gda_holder_new (G_VALUE_TYPE (cvalue2), val);
 			g_assert (gda_holder_set_value (nparam, cvalue2, NULL));
 			nlist = g_slist_append (nlist, nparam);
 		}

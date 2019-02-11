@@ -651,7 +651,6 @@ static void set_remove_source (GdaSet *set, GdaSetSource *source);
 static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
-static void att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *dataset);
 static void holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset);
 
 
@@ -1098,7 +1097,7 @@ gda_set_new_inline (gint nb, ...)
 
 		id = va_arg (ap, char *);
 		type = va_arg (ap, GType);
-		holder = (GdaHolder *) g_object_new (GDA_TYPE_HOLDER, "g-type", type, "id", id, NULL);
+		holder = gda_holder_new (type, id);
 
 		value = gda_value_new (type);
 		if (g_type_is_a (type, G_TYPE_BOOLEAN))
@@ -1596,8 +1595,6 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 						      G_CALLBACK (changed_holder_cb), set);
 		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
 						      G_CALLBACK (source_changed_holder_cb), set);
-		g_signal_handlers_disconnect_by_func (G_OBJECT (holder),
-						      G_CALLBACK (att_holder_changed_cb), set);
 	}
 	g_signal_handlers_disconnect_by_func (holder,
 					      G_CALLBACK (holder_notify_cb), set);
@@ -1634,17 +1631,6 @@ source_changed_holder_cb (G_GNUC_UNUSED GdaHolder *holder, GdaSet *set)
 	compute_public_data (set);
 }
 
-static void
-att_holder_changed_cb (GdaHolder *holder, const gchar *att_name, const GValue *att_value, GdaSet *set)
-{
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit (G_OBJECT (set), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder, att_name, att_value);
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-}
 
 static GError *
 validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *set)
@@ -1710,8 +1696,6 @@ gda_set_dispose (GObject *object)
 								      G_CALLBACK (changed_holder_cb), set);
 				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
 								      G_CALLBACK (source_changed_holder_cb), set);
-				g_signal_handlers_disconnect_by_func (G_OBJECT (list->data),
-								      G_CALLBACK (att_holder_changed_cb), set);
 			}
 			g_object_unref (list->data);
 		}
@@ -1889,24 +1873,22 @@ holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 		g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
 	}
 	else if (!strcmp (pspec->name, "name")) {
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
-		       GDA_ATTRIBUTE_NAME, gda_holder_get_attribute (holder, GDA_ATTRIBUTE_NAME));
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
+		gchar *name = NULL;
+		g_object_get (dataset, "name", &name, NULL);
+		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+				     "name", name != NULL ? name : "NULL");
+		if (name != NULL) {
+			g_free (name);
+		}
 	}
 	else if (!strcmp (pspec->name, "description")) {
-#ifdef GDA_DEBUG_signal
-	g_print (">> 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
-	g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
-		       GDA_ATTRIBUTE_DESCRIPTION, gda_holder_get_attribute (holder, GDA_ATTRIBUTE_DESCRIPTION));
-#ifdef GDA_DEBUG_signal
-	g_print ("<< 'HOLDER_ATTR_CHANGED' from %s\n", __FUNCTION__);
-#endif
+		gchar *desc = NULL;
+		g_object_get (dataset, "description", &desc, NULL);
+		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+				     "description", desc);
+		if (desc != NULL) {
+			g_free (desc);
+		}
 	}
 }
 
@@ -1924,7 +1906,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 	 * a holder B is similar to a holder A if it has the same ID
 	 */
 	hid = gda_holder_get_id (holder);
-	if (!hid) {
+	if (hid == NULL) {
 		g_warning (_("GdaHolder needs to have an ID"));
 		return FALSE;
 	}
@@ -1947,8 +1929,6 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 					  G_CALLBACK (changed_holder_cb), set);
 			g_signal_connect (G_OBJECT (holder), "source-changed",
 					  G_CALLBACK (source_changed_holder_cb), set);
-			g_signal_connect (G_OBJECT (holder), "attribute-changed",
-					  G_CALLBACK (att_holder_changed_cb), set);
 		}
 		if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
 			g_signal_connect (G_OBJECT (holder), "notify::g-type",

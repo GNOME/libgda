@@ -760,7 +760,7 @@ run_context_push_with_stmt (GdaReportEngine *engine, RunContext *context, GdaCon
 	GdaHolder *param;
 	GValue *value;
 	gchar *name;
-	param = gda_holder_new (G_TYPE_INT);
+	param = gda_holder_new (G_TYPE_INT, "id");
 	value = gda_value_new (G_TYPE_INT);
 	g_value_set_int (value, gda_data_model_get_n_rows  (model));
 	if (! gda_holder_set_value (param, value, error)) {

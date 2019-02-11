@@ -3136,9 +3136,9 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, sqlite3_int64 la
 			gchar *id;
 			const GValue *cvalue;
 			col = gda_data_model_describe_column (model, i);
-			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
-			g_object_set (G_OBJECT (h), "id", id,
+			h = gda_holder_new (gda_column_get_g_type (col), id);
+			g_object_set (G_OBJECT (h),
 				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
@@ -3922,8 +3922,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				GValue *value;
 				GSList *list;
 
-				holder = gda_holder_new (G_TYPE_INT);
-				g_object_set ((GObject*) holder, "id", "IMPACTED_ROWS", NULL);
+				holder = gda_holder_new (G_TYPE_INT, "IMPACTED_ROWS");
 				g_value_set_int ((value = gda_value_new (G_TYPE_INT)), changes);
 				gda_holder_take_value (holder, value, NULL);
 				list = g_slist_append (NULL, holder);

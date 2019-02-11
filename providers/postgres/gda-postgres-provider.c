@@ -1843,9 +1843,9 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 			const GValue *cvalue;
 
 			col = gda_data_model_describe_column (model, i);
-			h = gda_holder_new (gda_column_get_g_type (col));
 			id = g_strdup_printf ("+%d", i);
-			g_object_set (G_OBJECT (h), "id", id, "not-null", FALSE,
+			h = gda_holder_new (gda_column_get_g_type (col), id);
+			g_object_set (G_OBJECT (h), "not-null", FALSE,
 				      "name", gda_column_get_name (col), NULL);
 			g_free (id);
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);

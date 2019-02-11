@@ -339,8 +339,8 @@ have_meta_store_ready (TConnection *tcnc, GError **error)
 		GdaHolder *h;
 		h = gda_set_get_holder (tcnc->priv->infos, "meta_filename");
 		if (!h) {
-			h = gda_holder_new (G_TYPE_STRING);
-			g_object_set (h, "id", "meta_filename",
+			h = gda_holder_new (G_TYPE_STRING, "meta_filename");
+			g_object_set (h,
 				      "description", _("File containing the meta data associated to the connection"), NULL);
 			gda_set_add_holder (tcnc->priv->infos, h);
 		}
@@ -937,8 +937,8 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 			GdaHolder *h;
 			h = gda_set_get_holder (tcnc->priv->infos, "date_format");
 			if (!h) {
-				h = gda_holder_new (G_TYPE_STRING);
-				g_object_set (h, "id", "date_format",
+				h = gda_holder_new (G_TYPE_STRING, "date_format");
+				g_object_set (h,
 					      "description", _("Format of the date used for the connection, where "
 							       "YYYY is the year, MM the month and DD the day"), NULL);
 				gda_set_add_holder (tcnc->priv->infos, h);
@@ -2063,7 +2063,7 @@ foreach_ui_plugins_for_params (GdaSqlAnyPart *part, ParamsData *data, G_GNUC_UNU
 		/*g_print ("Using plugin [%s]\n", plugin);*/
 		GValue *value;
 		g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), plugin);
-		gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+		g_object_set (holder, "plugin", value, NULL);
 		gda_value_free (value);
 	}
 
@@ -2474,8 +2474,8 @@ t_connection_get_all_infos (TConnection *tcnc)
 	GdaHolder *h;
 	h = gda_set_get_holder (tcnc->priv->infos, "db_provider");
 	if (!h) {
-		h = gda_holder_new (G_TYPE_STRING);
-		g_object_set (h, "id", "db_provider",
+		h = gda_holder_new (G_TYPE_STRING, "db_provider");
+		g_object_set (h,
 			      "description", _("Database provider"), NULL);
 		gda_set_add_holder (tcnc->priv->infos, h);
 	}
@@ -2484,8 +2484,8 @@ t_connection_get_all_infos (TConnection *tcnc)
 	/* database name */
 	h = gda_set_get_holder (tcnc->priv->infos, "db_name");
 	if (!h) {
-		h = gda_holder_new (G_TYPE_STRING);
-		g_object_set (h, "id", "db_name",
+		h = gda_holder_new (G_TYPE_STRING, "db_name");
+		g_object_set (h,
 			      "description", _("Database name"), NULL);
 		gda_set_add_holder (tcnc->priv->infos, h);
 	}

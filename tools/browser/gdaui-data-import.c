@@ -365,8 +365,7 @@ spec_changed_cb (GtkWidget *wid, GdauiDataImport *import)
 	for (sepno = SEP_COMMA; sepno < SEP_LAST; sepno++) {
 		if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (import->priv->sep_array [sepno]))) {
 			sep = g_object_get_data (G_OBJECT (import->priv->sep_array [sepno]), "_sep");
-			psep = gda_holder_new (G_TYPE_STRING);
-			g_object_set (G_OBJECT (psep), "id", "SEPARATOR", NULL);
+			psep = gda_holder_new (G_TYPE_STRING, "SEPARATOR");
 			if (sepno != SEP_OTHER)
 				gda_holder_set_value_str (psep, NULL, sep, NULL);
 			else

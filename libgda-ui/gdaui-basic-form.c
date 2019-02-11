@@ -500,12 +500,10 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 			attrs |= toset ? 0 : GDA_VALUE_ATTR_CAN_BE_NULL;
 			mask |= GDA_VALUE_ATTR_CAN_BE_NULL;
 
-			defv = gda_holder_get_attribute (param, GDA_ATTRIBUTE_IS_DEFAULT);
-			if (defv && (G_VALUE_TYPE (defv) == G_TYPE_BOOLEAN) && g_value_get_boolean (defv)) {
+			if (gda_holder_value_is_default (param)) {
 				attrs |= GDA_VALUE_ATTR_IS_DEFAULT;
 				mask |= GDA_VALUE_ATTR_IS_DEFAULT;
 			}
-
 			g_signal_handlers_block_by_func (G_OBJECT (entry),
 							 G_CALLBACK (entry_contents_modified), sentry);
 			gdaui_data_entry_set_attributes (GDAUI_DATA_ENTRY (entry), attrs, mask);
@@ -912,14 +910,7 @@ create_entry_widget (SingleEntry *sentry)
 			value = default_val;
 
 		/* create entry */
-		plugin_val = gda_holder_get_attribute (param, GDAUI_ATTRIBUTE_PLUGIN);
-		if (plugin_val) {
-			if (G_VALUE_TYPE (plugin_val) == G_TYPE_STRING)
-				plugin = g_value_get_string (plugin_val);
-			else
-				g_warning (_("The '%s' attribute should be a G_TYPE_STRING value"),
-					   GDAUI_ATTRIBUTE_PLUGIN);
-		}
+		g_object_get (param, "plugin", &plugin, NULL);
 		entry = GTK_WIDGET (gdaui_new_data_entry (type, plugin));
 		sentry->entry = GDAUI_DATA_ENTRY (entry);
 
@@ -1300,8 +1291,7 @@ load_xml_layout_column (GdauiBasicForm *form, xmlNodePtr box_node)
 					if (plugin && sentry->single_param) {
 						GValue *value;
 						value = gda_value_new_from_string ((gchar*) plugin, G_TYPE_STRING);
-						gda_holder_set_attribute_static (sentry->single_param,
-										 GDAUI_ATTRIBUTE_PLUGIN, value);
+						g_object_set (sentry->single_param, "plugin", value, NULL);
 						gda_value_free (value);
 					}
 					if (plugin)

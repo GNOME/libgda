@@ -789,10 +789,7 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 		if (!plugin && !col->default_value && !autoinc)
 			continue;
 		if (plugin) {
-			GValue *value;
-			value = gda_value_new_from_string (plugin, G_TYPE_STRING);
-			gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-			gda_value_free (value);
+			g_object_set ((GObject*) holder, "plugin", plugin, NULL);
 		}
 		
 		if (col->default_value) {

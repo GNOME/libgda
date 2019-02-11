@@ -258,21 +258,18 @@ t_app_setup (TAppFeatures features)
 		value = gda_value_new (G_TYPE_STRING);
 		g_value_set_string (value, _("Set to TRUE when the 1st line of a CSV file holds column names"));
 		opt = gda_set_get_holder (global_t_app->priv->options, "csv_names_on_first_line");
-		gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
-		g_value_set_string (value, "NAMES_ON_FIRST_LINE");
-		gda_holder_set_attribute (opt, "csv", value, NULL);
+		g_object_set (opt, "description", value, NULL);
+		g_object_set_data ((GObject*) opt, "csv", "NAMES_ON_FIRST_LINE");
 
 		g_value_set_string (value, _("Quote character for CSV format"));
 		opt = gda_set_get_holder (global_t_app->priv->options, "csv_quote");
-		gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
-		g_value_set_string (value, "QUOTE");
-		gda_holder_set_attribute (opt, "csv", value, NULL);
+		g_object_set (opt, "description", value, NULL);
+		g_object_set_data ((GObject*) opt, "csv", "QUOTE");
 
 		g_value_set_string (value, _("Separator character for CSV format"));
 		opt = gda_set_get_holder (global_t_app->priv->options, "csv_separator");
-		gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
-		g_value_set_string (value, "SEPARATOR");
-		gda_holder_set_attribute (opt, "csv", value, NULL);
+		g_object_set (opt, "description", value, NULL);
+		g_object_set_data ((GObject*) opt, "csv", "SEPARATOR");
 		gda_value_free (value);
 
 #ifdef HAVE_LDAP
@@ -2301,8 +2298,10 @@ extra_command_option (ToolCommand *command, guint argc, const gchar **argv,
 			gda_data_model_set_value_at (model, 1, row, value, NULL);
 			gda_value_free (value);
 
-			value = (GValue*) gda_holder_get_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION);
+			value = gda_value_new (G_TYPE_STRING);
+			g_object_get_property ((GObject*) opt, "description", value);
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
+			gda_value_free (value);
 		}
 
 		res = g_new0 (ToolCommandResult, 1);
@@ -2372,8 +2371,10 @@ extra_command_info (ToolCommand *command, guint argc, const gchar **argv,
 			gda_data_model_set_value_at (model, 1, row, value, NULL);
 			gda_value_free (value);
 
-			value = (GValue*) gda_holder_get_attribute (info, GDA_ATTRIBUTE_DESCRIPTION);
+			value = gda_value_new (G_TYPE_STRING);
+			g_object_get_property ((GObject*) info, "description", value);
 			gda_data_model_set_value_at (model, 2, row, value, NULL);
+			gda_value_free (value);
 		}
 
 		res = g_new0 (ToolCommandResult, 1);
@@ -4147,16 +4148,15 @@ make_options_set_from_gdasql_options (const gchar *context)
 	GSList *list, *nlist = NULL;
 	for (list = gda_set_get_holders (global_t_app->priv->options); list; list = list->next) {
 		GdaHolder *param = GDA_HOLDER (list->data);
-		const GValue *cvalue;
-		cvalue = gda_holder_get_attribute (param, context);
-		if (!cvalue)
+		gchar *val;
+		val = g_object_get_data ((GObject*) param, context);
+		if (val == NULL)
 			continue;
 
 		GdaHolder *nparam;
 		const GValue *cvalue2;
 		cvalue2 = gda_holder_get_value (param);
-		nparam = gda_holder_new (G_VALUE_TYPE (cvalue2));
-		g_object_set ((GObject*) nparam, "id", g_value_get_string (cvalue), NULL);
+		nparam = gda_holder_new (G_VALUE_TYPE (cvalue2), val);
 		g_assert (gda_holder_set_value (nparam, cvalue2, NULL));
 		nlist = g_slist_append (nlist, nparam);
 	}
@@ -4641,7 +4641,7 @@ extra_command_set2 (ToolCommand *command, guint argc, const gchar **argv,
 			if (param) 
 				g_hash_table_remove (global_t_app->priv->parameters, pname);
 		
-			param = gda_holder_new (G_VALUE_TYPE (value));
+			param = gda_holder_new (G_VALUE_TYPE (value), "blob");
 			g_assert (gda_holder_set_value (param, value, NULL));
 			g_hash_table_insert (global_t_app->priv->parameters, g_strdup (pname), param);
 			T_APP_UNLOCK (main_data);
@@ -4660,7 +4660,7 @@ extra_command_set2 (ToolCommand *command, guint argc, const gchar **argv,
 		if (param) 
 			g_hash_table_remove (global_t_app->priv->parameters, pname);
 		
-		param = gda_holder_new (GDA_TYPE_BLOB);
+		param = gda_holder_new (GDA_TYPE_BLOB, "file");
 		bvalue = gda_value_new_blob_from_file (filename);
 		g_assert (gda_holder_take_value (param, bvalue, NULL));
 		g_hash_table_insert (global_t_app->priv->parameters, g_strdup (pname), param);

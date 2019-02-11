@@ -154,7 +154,6 @@ data_source_editor_init (DataSourceEditor *editor)
 	gtk_widget_show_all (ovl);
 
 	GdaHolder *holder;
-	GValue *value;
 	holder = gda_set_get_holder (editor->priv->attributes, "id");
 	g_object_set ((GObject*) holder, "name", _("Id"),
 		      "description",
@@ -175,17 +174,13 @@ data_source_editor_init (DataSourceEditor *editor)
 	g_object_set ((GObject*) holder, "name", _("SELECT\nSQL"),
 		      "description", _("Actual SQL executed\nto select data\n"
 				       "Can't be changed if a table name is set"), NULL);
-	value = gda_value_new_from_string ("text:PROG_LANG=gda-sql", G_TYPE_STRING);
-        gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-        gda_value_free (value);
+	g_object_set ((GObject*) holder, "plugin", "text:PROG_LANG=gda-sql", NULL);
 
 	holder = gda_set_get_holder (editor->priv->attributes, "depend");
 	g_object_set ((GObject*) holder, "name", _("Dependencies"),
 		      "description", _("Required and provided named parameters"), NULL);
 	gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
-	value = gda_value_new_from_string ("rtext", G_TYPE_STRING);
-        gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-        gda_value_free (value);
+	g_object_set ((GObject*) holder, "plugin", "rtext", NULL);
 }
 
 static void

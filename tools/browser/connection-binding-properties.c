@@ -441,15 +441,12 @@ create_part_for_model (ConnectionBindingProperties *cprop, TVirtualConnectionPar
 	GdaSet *set;
 	GdaHolder *holder;
 	GtkWidget *form;
-	GValue *value;
 	set = gda_set_new_inline (1,
 				  "NAME", G_TYPE_STRING, pm->table_name);
 
-	holder = gda_holder_new (GDA_TYPE_DATA_MODEL);
-	g_object_set (holder, "id", "DATASET", "name", "Data set", NULL);
-	value = gda_value_new_from_string ("data-model-import", G_TYPE_STRING);
-	gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-	gda_value_free (value);
+	holder = gda_holder_new (GDA_TYPE_DATA_MODEL, "DATASET");
+	g_object_set (holder, "name", "Data set", NULL);
+	g_object_set ((GObject*) holder, "plugin", "data-model-import", NULL);
 	g_assert (gda_set_add_holder (set, holder));
 	g_object_unref (holder);
 
@@ -555,8 +552,8 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart 
 	set = gda_set_new_inline (1,
 				  "SCHEMA", G_TYPE_STRING, cnc->table_schema);
 
-	holder = gda_holder_new (T_TYPE_CONNECTION);
-	g_object_set (holder, "id", "CNC", "name", "Connection", "not-null", TRUE, NULL);
+	holder = gda_holder_new (T_TYPE_CONNECTION, "CNC");
+	g_object_set (holder, "name", "Connection", "not-null", TRUE, NULL);
 	g_assert (gda_set_add_holder (set, holder));
 
 	g_value_set_object ((value = gda_value_new (T_TYPE_CONNECTION)), cnc->source_cnc);

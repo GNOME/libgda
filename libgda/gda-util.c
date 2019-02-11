@@ -663,8 +663,8 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	if (str) {
 		GValue *value;
 #define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin"
-                value = gda_value_new_from_string ((gchar*) str, G_TYPE_STRING);
-		gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
+		value = gda_value_new_from_string ((gchar*) str, G_TYPE_STRING);
+		g_object_set (holder, "plugin", value, NULL);
 		gda_value_free (value);
 		xmlFree (str);
 	}
@@ -733,14 +733,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 				xmlChar *att_name;
 				att_name = xmlGetProp (vnode, (xmlChar*) "name");
 				if (att_name) {
-					GValue *value;
-					g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), 
-							    (gchar*) xmlNodeGetContent (vnode));
-					gda_attributes_manager_set_full (gda_holder_attributes_manager,
-									 (gpointer) holder,
-									 (gchar*) att_name, value,
-									 (GDestroyNotify) xmlFree);
-					gda_value_free (value);
+					g_object_set_data_full ((GObject*) holder, att_name, g_strdup ((gchar*) xmlNodeGetContent (vnode)), (GDestroyNotify) g_free);
 				}
 				vnode = vnode->next;
 				continue;

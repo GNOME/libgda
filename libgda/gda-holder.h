@@ -75,7 +75,7 @@ struct _GdaHolderClass
  * Each GdaHolder object is thread safe.
  */
 
-GdaHolder          *gda_holder_new                     (GType type);
+GdaHolder          *gda_holder_new                     (GType type, const gchar *id);
 GdaHolder          *gda_holder_new_inline              (GType type, const gchar *id, ...);
 GdaHolder          *gda_holder_copy                    (GdaHolder *orig);
 
@@ -147,20 +147,6 @@ GdaDataModel       *gda_holder_get_source_model         (GdaHolder *holder, gint
 
 gboolean            gda_holder_set_bind                 (GdaHolder *holder, GdaHolder *bind_to, GError **error);
 GdaHolder          *gda_holder_get_bind                 (GdaHolder *holder);
-
-const GValue       *gda_holder_get_attribute            (GdaHolder *holder, const gchar *attribute);
-void                gda_holder_set_attribute            (GdaHolder *holder, const gchar *attribute, const GValue *value,
-							 GDestroyNotify destroy);
-
-/**
- * gda_holder_set_attribute_static:
- * @holder: a #GdaHolder
- * @attribute: attribute's name
- * @value: (nullable): a #GValue, or %NULL
- *
- * This function is similar to gda_holder_set_attribute() but for static strings
- */
-#define gda_holder_set_attribute_static(holder,attribute,value) gda_holder_set_attribute((holder),(attribute),(value),NULL)
 
 G_END_DECLS
 

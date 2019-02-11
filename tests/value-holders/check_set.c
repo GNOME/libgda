@@ -280,9 +280,8 @@ test4 (GError **error)
 {
 	GdaSet *set;
 	GdaHolder *h;
-	GValue *value;
-	
-	set = gda_set_new_inline (3, 
+
+	set = gda_set_new_inline (3,
 				  "H1", G_TYPE_STRING, "A string",
 				  "H2", G_TYPE_STRING, "1234",
 				  "H3", G_TYPE_CHAR, 'r');
@@ -295,9 +294,7 @@ test4 (GError **error)
 			     "Could not find GdaHolder H1");
 		return FALSE;
 	}
-	g_value_set_string ((value = gda_value_new (G_TYPE_STRING)), "Hello!");
-	gda_holder_set_attribute_static (h, "MyAttr", value);
-	gda_value_free (value);
+	g_object_set ((GObject*) h, "description", "Hello!", NULL);
 
 	if (!emitted_signals_find (set, "holder-attr-changed", error))
 		return FALSE;

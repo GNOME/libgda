@@ -1954,8 +1954,8 @@ create_internal_provider (const gchar *path,
 		GValue *value;
 #define GDAUI_ATTRIBUTE_PLUGIN "__gdaui_attr_plugin"
 		value = gda_value_new_from_string ("string:HIDDEN=true", G_TYPE_STRING);
-                gda_holder_set_attribute_static (h, GDAUI_ATTRIBUTE_PLUGIN, value);
-                gda_value_free (value);
+		g_object_set (h, "plugin", value, NULL);
+		gda_value_free (value);
 	}
 
 	info->icon_id = icon_id ? g_strdup (icon_id) : g_strdup (prov_name);

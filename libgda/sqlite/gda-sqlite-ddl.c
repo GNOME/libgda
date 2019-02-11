@@ -62,7 +62,11 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 	tmp = gda_connection_operation_get_sql_identifier_at (cnc,  op, "/TABLE_DEF_P/TABLE_NAME", error);
 	if (!tmp) {
 		g_string_free (string, TRUE);
-		g_assert (*error != NULL);
+		if (error != NULL) {
+			if (*error == NULL) {
+				g_warning (_("Internal error, creating table in SQLite provider"));
+			}
+		}
 		return NULL;
 	}
 	g_string_append (string, tmp);

@@ -453,8 +453,8 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 		}
 		if (!*params) 
 			*params = gda_set_new (NULL);
-		h = gda_holder_new (pspec->g_type);
-		g_object_set (G_OBJECT (h), "id", pspec->name, "name", pspec->name,
+		h = gda_holder_new (pspec->g_type, pspec->name);
+		g_object_set (G_OBJECT (h), "name", pspec->name,
 			      "description", pspec->descr, NULL);
 		gda_holder_set_not_null (h, ! pspec->nullok);
 		if (((GdaSqlExpr*) node)->value) {

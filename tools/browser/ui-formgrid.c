@@ -832,10 +832,7 @@ handle_user_prefs_for_sql_statement (UiFormGrid *formgrid, TConnection *tcnc,
 			GdaHolder *holder;
 			holder = gda_set_get_nth_holder (set, pos);
 			if (holder) {
-				GValue *value;
-				value = gda_value_new_from_string (plugin, G_TYPE_STRING);
-				gda_holder_set_attribute_static (holder, GDAUI_ATTRIBUTE_PLUGIN, value);
-				gda_value_free (value);
+				g_object_set ((GObject*) holder, "plugin", plugin, NULL);
 			}
 			g_free (plugin);
 		}
