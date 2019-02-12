@@ -274,16 +274,12 @@ t_app_setup (TAppFeatures features)
 
 #ifdef HAVE_LDAP
 		opt = gda_holder_new_string ("ldap_dn", "dn");
-		value = gda_value_new (G_TYPE_STRING);
-		g_value_set_string (value, _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"));
-		gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
+		g_object_set (opt, "description", _("Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn\" and \"none\")"), NULL);
 		gda_set_add_holder (T_APP (global_t_app)->priv->options, opt);
 		g_object_unref (opt);
 
 		opt = gda_holder_new_string ("ldap_attributes", T_DEFAULT_LDAP_ATTRIBUTES);
-		g_value_set_string (value, _("Defines the LDAP attributes which are fetched by default by LDAP commands"));
-		gda_holder_set_attribute (opt, GDA_ATTRIBUTE_DESCRIPTION, value, NULL);
-		gda_value_free (value);
+		g_object_set (opt, "description", _("Defines the LDAP attributes which are fetched by default by LDAP commands"), NULL);
 		gda_set_add_holder (T_APP (global_t_app)->priv->options, opt);
 		g_object_unref (opt);
 #endif

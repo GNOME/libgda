@@ -160,9 +160,6 @@ gda_column_get_allow_null
 gda_column_get_auto_increment
 gda_column_get_position
 gda_column_get_default_value
-gda_column_get_attribute
-gda_column_set_attribute
-gda_column_set_attribute_static
 gda_column_set_name
 gda_column_set_description
 gda_column_set_dbms_type
@@ -1370,9 +1367,6 @@ gda_holder_set_source_model
 gda_holder_get_source_model
 gda_holder_set_bind
 gda_holder_get_bind
-gda_holder_get_attribute
-gda_holder_set_attribute_static
-gda_holder_set_attribute
 <SUBSECTION Standard>
 GDA_IS_HOLDER
 GDA_HOLDER
@@ -2229,3 +2223,4 @@ GDA_IS_REPETITIVE_STATEMENT
 GDA_TYPE_REPETITIVE_STATEMENT
 gda_repetitive_statement_get_type
 </SECTION>
+
