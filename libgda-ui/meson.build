@@ -140,7 +140,9 @@ libgdaui = library('gda-ui-'+project_api_version,
 		libgda_ui_deps,
 		inc_rooth_dep
 		],
-	c_args: libgda_ui_cargs,
+	c_args: [
+		libgda_ui_cargs
+	],
 	link_with: [ libgda ],
 	link_args: [
 		'-export-dynamic'
@@ -210,3 +212,5 @@ libgdaui_vapi = custom_target('gdaui'+project_api_version+'_vapi',
 	install_dir: join_paths(get_option('datadir'),'vala','vapi')
 	)
 endif
+
+subdir('demos')

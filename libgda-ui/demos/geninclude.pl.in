@@ -15,21 +15,25 @@ struct _Demo
 
 EOT
 
+use File::Basename;
+
 for $file (@ARGV) {
     my %demo;
     
-    ($basename = $file) =~ s/\.c$//;
 
     open INFO_FILE, $file or die "Cannot open '$file'\n";
     $title = <INFO_FILE>;
     $title =~ s@^\s*/\*\s*@@;
     $title =~ s@\s*$@@;
+    my($filename,$dirs,$prefix) = fileparse($file);
+
+    ($basename = $filename) =~ s/\.c$//;
 
     close INFO_FILE;
 
     print "GtkWidget *do_$basename (GtkWidget *do_widget);\n";
 
-    push @demos, {"title" => $title, "file" => $file,
+    push @demos, {"title" => $title, "file" => $filename,
 		  "func"  => "do_$basename"};
 }
 

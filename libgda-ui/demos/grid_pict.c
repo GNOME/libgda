@@ -22,8 +22,7 @@ do_grid_pict (GtkWidget *do_widget)
 		GtkWidget *grid;
 		GdaSet *data_set;
 		GdaHolder *param;
-		GValue *value;
-		
+
 		window = gtk_dialog_new_with_buttons ("Grid with the 'picture' plugin",
 						      GTK_WINDOW (do_widget),
 						      0,
@@ -59,9 +58,7 @@ do_grid_pict (GtkWidget *do_widget)
 		/* specify that we want to use the 'picture' plugin */
 		data_set = GDA_SET (gdaui_data_selector_get_data_set (GDAUI_DATA_SELECTOR (grid)));
 		param = gda_set_get_holder (data_set, "pict");
-		value = gda_value_new_from_string ("picture", G_TYPE_STRING);
-		gda_holder_set_attribute_static (param, GDAUI_ATTRIBUTE_PLUGIN, value);
-		gda_value_free (value);
+		g_object_set (param, "plugin", "picture", NULL);
 
 		gtk_box_pack_start (GTK_BOX (vbox), grid, TRUE, TRUE, 0);
 
