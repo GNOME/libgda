@@ -693,6 +693,12 @@ gda_holder_get_property (GObject *object,
 			else
 				g_value_set_string (value, NULL);
 			break;
+		case PROP_PLUGIN:
+			if (priv->plugin != NULL)
+				g_value_set_string (value, priv->desc);
+			else
+				g_value_set_string (value, NULL);
+			break;
 		case PROP_GDA_TYPE:
 			g_value_set_gtype (value, priv->g_type);
 			break;
