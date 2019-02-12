@@ -151,7 +151,7 @@ gda_vconnection_hub_get_type (void)
  * gda_vconnection_hub_add:
  * @hub: a #GdaVconnectionHub connection
  * @cnc: a #GdaConnection
- * @ns: (nullable): a namespace, or %NULL
+ * @ns: a namespace, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Make all the tables of @cnc appear as tables (of the same name) in the @hub connection.
@@ -171,12 +171,19 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	g_return_val_if_fail (GDA_IS_VCONNECTION_HUB (hub), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
+	if (hc == NULL) {
+		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
+			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
+			     "%s", _("Namespace must be specified"));
+		return FALSE;
+	}
+
 	/* check for constraints */
 	hc = get_hub_cnc_by_ns (hub, ns);
 	if (hc && (hc->cnc != cnc)) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
-			     "%s", _("Namespace must be specified"));
+			     _("There is already a namespace named '%s' in use with another connection"), ns);
 		return FALSE;
 	}
 
@@ -186,16 +193,15 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	if (!gda_connection_is_opened (cnc)) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
-			     "%s", _("Connection is closed"));
+			     _("Connection was not added to virtual connection because it is closed"));
 		return FALSE;
 	}
 
 	/* actually adding @cnc */
 	hc = g_new (HubConnection, 1);
 	hc->hub = hub;
-	hc->cnc = cnc;
-	g_object_ref (cnc);
-	hc->ns = ns ? g_strdup (ns) : NULL;
+	hc->cnc = GDA_CONNECTION (g_object_ref (cnc));
+	hc->ns = g_strdup (ns);
 
 	if (!attach_hub_connection (hub, hc, error)) {
 		hub_connection_free (hc);
@@ -240,6 +246,7 @@ gda_vconnection_hub_remove (GdaVconnectionHub *hub, GdaConnection *cnc, GError *
 static  HubConnection*
 get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns)
 {
+	g_return_val_if_fail (ns != NULL, NULL);
 	GSList *list;
 	for (list = hub->priv->hub_connections; list; list = list->next) {
 		if ((!ns && !((HubConnection*) list->data)->ns)||
@@ -757,6 +764,7 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED i
 		gint i;
 		GSList *list;
 		stmt = GDA_STATEMENT (idxStr);
+		g_assert (GDA_IS_STATEMENT (stmt));
 		if (! gda_statement_get_parameters (stmt, &params, NULL))
 			return NULL;
 		if (argc > 0) {
