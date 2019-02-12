@@ -847,10 +847,7 @@ reset_columns_in_xml_layout (GdauiRawGrid *grid, xmlNodePtr grid_node)
 			xmlChar *plugin;
 			plugin = xmlGetProp (child, BAD_CAST "plugin");
 			if (plugin && cdata->single_param) {
-				GValue *value;
-				value = gda_value_new_from_string ((gchar*) plugin, G_TYPE_STRING);
-				g_object_set (cdata->single_param, "plugin", value, NULL);
-				gda_value_free (value);
+				g_object_set (cdata->single_param, "plugin", plugin, NULL);
 			}
 			if (plugin)
 				xmlFree (plugin);
