@@ -608,8 +608,10 @@ static void
 vcontext_free (VContext *context)
 {
 	GObject *obj = g_weak_ref_get (&(context->context_object));
-	g_hash_table_remove (context->vtable->context.hash, obj);
-	g_object_unref (obj);
+	if (obj) {
+		g_hash_table_remove (context->vtable->context.hash, obj);
+		g_object_unref (obj);
+	}
 	if (context->context_data) {
 		g_array_free (context->context_data, TRUE);
 		context->context_data = NULL;
