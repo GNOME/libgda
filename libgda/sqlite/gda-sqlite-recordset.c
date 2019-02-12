@@ -776,7 +776,7 @@ gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownu
 		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
 		if (error)
 			g_propagate_error (error, g_error_copy (lerror));
-		return TRUE;
+		return FALSE;
 	}
 	*prow = fetch_next_sqlite_row (imodel, FALSE, error);
 	imodel->priv->tmp_row = *prow;
