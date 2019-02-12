@@ -3078,7 +3078,7 @@ extra_command_bind_cnc (ToolCommand *command, guint argc, const gchar **argv,
 	gda_connection_get_meta_store (virtual); /* force create of meta store */
 
 	/* add existing connections to virtual connection */
-	string = g_string_new (_("Bound connections are as:"));
+	string = g_string_new (_("Connections were bound as:"));
 	for (i = 1; i < nargv; i++) {
 		tcnc = t_connection_get_by_name (argv[i]);
 		if (tcnc) {

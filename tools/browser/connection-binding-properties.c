@@ -213,22 +213,18 @@ static void
 create_layout (ConnectionBindingProperties *cprop)
 {
 	GtkWidget *label, *hbox;
-	gchar *str;
+	GString *str;
 	GtkWidget *dcontents;
 
 	dcontents = gtk_dialog_get_content_area (GTK_DIALOG (cprop));
 	gtk_container_set_border_width (GTK_CONTAINER (dcontents), 10);
 
-	str = g_strdup_printf ("<b>%s:</b>\n<small>%s</small>",
-			       _("Virtual connection's properties"),
-			       _("The virtual connection you are about to define can bind tables "
-				 "from an existing connection as well as bind a data set which will "
-				 "appear as a table (importing CSV data for example). "
-				 "You can add as many binds as needed"));
+	str = g_string_new (_("Virtual connection's properties."));
+	g_string_append (str, _("The virtual connection you are about to define can bind tables from an existing connection as well as bind a data set which will appear as a table (importing CSV data for example). You can add as many binds as needed"));
 
 	label = gtk_label_new ("");
-	gtk_label_set_markup (GTK_LABEL (label), str);
-	g_free (str);
+	gtk_label_set_markup (GTK_LABEL (label), str->str);
+	g_string_free (str, TRUE);
 	gtk_widget_set_halign (label, GTK_ALIGN_START);
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start (GTK_BOX (dcontents), label, FALSE, FALSE, 0);
@@ -553,7 +549,8 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart 
 				  "SCHEMA", G_TYPE_STRING, cnc->table_schema);
 
 	holder = gda_holder_new (T_TYPE_CONNECTION, "CNC");
-	g_object_set (holder, "name", "Connection", "not-null", TRUE, NULL);
+	g_object_set (holder, "name", _("Connection"), "not-null", TRUE,
+								"description", _("Connection to get tables from in the schema"), NULL);
 	g_assert (gda_set_add_holder (set, holder));
 
 	g_value_set_object ((value = gda_value_new (T_TYPE_CONNECTION)), cnc->source_cnc);
@@ -565,7 +562,7 @@ create_part_for_cnc (ConnectionBindingProperties *cprop, TVirtualConnectionPart 
 	g_object_unref (holder);
 
 	holder = gda_set_get_holder (set, "SCHEMA");
-	g_object_set (holder, "name", "Schema",
+	g_object_set (holder, "name", _("Schema"),
 		      "description", _("Name of the schema the\ntables will be in"), NULL);
 							  
 	form = gdaui_basic_form_new (set);

@@ -533,7 +533,7 @@ t_connection_dispose (GObject *object)
 		  tcnc->priv->dict_file_name = NULL;
     }
 
-		TO_IMPLEMENT;
+		// FIXME: TO_IMPLEMENT;
 		/*
 		  if (tcnc->priv->meta_store_signal)
 		  gda_thread_wrapper_disconnect (tcnc->priv->wrapper,
