@@ -28,52 +28,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DATA_SELECT            (gda_data_select_get_type())
-#define GDA_DATA_SELECT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_SELECT, GdaDataSelect))
-#define GDA_DATA_SELECT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_SELECT, GdaDataSelectClass))
-#define GDA_IS_DATA_SELECT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_SELECT))
-#define GDA_IS_DATA_SELECT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_SELECT))
 
-typedef struct _GdaDataSelect        GdaDataSelect;
-typedef struct _GdaDataSelectClass   GdaDataSelectClass;
-typedef struct _GdaDataSelectPrivate GdaDataSelectPrivate;
-
-/* error reporting */
-extern GQuark gda_data_select_error_quark (void);
-#define GDA_DATA_SELECT_ERROR gda_data_select_error_quark ()
-
-typedef enum {
-	GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
-	GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
-	GDA_DATA_SELECT_CONNECTION_ERROR,
-	GDA_DATA_SELECT_ACCESS_ERROR,
-	GDA_DATA_SELECT_SQL_ERROR,
-	GDA_DATA_SELECT_SAFETY_LOCKED_ERROR
-} GdaDataSelectError;
-
-/**
- * GdaDataSelectConditionType:
- * @GDA_DATA_SELECT_COND_PK: only primary key fields are used
- * @GDA_DATA_SELECT_COND_ALL_COLUMNS: all the columns of the tables are used
- *
- * Defines what criteria gda_data_select_compute_modification_statements_ext() uses
- * to uniquely identify a single row in a table when creating modification statements.
- */
-typedef enum {
-	GDA_DATA_SELECT_COND_PK,
-	GDA_DATA_SELECT_COND_ALL_COLUMNS
-} GdaDataSelectConditionType;
-
-struct _GdaDataSelect {
-	GObject           object;
-	GdaDataSelectPrivate *priv;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer _gda_reserved1;
-	gpointer _gda_reserved2;
-	gpointer _gda_reserved3;
-	gpointer _gda_reserved4;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaDataSelect, gda_data_select, GDA, DATA_SELECT, GObject)
 
 /*
  * Depending on model access flags, the implementations are:
@@ -107,6 +63,33 @@ struct _GdaDataSelectClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+
+/* error reporting */
+extern GQuark gda_data_select_error_quark (void);
+#define GDA_DATA_SELECT_ERROR gda_data_select_error_quark ()
+
+typedef enum {
+	GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
+	GDA_DATA_SELECT_MISSING_MODIFICATION_STATEMENT_ERROR,
+	GDA_DATA_SELECT_CONNECTION_ERROR,
+	GDA_DATA_SELECT_ACCESS_ERROR,
+	GDA_DATA_SELECT_SQL_ERROR,
+	GDA_DATA_SELECT_SAFETY_LOCKED_ERROR
+} GdaDataSelectError;
+
+/**
+ * GdaDataSelectConditionType:
+ * @GDA_DATA_SELECT_COND_PK: only primary key fields are used
+ * @GDA_DATA_SELECT_COND_ALL_COLUMNS: all the columns of the tables are used
+ *
+ * Defines what criteria gda_data_select_compute_modification_statements_ext() uses
+ * to uniquely identify a single row in a table when creating modification statements.
+ */
+typedef enum {
+	GDA_DATA_SELECT_COND_PK,
+	GDA_DATA_SELECT_COND_ALL_COLUMNS
+} GdaDataSelectConditionType;
 
 /**
  * SECTION:gda-data-select
@@ -153,8 +136,6 @@ struct _GdaDataSelectClass {
  *    </textobject>
  *  </mediaobject>
  */
-
-GType          gda_data_select_get_type                     (void) G_GNUC_CONST;
 
 gboolean       gda_data_select_set_row_selection_condition     (GdaDataSelect *model, GdaSqlExpr *expr, GError **error);
 gboolean       gda_data_select_set_row_selection_condition_sql (GdaDataSelect *model, const gchar *sql_where, GError **error);
