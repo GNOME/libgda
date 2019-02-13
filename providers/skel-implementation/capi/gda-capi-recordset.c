@@ -29,6 +29,7 @@
 #include "gda-capi.h"
 #include "gda-capi-recordset.h"
 #include "gda-capi-provider.h"
+#include "gda-data-select-extra.h"
 #include <libgda/gda-debug-macros.h>
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
@@ -235,14 +236,14 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaCapiRecordset *imodel;
 
 	imodel = GDA_CAPI_RECORDSET (model);
-	if (model->advertized_nrows >= 0)
-		return model->advertized_nrows;
+	if (_gda_data_select_get_advertized_nrows (model) >= 0)
+		return _gda_data_select_get_advertized_nrows (model);
 
 	/* use C API to determine number of rows,if possible */
 	g_warning("imodel not used: %p", imodel); /* Avoids a compiler warning. */
 	TO_IMPLEMENT;
 
-	return model->advertized_nrows;
+	return _gda_data_select_get_advertized_nrows (model);
 }
 
 /*

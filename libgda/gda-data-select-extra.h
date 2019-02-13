@@ -60,6 +60,11 @@ GdaDataSelectInternals *_gda_data_select_internals_steal (GdaDataSelect *model);
 void                    _gda_data_select_internals_paste (GdaDataSelect *model, GdaDataSelectInternals *inter);
 void                    _gda_data_select_internals_free (GdaDataSelectInternals *inter);
 
+GdaPStmt               *_gda_data_select_get_prep_stmt (GdaDataSelect *model);
+gint                    _gda_data_select_get_nb_stored_rows (GdaDataSelect *model);
+gint                    _gda_data_select_get_advertized_nrows (GdaDataSelect *model);
+void                    _gda_data_select_set_advertized_nrows (GdaDataSelect *model, gint n);
+
 G_END_DECLS
 
 #endif

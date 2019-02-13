@@ -108,6 +108,9 @@ struct _GdaDataSelectPrivate {
 	PrivateShareable       *sh;
 	gulong                  ext_params_changed_sig_id;
 	gdouble                 exec_time;
+  GdaPStmt               *prep_stmt; /* use the "prepared-stmt" property to set this */
+	gint                    nb_stored_rows; /* number of GdaRow objects currently stored */
+	gint                    advertized_nrows; /* set when the number of rows becomes known, -1 until then */
 };
 
 /* properties */
@@ -433,10 +436,10 @@ gda_data_select_init (GdaDataSelect *model, G_GNUC_UNUSED GdaDataSelectClass *kl
 	model->priv->sh-> notify_changes = TRUE;
 	model->priv->sh->rows = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
 	model->priv->sh->index = g_hash_table_new_full (g_int_hash, g_int_equal, g_free, NULL);
-	model->prep_stmt = NULL;
+	model->priv->prep_stmt = NULL;
 	model->priv->sh->columns = NULL;
-	model->nb_stored_rows = 0;
-	model->advertized_nrows = -1; /* unknown number of rows */
+	model->priv->nb_stored_rows = 0;
+	model->priv->advertized_nrows = -1; /* unknown number of rows */
 
 	model->priv->sh->sel_stmt = NULL;
 	model->priv->sh->ext_params = NULL;
@@ -565,9 +568,9 @@ gda_data_select_dispose (GObject *object)
 			g_object_unref (model->priv->iter);
 			model->priv->iter = NULL;
 		}
-		if (model->prep_stmt) {
-			g_object_unref (model->prep_stmt);
-			model->prep_stmt = NULL;
+		if (model->priv->prep_stmt) {
+			g_object_unref (model->priv->prep_stmt);
+			model->priv->prep_stmt = NULL;
 		}
 		if (model->priv->ext_params_changed_sig_id) {
 			g_signal_handler_disconnect (model->priv->sh->ext_params,
@@ -727,24 +730,24 @@ create_columns (GdaDataSelect *model)
 		g_free (model->priv->sh->modif_internals->cols_mod[m]);
 		model->priv->sh->modif_internals->cols_mod[m] = NULL;
 	}
-	if (!model->prep_stmt)
+	if (!model->priv->prep_stmt)
 		return;
 
-	if (model->prep_stmt->ncols < 0)
+	if (model->priv->prep_stmt->ncols < 0)
 		g_error (_("INTERNAL implementation error: unknown number of columns in GdaPStmt, \nset number of columns before using with GdaDataSelect"));
-	if (model->prep_stmt->tmpl_columns) {
+	if (model->priv->prep_stmt->tmpl_columns) {
 		/* copy template columns */
 		GSList *list;
-		for (list = model->prep_stmt->tmpl_columns; list; list = list->next)
+		for (list = model->priv->prep_stmt->tmpl_columns; list; list = list->next)
 			model->priv->sh->columns = g_slist_append (model->priv->sh->columns, g_object_ref (list->data));
 	}
 	else {
 		/* create columns */
-		for (i = 0; i < model->prep_stmt->ncols; i++) {
+		for (i = 0; i < model->priv->prep_stmt->ncols; i++) {
 			GdaColumn *gda_col;
 			gda_col = gda_column_new ();
-			if (model->prep_stmt->types)
-				gda_column_set_g_type (gda_col, model->prep_stmt->types [i]);
+			if (model->priv->prep_stmt->types)
+				gda_column_set_g_type (gda_col, model->priv->prep_stmt->types [i]);
 			model->priv->sh->columns = g_slist_append (model->priv->sh->columns, gda_col);
 		}
 	}
@@ -769,13 +772,13 @@ gda_data_select_set_property (GObject *object,
 			}
 			break;
 		case PROP_PREP_STMT:
-			if (model->prep_stmt)
-				g_object_unref (model->prep_stmt);
-			model->prep_stmt = g_value_get_object (value);
-			if (model->prep_stmt) {
+			if (model->priv->prep_stmt)
+				g_object_unref (model->priv->prep_stmt);
+			model->priv->prep_stmt = g_value_get_object (value);
+			if (model->priv->prep_stmt) {
 				GdaStatement *sel_stmt;
-				g_object_ref (model->prep_stmt);
-				sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
+				g_object_ref (model->priv->prep_stmt);
+				sel_stmt = gda_pstmt_get_gda_statement (model->priv->prep_stmt);
 				if (sel_stmt &&
 				    gda_statement_get_statement_type (sel_stmt) == GDA_SQL_STATEMENT_SELECT) {
 					model->priv->sh->sel_stmt = gda_statement_copy (sel_stmt);
@@ -861,7 +864,7 @@ gda_data_select_get_property (GObject *object,
 			g_value_set_object (value, model->priv->cnc);
 			break;
 		case PROP_PREP_STMT:
-			g_value_set_object (value, model->prep_stmt);
+			g_value_set_object (value, model->priv->prep_stmt);
 			break;
 		case PROP_FLAGS:
 			g_value_set_uint (value, model->priv->sh->usage_flags);
@@ -870,9 +873,9 @@ gda_data_select_get_property (GObject *object,
 			if (!model->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 				g_warning ("Cannot set the 'store-all-rows' property when access mode is cursor based");
 			else {
-				if ((model->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
+				if ((model->priv->advertized_nrows < 0) && CLASS (model)->fetch_nb_rows)
 					_gda_data_select_fetch_nb_rows (model);
-				g_value_set_boolean (value, model->nb_stored_rows == model->advertized_nrows);
+				g_value_set_boolean (value, model->priv->nb_stored_rows == model->priv->advertized_nrows);
 			}
 			break;
 		case PROP_PARAMS:
@@ -938,7 +941,7 @@ gda_data_select_take_row (GdaDataSelect *model, GdaRow *row, gint rownum)
 	ptr [1] = model->priv->sh->rows->len;
 	g_hash_table_insert (model->priv->sh->index, ptr, ptr+1);
 	g_ptr_array_add (model->priv->sh->rows, row);
-	model->nb_stored_rows = model->priv->sh->rows->len;
+	model->priv->nb_stored_rows = model->priv->sh->rows->len;
 }
 
 /**
@@ -1168,13 +1171,13 @@ check_acceptable_statement (GdaDataSelect *model, GError **error)
 	if (model->priv->sh->sel_stmt)
 		return model->priv->sh->sel_stmt;
 
-	if (! model->prep_stmt) {
+	if (! model->priv->prep_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			     "%s", _("Internal error: the \"prepared-stmt\" property has not been set"));
 		return NULL;
 	}
 
-	sel_stmt = gda_pstmt_get_gda_statement (model->prep_stmt);
+	sel_stmt = gda_pstmt_get_gda_statement (model->priv->prep_stmt);
 	if (! sel_stmt) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_MODIFICATION_STATEMENT_ERROR,
 			      "%s", _("Can't get the prepared statement's actual statement"));
@@ -1453,9 +1456,9 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 					gda_column_set_g_type (gdacol, gda_holder_get_g_type (holder));
 					coltypeschanged = TRUE;
 				}
-				if (model->prep_stmt && model->prep_stmt->types &&
-				    (model->prep_stmt->types [num] == GDA_TYPE_NULL))
-					model->prep_stmt->types [num] = gda_holder_get_g_type (holder);
+				if (model->priv->prep_stmt && model->priv->prep_stmt->types &&
+				    (model->priv->prep_stmt->types [num] == GDA_TYPE_NULL))
+					model->priv->prep_stmt->types [num] = gda_holder_get_g_type (holder);
 			}
 		}
 
@@ -1850,8 +1853,8 @@ gda_data_select_get_n_rows (GdaDataModel *model)
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
-	retval = imodel->advertized_nrows;
-	if ((imodel->advertized_nrows < 0) &&
+	retval = imodel->priv->advertized_nrows;
+	if ((imodel->priv->advertized_nrows < 0) &&
 	    (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM) &&
 	    CLASS (model)->fetch_nb_rows)
 		retval = _gda_data_select_fetch_nb_rows (imodel);
@@ -1869,10 +1872,10 @@ gda_data_select_get_n_columns (GdaDataModel *model)
 	imodel = GDA_DATA_SELECT (model);
 	g_return_val_if_fail (imodel->priv, 0);
 
-	if (imodel->prep_stmt)
-		return imodel->prep_stmt->ncols;
-	else
-		return g_slist_length (imodel->priv->sh->columns);
+	if (imodel->priv->prep_stmt)
+		return imodel->priv->prep_stmt->ncols;
+
+	return g_slist_length (imodel->priv->sh->columns);
 }
 
 static GdaColumn *
@@ -1940,8 +1943,8 @@ external_to_internal_row (GdaDataSelect *model, gint ext_row, GError **error)
 	}
 
 	/* check row number validity */
-	nrows = model->advertized_nrows < 0 ? gda_data_select_get_n_rows ((GdaDataModel*) model) :
-		model->advertized_nrows;
+	nrows = model->priv->advertized_nrows < 0 ? gda_data_select_get_n_rows ((GdaDataModel*) model) :
+		model->priv->advertized_nrows;
 	if ((ext_row < 0) || ((nrows >= 0) && (int_row >= nrows))) {
 		gint n;
 		n = gda_data_select_get_n_rows ((GdaDataModel*) model);
@@ -2038,11 +2041,11 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 				return NULL;
 			}
 			GType *types = NULL;
-			if (imodel->prep_stmt && imodel->prep_stmt->types) {
-				types = g_new (GType, imodel->prep_stmt->ncols + 1);
-				memcpy (types, imodel->prep_stmt->types, /* Flawfinder: ignore */
-					sizeof (GType) * imodel->prep_stmt->ncols);
-				types [imodel->prep_stmt->ncols] = G_TYPE_NONE;
+			if (imodel->priv->prep_stmt && imodel->priv->prep_stmt->types) {
+				types = g_new (GType, imodel->priv->prep_stmt->ncols + 1);
+				memcpy (types, imodel->priv->prep_stmt->types, /* Flawfinder: ignore */
+					sizeof (GType) * imodel->priv->prep_stmt->ncols);
+				types [imodel->priv->prep_stmt->ncols] = G_TYPE_NONE;
 			}
 			/*g_print ("*** Executing DelayedSelectStmt %p\n", dstmt);*/
 			tmpmodel = gda_connection_statement_execute_select_full (imodel->priv->cnc,
@@ -2275,8 +2278,8 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
         if (imodel->priv->sh->iter_row <= 0)
                 goto prev_error;
         else if (imodel->priv->sh->iter_row == G_MAXINT) {
-                g_assert (imodel->advertized_nrows >= 0);
-                target_iter_row = imodel->advertized_nrows - 1;
+                g_assert (imodel->priv->advertized_nrows >= 0);
+                target_iter_row = imodel->priv->advertized_nrows - 1;
         }
         else
                 target_iter_row = imodel->priv->sh->iter_row - 1;
@@ -3126,12 +3129,12 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	}
 
 	/* compute added row's number */
-	row = imodel->advertized_nrows;
+	row = imodel->priv->advertized_nrows;
 	if (imodel->priv->sh->del_rows)
 		row -= imodel->priv->sh->del_rows->len;
-	imodel->advertized_nrows++;
+	imodel->priv->advertized_nrows++;
 	int_row = external_to_internal_row (imodel, row, error);
-	imodel->advertized_nrows--;
+	imodel->priv->advertized_nrows--;
 
 	/* BVector */
 	BVector *bv;
@@ -3281,7 +3284,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 #ifdef GDA_DEBUG_NO
 	dump_d (imodel);
 #endif
-	imodel->advertized_nrows++;
+	imodel->priv->advertized_nrows++;
 	gda_data_model_row_inserted ((GdaDataModel *) imodel, row);
 
 	return row;
@@ -3692,13 +3695,13 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	select = check_acceptable_statement (model, error);
 	if (!select)
 		return FALSE;
-	g_assert (model->prep_stmt);
+	g_assert (model->priv->prep_stmt);
 	GType *types = NULL;
-	if (model->prep_stmt->types) {
-		types = g_new (GType, model->prep_stmt->ncols + 1);
-		memcpy (types, model->prep_stmt->types, /* Flawfinder: ignore */
-			sizeof (GType) * model->prep_stmt->ncols);
-		types [model->prep_stmt->ncols] = G_TYPE_NONE;
+	if (model->priv->prep_stmt->types) {
+		types = g_new (GType, model->priv->prep_stmt->ncols + 1);
+		memcpy (types, model->priv->prep_stmt->types, /* Flawfinder: ignore */
+			sizeof (GType) * model->priv->prep_stmt->ncols);
+		types [model->priv->prep_stmt->ncols] = G_TYPE_NONE;
 	}
 	new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (model->priv->cnc, select,
 										   model->priv->sh->ext_params,
@@ -3857,17 +3860,17 @@ gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
 	}
 
 	/* fetching data */
-	if (model->advertized_nrows < 0) {
+	if (model->priv->advertized_nrows < 0) {
 		if (CLASS (model)->fetch_nb_rows)
 			_gda_data_select_fetch_nb_rows (model);
-		if (model->advertized_nrows < 0) {
+		if (model->priv->advertized_nrows < 0) {
 			g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
 				     "%s", _("Can't get the number of rows of data model"));
 			return FALSE;
 		}
 	}
 
-	if (model->nb_stored_rows != model->advertized_nrows) {
+	if (model->priv->nb_stored_rows != model->priv->advertized_nrows) {
 		if (CLASS (model)->store_all) {
 			if (! _gda_data_select_store_all (model, error))
 				return FALSE;
@@ -3875,7 +3878,7 @@ gda_data_select_prepare_for_offline (GdaDataSelect *model, GError **error)
 	}
 
 	/* final check/complement */
-	for (i = 0; i < model->advertized_nrows; i++) {
+	for (i = 0; i < model->priv->advertized_nrows; i++) {
 		if (!g_hash_table_lookup (model->priv->sh->index, &i)) {
 			GdaRow *prow;
 			if (! _gda_data_select_fetch_at (model, &prow, i, error))
@@ -4090,4 +4093,22 @@ _gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum
 	return result ? TRUE : FALSE;
 }
 
+/* Private API for providers */
+GdaPStmt*
+_gda_data_select_get_prep_stmt (GdaDataSelect *model) {
+	return model->priv->prep_stmt;
+}
 
+gint
+_gda_data_select_get_nb_stored_rows (GdaDataSelect *model) {
+	return model->priv->nb_stored_rows;
+}
+
+gint
+_gda_data_select_get_advertized_nrows (GdaDataSelect *model) {
+	return model->priv->advertized_nrows;
+}
+void
+_gda_data_select_set_advertized_nrows (GdaDataSelect *model, gint n) {
+	model->priv->advertized_nrows = n;
+}

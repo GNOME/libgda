@@ -40,6 +40,7 @@
 #include "gda-mysql-recordset.h"
 #include "gda-mysql-provider.h"
 #include "gda-mysql-util.h"
+#include "gda-data-select-extra.h"
 #include <libgda/libgda-global-variables.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -259,7 +260,7 @@ gda_mysql_recordset_dispose (GObject  *object)
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
 
 	if (recset->priv) {
-		GDA_MYSQL_PSTMT (GDA_DATA_SELECT (object)->prep_stmt)->stmt_used = FALSE;
+		GDA_MYSQL_PSTMT (_gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)))->stmt_used = FALSE;
 
 		if (recset->priv->cnc) {
 			g_object_unref (G_OBJECT(recset->priv->cnc));
@@ -456,7 +457,7 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 	MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 	GSList *list;
 
-	((GdaDataSelect *) model)->advertized_nrows = mysql_affected_rows (cdata->mysql);
+	_gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_affected_rows (cdata->mysql));
 	for (i=0, list = columns; 
 	     i < model->priv->ncols; 
 	     i++, list = list->next) {
@@ -704,7 +705,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 
 	model->priv->mysql_stmt = ps->mysql_stmt;
 
-	((GdaDataSelect *) model)->advertized_nrows = mysql_stmt_affected_rows (ps->mysql_stmt);
+	_gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_stmt_affected_rows (ps->mysql_stmt));
 
         return GDA_DATA_MODEL (model);
 }
@@ -719,12 +720,12 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaMysqlRecordset *imodel;
 
 	imodel = GDA_MYSQL_RECORDSET (model);
-	if (model->advertized_nrows >= 0)
-		return model->advertized_nrows;
+	if (_gda_data_select_get_advertized_nrows (model) >= 0)
+		return _gda_data_select_get_advertized_nrows (model);
 
-	model->advertized_nrows = mysql_stmt_affected_rows (imodel->priv->mysql_stmt);
+	_gda_data_select_set_advertized_nrows (model, mysql_stmt_affected_rows (imodel->priv->mysql_stmt));
 	
-	return model->advertized_nrows;
+	return _gda_data_select_get_advertized_nrows (model);
 }
 
 static GdaRow *
@@ -735,7 +736,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 	MYSQL_BIND *mysql_bind_result;
 	g_return_val_if_fail (imodel->priv->mysql_stmt != NULL, NULL);
 
-	mysql_bind_result = ((GdaMysqlPStmt *) ((GdaDataSelect *) imodel)->prep_stmt)->mysql_bind_result;
+	mysql_bind_result = ((GdaMysqlPStmt *) _gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel))->mysql_bind_result;
 	g_assert (mysql_bind_result);
 
 	res = mysql_stmt_fetch (imodel->priv->mysql_stmt);
@@ -752,7 +753,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				       "http://gitlab.gnome.org/GNOME/libgda/issues");
 
 		gint col;
-		for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {
+		for (col = 0; col < _gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols; ++col) {
 			my_bool truncated;
 			mysql_bind_result[col].error = &truncated;
 			mysql_stmt_fetch_column (imodel->priv->mysql_stmt, &(mysql_bind_result[col]),
@@ -774,13 +775,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 	/* g_print ("%s: SQL=%s\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->sql); */
 
 	
-	GdaRow *row = gda_row_new (((GdaDataSelect *) imodel)->prep_stmt->ncols);
+	GdaRow *row = gda_row_new (_gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols);
 	gint col;
-	for (col = 0; col < ((GdaDataSelect *) imodel)->prep_stmt->ncols; ++col) {
+	for (col = 0; col < _gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols; ++col) {
 		gint i = col;
 		
 		GValue *value = gda_row_get_value (row, i);
-		GType type = ((GdaDataSelect *) imodel)->prep_stmt->types[i];
+		GType type = _gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->types[i];
 		
 		/*g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));*/
 
@@ -1061,7 +1062,7 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 
 	gda_data_select_take_row (model, *row, rownum);
 	
-	if (model->nb_stored_rows == model->advertized_nrows) {
+	if (_gda_data_select_get_nb_stored_rows (model) == _gda_data_select_get_advertized_nrows (model)) {
 		/* All the row have been converted.  We could free result now */
 		/* but it was done before provided no field-based API functions */
 		/* that process result set meta data was needed in the middle. */

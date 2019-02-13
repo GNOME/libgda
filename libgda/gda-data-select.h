@@ -67,11 +67,6 @@ struct _GdaDataSelect {
 	GObject           object;
 	GdaDataSelectPrivate *priv;
 
-	/* read only information */
-	GdaPStmt         *prep_stmt; /* use the "prepared-stmt" property to set this */
-	gint              nb_stored_rows; /* number of GdaRow objects currently stored */
-	gint              advertized_nrows; /* set when the number of rows becomes known, -1 until then */
-
 	/*< private >*/
 	/* Padding for future expansion */
 	gpointer _gda_reserved1;
