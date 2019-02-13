@@ -99,10 +99,13 @@ typedef struct _GdaTime GdaTime;
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 GdaTime*                          gda_time_new (void);
+GdaTime*                          gda_time_new_from_date_time (GDateTime *dt);
 GdaTime*                          gda_time_new_from_values (gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
 GdaTime*                          gda_time_copy (const GdaTime* time);
 void                              gda_time_free (GdaTime* time);
 
+void                              gda_time_set_from_date_time (GdaTime *time, GDateTime *dt);
+void                              gda_time_set_from_values (GdaTime *time, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone);
 gushort                           gda_time_get_hour (const GdaTime* time);
 void                              gda_time_set_hour (GdaTime* time, gushort hour);
 gushort                           gda_time_get_minute (const GdaTime* time);
@@ -111,11 +114,16 @@ gushort                           gda_time_get_second (const GdaTime* time);
 void                              gda_time_set_second (GdaTime* time, gushort second);
 gulong                            gda_time_get_fraction (const GdaTime *time);
 void                              gda_time_set_fraction (GdaTime* time, gulong fraction);
+GTimeZone*                        gda_time_get_tz (const GdaTime *time);
 glong                             gda_time_get_timezone (const GdaTime *time);
 void                              gda_time_set_timezone (GdaTime* time, glong timezone);
 
 gboolean                          gda_time_valid (const GdaTime *time);
 void                              gda_time_change_timezone (GdaTime *time, glong ntz);
+void                              gda_time_to_timezone (GdaTime *time, GTimeZone *ntz);
+gchar*                            gda_time_to_string (GdaTime *time);
+gchar*                            gda_time_to_string_local (GdaTime *time);
+gchar*                            gda_time_to_string_utc (GdaTime *time);
 
 /**
  * GdaBinary: (ref-func gda_binary_new) (unref-func gda_binary_free) (get-value-func gda_value_get_binary) (set-value-func gda_value_set_binary)

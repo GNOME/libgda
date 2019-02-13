@@ -112,7 +112,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		}
 	}
 	gchar *expected;
-	expected = "('@@@@@@@@@@T17:10:23+02', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+02', '19:09:22+00')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -136,7 +136,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22+00')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else
@@ -198,7 +198,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 		goto endtest;
 	}
 
-	expected = "('@@@@@@@@@@T17:10:23+02', '16:09:22-3')";
+	expected = "('@@@@@@@@@@T17:10:23+02', '19:09:22+00')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, 0, NULL, &error);
 	else
@@ -222,7 +222,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 	}
 	g_free (sql);
 
-	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22')";
+	expected = "('@@@@@@@@@@T15:10:23+00', '19:09:22+00')";
 	if (cnc)
 		sql = gda_connection_statement_to_sql (cnc, stmt, params, GDA_STATEMENT_SQL_TIMEZONE_TO_GMT, NULL, &error);
 	else

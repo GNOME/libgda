@@ -3204,16 +3204,10 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	gchar *stz = NULL;
 	gchar *fs = NULL;
 	gdouble seconds = 0.0;
-	glong fraction = 0.0;
-	/* https://en.wikipedia.org/wiki/ISO_8601 */
-	/* Any invalid Time Zone designator set time zone to local*/
-	GTimeZone *tz = g_time_zone_new_local ();
-	gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
+	glong fraction = 0;
+	int h, m, s;
+	GTimeZone *tz;
 
-	gda_time_set_hour (timegda, 0);
-	gda_time_set_minute (timegda, 0);
-	gda_time_set_second (timegda, 0);
-	gda_time_set_fraction (timegda, 0);
 
 	if ((*value < '0') || (*value > '9'))
 		return FALSE;
@@ -3225,7 +3219,7 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 		if (tmp > 23)
 			return FALSE;
 	}
-	gda_time_set_hour (timegda, tmp);
+	h = tmp;
 	if ((sep && *endptr != sep) || !*endptr)
 		return FALSE;
 
@@ -3237,7 +3231,7 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 		if (tmp > 59)
 			return FALSE;
 	}
-	gda_time_set_minute (timegda, tmp);
+	m = tmp;
 	if ((sep && *endptr != sep) || !*endptr)
 		return FALSE;
 
@@ -3251,22 +3245,21 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 		*out_endptr = stz;
 		return FALSE;
 	}
-	gda_time_set_second (timegda, (gint) seconds);
-	/* Strip fraction */
-	fraction = (glong) ((seconds - (gint) seconds) * 1000000);
-	g_free (fs);
-	gda_time_set_fraction (timegda, fraction);
+	tz = g_time_zone_new_local ();
 	if (stz != NULL) {
 		g_time_zone_unref (tz);
 		tz = g_time_zone_new (stz);
-		if (tz != NULL) {
-			gda_time_set_timezone (timegda, g_time_zone_get_offset (tz, 0));
+		if (tz == NULL) {
+			tz = g_time_zone_new_local ();
 		}
 		for (; *endptr; endptr++);
 	}
+	GDateTime *dt = g_date_time_new (tz, 1978, 1, 1, h, m, seconds);
 
-	if (tz != NULL)
-		g_time_zone_unref (tz);
+	gda_time_set_from_date_time (timegda, dt);
+
+	g_time_zone_unref (tz);
+
 	*out_endptr = endptr;
 	return TRUE;
 }

@@ -5,6 +5,7 @@ libgda 5.91.0
  - GdaHandler now supports value transformation, if possible, before set it
  - Ported almost all public API to use g_autoptr() and remove public private struct
  - GdaHolder now is GdaAttributeManager free, replaced by GObect properties
+ - GdaTime ported to GDateTime, with improved time handling and defaulting to UTC time
  - Fixed segfaults
  - Fixed meta data generation engine
  - Fixed PostgresSQL provider meta data generation integration

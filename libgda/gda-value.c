@@ -1445,126 +1445,24 @@ gda_numeric_get_string (const GdaNumeric *numeric)
 static void
 time_to_string (const GValue *src, GValue *dest)
 {
-	GdaTime *gdatime;
-
-	g_return_if_fail (G_VALUE_HOLDS_STRING (dest) &&
-			  GDA_VALUE_HOLDS_TIME (src));
-
-	gdatime = (GdaTime *) gda_value_get_time ((GValue *) src);
-
-	if (gdatime) {
-		GString *string;
-		string = g_string_new ("");
-		g_string_append_printf (string, "%02u:%02u:%02u",
-					gda_time_get_hour (gdatime),
-					gda_time_get_minute (gdatime),
-					gda_time_get_second (gdatime));
-		if (gda_time_get_fraction (gdatime) != 0)
-			g_string_append_printf (string, ".%lu", gda_time_get_fraction (gdatime));
-
-		if (gda_time_get_timezone (gdatime) != GDA_TIMEZONE_INVALID)
-			g_string_append_printf (string, "%+02d", (int) gda_time_get_timezone (gdatime) / 3600);
-
-		g_value_take_string (dest, string->str);
-		g_string_free (string, FALSE);
+	gchar *str = gda_value_stringify (src);
+	if (g_strcmp0 ("", str) == 0) {
+		g_value_set_string (dest, "00:00:00+0");
+	} else {
+		g_value_set_string (dest, str);
 	}
-	else
-		g_value_set_string (dest, "00:00:00");
+	g_free (str);
 }
 
 /* Transform a String GValue to a GdaTime from a string like "12:30:15+01" */
 static void
 string_to_time (const GValue *src, GValue *dest)
 {
-	/* FIXME: add more checks*/
-	GdaTime *timegda;
-	const gchar *as_string;
-	const gchar *ptr;
-
-	g_return_if_fail (G_VALUE_HOLDS_STRING (src) &&
-			  GDA_VALUE_HOLDS_TIME (dest));
-
-	as_string = g_value_get_string (src);
-	if (!as_string)
-		return;
-	timegda = gda_time_new ();
-
-	/* hour */
-	gda_time_set_timezone (timegda, GDA_TIMEZONE_INVALID);
-	ptr = as_string;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
-		gda_time_set_hour (timegda, (*ptr - '0') * 10 + *(ptr+1) - '0');
-	else {
-		gda_time_free (timegda);
-		return;
-	}
-
-	/* minute */
-	ptr += 2;
-	if (! *ptr) {
-		gda_time_free (timegda);
-		return;
-	}
-	if (*ptr == ':')
-		ptr++;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
-		gda_time_set_minute (timegda, (*ptr - '0') * 10 + *(ptr+1) - '0');
-	else{
-		gda_time_free (timegda);
-		return;
-	}
-
-	/* second */
-	ptr += 2;
-	gda_time_set_second (timegda, 0);
-	if (! *ptr) {
-		if ((gda_time_get_hour (timegda) <= 24) && (gda_time_get_minute (timegda) <= 60))
-			gda_value_set_time (dest, timegda);
-		gda_time_free (timegda);
-		return;
-	}
-	if (*ptr == ':')
-		ptr++;
-	if ((*ptr >= '0') && (*ptr <= '9') &&
-	    (*(ptr+1) >= '0') && (*(ptr+1) <= '9'))
-		gda_time_set_second (timegda, (*ptr - '0') * 10 + *(ptr+1) - '0');
-
-	/* extra */
-	ptr += 2;
-	if (! *ptr) {
-		if ((gda_time_get_hour (timegda) <= 24) && (gda_time_get_minute (timegda) <= 60) &&
-		    (gda_time_get_second (timegda) <= 60))
-			gda_value_set_time (dest, timegda);
-		gda_time_free (timegda);
-		return;
-	}
-
-	if (*ptr == '.') {
-		gulong fraction = 0;
-
-		ptr ++;
-		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
-			fraction = fraction * 10 + *ptr - '0';
-			ptr++;
-		}
-	}
-
-	if ((*ptr == '+') || (*ptr == '-')) {
-		glong sign = (*ptr == '+') ? 1 : -1;
-		gda_time_set_timezone (timegda, 0);
-		while (*ptr && (*ptr >= '0') && (*ptr <= '9')) {
-			gda_time_set_timezone (timegda, gda_time_get_timezone (timegda) * 10 + sign * ((*ptr) - '0'));
-			ptr++;
-		}
-		gda_time_set_timezone (timegda, gda_time_get_timezone (timegda) * 3600);
-	}
-
-	/* checks */
-	if ((gda_time_get_hour (timegda) <= 24) || (gda_time_get_minute (timegda) <= 60) || (gda_time_get_second (timegda) <= 60))
-		gda_value_set_time (dest, timegda);
-	gda_time_free (timegda);
+	const gchar *str = g_value_get_string (src);
+	GdaTime *time = gda_time_new ();
+	gda_parse_iso8601_time (time, str);
+	g_value_set_boxed (dest, time);
+	gda_time_free (time);
 }
 
 /**
@@ -1576,11 +1474,7 @@ string_to_time (const GValue *src, GValue *dest)
  * @timezone: number of seconds added to the GMT timezone
  */
 struct _GdaTime {
-	gushort   hour;
-	gushort   minute;
-	gushort   second;
-	gulong    fraction;
-	GTimeSpan timezone;
+	GDateTime *dt;
 };
 
 GType
@@ -1609,19 +1503,9 @@ GdaTime*
 gda_time_copy (const GdaTime* time)
 {
 
-	GdaTime *src = (GdaTime*) time;
-	GdaTime *copy = NULL;
-
-	g_return_val_if_fail (src, NULL);
-
-	copy = g_new0 (GdaTime, 1);
-	copy->hour = src->hour;
-	copy->minute = src->minute;
-	copy->second = src->second;
-	copy->fraction = src->fraction;
-	copy->timezone = src->timezone;
-
-	return copy;
+	GdaTime *c = g_new0(GdaTime, 1);
+	c->dt = g_date_time_add_days (time->dt, 0);
+	return c;
 }
 
 /**
@@ -1633,6 +1517,7 @@ gda_time_copy (const GdaTime* time)
 void
 gda_time_free (GdaTime* boxed)
 {
+	g_date_time_unref (boxed->dt);
 	g_free (boxed);
 }
 
@@ -1659,14 +1544,80 @@ gda_value_take_time (GValue *value, GdaTime *time)
 /**
  * gda_time_new:
  *
- * Creates a new #GdaTime structure.
+ * Creates a new #GdaTime with time now local.
  *
  * Returns: (transfer full): a new #GdaTime structure
  */
 GdaTime*
 gda_time_new (void)
 {
-	return g_new0 (GdaTime, 1);
+	GdaTime *t = g_new0 (GdaTime, 1);
+	t->dt = g_date_time_new_now_local ();
+	return t;
+}
+
+
+/**
+ * gda_time_to_string:
+ *
+ * Creates a string representation of a #GdaTime in local time
+ * with the timezone designation.
+ *
+ * Returns: (transfer full): a new string
+ * Since: 6.0
+ */
+gchar*
+gda_time_to_string (GdaTime *time)
+{
+	gchar *str;
+	GTimeZone *tz = g_time_zone_new_local ();
+	GDateTime *ndt = g_date_time_to_timezone (time->dt, tz);
+	str = g_date_time_format (ndt, "%H:%M:%S%:::z");
+	g_time_zone_unref (tz);
+	g_date_time_unref (ndt);
+	return str;
+}
+
+/**
+ * gda_time_to_string_local:
+ *
+ * Creates a string representation of a #GdaTime in local time
+ * without timezone designation.
+ *
+ * Returns: (transfer full): a new string
+ * Since: 6.0
+ */
+gchar*
+gda_time_to_string_local (GdaTime *time)
+{
+	gchar *str;
+	GTimeZone *tz = g_time_zone_new_local ();
+	GDateTime *ndt = g_date_time_to_timezone (time->dt, tz);
+	str = g_date_time_format (ndt, "%H:%M:%S");
+	g_time_zone_unref (tz);
+	g_date_time_unref (ndt);
+	return str;
+}
+
+/**
+ * gda_time_to_string_utc:
+ *
+ * Creates a string representation of a #GdaTime in UTC time
+ * with time zone indication.
+ *
+ * Returns: (transfer full): a new string
+ * Since: 6.0
+ */
+gchar*
+gda_time_to_string_utc (GdaTime *time)
+{
+	gchar *str;
+	GTimeZone *tz = g_time_zone_new_utc ();
+	GDateTime *ndt = g_date_time_to_timezone (time->dt, tz);
+	str = g_date_time_format (ndt, "%H:%M:%S%:::z");
+	g_time_zone_unref (tz);
+	g_date_time_unref (ndt);
+	return str;
 }
 
 /**
@@ -1675,7 +1626,7 @@ gda_time_new (void)
  * @minute: minutes
  * @second: seconds
  * @fraction: fraction of seconds
- * @timezone: timezone used
+ * @timezone: timezone in seconds added to UTC
  *
  * Returns: (transfer full): the a new value storing a time
  */
@@ -1683,12 +1634,81 @@ GdaTime*
 gda_time_new_from_values (gushort hour, gushort minute, gushort second, gulong fraction, glong timezone)
 {
 	GdaTime* time = g_new0 (GdaTime, 1);
-	time->hour = hour;
-	time->minute = minute;
-	time->second = second;
-	time->fraction = fraction;
-	time->timezone = timezone;
+	gda_time_set_from_values (time, hour, minute, second, fraction, timezone);
 	return time;
+}
+
+/**
+ * gda_time_set_from_values:
+ * @time: a #GdaTime object to set values to
+ * @hour: hours
+ * @minute: minutes
+ * @second: seconds
+ * @fraction: fraction of seconds
+ * @timezone: timezone in seconds added to UTC
+ *
+ * Returns: (transfer full): the a new value storing a time
+ * Since: 6.0
+ */
+void
+gda_time_set_from_values (GdaTime *time, gushort hour, gushort minute, gushort second, gulong fraction, glong timezone)
+{
+	gdouble seconds = 0.0;
+	gchar *sec = g_strdup_printf ("%d.%lu", second, fraction);
+	seconds = g_ascii_strtod (sec, NULL);
+	g_free (sec);
+	gint h = timezone / 3600;
+	gint m = (timezone - h * 3600) / 60;
+	gint s = (timezone - h * 3600 - m * 60);
+	gint sig = h;
+	if (m < 0) {
+		m = -1 * m;
+	}
+	if (s < 0) {
+		s = -1 * s;
+	}
+	if (h < 0) {
+		h = -1 * h;
+	}
+	gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d", sig < 0 ? "-" : "+", h, m, s);
+	GTimeZone *tz = g_time_zone_new (stz);
+	g_free (stz);
+
+	time->dt = g_date_time_new (tz,
+	                            1970,
+	                            1,
+	                            1,
+	                            (gint) hour,
+	                            (gint) minute,
+	                            seconds);
+}
+
+/**
+ * gda_time_new_from_date_time:
+ * @dt: a #GDateTime to get time from
+ *
+ * Returns: (transfer full): the a new value storing a time
+ * Since: 6.0
+ */
+GdaTime*
+gda_time_new_from_date_time (GDateTime *dt)
+{
+	GdaTime* time = g_new0 (GdaTime, 1);
+	time->dt = g_date_time_add_days (dt, 0);
+	return time;
+}
+
+/**
+ * gda_time_set_from_date_time:
+ * @dt: a #GDateTime to get time from
+ *
+ * Returns: (transfer full): the a new value storing a time
+ * Since: 6.0
+ */
+void
+gda_time_set_from_date_time (GdaTime *time, GDateTime *dt)
+{
+	time->dt = g_date_time_add_days (dt, 0);
 }
 /**
  * gda_time_get_hour:
@@ -1700,7 +1720,7 @@ gushort
 gda_time_get_hour (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
-	return time->hour;
+	return (gushort) g_date_time_get_hour (time->dt);
 }
 /**
  * gda_time_set_hour:
@@ -1713,7 +1733,11 @@ void
 gda_time_set_hour (GdaTime* time, gushort hour)
 {
 	g_return_if_fail (time != NULL);
-	time->hour = hour;
+	gda_time_new_from_values (hour,
+	                          gda_time_get_minute (time),
+	                          gda_time_get_second (time),
+	                          gda_time_get_fraction (time),
+	                          gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_minute:
@@ -1725,7 +1749,7 @@ gushort
 gda_time_get_minute (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
-	return time->minute;
+	return (gushort) g_date_time_get_minute (time->dt);
 }
 /**
  * gda_time_set_minute:
@@ -1738,7 +1762,11 @@ void
 gda_time_set_minute (GdaTime* time, gushort minute)
 {
 	g_return_if_fail (time != NULL);
-	time->minute = minute;
+	gda_time_new_from_values (gda_time_get_hour (time),
+	                          minute,
+	                          gda_time_get_second (time),
+	                          gda_time_get_fraction (time),
+	                          gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_second:
@@ -1750,7 +1778,7 @@ gushort
 gda_time_get_second (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
-	return time->second;
+	return (gushort) g_date_time_get_second (time->dt);
 }
 /**
  * gda_time_set_second:
@@ -1763,7 +1791,11 @@ void
 gda_time_set_second (GdaTime* time, gushort second)
 {
 	g_return_if_fail (time != NULL);
-	time->second = second;
+	gda_time_new_from_values (gda_time_get_hour (time),
+	                          gda_time_get_minute (time),
+	                          second,
+	                          gda_time_get_fraction (time),
+	                          gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_fraction:
@@ -1775,7 +1807,14 @@ gulong
 gda_time_get_fraction (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
-	return time->fraction;
+	gdouble v = g_date_time_get_seconds (time->dt) - g_date_time_get_second (time->dt);
+	gchar *str = g_strdup_printf ("%0.6f", v);
+	for (int i = 0; i < 2; i++) {
+		str[i] = ' ';
+	}
+	gulong f = (gulong) g_ascii_strtoll ((const gchar*) str, NULL, 10);
+	g_free (str);
+	return f;
 }
 /**
  * gda_time_set_fraction:
@@ -1788,7 +1827,11 @@ void
 gda_time_set_fraction (GdaTime* time, gulong fraction)
 {
 	g_return_if_fail (time != NULL);
-	time->fraction = fraction;
+	gda_time_new_from_values (gda_time_get_hour (time),
+	                          gda_time_get_minute (time),
+	                          gda_time_get_second (time),
+	                          fraction,
+	                          gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_timezone:
@@ -1802,8 +1845,26 @@ glong
 gda_time_get_timezone (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
-	return time->timezone;
+	glong tz = (glong) (g_date_time_get_utc_offset (time->dt) / 1000000);
+	return tz;
 }
+/**
+ * gda_time_get_tz:
+ * @time: a #GdaTime value to get time zone from
+ *
+ * Returns a #GTimeZone in use in this @time.
+ *
+ * Since: 6.0
+ */
+GTimeZone*
+gda_time_get_tz (const GdaTime* time)
+{
+	g_return_val_if_fail (time != NULL, 0);
+	const gchar *stz = g_date_time_get_timezone_abbreviation (time->dt);
+	GTimeZone *tz = g_time_zone_new (stz);
+	return tz;
+}
+
 /**
  * gda_time_set_timezone:
  * @time: a #GdaTime value to set time zone to
@@ -1815,7 +1876,11 @@ void
 gda_time_set_timezone (GdaTime* time, glong timezone)
 {
 	g_return_if_fail (time != NULL);
-	time->timezone = timezone;
+	gda_time_new_from_values (gda_time_get_hour (time),
+	                          gda_time_get_minute (time),
+	                          gda_time_get_second (time),
+	                          gda_time_get_fraction (time),
+	                          timezone);
 }
 
 /**
@@ -1824,6 +1889,7 @@ gda_time_set_timezone (GdaTime* time, glong timezone)
  *
  * Returns: #TRUE if #GdaTime is valid; %FALSE otherwise.
  *
+ * Deprecated: 6.0
  * Since: 4.2
  */
 gboolean
@@ -1831,14 +1897,6 @@ gda_time_valid (const GdaTime *time)
 {
 	g_return_val_if_fail (time, FALSE);
 
-	if ((time->hour > 23) ||
-	    (time->minute > 59) ||
-	    (time->second > 59))
-		return FALSE;
-	if ((time->fraction >= 1000000) ||
-	    (time->timezone <= -12 * 3600) ||
-	    (time->timezone >= 12 * 3600))
-		return FALSE;
 	return TRUE;
 }
 
@@ -1860,35 +1918,47 @@ gda_time_change_timezone (GdaTime *time, glong ntz)
 {
 	g_return_if_fail (time);
 	g_return_if_fail (gda_time_valid (time));
-	g_return_if_fail ((ntz > - 12 * 3600) && (ntz < 12 * 3600));
 
-	if (time->timezone == ntz)
-		return;
-
-	if (time->timezone != GDA_TIMEZONE_INVALID) {
-		glong nsec;
-		nsec = time->hour * 3600 + time->minute * 60 + time->second - time->timezone + ntz;
-		if (nsec < 0)
-			nsec += 86400;
-		else if (nsec >= 86400)
-			nsec -= 86400;
-
-		/* hours */
-		gint n;
-		n = nsec / 3600;
-		time->hour = (gushort) n;
-
-		/* minutes */
-		nsec -= n * 3600;
-		n = nsec / 60;
-		time->minute = (gushort) n;
-
-		/* seconds */
-		nsec -= n * 60;
-		time->second = (gushort) nsec;
+	gint h = ntz / 3600;
+	gint m = (ntz - h * 3600) / 60;
+	gint s = (ntz - h * 3600 - m * 60);
+	gint sig = h;
+	if (m < 0) {
+		m = -1 * m;
 	}
+	if (s < 0) {
+		s = -1 * s;
+	}
+	if (h < 0) {
+		h = -1 * h;
+	}
+	gchar *stz = g_strdup_printf ("%s%02d:%02d:%02d", sig < 0 ? "-" : "+", h, m, s);
+	GTimeZone *tz = g_time_zone_new (stz);
+	g_free (stz);
+	GDateTime *ndt = time->dt;
+	time->dt = g_date_time_to_timezone (time->dt, tz);
+	g_date_time_unref (ndt);
+}
 
-	time->timezone = ntz;
+
+/**
+ * gda_time_to_timezone:
+ * @time: a valid #GdaTime
+ * @ntz: a new #GTimeZone to use
+ *
+ * Translate @time's to give timezone
+ *
+ * Since: 6.0
+ */
+void
+gda_time_to_timezone (GdaTime *time, GTimeZone *ntz)
+{
+	g_return_if_fail (time);
+	g_return_if_fail (gda_time_valid (time));
+
+	GDateTime *ndt = time->dt;
+	time->dt = g_date_time_to_timezone (time->dt, ntz);
+	g_date_time_unref (ndt);
 }
 
 /**
@@ -2025,42 +2095,6 @@ gda_value_new_blob_from_file (const gchar *filename)
         return value;
 }
 
-/*
- * Warning: DOES NOT modify @gmttm and loctm
- *
- * Returns: the offset, or G_MAXLONG in case of error
- */
-static glong
-compute_tz_offset (struct tm *gmttm, struct tm *loctm)
-{
-	if (! gmttm || !loctm)
-		return G_MAXLONG;
-
-	struct tm cgmttm, cloctm;
-	cgmttm = *gmttm;
-	cloctm = *loctm;
-
-	time_t lt, gt;
-	cgmttm.tm_isdst = 0;
-	cloctm.tm_isdst = 0;
-
-	lt = mktime (&cloctm);
-	if (lt == -1)
-		return G_MAXLONG;
-	gt = mktime (&cgmttm);
-	if (gt == -1)
-		return G_MAXLONG;
-	glong off;
-	off = lt - gt;
-	/*g_print ("%s(): %02d:%02d:%02d %d\n", __FUNCTION__,
-	  loctm->tm_hour, loctm->tm_min, loctm->tm_sec, (gint) (off / 3600));*/
-
-	if ((off >= 24 * 3600) || (off <= - 24 * 3600))
-		return G_MAXLONG;
-	else
-		return off;
-}
-
 /**
  * gda_value_new_date_time:
  *
@@ -2139,54 +2173,12 @@ gda_value_new_date_time_from_timet (time_t val)
 GValue *
 gda_value_new_time_from_timet (time_t val)
 {
-	GValue *value = NULL;
-	struct tm *ltm = NULL;
-	glong tz = 0;
+	GValue *value = gda_value_new (GDA_TYPE_TIME);
+	GDateTime *dt = g_date_time_new_from_unix_local (val);
+	GdaTime *t = gda_time_new_from_date_time (dt);
+	gda_value_set_time (value, t);
 
-#ifdef HAVE_LOCALTIME_R
-	struct tm gmttm, loctm;
-	tzset ();
-	ltm = localtime_r ((const time_t *) &val, &loctm);
-	tz = compute_tz_offset (gmtime_r ((const time_t *) &val, &gmttm), &loctm);
-	if (tz == G_MAXLONG)
-		ltm = NULL;
-#elif HAVE_LOCALTIME_S
-	struct tm gmttm, loctm;
-	if ((localtime_s (&loctm, (const time_t *) &val) == 0) &&
-	    (gmtime_s (&gmttm, (const time_t *) &val) == 0)) {
-		tz = compute_tz_offset (&gmttm, &loctm);
-		if (tz != G_MAXLONG)
-			ltm = &loctm;
-	}
-#else
-	struct tm gmttm, loctm;
-	ltm = gmtime ((const time_t *) &val);
-	if (ltm) {
-		gmttm = *ltm;
-		ltm = localtime ((const time_t *) &val);
-		if (ltm) {
-			loctm = *ltm;
-			tz = compute_tz_offset (&gmttm, &loctm);
-			if (tz == G_MAXLONG)
-				ltm = NULL;
-		}
-	}
-	
-#endif
-
-        if (ltm) {
-                GdaTime tim;
-                tim.hour = ltm->tm_hour;
-                tim.minute = ltm->tm_min;
-                tim.second = ltm->tm_sec;
-                tim.fraction = 0;
-                tim.timezone = tz;
-
-		value = g_new0 (GValue, 1);
-                gda_value_set_time (value, (const GdaTime *) &tim);
-        }
-
-        return value;
+	return value;
 }
 
 /**
@@ -2812,6 +2804,15 @@ gda_value_stringify (const GValue *value)
 		else
 			return g_strdup ("0000-00-00");
 	}
+  else if (g_type_is_a (type, GDA_TYPE_TIME)) {
+		GdaTime *gts;
+		gts = (GdaTime*) g_value_get_boxed (value);
+		if (gts != NULL) {
+			return gda_time_to_string_utc (gts);
+		} else {
+			return "00:00:00+0";
+		}
+  }
   else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
     GDateTime *ts;
     ts = (GDateTime*) g_value_get_boxed (value);

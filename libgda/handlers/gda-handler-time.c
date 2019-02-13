@@ -535,20 +535,13 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		}
 	}
 	else if (type == GDA_TYPE_TIME) {
-		const GdaTime *tim;
-		GString *string;
-		string = g_string_new ("");
-		tim = gda_value_get_time ((GValue *) value);
-		g_string_append_c (string, '\'');
-		g_string_append_printf (string, "%02d:%02d:%02d",
-					gda_time_get_hour (tim),
-					gda_time_get_minute (tim),
-					gda_time_get_second (tim));
-		if (gda_time_get_timezone (tim) != GDA_TIMEZONE_INVALID)
-			g_string_append_printf (string, "%+02d",
-						(int) gda_time_get_timezone (tim) / 3600);
-		g_string_append_c (string, '\'');
-		retval = g_string_free (string, FALSE);
+		GdaTime *gdat;
+		gchar *str;
+
+		gdat = (GdaTime*) g_value_get_boxed ((GValue *) value);
+		str = gda_time_to_string_utc (gdat);
+		retval = g_strdup_printf ("'%s'", str);
+		g_free (str);
 	}
 	else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 		GDateTime *gdats;
@@ -557,51 +550,12 @@ gda_handler_time_get_sql_from_value (GdaDataHandler *iface, const GValue *value)
 		if (gdats != NULL)
 			retval = g_date_time_format (gdats, "'%FT%H:%M:%S%:::z'");
 		else
-			retval = g_strdup ("NULL");	
-	}
-	else if (type == G_TYPE_DATE_TIME) { // FIXME: Remove
-		GDateTime *ts;
-		GDate *vdate;
-
-		ts = g_value_get_boxed ((GValue *) value);
-		if (ts) {
-			gint y, m, d;
-			g_date_time_get_ymd (ts, &y, &m, &d);
-			vdate = g_date_new_dmy (d, m, y);
-			str = render_date_locale (vdate, hdl->sql_locale);
-			g_date_free (vdate);
-
-			if (str) {
-				GString *string;
-				string = g_string_new ("");
-				g_string_append_printf (string, "%02u:%02u:%02u",
-							g_date_time_get_hour (ts),
-							g_date_time_get_minute (ts),
-							g_date_time_get_second (ts));
-				if (g_date_time_get_microsecond (ts) != 0)
-					g_string_append_printf (string, ".%d", g_date_time_get_microsecond (ts));
-
-				GTimeSpan span;
-				span = g_date_time_get_utc_offset (ts);
-				if (span > 0)
-					g_string_append_printf (string, "+%02d",
-								(int) (span / G_TIME_SPAN_HOUR));
-				else
-					g_string_append_printf (string, "-%02d",
-								(int) (-span / G_TIME_SPAN_HOUR));
-
-				retval = g_strdup_printf ("'%sT%s'", str, string->str);
-				g_free (str);
-				g_string_free (string, TRUE);
-			}
-			else
-				retval = g_strdup ("NULL");
-		}
-		else
 			retval = g_strdup ("NULL");
 	}
-	else
-		g_assert_not_reached ();
+	else {
+		g_warning (_("Time data handler can create an SQL representation of a value not holding time type."));
+		retval = g_strdup ("NULL");
+	}
 
 	return retval;
 }
