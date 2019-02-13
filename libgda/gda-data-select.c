@@ -73,7 +73,7 @@ typedef struct {
 	GHashTable             *index; /* key = model row number, value = index in @rows array*/
 
 	/* Internal iterator's information, if GDA_DATA_MODEL_CURSOR_* based access */
-        gint                    iter_row; /* G_MININT if at start, G_MAXINT if at end, "external" row number */
+	gint                    iter_row; /* G_MININT if at start, G_MAXINT if at end, "external" row number */
 
 	GdaStatement           *sel_stmt;
 	GdaSet                 *ext_params;
@@ -2206,7 +2206,6 @@ gda_data_select_create_iter (GdaDataModel *model)
 										"data-model", model, NULL));
 			imodel->priv->sh->iter_row = -1;
 		}
-		g_object_ref (imodel->priv->iter);
 		return imodel->priv->iter;
 	}
 }
@@ -2228,7 +2227,6 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	g_return_val_if_fail (CLASS (model)->fetch_next, FALSE);
 	g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
 
 	if (imodel->priv->sh->iter_row == G_MAXINT) {
 		gda_data_model_iter_invalidate_contents (iter);
@@ -2272,8 +2270,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		return gda_data_model_iter_move_prev_default (model, iter);
 
-        g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
+	g_return_val_if_fail (iter, FALSE);
 
         if (imodel->priv->sh->iter_row <= 0)
                 goto prev_error;
@@ -2320,8 +2317,7 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	if (imodel->priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		return gda_data_model_iter_move_to_row_default (model, iter, row);
 
-        g_return_val_if_fail (iter, FALSE);
-        g_return_val_if_fail (imodel->priv->iter == iter, FALSE);
+	g_return_val_if_fail (iter, FALSE);
 
 	int_row = external_to_internal_row (imodel, row, NULL);
 	if (imodel->priv->sh->current_prow && (imodel->priv->sh->current_prow_row == row))
