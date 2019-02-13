@@ -51,7 +51,7 @@ static void browser_window_class_init (BrowserWindowClass *klass);
 static void browser_window_init (BrowserWindow *bwin);
 static void browser_window_dispose (GObject *object);
 
-static gboolean key_press_event (GtkWidget *widget, GdkEventKey *event);
+static gboolean key_press_event (GtkWidget *widget, GdkEventKey *event, gpointer userdata);
 
 static void transaction_status_changed_cb (TConnection *tcnc, BrowserWindow *bwin);
 static void cnc_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status, BrowserWindow *bwin);
@@ -130,7 +130,6 @@ browser_window_class_init (BrowserWindowClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-	widget_class->key_press_event = key_press_event;
 	parent_class = g_type_class_peek_parent (klass);
 
 	browser_window_signals[FULLSCREEN_CHANGED] =
@@ -154,6 +153,7 @@ browser_window_init (BrowserWindow *bwin)
 	bwin->priv->pers_list = NULL;
 	bwin->priv->updating_transaction_status = FALSE;
 	bwin->priv->fullscreen = FALSE;
+	g_signal_connect (G_OBJECT (bwin), "key-press-event", G_CALLBACK (key_press_event), NULL);
 }
 
 static void
@@ -630,7 +630,7 @@ change_perspective_cb (GSimpleAction *action, GVariant *state, gpointer data)
 }
 
 static gboolean
-key_press_event (GtkWidget *widget, GdkEventKey *event)
+key_press_event (GtkWidget *widget, GdkEventKey *event, gpointer userdata)
 {
 	if ((event->keyval == GDK_KEY_Escape) &&
 	    browser_window_is_fullscreen (BROWSER_WINDOW (widget))) {
@@ -638,8 +638,7 @@ key_press_event (GtkWidget *widget, GdkEventKey *event)
 		return TRUE;
 	}
 
-	/* parent class */
-	return GTK_WIDGET_CLASS (parent_class)->key_press_event (widget, event);
+	return FALSE;
 }
 
 static void

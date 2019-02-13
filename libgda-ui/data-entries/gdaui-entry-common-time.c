@@ -109,7 +109,7 @@ gdaui_entry_common_time_class_init (GdauiEntryCommonTimeClass * class)
 					 g_param_spec_boolean ("editing-canceled", NULL, NULL, FALSE,
 							       G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (object_class, PROP_TYPE,
-					 g_param_spec_uint ("type", NULL, NULL, 0, G_MAXUINT, GDA_TYPE_TIME, 
+					 g_param_spec_gtype ("type", "GType", "Entry GType handled", G_TYPE_NONE,
 							    G_PARAM_WRITABLE | G_PARAM_READABLE));
 }
 
@@ -122,71 +122,6 @@ key_press_event_cb (GdauiEntryCommonTime *mgtim, GdkEventKey *key_event, G_GNUC_
 	return FALSE;
 }
 
-static glong
-compute_tz_offset (struct tm *gmttm, struct tm *loctm)
-{
-        if (! gmttm || !loctm)
-                return G_MAXLONG;
-
-        struct tm cgmttm, cloctm;
-        cgmttm = *gmttm;
-        cloctm = *loctm;
-
-        time_t lt, gt;
-        cgmttm.tm_isdst = 0;
-        cloctm.tm_isdst = 0;
-
-        lt = mktime (&cloctm);
-        if (lt == -1)
-                return G_MAXLONG;
-        gt = mktime (&cgmttm);
-        if (gt == -1)
-                return G_MAXLONG;
-        glong off;
-        off = lt - gt;
-
-        if ((off >= 24 * 3600) || (off <= - 24 * 3600))
-                return G_MAXLONG;
-        else
-                return off;
-}
-
-static gulong
-compute_localtime_tz (void)
-{
-	time_t val;
-	val = time (NULL);
-	glong tz = 0;
-
-#ifdef HAVE_LOCALTIME_R
-        struct tm gmttm, loctm;
-        tzset ();
-	localtime_r ((const time_t *) &val, &loctm);
-        tz = compute_tz_offset (gmtime_r ((const time_t *) &val, &gmttm), &loctm);
-#elif HAVE_LOCALTIME_S
-        struct tm gmttm, loctm;
-        if ((localtime_s (&loctm, (const time_t *) &val) == 0) &&
-            (gmtime_s (&gmttm, (const time_t *) &val) == 0)) {
-                tz = compute_tz_offset (&gmttm, &loctm);
-        }
-#else
-        struct tm gmttm, loctm;
-	struct tm *ltm;
-        ltm = gmtime ((const time_t *) &val);
-        if (ltm) {
-                gmttm = *ltm;
-                ltm = localtime ((const time_t *) &val);
-                if (ltm) {
-                        loctm = *ltm;
-                        tz = compute_tz_offset (&gmttm, &loctm);
-                }
-        }
-#endif
-	if (tz == G_MAXLONG)
-		tz = 0;
-	return tz;
-}
-
 static void
 gdaui_entry_common_time_init (GdauiEntryCommonTime *mgtim)
 {
@@ -196,7 +131,9 @@ gdaui_entry_common_time_init (GdauiEntryCommonTime *mgtim)
 	priv->editing_canceled = FALSE;
 	priv->value_tz = 0; /* safe init value */
 	priv->value_fraction = 0; /* safe init value */
-	priv->displayed_tz = compute_localtime_tz ();
+	GDateTime *dt = g_date_time_new_now_local ();
+	priv->displayed_tz = (glong) g_date_time_get_utc_offset (dt);
+	g_date_time_unref (dt);
 	g_signal_connect (mgtim, "key-press-event",
 			  G_CALLBACK (key_press_event_cb), NULL);
 }
@@ -239,7 +176,7 @@ gdaui_entry_common_time_set_property (GObject *object,
 	/* GdauiEntryCommonTimePrivate *priv = gdaui_entry_common_time_get_instance_private (mgtim); */
 	switch (param_id) {
 		case PROP_TYPE:
-			gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (object), g_value_get_uint (value));
+			gdaui_data_entry_set_value_type (GDAUI_DATA_ENTRY (object), g_value_get_gtype (value));
 			break;
 		case PROP_EDITING_CANCELED:
 			TO_IMPLEMENT;
@@ -265,7 +202,7 @@ gdaui_entry_common_time_get_property (GObject *object,
 			g_value_set_boolean (value, priv->editing_canceled);
 			break;
 		case PROP_TYPE:
-			g_value_set_uint (value, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (object)));
+			g_value_set_gtype (value, gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (object)));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -340,23 +277,11 @@ icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, 
 		}
 
 		if (unset) {
-			time_t now;
-			struct tm *stm;
-
-			now = time (NULL);
-#ifdef HAVE_LOCALTIME_R
-			struct tm tmpstm;
-			stm = localtime_r (&now, &tmpstm);
-#elif HAVE_LOCALTIME_S
-			struct tm tmpstm;
-			g_assert (localtime_s (&tmpstm, &now) == 0);
-			stm = &tmpstm;
-#else
-			stm = localtime (&now);
-#endif
-			year = stm->tm_year + 1900;
-			month = stm->tm_mon;
-			day = stm->tm_mday;
+			GDateTime *dt = g_date_time_new_now_local ();
+			year = g_date_time_get_year (dt);
+			month = g_date_time_get_month (dt);
+			day = g_date_time_get_day_of_month (dt);
+			g_date_time_unref (dt);
 		}
 
 		if (! unset) {
@@ -455,17 +380,6 @@ date_day_selected_double_click (GtkCalendar *calendar, GdauiEntryCommonTime *mgt
 {
 	GdauiEntryCommonTimePrivate *priv = gdaui_entry_common_time_get_instance_private (mgtim);
 	gtk_widget_hide (priv->cal_popover);
-}
-
-static glong
-fit_tz (glong tz)
-{
-	tz = tz % 86400;
-	if (tz > 43200)
-		tz -= 86400;
-	else if (tz < -43200)
-		tz += 86400;
-	return tz;
 }
 
 static void entry_insert_func (GdauiFormattedEntry *fentry, gunichar insert_char, gint virt_pos, gpointer data);
@@ -589,7 +503,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				const GdaTime *gtim;
 				GdaTime* copy;
 				gtim = gda_value_get_time (value);
-				priv->value_tz = fit_tz (gda_time_get_timezone (gtim));
+				priv->value_tz = gda_time_get_timezone (gtim);
 				priv->value_fraction = gda_time_get_fraction (gtim);
 
 				copy = gda_time_copy (gtim);
@@ -622,7 +536,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				GDateTime *gts;
 				GDateTime *copy;
 				gts = g_value_get_boxed (value);
-				priv->value_tz = fit_tz (g_date_time_get_utc_offset (gts) / 1000000);
+				priv->value_tz = g_date_time_get_utc_offset (gts);
 				priv->value_fraction = (glong) ((g_date_time_get_seconds (gts) - g_date_time_get_second (gts)) * 1000000);
 
 				gint itz = priv->displayed_tz;
@@ -651,11 +565,10 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				g_date_time_unref (copy);
 			}
 		}
-		else
-			gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
+	} else {
+		g_warning (_("Can't set value to entry: Invalid Data Type for Entry Wrapper Time"));
+		gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
 	}
-	else
-		g_assert_not_reached ();
 }
 
 static GValue *
@@ -739,8 +652,11 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 			 */
 		}
 	}
-	else
-		g_assert_not_reached ();
+	else {
+		g_warning (_("Can't get value from entry: Invalid Data Type for Entry Wrapper Time"));
+		gdaui_entry_set_text (GDAUI_ENTRY (priv->entry), NULL);
+		value = gda_value_new (G_TYPE_DATE);
+	}
 	
 	if (!value) {
 		/* in case the gda_data_handler_get_value_from_str() returned an error because

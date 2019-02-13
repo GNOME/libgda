@@ -684,7 +684,7 @@ gdaui_data_cell_renderer_textual_start_editing (GtkCellRenderer      *cell,
 	else
 		entry = gdaui_entry_string_new (priv->dh, priv->type, priv->options);
 
-	g_object_set (G_OBJECT (entry), "is-cell-renderer", TRUE, "actions", FALSE, NULL);
+	 g_object_set (G_OBJECT (entry), "is-cell-renderer", TRUE, NULL);
 
 	if (OPTIMIZE) {
 		GValue *orig;
