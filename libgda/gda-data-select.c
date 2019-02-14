@@ -262,8 +262,11 @@ gda_data_select_iter_set_value_at (GdaDataModelIter *iter, gint col,
 
 	g_object_get (G_OBJECT (iter), "data-model", &imodel, NULL);
 	g_return_val_if_fail (imodel, FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_MODEL (imodel), FALSE);
 
-	g_return_val_if_fail (check_data_model_for_updates (imodel, col, value, error), FALSE);
+	if (!check_data_model_for_updates (imodel, col, value, error)) {
+		return FALSE;
+	}
 
 	/* BVector */
 	BVector *bv;
@@ -2173,6 +2176,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaRow *prow = NULL;
 	gint target_iter_row;
 	gint int_row;
+	GError *error = NULL;
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
 	if (priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
@@ -2180,6 +2184,12 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 
 	g_return_val_if_fail (CLASS (model)->fetch_next, FALSE);
 	g_return_val_if_fail (iter, FALSE);
+
+	if (gda_data_model_get_n_rows (model) == 0) {
+		priv->sh->iter_row = G_MAXINT;
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 
 	if (priv->sh->iter_row == G_MAXINT) {
 		gda_data_model_iter_invalidate_contents (iter);
@@ -2190,14 +2200,34 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 	else
 		target_iter_row = priv->sh->iter_row + 1;
 
-	int_row = external_to_internal_row (GDA_DATA_SELECT (model), target_iter_row, NULL);
+	if ((priv->sh->iter_row) >= gda_data_model_get_n_rows (model)) {
+		priv->sh->iter_row = G_MAXINT;
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
+
+	int_row = external_to_internal_row (GDA_DATA_SELECT (model), target_iter_row, &error);
+	if (int_row < 0) {
+		g_warning (_("Can't calculate internal row number: %s"),
+		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 	prow = gda_data_select_get_stored_row (GDA_DATA_SELECT (model), int_row);
-	if (!prow)
-		_gda_data_select_fetch_next (GDA_DATA_SELECT (model), &prow, int_row, NULL);
+	if (!prow) {
+		if (!_gda_data_select_fetch_next (GDA_DATA_SELECT (model), &prow, int_row, &error)) {
+			g_warning (_("Can't fetch next row: %s"),
+				         error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
+	}
 
 	if (prow) {
 		priv->sh->iter_row = target_iter_row;
-                update_iter (GDA_DATA_SELECT (model), prow);
+		update_iter (GDA_DATA_SELECT (model), prow);
 		return TRUE;
 	}
 	else {
@@ -2205,7 +2235,7 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		priv->sh->iter_row = G_MAXINT;
 		g_object_set (G_OBJECT (iter), "current-row", -1, NULL);
 		g_signal_emit_by_name (iter, "end-of-data");
-                return FALSE;
+		return FALSE;
 	}
 }
 
@@ -2215,6 +2245,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	GdaRow *prow = NULL;
 	gint target_iter_row;
 	gint int_row;
+	GError *error = NULL;
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
 	if (priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
@@ -2231,14 +2262,32 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	else
 		target_iter_row = priv->sh->iter_row - 1;
 
-	int_row = external_to_internal_row (GDA_DATA_SELECT (model), target_iter_row, NULL);
+	if (priv->sh->iter_row < 0) {
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
+
+	int_row = external_to_internal_row (GDA_DATA_SELECT (model), target_iter_row, &error);
+	if (int_row < 0) {
+		g_warning (_("Can't move back iter at row: %s"),
+		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 	prow = gda_data_select_get_stored_row (GDA_DATA_SELECT (model), int_row);
 	if (!prow) {
 		if (! CLASS (model)->fetch_prev) {
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}
-		_gda_data_select_fetch_prev (GDA_DATA_SELECT (model), &prow, int_row, NULL);
+		if (!_gda_data_select_fetch_prev (GDA_DATA_SELECT (model), &prow, int_row, &error)) {
+			g_warning (_("Can't fetch previous row: %s"),
+				         error && error->message ? error->message : "No error was set");
+			g_clear_error (&error);
+			gda_data_model_iter_invalidate_contents (iter);
+			return FALSE;
+		}
 	}
 
 	if (prow) {
@@ -2259,16 +2308,28 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 {
 	GdaRow *prow = NULL;
 	gint int_row;
+	GError *error = NULL;
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
-	g_return_val_if_fail (priv, FALSE);
+	g_return_val_if_fail (iter, FALSE);
 
 	if (priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 		return gda_data_model_iter_move_to_row_default (model, iter, row);
 
-	g_return_val_if_fail (iter, FALSE);
+	if (row >= gda_data_model_get_n_rows (model)) {
+		priv->sh->iter_row = -1;
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 
-	int_row = external_to_internal_row (GDA_DATA_SELECT (model), row, NULL);
+	int_row = external_to_internal_row (GDA_DATA_SELECT (model), row, &error);
+	if (int_row < 0) {
+		g_warning (_("Can't move iter at row '%d': %s"), row,
+		           error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		gda_data_model_iter_invalidate_contents (iter);
+		return FALSE;
+	}
 	if (priv->sh->current_prow && (priv->sh->current_prow_row == row))
 		prow = priv->sh->current_prow;
 	else
@@ -2281,7 +2342,13 @@ gda_data_select_iter_at_row (GdaDataModel *model, GdaDataModelIter *iter, gint r
 	}
 	else {
 		if (CLASS (model)->fetch_at) {
-			_gda_data_select_fetch_at (GDA_DATA_SELECT (model), &prow, int_row, NULL);
+			if (!_gda_data_select_fetch_at (GDA_DATA_SELECT (model), &prow, int_row, &error)) {
+				g_warning (_("Can't fetch row '%d': %s"), row,
+						       error && error->message ? error->message : "No error was set");
+				g_clear_error (&error);
+				gda_data_model_iter_invalidate_contents (iter);
+				return FALSE;
+			}
 			if (prow) {
 				priv->sh->iter_row = row;
 				update_iter (GDA_DATA_SELECT (model), prow);
@@ -2324,6 +2391,9 @@ update_iter (GdaDataSelect *imodel, GdaRow *prow)
 	GdaDataModelIter *iter = priv->iter;
 	GSList *plist;
 	gboolean update_model;
+	if (iter == NULL) {
+		return;
+	}
 
 	g_object_get (G_OBJECT (iter), "update-model", &update_model, NULL);
 	if (update_model)
@@ -2935,7 +3005,9 @@ gda_data_select_set_value_at (GdaDataModel *model, gint col, gint row, const GVa
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
 	g_return_val_if_fail (priv, FALSE);
-	g_return_val_if_fail (check_data_model_for_updates (GDA_DATA_SELECT (model), col, value, error), FALSE);
+	if (!check_data_model_for_updates (GDA_DATA_SELECT (model), col, value, error)) {
+		return FALSE;
+	}
 	if (! (priv->sh->usage_flags & GDA_DATA_MODEL_ACCESS_RANDOM)) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
 			     "%s", _("Data model does only support random access"));

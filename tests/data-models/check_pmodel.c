@@ -84,8 +84,8 @@ static gint test17 (GdaConnection *cnc);
 
 TestFunc tests[] = {
 	test1,
-        test2,
-        test3,
+	test2,
+	test3,
 	test4,
 	test5,
 	test6,
@@ -134,50 +134,50 @@ static GdaConnection *
 setup_connection (void)
 {
 	RawDDLCreator *ddl;
-        GError *error = NULL;
-        GdaConnection *cnc;
-        gchar *str;
+	GError *error = NULL;
+	GdaConnection *cnc;
+	gchar *str;
 
-        /* open a connection */
-        cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=pmodel", NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
-        if (!cnc) {
-                g_print ("Error opening connection: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
-        }
+	/* open a connection */
+	cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=pmodel", NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
+	if (!cnc) {
+		g_print ("Error opening connection: %s\n", error && error->message ? error->message : "No detail");
+		g_error_free (error);
+		exit (EXIT_FAILURE);
+	}
 
 	/* Setup structure */
-        ddl = raw_ddl_creator_new ();
-        raw_ddl_creator_set_connection (ddl, cnc);
+	ddl = raw_ddl_creator_new ();
+	raw_ddl_creator_set_connection (ddl, cnc);
 	str = g_build_filename (CHECK_FILES, "tests", "data-models", "pmodel_dbstruct.xml", NULL);
-        if (!raw_ddl_creator_set_dest_from_file (ddl, str, &error)) {
-                g_print ("Error creating RawDDLCreator: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
-        }
+	if (!raw_ddl_creator_set_dest_from_file (ddl, str, &error)) {
+		g_print ("Error creating RawDDLCreator: %s\n", error && error->message ? error->message : "No detail");
+		g_error_free (error);
+		exit (EXIT_FAILURE);
+	}
 	g_free (str);
 
 #ifdef SHOW_SQL
-        str = raw_ddl_creator_get_sql (ddl, &error);
-        if (!str) {
-                g_print ("Error getting SQL: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
-        }
-        g_print ("%s\n", str);
-        g_free (str);
+	str = raw_ddl_creator_get_sql (ddl, &error);
+	if (!str) {
+		g_print ("Error getting SQL: %s\n", error && error->message ? error->message : "No detail");
+		g_error_free (error);
+		exit (EXIT_FAILURE);
+	}
+	g_print ("%s\n", str);
+	g_free (str);
 #endif
 
-        if (!raw_ddl_creator_execute (ddl, &error)) {
-                g_print ("Error creating database objects: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
-        }
+	if (!raw_ddl_creator_execute (ddl, &error)) {
+		g_print ("Error creating database objects: %s\n", error && error->message ? error->message : "No detail");
+		g_error_free (error);
+		exit (EXIT_FAILURE);
+	}
 
 	if (! gda_connection_update_meta_store (cnc, NULL, &error)) {
 		g_print ("Error fetching meta data: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
+		g_error_free (error);
+		exit (EXIT_FAILURE);
 	}
 
 	/* load some data */
@@ -187,11 +187,11 @@ setup_connection (void)
 	/* update meta store */
 	if (! gda_connection_update_meta_store (cnc, NULL, &error)) {
 		g_print ("Error updateing meta store: %s\n", error && error->message ? error->message : "No detail");
-                g_error_free (error);
-                exit (EXIT_FAILURE);
+		g_error_free (error);
+		exit (EXIT_FAILURE);
 	}
 
-        g_object_unref (ddl);
+	g_object_unref (ddl);
 	return cnc;
 }
 
@@ -222,7 +222,7 @@ stmt_from_string (const gchar *sql)
 
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, &error);
 	if (!stmt) {
-		g_print ("Cound not parse SQL: %s\nSQL was: %s\n",
+		g_print ("Could not parse SQL: %s\nSQL was: %s\n",
 			 error && error->message ? error->message : "No detail",
 			 sql);
 		exit (EXIT_FAILURE);
@@ -1184,6 +1184,8 @@ test11 (GdaConnection *cnc)
 	ncols = gda_data_model_get_n_columns (model);
 	nrows = gda_data_model_get_n_rows (ramodel);
 	iter = gda_data_model_create_iter (model);
+	g_assert (iter != NULL);
+	g_assert (GDA_IS_DATA_MODEL_ITER (iter));
 	for (; gda_data_model_iter_move_next (iter);) {
 		//g_print ("Iter is now at row %d\n", gda_data_model_iter_get_row (iter));
 		gint i;
@@ -1229,6 +1231,10 @@ test11 (GdaConnection *cnc)
 
 	/* create an iterator */
 	iter = gda_data_model_create_iter (model);
+	g_assert (iter != NULL);
+	g_assert (G_IS_OBJECT (iter));
+	g_assert (GDA_IS_SET (iter));
+	g_assert (GDA_IS_DATA_MODEL_ITER (iter));
 	if (gda_data_model_iter_move_next (iter)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -1277,14 +1283,33 @@ test12 (GdaConnection *cnc)
 	g_assert (gda_set_set_holder_value (params, &error, "id", 9));
 
 	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
-	g_assert (model);
+	if (model == NULL) {
+		g_warning ("Error: %s", error && error->message ? error->message : "No detail");
+		g_assert_not_reached ();
+	}
+	g_print ("Query Result:\n");
 	gda_data_model_dump (model, stdout);
 	g_object_unref (model);
 
 	model = gda_connection_statement_execute_select_full (cnc, stmt, params, 
 							      GDA_STATEMENT_MODEL_CURSOR_FORWARD, 
 							      NULL, &error);
-	g_assert (model);
+	if (model == NULL) {
+		g_warning ("Error: %s", error && error->message ? error->message : "No detail");
+		g_assert_not_reached ();
+	}
+	g_print ("Rows in Model with Forward Cursor: %d\n", gda_data_model_get_n_rows (model));
+	g_object_unref (model);
+
+	model = gda_connection_statement_execute_select_full (cnc, stmt, params,
+							      GDA_STATEMENT_MODEL_CURSOR_FORWARD,
+							      NULL, &error);
+	if (model == NULL) {
+		g_warning ("Error: %s", error && error->message ? error->message : "No detail");
+		g_assert_not_reached ();
+	}
+	g_print ("Rows in Model: %d\n", gda_data_model_get_n_rows (model));
+	g_assert (gda_data_model_get_n_rows (model) > 0);
 	monitor_model_signals (model);
 
 	/* gda_data_select_compute_modification_statements() */
@@ -1295,9 +1320,11 @@ test12 (GdaConnection *cnc)
 	}
 
 	/* create an iterator */
+	g_print ("Creating iterator for FORWARD Data Model\n");
 	iter = gda_data_model_create_iter (model);
-  g_assert (GDA_IS_DATA_MODEL_ITER (iter));
+	g_assert (iter != NULL);
   g_assert (GDA_IS_SET (iter));
+	g_assert (GDA_IS_DATA_MODEL_ITER (iter));
 	g_signal_connect (iter, "row-changed", G_CALLBACK (iter_row_changed), NULL);
 	g_assert (gda_data_model_iter_move_next (iter));
 	g_assert (gda_data_model_iter_move_next (iter));
@@ -1539,27 +1566,27 @@ static gint
 test15 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-        GdaDataModel *model = NULL, *rerun;
-        GdaStatement *stmt;
-        GdaSet *params;
-        gint nfailed = 0;
+	GdaDataModel *model = NULL, *rerun;
+	GdaStatement *stmt;
+	GdaSet *params;
+	gint nfailed = 0;
 
 	clear_signals ();
 
-        /* create GdaDataModelQuery */
-        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
-        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+	/* create GdaDataModelQuery */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
 	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
-                nfailed++;
+	nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't set 'theid' value: %s \n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't set 'theid' value: %s \n",
+		         error && error->message ? error->message : "No detail");
 #endif
-                goto out;
-        }
-        model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
-        g_assert (model);
+		goto out;
+	}
+	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	g_assert (model);
 
 	monitor_model_signals (model);
 
@@ -1569,42 +1596,42 @@ test15 (GdaConnection *cnc)
 	/**/
 	g_object_set (G_OBJECT (model), "auto-reset", TRUE, NULL);
 	if (! gda_set_set_holder_value (params, &error, "theid", 3)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't set 'theid' value: %s \n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't set 'theid' value: %s \n",
+		         error && error->message ? error->message : "No detail");
 #endif
-                goto out;
-        }
+	goto out;
+	}
 	check_expected_signal (model, 'R', -1);
 
 	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
 	if (!dstr || strcmp (dstr, "hey")) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
-			 dstr);
+		g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
+		         dstr);
 #endif
-                goto out;
+	goto out;
 	}
 
 	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
 	g_assert (rerun);
 	if (! compare_data_models (model, rerun, NULL)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Data model differs after a refresh\n");
+		g_print ("Data model differs after a refresh\n");
 #endif
-                goto out;
-        }
-        g_object_unref (rerun);
+		goto out;
+	}
+	g_object_unref (rerun);
 
  out:
 	if (model)
 		g_object_unref (model);
-        g_object_unref (stmt);
+	g_object_unref (stmt);
 
-        return nfailed;
+	return nfailed;
 }
 
 /*
@@ -1618,38 +1645,39 @@ static gint
 test16 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-        GdaDataModel *model, *rerun;
-        GdaStatement *stmt;
-        GdaSet *params;
-        gint nfailed = 0;
+	GdaDataModel *model, *rerun;
+	GdaStatement *stmt;
+	GdaSet *params;
+	gint nfailed = 0;
 
 	clear_signals ();
 
-        /* create GdaDataModelQuery */
-        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
-        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+	/* create GdaDataModelQuery */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
-        model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-							      NULL, &error);
+	model = gda_connection_statement_execute_select_full (cnc, stmt, params,
+	                                                      GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+	                                                      NULL, &error);
 	if (!model) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't run a SELECT with invalid parameters and the "
-			 "GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag: %s\n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't run a SELECT with invalid parameters and the "
+		   "GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag: %s\n",
+		   error && error->message ? error->message : "No detail");
 #endif
-                goto out;
+		goto out;
 	}
 
 	if (gda_data_model_get_n_rows (model) != 0) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Data model should report 0 row and reports: %d",
+		g_print ("Data model should report 0 row and reports: %d",
 			 gda_data_model_get_n_rows (model));
 #endif
-                goto out;
+		goto out;
 	}
-
+	g_print ("After First select ejection\n");
 	dump_data_model (model);
 
 	/* set a custom data */
@@ -1657,14 +1685,15 @@ test16 (GdaConnection *cnc)
 	monitor_model_signals (model);
 
 	/**/
+	g_print ("Setting a new Value in parameters: theid = 9\n");
 	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't set 'theid' value: %s \n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't set 'theid' value: %s \n",
+		         error && error->message ? error->message : "No detail");
 #endif
-                goto out;
-        }
+		goto out;
+	}
 	check_expected_signal (model, 'R', -1);
 
 	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
@@ -1680,24 +1709,25 @@ test16 (GdaConnection *cnc)
 	dump_data_model (model);
 
 	/**/
+	g_print ("Setting a new Value in parameters: theid = 120\n");
 	if (! gda_set_set_holder_value (params, &error, "theid", 120)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't set 'theid' value: %s \n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't set 'theid' value: %s \n",
+		         error && error->message ? error->message : "No detail");
 #endif
-                goto out;
-        }
+		goto out;
+	}
 	check_expected_signal (model, 'R', -1);
 
 	dstr = g_object_get_data (G_OBJECT (model), "mydata");
 	if (!dstr || strcmp (dstr, "hey")) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
+		g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
 			 dstr);
 #endif
-                goto out;
+		goto out;
 	}
 
 	dump_data_model (model);
@@ -1705,13 +1735,13 @@ test16 (GdaConnection *cnc)
 	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
 	g_assert (rerun);
 	if (! compare_data_models (model, rerun, NULL)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Data model differs after a refresh\n");
+		g_print ("Data model differs after a refresh\n");
 #endif
-                goto out;
-        }
-        g_object_unref (rerun);
+		goto out;
+	}
+	g_object_unref (rerun);
 
 	/**/
 	gda_holder_force_invalid (GDA_HOLDER (gda_set_get_holders (params)->data));
@@ -1719,10 +1749,10 @@ test16 (GdaConnection *cnc)
 	dump_data_model (model);
 
  out:
-        g_object_unref (model);
-        g_object_unref (stmt);
+	g_object_unref (model);
+	g_object_unref (stmt);
 
-        return nfailed;
+	return nfailed;
 }
 
 /*
@@ -1737,18 +1767,18 @@ static gint
 test17 (GdaConnection *cnc)
 {
 	GError *error = NULL;
-        GdaDataModel *model;
-        GdaStatement *stmt;
+	GdaDataModel *model;
+	GdaStatement *stmt;
 	GdaDataModelIter *iter;
-        GdaSet *params;
-        gint nfailed = 0;
+	GdaSet *params;
+	gint nfailed = 0;
 
-        /* create GdaDataModelQuery */
-        stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
-        g_assert (gda_statement_get_parameters (stmt, &params, NULL));
+	/* create GdaDataModelQuery */
+	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
+	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
-        model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-							      NULL, &error);
+	model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
+	                                                      NULL, &error);
 	g_assert (model);
 	iter = gda_data_model_create_iter (model);
 	
@@ -1756,13 +1786,13 @@ test17 (GdaConnection *cnc)
 	GdaColumn *column;
 	GSList *list;
 	for (i = 0, list = gda_set_get_holders ((GdaSet*) iter);
-	     list;
-	     i++, list = list->next) {
+		list;
+		i++, list = list->next) {
 		if (gda_holder_get_g_type ((GdaHolder *) list->data) == GDA_TYPE_NULL) 
 			nullcol = i;
 		column = gda_data_model_describe_column (model, i);
 		if (gda_holder_get_g_type ((GdaHolder *) list->data) != 
-		    gda_column_get_g_type (column)) {
+			gda_column_get_g_type (column)) {
 			nfailed++;
 #ifdef CHECK_EXTRA_INFO
 			g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
@@ -1775,61 +1805,61 @@ test17 (GdaConnection *cnc)
 	}
 	if (nullcol == -1) {
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Could not find a GDA_TYPE_NULL column, test will be invalid");
+		g_print ("Could not find a GDA_TYPE_NULL column, test will be invalid");
 #endif
 		goto out;
 	}
 
 	/**/
 	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
-                nfailed++;
+		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Can't set 'theid' value: %s \n",
-                         error && error->message ? error->message : "No detail");
+		g_print ("Can't set 'theid' value: %s \n",
+		          error && error->message ? error->message : "No detail");
 #endif
                 goto out;
         }
 
 	column = gda_data_model_describe_column (model, nullcol);
 	if (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet*) iter), nullcol)) !=
-	    gda_column_get_g_type (column)) {
+		gda_column_get_g_type (column)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
-			 nullcol, 
-			 g_type_name (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet*) iter),
+		g_print ("Iter's GdaHolder for column %d reports the '%s' type when it should be '%s'",
+			   nullcol,
+			   g_type_name (gda_holder_get_g_type ((GdaHolder *) g_slist_nth_data (gda_set_get_holders ((GdaSet*) iter),
 											     nullcol))),
-			 g_type_name (gda_column_get_g_type (column)));
+			    g_type_name (gda_column_get_g_type (column)));
 #endif
-                goto out;
+		goto out;
 	}
 
 	/**/
 	if (gda_data_model_iter_is_valid (iter)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Iter should be invalid, and it is at row %d\n",
+		g_print ("Iter should be invalid, and it is at row %d\n",
 			 gda_data_model_iter_get_row (iter));
 #endif
-                goto out;
+		goto out;
 	}
 	dump_data_model (model);
 	while (gda_data_model_iter_move_next (iter));
 	if (gda_data_model_iter_is_valid (iter)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
-                g_print ("Iter could not be moved up to the end, and remained 'locked' at row %d\n",
+		g_print ("Iter could not be moved up to the end, and remained 'locked' at row %d\n",
 			 gda_data_model_iter_get_row (iter));
 #endif
-                goto out;
+		goto out;
 	}
 
 
  out:
-        g_object_unref (model);
-        g_object_unref (stmt);
+	g_object_unref (model);
+	g_object_unref (stmt);
 
-        return nfailed;
+	return nfailed;
 }
 
 

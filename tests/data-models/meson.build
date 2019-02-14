@@ -130,7 +130,8 @@ test('PModel', tchkpm,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
-		]
+		],
+	is_parallel: false
 	)
 
 tchkemrs = executable('check_empty_rs',
