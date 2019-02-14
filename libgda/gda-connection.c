@@ -897,13 +897,13 @@ merge_column_types (const GType *struct_types, const GType *user_types)
 }
 
 /**
- * gda_connection_new_from_dsn:
- * @dsn: data source name.
+ * gda_connection_new_from_dsn_name:
+ * @dsn_name: data source name.
  * @auth_string: (nullable): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
  *
- * This function creates a new function, using a pre-defined data source (DSN),
+ * This function creates a new function, using a pre-defined data source (DSN) name,
  * see gda_config_define_dsn() for more information about how to define a DSN. If you don't want to define
  * a DSN, it is possible to use gda_connection_new_from_string() instead of this method.
  *
@@ -913,41 +913,44 @@ merge_column_types (const GType *struct_types, const GType *user_types)
  * must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
  * The @auth_string can contain the authentication information for the server
- * to accept the connection. It is a string containing semi-colon seperated named value, usually 
+ * to accept the connection. It is a string containing semi-colon separated named value, usually 
  * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
  * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
  *
  * The actual named parameters required depend on the provider being used, and that list is available
  * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
- * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-6.0 -L" command to 
- * list the possible named parameters.
+ * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-6.0 -L" command
+ * to list the possible named parameters.
  *
- * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes) 
+ * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes)
  * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
  *
  * The returned connection is not yet opened, you need to call gda_connection_open() or gda_connection_open_async().
  *
  * Returns: (transfer full): a new #GdaConnection or %NULL if there was an error.
  *
- * Since: 5.0.2
+ * Since: 6.0
  */
 GdaConnection *
-gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string, 
-			     GdaConnectionOptions options, GError **error)
+gda_connection_new_from_dsn_name (const gchar *dsn_name,
+                                  const gchar *auth_string,
+                                  GdaConnectionOptions options,
+                                  GError **error)
 {
 	GdaConnection *cnc = NULL;
 	GdaDsnInfo *dsn_info;
 	gchar *user, *pass, *real_dsn;
 	gchar *real_auth_string = NULL;
 
-	g_return_val_if_fail (dsn && *dsn, NULL);
+	g_return_val_if_fail (dsn_name && *dsn_name, NULL);
+  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
 
-	gda_dsn_split (dsn, &real_dsn, &user, &pass);
+	gda_dsn_split (dsn_name, &real_dsn, &user, &pass);
 	if (!real_dsn) {
 		g_free (user);
 		g_free (pass);
 		g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_DSN_NOT_FOUND_ERROR, 
-			     _("Malformed data source specification '%s'"), dsn);
+			     _("Malformed data source specification '%s'"), dsn_name);
 		return NULL;
 	}
 
@@ -986,7 +989,7 @@ gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string,
 		else
 			g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
 				     _("No provider '%s' installed"), dsn_info->provider);
-		
+
 		if (prov)
 			cnc = _gda_server_provider_create_connection (prov, real_dsn, NULL,
 								      auth_string ? auth_string : real_auth_string,
@@ -1004,8 +1007,108 @@ gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string,
 }
 
 /**
- * gda_connection_open_from_dsn:
+ * gda_connection_new_from_dsn:
  * @dsn: data source name.
+ * @auth_string: (nullable): authentication string, or %NULL
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * This function creates a new connection, using a pre-defined data source (DSN), see
+ * gda_config_define_dsn() for more information about how to define a DSN. If you don't want to
+ * define a DSN, it is possible to use gda_connection_new_from_string() instead of this method.
+ *
+ * The @auth_string can contain the authentication information for the server
+ * to accept the connection. It is a string containing semi-colon seperated named value, usually
+ * like "USERNAME=...;PASSWORD=..." where the ... are replaced by actual values. Note that each
+ * name and value must be encoded as per RFC 1738, see gda_rfc1738_encode() for more information.
+ *
+ * If @auth_string is given, it wil be used, otherwise auth_string of #GdaDsnInfo will be used.
+ *
+ * The actual named parameters required depend on the provider being used, and that list is available
+ * as the <parameter>auth_params</parameter> member of the #GdaProviderInfo structure for each installed
+ * provider (use gda_config_get_provider_info() to get it). Also one can use the "gda-sql-6.0 -L" command
+ * to list the possible named parameters.
+ *
+ * This method may fail with a GDA_CONNECTION_ERROR domain error (see the #GdaConnectionError error codes)
+ * or a %GDA_CONFIG_ERROR domain error (see the #GdaConfigError error codes).
+ *
+ * The returned connection is not yet opened, you need to call gda_connection_open() or gda_connection_open_async().
+ *
+ * Returns: (transfer full): a new #GdaConnection or %NULL if there was an error.
+ *
+ * Since: 6.0
+ */
+GdaConnection *
+gda_connection_new_from_dsn (GdaDsnInfo *dsn,
+                             const gchar *auth_string,
+                             GdaConnectionOptions options,
+                             GError **error)
+{
+  GdaConnection *cnc = NULL;
+
+  g_return_val_if_fail (dsn, NULL);
+  g_return_val_if_fail (dsn->cnc_string, NULL);
+  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+
+/* try to find provider */
+  if (!dsn->provider)
+   {
+      GdaProviderInfo *pinfo = NULL;
+      GdaServerProvider *prov = NULL;
+
+      pinfo = gda_config_get_provider_info (dsn->provider);
+      if (pinfo)
+        prov = gda_config_get_provider (dsn->provider, error);
+      else
+        g_set_error (error, GDA_CONFIG_ERROR, GDA_CONFIG_PROVIDER_NOT_FOUND_ERROR,
+                     _("No provider '%s' installed"), dsn->provider);
+
+      if (prov)
+        cnc = _gda_server_provider_create_connection (prov, NULL, dsn->cnc_string,
+                                                      auth_string ? auth_string : dsn->auth_string,
+                                                      options);
+    }
+  else
+    g_set_error (error, GDA_CONNECTION_ERROR, GDA_CONNECTION_PROVIDER_NOT_FOUND_ERROR,
+                 "%s", _("Datasource configuration error: no provider specified"));
+
+  return cnc;
+}
+
+/**
+ * gda_connection_open_from_dsn_name:
+ * @dsn_name: data source name.
+ * @auth_string: (nullable): authentication string, or %NULL
+ * @options: options for the connection (see #GdaConnectionOptions).
+ * @error: a place to store an error, or %NULL
+ *
+ * This function creates a connection and opens it, using a DSN name. If opening fails, then no connection is created. The named DSN should be available.
+ * See gda_connection_new_from_dsn_name() for more information.
+ *
+ * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
+ */
+GdaConnection *
+gda_connection_open_from_dsn_name (const gchar *dsn_name,
+                                   const gchar *auth_string,
+                                   GdaConnectionOptions options,
+                                   GError **error)
+{
+  GdaConnection *cnc = NULL;
+
+  g_return_val_if_fail (dsn_name && *dsn_name, NULL);
+  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+
+  cnc = gda_connection_new_from_dsn_name (dsn_name, auth_string, options, error);
+
+  if (cnc && !gda_connection_open (cnc, error))
+    g_clear_object (&cnc);
+
+  return cnc;
+}
+
+/**
+ * gda_connection_open_from_dsn:
+ * @dsn_name: data sourcename.
  * @auth_string: (nullable): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
@@ -1014,20 +1117,27 @@ gda_connection_new_from_dsn (const gchar *dsn, const gchar *auth_string,
  * See gda_connection_new_from_dsn() for more information.
  *
  * Returns: (transfer full): a new #GdaConnection if connection opening was successful or %NULL if there was an error.
+ * Since: 6.0
  */
 GdaConnection *
-gda_connection_open_from_dsn (const gchar *dsn, const gchar *auth_string,
-			      GdaConnectionOptions options, GError **error)
+gda_connection_open_from_dsn (GdaDsnInfo *dsn,
+                              const gchar *auth_string,
+                              GdaConnectionOptions options,
+                              GError **error)
 {
-	GdaConnection *cnc;
-	cnc = gda_connection_new_from_dsn (dsn, auth_string, options, error);
-	if (cnc && !gda_connection_open (cnc, error)) {
-		g_object_unref (cnc);
-		cnc = NULL;
-	}
-	return cnc;
-}
+  GdaConnection *cnc = NULL;
 
+  g_return_val_if_fail (dsn, NULL);
+  g_return_val_if_fail (dsn->cnc_string, NULL);
+  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+
+  cnc = gda_connection_new_from_dsn (dsn, auth_string, options, error);
+
+  if (cnc && !gda_connection_open (cnc, error))
+    g_clear_object (&cnc);
+
+  return cnc;
+}
 
 /**
  * gda_connection_new_from_string:
