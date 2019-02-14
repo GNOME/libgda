@@ -42,6 +42,7 @@
 #include <libgda/gda-server-operation.h>
 #include <libgda/gda-batch.h>
 #include <libgda/gda-db-catalog.h>
+#include <libgda/gda-config.h>
 
 G_BEGIN_DECLS
 
@@ -62,12 +63,13 @@ typedef enum {
 	GDA_CONNECTION_OPEN_ERROR,
 	GDA_CONNECTION_ALREADY_OPENED_ERROR,
 	GDA_CONNECTION_STATEMENT_TYPE_ERROR,
-	GDA_CONNECTION_CANT_LOCK_ERROR,
+  GDA_CONNECTION_CANT_LOCK_ERROR,
 	GDA_CONNECTION_TASK_NOT_FOUND_ERROR,
 	GDA_CONNECTION_CLOSED_ERROR,
 	GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
 	GDA_CONNECTION_NO_MAIN_CONTEXT_ERROR
 } GdaConnectionError;
+
 
 #define GDA_CONNECTION_NONEXIST_DSN_ERROR GDA_CONNECTION_DSN_NOT_FOUND_ERROR
 
@@ -147,7 +149,7 @@ struct _GdaConnectionClass {
  * @GDA_CONNECTION_OPTIONS_READ_ONLY: this flag specifies that the connection to open should be in a read-only mode
  *                                    (this policy is not correctly enforced at the moment)
  * @GDA_CONNECTION_OPTIONS_SQL_IDENTIFIERS_CASE_SENSITIVE: this flag specifies that SQL identifiers submitted as input
- *                                    to Libgda have to keep their case sensitivity. 
+                                     to Libgda have to keep their case sensitivity. 
  * @GDA_CONNECTION_OPTIONS_AUTO_META_DATA: this flags specifies that if a #GdaMetaStore has been associated
  *                                     to the connection, then it is kept up to date with the evolutions in the
  *                                     database's structure. Be aware however that there are some drawbacks
@@ -258,13 +260,28 @@ typedef enum {
 } GdaConnectionMetaType;
 
 
-GdaConnection       *gda_connection_open_from_dsn        (const gchar *dsn, const gchar *auth_string,
-							  GdaConnectionOptions options, GError **error);
+GdaConnection       *gda_connection_open_from_dsn_name   (const gchar *dsn,
+                                                          const gchar *auth_string,
+                                                          GdaConnectionOptions options,
+                                                          GError **error);
+
+GdaConnection       *gda_connection_open_from_dsn        (GdaDsnInfo *dsn,
+                                                          const gchar *auth_string,
+                                                          GdaConnectionOptions options,
+                                                          GError **error);
 GdaConnection       *gda_connection_open_from_string     (const gchar *provider_name,
 							  const gchar *cnc_string, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
-GdaConnection       *gda_connection_new_from_dsn         (const gchar *dsn, const gchar *auth_string,
-							  GdaConnectionOptions options, GError **error);
+GdaConnection       *gda_connection_new_from_dsn_name     (const gchar *dsn_name,
+                                                           const gchar *auth_string,
+                                                           GdaConnectionOptions options,
+                                                           GError **error);
+
+GdaConnection       *gda_connection_new_from_dsn          (GdaDsnInfo *dsn,
+                                                           const gchar *auth_string,
+                                                           GdaConnectionOptions options,
+                                                           GError **error);
+
 GdaConnection       *gda_connection_new_from_string      (const gchar *provider_name, 
 							  const gchar *cnc_string, const gchar *auth_string,
 							  GdaConnectionOptions options, GError **error);
