@@ -45,17 +45,20 @@ typedef struct
 /**
  * SECTION:gda-db-catalog
  * @title: GdaDbCatalog
- * @short_description: Object to constract database representation from an xml file or by reading the existing datatabase 
+ * @short_description: Object to constract database representation from an xml file or by reading
+ * the existing datatabase
  * @see_also: #GdaDbTable, #GdaDbView
  * @stability: Stable
  * @include: libgda/libgda.h
  *
- * This is a main object that represents overall database. In can be constracted from an xml 
- * file using gda_db_catalog_parse_file() or gda_db_creator_parse_file_from_path(). It can also
- * be constracted from an open connection using gda_db_catalog_parse_cnc(). The database can be
- * updated using gda_db_catalog_perform_operation() and dumped to a file using
- * gda_db_catalog_write_to_path() and gda_db_creator_write_to_file(). 
- *  
+ * This is a main object that represents overall database. The best way to create an instance of
+ * #GdaDbCatalog is to call gda_connection_create_db_catalog(). This object may be also constracted
+ * from an xml file using gda_db_catalog_parse_file() or gda_db_catalog_parse_file_from_path() or
+ * didrectly from the open connection using gda_db_catalog_parse_cnc().
+ *
+ * The database can be updated or modified using gda_db_catalog_perform_operation() and dumped to
+ * a file using gda_db_catalog_write_to_path() or gda_db_catalog_write_to_file().
+ *
  */
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDbCatalog, gda_db_catalog, G_TYPE_OBJECT)
@@ -207,7 +210,7 @@ static gboolean
 _gda_db_catalog_validate_doc (xmlDocPtr doc,
                               GError **error)
 {
-  g_return_val_if_fail (doc,FALSE);
+  g_return_val_if_fail (doc, FALSE);
 
   xmlValidCtxtPtr  ctx = NULL;
 
@@ -222,7 +225,7 @@ _gda_db_catalog_validate_doc (xmlDocPtr doc,
       goto on_error;
     }
 
-  int valid = xmlValidateDtd (ctx,doc,_gda_db_catalog_dtd);
+  int valid = xmlValidateDtd (ctx, doc,_gda_db_catalog_dtd);
 
   if (!valid)
     {
@@ -249,7 +252,7 @@ on_error:
  *
  * Internal method to populate #GdaDbCatalog from @doc instance.
  *
- * Returns: %TRUE if no errors, %FALSE otherwise. 
+ * Returns: %TRUE if no errors, %FALSE otherwise.
  *
  */
 static gboolean
@@ -257,8 +260,8 @@ _gda_db_catalog_parse_doc (GdaDbCatalog *self,
                            xmlDocPtr doc,
                            GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (doc,FALSE);
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (doc, FALSE);
 
   xmlChar         *schema_name = NULL;
   xmlNodePtr       node        = NULL;
@@ -279,7 +282,7 @@ _gda_db_catalog_parse_doc (GdaDbCatalog *self,
   schema_name = xmlGetProp(node,(xmlChar *)"name");
 //  g_assert (schema_name); /* If schema_name == NULL we have problem with validation */
   if (schema_name)
-    g_object_set (self,"schema_name",(char*)schema_name,NULL);
+    g_object_set (self, "schema_name", (char*)schema_name, NULL);
 
   xmlFree (schema_name);
 
@@ -313,7 +316,7 @@ _gda_db_catalog_parse_doc (GdaDbCatalog *self,
             goto on_error;
           }
         else
-          priv->mp_views = g_list_append (priv->mp_views,view);
+          priv->mp_views = g_list_append (priv->mp_views, view);
       }  /* end of else if */
   } /* End of for loop */
 
@@ -337,12 +340,12 @@ on_error:
  * |[<!-- language="DTD" -->
  * <!ELEMENT schema (table+, view*)>
  * <!ATTLIST schema name           CDATA   #IMPLIED>
- * 
+ *
  * <!ELEMENT table (comment?,column+, fkey*)>
  * <!ATTLIST table temptable       (TRUE|FALSE)    "FALSE">
  * <!ATTLIST table name            CDATA           #REQUIRED>
  * <!ATTLIST table space           CDATA           #IMPLIED>
- * 
+ *
  * <!ELEMENT column (comment?, value?, check?)>
  * <!ATTLIST column name           CDATA           #REQUIRED>
  * <!ATTLIST column type           CDATA           #REQUIRED>
@@ -350,29 +353,29 @@ on_error:
  * <!ATTLIST column unique         (TRUE|FALSE)    "FALSE">
  * <!ATTLIST column autoinc        (TRUE|FALSE)    "FALSE">
  * <!ATTLIST column nnul           (TRUE|FALSE)    "FALSE">
- * 
+ *
  * <!ELEMENT comment       (#PCDATA)>
  * <!ELEMENT value         (#PCDATA)>
  * <!ATTLIST value size            CDATA          #IMPLIED>
  * <!ATTLIST value scale           CDATA          #IMPLIED>
- * 
+ *
  * <!ELEMENT check         (#PCDATA)>
- * 
+ *
  * <!ELEMENT fkey (fk_field?)>
  * <!ATTLIST fkey reftable CDATA #IMPLIED>
  * <!ATTLIST fkey onupdate (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>
  * <!ATTLIST fkey ondelete (RESTRICT|CASCADE|SET_NULL|NO_ACTION|SET_DEFAULT)       #IMPLIED>
- * 
+ *
  * <!ELEMENT fk_field (#PCDATA)>
  * <!ATTLIST fk_field name         CDATA           #REQUIRED>
  * <!ATTLIST fk_field reffield     CDATA           #REQUIRED>
- * 
+ *
  * <!ELEMENT view (definition)>
  * <!ATTLIST view name             CDATA           #REQUIRED>
  * <!ATTLIST view replace          (TRUE|FALSE)    "FALSE">
  * <!ATTLIST view temp             (TRUE|FALSE)    "FALSE">
  * <!ATTLIST view ifnotexists      (TRUE|FALSE)    "TRUE">
- * 
+ *
  * <!ELEMENT definition (#PCDATA)>
  * ]|
  *
@@ -381,8 +384,9 @@ on_error:
  * (https://gitlab.gnome.org/GNOME/libgda/blob/master/libgda/libgda-db-catalog.dtd)
  *
  * The given @xmlfile will be checked before parsing and %FALSE will be
- * returned if fails. The @xmlfile will be validated internally.
- * The same method can be used to validate xmlfile before parsing it.
+ * returned if fails. The @xmlfile will be validated internally using
+ * gda_db_catalog_validate_to_file() or gda_db_catalog_validate_to_path() methods.
+ * The same methods can be used to validate xmlfile before parsing it.
  */
 gboolean
 gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
@@ -395,7 +399,7 @@ gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
 
   xmlDocPtr doc = NULL;
 
-  doc = xmlParseFile(xmlfile);
+  doc = xmlParseFile (xmlfile);
 
   if (!doc)
     {
@@ -406,7 +410,7 @@ gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
       goto on_error;
     }
 
-  if (!_gda_db_catalog_validate_doc (doc,error))
+  if (!_gda_db_catalog_validate_doc (doc, error))
     {
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
@@ -415,9 +419,9 @@ gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
       goto on_error;
     }
 
-  if (!_gda_db_catalog_parse_doc (self,doc,error))
+  if (!_gda_db_catalog_parse_doc (self, doc, error))
     goto on_error;
-  
+
   xmlFreeDoc (doc);
   return TRUE;
 
@@ -442,8 +446,8 @@ gboolean
 gda_db_catalog_validate_file_from_path (const gchar *xmlfile,
                                         GError **error)
 {
-  g_return_val_if_fail (xmlfile,FALSE);
-  g_return_val_if_fail (_gda_db_catalog_dtd,FALSE);
+  g_return_val_if_fail (xmlfile, FALSE);
+  g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   xmlDocPtr doc = NULL;
 
@@ -458,7 +462,7 @@ gda_db_catalog_validate_file_from_path (const gchar *xmlfile,
       goto on_error;
     }
 
-  if (!_gda_db_catalog_validate_doc (doc,error))
+  if (!_gda_db_catalog_validate_doc (doc, error))
     goto on_error;
 
   xmlFreeDoc (doc);
@@ -474,13 +478,15 @@ on_error:
  * gda_db_catalog_get_tables:
  * @self: a #GdaDbCatalog object
  *
- * Returns: (element-type Gda.DbTable) (transfer none): a list of tables
+ * Returns: (element-type Gda.DbTable) (transfer none): a list of tables as #GdaDbTable or %NULL.
  *
  * Since: 6.0
  */
 GList*
 gda_db_catalog_get_tables (GdaDbCatalog *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
   return priv->mp_tables;
 }
@@ -489,13 +495,15 @@ gda_db_catalog_get_tables (GdaDbCatalog *self)
  * gda_db_catalog_get_views:
  * @self: a #GdaDbCatalog object
  *
- * Returns: (element-type Gda.DbView) (transfer none): a list of views
+ * Returns: (element-type Gda.DbView) (transfer none): a list of views as #GdaDbView or %NULL
  *
  * Since: 6.0
  */
 GList*
 gda_db_catalog_get_views (GdaDbCatalog *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
   return priv->mp_views;
 }
@@ -516,13 +524,13 @@ gda_db_catalog_get_table (GdaDbCatalog *self,
                           const gchar *schema,
                           const gchar *name)
 {
-  g_return_val_if_fail (self,NULL);
-  g_return_val_if_fail (name,NULL);
+  g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (name, NULL);
 
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
   GdaDbBase *iobj = gda_db_base_new ();
-  gda_db_base_set_names (iobj,catalog,schema,name);
+  gda_db_base_set_names (iobj, catalog, schema, name);
 
   GList *it = NULL;
 
@@ -542,9 +550,9 @@ gda_db_catalog_get_table (GdaDbCatalog *self,
  * @self: a #GdaDbCatalog object
  * @name: view name
  *
- * Convenient function to return a view based on name
+ * Convenient function to return a view based on name.
  *
- * Returns: table as #GdaDbView or %NULL
+ * Returns: table as #GdaDbView or %NULL if the view is not found.
  *
  */
 const GdaDbView*
@@ -561,10 +569,10 @@ gda_db_catalog_get_view (GdaDbCatalog *self,
   gda_db_base_set_names (iobj,catalog,schema,name);
 
   for (it = priv->mp_views; it; it = it->next)
-    if (!gda_db_base_compare (iobj,GDA_DB_BASE(it)))
+    if (!gda_db_base_compare (iobj, GDA_DB_BASE(it)))
       {
         g_object_unref (iobj);
-      return GDA_DB_VIEW(it);
+        return GDA_DB_VIEW(it);
       }
 
   g_object_unref (iobj);
@@ -579,7 +587,7 @@ gda_db_catalog_get_view (GdaDbCatalog *self,
  * object. If %NULL is passed this function works exactly as
  * gda_db_table_new()
  *
- * This method should not be part of the public API. 
+ * This method should not be part of the public API.
  *
  * Since: 6.0
  */
@@ -587,25 +595,25 @@ static GdaDbTable*
 _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
 {
   if (!obj)
-    return gda_db_table_new();
+    return gda_db_table_new ();
 
   if (obj->obj_type != GDA_META_DB_TABLE)
     return NULL;
 
   GdaMetaTable *metatable = GDA_META_TABLE(obj);
-  GdaDbTable *table = gda_db_table_new();
+  GdaDbTable *table = gda_db_table_new ();
 
   gda_db_base_set_names(GDA_DB_BASE(table),
-                         obj->obj_catalog,
-                         obj->obj_schema,
-                         obj->obj_name);
+                        obj->obj_catalog,
+                        obj->obj_schema,
+                        obj->obj_name);
 
   GSList *it = NULL;
   for (it = metatable->columns; it; it = it->next)
     {
       GdaDbColumn *column = gda_db_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
 
-      gda_db_table_append_column(table,column);
+      gda_db_table_append_column (table, column);
     }
 
   it = NULL;
@@ -616,7 +624,7 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
 
       GdaDbFkey *fkey = gda_db_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
 
-      gda_db_table_append_fkey (table,fkey);
+      gda_db_table_append_fkey (table, fkey);
 
     }
 
@@ -629,17 +637,17 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
  *
  * Create new #GdaDbView object from the corresponding #GdaMetaView object
  *
- * This method should not be part of the public API. 
+ * This method should not be part of the public API.
  *
- * Returns: New instance of #GdaDbView 
+ * Returns: New instance of #GdaDbView
  */
 static GdaDbView*
 _gda_db_view_new_from_meta (GdaMetaView *view)
 {
   if (!view)
-    return gda_db_view_new();
+    return gda_db_view_new ();
 
-  GdaDbView *dbview = gda_db_view_new();
+  GdaDbView *dbview = gda_db_view_new ();
 
   gda_db_view_set_defstring (dbview,view->view_def);
   gda_db_view_set_replace (dbview,view->is_updatable);
@@ -647,25 +655,28 @@ _gda_db_view_new_from_meta (GdaMetaView *view)
   return dbview;
 }
 
-/** 
+/**
  * gda_db_catalog_parse_cnc:
- * @self: a #GdaDbCatalog instance 
+ * @self: a #GdaDbCatalog instance
  * @error: error storage object
  *
- * Parse cnc to populate @self object. This method should be called every time after database was
- * modified or @self was just created.
+ * Parse internal cnc to populate @self object. This method should be called every time after
+ * database was modified or @self was just created using gda_connection_create_db_catalog(). The
+ * method will return %FALSE if no internal #GdaConnection available.
  *
  * Returns: Returns %TRUE if succeeded, %FALSE otherwise.
+ *
+ * Since: 6.0
  */
 gboolean
 gda_db_catalog_parse_cnc (GdaDbCatalog *self,
                           GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
+  g_return_val_if_fail (self, FALSE);
 
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
-  if (!gda_connection_is_opened (priv->cnc))
+  if (!priv->cnc && !gda_connection_is_opened (priv->cnc))
     return FALSE;
 
   if(!gda_connection_update_meta_store (priv->cnc, NULL, error))
@@ -676,7 +687,9 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
   GdaMetaStruct *mstruct = NULL;
 
   mstore = gda_connection_get_meta_store (priv->cnc);
-  mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
+  mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT,
+                                           "meta-store", mstore,
+                                           "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
 
   GSList *dblist = NULL;
 
@@ -694,7 +707,7 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
     {
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_TABLE)
         {
-          GdaDbTable *table = _gda_db_table_new_from_meta(it->data);
+          GdaDbTable *table = _gda_db_table_new_from_meta (it->data);
           if (!table)
             continue;
 
@@ -704,8 +717,8 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
 
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_VIEW)
         {
-          GdaDbView *view = _gda_db_view_new_from_meta(it->data);
-          priv->mp_views = g_list_append (priv->mp_views,view);
+          GdaDbView *view = _gda_db_view_new_from_meta (it->data);
+          priv->mp_views = g_list_append (priv->mp_views, view);
           continue;
         }
     }
@@ -726,7 +739,8 @@ on_error:
  * @self: a #GdaDbCatalog instance
  * @table: table to append
  *
- * This method append @table to the total list of all tables stored in @self.
+ * This method append @table to the total list of all tables stored in @self. This method increase
+ * reference count for @table.
  *
  * Since: 6.0
  */
@@ -738,7 +752,7 @@ gda_db_catalog_append_table (GdaDbCatalog *self,
 
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
-  priv->mp_tables = g_list_append (priv->mp_tables,g_object_ref (table));
+  priv->mp_tables = g_list_append (priv->mp_tables, g_object_ref (table));
 }
 
 /**
@@ -746,7 +760,8 @@ gda_db_catalog_append_table (GdaDbCatalog *self,
  * @self: a #GdaDbCatalog instance
  * @view: view to append
  *
- * This method append @view to the total list of all views stored in @self.
+ * This method append @view to the total list of all views stored in @self. This method increase
+ * reference count for @view.
  *
  * Since: 6.0
  */
@@ -758,7 +773,7 @@ gda_db_catalog_append_view (GdaDbCatalog *self,
 
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
-  priv->mp_views = g_list_append (priv->mp_views,g_object_ref (view));
+  priv->mp_views = g_list_append (priv->mp_views, g_object_ref (view));
 }
 
 /**
@@ -771,20 +786,20 @@ gda_db_catalog_append_view (GdaDbCatalog *self,
  * method to work with database. For retrieving information from database to an
  * xml file use gda_db_catalog_parse_cnc() and gda_db_buildable_write_xml().
  *
- * Connection should be opened to use this method. See gda_connection_open()
- * method for reference.
+ * Connection can be added as a property using g_object_set() call and should be opened to use
+ * this method. See gda_connection_open() method for reference.
  *
  * Only table can be created. Views are ignored
  *
  * Each table from database compared with each table in the #GdaDbCatalog
- * instance. If the table doesn't exist in database, it will be created (CREATE_TABLE). 
+ * instance. If the table doesn't exist in database, it will be created (CREATE_TABLE).
  * If table exists in the database and xml file, all columns will be checked. If columns
  * are present in xml file but not in the database it will be created (ADD_COLUMN). If
  * column exists but has different parameters, e.g. nonnull it will not be
- * modified. 
+ * modified.
  *
- * Note: Pkeys are not checked. This is a limitation that should be removed. The corresponding 
- * issue was open on gitlab page. 
+ * Note: Pkeys are not checked. This is a limitation that should be removed. The corresponding
+ * issue was open on gitlab page.
  */
 gboolean
 gda_db_catalog_perform_operation (GdaDbCatalog *self,
@@ -810,7 +825,10 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
     return FALSE;
 
   GdaMetaStore *mstore = gda_connection_get_meta_store (priv->cnc);
-  GdaMetaStruct *mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", mstore, "features", GDA_META_STRUCT_FEATURE_ALL, NULL);
+  GdaMetaStruct *mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT,
+                                                          "meta-store", mstore,
+                                                          "features", GDA_META_STRUCT_FEATURE_ALL,
+                                                          NULL);
 
   // We need information about catalog, schema, name for each object we would
   // like to check
@@ -829,7 +847,7 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
     {
       /* SQLite accepts only one possible value for schema: "main".
        * Other databases may also ignore schema and reference objects only by database and
-       * name, e.g. db_name.table_name 
+       * name, e.g. db_name.table_name
        * */
       g_value_set_string (catalog, gda_db_base_get_catalog(it->data));
       g_value_set_string (schema , gda_db_base_get_schema (it->data));
@@ -875,8 +893,8 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
  * gda_db_catalog_write_to_file:
  * @self: a #GdaDbCatalog instance
  * @file: a #GFile to write database description
- * @error: container to hold error 
- * 
+ * @error: container to hold error
+ *
  * This method writes database description as xml file.
  * Similar to gda_db_catalog_write_to_path()
  *
@@ -889,11 +907,11 @@ gda_db_catalog_write_to_file (GdaDbCatalog *self,
                               GFile *file,
                               GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (file,FALSE);
-  
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (file, FALSE);
+
   gchar *filepath = g_file_get_path (file);
-  gboolean res = gda_db_catalog_write_to_path (self,filepath,error);
+  gboolean res = gda_db_catalog_write_to_path (self, filepath, error);
   g_free (filepath);
   return res;
 }
@@ -906,7 +924,7 @@ gda_db_catalog_write_to_file (GdaDbCatalog *self,
  *
  * Save content of @self to a user friendly xml file.
  *
- * Returns: %TRUE is no error, %FLASE otherwise. 
+ * Returns: %TRUE is no error, %FLASE otherwise.
  *
  * Since: 6.0
  */
@@ -917,7 +935,7 @@ gda_db_catalog_write_to_path (GdaDbCatalog *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (path,FALSE);
- 
+
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
   xmlDocPtr doc = NULL;
@@ -925,17 +943,17 @@ gda_db_catalog_write_to_path (GdaDbCatalog *self,
 
   doc = xmlNewDoc (BAD_CAST "1.0");
   node_root = xmlNewNode (NULL, BAD_CAST "schema");
-  
-  if (priv->mp_schemaname)
-    xmlNewProp (node_root,(xmlChar*)"name",(xmlChar*)priv->mp_schemaname);
 
-  xmlDocSetRootElement (doc,node_root);
+  if (priv->mp_schemaname)
+    xmlNewProp (node_root, (xmlChar*)"name",(xmlChar*)priv->mp_schemaname);
+
+  xmlDocSetRootElement (doc, node_root);
 
   GList *it = NULL;
-  
+
   for (it = priv->mp_tables; it; it=it->next)
     if (!gda_db_buildable_write_node (GDA_DB_BUILDABLE(GDA_DB_TABLE(it->data)),
-                                       node_root,error))
+                                       node_root, error))
       goto on_error;
 
   for (it = priv->mp_views; it; it=it->next)
@@ -943,15 +961,15 @@ gda_db_catalog_write_to_path (GdaDbCatalog *self,
                                        node_root,error))
       goto on_error;
 
-  xmlSaveFormatFileEnc (path,doc,"UTF-8",1);
+  xmlSaveFormatFileEnc (path, doc, "UTF-8", 1);
   xmlFreeDoc (doc);
-  xmlCleanupParser();
-  
+  xmlCleanupParser ();
+
   return TRUE;
 
 on_error:
   xmlFreeDoc (doc);
-  xmlCleanupParser();
+  xmlCleanupParser ();
   return FALSE;
 }
 
@@ -960,7 +978,7 @@ on_error:
  * @self: an instance of #GdaDbCatalog
  * @xmlfile: xml file as #GFile instance
  * @error: Error container
- * 
+ *
  * For detailed description see gda_db_catalog_parse_file_from_path()
  *
  * Since: 6.0
@@ -970,42 +988,44 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
                            GFile *xmlfile,
                            GError **error)
 {
-  g_return_val_if_fail (self,FALSE);
-  g_return_val_if_fail (xmlfile,FALSE);
-  g_return_val_if_fail (_gda_db_catalog_dtd,FALSE);
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (xmlfile, FALSE);
+  g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   GFileInputStream *istream = NULL;
   xmlDocPtr doc = NULL;
 
-  istream = g_file_read (xmlfile,NULL,error);
+  istream = g_file_read (xmlfile, NULL, error);
 
   if(!istream)
     {
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
                    GDA_DB_CATALOG_FILE_READ,
-                   _("Can't open stream for reading file '%s'"), g_file_get_basename(xmlfile));
+                   _("Can't open stream for reading file '%s'"), g_file_get_basename (xmlfile));
       return FALSE;
     }
 
   xmlParserCtxtPtr ctxt = NULL;
-  char buffer[10];
+  int buffer_size = 10;
+  char buffer[buffer_size];
   int ctxt_res = 0;
-  ctxt = xmlCreatePushParserCtxt (NULL,NULL,buffer,ctxt_res,NULL);
+  ctxt = xmlCreatePushParserCtxt (NULL, NULL, buffer, ctxt_res, NULL);
   if (!ctxt)
     {
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
                    GDA_DB_CATALOG_FILE_READ,
-                   _("Can't create parse context for '%s'"), g_file_get_basename(xmlfile));
+                   _("Can't create parse context for '%s'"), g_file_get_basename (xmlfile));
       goto on_error;
     }
 
   int rescheck;
-  while ((ctxt_res = g_input_stream_read ((GInputStream*)istream,buffer,9,NULL,error)) > 0)
+  while ((ctxt_res = g_input_stream_read ((GInputStream*)istream, buffer, buffer_size-1,
+                                          NULL, error)) > 0)
     {
-      rescheck = xmlParseChunk(ctxt,buffer,ctxt_res,0); 
-   
+      rescheck = xmlParseChunk (ctxt, buffer, ctxt_res, 0);
+
       if (rescheck != 0)
         {
           g_set_error (error,
@@ -1017,7 +1037,7 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
         }
     }
 
-  xmlParseChunk (ctxt,buffer,0,1);
+  xmlParseChunk (ctxt, buffer, 0, 1);
 
   doc = ctxt->myDoc;
   ctxt_res = ctxt->wellFormed;
@@ -1040,7 +1060,7 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
       goto on_error;
     }
 
-  if (!_gda_db_catalog_validate_doc(doc, error))
+  if (!_gda_db_catalog_validate_doc (doc, error))
     {
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,

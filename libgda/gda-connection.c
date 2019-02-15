@@ -7114,8 +7114,8 @@ gda_connection_operation_get_sql_identifier_at_path (GdaConnection *cnc, GdaServ
  * gda_connection_create_db_catalog:
  * @cnc: A #GdaConnection object to use
  *
- * A convenient method to create a new #GdaDbCreator instance and set the current @cnc as a
- * property.  If for some reason, this approach doesn't fit well, the same task can be achieved 
+ * A convenient method to create a new #GdaDbCatalog instance and set the current @cnc as a
+ * property.  If for some reason, this approach doesn't fit well, the same task can be achieved
  * by the following code:
  *
  * GdaDbCatalog *catalog = gda_db_catalog_new ();

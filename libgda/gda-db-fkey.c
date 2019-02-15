@@ -1,6 +1,6 @@
 /* gda-db-fkey.c
  *
- * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2018-2019 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -66,24 +66,24 @@ static const gchar *OnAction[] = {
 
 /* This is convenient way to name all nodes from xml file */
 enum {
-  GDA_DB_FKEY_NODE,
-  GDA_DB_FKEY_REFTABLE,
-  GDA_DB_FKEY_ONUPDATE,
-  GDA_DB_FKEY_ONDELETE,
-  GDA_DB_FKEY_FKFIELD,
-  GDA_DB_FKEY_FKFIELD_NAME,
-  GDA_DB_FKEY_FKFIELD_REFIELD,
-  GDA_DB_FKEY_N_NODES
+    GDA_DB_FKEY_NODE,
+    GDA_DB_FKEY_REFTABLE,
+    GDA_DB_FKEY_ONUPDATE,
+    GDA_DB_FKEY_ONDELETE,
+    GDA_DB_FKEY_FKFIELD,
+    GDA_DB_FKEY_FKFIELD_NAME,
+    GDA_DB_FKEY_FKFIELD_REFIELD,
+    GDA_DB_FKEY_N_NODES
 };
 
-const gchar *gdadbfkeynodes[GDA_DB_FKEY_N_NODES] = {
-  "fkey",
-  "reftable",
-  "onupdate",
-  "ondelete",
-  "fk_field",
-  "name",
-  "reffield"
+static const gchar *gdadbfkeynodes[GDA_DB_FKEY_N_NODES] = {
+    "fkey",
+    "reftable",
+    "onupdate",
+    "ondelete",
+    "fk_field",
+    "name",
+    "reffield"
 };
 
 /**
@@ -102,8 +102,8 @@ gda_db_fkey_new (void)
 /**
  * gda_db_fkey_new_from_meta:
  * @metafkey: a #GdaMetaTableForeignKey instance
- * 
- * Create a new instance from the corresponding meta object. If @metafkey is %NULL, 
+ *
+ * Create a new instance from the corresponding meta object. If @metafkey is %NULL,
  * this function is identical to gda_db_fkey_new()
  *
  */
@@ -111,13 +111,13 @@ GdaDbFkey*
 gda_db_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
 {
   if (!metafkey)
-    return gda_db_fkey_new();
+    return gda_db_fkey_new ();
 
   GdaMetaDbObject *refobject = GDA_META_DB_OBJECT (metafkey->meta_table);
 
   GdaDbFkey *fkey = gda_db_fkey_new ();
-  
-  gda_db_fkey_set_ref_table (fkey,refobject->obj_full_name);
+
+  gda_db_fkey_set_ref_table (fkey, refobject->obj_full_name);
 
   for (gint i = 0; i < metafkey->cols_nb; i++)
       gda_db_fkey_set_field (fkey,
@@ -129,35 +129,35 @@ gda_db_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
   switch (policy)
     {
     case GDA_META_FOREIGN_KEY_NONE:
-      gda_db_fkey_set_onupdate (fkey,GDA_DB_FKEY_NO_ACTION);
+      gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_NO_ACTION);
       break;
     case GDA_META_FOREIGN_KEY_CASCADE:
-      gda_db_fkey_set_onupdate (fkey,GDA_DB_FKEY_CASCADE);
+      gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_CASCADE);
       break;
     case GDA_META_FOREIGN_KEY_RESTRICT:
-      gda_db_fkey_set_onupdate (fkey,GDA_DB_FKEY_RESTRICT);
+      gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_RESTRICT);
       break;
     case GDA_META_FOREIGN_KEY_SET_DEFAULT:
-      gda_db_fkey_set_onupdate (fkey,GDA_DB_FKEY_SET_DEFAULT);
+      gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_SET_DEFAULT);
       break;
     default:
       break;
     }
-  
+
   policy = GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY(metafkey);
   switch (policy)
     {
     case GDA_META_FOREIGN_KEY_NONE:
-      gda_db_fkey_set_ondelete (fkey,GDA_DB_FKEY_NO_ACTION);
+      gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_NO_ACTION);
       break;
     case GDA_META_FOREIGN_KEY_CASCADE:
-      gda_db_fkey_set_ondelete (fkey,GDA_DB_FKEY_CASCADE);
+      gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_CASCADE);
       break;
     case GDA_META_FOREIGN_KEY_RESTRICT:
-      gda_db_fkey_set_ondelete (fkey,GDA_DB_FKEY_RESTRICT);
+      gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_RESTRICT);
       break;
     case GDA_META_FOREIGN_KEY_SET_DEFAULT:
-      gda_db_fkey_set_ondelete (fkey,GDA_DB_FKEY_SET_DEFAULT);
+      gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_SET_DEFAULT);
       break;
     default:
       break;
@@ -175,7 +175,7 @@ gda_db_fkey_finalize (GObject *object)
   if (priv->mp_field)     g_list_free_full (priv->mp_field,     g_free);
   if (priv->mp_ref_field) g_list_free_full (priv->mp_ref_field, g_free);
 
-  g_free(priv->mp_ref_table);
+  g_free (priv->mp_ref_table);
 
   G_OBJECT_CLASS (gda_db_fkey_parent_class)->finalize (object);
 }
@@ -208,7 +208,7 @@ gda_db_fkey_init (GdaDbFkey *self)
  * @error: #GError object to store error
  *
  * Use this method to populate corresponding #GdaDbFkey object from xml node. Usually,
- * this method is called from #GdaDbCreator during parsing the input xml file.
+ * this method is called from #GdaDbCatalog during parsing the input xml file.
  *
  * The corresponding DTD section suitable for parsing by this method should correspond
  * th the following code:
@@ -230,12 +230,12 @@ gda_db_fkey_init (GdaDbFkey *self)
  */
 static gboolean
 gda_db_fkey_parse_node (GdaDbBuildable *buildable,
-                         xmlNodePtr       node,
-                         GError         **error)
+                        xmlNodePtr       node,
+                        GError         **error)
 {
-  g_return_val_if_fail (buildable,FALSE);
+  g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (node, FALSE);
-  
+
   /*
    *    <fkey reftable="products" onupdate="NO_ACTION" ondelete="NO_ACTION">
    *        <fk_field name="column_name" reffield="column_name"/>
@@ -243,7 +243,7 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
    *    </fkey>
    */
   xmlChar *name = NULL;
-  if (g_strcmp0 ((gchar*)node->name,gdadbfkeynodes[GDA_DB_FKEY_NODE]))
+  if (g_strcmp0 ((gchar*)node->name, gdadbfkeynodes[GDA_DB_FKEY_NODE]))
     return FALSE;
 
   GdaDbFkey *self = GDA_DB_FKEY (buildable);
@@ -251,7 +251,7 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
 
   xmlChar *prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_REFTABLE]);
+  prop = xmlGetProp (node, (xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_REFTABLE]);
 
   g_assert (prop); /* Bug with xml valdation */
 
@@ -259,15 +259,15 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
   xmlFree (prop);
   prop = NULL;
 
-  prop = xmlGetProp (node,(xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_ONUPDATE]);
+  prop = xmlGetProp (node, (xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_ONUPDATE]);
 
   if (prop)
     {
       priv->m_onupdate = GDA_DB_FKEY_NO_ACTION;
 
-      for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+      for (guint i = 0; i < G_N_ELEMENTS(OnAction); i++)
         {
-          if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
+          if (!g_strcmp0 ((gchar *)prop, OnAction[i]))
             priv->m_onupdate = (GdaDbFkeyReferenceAction)i;
         }
 
@@ -275,14 +275,13 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
       prop = NULL;
     }
 
-
-  prop = xmlGetProp (node,(xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_ONDELETE]);
+  prop = xmlGetProp (node, (xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_ONDELETE]);
 
   if (prop)
     {
-      for (guint i = 0; i < G_N_ELEMENTS(OnAction);i++)
+      for (guint i = 0; i < G_N_ELEMENTS(OnAction); i++)
         {
-          if (!g_strcmp0 ((gchar *)prop,OnAction[i]))
+          if (!g_strcmp0 ((gchar *)prop, OnAction[i]))
             priv->m_ondelete = (GdaDbFkeyReferenceAction)i;
         }
 
@@ -296,15 +295,15 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
 
   for (xmlNodePtr it = node->children; it; it = it->next)
     {
-      if (!g_strcmp0 ((gchar *)it->name,gdadbfkeynodes[GDA_DB_FKEY_FKFIELD]))
+      if (!g_strcmp0 ((gchar *)it->name, gdadbfkeynodes[GDA_DB_FKEY_FKFIELD]))
         {
-          name = xmlGetProp (it,(xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_NAME]);
+          name = xmlGetProp (it, (xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_NAME]);
 
           g_assert(name);
-          priv->mp_field = g_list_append (priv->mp_field,g_strdup ((const gchar *)name));
+          priv->mp_field = g_list_append (priv->mp_field, g_strdup ((const gchar *)name));
           xmlFree (name);
 
-          reffield = xmlGetProp (it,(xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_REFIELD]);
+          reffield = xmlGetProp (it, (xmlChar *)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_REFIELD]);
           g_assert(reffield);
           priv->mp_ref_field = g_list_append (priv->mp_ref_field,
                                               g_strdup ((const gchar *)reffield));
@@ -335,25 +334,26 @@ gda_db_fkey_parse_node (GdaDbBuildable *buildable,
  */
 static gboolean
 gda_db_fkey_write_node (GdaDbBuildable  *buildable,
-                         xmlNodePtr rootnode,
-                         GError **error)
+                        xmlNodePtr rootnode,
+                        GError **error)
 {
   g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (rootnode,FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FASLE);
 
   GdaDbFkey *self = GDA_DB_FKEY (buildable);
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
   xmlNodePtr node = NULL;
-  node  = xmlNewChild (rootnode,NULL,(xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_NODE],NULL);
+  node  = xmlNewChild (rootnode, NULL, (xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_NODE], NULL);
 
-  xmlNewProp (node,BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_REFTABLE],
+  xmlNewProp (node, BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_REFTABLE],
               BAD_CAST priv->mp_ref_table);
-  
-  xmlNewProp (node,BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_ONUPDATE],
+
+  xmlNewProp (node, BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_ONUPDATE],
               BAD_CAST priv->m_onupdate);
 
-  xmlNewProp (node,BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_ONDELETE],
+  xmlNewProp (node, BAD_CAST gdadbfkeynodes[GDA_DB_FKEY_ONDELETE],
               BAD_CAST priv->m_ondelete);
 
   GList *it = priv->mp_field;
@@ -362,12 +362,12 @@ gda_db_fkey_write_node (GdaDbBuildable  *buildable,
   for (; it && jt; it = it->next, jt=jt->next )
     {
       xmlNodePtr tnode = NULL;
-      tnode = xmlNewChild (node,NULL,(xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD],NULL);
+      tnode = xmlNewChild (node, NULL,(xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD], NULL);
 
-      xmlNewProp (tnode,(xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_NAME],
+      xmlNewProp (tnode, (xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_NAME],
                   BAD_CAST it->data);
 
-      xmlNewProp (tnode,(xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_REFIELD],
+      xmlNewProp (tnode, (xmlChar*)gdadbfkeynodes[GDA_DB_FKEY_FKFIELD_REFIELD],
                   BAD_CAST jt->data);
     }
 
@@ -386,14 +386,14 @@ gda_db_fkey_buildable_interface_init (GdaDbBuildableInterface *iface)
  * @self: An object #GdaDbFkey
  *
  * Return: ON DELETE action as a string. If the action is not set then the string corresponding to
- * NO_ACTION is returned. 
+ * NO_ACTION is returned.
  *
  * Since: 6.0
  */
 const gchar *
 gda_db_fkey_get_ondelete (GdaDbFkey *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
@@ -403,7 +403,7 @@ gda_db_fkey_get_ondelete (GdaDbFkey *self)
 /**
  * gda_db_fkey_get_ondelete_id:
  * @self: a #GdaDbFkey object
- * 
+ *
  * The default value is %NO_ACTION
  *
  * Return: ON DELETE action as a #GdaDbFkeyReferenceAction.
@@ -413,6 +413,8 @@ gda_db_fkey_get_ondelete (GdaDbFkey *self)
 GdaDbFkeyReferenceAction
 gda_db_fkey_get_ondelete_id (GdaDbFkey *self)
 {
+  g_return_val_if_fail (self, NULL);
+
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
   return priv->m_ondelete;
@@ -429,7 +431,7 @@ gda_db_fkey_get_ondelete_id (GdaDbFkey *self)
  */
 void
 gda_db_fkey_set_onupdate (GdaDbFkey *self,
-                           GdaDbFkeyReferenceAction id)
+                          GdaDbFkeyReferenceAction id)
 {
   g_return_if_fail (self);
 
@@ -449,7 +451,7 @@ gda_db_fkey_set_onupdate (GdaDbFkey *self,
  */
 void
 gda_db_fkey_set_ondelete (GdaDbFkey *self,
-                           GdaDbFkeyReferenceAction id)
+                          GdaDbFkeyReferenceAction id)
 {
   g_return_if_fail (self);
 
@@ -469,7 +471,7 @@ gda_db_fkey_set_ondelete (GdaDbFkey *self,
 const gchar *
 gda_db_fkey_get_onupdate (GdaDbFkey *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
@@ -522,7 +524,7 @@ gda_db_fkey_get_ref_table (GdaDbFkey *self)
  */
 void
 gda_db_fkey_set_ref_table (GdaDbFkey *self,
-                            const gchar *rtable)
+                           const gchar *rtable)
 {
   g_return_if_fail (self);
 
@@ -563,7 +565,7 @@ gda_db_fkey_get_field_name (GdaDbFkey *self)
 const GList *
 gda_db_fkey_get_ref_field (GdaDbFkey *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
@@ -582,8 +584,8 @@ gda_db_fkey_get_ref_field (GdaDbFkey *self)
  */
 void
 gda_db_fkey_set_field (GdaDbFkey  *self,
-                        const gchar *field,
-                        const gchar *reffield)
+                       const gchar *field,
+                       const gchar *reffield)
 {
   g_return_if_fail (self);
   g_return_if_fail (field);
@@ -591,8 +593,8 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
-  priv->mp_field = g_list_append (priv->mp_field,(gpointer)field);
-  priv->mp_ref_field = g_list_append(priv->mp_ref_field,(gpointer)reffield);
+  priv->mp_field = g_list_append (priv->mp_field, (gpointer)field);
+  priv->mp_ref_field = g_list_append(priv->mp_ref_field, (gpointer)reffield);
 }
 
 /**
@@ -601,7 +603,7 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
  * @op: a #GdaServerOperation to populate
  * @error: error container
  *
- * Prepare @op object for execution by populating with information stored in @self. 
+ * Prepare @op object for execution by populating with information stored in @self.
  *
  * Returns: %TRUE if no error or %FALSE otherwise.
  *
@@ -609,9 +611,9 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
  */
 gboolean
 gda_db_fkey_prepare_create  (GdaDbFkey *self,
-                              GdaServerOperation *op,
-                              gint i,
-                              GError **error)
+                             GdaServerOperation *op,
+                             gint i,
+                             GError **error)
 {
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 

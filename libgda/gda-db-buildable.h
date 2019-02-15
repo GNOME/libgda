@@ -29,7 +29,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_DB_BUILDABLE gda_db_buildable_get_type ()
-G_DECLARE_INTERFACE(GdaDbBuildable, gda_db_buildable,GDA, DB_BUILDABLE,GObject)
+
+G_DECLARE_INTERFACE(GdaDbBuildable, gda_db_buildable, GDA, DB_BUILDABLE, GObject)
 
 struct _GdaDbBuildableInterface
 {
@@ -45,12 +46,12 @@ struct _GdaDbBuildableInterface
 };
 
 gboolean gda_db_buildable_parse_node (GdaDbBuildable *self,
-                                       xmlNodePtr node,
-                                       GError **error);
+                                      xmlNodePtr node,
+                                      GError **error);
 
 gboolean gda_db_buildable_write_node (GdaDbBuildable *self,
-                                       xmlNodePtr node,
-                                       GError **error);
+                                      xmlNodePtr node,
+                                      GError **error);
 
 G_END_DECLS
 
