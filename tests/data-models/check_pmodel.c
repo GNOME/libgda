@@ -1308,8 +1308,6 @@ test12 (GdaConnection *cnc)
 		g_warning ("Error: %s", error && error->message ? error->message : "No detail");
 		g_assert_not_reached ();
 	}
-	g_print ("Rows in Model: %d\n", gda_data_model_get_n_rows (model));
-	g_assert (gda_data_model_get_n_rows (model) > 0);
 	monitor_model_signals (model);
 
 	/* gda_data_select_compute_modification_statements() */
@@ -1570,13 +1568,23 @@ test15 (GdaConnection *cnc)
 	GdaStatement *stmt;
 	GdaSet *params;
 	gint nfailed = 0;
+	gint idmax = 0;
 
 	clear_signals ();
+	/* Dump all data*/
+	stmt = stmt_from_string ("SELECT id FROM customers ORDER BY id");
+	model =  gda_connection_statement_execute_select (cnc, stmt, NULL, NULL);
+	g_assert (model);
+	g_print ("Full Data Set:\n");
+	gda_data_model_dump (model, stdout);
+	g_object_unref (stmt);
+	g_object_unref (model);
 
 	/* create GdaDataModelQuery */
 	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
 	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
+	g_print ("Setted parameters Set outside data set:\n");
 	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
 	nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -1585,8 +1593,8 @@ test15 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	model = gda_connection_statement_execute_select (cnc, stmt, params, &error);
-	g_assert (model);
+	g_print ("Created first filtered DataModel:\n");
+	model = (GdaDataModel*) gda_data_model_select_new (cnc, stmt, params);
 
 	monitor_model_signals (model);
 
@@ -1594,7 +1602,7 @@ test15 (GdaConnection *cnc)
 	g_object_set_data (G_OBJECT (model), "mydata", "hey");
 
 	/**/
-	g_object_set (G_OBJECT (model), "auto-reset", TRUE, NULL);
+	g_print ("Change value on parameters DataModel:\n");
 	if (! gda_set_set_holder_value (params, &error, "theid", 3)) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -1603,7 +1611,9 @@ test15 (GdaConnection *cnc)
 #endif
 	goto out;
 	}
-	check_expected_signal (model, 'R', -1);
+	check_expected_signal (model, 'M', -1);
+	g_print ("Data Model upfter 'updated' signal\n");
+	gda_data_model_dump (model, stdout);
 
 	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
 	if (!dstr || strcmp (dstr, "hey")) {
@@ -1615,7 +1625,7 @@ test15 (GdaConnection *cnc)
 	goto out;
 	}
 
-	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
+	rerun = gda_connection_statement_execute_select (cnc, stmt, params, NULL);
 	g_assert (rerun);
 	if (! compare_data_models (model, rerun, NULL)) {
 		nfailed++;
@@ -1627,6 +1637,7 @@ test15 (GdaConnection *cnc)
 	g_object_unref (rerun);
 
  out:
+	g_clear_error (&error);
 	if (model)
 		g_object_unref (model);
 	g_object_unref (stmt);
@@ -1656,19 +1667,10 @@ test16 (GdaConnection *cnc)
 	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
 	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
-	model = gda_connection_statement_execute_select_full (cnc, stmt, params,
-	                                                      GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-	                                                      NULL, &error);
-	if (!model) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("Can't run a SELECT with invalid parameters and the "
-		   "GDA_STATEMENT_MODEL_ALLOW_NOPARAM flag: %s\n",
-		   error && error->message ? error->message : "No detail");
-#endif
-		goto out;
-	}
+	model = (GdaDataModel*) gda_data_model_select_new (cnc, stmt, params);
+	g_assert (model);
 
+	g_assert (!gda_data_model_select_is_valid (GDA_DATA_MODEL_SELECT (model)));
 	if (gda_data_model_get_n_rows (model) != 0) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -1677,12 +1679,6 @@ test16 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	g_print ("After First select ejection\n");
-	dump_data_model (model);
-
-	/* set a custom data */
-	g_object_set_data (G_OBJECT (model), "mydata", "hey");
-	monitor_model_signals (model);
 
 	/**/
 	g_print ("Setting a new Value in parameters: theid = 9\n");
@@ -1694,17 +1690,7 @@ test16 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	check_expected_signal (model, 'R', -1);
-
-	const gchar *dstr = g_object_get_data (G_OBJECT (model), "mydata");
-	if (!dstr || strcmp (dstr, "hey")) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-                g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
-			 dstr);
-#endif
-                goto out;
-	}
+	check_expected_signal (model, 'M', -1);
 
 	dump_data_model (model);
 
@@ -1718,20 +1704,12 @@ test16 (GdaConnection *cnc)
 #endif
 		goto out;
 	}
-	check_expected_signal (model, 'R', -1);
+	check_expected_signal (model, 'M', -1);
 
-	dstr = g_object_get_data (G_OBJECT (model), "mydata");
-	if (!dstr || strcmp (dstr, "hey")) {
-		nfailed++;
-#ifdef CHECK_EXTRA_INFO
-		g_print ("Data model lost custom added data: expected 'hey' and got '%s'\n",
-			 dstr);
-#endif
-		goto out;
-	}
-
+	g_print ("Setting a new Value in parameters: theid = 120");
 	dump_data_model (model);
 
+	g_print ("Getting original data from a SELECT statement:\n");
 	rerun = gda_connection_statement_execute_select (cnc, stmt, params, &error);
 	g_assert (rerun);
 	if (! compare_data_models (model, rerun, NULL)) {
@@ -1745,8 +1723,8 @@ test16 (GdaConnection *cnc)
 
 	/**/
 	gda_holder_force_invalid (GDA_HOLDER (gda_set_get_holders (params)->data));
-	check_expected_signal (model, 'R', -1);
-	dump_data_model (model);
+	check_expected_signal (model, 'M', -1);
+	g_assert (!gda_data_model_select_is_valid (GDA_DATA_MODEL_SELECT (model)));
 
  out:
 	g_object_unref (model);
@@ -1768,20 +1746,34 @@ test17 (GdaConnection *cnc)
 {
 	GError *error = NULL;
 	GdaDataModel *model;
-	GdaStatement *stmt;
 	GdaDataModelIter *iter;
 	GdaSet *params;
 	gint nfailed = 0;
 
 	/* create GdaDataModelQuery */
-	stmt = stmt_from_string ("SELECT * FROM customers WHERE id <= ##theid::gint");
-	g_assert (gda_statement_get_parameters (stmt, &params, NULL));
 
-	model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-	                                                      NULL, &error);
+	model = (GdaDataModel*) gda_data_model_select_new_from_string (cnc, "SELECT * FROM customers WHERE id <= ##theid::gint");
 	g_assert (model);
+	g_assert (!gda_data_model_select_is_valid (GDA_DATA_MODEL_SELECT (model)));
+	g_print ("Get parameters\n");
+	params = gda_data_model_select_get_parameters (GDA_DATA_MODEL_SELECT (model));
+	g_assert (params != NULL);
+	g_assert (GDA_IS_SET (params));
+	g_print ("Set values to parameters\n");
+	/* Place a valid parameters to get a valid data model*/
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+		nfailed++;
+#ifdef CHECK_EXTRA_INFO
+		g_print ("Can't set 'theid' value: %s \n",
+		          error && error->message ? error->message : "No detail");
+#endif
+		goto out;
+	}
+	g_assert (gda_data_model_select_is_valid (GDA_DATA_MODEL_SELECT (model)));
+	g_print ("SELECT after set parameters\n");
+	dump_data_model (model);
 	iter = gda_data_model_create_iter (model);
-	
+	g_assert (iter != NULL);
 	gint i, nullcol = -1;
 	GdaColumn *column;
 	GSList *list;
@@ -1857,7 +1849,6 @@ test17 (GdaConnection *cnc)
 
  out:
 	g_object_unref (model);
-	g_object_unref (stmt);
 
 	return nfailed;
 }
@@ -2228,6 +2219,9 @@ check_expected_signal (GdaDataModel *model, gchar type, gint row)
 			break;
 		case 'R':
 			exp = "reset";
+			break;
+		case 'M':
+			exp = "updated";
 			break;
 		default:
 			exp = "???";

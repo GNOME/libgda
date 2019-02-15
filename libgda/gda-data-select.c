@@ -3774,10 +3774,11 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	old_priv->sh->sel_stmt = priv->sh->sel_stmt;
 	priv->sh->sel_stmt = (GdaStatement*) copy;
 
-	if (priv->sh->ext_params)
+	if (priv->sh->ext_params) {
 		priv->ext_params_changed_sig_id =
 			g_signal_connect (priv->sh->ext_params, "holder-changed",
 					  G_CALLBACK (ext_params_holder_changed_cb), model);
+	}
 
 	/* keep the same GdaColumn pointers */
 	GSList *l1, *l2;
