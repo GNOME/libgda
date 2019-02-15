@@ -2158,15 +2158,13 @@ gda_data_select_create_iter (GdaDataModel *model)
 		return GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_SELECT_ITER,
 							  "data-model", model, NULL));
 	}
-	else {
-		/* Create the iter if necessary, or just return the existing iter: */
-		if (priv->iter == NULL) {
-			priv->iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_SELECT_ITER,
-										"data-model", model, NULL));
-			priv->sh->iter_row = -1;
-		}
-		return priv->iter;
+	/* Create the iter if necessary, or just return the existing iter: */
+	if (priv->iter == NULL) {
+		priv->iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_SELECT_ITER,
+									"data-model", model, NULL));
+		priv->sh->iter_row = -1;
 	}
+	return g_object_ref (priv->iter);
 }
 
 static void update_iter (GdaDataSelect *imodel, GdaRow *prow);
@@ -2199,12 +2197,6 @@ gda_data_select_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 		target_iter_row = 0;
 	else
 		target_iter_row = priv->sh->iter_row + 1;
-
-	if ((priv->sh->iter_row) >= gda_data_model_get_n_rows (model)) {
-		priv->sh->iter_row = G_MAXINT;
-		gda_data_model_iter_invalidate_contents (iter);
-		return FALSE;
-	}
 
 	int_row = external_to_internal_row (GDA_DATA_SELECT (model), target_iter_row, &error);
 	if (int_row < 0) {
@@ -2278,6 +2270,7 @@ gda_data_select_iter_prev (GdaDataModel *model, GdaDataModelIter *iter)
 	prow = gda_data_select_get_stored_row (GDA_DATA_SELECT (model), int_row);
 	if (!prow) {
 		if (! CLASS (model)->fetch_prev) {
+			g_warning (_("Internal error: No fetch_prev() method implementation for data model"));
 			gda_data_model_iter_invalidate_contents (iter);
 			return FALSE;
 		}

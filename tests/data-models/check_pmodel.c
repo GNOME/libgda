@@ -1187,7 +1187,7 @@ test11 (GdaConnection *cnc)
 	g_assert (iter != NULL);
 	g_assert (GDA_IS_DATA_MODEL_ITER (iter));
 	for (; gda_data_model_iter_move_next (iter);) {
-		//g_print ("Iter is now at row %d\n", gda_data_model_iter_get_row (iter));
+		g_print ("Iter is now at row %d\n", gda_data_model_iter_get_row (iter));
 		gint i;
 		for (i = 0; i < ncols; i++) {
 			const GValue *cvalue, *refcvalue;
