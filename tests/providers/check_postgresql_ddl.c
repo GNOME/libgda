@@ -42,12 +42,6 @@ db_create_quark_foreach_func (gchar *name, gchar *value, GdaServerOperation *op)
 	gda_server_operation_set_value_at (op, value, NULL, "/SERVER_CNX_P/%s", name);
 }
 
-static void 
-cnc_create_quark_foreach_func (gchar *name, gchar *value, GdaServerOperation *op)
-{
-	gda_server_operation_set_value_at (op, value, NULL, "/DB_DEF_P/%s", name);
-}
-
 static void
 postgresql_create_db_no_cnc(void)
 {

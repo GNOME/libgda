@@ -190,7 +190,7 @@ compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean
 				if (reverse) {
 					if (!string) {
 						string = g_string_new ("");
-						g_string_vprintf (string, _("Obtain referenced data in table %s from "),
+						g_string_printf (string, _("Obtain referenced data in table %s from "),
 									fkey->depend_on->obj_short_name);
 					}
 					else
@@ -207,7 +207,7 @@ compute_fk_dependency (GdaMetaTableForeignKey *fkey, GSList *selfields, gboolean
 				else {
 					if (!string) {
 						string = g_string_new ("");
-						g_string_vprintf (string, _("List referencing data in %s."),
+						g_string_printf (string, _("List referencing data in %s."),
 									fkey->meta_table->obj_short_name);
 					}
 					else
