@@ -187,6 +187,11 @@ static void params_changed_cb (GdaSet *params, GdaHolder *holder, GdaDataModelSe
 GdaDataModelSelect*
 gda_data_model_select_new (GdaConnection *cnc, GdaStatement *stm, GdaSet *params)
 {
+  g_return_val_if_fail (cnc != NULL, NULL);
+  g_return_val_if_fail (stm != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+  g_return_val_if_fail (GDA_IS_STATEMENT (stm), NULL);
+
   GdaDataModelSelect* model = GDA_DATA_MODEL_SELECT (g_object_new (GDA_TYPE_DATA_MODEL_SELECT, NULL));
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
 
@@ -212,6 +217,8 @@ gda_data_model_select_new (GdaConnection *cnc, GdaStatement *stm, GdaSet *params
 GdaDataModelSelect*
 gda_data_model_select_new_from_string (GdaConnection *cnc, const gchar *sql)
 {
+  g_return_val_if_fail (cnc != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
   GdaStatement *stm = gda_connection_parse_sql_string (cnc, sql, NULL, NULL);
   if (stm == NULL) {
     return NULL;
@@ -219,7 +226,6 @@ gda_data_model_select_new_from_string (GdaConnection *cnc, const gchar *sql)
 
   GdaSet *params = NULL;
   gda_statement_get_parameters (stm, &params, NULL);
-  g_message ("Params: %s", params != NULL ? "True" : "False");
 
   return gda_data_model_select_new (cnc, stm, params);
 }
@@ -278,7 +284,6 @@ gda_data_model_select_set_parameters  (GdaDataModelSelect *model, GdaSet *params
   priv->params = g_object_ref (priv->params);
   g_signal_connect (priv->params, "holder-changed", G_CALLBACK (params_changed_cb), model);
   params_changed_cb (priv->params, NULL, model);
-  g_message ("Setted parameters");
 }
 
 

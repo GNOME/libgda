@@ -892,15 +892,12 @@ prov_test_common_check_cursor_models (void)
 
 /*
  *
- * Check for the GdaDataModel returned from a SELECT combined with the GDA_STATEMENT_MODEL_ALLOW_NOPARAM
- * flag
+ * Check for the GdaDataModel returned from a SELECT with auto-update
  *
  */
 int 
 prov_test_common_check_data_select (void)
 {
-	GdaSqlParser *parser = NULL;
-	GdaStatement *stmt = NULL;
 	GdaSet *params = NULL;
 	GError *error = NULL;
 	int number_failed = 0;
@@ -913,41 +910,15 @@ prov_test_common_check_data_select (void)
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
 #endif
 
-	parser = gda_connection_create_parser (cnc);
-	if (!parser)
-		parser = gda_sql_parser_new ();
-
 	/* create statement */
-	stmt = gda_sql_parser_parse_string (parser, "SELECT * FROM actor WHERE actor_id <= ##theid::gint", 
-					    &remain, &error);
-	if (!stmt) {
-		number_failed ++;
-		goto out;
-	}
-	if (remain) {
-		g_set_error (&error, TEST_ERROR, TEST_ERROR_PARSING,
-			     "Parsing error, remains: %s", remain);
-		number_failed ++;
-		goto out;
-	}
-	
-	/* get model */
-	if (! (gda_statement_get_parameters (stmt, &params, &error))) {
-		number_failed ++;
-		goto out;
-	}
-
-	model = gda_connection_statement_execute_select_full (cnc, stmt, params, GDA_STATEMENT_MODEL_ALLOW_NOPARAM,
-                                                              NULL, &error);
-	if (!model) {
-		number_failed ++;
-		goto out;
-	}
-
-	if (gda_data_model_get_n_rows (model) != 0) {
-		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
-			     "Data model reports %d rows when 0 expected", gda_data_model_get_n_rows (model));
-		number_failed ++;
+	model = (GdaDataModel*) gda_data_model_select_new_from_string (cnc, "SELECT * FROM actor WHERE actor_id <= ##theid::gint");
+	g_assert (model);
+	g_assert (GDA_IS_DATA_MODEL_SELECT (model));
+	params = gda_data_model_select_get_parameters (GDA_DATA_MODEL_SELECT (model));
+	g_assert (params != NULL);
+	g_assert (GDA_IS_SET (params));
+	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
+		number_failed++;
 		goto out;
 	}
 
@@ -955,13 +926,6 @@ prov_test_common_check_data_select (void)
 	for (columns = NULL, i = 0;
 	     i < ncols; i++) 
 		columns = g_slist_append (columns, gda_data_model_describe_column (model, i));
-
-	/* change param */
-	g_object_set (model, "auto-reset", TRUE, NULL);
-	if (! gda_set_set_holder_value (params, &error, "theid", 9)) {
-                number_failed++;
-                goto out;
-        }
 
 	if (gda_data_model_get_n_rows (model) != 9) {
 		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
@@ -991,13 +955,10 @@ prov_test_common_check_data_select (void)
 	}
 
  out:
-	if (stmt)
-		g_object_unref (stmt);
 	if (params)
 		g_object_unref (params);
 	if (model)
 		g_object_unref (model);
-	g_object_unref (parser);
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("GdaDataSelect test resulted in %d error(s)\n", number_failed);
