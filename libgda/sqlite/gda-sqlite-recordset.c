@@ -311,8 +311,7 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
         model = g_object_new (GDA_TYPE_SQLITE_RECORDSET,
 			      "connection", cnc,
 			      "prepared-stmt", ps, "model-usage", rflags, 
-			      "exec-params", exec_params, 
-			      "auto-reset", force_empty, NULL);
+			      "exec-params", exec_params, NULL);
 	gboolean is_virt;
 	is_virt = GDA_IS_VCONNECTION_DATA_MODEL (cnc) ? TRUE : FALSE;
 	if (is_virt) {

@@ -77,7 +77,6 @@ typedef struct {
 
 	GdaStatement           *sel_stmt;
 	GdaSet                 *ext_params;
-	gboolean                reset_with_ext_params_change;
 	GdaDataModelAccessFlags usage_flags;
 
 	/* attributes specific to data model modifications */
@@ -158,7 +157,6 @@ enum
 	PROP_UPD_QUERY,
 	PROP_DEL_QUERY,
 	PROP_SEL_STMT,
-	PROP_RESET_WITH_EXT_PARAM,
 	PROP_EXEC_DELAY
 };
 
@@ -203,7 +201,6 @@ static GdaStatement *compute_single_insert_stmt (GdaDataSelect *model, BVector *
 static GdaStatement *compute_single_select_stmt (GdaDataSelect *model, GError **error);
 static gint *compute_insert_select_params_mapping (GdaSet *sel_params, GdaSet *ins_values, GdaSqlExpr *row_cond);
 
-static void ext_params_holder_changed_cb (GdaSet *paramlist, GdaHolder *param, GdaDataSelect *model);
 static gboolean check_data_model_for_updates (GdaDataSelect *imodel,
                               gint col,
                               const GValue *value,
@@ -334,12 +331,6 @@ gda_data_select_class_init (GdaDataSelectClass *klass)
 							      "SELECT statement which was executed to yield to the data model",
 							      GDA_TYPE_STATEMENT, G_PARAM_READABLE));
 
-	g_object_class_install_property (object_class, PROP_RESET_WITH_EXT_PARAM,
-					 g_param_spec_boolean ("auto-reset", "Automatically reset itself",
-							       "Automatically re-run the SELECT statement if any parameter "
-							       "has changed since it was first executed", FALSE,
-							       G_PARAM_READABLE | G_PARAM_WRITABLE));
-
 	/**
 	 * GdaDataSelect:execution-delay:
 	 *
@@ -404,7 +395,6 @@ gda_data_select_init (GdaDataSelect *model)
 
 	priv->sh->sel_stmt = NULL;
 	priv->sh->ext_params = NULL;
-	priv->sh->reset_with_ext_params_change = FALSE;
 
 	priv->sh->iter_row = G_MININT;
 	priv->ext_params_changed_sig_id = 0;
@@ -434,20 +424,6 @@ gda_data_select_init (GdaDataSelect *model)
 	priv->sh->current_prow_row = -1;
 }
 
-static void
-ext_params_holder_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, G_GNUC_UNUSED GdaHolder *param,
-			      GdaDataSelect *model)
-{
-	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
-	if (priv->sh->reset_with_ext_params_change) {
-		GError *error = NULL;
-		if (! gda_data_select_rerun (model, &error)) {
-			g_warning (_("Could not re-run SELECT statement: %s"),
-				   error && error->message ? error->message : _("No detail"));
-			g_clear_error (&error);
-		}
-	}
-}
 
 static void
 free_private_shared_data (GdaDataSelect *model)
@@ -768,9 +744,6 @@ gda_data_select_set_property (GObject *object,
 			set = g_value_get_object (value);
 			if (set) {
 				priv->sh->ext_params = g_object_ref (set);
-				priv->ext_params_changed_sig_id =
-					g_signal_connect (priv->sh->ext_params, "holder-changed",
-							  G_CALLBACK (ext_params_holder_changed_cb), GDA_DATA_SELECT (object));
 				priv->sh->modif_internals->exec_set = gda_set_copy (set);
 			}
 			break;
@@ -801,9 +774,6 @@ gda_data_select_set_property (GObject *object,
 				g_object_ref (priv->sh->modif_internals->modif_stmts [UPD_QUERY]);
 			g_free (priv->sh->modif_internals->cols_mod[UPD_QUERY]);
 			priv->sh->modif_internals->cols_mod[UPD_QUERY] = NULL;
-			break;
-		case PROP_RESET_WITH_EXT_PARAM:
-			priv->sh->reset_with_ext_params_change = g_value_get_boolean (value);
 			break;
 		case PROP_EXEC_DELAY:
 			priv->exec_time = g_value_get_double (value);
@@ -857,9 +827,6 @@ gda_data_select_get_property (GObject *object,
 			break;
 		case PROP_SEL_STMT:
 			g_value_set_object (value, check_acceptable_statement (model, NULL));
-			break;
-		case PROP_RESET_WITH_EXT_PARAM:
-			g_value_set_boolean (value, priv->sh->reset_with_ext_params_change);
 			break;
 		case PROP_EXEC_DELAY:
 			g_value_set_double (value, priv->exec_time);
@@ -3764,7 +3731,6 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	/* we need to keep some data from the old model */
 	GdaDataSelectInternals *mi;
 
-	priv->sh->reset_with_ext_params_change = old_priv->sh->reset_with_ext_params_change;
 	priv->sh->notify_changes = old_priv->sh->notify_changes;
 	mi = old_priv->sh->modif_internals;
 	old_priv->sh->modif_internals = priv->sh->modif_internals;
@@ -3773,12 +3739,6 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	copy = old_priv->sh->sel_stmt;
 	old_priv->sh->sel_stmt = priv->sh->sel_stmt;
 	priv->sh->sel_stmt = (GdaStatement*) copy;
-
-	if (priv->sh->ext_params) {
-		priv->ext_params_changed_sig_id =
-			g_signal_connect (priv->sh->ext_params, "holder-changed",
-					  G_CALLBACK (ext_params_holder_changed_cb), model);
-	}
 
 	/* keep the same GdaColumn pointers */
 	GSList *l1, *l2;

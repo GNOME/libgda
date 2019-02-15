@@ -918,7 +918,6 @@ data_source_execute (DataSource *source, GError **error)
 					if (source->priv->model)
 						g_object_unref (source->priv->model);
 					source->priv->model = GDA_DATA_MODEL (result);
-					g_object_set (source->priv->model, "auto-reset", FALSE, NULL);
 				}
 				gda_data_model_dump (source->priv->model, NULL);
 			}
