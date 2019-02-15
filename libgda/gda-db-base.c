@@ -29,14 +29,14 @@ typedef struct
 } GdaDbBasePrivate;
 
 /**
- * SECTION:gda-db-base 
+ * SECTION:gda-db-base
  * @short_description: The basic class for all database objects
  * @see_also: #GdaDbTable, #GdaDbView
  * @stability: Stable
  * @include: libgda/libgda.h
  *
  * This is a basic class for database objects, e.g. #GdaDbTable and #GdaDbView. It is not common to
- * use it directly. 
+ * use it directly.
  */
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDbBase, gda_db_base, G_TYPE_OBJECT)
@@ -46,7 +46,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (GdaDbBase, gda_db_base, G_TYPE_OBJECT)
  *
  * Create a new #GdaDbBase instance
  *
- * Returns: a new #GdaDbBase instance 
+ * Returns: a new #GdaDbBase instance
  */
 GdaDbBase*
 gda_db_base_new (void)
@@ -95,7 +95,7 @@ gda_db_base_init (GdaDbBase *self)
  * @name: a table name associated with the table
  *
  * Sets database object names. @catalog and @schema can be %NULL but
- * @name always should be a valid, not %NULL string. The @name must be always
+ * @name always should be a valid, not %NULL string. The @name must be
  * set. If @catalog is %NULL @schema may not be %NULL but if @schema is
  * %NULL @catalog also should be %NULL.
  *
@@ -132,12 +132,12 @@ gda_db_base_set_names (GdaDbBase *self,
   fullnamestr = g_string_new (NULL);
 
   if (priv->m_catalog && priv->m_schema)
-    g_string_printf (fullnamestr,"%s.%s.%s",priv->m_catalog,
-                     priv->m_schema,priv->m_name);
+    g_string_printf (fullnamestr, "%s.%s.%s", priv->m_catalog,
+                     priv->m_schema, priv->m_name);
   else if (priv->m_schema)
-    g_string_printf (fullnamestr,"%s.%s",priv->m_schema,priv->m_name);
+    g_string_printf (fullnamestr, "%s.%s", priv->m_schema, priv->m_name);
   else
-    g_string_printf (fullnamestr,"%s",priv->m_name);
+    g_string_printf (fullnamestr, "%s", priv->m_name);
 
   priv->m_fullname = g_strdup (fullnamestr->str);
   g_string_free (fullnamestr, TRUE);
@@ -159,7 +159,7 @@ gda_db_base_set_names (GdaDbBase *self,
 const gchar*
 gda_db_base_get_full_name (GdaDbBase *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -168,12 +168,12 @@ gda_db_base_get_full_name (GdaDbBase *self)
   fullnamestr = g_string_new (NULL);
 
   if (priv->m_catalog && priv->m_schema && priv->m_name)
-    g_string_printf (fullnamestr,"%s.%s.%s",priv->m_catalog,
-                     priv->m_schema,priv->m_name);
+    g_string_printf (fullnamestr, "%s.%s.%s", priv->m_catalog,
+                     priv->m_schema, priv->m_name);
   else if (priv->m_schema && priv->m_name)
-    g_string_printf (fullnamestr,"%s.%s",priv->m_schema,priv->m_name);
+    g_string_printf (fullnamestr, "%s.%s", priv->m_schema, priv->m_name);
   else if (priv->m_name)
-    g_string_printf (fullnamestr,"%s",priv->m_name);
+    g_string_printf (fullnamestr, "%s", priv->m_name);
   else
     return NULL;
 
@@ -194,9 +194,9 @@ gda_db_base_get_full_name (GdaDbBase *self)
  * Since: 6.0
  */
 const gchar*
-gda_db_base_get_catalog (GdaDbBase  *self)
+gda_db_base_get_catalog (GdaDbBase *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -209,14 +209,14 @@ gda_db_base_get_catalog (GdaDbBase  *self)
  *
  * Returns current schema name. The returned string should not be freed.
  *
- * Returns: Current catalog or %NULL
+ * Returns: Current scheme or %NULL
  *
  * Since: 6.0
  */
 const gchar*
-gda_db_base_get_schema (GdaDbBase  *self)
+gda_db_base_get_schema (GdaDbBase *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -234,9 +234,9 @@ gda_db_base_get_schema (GdaDbBase  *self)
  * Since: 6.0
  */
 const gchar*
-gda_db_base_get_name (GdaDbBase  *self)
+gda_db_base_get_name (GdaDbBase *self)
 {
-  g_return_val_if_fail (self,NULL);
+  g_return_val_if_fail (self, NULL);
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -247,7 +247,7 @@ gda_db_base_get_name (GdaDbBase  *self)
  * gda_db_base_set_catalog:
  * @self: a #GdaDbBase instance
  * @catalog: Catalog name as a string
- * 
+ *
  * Set catalog name
  *
  * Since: 6.0
@@ -269,7 +269,7 @@ gda_db_base_set_catalog (GdaDbBase  *self,
  * @self: a #GdaDbBase instance
  * @schema: Schema name as a string
  *
- * Set object schema.
+ * Set object schema. If @schema is %NULL the function just returns.
  *
  * Since: 6.0
  */
@@ -278,6 +278,9 @@ gda_db_base_set_schema (GdaDbBase  *self,
                         const gchar *schema)
 {
   g_return_if_fail (self);
+
+  if (!schema)
+    return;
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -289,8 +292,8 @@ gda_db_base_set_schema (GdaDbBase  *self,
  * gda_db_base_set_name:
  * @self: a #GdaDbBase instance
  * @name: Object name as a string
- * 
- * Set object name
+ *
+ * Set object name. If @name is %NULL the function just returns.
  *
  * Since: 6.0
  */
@@ -299,6 +302,9 @@ gda_db_base_set_name (GdaDbBase  *self,
                       const gchar *name)
 {
   g_return_if_fail (self);
+
+  if (!name)
+    return;
 
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
@@ -311,7 +317,7 @@ gda_db_base_set_name (GdaDbBase  *self,
  * @a: first #GdaDbBase object
  * @b: second #GdaDbBase object
  *
- * Compares two objects similar to g_strcmp(). 
+ * Compares two objects similar to g_strcmp().
  *
  * Returns: 0 if catalog, schema and name are the same
  *
@@ -327,15 +333,15 @@ gda_db_base_compare (GdaDbBase *a,
     return -1;
   else if (a && !b)
     return 1;
- 
-  gint res = g_strcmp0 (gda_db_base_get_name(a),gda_db_base_get_name(b));
+
+  gint res = g_strcmp0 (gda_db_base_get_name(a), gda_db_base_get_name(b));
 
   if (!res)
     {
-      res = g_strcmp0 (gda_db_base_get_catalog(a),gda_db_base_get_catalog(b));
-      
+      res = g_strcmp0 (gda_db_base_get_catalog(a), gda_db_base_get_catalog(b));
+
       if (!res)
-        return g_strcmp0(gda_db_base_get_schema(a),gda_db_base_get_schema(b));  
+        return g_strcmp0(gda_db_base_get_schema(a), gda_db_base_get_schema(b));
       else
         return res;
     }

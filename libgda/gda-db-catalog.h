@@ -34,25 +34,26 @@ G_BEGIN_DECLS
 
 G_DECLARE_DERIVABLE_TYPE (GdaDbCatalog, gda_db_catalog, GDA, DB_CATALOG, GObject)
 
-struct _GdaDbCatalogClass {
+struct _GdaDbCatalogClass
+{
     GObjectClass parent;
 };
 
 /**
  * GdaDbCatalogError:
  * @GDA_DB_CATALOG_CONTEXT_NULL: Context is %NULL. Should not be %NULL for normal operation.
- * @GDA_DB_CATALOG_DOC_NULL: #xmlDocPtr is %NULL. 
+ * @GDA_DB_CATALOG_DOC_NULL: #xmlDocPtr is %NULL.
  * @GDA_DB_CATALOG_INVALID_XML: Sets if xml check fails. Xml file structure doesn't match with DTD
  * file
- * @GDA_DB_CATALOG_INVALID_SCHEMA: Sets if the used schema is invalid. 
- * @GDA_DB_CATALOG_SERVER_OPERATION: Sets if server operation is %NULL. 
+ * @GDA_DB_CATALOG_INVALID_SCHEMA: Sets if the used schema is invalid.
+ * @GDA_DB_CATALOG_SERVER_OPERATION: Sets if server operation is %NULL.
  * @GDA_DB_CATALOG_FILE_READ: Sets if xml file is not readable
  * @GDA_DB_CATALOG_PARSE_CONTEXT: Sets if an error with context during parsing an xml file
  * @GDA_DB_CATALOG_PARSE: Sets if parsing reports an error
  * @GDA_DB_CATALOG_PARSE_CHUNK: If set, error with parse chunk algorithm.
  * @GDA_DB_CATALOG_CONNECTION_CLOSED: Connection is not open.
  *
- * These error are primary for developers to troubleshoot the problem rather than for user. 
+ * These error are primary for developers to troubleshoot the problem rather than for user.
  */
 typedef  enum {
     GDA_DB_CATALOG_CONTEXT_NULL,
