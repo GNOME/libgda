@@ -12,9 +12,9 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) -DHAVE_LDAP \
 	$(MAC_INTEGRATION_CFLAGS)
 
-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+perspective-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_ldap_marshal > $@
-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+perspective-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_ldap_marshal > $@
 
 GENFILES = \

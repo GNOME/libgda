@@ -32,6 +32,19 @@ if soup_dep.found()
 endif
 
 
+tools_cargs = [
+	'-include',
+	meson.build_root() + '/config.h',
+	'-DROOT_DIR="'+meson.source_root()+'"',
+	'-DIS_BROWSER',
+	'-DHAVE_GTK_CLASSES'
+	]
+if ldap_found
+tools_cargs += [
+	'-DHAVE_LDAP'
+	]
+endif
+
 gda_sql = executable('gda-sql-'+project_api_version,
 	gda_sql_sources,
 	link_with: libgda,
@@ -134,13 +147,7 @@ executable('org.gnome.gda.Browser',
 		libgdaui
 		],
 	dependencies: browser_deps,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
-		'-DIS_BROWSER',
-		'-DHAVE_GTK_CLASSES'
-		],
+	c_args: tools_cargs,
 	link_args: gda_browser_link_args,
 	install: true
 	)

@@ -136,9 +136,6 @@ GObject            *t_connection_execute_statement      (TConnection *tcnc,
 							 GdaStatementModelUsage model_usage,
 							 GdaSet **last_insert_row,
 							 GError **error);
-gboolean            t_connection_rerun_select           (TConnection *tcnc,
-							 GdaDataModel *model,
-							 GError **error);
 void                t_connection_set_busy_state (TConnection *bcnc, gboolean busy, const gchar *busy_reason);
 gboolean            t_connection_normalize_sql_statement(TConnection *tcnc,
 							 GdaSqlStatement *sqlst, GError **error);

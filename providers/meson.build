@@ -27,3 +27,7 @@ endif
 if mysql_dep.found()
 subdir('mysql')
 endif
+
+if soup_dep.found() and get_option('with-libsoup')
+subdir('web')
+endif

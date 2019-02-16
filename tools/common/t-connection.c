@@ -1454,27 +1454,6 @@ t_connection_execute_statement (TConnection *tcnc,
 }
 
 /**
- * t_connection_rerun_select
- * @tcnc: a #TConnection object
- * @model: a #GdaDataModel, which has to ba a #GdaDataSelect
- * @error: a place to store errors, or %NULL
- *
- * Re-execute @model
- *
- * Returns: %TRUE if no error occurred
- */
-gboolean
-t_connection_rerun_select (TConnection *tcnc,
-			   GdaDataModel *model,
-			   GError **error)
-{
-	g_return_val_if_fail (T_IS_CONNECTION (tcnc), FALSE);
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
-
-	return gda_data_select_rerun (GDA_DATA_SELECT (model), error);
-}
-
-/**
  * t_connection_normalize_sql_statement
  * @tcnc: a #TConnection
  * @sqlst: a #GdaSqlStatement

@@ -21,7 +21,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "class-properties.h"
-#include "marshal.h"
+#include "perspective-marshal.h"
 #include "../text-search.h"
 #include "../ui-support.h"
 

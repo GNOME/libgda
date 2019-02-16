@@ -353,7 +353,7 @@ hash_for_existing_nodes (const GSList *nodes)
 	return hash;
 }
 
-//static gboolean icons_resol_cb (MgrFavorites *mgr);
+static gboolean icons_resol_cb (MgrFavorites *mgr);
 
 static GSList *
 mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
@@ -780,41 +780,41 @@ mgr_favorites_update_children (GdaTreeManager *manager, GdaTreeNode *node, const
 	return g_slist_reverse (nodes_list);
 }
 
-//#ifdef HAVE_LDAP
-/* static gboolean */
-/* icons_resol_cb (MgrFavorites *mgr) */
-/* { */
-/*         if (mgr->priv->icons_resol_timer == 0) */
-/*                 return FALSE; */
-/*         if (mgr->priv->icons_resol_list) { */
-/*                 IconResolutionData *data; */
-/*                 data = (IconResolutionData*) mgr->priv->icons_resol_list->data; */
-/*                 mgr->priv->icons_resol_list = g_slist_delete_link (mgr->priv->icons_resol_list, */
-/*                                                                    mgr->priv->icons_resol_list); */
+#ifdef HAVE_LDAP
+static gboolean
+icons_resol_cb (MgrFavorites *mgr)
+{
+        if (mgr->priv->icons_resol_timer == 0)
+                return FALSE;
+        if (mgr->priv->icons_resol_list) {
+                IconResolutionData *data;
+                data = (IconResolutionData*) mgr->priv->icons_resol_list->data;
+                mgr->priv->icons_resol_list = g_slist_delete_link (mgr->priv->icons_resol_list,
+                                                                   mgr->priv->icons_resol_list);
 
-/* 		GdkPixbuf *pixbuf; */
-/* 		pixbuf = ui_connection_ldap_icon_for_dn (mgr->priv->tcnc, data->dn, NULL); */
-/* 		if (pixbuf) { */
-/* 			GValue *av; */
-/* 			av = gda_value_new (G_TYPE_OBJECT); */
-/* 			g_value_set_object (av, pixbuf); */
-/* 			gda_tree_node_set_node_attribute ((GdaTreeNode*) data->node, "icon", av, NULL); */
-/* 			gda_value_free (av); */
-/* 		} */
-/*                 icon_resolution_data_free (data); */
-/*         } */
+		GdkPixbuf *pixbuf;
+		pixbuf = ui_connection_ldap_icon_for_dn (mgr->priv->tcnc, data->dn, NULL);
+		if (pixbuf) {
+			GValue *av;
+			av = gda_value_new (G_TYPE_OBJECT);
+			g_value_set_object (av, pixbuf);
+			gda_tree_node_set_node_attribute ((GdaTreeNode*) data->node, "icon", av, NULL);
+			gda_value_free (av);
+		}
+                icon_resolution_data_free (data);
+        }
 
-/*         if (! mgr->priv->icons_resol_list) { */
-/*                 mgr->priv->icons_resol_timer = 0; */
-/*                 return FALSE; */
-/*         } */
-/*         else */
-/*                 return TRUE; */
-/* } */
-//#else
-//static gboolean
-/* icons_resol_cb (MgrFavorites *mgr) */
-/* { */
-/*   return FALSE; */
-/* } */
-//#endif
+        if (! mgr->priv->icons_resol_list) {
+                mgr->priv->icons_resol_timer = 0;
+                return FALSE;
+        }
+        else
+                return TRUE;
+}
+#else
+static gboolean
+icons_resol_cb (MgrFavorites *mgr)
+{
+  return FALSE;
+}
+#endif

@@ -898,7 +898,7 @@ data_source_execute (DataSource *source, GError **error)
 		if (source->priv->need_rerun) {
 			source->priv->need_rerun = FALSE;
 			g_signal_emit (source, data_source_signals [EXEC_STARTED], 0);
-			t_connection_rerun_select (source->priv->tcnc, source->priv->model, &lerror);
+      // FIXME: Use a GdaDataModelSelect instead
 			gda_data_model_dump (source->priv->model, NULL);
 			g_signal_emit (source, data_source_signals [EXEC_FINISHED], 0, lerror);
 		}

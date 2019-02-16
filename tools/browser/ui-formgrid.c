@@ -606,18 +606,19 @@ action_executed_holder_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED G
 
 	GError *error = NULL;
 	gda_data_model_freeze (aed->model);
-	if (!t_connection_rerun_select (aed->tcnc, aed->model, &error)) {
-		GtkWidget *toplevel;
-		toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid));
-		ui_show_error (GTK_WINDOW (toplevel),
-			       _("Error executing query:\n%s"), error->message ? error->message : _("No detail"));
-		g_clear_error (&error);
-		gda_data_model_thaw (aed->model);
-	}
-	else {
-		gda_data_model_thaw (aed->model);
-		gda_data_model_reset (aed->model);
-	}
+  // FIXME: Use a GdaDataModelSelect instead
+	/* if (!t_connection_rerun_select (aed->tcnc, aed->model, &error)) { */
+	/* 	GtkWidget *toplevel; */
+	/* 	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (aed->formgrid)); */
+	/* 	ui_show_error (GTK_WINDOW (toplevel), */
+	/* 		       _("Error executing query:\n%s"), error->message ? error->message : _("No detail")); */
+	/* 	g_clear_error (&error); */
+	/* 	gda_data_model_thaw (aed->model); */
+	/* } */
+	/* else { */
+	/* 	gda_data_model_thaw (aed->model); */
+	/* 	gda_data_model_reset (aed->model); */
+	/* } */
 }
 
 static void

@@ -7,12 +7,18 @@ subdir('schema-browser')
 subdir('query-exec')
 subdir('data-manager')
 
+if ldap_found
+subdir('ldap-browser')
+gda_browser_sources += ldap_perspective_sources
+browser_deps += inc_ldapbrowserdir_dep
+endif
+
 if goocanvas_dep.found()
 subdir('canvas')
 gda_browser_sources += canvas_sources
 endif
 
-gda_browser_sources += perspective_sources
+gda_browser_sources += dummy_perspective_sources
 gda_browser_sources += schema_sources
 gda_browser_sources += query_exec_sources
 gda_browser_sources += data_manager_sources

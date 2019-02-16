@@ -25,6 +25,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/gda-connection-private.h>
+#include <gda-data-select-extra.h>
 #include "gda-web.h"
 #include "gda-web-recordset.h"
 #include "gda-web-provider.h"
@@ -324,13 +325,13 @@ gda_web_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaWebRecordset *imodel;
 
 	imodel = GDA_WEB_RECORDSET (model);
-	if (model->advertized_nrows >= 0)
-		return model->advertized_nrows;
+	if (_gda_data_select_get_advertized_nrows (model) >= 0)
+		return _gda_data_select_get_advertized_nrows (model);
 
 	if (imodel->priv->real_model)
-		model->advertized_nrows = gda_data_model_get_n_rows (imodel->priv->real_model);
+		_gda_data_select_set_advertized_nrows (model, gda_data_model_get_n_rows (imodel->priv->real_model));
 
-	return model->advertized_nrows;
+	return _gda_data_select_get_advertized_nrows (model);
 }
 
 /*
