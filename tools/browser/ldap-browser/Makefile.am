@@ -14,7 +14,7 @@ AM_CPPFLAGS = \
 
 ldap-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_ldap_marshal > $@
-ldap-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+ldap-marshal.c: marshal.list $(GLIB_GENMARSHAL) ldap-marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_ldap_marshal > $@
 
 GENFILES = \

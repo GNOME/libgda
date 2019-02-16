@@ -69,6 +69,7 @@ libgda_sqlite_provider = library ('gda-sqlite-'+project_api_version,
 		sqlite_dep,
 		inc_libgda_sqliteh_dep,
 		inc_sqliteh_dep,
+		inc_libgdah_dep
 		],
 	c_args: [
 		'-include',
