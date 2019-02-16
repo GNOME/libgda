@@ -30,6 +30,7 @@ variables:
                 libgdk-pixbuf2.0-dev
                 libgraphviz-dev
                 libisocodes-dev
+                libsoup2.4-dev
                 libxslt1-dev
                 libjson-glib-dev
                 libgcrypt20-dev
@@ -128,7 +129,7 @@ meson_build:
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson _build --prefix=/usr -Denable-debug=true -Denable-gtk-doc=true
+  - meson _build --prefix=/usr -Denable-debug=true -Denable-gtk-doc=true -Denable-tools=true
   - cd _build
   - ninja
   - broadwayd &

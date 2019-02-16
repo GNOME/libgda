@@ -12,14 +12,14 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) -DHAVE_LDAP \
 	$(MAC_INTEGRATION_CFLAGS)
 
-perspective-marshal.h: marshal.list $(GLIB_GENMARSHAL)
+ldap-marshal.h: marshal.list $(GLIB_GENMARSHAL)
 	$(GLIB_GENMARSHAL) $< --header --prefix=_ldap_marshal > $@
-perspective-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
+ldap-marshal.c: marshal.list $(GLIB_GENMARSHAL) marshal.h
 	$(GLIB_GENMARSHAL) $< --body --prefix=_ldap_marshal > $@
 
 GENFILES = \
-	marshal.c \
-	marshal.h
+	ldap-marshal.c \
+	ldap-marshal.h
 
 $(libperspective_la_OBJECTS): $(GENFILES)
 
@@ -54,7 +54,7 @@ libperspective_la_SOURCES = \
 	vtable-dialog.h \
 	vtable-dialog.c
 
-$(OBJECTS): marshal.c marshal.h
+$(OBJECTS): ldap-marshal.c ldap-marshal.h
 
 EXTRA_DIST = \
 	marshal.list
