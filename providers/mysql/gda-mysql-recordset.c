@@ -40,7 +40,7 @@
 #include "gda-mysql-recordset.h"
 #include "gda-mysql-provider.h"
 #include "gda-mysql-util.h"
-#include "gda-data-select-extra.h"
+#include <gda-data-select-private.h>
 #include <libgda/libgda-global-variables.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>

@@ -36,7 +36,7 @@
 #include "gda-sqlite-recordset.h"
 #include "gda-sqlite-provider.h"
 #include "gda-sqlite-blob-op.h"
-#include "gda-data-select-extra.h"
+#include <gda-data-select-private.h>
 #include <libgda/gda-util.h>
 #include <libgda/gda-connection-private.h>
 

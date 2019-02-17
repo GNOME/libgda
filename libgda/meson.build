@@ -84,6 +84,7 @@ libgda_headers = files([
 	'gda-data-access-wrapper.h',
 	'gda-data-proxy.h',
 	'gda-data-select.h',
+	'gda-data-select-private.h',
         'gda-db-catalog.h',
         'gda-db-table.h',
         'gda-db-view.h',

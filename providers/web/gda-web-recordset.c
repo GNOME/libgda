@@ -25,7 +25,7 @@
 #include <libgda/gda-util.h>
 #include <libgda/sql-parser/gda-sql-parser.h>
 #include <libgda/gda-connection-private.h>
-#include <gda-data-select-extra.h>
+#include <gda-data-select-private.h>
 #include "gda-web.h"
 #include "gda-web-recordset.h"
 #include "gda-web-provider.h"

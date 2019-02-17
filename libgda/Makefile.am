@@ -77,6 +77,7 @@ gda_headers = \
 	gda-data-access-wrapper.h \
 	gda-data-proxy.h \
 	gda-data-select.h \
+	gda-data-select-private.h \
 	gda-decl.h \
 	gda-enums.h \
 	gda-holder.h \
