@@ -26,7 +26,7 @@
 #include <libgda-ui/gdaui-tree-store.h>
 #include "../dnd.h"
 #include "../ui-support.h"
-#include "perspective-marshal.h"
+#include "ldap-marshal.h"
 #include "../gdaui-bar.h"
 #include <gdk/gdkkeysyms.h>
 #include <libgda-ui/internal/popup-container.h>

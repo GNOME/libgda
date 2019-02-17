@@ -33,7 +33,7 @@ ldap_perspective_sources = files([
 	])
 
 
-ldap_perspective_marshalls = gnome_module.genmarshal('perspective-marshal',prefix : '_ldap_marshal',
+ldap_perspective_marshalls = gnome_module.genmarshal('ldap-marshal',prefix : '_ldap_marshal',
 					sources : 'marshal.list')
 
 ldap_perspective_sources += [

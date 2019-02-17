@@ -21,7 +21,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "entry-properties.h"
-#include "perspective-marshal.h"
+#include "ldap-marshal.h"
 #include <time.h>
 #include <libgda-ui/libgda-ui.h>
 #include "../ui-support.h"
