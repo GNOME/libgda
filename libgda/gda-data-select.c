@@ -1914,6 +1914,9 @@ static void dump_d (GdaDataSelect *model)
 static const GValue *
 gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **error)
 {
+	g_return_val_if_fail (model != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
+
 	GdaRow *prow;
 	gint int_row;
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));

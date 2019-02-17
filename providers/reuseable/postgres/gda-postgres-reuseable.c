@@ -185,11 +185,14 @@ _gda_postgres_compute_version (GdaConnection *cnc, GdaPostgresReuseable *rdata, 
 		return FALSE;
 	
 	const GValue *cvalue;
-	cvalue = gda_data_model_get_value_at (model, 0, 0, NULL);
+	GError *lerror = NULL;
+	cvalue = gda_data_model_get_value_at (model, 0, 0, &lerror);
 	if (!cvalue) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
-                             GDA_SERVER_PROVIDER_INTERNAL_ERROR, "%s",
-                             _("Can't get version data from server"));
+		            GDA_SERVER_PROVIDER_INTERNAL_ERROR,
+		            _("Can't get version data from server: %s"),
+		            lerror && lerror->message ? lerror->message : _("No detail"));
+		g_clear_error (&lerror);
 		g_object_unref (model);
 		return FALSE;
 	}
@@ -305,8 +308,15 @@ _gda_postgres_compute_types (GdaConnection *cnc, GdaPostgresReuseable *rdata)
 	gchar *avoid_types = NULL;
 	GString *string;
 
-	if (rdata->version_float == 0)
-		_gda_postgres_compute_version (cnc, rdata, NULL);
+	if (rdata->version_float == 0) {
+		GError *lerror = NULL;
+		_gda_postgres_compute_version (cnc, rdata, &lerror);
+		if (lerror != NULL) {
+			g_warning (_("Internal Error: Can't calculate PostgreSQL version: %s"),
+			           lerror && lerror->message ? lerror->message : _("No detail"));
+			return;
+		}
+	}
 	if (rdata->version_float < 7.3) {
 		gchar *query;
 		avoid_types = "'SET', 'cid', 'oid', 'int2vector', 'oidvector', 'regproc', 'smgr', 'tid', 'unknown', 'xid'";

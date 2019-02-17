@@ -440,6 +440,9 @@ gda_postgres_recordset_fetch_nb_rows (GdaDataSelect *model)
 static gboolean
 gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
+	g_return_val_if_fail (model != NULL, FALSE);
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
+
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset *) model;
 
 	if (!imodel->priv->pg_res) {
@@ -819,6 +822,8 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 static GdaRow *
 new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **error)
 {
+	g_return_val_if_fail (imodel != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_DATA_SELECT (imodel), NULL);
 	GdaRow *prow;
 
 	prow = gda_row_new (_gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols);

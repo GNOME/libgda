@@ -96,7 +96,7 @@ typedef struct {
 	GtkWidget           *stack;
 	GtkWidget           *button; /* "..." button */
 	GtkWidget           *label;
-        GdaDataHandler      *data_handler; /* FIXME: to remove if unused elsewhere */
+	GdaDataHandler      *data_handler; /* FIXME: to remove if unused elsewhere */
 	gboolean             show_actions;
 	gboolean             is_cell_renderer;
 	gboolean             editable;
