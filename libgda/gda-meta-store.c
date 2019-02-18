@@ -1587,23 +1587,23 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	/* load information schema's structure XML file */
 	ostream = g_memory_output_stream_new_resizable ();
 	res = g_file_new_for_uri ("resource:///libgda/information_schema.xml");
-	istream = g_file_read (res, NULL, lerror);
+	istream = G_INPUT_STREAM (g_file_read (res, NULL, &lerror));
 	if (istream == NULL) {
 		g_warning (_("Internal error: no information schema was found: %s"),
 							 lerror && lerror->message ? lerror->message : "No error message was set");
-		g_clear_error (lerror);
+		g_clear_error (&lerror);
 		return;
 	}
-	g_clear_error (lerror);
-	size = g_output_stream_splice (ostream, istream, G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE, NULL, lerror);
+	g_clear_error (&lerror);
+	size = g_output_stream_splice (ostream, istream, G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE, NULL, &lerror);
 	if (size == -1) {
 		g_warning (_("Internal error: can't read information schema: %s"),
 							 lerror && lerror->message ? lerror->message : "No error message was set");
-		g_clear_error (lerror);
+		g_clear_error (&lerror);
 		return;
 	}
-	g_clear_error (lerror);
-	schema = (gchar*) g_memory_output_stream_get_data (ostream);
+	g_clear_error (&lerror);
+	schema = (gchar*) g_memory_output_stream_get_data (G_MEMORY_OUTPUT_STREAM (ostream));
 	doc = xmlReadDoc (schema, "", NULL, XML_PARSE_RECOVER);
 	g_object_unref (ostream);
 	g_object_unref (istream);

@@ -47,9 +47,6 @@ prov_test_common_setup (void)
 	int number_failed = 0;
 	GError *error = NULL;
 	GdaServerOperation *opndb;
-	GdaConnection *cnct = NULL;
-	gchar **env = NULL;
-	const gchar *cnc_string = NULL;
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
@@ -212,11 +209,10 @@ prov_test_common_check_meta_partial (void)
 {
 	int number_failed = 0;
 	GSList *tables = NULL, *list;
-	gboolean dump_ok = TRUE;
 	GdaMetaStore *store;
 	gchar **dump1 = NULL;
 	GError *gerror = NULL;
-	gint ntables, i;
+	gint i;
 
 	store = gda_connection_get_meta_store (cnc);
 
@@ -313,11 +309,10 @@ prov_test_common_check_meta_partial2 (void)
 {
 	int number_failed = 0;
 	GSList *tables = NULL, *list;
-	gboolean dump_ok = TRUE;
 	GdaMetaStore *store;
 	gchar **dump1 = NULL;
 	GError *gerror = NULL;
-	gint ntables, i;
+	gint i;
 
 	store = gda_connection_get_meta_store (cnc);
 
@@ -416,11 +411,10 @@ prov_test_common_check_meta_partial3 (void)
 {
 	int number_failed = 0;
 	GSList *tables = NULL, *list;
-	gboolean dump_ok = TRUE;
 	GdaMetaStore *store;
 	gchar **dump1 = NULL;
 	GError *gerror = NULL;
-	gint ntables, i;
+	gint i;
 
 	store = gda_connection_get_meta_store (cnc);
 
@@ -902,7 +896,6 @@ prov_test_common_check_data_select (void)
 	GError *error = NULL;
 	int number_failed = 0;
 	GdaDataModel *model = NULL;
-	const gchar *remain;
 	GSList *columns;
 	gint i, ncols;
 

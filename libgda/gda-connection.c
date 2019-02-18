@@ -4711,100 +4711,101 @@ typedef struct {
 	GHashTable         *context_templates_hash;
 } DownstreamCallbackData;
 
-static GError *
-suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext *suggest, DownstreamCallbackData *data)
-{
-#define MAX_CONTEXT_SIZE 10
-	if (data->error)
-		return data->error;
+// UNUSED METHOD
+/* static GError * */
+/* suggest_update_cb_downstream (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext *suggest, DownstreamCallbackData *data) */
+/* { */
+/* #define MAX_CONTEXT_SIZE 10 */
+/* 	if (data->error) */
+/* 		return data->error; */
 
-	GdaMetaContext *templ_context;
-	GdaMetaContext loc_suggest;
-	gchar *column_names[MAX_CONTEXT_SIZE];
-	GValue *column_values[MAX_CONTEXT_SIZE];
+/* 	GdaMetaContext *templ_context; */
+/* 	GdaMetaContext loc_suggest; */
+/* 	gchar *column_names[MAX_CONTEXT_SIZE]; */
+/* 	GValue *column_values[MAX_CONTEXT_SIZE]; */
 
 	/* if there is no context with the same table name in the templates, then exit right now */
-	templ_context = g_hash_table_lookup (data->context_templates_hash, suggest->table_name);
-	if (!templ_context)
-		return NULL;
+/* 	templ_context = g_hash_table_lookup (data->context_templates_hash, suggest->table_name); */
+/* 	if (!templ_context) */
+/* 		return NULL; */
 	
-	if (templ_context->size > 0) {
+/* 	if (templ_context->size > 0) { */
 		/* setup @loc_suggest */
-		gint i, j;
+/* 		gint i, j; */
 
-		if (suggest->size > MAX_CONTEXT_SIZE) {
-			g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug",
-				   __FUNCTION__, suggest->size);
-			return NULL;
-		}
-		loc_suggest.size = suggest->size;
-		loc_suggest.table_name = suggest->table_name;
-		loc_suggest.column_names = column_names;
-		loc_suggest.column_values = column_values;
-		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size); /* Flawfinder: ignore */
-		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size); /* Flawfinder: ignore */
+/* 		if (suggest->size > MAX_CONTEXT_SIZE) { */
+/* 			g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug", */
+/* 				   __FUNCTION__, suggest->size); */
+/* 			return NULL; */
+/* 		} */
+/* 		loc_suggest.size = suggest->size; */
+/* 		loc_suggest.table_name = suggest->table_name; */
+/* 		loc_suggest.column_names = column_names; */
+/* 		loc_suggest.column_values = column_values; */
+/* 		memcpy (loc_suggest.column_names, suggest->column_names, sizeof (gchar *) * suggest->size);  */ /* Flawfinder: ignore */
+/* 		memcpy (loc_suggest.column_values, suggest->column_values, sizeof (GValue *) * suggest->size);  */ /* Flawfinder: ignore */
 		
 		/* check that any @suggest's columns which is in @templ_context's has the same values */
-		for (j = 0; j < suggest->size; j++) {
-			for (i = 0; i < templ_context->size; i++) {
-				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) {
+/* 		for (j = 0; j < suggest->size; j++) { */
+/* 			for (i = 0; i < templ_context->size; i++) { */
+/* 				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) { */
 					/* same column name, now check column value */
-					if (G_VALUE_TYPE (templ_context->column_values[i]) != 
-					    G_VALUE_TYPE (suggest->column_values[j])) {
-						g_warning ("Internal error: column types mismatch for GdaMetaContext "
-							   "table '%s' and column '%s' (%s/%s)",
-							   templ_context->table_name, templ_context->column_names[i], 
-							   g_type_name (G_VALUE_TYPE (templ_context->column_values[i])),
-							   g_type_name (G_VALUE_TYPE (suggest->column_values[j])));
-						return NULL;
-					}
-					if (gda_value_compare (templ_context->column_values[i], suggest->column_values[j]))
+/* 					if (G_VALUE_TYPE (templ_context->column_values[i]) !=  */
+/* 					    G_VALUE_TYPE (suggest->column_values[j])) { */
+/* 						g_warning ("Internal error: column types mismatch for GdaMetaContext " */
+/* 							   "table '%s' and column '%s' (%s/%s)", */
+/* 							   templ_context->table_name, templ_context->column_names[i],  */
+/* 							   g_type_name (G_VALUE_TYPE (templ_context->column_values[i])), */
+/* 							   g_type_name (G_VALUE_TYPE (suggest->column_values[j]))); */
+/* 						return NULL; */
+/* 					} */
+/* 					if (gda_value_compare (templ_context->column_values[i], suggest->column_values[j])) */
 						/* different values */
-						return NULL;
-					break;
-				}
-			}
-		}
+/* 						return NULL; */
+/* 					break; */
+/* 				} */
+/* 			} */
+/* 		} */
 
 		/* @templ_context may contain some more columns => add them to @loc_suggest */
-		for (i = 0; i < templ_context->size; i++) {
-			for (j = 0; j < suggest->size; j++) {
-				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) {
-					j = -1;
-					break;
-				}
-			}
-			if (j >= 0) {
-				if (loc_suggest.size >= MAX_CONTEXT_SIZE) {
-					g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug",
-						   __FUNCTION__, loc_suggest.size + 1);
-					return NULL;
-				}
-				loc_suggest.column_names [loc_suggest.size] = templ_context->column_names [i];
-				loc_suggest.column_values [loc_suggest.size] = templ_context->column_values [i];
-				loc_suggest.size ++;
-			}
-		}
+/* 		for (i = 0; i < templ_context->size; i++) { */
+/* 			for (j = 0; j < suggest->size; j++) { */
+/* 				if (!strcmp (templ_context->column_names[i], suggest->column_names[j])) { */
+/* 					j = -1; */
+/* 					break; */
+/* 				} */
+/* 			} */
+/* 			if (j >= 0) { */
+/* 				if (loc_suggest.size >= MAX_CONTEXT_SIZE) { */
+/* 					g_warning ("Internal limitation at %s(), limitation should be at least %d, please report a bug", */
+/* 						   __FUNCTION__, loc_suggest.size + 1); */
+/* 					return NULL; */
+/* 				} */
+/* 				loc_suggest.column_names [loc_suggest.size] = templ_context->column_names [i]; */
+/* 				loc_suggest.column_values [loc_suggest.size] = templ_context->column_values [i]; */
+/* 				loc_suggest.size ++; */
+/* 			} */
+/* 		} */
 
-		suggest = &loc_suggest;
-	}
+/* 		suggest = &loc_suggest; */
+/* 	} */
 	
-	GError *lerror = NULL;
-	if (!local_meta_update (data->prov, data->cnc, suggest, &lerror)) {
-		if (lerror)
-			data->error = lerror;
-		else {
-			g_set_error (&lerror,GDA_CONNECTION_ERROR,
-				     GDA_CONNECTION_META_DATA_CONTEXT_ERROR,
-				      "%s", _("Meta update error"));
-			data->error = lerror;
-		}
+/* 	GError *lerror = NULL; */
+/* 	if (!local_meta_update (data->prov, data->cnc, suggest, &lerror)) { */
+/* 		if (lerror) */
+/* 			data->error = lerror; */
+/* 		else { */
+/* 			g_set_error (&lerror,GDA_CONNECTION_ERROR, */
+/* 				     GDA_CONNECTION_META_DATA_CONTEXT_ERROR, */
+/* 				      "%s", _("Meta update error")); */
+/* 			data->error = lerror; */
+/* 		} */
 
-		return data->error;
-	}
+/* 		return data->error; */
+/* 	} */
 
-	return NULL;
-}
+/* 	return NULL; */
+/* } */
 
 /**
  * gda_connection_update_meta_store:

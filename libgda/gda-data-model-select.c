@@ -243,7 +243,8 @@ gda_data_model_select_new_from_string (GdaConnection *cnc, const gchar *sql)
 gboolean
 gda_data_model_select_is_valid (GdaDataModelSelect *model)
 {
-  g_return_if_fail (model);
+  g_return_val_if_fail (model != NULL, FALSE);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), FALSE);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   return priv->model != NULL;
 }
@@ -257,7 +258,8 @@ gda_data_model_select_is_valid (GdaDataModelSelect *model)
 GdaSet*
 gda_data_model_select_get_parameters  (GdaDataModelSelect *model)
 {
-  g_return_if_fail (model);
+  g_return_val_if_fail (model != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   if (priv->params == NULL) {
     gda_statement_get_parameters (priv->stm, &priv->params, NULL);

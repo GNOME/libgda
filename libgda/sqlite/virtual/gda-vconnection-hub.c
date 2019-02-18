@@ -171,7 +171,7 @@ gda_vconnection_hub_add (GdaVconnectionHub *hub,
 	g_return_val_if_fail (GDA_IS_VCONNECTION_HUB (hub), FALSE);
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
-	if (hc == NULL) {
+	if (ns == NULL) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     "%s", _("Namespace must be specified"));
@@ -763,7 +763,7 @@ dict_table_create_model_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED i
 	if (idxStr) {
 		gint i;
 		GSList *list;
-		stmt = GDA_STATEMENT (idxStr);
+		stmt = GDA_STATEMENT ((GdaStatement*) idxStr);
 		g_assert (GDA_IS_STATEMENT (stmt));
 		if (! gda_statement_get_parameters (stmt, &params, NULL))
 			return NULL;

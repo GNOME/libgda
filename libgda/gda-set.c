@@ -1883,14 +1883,14 @@ holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 	}
 	else if (!strcmp (pspec->name, "name")) {
 		GValue *name = gda_value_new (G_TYPE_STRING);
-		g_object_get_property (dataset, "name", name);
+		g_object_get_property (G_OBJECT (dataset), "name", name);
 		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
 				     "name", name);
 		gda_value_free (name);
 	}
 	else if (!strcmp (pspec->name, "description")) {
 		GValue *desc = gda_value_new (G_TYPE_STRING);
-		g_object_get_property (dataset, "description", desc);
+		g_object_get_property (G_OBJECT (dataset), "description", desc);
 		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
 				     "description", desc);
 		gda_value_free (desc);
