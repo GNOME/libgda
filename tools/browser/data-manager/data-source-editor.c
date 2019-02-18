@@ -155,32 +155,43 @@ data_source_editor_init (DataSourceEditor *editor)
 
 	GdaHolder *holder;
 	holder = gda_set_get_holder (editor->priv->attributes, "id");
-	g_object_set ((GObject*) holder, "name", _("Id"),
+	if (holder) {
+		g_object_set ((GObject*) holder, "name", _("Id"),
 		      "description",
-		      _("Data source's ID\n"
-			"(as referenced by other data sources)"), NULL);
-	gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
+		      _("Data source's ID\n(as referenced by other data sources)"), NULL);
+		gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
+	}
 
 	holder = gda_set_get_holder (editor->priv->attributes, "descr");
-	g_object_set ((GObject*) holder, "name", _("Description"),
+	if (holder != NULL) {
+		g_object_set ((GObject*) holder, "name", _("Description"),
 		      "description", _("Data source's description"), NULL);
+	}
 
 	holder = gda_set_get_holder (editor->priv->attributes, "table");
-	g_object_set ((GObject*) holder, "name", _("Table"),
-		      "description", _("Table to display data from, leave empty\n"
-				       "to specify a SELECT statement instead"), NULL);
+
+	if (holder != NULL) {
+		g_object_set ((GObject*) holder, "name", _("Table"),
+		      "description", _("Table to display data from, leave empty\nto specify a SELECT statement instead"),
+		      NULL);
+	}
 
 	holder = gda_set_get_holder (editor->priv->attributes, "sql");
-	g_object_set ((GObject*) holder, "name", _("SELECT\nSQL"),
-		      "description", _("Actual SQL executed\nto select data\n"
-				       "Can't be changed if a table name is set"), NULL);
-	g_object_set ((GObject*) holder, "plugin", "text:PROG_LANG=gda-sql", NULL);
+	if (holder != NULL) {
+		g_object_set ((GObject*) holder, "name", _("SELECT\nSQL"),
+		      "description", _("Actual SQL executed\nto select data\nCan't be changed if a table name is set"),
+		       "plugin", "text:PROG_LANG=gda-sql",
+		       NULL);
+	}
+
 
 	holder = gda_set_get_holder (editor->priv->attributes, "depend");
-	g_object_set ((GObject*) holder, "name", _("Dependencies"),
-		      "description", _("Required and provided named parameters"), NULL);
-	gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
-	g_object_set ((GObject*) holder, "plugin", "rtext", NULL);
+	if (holder != NULL) {
+		g_object_set ((GObject*) holder, "name", _("Dependencies"),
+		      "description", _("Required and provided named parameters"),
+		      "plugin", "rtext", NULL);
+		gdaui_basic_form_entry_set_editable (GDAUI_BASIC_FORM (form), holder, FALSE);
+	}
 }
 
 static void
