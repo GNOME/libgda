@@ -695,15 +695,21 @@ gda_set_set_property (GObject *object,
 
 	switch (param_id) {
 	case PROP_ID:
-		g_free (priv->id);
+		if (priv->id != NULL)  {
+			g_free (priv->id);
+		}
 		priv->id = g_value_dup_string (value);
 		break;
 	case PROP_NAME:
-		g_free (priv->name);
+		if (priv->name != NULL) {
+			g_free (priv->name);
+		}
 		priv->name = g_value_dup_string (value);
 		break;
 	case PROP_DESCR:
-		g_free (priv->descr);
+		if (priv->descr) {
+			g_free (priv->descr);
+		}
 		priv->descr = g_value_dup_string (value);
 		break;
 	case PROP_HOLDERS: {
@@ -711,7 +717,7 @@ gda_set_set_property (GObject *object,
 		GSList* holders;
 		for (holders = (GSList*) g_value_get_pointer (value); holders; holders = holders->next) 
 			gda_set_real_add_holder (set, GDA_HOLDER (holders->data));
-		compute_public_data (set);	
+		compute_public_data (set);
 		break;
 	}
 	case PROP_VALIDATE_CHANGES:
@@ -1870,26 +1876,24 @@ holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 	GType gtype;
 	gtype = gda_holder_get_g_type (holder);
 	if (!strcmp (pspec->name, "g-type")) {
-		g_assert (gtype != GDA_TYPE_NULL);
+		if (gtype == GDA_TYPE_NULL) {
+			return;
+		}
 		g_signal_emit (dataset, gda_set_signals[HOLDER_TYPE_SET], 0, holder);
 	}
 	else if (!strcmp (pspec->name, "name")) {
-		gchar *name = NULL;
-		g_object_get (dataset, "name", &name, NULL);
+		GValue *name = gda_value_new (G_TYPE_STRING);
+		g_object_get_property (dataset, "name", name);
 		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
-				     "name", name != NULL ? name : "NULL");
-		if (name != NULL) {
-			g_free (name);
-		}
+				     "name", name);
+		gda_value_free (name);
 	}
 	else if (!strcmp (pspec->name, "description")) {
-		gchar *desc = NULL;
-		g_object_get (dataset, "description", &desc, NULL);
+		GValue *desc = gda_value_new (G_TYPE_STRING);
+		g_object_get_property (dataset, "description", desc);
 		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
 				     "description", desc);
-		if (desc != NULL) {
-			g_free (desc);
-		}
+		gda_value_free (desc);
 	}
 }
 
@@ -1931,12 +1935,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 			g_signal_connect (G_OBJECT (holder), "source-changed",
 					  G_CALLBACK (source_changed_holder_cb), set);
 		}
-		if (gda_holder_get_g_type (holder) == GDA_TYPE_NULL)
-			g_signal_connect (G_OBJECT (holder), "notify::g-type",
-					  G_CALLBACK (holder_notify_cb), set);
-		g_signal_connect (G_OBJECT (holder), "notify::name",
-				  G_CALLBACK (holder_notify_cb), set);
-		g_signal_connect (G_OBJECT (holder), "notify::description",
+		g_signal_connect (G_OBJECT (holder), "notify",
 				  G_CALLBACK (holder_notify_cb), set);
 		return TRUE;
 	}
