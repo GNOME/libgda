@@ -628,7 +628,7 @@ typedef struct
 	gchar           *name;
 	gchar           *descr;
 	GHashTable      *holders_hash; /* key = GdaHoler ID, value = GdaHolder */
-	GArray          *holders_array;
+	GPtrArray       *holders_array;
 	gboolean         read_only;
 	gboolean         validate_changes;
 
@@ -1619,7 +1619,7 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	priv->holders = g_slist_remove (priv->holders, holder);
 	g_hash_table_remove (priv->holders_hash, gda_holder_get_id (holder));
 	if (priv->holders_array) {
-		g_array_free (priv->holders_array, TRUE);
+		g_ptr_array_free (priv->holders_array, TRUE);
 		priv->holders_array = NULL;
 	}
 	g_object_unref (G_OBJECT (holder));
@@ -1706,7 +1706,7 @@ gda_set_dispose (GObject *object)
 		priv->holders_hash = NULL;
 	}
 	if (priv->holders_array) {
-		g_array_free (priv->holders_array, TRUE);
+		g_ptr_array_free (priv->holders_array, TRUE);
 		priv->holders_array = NULL;
 	}
 
@@ -1866,6 +1866,7 @@ gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 static void
 holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 {
+	g_return_if_fail (GDA_IS_SET (dataset));
 	GType gtype;
 	gtype = gda_holder_get_g_type (holder);
 	if (!strcmp (pspec->name, "g-type")) {
@@ -1917,7 +1918,7 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		priv->holders = g_slist_append (priv->holders, holder);
 		g_hash_table_insert (priv->holders_hash, (gchar*) hid, holder);
 		if (priv->holders_array) {
-			g_array_free (priv->holders_array, TRUE);
+			g_ptr_array_free (priv->holders_array, TRUE);
 			priv->holders_array = NULL;
 		}
 		g_object_ref (holder);
@@ -2085,17 +2086,19 @@ gda_set_get_nth_holder (GdaSet *set, gint pos)
 	g_return_val_if_fail (pos >= 0, NULL);
   GdaSetPrivate *priv = gda_set_get_instance_private (set);
 
-	if (! priv->holders_array) {
+	if (priv->holders_array == NULL) {
 		GSList *list;
-		priv->holders_array = g_array_sized_new (FALSE, FALSE, sizeof (GdaHolder*),
-							      g_slist_length (priv->holders));
-		for (list = priv->holders; list; list = list->next)
-			g_array_append_val (priv->holders_array, list->data);
+		priv->holders_array = g_ptr_array_new_full (g_slist_length (priv->holders),
+		                                           (GDestroyNotify) g_object_unref);
+		for (list = priv->holders; list; list = list->next) {
+			g_ptr_array_insert (priv->holders_array, -1,
+			                    g_object_ref ((GObject*) list->data));
+		}
 	}
 	if ((guint)pos >= priv->holders_array->len)
 		return NULL;
 	else
-		return g_array_index (priv->holders_array, GdaHolder*, pos);
+		return g_ptr_array_index (priv->holders_array, pos);
 }
 
 /**
