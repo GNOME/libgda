@@ -101,11 +101,11 @@ G_BEGIN_DECLS
 
 void gda_init (void);
 void gda_locale_changed (void);
-gchar *gda_get_application_exec_path (const gchar *app_name);
 
 G_END_DECLS
 
 #endif
+
 
 
 
