@@ -461,14 +461,16 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 			value = NULL;
 			break;
 		case L_SPACE:
-			if (priv->context->in_param_spec ||
-			    (priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
-				/* ignore space */
-				gda_value_free (value);
-				value = NULL;
-				break;
-			}
 		default:
+			if (priv->context->token_type == L_SPACE) {
+				if (priv->context->in_param_spec ||
+					  (priv->mode == GDA_SQL_PARSER_MODE_PARSE)) {
+					/* ignore space */
+					gda_value_free (value);
+					value = NULL;
+					continue;
+				}
+			}
 			if (priv->mode == GDA_SQL_PARSER_MODE_DELIMIT) {
 				if ((priv->context->token_type == L_BEGIN) &&
 				    (priv->passed_tokens->len != 0) &&
@@ -1255,18 +1257,21 @@ getToken (GdaSqlParser *parser)
 		}
 		break;
 	}
-	case '.':
-		if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
-			if (! isdigit (z[1])) {
-				priv->context->token_type = L_DOT;
-				consumed_chars = 1;
-				break;
-			}
-			/* If the next character is a digit, this is a floating point
-			** number that begins with ".".  Fall thru into the next case */
-		}
-	case '0': case '1': case '2': case '3': case '4':
+
+
+	case '.': case '0': case '1': case '2': case '3': case '4':
 	case '5': case '6': case '7': case '8': case '9': {
+		if ((*z) == '.') {
+			if (priv->mode != GDA_SQL_PARSER_MODE_DELIMIT) {
+				if (! isdigit (z[1])) {
+					priv->context->token_type = L_DOT;
+					consumed_chars = 1;
+					break;
+				}
+				/* If the next character is a digit, this is a floating point
+				** number that begins with ".".  Fall thru into the next case */
+			}
+		}
 		priv->context->token_type = L_INTEGER;
 		if ((z[0] == '0') && ((z[1] == 'x') || (z[1] == 'X')) && (z[2] != 0)) {
 			/* hexadecimal */
