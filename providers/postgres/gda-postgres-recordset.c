@@ -348,7 +348,7 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, 
 			      "exec-params", exec_params, NULL);
 	model->priv->pg_res = pg_res;
-	_gda_data_select_set_advertized_nrows ((GdaDataSelect*) model, PQntuples (model->priv->pg_res));
+	gda_data_select_set_advertized_nrows ((GdaDataSelect*) model, PQntuples (model->priv->pg_res));
 
 	return GDA_DATA_MODEL (model);
 }
@@ -422,14 +422,14 @@ gda_postgres_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaPostgresRecordset *imodel;
 
 	imodel = GDA_POSTGRES_RECORDSET (model);
-	if (_gda_data_select_get_advertized_nrows (model) >= 0)
-		return _gda_data_select_get_advertized_nrows (model);
+	if (gda_data_select_get_advertized_nrows (model) >= 0)
+		return gda_data_select_get_advertized_nrows (model);
 
 	/* use C API to determine number of rows,if possible */
 	if (!imodel->priv->cursor_name)
-		_gda_data_select_set_advertized_nrows (model, PQntuples (imodel->priv->pg_res));
+		gda_data_select_set_advertized_nrows (model, PQntuples (imodel->priv->pg_res));
 
-	return _gda_data_select_get_advertized_nrows (model);
+	return gda_data_select_get_advertized_nrows (model);
 }
 
 /*
@@ -454,7 +454,7 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 	*prow = new_row_from_pg_res (imodel, rownum, error);
 	gda_data_select_take_row (model, *prow, rownum);
 
-	if (_gda_data_select_get_nb_stored_rows (model) == _gda_data_select_get_advertized_nrows (model)) {
+	if (gda_data_select_get_nb_stored_rows (model) == gda_data_select_get_advertized_nrows (model)) {
 		/* all the rows have been converted from PGresult to GdaRow objects => we can
 		 * discard the PGresult */
 		PQclear (imodel->priv->pg_res);
@@ -479,7 +479,7 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
 		return FALSE;
 	}
 
-	for (i = 0; i < _gda_data_select_get_advertized_nrows (model); i++) {
+	for (i = 0; i < gda_data_select_get_advertized_nrows (model); i++) {
 		GdaRow *prow;
 		if (! gda_postgres_recordset_fetch_random (model, &prow, i, error))
 			return FALSE;
@@ -806,14 +806,14 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 	gchar *thevalue;
 	gint col;
 
-	for (col = 0; col < _gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols; col++) {
+	for (col = 0; col < gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols; col++) {
 		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
 		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
 			gda_value_set_null (gda_row_get_value (prow, col));
 		else
 			set_value (gda_data_select_get_connection ((GdaDataSelect*) imodel),
 				   prow, gda_row_get_value (prow, col), 
-				   _gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->types [col],
+				   gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->types [col],
 				   thevalue, 
 				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col), error);
 	}
@@ -826,7 +826,7 @@ new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **
 	g_return_val_if_fail (GDA_IS_DATA_SELECT (imodel), NULL);
 	GdaRow *prow;
 
-	prow = gda_row_new (_gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols);
+	prow = gda_row_new (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols);
 	set_prow_with_pg_res (imodel, prow, pg_res_rownum, error);
 	return prow;
 }
@@ -884,9 +884,9 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 			/* GDA_DATA_SELECT (model)->advertized_nrows and model->priv->pg_pos */
 			if (nbtuples < model->priv->chunk_size) {
 				if (model->priv->pg_pos == G_MININT) 
-					_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), nbtuples);
+					gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), nbtuples);
 				else
-					_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model),model->priv->pg_pos + nbtuples + 1);
+					gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model),model->priv->pg_pos + nbtuples + 1);
 
 				model->priv->pg_pos = G_MAXINT;				
 			}
@@ -899,9 +899,9 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 		}
 		else {
 			if (model->priv->pg_pos == G_MININT)
-				_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), 0);
+				gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), 0);
 			else
-				_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->pg_pos + 1); /* total number of rows */
+				gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->pg_pos + 1); /* total number of rows */
 			model->priv->pg_pos = G_MAXINT;
 			retval = FALSE;
 		}
@@ -927,7 +927,7 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 	if (model->priv->pg_pos == G_MININT) 
 		return FALSE;
 	else if (model->priv->pg_pos == G_MAXINT) 
-		g_assert (_gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) >= 0); /* total number of rows MUST be known at this point */
+		g_assert (gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) >= 0); /* total number of rows MUST be known at this point */
 
 	gchar *str;
 	gboolean retval = TRUE;
@@ -969,7 +969,7 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
                 if (nbtuples > 0) {
 			/* model->priv->pg_res_inf */
 			if (model->priv->pg_pos == G_MAXINT)
-				model->priv->pg_res_inf = _gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - nbtuples;
+				model->priv->pg_res_inf = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - nbtuples;
 			else
 				model->priv->pg_res_inf = 
 					MAX (model->priv->pg_res_inf - (noffset - model->priv->chunk_size), 0);
@@ -980,7 +980,7 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 			}
 			else {
 				if (model->priv->pg_pos == G_MAXINT)
-					model->priv->pg_pos = _gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - 1;
+					model->priv->pg_pos = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - 1;
 				else
 					model->priv->pg_pos = MAX (model->priv->pg_pos - noffset, -1) + nbtuples;
 			}

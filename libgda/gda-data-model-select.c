@@ -259,7 +259,7 @@ GdaSet*
 gda_data_model_select_get_parameters  (GdaDataModelSelect *model)
 {
   g_return_val_if_fail (model != NULL, NULL);
-  g_return_val_if_fail (GDA_IS_CONNECTION (model), NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   if (priv->params == NULL) {
     gda_statement_get_parameters (priv->stm, &priv->params, NULL);
@@ -276,7 +276,8 @@ gda_data_model_select_get_parameters  (GdaDataModelSelect *model)
 void
 gda_data_model_select_set_parameters  (GdaDataModelSelect *model, GdaSet *params)
 {
-  g_return_if_fail (model);
+  g_return_if_fail (model != NULL);
+  g_return_if_fail (GDA_IS_DATA_MODEL_SELECT (model));
   g_return_if_fail (params != NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   if (priv->params != NULL) {
@@ -296,6 +297,8 @@ gda_data_model_select_set_parameters  (GdaDataModelSelect *model, GdaSet *params
 static gint
 gda_data_model_select_get_n_rows (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, -1);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), -1);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, 0);
   return gda_data_model_get_n_rows (priv->model);
@@ -303,6 +306,8 @@ gda_data_model_select_get_n_rows (GdaDataModel *model)
 static gint
 gda_data_model_select_get_n_columns   (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, -1);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), -1);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, 0);
   return gda_data_model_get_n_columns (priv->model);
@@ -311,6 +316,8 @@ static GdaColumn*
 gda_data_model_select_describe_column (GdaDataModel *model,
                                        gint          col)
 {
+  g_return_val_if_fail (model != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, NULL);
   return gda_data_model_describe_column (priv->model, col);
@@ -318,6 +325,8 @@ gda_data_model_select_describe_column (GdaDataModel *model,
 static GdaDataModelAccessFlags
 gda_data_model_select_get_access_flags (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, 0);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), 0);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, 0);
   return gda_data_model_get_access_flags (priv->model);
@@ -328,6 +337,8 @@ gda_data_model_select_get_value_at (GdaDataModel  *model,
                                     gint           row,
                                     GError       **error)
 {
+  g_return_val_if_fail (model != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, NULL);
   return gda_data_model_get_value_at (priv->model, col, row, error);
@@ -337,6 +348,8 @@ gda_data_model_select_get_attributes_at (GdaDataModel *model,
                                          gint          col,
                                          gint          row)
 {
+  g_return_val_if_fail (model != NULL, 0);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), 0);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, 0);
   return gda_data_model_get_attributes_at (priv->model, col, row);
@@ -345,6 +358,8 @@ gda_data_model_select_get_attributes_at (GdaDataModel *model,
 static GdaDataModelIter*
 gda_data_model_select_create_iter (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, NULL);
   return gda_data_model_create_iter (priv->model);
@@ -357,6 +372,8 @@ gda_data_model_select_set_value_at (GdaDataModel  *model,
                                     const GValue  *value,
                                     GError       **error)
 {
+  g_return_val_if_fail (model != NULL, FALSE);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), FALSE);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, FALSE);
   return gda_data_model_set_value_at (priv->model, col, row, value, error);
@@ -368,6 +385,8 @@ gda_data_model_select_set_values (GdaDataModel  *model,
                                   GList         *values,
                                   GError       **error)
 {
+  g_return_val_if_fail (model != NULL, FALSE);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), FALSE);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, FALSE);
   return gda_data_model_set_values (priv->model, row, values, error);
@@ -377,6 +396,8 @@ gda_data_model_select_append_values (GdaDataModel  *model,
                                      const GList   *values,
                                      GError       **error)
 {
+  g_return_val_if_fail (model != NULL, -1);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), -1);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, -1);
   return gda_data_model_append_values (priv->model, values, error);
@@ -386,6 +407,8 @@ gda_data_model_select_remove_row (GdaDataModel  *model,
                                   gint           row,
                                   GError       **error)
 {
+  g_return_val_if_fail (model != NULL, FALSE);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), FALSE);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, FALSE);
   return gda_data_model_remove_row (priv->model, row, error);
@@ -394,6 +417,8 @@ gda_data_model_select_remove_row (GdaDataModel  *model,
 static void
 gda_data_model_select_freeze (GdaDataModel *model)
 {
+  g_return_if_fail (model != NULL);
+  g_return_if_fail (GDA_IS_DATA_MODEL_SELECT (model));
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_if_fail (priv->model != NULL);
   return gda_data_model_freeze (priv->model);
@@ -401,6 +426,8 @@ gda_data_model_select_freeze (GdaDataModel *model)
 static void
 gda_data_model_select_thaw (GdaDataModel *model)
 {
+  g_return_if_fail (model != NULL);
+  g_return_if_fail (GDA_IS_DATA_MODEL_SELECT (model));
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_if_fail (priv->model != NULL);
   return gda_data_model_thaw (priv->model);
@@ -408,6 +435,8 @@ gda_data_model_select_thaw (GdaDataModel *model)
 static gboolean
 gda_data_model_select_get_notify (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, FALSE);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), FALSE);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, FALSE);
   return gda_data_model_get_notify (priv->model);
@@ -415,6 +444,8 @@ gda_data_model_select_get_notify (GdaDataModel *model)
 static GError**
 gda_data_model_select_get_exceptions (GdaDataModel *model)
 {
+  g_return_val_if_fail (model != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_DATA_MODEL_SELECT (model), NULL);
   GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (model));
   g_return_val_if_fail (priv->model != NULL, FALSE);
   return gda_data_model_get_exceptions (priv->model);

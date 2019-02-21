@@ -113,7 +113,7 @@ gda_sqlite_recordset_dispose (GObject *object)
 
 	if (recset->priv) {
 		GdaSqlitePStmt *ps;
-		ps = GDA_SQLITE_PSTMT (_gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)));
+		ps = GDA_SQLITE_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)));
 		if (ps != NULL) {
 			ps->stmt_used = FALSE;
 			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
@@ -184,9 +184,9 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 	gint *missing_cols, nb_missing;
 	GdaDataSelect *pmodel = (GdaDataSelect*) model;
 
-	missing_cols = g_new (gint, _gda_data_select_get_prep_stmt(pmodel)->ncols);
-	for (nb_missing = 0, i = 0; i <  _gda_data_select_get_prep_stmt(pmodel)->ncols; i++) {
-		if ( _gda_data_select_get_prep_stmt(pmodel)->types[i] == GDA_TYPE_NULL)
+	missing_cols = g_new (gint, gda_data_select_get_prep_stmt(pmodel)->ncols);
+	for (nb_missing = 0, i = 0; i <  gda_data_select_get_prep_stmt(pmodel)->ncols; i++) {
+		if ( gda_data_select_get_prep_stmt(pmodel)->types[i] == GDA_TYPE_NULL)
 			missing_cols [nb_missing++] = i;
 	}
 
@@ -204,10 +204,10 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		g_print ("Prefetched row %d of model %p\n", model->priv->next_row_num - 1, pmodel);
 #endif
 		for (i = nb_missing - 1; i >= 0; i--) {
-			if ( _gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]] != GDA_TYPE_NULL) {
+			if ( gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]] != GDA_TYPE_NULL) {
 #ifdef GDA_DEBUG_NO
 				g_print ("Found type '%s' for col %d\n", 
-					 g_type_name ( _gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]]),
+					 g_type_name ( gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]]),
 					 missing_cols [i]);
 #endif
 				memmove (missing_cols + i, missing_cols + i + 1, sizeof (gint) * (nb_missing - i - 1));
@@ -377,7 +377,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return NULL;
-	ps = GDA_SQLITE_PSTMT ( _gda_data_select_get_prep_stmt(GDA_DATA_SELECT (model)));
+	ps = GDA_SQLITE_PSTMT ( gda_data_select_get_prep_stmt(GDA_DATA_SELECT (model)));
 
 	virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) model), model);
 
@@ -673,7 +673,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		/* nothing to do */
 		break;
 	case SQLITE_DONE:
-		_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
+		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
 		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 		break;
 	case SQLITE_READONLY:
@@ -696,7 +696,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
 		if (rc == SQLITE_ERROR)
 			g_propagate_error (error, g_error_copy (lerror));
-		_gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
+		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
 		break;
 	}
 	}
@@ -717,13 +717,13 @@ gda_sqlite_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaRow *prow = NULL;
 
 	imodel = GDA_SQLITE_RECORDSET (model);
-	if (_gda_data_select_get_advertized_nrows (model) >= 0)
-		return _gda_data_select_get_advertized_nrows (model);
+	if (gda_data_select_get_advertized_nrows (model) >= 0)
+		return gda_data_select_get_advertized_nrows (model);
 
 	for (prow = fetch_next_sqlite_row (imodel, TRUE, NULL); 
 	     prow; 
 	     prow = fetch_next_sqlite_row (imodel, TRUE, NULL));
-	return _gda_data_select_get_advertized_nrows (model);
+	return gda_data_select_get_advertized_nrows (model);
 }
 
 /*

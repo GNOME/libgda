@@ -1800,8 +1800,6 @@ gda_data_select_get_n_rows (GdaDataModel *model)
 static gint
 gda_data_select_get_n_columns (GdaDataModel *model)
 {
-	GdaDataSelect *imodel;
-
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
 	if (priv->prep_stmt)
@@ -4085,27 +4083,28 @@ _gda_data_select_fetch_at      (GdaDataSelect *model, GdaRow **prow, gint rownum
 
 /* Private API for providers */
 GdaPStmt*
-_gda_data_select_get_prep_stmt (GdaDataSelect *model)
+gda_data_select_get_prep_stmt (GdaDataSelect *model)
 {
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
 	return priv->prep_stmt;
 }
 
 gint
-_gda_data_select_get_nb_stored_rows (GdaDataSelect *model)
+gda_data_select_get_nb_stored_rows (GdaDataSelect *model)
 {
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
 	return priv->nb_stored_rows;
 }
 
 gint
-_gda_data_select_get_advertized_nrows (GdaDataSelect *model)
+gda_data_select_get_advertized_nrows (GdaDataSelect *model)
 {
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
 	return priv->advertized_nrows;
 }
+
 void
-_gda_data_select_set_advertized_nrows (GdaDataSelect *model, gint n)
+gda_data_select_set_advertized_nrows (GdaDataSelect *model, gint n)
 {
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
 	priv->advertized_nrows = n;

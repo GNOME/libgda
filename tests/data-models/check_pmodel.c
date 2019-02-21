@@ -1754,6 +1754,8 @@ test17 (GdaConnection *cnc)
 
 	model = (GdaDataModel*) gda_data_model_select_new_from_string (cnc, "SELECT * FROM customers WHERE id <= ##theid::gint");
 	g_assert (model);
+	g_assert (GDA_IS_DATA_MODEL (model));
+	g_assert (GDA_IS_DATA_MODEL_SELECT (model));
 	g_assert (!gda_data_model_select_is_valid (GDA_DATA_MODEL_SELECT (model)));
 	g_print ("Get parameters\n");
 	params = gda_data_model_select_get_parameters (GDA_DATA_MODEL_SELECT (model));

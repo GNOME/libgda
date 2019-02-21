@@ -236,14 +236,14 @@ gda_capi_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaCapiRecordset *imodel;
 
 	imodel = GDA_CAPI_RECORDSET (model);
-	if (_gda_data_select_get_advertized_nrows (model) >= 0)
-		return _gda_data_select_get_advertized_nrows (model);
+	if (gda_data_select_get_advertized_nrows (model) >= 0)
+		return gda_data_select_get_advertized_nrows (model);
 
 	/* use C API to determine number of rows,if possible */
 	g_warning("imodel not used: %p", imodel); /* Avoids a compiler warning. */
 	TO_IMPLEMENT;
 
-	return _gda_data_select_get_advertized_nrows (model);
+	return gda_data_select_get_advertized_nrows (model);
 }
 
 /*
