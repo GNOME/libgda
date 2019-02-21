@@ -1501,9 +1501,11 @@ getToken (GdaSqlParser *parser)
 	else if (priv->context->token_type == L_IS)
 		handle_composed_2_keywords (parser, retval, L_NULL, L_ISNULL);
 	else if (priv->context->token_type == L_NOT) {
-		handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL) ||
-			handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE) ||
-			handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
+		if (!handle_composed_2_keywords (parser, retval, L_NULL, L_NOTNULL)) {
+			if (!handle_composed_2_keywords (parser, retval, L_LIKE, L_NOTLIKE)) {
+				handle_composed_2_keywords (parser, retval, L_ILIKE, L_NOTILIKE);
+			}
+		}
 	}
 	else if (priv->context->token_type == L_SIMILAR)
 		handle_composed_2_keywords (parser, retval, L_TO, L_SIMILAR);
