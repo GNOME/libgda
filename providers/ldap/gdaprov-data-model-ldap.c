@@ -1136,15 +1136,16 @@ worker_execute_ldap_search (WorkerSearchData *data, GError **error)
 		}
 		break;
 	}
-	case LDAP_SERVER_DOWN: {
-		gint i;
-		for (i = 0; i < 5; i++) {
-			if (gda_ldap_rebind (data->cnc, NULL))
-				goto retry;
-			g_usleep (G_USEC_PER_SEC * 2);
-		}
-	}
+	case LDAP_SERVER_DOWN:
 	default: {
+		if (res == LDAP_SERVER_DOWN) {
+			gint i;
+			for (i = 0; i < 5; i++) {
+				if (gda_ldap_rebind (data->cnc, NULL))
+					goto retry;
+				g_usleep (G_USEC_PER_SEC * 2);
+			}
+		}
 		/* error */
 		GError *e = NULL;
 		int ldap_errno;
@@ -1159,7 +1160,7 @@ worker_execute_ldap_search (WorkerSearchData *data, GError **error)
 #endif /*GDA_DEBUG_FORCE_ERROR*/
 
 	if (data->model->priv->truncated) {
-		/* compute totel number of rows now that we know it */
+		/* compute total number of rows now that we know it */
 		if (data->model->priv->top_exec->ldap_msg)
 			data->model->priv->n_rows = data->model->priv->current_exec->nb_entries;
 		else {
@@ -1753,7 +1754,7 @@ row_multiplier_index_next (RowMultiplier *rm)
 		}
 
 		cm = g_array_index (rm->cms, ColumnMultiplier*, i);
-		if (cm->index < (cm->values->len - 1)) {
+		if ((guint) cm->index < (guint) (cm->values->len - 1)) {
 			cm->index ++;
 #ifdef GDA_DEBUG_NO
 			g_print ("RM %p [TRUE]:\n", rm);
