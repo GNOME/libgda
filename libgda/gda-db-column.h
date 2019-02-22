@@ -42,9 +42,10 @@ struct _GdaDbColumnClass
  * GdaDbColumnError:
  * @GDA_DB_COLUMN_ERROR_TYPE: Set if wrong column type was given in the xml file.
  *
- * Values used to describe the source of the error. 
+ * Values used to describe the source of the error.
  */
-typedef  enum {
+typedef  enum 
+{
   GDA_DB_COLUMN_ERROR_TYPE
 } GdaDbColumnError;
 

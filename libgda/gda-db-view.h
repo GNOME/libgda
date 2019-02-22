@@ -40,22 +40,6 @@ struct _GdaDbViewClass
   GdaDbBaseClass parent_class;
 };
 
-/**
- * SECTION: GdaDbView
- * @short_description: Object to handle information about view 
- * @title: GdaDbView 
- * @section_id:
- * @see_also: #GdaDbTable #GdaDbCreator
- * @stability: Stable
- * @include: libgda/libgda.h
- * @image: 
- *
- * #GdaDbView object represents a representtaion of the view from the
- * database. It implements #GdaDbBuildbale interface and allows one to
- * read/write information about view structure from/to an xml file. See
- * #GdaDbBuildable for more information.
- */
-
 GdaDbView*  gda_db_view_new            (void);
 
 gboolean     gda_db_view_get_istemp    (GdaDbView *self);
