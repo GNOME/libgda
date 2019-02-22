@@ -590,7 +590,7 @@ void
 gda_db_column_set_name (GdaDbColumn *self,
                         const gchar *name)
 {
-  g_return_val_if_fail (self, NULL);
+  g_return_if_fail (self);
   GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   g_free (priv->mp_name);

@@ -339,7 +339,7 @@ gda_db_fkey_write_node (GdaDbBuildable  *buildable,
 {
   g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (rootnode,FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FASLE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   GdaDbFkey *self = GDA_DB_FKEY (buildable);
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
@@ -413,7 +413,7 @@ gda_db_fkey_get_ondelete (GdaDbFkey *self)
 GdaDbFkeyReferenceAction
 gda_db_fkey_get_ondelete_id (GdaDbFkey *self)
 {
-  g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (self, GDA_DB_FKEY_NO_ACTION);
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
