@@ -332,7 +332,7 @@ dsn_test_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data
 
 		if (login)
 			cinfo = gdaui_login_get_connection_information (login);
-		cnc = gda_connection_open_from_dsn (dsn,
+		cnc = gda_connection_open_from_dsn_name (dsn,
 						    cinfo ? cinfo->auth_string : NULL,
 						    GDA_CONNECTION_OPTIONS_NONE, &error);
 		if (cnc) {

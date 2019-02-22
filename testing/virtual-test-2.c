@@ -42,7 +42,7 @@ main ()
 	gda_init ();
 
 	/* open connection */
-	cnc = gda_connection_open_from_dsn ("SalesTest", NULL,
+	cnc = gda_connection_open_from_dsn_name ("SalesTest", NULL,
 					    GDA_CONNECTION_OPTIONS_READ_ONLY, &error);
 	if (!cnc) {
 		g_print ("Could not open connection to the SalesTest DSN: %s\n", 

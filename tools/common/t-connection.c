@@ -875,7 +875,7 @@ t_connection_open (const gchar *cnc_name, const gchar *cnc_string, const gchar *
 		real_auth_string = g_string_free (string, FALSE);
 	}
 	if (info && !real_provider)
-		newcnc = gda_connection_open_from_dsn (real_cnc_string, real_auth_string,
+		newcnc = gda_connection_open_from_dsn_name (real_cnc_string, real_auth_string,
 						       GDA_CONNECTION_OPTIONS_AUTO_META_DATA, error);
 	else
 		newcnc = gda_connection_open_from_string (NULL, real_cnc_string, real_auth_string,
