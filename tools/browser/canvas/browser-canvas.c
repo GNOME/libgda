@@ -276,8 +276,11 @@ motion_notify_event_cb (BrowserCanvas *canvas, GdkEvent *event, G_GNUC_UNUSED Go
 				canvas->xmouse = ((GdkEventMotion*) event)->x;
 				canvas->ymouse = ((GdkEventMotion*) event)->y;
 				canvas->priv->canvas_moving = TRUE;
-				if (! hand_cursor)
-					hand_cursor = gdk_cursor_new (GDK_HAND2);
+				if (! hand_cursor) {
+					hand_cursor = gdk_cursor_new_for_display (
+                        gtk_widget_get_display (GTK_WIDGET(canvas)),
+                        GDK_HAND2);
+				}
 				gdk_window_set_cursor (gtk_widget_get_window (GTK_WIDGET (canvas)),
 						       hand_cursor);
 			}

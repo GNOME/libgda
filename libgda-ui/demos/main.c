@@ -509,16 +509,10 @@ load_file (const gchar *filename)
 				p++;
 			if (*p)	{
 				p = buffer->str;
-				state++;
-				/* Fall through */
+			  /* Reading program body */
+			  gtk_text_buffer_insert (source_buffer, &start, p, -1);
+			  gtk_text_buffer_insert (source_buffer, &start, "\n", 1);
 			}
-			else
-				break;
-			
-		case 3:
-			/* Reading program body */
-			gtk_text_buffer_insert (source_buffer, &start, p, -1);
-			gtk_text_buffer_insert (source_buffer, &start, "\n", 1);
 			break;
 		}
 	}

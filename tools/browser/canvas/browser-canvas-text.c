@@ -286,6 +286,7 @@ browser_canvas_text_set_property (GObject *object,
 					      "text", ct->priv->text,
 					      "use-markup", FALSE, NULL);
 		}
+		break;
 	case PROP_BOLD:
 		bool = g_value_get_boolean (value);
 		ct->priv->bold = bool;
