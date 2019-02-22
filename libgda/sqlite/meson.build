@@ -1,3 +1,9 @@
+mkkeywordhashf = files([
+	'mkkeywordhash.c'
+])
+
+mkkeywordhash = executable ('mkkeywordhash', mkkeywordhashf)
+
 if sqlite_internal
 	subdir('sqlite-src')
 endif

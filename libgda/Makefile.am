@@ -28,6 +28,7 @@ GLOBAL_CFLAGS = \
 	-I$(top_srcdir)/libgda \
 	-I$(top_builddir)/libgda/sqlite \
 	-I$(top_builddir)/libgda \
+	-Wall \
 	-DABI_VERSION=\""$(GDA_ABI_VERSION)"\" \
 	$(COREDEPS_CFLAGS) \
 	$(BDB_CFLAGS) \

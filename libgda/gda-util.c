@@ -2545,6 +2545,9 @@ gchar *
 gda_sql_identifier_quote (const gchar *id, GdaConnection *cnc, GdaServerProvider *prov,
 			  gboolean for_meta_store, gboolean force_quotes)
 {
+#if GDA_DEBUG
+	test_keywords ();
+#endif
 	g_return_val_if_fail (id && *id, NULL);
 	if (prov)
 		g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);

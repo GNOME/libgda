@@ -168,7 +168,10 @@ _gda_sqlite_compute_g_type (int sqlite_type)
 GdaSqlReservedKeywordsFunc
 _gda_sqlite_get_reserved_keyword_func (void)
 {
-        return is_keyword;
+#ifdef GDA_DEBUG
+  test_keywords ();
+#endif
+  return is_keyword;
 }
 
 static gchar *

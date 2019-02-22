@@ -88,6 +88,10 @@ _gda_capi_provider_meta_init (GdaServerProvider *provider)
 					    "name2", G_TYPE_STRING, "");
 	}
 
+#ifdef GDA_DEBUG
+	test_keywords ();
+#endif
+
 	g_mutex_unlock (&init_mutex);
 
 }

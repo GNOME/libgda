@@ -484,18 +484,23 @@ _gda_postgres_reuseable_get_reserved_keywords_func (GdaProviderReuseable *rdata)
 {
 	if (rdata) {
 		switch (rdata->major) {
-                case 8:
-                        if (rdata->minor == 2)
-                                return V82is_keyword;
-                        if (rdata->minor == 3)
-                                return V83is_keyword;
+		case 8:
+#ifdef GDA_DEBUG
+				V82test_keywords ();
+				V83test_keywords ();
+				V84test_keywords ();
+#endif
+			if (rdata->minor == 2)
+				return V82is_keyword;
+			if (rdata->minor == 3)
+				return V83is_keyword;
 			if (rdata->minor == 4)
-                                return V84is_keyword;
-                        return V84is_keyword;
-                default:
-                        return V84is_keyword;
-                break;
-                }
+				return V84is_keyword;
+			return V84is_keyword;
+		default:
+			return V84is_keyword;
+			break;
+		}
 	}
         return V84is_keyword;
 }
