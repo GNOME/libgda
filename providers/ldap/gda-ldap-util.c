@@ -1474,15 +1474,16 @@ worker_gdaprov_ldap_describe_entry (WorkerLdapDescrEntryData *data, GError **err
 		gda_ldap_may_unbind (data->cnc);
 		return lentry;
 	}
-	case LDAP_SERVER_DOWN: {
-		gint i;
-		for (i = 0; i < 5; i++) {
-			if (gda_ldap_rebind (data->cnc, NULL))
-				goto retry;
-			g_usleep (G_USEC_PER_SEC * 2);
-		}
-	}
+	case LDAP_SERVER_DOWN:
 	default: {
+		if (res == LDAP_SERVER_DOWN) {
+			gint i;
+			for (i = 0; i < 5; i++) {
+				if (gda_ldap_rebind (data->cnc, NULL))
+					goto retry;
+				g_usleep (G_USEC_PER_SEC * 2);
+			}
+		}
 		/* error */
 		int ldap_errno;
 		ldap_get_option (data->cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
@@ -1665,19 +1666,20 @@ worker_gdaprov_ldap_get_entry_children (WorkerEntryChildrenData *data, GError **
 		else
 			return NULL;
 	}
-	case LDAP_SERVER_DOWN: {
-		gint i;
-		if (msg) {
-			ldap_msgfree (msg);
-			msg = NULL;
-		}
-		for (i = 0; i < 5; i++) {
-			if (gda_ldap_rebind (data->cnc, NULL))
-				goto retry;
-			g_usleep (G_USEC_PER_SEC * 2);
-		}
-	}
+	case LDAP_SERVER_DOWN:
 	default: {
+		if (res == LDAP_SERVER_DOWN) {
+			gint i;
+			if (msg) {
+				ldap_msgfree (msg);
+				msg = NULL;
+			}
+			for (i = 0; i < 5; i++) {
+				if (gda_ldap_rebind (data->cnc, NULL))
+					goto retry;
+				g_usleep (G_USEC_PER_SEC * 2);
+			}
+		}
 		/* error */
 		int ldap_errno;
 		ldap_get_option (data->cdata->handle, LDAP_OPT_ERROR_NUMBER, &ldap_errno);
