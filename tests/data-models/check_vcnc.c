@@ -313,19 +313,16 @@ run_sql_select (GdaConnection *cnc, const gchar *sql, gboolean iter_only, GError
 static gboolean
 run_sql_non_select (GdaConnection *cnc, const gchar *sql, GdaSet *params, GError **error)
 {
-	GdaStatement *stmt;
-        gint nrows;
-        GdaSqlParser *parser;
+  GdaStatement *stmt;
+  gint nrows;
 
-        parser = gda_connection_create_parser (cnc);
-        stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
-        g_object_unref (parser);
+  stmt = gda_connection_parse_sql_string (cnc, sql, NULL, error);
 
-        nrows = gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, error);
-        g_object_unref (stmt);
-        if (nrows == -1)
-		return FALSE;
-	return TRUE;
+  nrows = gda_connection_statement_execute_non_select (cnc, stmt, params, NULL, error);
+  g_object_unref (stmt);
+  if (nrows == -1)
+  return FALSE;
+  return TRUE;
 }
 
 static gboolean
