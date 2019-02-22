@@ -1232,8 +1232,9 @@ gda_sqlite_provider_open_connection (GdaServerProvider *provider, GdaConnection 
 	if (auth)
 		passphrase = gda_quark_list_find (auth, "PASSWORD");
 
-	if (passphrase && *passphrase && SQLITE3_CALL (sqlite3_key)) {
-		errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase, strlen (passphrase));
+	if (passphrase != NULL) {
+		errmsg = SQLITE3_CALL (sqlite3_key_v2) (cdata->connection, filename,
+		                                       (void*) passphrase, strlen (passphrase));
 		if (errmsg != SQLITE_OK) {
 			gda_connection_add_event_string (cnc, _("Wrong encryption passphrase"));
 			gda_sqlite_free_cnc_data (cdata);
@@ -1275,13 +1276,8 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 
 	/* allow loading extensions using SELECT load_extension ()... */
 	if (extensions && ((*extensions == 't') || (*extensions == 'T'))) {
-		if (SQLITE3_CALL (sqlite3_enable_load_extension))
-			SQLITE3_CALL (sqlite3_enable_load_extension) (cdata->connection, 1);
-		else {
-			gda_connection_add_event_string (cnc, _("Extension loading is not supported"));
-			gda_sqlite_free_cnc_data (cdata);
-			return FALSE;
-		}
+		sqlite3_db_config (cdata->connection, SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION, 1, NULL);
+		g_message (_("SECURITY WARNING: Load Extension is enable for SQL commands, this means an attacker can access extension load capabilities"));
 	}
 
 	/* try to prepare all the internal statements */
@@ -1703,10 +1699,9 @@ gda_sqlite_provider_perform_operation (GdaServerProvider *provider, GdaConnectio
 		value = gda_server_operation_get_value_at (op, "/DB_DEF_P/PASSWORD");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) &&
 		    g_value_get_string (value) &&
-		    *g_value_get_string (value) &&
-		    SQLITE3_CALL (sqlite3_key)) {
+		    *g_value_get_string (value)) {
 			const gchar *passphrase = g_value_get_string (value);
-			errmsg = SQLITE3_CALL (sqlite3_key) (cdata->connection, (void*) passphrase,
+			errmsg = SQLITE3_CALL (sqlite3_key_v2) (cdata->connection, cdata->file, (void*) passphrase,
 							     strlen (passphrase));
 			if (errmsg != SQLITE_OK) {
 				g_set_error (error, GDA_SERVER_PROVIDER_ERROR,

@@ -46,7 +46,6 @@ prov_test_common_setup (void)
 {
 	int number_failed = 0;
 	GError *error = NULL;
-	GdaServerOperation *opndb;
 
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
