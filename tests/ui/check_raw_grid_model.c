@@ -31,7 +31,6 @@ main (int argc, char** argv)
 	/* open connection */
 	cnc = ui_tests_common_open_connection ();
 
-	GdaSet *set;
 	GdauiRawGrid *grid;
 	GdaDataModel *model;
 	GdaDataModelIter *iter1, *iter2;

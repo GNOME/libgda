@@ -417,7 +417,6 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 {
 	GdaHolder *holder;
 
-	static GMutex serial_mutex;
 	static guint serial = 0;
 	const gchar *idm = NULL;
 
@@ -430,7 +429,6 @@ gda_holder_new_inline (GType type, const gchar *id, ...)
 	}
 
 	holder = gda_holder_new (type, idm);
-	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
 	if (holder) {
 		GValue *value;
 		va_list ap;
@@ -672,7 +670,6 @@ gda_holder_get_property (GObject *object,
 			 GParamSpec *pspec)
 {
 	GdaHolder *holder;
-	const GValue *cvalue;
 
 	holder = GDA_HOLDER (object);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);

@@ -567,7 +567,6 @@ t_config_info_purge_data_files (const gchar *criteria, GError **error)
 		return NULL;
 	}
 
-	const gchar *name;
 	GFile *confdir;
   GFileEnumerator *ch_files;
 

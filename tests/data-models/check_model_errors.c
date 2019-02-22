@@ -317,9 +317,15 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
 static gint
 test2 (GdaConnection *cnc)
 {
-#define TABLE_NAME "data"
-	GdaDataModel *model;
+	GdaDataModel *model = NULL;
 	gint nfailed = 0;
+	GdaVirtualProvider *virtual_provider = NULL;
+	GError *lerror = NULL;
+	GdaConnection *vcnc = NULL;
+	GdaDataModelIter *iter = NULL;
+	GdaStatement *stmt;
+
+#define TABLE_NAME "data"
 
 	model = data_model_errors_new ();
 	if (!model) {
@@ -330,11 +336,6 @@ test2 (GdaConnection *cnc)
 		goto out;
 	}
 
-	GdaVirtualProvider *virtual_provider;
-	GError *lerror = NULL;
-	GdaConnection *vcnc;
-	GdaDataModelIter *iter = NULL;
-	GdaStatement *stmt;
 	virtual_provider = gda_vprovider_data_model_new ();
 	vcnc = gda_virtual_connection_open (virtual_provider, GDA_CONNECTION_OPTIONS_NONE, &lerror);
 	if (!vcnc) {
@@ -476,12 +477,18 @@ test2 (GdaConnection *cnc)
 	}
 
  out:
-	if (iter)
+	if (iter != NULL) {
 		g_object_unref (iter);
-	if (model)
+	}
+	if (model != NULL) {
 		g_object_unref (model);
-	g_object_unref (vcnc);
-	g_object_unref (virtual_provider);
+	}
+	if (vcnc != NULL) {
+		g_object_unref (vcnc);
+	}
+	if (virtual_provider != NULL) {
+		g_object_unref (virtual_provider);
+	}
 	
 	return nfailed;
 }

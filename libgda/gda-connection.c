@@ -5051,7 +5051,6 @@ gda_connection_update_meta_store (GdaConnection *cnc, GdaMetaContext *context, G
 		}
 #endif
 					
-		gulong signal_id;
 		DownstreamCallbackData cbd;
 		gboolean retval = TRUE;
 		

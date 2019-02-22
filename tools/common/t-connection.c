@@ -1197,8 +1197,6 @@ t_connection_update_meta_data (TConnection *tcnc, GError ** error)
 {
 	g_return_if_fail (T_IS_CONNECTION (tcnc));
 
-  GdaMetaStruct *mstruct;
-
   g_message ("Updating meta data for: %s", t_connection_get_name (tcnc));
 
 	t_connection_set_busy_state (tcnc, TRUE, _("Getting database schema information"));

@@ -688,7 +688,6 @@ create_columns_data (GdauiRawGrid *grid)
 			/* single direct parameter */
 			GType g_type;
 			const gchar *plugin = NULL;
-			const GValue *plugin_val;
 			gchar *title;
 			gint model_col;
 

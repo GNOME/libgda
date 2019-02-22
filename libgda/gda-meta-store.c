@@ -1604,7 +1604,7 @@ create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store)
 	}
 	g_clear_error (&lerror);
 	schema = (gchar*) g_memory_output_stream_get_data (G_MEMORY_OUTPUT_STREAM (ostream));
-	doc = xmlReadDoc (schema, "", NULL, XML_PARSE_RECOVER);
+	doc = xmlReadDoc ((const xmlChar*) schema, "", NULL, XML_PARSE_RECOVER);
 	g_object_unref (ostream);
 	g_object_unref (istream);
 	g_object_unref (res);

@@ -108,11 +108,8 @@ static GtkWidget *
 create_entry (GdauiEntryWrapper *mgwrap)
 {
 	GtkWidget *evbox, *label;
-	GdauiEntryNone *entry;
 
 	g_return_val_if_fail (mgwrap && GDAUI_IS_ENTRY_NONE (mgwrap), NULL);
-	entry = GDAUI_ENTRY_NONE (mgwrap);
-	GdauiEntryNonePrivate *priv = gdaui_entry_none_get_instance_private (entry);
 
 	evbox = gtk_event_box_new ();
 	gtk_widget_add_events (evbox, GDK_FOCUS_CHANGE_MASK);

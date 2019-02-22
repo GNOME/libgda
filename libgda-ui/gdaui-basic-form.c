@@ -883,7 +883,6 @@ create_entry_widget (SingleEntry *sentry)
 		const GValue *val, *default_val, *value;
 		gboolean nnul;
 		const gchar *plugin = NULL;
-		const GValue *plugin_val;
 
 		items_count = gda_set_group_get_n_nodes (sg);
 		if ( items_count != 1) { /* only 1 item in the list */

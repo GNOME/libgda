@@ -41,8 +41,6 @@ G_DEFINE_TYPE_WITH_PRIVATE (GdauiEntryBoolean, gdaui_entry_boolean, GDAUI_TYPE_E
 static void
 gdaui_entry_boolean_class_init (GdauiEntryBooleanClass * class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
-
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;

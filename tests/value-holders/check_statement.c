@@ -178,9 +178,9 @@ test2 (GError **error)
 		if (strcmp ((gchar*) node->name, "test"))
                         continue;
 		xmlNodePtr snode;
-                xmlChar *sql = NULL;
-                xmlChar *id;
-                xmlChar *prov_name;
+		xmlChar *sql = NULL;
+		xmlChar *id;
+		xmlChar *prov_name;
 
 		prov_name = xmlGetProp (node, BAD_CAST "provider");
 		if (prov_name) {
@@ -202,7 +202,7 @@ test2 (GError **error)
 		GdaStatement *stmt;
 		GError *lerror = NULL;
 		
-		stmt = gda_sql_parser_parse_string (parser, sql, NULL, &lerror);
+		stmt = gda_sql_parser_parse_string (parser, (const gchar*) sql, NULL, &lerror);
 		xmlFree (sql);
 		id = xmlGetProp (node, BAD_CAST "id");
 		g_print ("===== TEST %s\n", id);

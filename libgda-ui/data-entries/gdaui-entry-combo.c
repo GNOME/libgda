@@ -695,8 +695,6 @@ gdaui_entry_combo_set_default_values (GdauiEntryCombo *combo, G_GNUC_UNUSED GSLi
 static void
 gdaui_entry_combo_set_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue *value)
 {
-	GdauiEntryCombo *combo;
-
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
         //combo = GDAUI_ENTRY_COMBO (iface);
         //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
@@ -707,8 +705,6 @@ gdaui_entry_combo_set_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue *
 static GValue *
 gdaui_entry_combo_get_value (GdauiDataEntry *iface)
 {
-        GdauiEntryCombo *combo;
-	
         g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), NULL);
         //combo = GDAUI_ENTRY_COMBO (iface);
         //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
@@ -721,8 +717,6 @@ gdaui_entry_combo_get_value (GdauiDataEntry *iface)
 static void
 gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue * value)
 {
-        GdauiEntryCombo *combo;
-	
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
         //combo = GDAUI_ENTRY_COMBO (iface);
         //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
@@ -733,8 +727,6 @@ gdaui_entry_combo_set_ref_value (GdauiDataEntry *iface, G_GNUC_UNUSED const GVal
 static const GValue *
 gdaui_entry_combo_get_ref_value (GdauiDataEntry *iface)
 {
-        GdauiEntryCombo *combo;
-	
         g_return_val_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface), NULL);
         //combo = GDAUI_ENTRY_COMBO (iface);
         //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);
@@ -746,8 +738,6 @@ gdaui_entry_combo_get_ref_value (GdauiDataEntry *iface)
 static void
 gdaui_entry_combo_set_value_default (GdauiDataEntry *iface, G_GNUC_UNUSED const GValue * value)
 {
-        GdauiEntryCombo *combo;
-
         g_return_if_fail (iface && GDAUI_IS_ENTRY_COMBO (iface));
         //combo = GDAUI_ENTRY_COMBO (iface);
         //GdauiEntryComboPrivate *priv = gdaui_entry_combo_get_instance_private (combo);

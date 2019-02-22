@@ -471,7 +471,7 @@ gda_web_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 	 * change key: cdata->key = MD5(cdata->key)
 	 */
 	gchar *md5str;
-	md5str = g_compute_checksum_for_data (G_CHECKSUM_MD5, cdata->key, strlen (cdata->key));
+	md5str = g_compute_checksum_for_data (G_CHECKSUM_MD5, (const guchar*) cdata->key, strlen (cdata->key));
 	g_free (cdata->key);
 	cdata->key = md5str;
 

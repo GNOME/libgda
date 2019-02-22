@@ -89,8 +89,6 @@ gdaui_init (void)
 		gdaui_plugins_hash = init_plugins_hash ();
 
 	/* initialize CSS */
-	GBytes *css_data;
-	GError *error = NULL;
   GtkCssProvider *css_provider;
   css_provider = gtk_css_provider_new ();
   g_object_connect (css_provider, "signal::parsing-error", catch_css_parsing_errors, NULL, NULL);

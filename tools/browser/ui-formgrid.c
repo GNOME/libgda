@@ -604,7 +604,6 @@ action_executed_holder_changed_cb (G_GNUC_UNUSED GdaSet *params, G_GNUC_UNUSED G
 	if (! aed->formgrid->priv->autoupdate || ! aed->formgrid->priv->autoupdate_possible)
 		return;
 
-	GError *error = NULL;
 	gda_data_model_freeze (aed->model);
   // FIXME: Use a GdaDataModelSelect instead
 	/* if (!t_connection_rerun_select (aed->tcnc, aed->model, &error)) { */

@@ -349,8 +349,6 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
 
               g_assert_nonnull (value);
 
-              GType ggtype = G_VALUE_TYPE(value);
-
               g_assert_true (TRUE && g_value_get_boolean (value));
             }
 

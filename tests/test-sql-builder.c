@@ -631,7 +631,7 @@ build13 (void)
 
 	gchar *data = "abc'de\\fghijklm";
 	GdaBinary *bin = gda_binary_new ();
-	gda_binary_set_data (bin, data, 10);
+	gda_binary_set_data (bin, (const guchar*) data, 10);
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_BINARY, bin), 0);
 

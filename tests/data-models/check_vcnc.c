@@ -202,7 +202,6 @@ test1 (Data *data) {
 
 static gchar*
 create_connection_string (Data *data) {
-  GFile *db;
   GFile *d;
   GRand *rand;
   gint i;

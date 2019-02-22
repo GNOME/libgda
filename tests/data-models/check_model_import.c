@@ -115,7 +115,7 @@ do_test_load_file (const gchar *filename)
 		/* abort the test */
 		return TRUE;
 	root = xmlDocGetRootElement (doc);
-	if (strcmp (root->name, "gda_array")) {
+	if (g_strcmp0 ((const gchar*) root->name, "gda_array")) {
 		/* abort the test */
 		xmlFreeDoc (doc);
 		return TRUE;

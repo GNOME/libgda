@@ -971,7 +971,6 @@ test9 (GdaConnection *cnc)
 	GdaStatement *stmt;
 	gint nfailed = 0;
 	GdaSet *params;
-	GValue *value;
 
 	clear_signals ();
 
@@ -1568,7 +1567,6 @@ test15 (GdaConnection *cnc)
 	GdaStatement *stmt;
 	GdaSet *params;
 	gint nfailed = 0;
-	gint idmax = 0;
 
 	clear_signals ();
 	/* Dump all data*/

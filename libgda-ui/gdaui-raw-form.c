@@ -732,11 +732,8 @@ gdaui_raw_form_get_proxy (GdauiDataProxy *iface)
 void
 gdaui_raw_form_set_column_editable (GdauiDataProxy *iface, G_GNUC_UNUSED gint column, G_GNUC_UNUSED gboolean editable)
 {
-	GdauiRawForm *form;
 
 	g_return_if_fail (GDAUI_IS_RAW_FORM (iface));
-	form = GDAUI_RAW_FORM (iface);
-	GdauiRawFormPrivate *priv = gdaui_raw_form_get_instance_private (form);
 
 	TO_IMPLEMENT;
 	/* What needs to be done:

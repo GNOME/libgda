@@ -733,7 +733,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 				xmlChar *att_name;
 				att_name = xmlGetProp (vnode, (xmlChar*) "name");
 				if (att_name) {
-					g_object_set_data_full ((GObject*) holder, att_name, g_strdup ((gchar*) xmlNodeGetContent (vnode)), (GDestroyNotify) g_free);
+					g_object_set_data_full ((GObject*) holder, (const gchar*) att_name, g_strdup ((gchar*) xmlNodeGetContent (vnode)), (GDestroyNotify) g_free);
 				}
 				vnode = vnode->next;
 				continue;
@@ -3205,10 +3205,8 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	unsigned long int tmp;
 	const char *endptr;
 	gchar *stz = NULL;
-	gchar *fs = NULL;
 	gdouble seconds = 0.0;
-	glong fraction = 0;
-	int h, m, s;
+	int h, m;
 	GTimeZone *tz;
 
 

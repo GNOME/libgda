@@ -92,7 +92,7 @@ main (int argc, char **argv)
 		if (!info)
 			g_error (_("DSN '%s' is not declared"), dsn);
 		else {
-			cnc = gda_connection_open_from_dsn (info->name, auth_string ? auth_string : info->auth_string,
+			cnc = gda_connection_open_from_dsn_name (info->name, auth_string ? auth_string : info->auth_string,
 							    0, &error);
 			if (!cnc) {
 				g_warning (_("Can't open connection to DSN %s: %s\n"), info->name,

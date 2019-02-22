@@ -35,7 +35,7 @@ check_hash (const gchar *key, const gchar *data, const gchar *expected_hash)
 	gboolean retval = TRUE;
 	gchar *md5str;
 
-	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, key, strlen (key),
+	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, (const guchar*) key, strlen (key),
 					    data, -1);
 	
 	if (strcmp (md5str, expected_hash))
@@ -372,7 +372,7 @@ _gda_web_send_message_to_frontend (GdaConnection *cnc, WebConnectionData *cdata,
 	/* finalize and send message */
  	if (hash_key) {
 		gchar *md5str;
-		md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, hash_key, strlen (hash_key),
+		md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, (const guchar*) hash_key, strlen (hash_key),
 						    message, -1);
 
 		GString *string;
@@ -450,7 +450,7 @@ _gda_web_compute_token (WebConnectionData *cdata)
 	g_return_val_if_fail (cdata->next_challenge && cdata->key, NULL);
 
 	gchar *md5str;
-	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, cdata->key, strlen (cdata->key),
+	md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5, (const guchar*) cdata->key, strlen (cdata->key),
 					    cdata->next_challenge, -1);	
 	return md5str;
 }

@@ -245,9 +245,9 @@ start_thread (ThData *data)
 
 				expected = xmlNodeGetContent (snode);
 				mode = xmlGetProp (snode, BAD_CAST "mode");
-				if ((mode && !strcmp (mode, "delim") && 
+				if ((mode && !g_strcmp0 ((const gchar*) mode, "delim") &&
 				     (data->current_tested_mode == GDA_SQL_PARSER_MODE_DELIMIT)) ||
-				    ((!mode || strcmp (mode, "delim")) &&
+				    ((!mode || g_strcmp0 ((const gchar*) mode, "delim")) &&
 				     (data->current_tested_mode == GDA_SQL_PARSER_MODE_PARSE))) {
 					if (sql) {
 						thpriv->nfailures += do_test (parser, id, sql, expected, NULL, NULL);
@@ -265,9 +265,9 @@ start_thread (ThData *data)
 				mode = xmlGetProp (snode, BAD_CAST "mode");
 				error_line = xmlGetProp (snode, BAD_CAST "line");
 				error_col = xmlGetProp (snode, BAD_CAST "col");
-				if ((mode && !strcmp (mode, "delim") && 
+				if ((mode && !g_strcmp0 ((const gchar*) mode, "delim") &&
 				     (data->current_tested_mode == GDA_SQL_PARSER_MODE_DELIMIT)) ||
-				    ((!mode || strcmp (mode, "delim")) &&
+				    ((!mode || g_strcmp0 ((const gchar*) mode, "delim")) &&
 				     (data->current_tested_mode == GDA_SQL_PARSER_MODE_PARSE))) {
 					if (sql) {
 						thpriv->nfailures += do_test (parser, id, sql, NULL, error_line, error_col);

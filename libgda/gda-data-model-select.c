@@ -135,7 +135,6 @@ static void gda_data_model_select_set_property (GObject      *object,
                                                 const GValue *value,
                                                 GParamSpec   *pspec)
 {
-  GdaDataModelSelectPrivate *priv = gda_data_model_select_get_instance_private (GDA_DATA_MODEL_SELECT (object));
   switch (property_id) {
   case PROP_VALID:
     break;

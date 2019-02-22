@@ -1114,8 +1114,9 @@ gdaui_server_operation_update_parameters (GdauiServerOperation *form, GError** e
 /*
  * CREATE_TABLE "/FIELDS_A" Custom widgets rendering
  */
-static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row,
-							  GdaDataModelIter *form_iter);
+//static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid_iter, gint row,
+//							  GdaDataModelIter *form_iter);
+
 // FIXME: Removed to avoid warning
 //static void create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form);
 // FIXME: Removed to avoid warning
@@ -1223,15 +1224,15 @@ static void create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *grid
 /* 	return hlayout; */
 /* } */
 
-static void
-create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *iter1, gint row, GdaDataModelIter *iter2)
-{
-	g_signal_handlers_block_by_func (G_OBJECT (iter2),
-					 G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1);
-	gda_data_model_iter_move_to_row (iter2, row);
-	g_signal_handlers_unblock_by_func (G_OBJECT (iter2),
-					   G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1);
-}
+/* static void */
+/* create_table_grid_fields_iter_row_changed_cb (GdaDataModelIter *iter1, gint row, GdaDataModelIter *iter2) */
+/* { */
+/* 	g_signal_handlers_block_by_func (G_OBJECT (iter2), */
+/* 					 G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1); */
+/* 	gda_data_model_iter_move_to_row (iter2, row); */
+/* 	g_signal_handlers_unblock_by_func (G_OBJECT (iter2), */
+/* 					   G_CALLBACK (create_table_grid_fields_iter_row_changed_cb), iter1); */
+/* } */
 
 /* static void */
 /* create_table_proxy_row_inserted_cb (GdaDataProxy *proxy, gint row, GdauiServerOperation *form) */

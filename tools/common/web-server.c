@@ -522,7 +522,7 @@ get_auth (WebServer *server, SoupMessage *msg, GHashTable *query)
 			gchar *md5str;
 			
 			md5str = g_compute_hmac_for_string (G_CHECKSUM_MD5,
-							    server->priv->token, strlen (server->priv->token),
+							    (const guchar*) server->priv->token, strlen (server->priv->token),
 							    ts->string, -1);
 			
 			if (!strcmp (md5str, token)) {

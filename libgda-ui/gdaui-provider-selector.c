@@ -72,8 +72,6 @@ gdaui_provider_selector_show (GtkWidget *widget)
 static void
 gdaui_provider_selector_class_init (GdauiProviderSelectorClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
 	GTK_WIDGET_CLASS (klass)->show = gdaui_provider_selector_show;
 }
 

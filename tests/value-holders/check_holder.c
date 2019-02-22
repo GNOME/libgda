@@ -969,8 +969,6 @@ static gboolean
 test12 (GError **error)
 {
 	GdaHolder *h;
-	const GValue *cvalue;
-	GValue *value;
 
 	h = gda_holder_new (GDA_TYPE_NULL, "id");
 

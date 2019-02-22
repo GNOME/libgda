@@ -302,7 +302,6 @@ gdaui_login_finalize (GObject *object)
 	GdauiLogin *login = (GdauiLogin *) object;
 
 	g_return_if_fail (GDAUI_IS_LOGIN (login));
-	GdauiLoginPrivate *priv = gdaui_login_get_instance_private (login);
 
 	GdaConfig *conf = gda_config_get ();
 	g_signal_handlers_disconnect_by_func (conf,
