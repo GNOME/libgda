@@ -199,7 +199,7 @@ do_test (GdaSqlParser *parser, const xmlChar *id, const xmlChar *file, xmlNodePt
 				}
 				g_strstrip (sql);
 				if (expected) {
-					if (strcmp (sql, expected)) {
+					if (g_strcmp0 (sql, (const gchar*) expected)) {
 						g_print ("ERROR for test '%s', statement at position %d:\n   *exp:%s\n   *got:%s\n", id,
 							 g_slist_position ((GSList*) stmt_list, list), expected, sql);	 
 						failures ++;

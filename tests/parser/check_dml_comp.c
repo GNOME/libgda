@@ -92,14 +92,14 @@ main (int argc, char** argv)
 				xmlChar *prop;
 				gboolean require_pk = TRUE;
 				comp_exp = xmlNodeGetContent (snode);
-				prop = xmlGetProp (snode, "need_pk");
+				prop = xmlGetProp (snode, (const xmlChar*) "need_pk");
 				if (prop) {
 					if ((*prop == 'f') || (*prop == 'F') || (*prop == '0'))
 						require_pk = FALSE;
 					xmlFree (prop);
 				}
 				if (sql) {
-					if (!do_test (id, sql, snode->name, comp_exp, require_pk))
+					if (!do_test (id, sql, (const gchar*) snode->name, comp_exp, require_pk))
 						failures++;
 					ntests++;
 				}
@@ -140,7 +140,7 @@ do_test (const xmlChar *id, const xmlChar *sql,
 		 require_pk ? "PK fields" : "All fields", sql);
 #endif
 
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	stmt = gda_sql_parser_parse_string (parser, (const gchar*) sql, NULL, NULL);
 	if (!stmt) {
 		g_print ("ERROR for test '%s': could not parse statement\n", id);
 		return FALSE;
@@ -189,7 +189,7 @@ do_test (const xmlChar *id, const xmlChar *sql,
 		if (*computed_exp && cstmt) {
 			gchar *serial;
 			serial = gda_statement_serialize (cstmt);
-			if (strcmp (serial, computed_exp)) {
+			if (g_strcmp0 (serial, (const gchar*) computed_exp)) {
 				gchar *rend;
 				rend = gda_statement_to_sql (cstmt, NULL, NULL);
 				g_print ("ERROR for test '%s': computed %s statement is incorrect:\n"

@@ -86,7 +86,7 @@ main (int argc, char** argv)
 			if (!strcmp ((gchar*) snode->name, "sql")) {
 				sql = xmlNodeGetContent (snode);
 				xmlChar *prop;
-				prop = xmlGetProp (snode, "valid");
+				prop = xmlGetProp (snode, (const xmlChar*) "valid");
 				if (prop) {
 					if ((*prop == 't') || (*prop == 'T') || (*prop == '1'))
 						valid = TRUE;
@@ -133,7 +133,7 @@ do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected)
 	g_print ("===== TEST %s SQL: @%s@\n", id, sql);
 #endif
 
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	stmt = gda_sql_parser_parse_string (parser, (const gchar*) sql, NULL, NULL);
 	if (!stmt) {
 		g_print ("ERROR for test '%s': could not parse statement\n", id);
 		return FALSE;

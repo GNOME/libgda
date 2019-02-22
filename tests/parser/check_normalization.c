@@ -128,7 +128,7 @@ do_test (const xmlChar *id, const xmlChar *sql, const xmlChar *norm)
 	g_print ("===== TEST %s SQL: @%s@\n", id, sql);
 #endif
 
-	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
+	stmt = gda_sql_parser_parse_string (parser, (const gchar*) sql, NULL, NULL);
 	if (!stmt) {
 		g_print ("ERROR for test '%s': could not parse statement\n", id);
 		return FALSE;
@@ -141,7 +141,7 @@ do_test (const xmlChar *id, const xmlChar *sql, const xmlChar *norm)
 	}
 
 	str = gda_statement_serialize (stmt);
-	if (strcmp (str, norm)) {
+	if (g_strcmp0 (str, (const gchar*) norm)) {
 		gchar *sql;
 		sql = gda_statement_to_sql (stmt, NULL, NULL);
 		g_print ("ERROR for test '%s': \n\tEXP: %s\n\tGOT: %s\n\tSQL: %s\n", id, norm, str, sql);
