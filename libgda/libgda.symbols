@@ -505,9 +505,6 @@
 	gda_meta_struct_load_from_xml_file
 	gda_meta_struct_new
 	gda_meta_struct_sort_db_objects
-	gda_meta_table_column_foreach_attribute
-	gda_meta_table_column_get_attribute
-	gda_meta_table_column_set_attribute
 	gda_null_get_type
 	gda_numeric_copy
 	gda_numeric_free

@@ -602,11 +602,8 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 			GdaMetaTableColumn *meta_table_column = select_field->validity_meta_table_column;
 
 			if (! strcmp (meta_table_column->column_name, field_name)) {
-				const GValue *gvalue = gda_meta_table_column_get_attribute
-					(meta_table_column, GDA_ATTRIBUTE_DESCRIPTION);
-
 				gda_sql_statement_free (sql_statement);
-				return gvalue ? g_value_get_string (gvalue) : NULL;
+				return meta_table_column->desc;
 			}
 		}
 	}
@@ -1270,7 +1267,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			if (tcol->default_value)
 				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)),
 						    tcol->default_value);
-			else if (gda_meta_table_column_get_attribute (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT))
+			else if (tcol->auto_incement)
 				expr->value = gda_value_new_default (GDA_EXTRA_AUTO_INCREMENT);
 
 			expr->param_spec = pspec;
@@ -1285,7 +1282,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
 			if (tcol->default_value)
 				g_value_set_string ((expr->value = gda_value_new (G_TYPE_STRING)),
 						    tcol->default_value);
-			else if (gda_meta_table_column_get_attribute (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT))
+			else if (tcol->auto_incement)
 				expr->value = gda_value_new_default (GDA_EXTRA_AUTO_INCREMENT);
 			expr->param_spec = pspec;
 			ust->expr_list = g_slist_append (ust->expr_list, expr);

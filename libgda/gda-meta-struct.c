@@ -56,6 +56,8 @@ typedef struct {
 	GHashTable   *index; /* key = [catalog].[schema].[name], value = a GdaMetaDbObject. Note: catalog, schema and name 
 			      * are case sensitive (and don't have any double quote around them) */
 	guint         features;
+	gboolean      auto_incement;
+	gchar        *desc;
 } GdaMetaStructPrivate;
 G_DEFINE_TYPE_WITH_PRIVATE (GdaMetaStruct, gda_meta_struct, G_TYPE_OBJECT)
 
@@ -69,8 +71,6 @@ static void gda_meta_table_free_contents (GdaMetaTable *table);
 static void gda_meta_view_free_contents (GdaMetaView *view);
 static void gda_meta_table_column_free (GdaMetaTableColumn *tcol);
 static void gda_meta_table_foreign_key_free (GdaMetaTableForeignKey *tfk);
-
-static GdaAttributesManager *att_mgr;
 
 /* properties */
 enum {
@@ -116,8 +116,6 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 	/* virtual methods */
 	object_class->dispose = gda_meta_struct_dispose;
 
-	/* extra */
-	att_mgr = gda_attributes_manager_new (FALSE, NULL, NULL);
 }
 
 
@@ -127,6 +125,8 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
 	priv->store = NULL;
 	priv->db_objects = NULL;
 	priv->index = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+	priv->auto_incement = FALSE;
+	priv->desc = NULL;
 }
 
 
@@ -981,26 +981,23 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 			if (!gda_value_is_null (cvalue)) {
 				gchar **array, *tmp;
 				gint ai;
-				GValue *true_value;
 
-				g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
 				cstr = g_value_get_string (cvalue);
 				array = g_strsplit (cstr, ",", 0);
 				for (ai = 0; array [ai]; ai++) {
 					tmp = g_strstrip (array [ai]);
-					if (!strcmp (tmp, GDA_EXTRA_AUTO_INCREMENT))
-						gda_attributes_manager_set (att_mgr, tcol, GDA_ATTRIBUTE_AUTO_INCREMENT, 
-									    true_value);
+					if (!g_strcmp0 (tmp, GDA_EXTRA_AUTO_INCREMENT)) {
+						tcol->auto_incement = TRUE;
+					}
 				}
-				gda_value_free (true_value);
 				g_strfreev (array);
 			}
 
 			cvalue = gda_data_model_get_value_at (model, 10, i, error);
 			if (!cvalue) goto onerror;
-			if (!gda_value_is_null (cvalue))
-				gda_attributes_manager_set (att_mgr, tcol, GDA_ATTRIBUTE_DESCRIPTION, 
-							    cvalue);
+			if (!gda_value_is_null (cvalue)) {
+				tcol->desc = g_value_dup_string (cvalue);
+			}
 
 		}
 		mt->columns = g_slist_reverse (mt->columns);
@@ -2090,7 +2087,9 @@ gda_meta_table_column_free (GdaMetaTableColumn *tcol)
 	g_free (tcol->column_name);
 	g_free (tcol->column_type);
 	g_free (tcol->default_value);
-	gda_attributes_manager_clear (att_mgr, tcol);
+	if (tcol->desc != NULL) {
+		g_free (tcol->desc);
+	}
 	g_free (tcol);
 }
 
@@ -2566,62 +2565,3 @@ _gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GE
 	}
 }
 
-/**
- * gda_meta_table_column_get_attribute:
- * @tcol: a #GdaMetaTableColumn
- * @attribute: attribute name as a string
- *
- * Get the value associated to a named attribute.
- *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-6.0-Attributes-manager.synopsis">this section</link>.
- *
- * Returns: (transfer none): a read-only #GValue, or %NULL if not attribute named @attribute has been set for @column
- */
-const GValue *
-gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute)
-{
-	return gda_attributes_manager_get (att_mgr, tcol, attribute);
-}
-
-/**
- * gda_meta_table_column_set_attribute:
- * @tcol: a #GdaMetaTableColumn
- * @attribute: attribute name as a static string
- * @value: (nullable): a #GValue, or %NULL
- * @destroy: (nullable): function called when @attribute has to be freed, or %NULL
- *
- * Set the value associated to a named attribute.
- *
- * Attributes can have any name, but Libgda proposes some default names, see <link linkend="libgda-40-Attributes-manager.synopsis">this section</link>.
- * If there is already an attribute named @attribute set, then its value is replaced with the new @value, 
- * except if @value is %NULL, in which case the attribute is removed.
- *
- * Warning: @attribute is not copied, if it needs to be freed when not used anymore, then @destroy should point to
- * the functions which will free it (typically g_free()). If @attribute does not need to be freed, then @destroy can be %NULL.
- */
-void
-gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
-				     GDestroyNotify destroy)
-{
-	const GValue *cvalue;
-	cvalue = gda_attributes_manager_get (att_mgr, tcol, attribute);
-	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
-	    (!value && !cvalue))
-		return;
-
-	gda_attributes_manager_set_full (att_mgr, tcol, attribute, value, destroy);
-}
-
-/**
- * gda_meta_table_column_foreach_attribute:
- * @tcol: a #GdaMetaTableColumn
- * @func: (scope call): a #GdaAttributesManagerFunc function
- * @data: (closure): user data to be passed as last argument of @func each time it is called
- *
- * Calls @func for each attribute set to tcol
- */
-void
-gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data)
-{
-	gda_attributes_manager_foreach (att_mgr, tcol, func, data);
-}

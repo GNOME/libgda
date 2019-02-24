@@ -525,19 +525,6 @@ typedef struct {
 	GError **error;
 	gboolean allok;
 } FData;
-static void
-meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *value, FData *fdata)
-{
-	if (!fdata->allok)
-		return;
-	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) &&
-	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) &&
-	    g_value_get_boolean (value)) {
-		fdata->allok = gda_server_operation_set_value_at (fdata->op, "TRUE", fdata->error,
-								  "/FIELDS_A/@COLUMN_AUTOINC/%d",
-								  fdata->index);
-	}
-}
 
 static GdaServerOperation *
 create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
@@ -582,8 +569,13 @@ create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov,
 		fdata.index = index;
 		fdata.error = error;
 		fdata.allok = TRUE;
-		gda_meta_table_column_foreach_attribute (tcol, (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func,
-							 &fdata);
+
+		if (tcol->auto_incement) {
+			fdata.allok = gda_server_operation_set_value_at (fdata.op, "TRUE", fdata.error,
+								  "/FIELDS_A/@COLUMN_AUTOINC/%d",
+								  fdata.index);
+		}
+
 		if (!fdata.allok)
 			goto onerror;
 

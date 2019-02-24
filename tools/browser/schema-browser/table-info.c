@@ -771,22 +771,20 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 	for (nthcol = 0, list = mtable->columns; list; nthcol++, list = list->next) {
 		GdaMetaTableColumn *col = (GdaMetaTableColumn*) list->data;
 		gchar *plugin;
-		const GValue *autoinc;
 		GdaHolder *holder;
 
 		plugin = t_connection_get_table_column_attribute (tinfo->priv->tcnc,
 									mtable,	col,
 									T_CONNECTION_COLUMN_PLUGIN,
 									NULL);
-		holder = gda_set_get_holder (params, col->column_name);
+		holder = gda_set_get_holder (params, col->column_name);;
 		if (!holder)
 			continue;
 
-		autoinc = gda_meta_table_column_get_attribute (col, GDA_ATTRIBUTE_AUTO_INCREMENT);
 		if (tinfo->priv->insert_columns_hash)
 			g_hash_table_insert (tinfo->priv->insert_columns_hash, GINT_TO_POINTER (nthcol), g_object_ref (holder));
 		
-		if (!plugin && !col->default_value && !autoinc)
+		if (!plugin && !col->default_value && !col->auto_incement)
 			continue;
 		if (plugin) {
 			g_object_set ((GObject*) holder, "plugin", plugin, NULL);
@@ -805,7 +803,7 @@ action_insert_cb (G_GNUC_UNUSED GSimpleAction *action, G_GNUC_UNUSED GVariant *s
 			g_object_set (holder, "description", tmp, NULL);
 			g_free (tmp);
 		}
-		else if (autoinc) {
+		else if (col->auto_incement) {
 			GValue *dv;
 			g_value_set_string ((dv = gda_value_new (G_TYPE_STRING)), "");
 			gda_holder_set_default_value (holder, dv);

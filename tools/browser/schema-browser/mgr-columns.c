@@ -384,9 +384,7 @@ mgr_columns_update_children (GdaTreeManager *manager, GdaTreeNode *node, const G
 				details = g_string_new ("");
 			g_string_append (details, _("Foreign key"));
 		}
-		const GValue *autoinc;
-		autoinc = gda_meta_table_column_get_attribute (col, GDA_ATTRIBUTE_AUTO_INCREMENT);
-		if (autoinc) {
+		if (col->auto_incement) {
 			if (details)
 				g_string_append (details, ", ");
 			else

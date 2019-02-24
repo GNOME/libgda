@@ -258,6 +258,8 @@ typedef struct {
 	gboolean      pkey;
 	gboolean      nullok;
 	gchar        *default_value;
+	gboolean      auto_incement;
+	gchar        *desc;
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -276,21 +278,6 @@ typedef struct {
  * Returns: @col, casted to a #GdaMetaTableColumn
  */
 #define GDA_META_TABLE_COLUMN(col) ((GdaMetaTableColumn*)(col))
-
-const GValue *gda_meta_table_column_get_attribute (GdaMetaTableColumn *tcol, const gchar *attribute);
-void          gda_meta_table_column_set_attribute (GdaMetaTableColumn *tcol, const gchar *attribute, const GValue *value,
-						   GDestroyNotify destroy);
-/**
- * gda_meta_table_column_set_attribute_static:
- * @column: a #GdaMetaTableColumn
- * @attribute: attribute's name
- * @value: (nullable): a #GValue, or %NULL
- *
- * This function is similar to gda_meta_table_column_set_attribute() but for static strings
- */
-#define gda_meta_table_column_set_attribute_static(column,attribute,value) gda_meta_table_column_set_attribute((column),(attribute),(value),NULL)
-
-void          gda_meta_table_column_foreach_attribute (GdaMetaTableColumn *tcol, GdaAttributesManagerFunc func, gpointer data);
 
 /**
  * GdaMetaForeignKeyPolicy:

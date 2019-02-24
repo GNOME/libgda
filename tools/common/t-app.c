@@ -1692,21 +1692,6 @@ gda_internal_command_build_meta_struct (GdaConnection *cnc, const gchar **argv, 
 	return NULL;
 }
 
-static void
-meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *value, GString **string)
-{
-	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) && 
-	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) && 
-	    g_value_get_boolean (value)) {
-		if (*string) {
-			g_string_append (*string, ", ");
-			g_string_append (*string, _("Auto increment"));
-		}
-		else
-			*string = g_string_new (_("Auto increment"));
-	}
-}
-
 ToolCommandResult *
 gda_internal_command_detail (ToolCommand *command, guint argc, const gchar **argv,
 			     TContext *console, GError **error)
@@ -1865,7 +1850,6 @@ gda_internal_command_detail (ToolCommand *command, guint argc, const gchar **arg
 				GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
 				GList *values = NULL;
 				GValue *val;
-				GString *string = NULL;
 
 				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->column_name);
 				values = g_list_append (values, val);
@@ -1876,14 +1860,11 @@ gda_internal_command_detail (ToolCommand *command, guint argc, const gchar **arg
 				g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), tcol->default_value);
 				values = g_list_append (values, val);
 
-				gda_meta_table_column_foreach_attribute (tcol, 
-									 (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
-				if (string) {
-					g_value_take_string ((val = gda_value_new (G_TYPE_STRING)), string->str);
-					g_string_free (string, FALSE);
-				}
-				else
+				if (tcol->auto_incement) {
+					g_value_set_string ((val = gda_value_new (G_TYPE_STRING)), _("Auto increment"));
+				} else  {
 					val = gda_value_new_null ();
+				}
 				values = g_list_append (values, val);
 
 				gda_data_model_append_values (model, values, NULL);

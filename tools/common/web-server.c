@@ -826,21 +826,6 @@ get_for_cnc (WebServer *webserver, SoupMessage *msg, TConnection *tcnc, gchar **
 	return retval;
 }
 
-static void
-meta_table_column_foreach_attribute_func (const gchar *att_name, const GValue *value, GString **string)
-{
-	if (!strcmp (att_name, GDA_ATTRIBUTE_AUTO_INCREMENT) && 
-	    (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN) && 
-	    g_value_get_boolean (value)) {
-		if (*string) {
-			g_string_append (*string, ", ");
-			g_string_append (*string, _("Auto increment"));
-		}
-		else
-			*string = g_string_new (_("Auto increment"));
-	}
-}
-
 static gchar *meta_struct_dump_as_graph (TConnection *tcnc, GdaMetaStruct *mstruct,
 					 GdaMetaDbObject *central_dbo, GError **error);
 static gboolean
@@ -869,8 +854,7 @@ compute_table_details (TConnection *tcnc, HtmlDoc *hdoc, WebServer *webserver,
 
 	for (list = mt->columns; list; list = list->next) {
 		GdaMetaTableColumn *tcol = GDA_META_TABLE_COLUMN (list->data);
-		GString *string = NULL;
-		
+
 		tr = xmlNewChild (table, NULL, BAD_CAST "tr", NULL);
 		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST tcol->column_name);
 		if (tcol->pkey)
@@ -879,14 +863,11 @@ compute_table_details (TConnection *tcnc, HtmlDoc *hdoc, WebServer *webserver,
 		td = xmlNewChild (tr, NULL, BAD_CAST "td", tcol->nullok ? BAD_CAST _("yes") : BAD_CAST _("no"));
 		td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST tcol->default_value);
 
-		gda_meta_table_column_foreach_attribute (tcol, 
-				    (GdaAttributesManagerFunc) meta_table_column_foreach_attribute_func, &string);
-		if (string) {
-			td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST string->str);
-			g_string_free (string, TRUE);
-		}
-		else
+		if (tcol->auto_incement) {
+			td = xmlNewChild (tr, NULL, BAD_CAST "td", BAD_CAST _("Auto increment"));
+		} else {
 			td = xmlNewChild (tr, NULL, BAD_CAST "td", NULL);
+		}
 	}
 
 	/* finished if we don't have a table */

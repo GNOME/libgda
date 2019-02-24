@@ -274,10 +274,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 			/* FIXME: handle default value */
 			extra = xmlGetProp (cnode, BAD_CAST "autoinc");
 			if (extra) {
-				GValue *true_value;
-				g_value_set_boolean ((true_value = gda_value_new (G_TYPE_BOOLEAN)), TRUE);
-				gda_meta_table_column_set_attribute_static (tcol, GDA_ATTRIBUTE_AUTO_INCREMENT, true_value);
-				gda_value_free (true_value);
+				tcol->auto_incement = TRUE;
 				xmlFree (extra);
 			}
 
