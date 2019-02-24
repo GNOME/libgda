@@ -317,7 +317,7 @@ gdaui_entry_combo_dispose (GObject *object)
 		g_signal_handlers_disconnect_by_func (priv->paramlist,
 						      G_CALLBACK (uiset_source_model_changed_cb),
 						      combo);
-		g_object_unref (priv->paramlist);
+		g_clear_object (&priv->paramlist);
 	}
 
 	if (priv->combo_nodes) {
