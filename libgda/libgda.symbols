@@ -393,7 +393,6 @@
 	gda_handler_time_set_str_spec
 	gda_handler_type_get_type
 	gda_handler_type_new
-	gda_holder_attributes_manager
 	gda_holder_copy
 	gda_holder_error_quark
 	gda_holder_force_invalid

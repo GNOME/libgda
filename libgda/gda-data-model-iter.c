@@ -33,10 +33,6 @@
 #include "gda-enums.h"
 #include "gda-data-select.h"
 
-extern GdaAttributesManager *_gda_column_attributes_manager;
-extern GdaAttributesManager *gda_holder_attributes_manager;
-
-
 /* private structure */
 typedef struct
 {

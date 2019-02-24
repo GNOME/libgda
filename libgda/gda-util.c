@@ -62,7 +62,6 @@
 #include "keywords_hash.code" /* this one is dynamically generated */
 
 extern gchar *gda_lang_locale;
-extern GdaAttributesManager *gda_holder_attributes_manager;
 
 /**
  * gda_g_type_to_string:

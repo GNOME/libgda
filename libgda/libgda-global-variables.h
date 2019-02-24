@@ -35,6 +35,5 @@
 IMPORT extern gchar *gda_numeric_locale;
 IMPORT extern gchar *gda_lang_locale;
 IMPORT extern xmlDtdPtr gda_paramlist_dtd;
-IMPORT extern GdaAttributesManager *gda_holder_attributes_manager;
 
 #endif

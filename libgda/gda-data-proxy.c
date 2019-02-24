@@ -104,8 +104,6 @@ static void fetch_current_cached_changes (GdaDataProxy *proxy);
 #define DEBUG_SYNC
 #undef DEBUG_SYNC
 
-extern GdaAttributesManager *gda_holder_attributes_manager;
-
 static GMutex parser_mutex;
 static GdaSqlParser *internal_parser;
 static GMutex provider_mutex;
