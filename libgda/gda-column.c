@@ -27,7 +27,6 @@
 #include <libgda/gda-column.h>
 #include <string.h>
 #include "gda-marshal.h"
-#include <libgda/gda-attributes-manager.h>
 #include <libgda/gda-custom-marshal.h>
 
 #define PARENT_TYPE G_TYPE_OBJECT

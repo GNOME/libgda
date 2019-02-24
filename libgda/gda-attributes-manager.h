@@ -25,34 +25,6 @@
 
 G_BEGIN_DECLS
 
-/* main struct */
-/**
- * GdaAttributesManager:
- */
-typedef struct _GdaAttributesManager GdaAttributesManager;
-typedef void (*GdaAttributesManagerFunc) (const gchar *att_name, const GValue *value, gpointer data);
-typedef void (*GdaAttributesManagerSignal) (GObject *obj, const gchar *att_name, const GValue *value, gpointer data);
-
-
-#define GDA_TYPE_ATTRIBUTES_MANAGER (gda_attributes_manager_get_type())
-
-GType                 gda_attributes_manager_get_type  (void) G_GNUC_CONST;
-GdaAttributesManager *gda_attributes_manager_new         (gboolean for_objects, 
-							  GdaAttributesManagerSignal signal_func, gpointer signal_data);
-void                  gda_attributes_manager_free        (GdaAttributesManager *mgr);
-
-void                  gda_attributes_manager_set         (GdaAttributesManager *mgr, gpointer ptr,
-							  const gchar *att_name, const GValue *value);
-void                  gda_attributes_manager_set_full    (GdaAttributesManager *mgr, gpointer ptr,
-							  const gchar *att_name, const GValue *value, GDestroyNotify destroy);
-const GValue         *gda_attributes_manager_get         (GdaAttributesManager *mgr, gpointer ptr, const gchar *att_name);
-void                  gda_attributes_manager_copy        (GdaAttributesManager *from_mgr, gpointer *from, 
-							  GdaAttributesManager *to_mgr, gpointer *to);
-void                  gda_attributes_manager_clear       (GdaAttributesManager *mgr, gpointer ptr);
-void                  gda_attributes_manager_foreach     (GdaAttributesManager *mgr, gpointer ptr, 
-							  GdaAttributesManagerFunc func, gpointer data);
-
-
 /* possible predefined attribute names for gda_holder_get_attribute() or gda_column_get_attribute() */
 /**
  * GDA_ATTRIBUTE_DESCRIPTION:

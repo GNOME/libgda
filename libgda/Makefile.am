@@ -192,7 +192,6 @@ libgda_sources =  \
 	libcsv.c \
 	dir-blob-op.h \
 	dir-blob-op.c \
-	gda-attributes-manager.c \
 	$(gda_headers) \
 	gda-debug-macros.h \
 	gda-connection-internal.h \

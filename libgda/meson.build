@@ -133,7 +133,6 @@ install_headers(libgda_headers_all,
 	)
 
 libgda_sources= files([
-	'gda-attributes-manager.c',
 	'gda-batch.c',
 	'gda-blob-op.c',
 	'gda-blob-op-impl.h',

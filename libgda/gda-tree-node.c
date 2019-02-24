@@ -76,8 +76,6 @@ enum {
 	PROP_NAME
 };
 
-GdaAttributesManager *_gda_tree_node_attributes_manager;
-
 static void m_node_changed (GdaTreeNode *reporting, GdaTreeNode *node);
 static void m_node_inserted (GdaTreeNode *reporting, GdaTreeNode *node);
 static void m_node_has_child_toggled (GdaTreeNode *reporting, GdaTreeNode *node);
@@ -184,8 +182,6 @@ gda_tree_node_class_init (GdaTreeNodeClass *klass)
 
 	object_class->dispose = gda_tree_node_dispose;
 
-	/* extra */
-	_gda_tree_node_attributes_manager = gda_attributes_manager_new (TRUE, NULL, NULL);
 }
 
 static void
@@ -861,14 +857,8 @@ gda_tree_node_get_child_name (GdaTreeNode *node, const gchar *name)
 			GdaTreeNodesList *tn = GDA_TREE_NODES_LIST (parts->data);
 			GSList *list;
 			for (list = tn->nodes; list; list = list->next) {
-				const GValue *cvalue;
-				cvalue = gda_attributes_manager_get (_gda_tree_node_attributes_manager, list->data,
-								     GDA_ATTRIBUTE_NAME);
-				if (cvalue) {
-					const gchar *cname = g_value_get_string (cvalue);
-					if (cname && !strcmp (name, cname))
-						return (GdaTreeNode*) list->data;
-				}
+				if (priv->name && !g_strcmp0 (name, priv->name))
+					return (GdaTreeNode*) list->data;
 			}
 		}
 	}
