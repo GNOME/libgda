@@ -26,8 +26,9 @@
 #include <libgda/gda-value.h>
 
 typedef struct {
-        GSList         *children; /* list of GdaTreeNodesList */
+	GSList         *children; /* list of GdaTreeNodesList */
 	GdaTreeNode    *parent;
+	gchar          *name;
 } GdaTreeNodePrivate;
 G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeNode, gda_tree_node, G_TYPE_OBJECT)
 /*
@@ -269,6 +270,7 @@ gda_tree_node_init (GdaTreeNode *tnode)
 	g_return_if_fail (GDA_IS_TREE_NODE (tnode));
 	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (tnode);
 	priv->children = NULL;
+	priv->name = NULL;
 }
 
 static void
@@ -279,9 +281,14 @@ gda_tree_node_dispose (GObject *object)
 	g_return_if_fail (GDA_IS_TREE_NODE (tnode));
 	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (tnode);
 
-	if (priv->children) {
+	if (priv->children != NULL) {
 		g_slist_foreach (priv->children, (GFunc) _gda_nodes_list_free, NULL);
 		g_slist_free (priv->children);
+		priv->children = NULL;
+	}
+	if (priv->name != NULL) {
+		g_free (priv->name);
+		priv->name = NULL;
 	}
 
 	/* chain to parent class */
@@ -307,9 +314,11 @@ gda_tree_node_set_property (GObject *object,
 	GdaTreeNode *tnode;
 
 	tnode = GDA_TREE_NODE (object);
+	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (tnode);
+
 	switch (param_id) {
 	case PROP_NAME:
-		gda_attributes_manager_set (_gda_tree_node_attributes_manager, tnode, GDA_ATTRIBUTE_NAME, value);
+		priv->name = g_value_dup_string (value);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -326,11 +335,11 @@ gda_tree_node_get_property (GObject *object,
 	GdaTreeNode *tnode;
 	
 	tnode = GDA_TREE_NODE (object);
+	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (tnode);
+
 	switch (param_id) {
 	case PROP_NAME: {
-		const GValue *cvalue = gda_attributes_manager_get (_gda_tree_node_attributes_manager, tnode,
-								   GDA_ATTRIBUTE_NAME);
-		g_value_set_string (value, cvalue ? g_value_get_string (cvalue): NULL);
+		g_value_set_string (value, priv->name);
 		break;
 	}
 	default:
@@ -339,36 +348,27 @@ gda_tree_node_get_property (GObject *object,
 	}
 }
 
-static void
-attributes_foreach_func (const gchar *att_name, const GValue *value, GString *string)
-{
-	gchar *str = gda_value_stringify (value);
-	g_string_append_printf (string, " %s=%s", att_name, str);
-	g_free (str);
-}
-
 static gchar *
 gda_tree_node_dump_header (GdaTreeNode *node)
 {
-	const GValue *cvalue;
+	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (node);
 
-	cvalue = gda_attributes_manager_get (_gda_tree_node_attributes_manager, node,
-					     GDA_ATTRIBUTE_NAME);
 	if (g_getenv ("GDA_TREE_DUMP_ALL_ATTRIBUTES")) {
 		GString *string;
 		string = g_string_new ("");
-		if (cvalue && (G_VALUE_TYPE (cvalue) == G_TYPE_STRING))
-			g_string_append (string, g_value_get_string (cvalue));
+		if (priv->name != NULL)
+			g_string_append (string, priv->name);
 		else
 			g_string_append (string, "Unnamed node");
 		g_string_append_c (string, ':');
-		gda_attributes_manager_foreach (_gda_tree_node_attributes_manager, node,
-						(GdaAttributesManagerFunc) attributes_foreach_func, string);
+
+		// Attributes now are data associations in the GObject and not iterable
+		// FIXME: how to iterate over. This method is not used anyother place
 		return g_string_free (string, FALSE);
 	}
 	else {
-		if (cvalue)
-			return g_strdup (g_value_get_string (cvalue));
+		if (priv->name != NULL)
+			return g_strdup (priv->name);
 		else
 			return g_strdup_printf ("Unnamed node");
 	}
@@ -657,11 +657,11 @@ gda_tree_node_fetch_attribute (GdaTreeNode *node, const gchar *attribute)
 	const GValue *cvalue;
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), NULL);
 	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (node);
-
-	cvalue = gda_attributes_manager_get (_gda_tree_node_attributes_manager, node, attribute);
-	if (!cvalue && priv->parent)
+	cvalue = g_object_get_data (G_OBJECT (node), attribute);
+	if (cvalue == NULL && priv->parent != NULL) {
 		cvalue = gda_tree_node_fetch_attribute (priv->parent, attribute);
-	return cvalue;
+	}
+	return (const GValue*) cvalue;
 }
 
 /**
@@ -685,7 +685,7 @@ gda_tree_node_get_node_attribute (GdaTreeNode *node, const gchar *attribute)
 {
 	g_return_val_if_fail (GDA_IS_TREE_NODE (node), NULL);
 
-	return gda_attributes_manager_get (_gda_tree_node_attributes_manager, node, attribute);
+	return g_object_get_data (G_OBJECT (node), attribute);
 }
 
 /**
@@ -722,12 +722,12 @@ gda_tree_node_set_node_attribute (GdaTreeNode *node, const gchar *attribute, con
 	g_return_if_fail (GDA_IS_TREE_NODE (node));
 	g_return_if_fail (attribute);
 
-	cvalue = gda_attributes_manager_get (_gda_tree_node_attributes_manager, node, attribute);
+	cvalue = g_object_get_data (G_OBJECT (node), attribute);
 	if ((value && cvalue && !gda_value_differ (cvalue, value)) ||
 	    (!value && !cvalue))
 		return;
 
-	if (!strcmp (attribute, GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN) &&
+	if (!g_strcmp0 (attribute, GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN) &&
 	    (!value || (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN))) {
 		gboolean ouc = FALSE;
 		gboolean nuc = FALSE;
@@ -739,16 +739,14 @@ gda_tree_node_set_node_attribute (GdaTreeNode *node, const gchar *attribute, con
 			nuc = TRUE;
 
 		if (ouc != nuc) {
-			gda_attributes_manager_set_full (_gda_tree_node_attributes_manager, node,
-							 attribute, value, destroy);
+			g_object_set_data_full (G_OBJECT (node), attribute, (gpointer) value, (GDestroyNotify) gda_value_free);
 			g_signal_emit (node, gda_tree_node_signals[NODE_HAS_CHILD_TOGGLED], 0, node);
 			g_signal_emit (node, gda_tree_node_signals[NODE_CHANGED], 0, node);
 			return;
 		}
 	}
 
-	gda_attributes_manager_set_full (_gda_tree_node_attributes_manager, node, attribute,
-					 value, destroy);
+	g_object_set_data_full (G_OBJECT (node), attribute, (gpointer) value, (GDestroyNotify) gda_value_free);
 	g_signal_emit (node, gda_tree_node_signals[NODE_CHANGED], 0, node);
 }
 
