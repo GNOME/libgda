@@ -85,8 +85,6 @@ static GdaServerProviderBase hub_base_functions = {
 static void
 gda_vprovider_hub_class_init (GdaVproviderHubClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,

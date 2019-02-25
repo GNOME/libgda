@@ -24,21 +24,10 @@
 #include "gda-virtual-provider.h"
 
 #define GDA_TYPE_VIRTUAL_CONNECTION            (gda_virtual_connection_get_type())
-#define GDA_VIRTUAL_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VIRTUAL_CONNECTION, GdaVirtualConnection))
-#define GDA_VIRTUAL_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VIRTUAL_CONNECTION, GdaVirtualConnectionClass))
-#define GDA_IS_VIRTUAL_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VIRTUAL_CONNECTION))
-#define GDA_IS_VIRTUAL_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VIRTUAL_CONNECTION))
 
 G_BEGIN_DECLS
 
-typedef struct _GdaVirtualConnection      GdaVirtualConnection;
-typedef struct _GdaVirtualConnectionClass GdaVirtualConnectionClass;
-typedef struct _GdaVirtualConnectionPrivate GdaVirtualConnectionPrivate;
-
-struct _GdaVirtualConnection {
-	GdaConnection                connection;
-	GdaVirtualConnectionPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaVirtualConnection, gda_virtual_connection, GDA, VIRTUAL_CONNECTION, GdaConnection)
 
 struct _GdaVirtualConnectionClass {
 	GdaConnectionClass           parent_class;
