@@ -23,23 +23,10 @@
 #include "gda-vconnection-data-model.h"
 
 #define GDA_TYPE_VCONNECTION_HUB            (gda_vconnection_hub_get_type())
-#define GDA_VCONNECTION_HUB(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VCONNECTION_HUB, GdaVconnectionHub))
-#define GDA_VCONNECTION_HUB_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VCONNECTION_HUB, GdaVconnectionHubClass))
-#define GDA_IS_VCONNECTION_HUB(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VCONNECTION_HUB))
-#define GDA_IS_VCONNECTION_HUB_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VCONNECTION_HUB))
 
 G_BEGIN_DECLS
 
-typedef struct _GdaVconnectionHub      GdaVconnectionHub;
-typedef struct _GdaVconnectionHubClass GdaVconnectionHubClass;
-typedef struct _GdaVconnectionHubPrivate GdaVconnectionHubPrivate;
-
-typedef void (*GdaVConnectionHubFunc) (GdaConnection *cnc, const gchar *ns, gpointer data);
-
-struct _GdaVconnectionHub {
-	GdaVconnectionDataModel      parent;
-	GdaVconnectionHubPrivate    *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaVconnectionHub, gda_vconnection_hub, GDA, VCONNECTION_HUB, GdaVconnectionDataModel)
 
 struct _GdaVconnectionHubClass {
 	GdaVconnectionDataModelClass parent_class;
@@ -51,6 +38,8 @@ struct _GdaVconnectionHubClass {
 	void (*_gda_reserved3) (void);
 	void (*_gda_reserved4) (void);
 };
+
+typedef void (*GdaVConnectionHubFunc) (GdaConnection *cnc, const gchar *ns, gpointer data);
 
 /**
  * SECTION:gda-vconnection-hub
@@ -70,9 +59,7 @@ struct _GdaVconnectionHubClass {
  * 'table_1' must be referred to as 'c1.table_1' and 'table_2' must be referred to as 'c1.table_2'.
  */
 
-GType               gda_vconnection_hub_get_type       (void) G_GNUC_CONST;
-
-gboolean            gda_vconnection_hub_add            (GdaVconnectionHub *hub, 
+gboolean            gda_vconnection_hub_add            (GdaVconnectionHub *hub,
 							GdaConnection *cnc, const gchar *ns, GError **error);
 gboolean            gda_vconnection_hub_remove         (GdaVconnectionHub *hub, GdaConnection *cnc, GError **error);
 GdaConnection      *gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns);

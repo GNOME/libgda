@@ -43,16 +43,15 @@ static void hub_connection_free (HubConnection *hc);
 static gboolean attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error);
 static void detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc);
 
-struct _GdaVconnectionHubPrivate {
+typedef struct {
 	GSList        *hub_connections; /* list of HubConnection structures */
 	GdaSqlParser *internal_parser;
-};
+} GdaVconnectionHubPrivate;
 
-static void gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass);
-static void gda_vconnection_hub_init       (GdaVconnectionHub *cnc, GdaVconnectionHubClass *klass);
 static void gda_vconnection_hub_dispose   (GObject *object);
-static void gda_vconnection_hub_finalize   (GObject *object);
-static GObjectClass  *parent_class = NULL;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaVconnectionHub, gda_vconnection_hub, GDA_TYPE_VCONNECTION_DATA_MODEL)
+
 
 static HubConnection *get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns);
 static HubConnection *get_hub_cnc_by_cnc (GdaVconnectionHub *hub, GdaConnection *cnc);
@@ -65,86 +64,38 @@ gda_vconnection_hub_class_init (GdaVconnectionHubClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	object_class->dispose = gda_vconnection_hub_dispose;
-	object_class->finalize = gda_vconnection_hub_finalize;
 }
 
 static void
-gda_vconnection_hub_init (GdaVconnectionHub *cnc, G_GNUC_UNUSED GdaVconnectionHubClass *klass)
+gda_vconnection_hub_init (GdaVconnectionHub *cnc)
 {
-	cnc->priv = g_new (GdaVconnectionHubPrivate, 1);
-	cnc->priv->hub_connections = NULL;
-	cnc->priv->internal_parser = gda_sql_parser_new ();;
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (cnc);
+	priv->hub_connections = NULL;
+	priv->internal_parser = gda_sql_parser_new ();;
 }
 
 static void
 gda_vconnection_hub_dispose (GObject *object)
 {
 	GdaVconnectionHub *cnc = (GdaVconnectionHub *) object;
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (cnc);
 
 	g_return_if_fail (GDA_IS_VCONNECTION_HUB (cnc));
 
 	/* free memory */
-	if (cnc->priv) {
-		gda_connection_close ((GdaConnection *) cnc, NULL);
-		if (cnc->priv->hub_connections) {
-			g_slist_free_full (cnc->priv->hub_connections, (GDestroyNotify) hub_connection_free);
-			cnc->priv->hub_connections = NULL;
-		}
-		if (cnc->priv->internal_parser)
-			g_object_unref (cnc->priv->internal_parser);
+	gda_connection_close ((GdaConnection *) cnc, NULL);
+	if (priv->hub_connections) {
+		g_slist_free_full (priv->hub_connections, (GDestroyNotify) hub_connection_free);
+		priv->hub_connections = NULL;
+	}
+	if (priv->internal_parser) {
+		g_object_unref (priv->internal_parser);
+		priv->internal_parser = NULL;
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gda_vconnection_hub_finalize (GObject *object)
-{
-	GdaVconnectionHub *cnc = (GdaVconnectionHub *) object;
-
-	g_return_if_fail (GDA_IS_VCONNECTION_HUB (cnc));
-
-	/* free memory */
-	if (cnc->priv) {
-		g_free (cnc->priv);
-		cnc->priv = NULL;
-	}
-
-	/* chain to parent class */
-	parent_class->finalize (object);
-}
-GType
-gda_vconnection_hub_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaVconnectionHubClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_vconnection_hub_class_init,
-				NULL, NULL,
-				sizeof (GdaVconnectionHub),
-				0,
-				(GInstanceInitFunc) gda_vconnection_hub_init,
-				0
-			};
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VCONNECTION_DATA_MODEL, "GdaVconnectionHub", &info, 0);
-		g_mutex_unlock (&registering);
-		}
-	}
-
-	return type;
+	G_OBJECT_CLASS (gda_vconnection_hub_parent_class)->dispose (object);
 }
 
 /**
@@ -238,7 +189,7 @@ gda_vconnection_hub_remove (GdaVconnectionHub *hub, GdaConnection *cnc, GError *
 		return FALSE;
 	}
 
-	/* clean the hub->priv->hub_connections list */
+	/* clean the priv->hub_connections list */
 	detach_hub_connection (hub, hc);
 	return TRUE;
 }
@@ -248,7 +199,8 @@ get_hub_cnc_by_ns (GdaVconnectionHub *hub, const gchar *ns)
 {
 	g_return_val_if_fail (ns != NULL, NULL);
 	GSList *list;
-	for (list = hub->priv->hub_connections; list; list = list->next) {
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (hub);
+	for (list = priv->hub_connections; list; list = list->next) {
 		if ((!ns && !((HubConnection*) list->data)->ns)||
 		    (ns && ((HubConnection*) list->data)->ns && !strcmp (((HubConnection*) list->data)->ns, ns)))
 			return (HubConnection*) list->data;
@@ -260,7 +212,8 @@ static HubConnection *
 get_hub_cnc_by_cnc (GdaVconnectionHub *hub, GdaConnection *cnc)
 {
 	GSList *list;
-	for (list = hub->priv->hub_connections; list; list = list->next) {
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (hub);
+	for (list = priv->hub_connections; list; list = list->next) {
 		if (((HubConnection*) list->data)->cnc == cnc)
 			return (HubConnection*) list->data;
 	}
@@ -281,7 +234,6 @@ gda_vconnection_hub_get_connection (GdaVconnectionHub *hub, const gchar *ns)
 {
 	HubConnection *hc;
 	g_return_val_if_fail (GDA_IS_VCONNECTION_HUB (hub), NULL);
-	g_return_val_if_fail (hub->priv, NULL);
 
 	hc = get_hub_cnc_by_ns (hub, ns);
 	if (hc)
@@ -304,12 +256,12 @@ gda_vconnection_hub_foreach (GdaVconnectionHub *hub,
 {
 	GSList *list, *next;
 	g_return_if_fail (GDA_IS_VCONNECTION_HUB (hub));
-	g_return_if_fail (hub->priv);
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (hub);
 
 	if (!func)
 		return;
 
-	list = hub->priv->hub_connections;
+	list = priv->hub_connections;
 	while (list) {
 		HubConnection *hc = (HubConnection*) list->data;
 		next = list->next;
@@ -836,6 +788,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	GdaMetaStore *store;
 	GdaMetaContext context;
 	GdaConnectionOptions options;
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (hub);
 
 	store = gda_connection_get_meta_store (hc->cnc);
 	g_assert (store);
@@ -852,7 +805,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	if (hc->ns) {
 		GdaStatement *stmt;
 		tmp = g_strdup_printf ("ATTACH ':memory:' AS %s", hc->ns);
-		stmt = gda_sql_parser_parse_string (hub->priv->internal_parser, tmp, NULL, NULL);
+		stmt = gda_sql_parser_parse_string (priv->internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
 		g_assert (stmt);
 		if (gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, error) == -1) {
@@ -892,7 +845,7 @@ attach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc, GError **error
 	/* monitor changes */
 	g_signal_connect (store, "meta-changed", G_CALLBACK (meta_changed_cb), hc);
 
-	hub->priv->hub_connections = g_slist_append (hub->priv->hub_connections, hc);
+	priv->hub_connections = g_slist_append (priv->hub_connections, hc);
 	return TRUE;
 }
 
@@ -994,6 +947,7 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 	GdaMetaStore *store;
 	GdaDataModel *model;
 	gint i, nrows;
+	GdaVconnectionHubPrivate *priv = gda_vconnection_hub_get_instance_private (hub);
 
 	/* un-monitor changes */
 	g_object_get (G_OBJECT (hc->cnc), "meta-store", &store, NULL);
@@ -1017,14 +971,14 @@ detach_hub_connection (GdaVconnectionHub *hub, HubConnection *hc)
 		GdaStatement *stmt;
 		gchar *tmp;
 		tmp = g_strdup_printf ("DETACH %s", hc->ns);
-		stmt = gda_sql_parser_parse_string (hub->priv->internal_parser, tmp, NULL, NULL);
+		stmt = gda_sql_parser_parse_string (priv->internal_parser, tmp, NULL, NULL);
 		g_free (tmp);
 		g_assert (stmt);
 		gda_connection_statement_execute_non_select (GDA_CONNECTION (hub), stmt, NULL, NULL, NULL);
 		g_object_unref (stmt);
 	}
 
-	hub->priv->hub_connections = g_slist_remove (hub->priv->hub_connections, hc);
+	priv->hub_connections = g_slist_remove (priv->hub_connections, hc);
 	hub_connection_free (hc);
 }
 
