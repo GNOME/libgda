@@ -24,16 +24,9 @@
 #include <libgda/sql-parser/gda-statement-struct-parts.h>
 
 #define GDA_TYPE_VCONNECTION_DATA_MODEL            (gda_vconnection_data_model_get_type())
-#define GDA_VCONNECTION_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VCONNECTION_DATA_MODEL, GdaVconnectionDataModel))
-#define GDA_VCONNECTION_DATA_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VCONNECTION_DATA_MODEL, GdaVconnectionDataModelClass))
-#define GDA_IS_VCONNECTION_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VCONNECTION_DATA_MODEL))
-#define GDA_IS_VCONNECTION_DATA_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VCONNECTION_DATA_MODEL))
 
 G_BEGIN_DECLS
 
-typedef struct _GdaVconnectionDataModel      GdaVconnectionDataModel;
-typedef struct _GdaVconnectionDataModelClass GdaVconnectionDataModelClass;
-typedef struct _GdaVconnectionDataModelPrivate GdaVconnectionDataModelPrivate;
 typedef struct _GdaVconnectionDataModelSpec  GdaVconnectionDataModelSpec;
 typedef struct _GdaVconnectionDataModelFilter GdaVconnectionDataModelFilter;
 
@@ -164,7 +157,7 @@ typedef GdaDataModel *(*GdaVconnectionDataModelCreateFModelFunc) (GdaVconnection
  * function which is actually responsible for analysing the optimization.
  */
 struct _GdaVconnectionDataModelSpec {
-	GdaDataModel                             *data_model;
+	GdaDataModel                             *data_model; //FIXME: Use GWeakRef
 	GdaVconnectionDataModelCreateColumnsFunc  create_columns_func;
 	GdaVconnectionDataModelCreateModelFunc    create_model_func;
 
@@ -173,18 +166,16 @@ struct _GdaVconnectionDataModelSpec {
 };
 #define GDA_VCONNECTION_DATA_MODEL_SPEC(x) ((GdaVconnectionDataModelSpec*)(x))
 
-struct _GdaVconnectionDataModel {
-	GdaVirtualConnection            connection;
-	GdaVconnectionDataModelPrivate *priv;
-};
+
+G_DECLARE_DERIVABLE_TYPE (GdaVconnectionDataModel, gda_vconnection_data_model, GDA, VCONNECTION_DATA_MODEL, GdaVirtualConnection)
 
 struct _GdaVconnectionDataModelClass {
 	GdaVirtualConnectionClass       parent_class;
 
 	void                          (*vtable_created) (GdaVconnectionDataModel *cnc,
-							  const gchar *table_name);
+	                              const gchar *table_name);
 	void                          (*vtable_dropped) (GdaVconnectionDataModel *cnc,
-							    const gchar *table_name);
+	                              const gchar *table_name);
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -212,13 +203,11 @@ struct _GdaVconnectionDataModelClass {
  * for some background information.
  */
 
-GType               gda_vconnection_data_model_get_type  (void) G_GNUC_CONST;
-
-gboolean            gda_vconnection_data_model_add       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelSpec *spec, 
-							  GDestroyNotify spec_free_func,
-							  const gchar *table_name, GError **error);
+gboolean            gda_vconnection_data_model_add       (GdaVconnectionDataModel *cnc, GdaVconnectionDataModelSpec *spec,
+                                                          GDestroyNotify spec_free_func,
+                                                          const gchar *table_name, GError **error);
 gboolean            gda_vconnection_data_model_add_model (GdaVconnectionDataModel *cnc, 
-							  GdaDataModel *model, const gchar *table_name, GError **error);
+                                                          GdaDataModel *model, const gchar *table_name, GError **error);
 gboolean            gda_vconnection_data_model_remove    (GdaVconnectionDataModel *cnc, const gchar *table_name, GError **error);
 
 GdaVconnectionDataModelSpec *gda_vconnection_data_model_get (GdaVconnectionDataModel *cnc, const gchar *table_name);
@@ -226,7 +215,7 @@ const gchar        *gda_vconnection_data_model_get_table_name (GdaVconnectionDat
 GdaDataModel       *gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar *table_name);
 
 void                gda_vconnection_data_model_foreach   (GdaVconnectionDataModel *cnc, 
-							  GdaVconnectionDataModelFunc func, gpointer data);
+                                                          GdaVconnectionDataModelFunc func, gpointer data);
 
 G_END_DECLS
 

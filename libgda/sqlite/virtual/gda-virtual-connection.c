@@ -27,7 +27,7 @@
 #include <libgda/gda-connection-internal.h>
 #include <libgda/gda-debug-macros.h>
 
-static void gda_virtual_connection_finalize   (GObject *object);
+static void gda_virtual_connection_dispose   (GObject *object);
 
 typedef struct {
 	gpointer              v_provider_data;
@@ -58,7 +58,7 @@ gda_virtual_connection_class_init (GdaVirtualConnectionClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
 	/* virtual methods */
-	object_class->finalize = gda_virtual_connection_finalize;
+	object_class->dispose = gda_virtual_connection_dispose;
 	GDA_CONNECTION_CLASS (klass)->closed = (void (*) (GdaConnection*)) conn_closed_cb;
 }
 
@@ -71,7 +71,7 @@ gda_virtual_connection_init (GdaVirtualConnection *vcnc)
 }
 
 static void
-gda_virtual_connection_finalize (GObject *object)
+gda_virtual_connection_dispose (GObject *object)
 {
 	GdaVirtualConnection *vcnc = (GdaVirtualConnection *) object;
 
