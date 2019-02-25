@@ -23,21 +23,10 @@
 #include <virtual/gda-vprovider-data-model.h>
 
 #define GDA_TYPE_VPROVIDER_HUB            (gda_vprovider_hub_get_type())
-#define GDA_VPROVIDER_HUB(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VPROVIDER_HUB, GdaVproviderHub))
-#define GDA_VPROVIDER_HUB_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VPROVIDER_HUB, GdaVproviderHubClass))
-#define GDA_IS_VPROVIDER_HUB(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VPROVIDER_HUB))
-#define GDA_IS_VPROVIDER_HUB_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VPROVIDER_HUB))
 
 G_BEGIN_DECLS
 
-typedef struct _GdaVproviderHub      GdaVproviderHub;
-typedef struct _GdaVproviderHubClass GdaVproviderHubClass;
-typedef struct _GdaVproviderHubPrivate GdaVproviderHubPrivate;
-
-struct _GdaVproviderHub {
-	GdaVproviderDataModel      parent;
-	GdaVproviderHubPrivate    *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaVproviderHub, gda_vprovider_hub, GDA, VPROVIDER_HUB, GdaVproviderDataModel)
 
 struct _GdaVproviderHubClass {
 	GdaVproviderDataModelClass parent_class;
@@ -65,8 +54,6 @@ struct _GdaVproviderHubClass {
  * will generate a #GdaVconnectionHub connection object, from which connections can be added.
  */
 
-
-GType               gda_vprovider_hub_get_type (void) G_GNUC_CONST;
 GdaVirtualProvider *gda_vprovider_hub_new      (void);
 
 G_END_DECLS

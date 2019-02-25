@@ -25,28 +25,20 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-impl.h>
 
-struct _GdaVproviderHubPrivate {
+typedef struct {
 	int foo;
-};
+} GdaVproviderHubPrivate;
 
 /* properties */
 enum
 {
-        PROP_0,
+	PROP_0,
 };
 
 static void gda_vprovider_hub_class_init (GdaVproviderHubClass *klass);
-static void gda_vprovider_hub_init       (GdaVproviderHub *prov, GdaVproviderHubClass *klass);
-static void gda_vprovider_hub_finalize   (GObject *object);
-static void gda_vprovider_hub_set_property (GObject *object,
-					       guint param_id,
-					       const GValue *value,
-					       GParamSpec *pspec);
-static void gda_vprovider_hub_get_property (GObject *object,
-					       guint param_id,
-					       GValue *value,
-					       GParamSpec *pspec);
-static GObjectClass  *parent_class = NULL;
+static void gda_vprovider_hub_init       (GdaVproviderHub *prov);
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaVproviderHub, gda_vprovider_hub, GDA_TYPE_VPROVIDER_DATA_MODEL)
 
 static GdaConnection *gda_vprovider_hub_create_connection (GdaServerProvider *provider);
 static gboolean       gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *cnc);
@@ -95,108 +87,17 @@ gda_vprovider_hub_class_init (GdaVproviderHubClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
 						(gpointer) &hub_base_functions);
-
-	object_class->finalize = gda_vprovider_hub_finalize;
-
-	/* Properties */
-        object_class->set_property = gda_vprovider_hub_set_property;
-        object_class->get_property = gda_vprovider_hub_get_property;
 }
 
 
 static void
-gda_vprovider_hub_init (GdaVproviderHub *prov, G_GNUC_UNUSED GdaVproviderHubClass *klass)
+gda_vprovider_hub_init (GdaVproviderHub *prov)
 {
-	prov->priv = g_new (GdaVproviderHubPrivate, 1);
 }
-
-static void
-gda_vprovider_hub_finalize (GObject *object)
-{
-	GdaVproviderHub *prov = (GdaVproviderHub *) object;
-
-	g_return_if_fail (GDA_IS_VPROVIDER_HUB (prov));
-
-	/* free memory */
-	g_free (prov->priv);
-	prov->priv = NULL;
-
-	/* chain to parent class */
-	parent_class->finalize (object);
-}
-
-GType
-gda_vprovider_hub_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaVproviderHubClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_vprovider_hub_class_init,
-				NULL, NULL,
-				sizeof (GdaVproviderHub),
-				0,
-				(GInstanceInitFunc) gda_vprovider_hub_init,
-				0
-			};
-			
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaVproviderHub", &info, 0);
-		g_mutex_unlock (&registering);
-		}
-	}
-
-	return type;
-}
-
-static void
-gda_vprovider_hub_set_property (GObject *object,
-				       guint param_id,
-				       G_GNUC_UNUSED const GValue *value,
-				       GParamSpec *pspec)
-{
-        GdaVproviderHub *prov;
-
-        prov = GDA_VPROVIDER_HUB (object);
-        if (prov->priv) {
-                switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
-}
-
-static void
-gda_vprovider_hub_get_property (GObject *object,
-				       guint param_id,
-				       G_GNUC_UNUSED GValue *value,
-				       GParamSpec *pspec)
-{
-        GdaVproviderHub *prov;
-
-        prov = GDA_VPROVIDER_HUB (object);
-        if (prov->priv) {
-		switch (param_id) {
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-		}
-        }
-}
-
 
 /**
  * gda_vprovider_hub_new
@@ -226,25 +127,18 @@ gda_vprovider_hub_create_connection (GdaServerProvider *provider)
 	return cnc;
 }
 
-static void
-cnc_close_foreach_func (GdaConnection *cnc, G_GNUC_UNUSED const gchar *ns, GdaVconnectionHub *hub)
-{
-	/*g_print ("---- FOREACH: Removing connection %p ('%s') from HUB\n", cnc, ns);*/
-	if (! gda_vconnection_hub_remove (hub, cnc, NULL))
-		g_warning ("Internal GdaVproviderHub error");
-}
-
 static gboolean
 gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_VPROVIDER_HUB (provider), FALSE);
 	g_return_val_if_fail (GDA_IS_VCONNECTION_HUB (cnc), FALSE);
 
-	gda_vconnection_hub_foreach (GDA_VCONNECTION_HUB (cnc),
-				     (GdaVConnectionHubFunc) cnc_close_foreach_func, cnc);
+	if (! gda_vconnection_hub_remove (GDA_VCONNECTION_HUB (provider), cnc, NULL)) {
+		g_warning (_("Internal GdaVproviderHub error"));
+	}
 
 	GdaServerProviderBase *parent_functions;
-	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_hub_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	return parent_functions->close_connection (provider, cnc);
 }
 

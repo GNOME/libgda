@@ -269,19 +269,7 @@ typedef struct {
 G_DEFINE_TYPE_WITH_CODE (GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER,
                          G_ADD_PRIVATE (GdaSqliteProvider)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_PROVIDER_META, gda_sqlite_provider_meta_iface_init)
-                         G_IMPLEMENT_INTERFACE (GDA_TYPE_PROVIDER, gda_sqlite_provider_iface_init)
-
-                        #ifdef HAVE_SQLITE
-                          GModule *module2;
-
-                          module2 = find_sqlite_library ("libsqlite3");
-                          if (module2)
-                            load_symbols (module2);
-                          if (s3r == NULL) {
-                            g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
-                          }
-                        #endif
-                         )
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_PROVIDER, gda_sqlite_provider_iface_init))
 
 
 /*
@@ -941,6 +929,17 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						NULL);
 	g_object_class_override_property (G_OBJECT_CLASS (klass), PROP_CONNECTION, "connection");
+
+#ifdef HAVE_SQLITE
+	GModule *module2;
+
+	module2 = find_sqlite_library ("libsqlite3");
+	if (module2)
+		load_symbols (module2);
+	if (s3r == NULL) {
+		g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
+	}
+#endif
 }
 
 static void
