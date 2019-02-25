@@ -109,9 +109,14 @@ lbdb_cargs = []
 sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: false)
 sqlite_internal = true
 if sqlite_dep.found()
-	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata', required: false)
+	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
+								required: false,
+								dependencies: sqlite_dep)
 	if not sqlite3_table_column_metadata
+		message('Using embeded SQLite library')
 		sqlite_internal = false
+	else
+		message('Using system installed SQLite library')
 	endif
 endif
 
