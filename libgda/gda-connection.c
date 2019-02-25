@@ -139,7 +139,6 @@ static void add_exec_time_to_object (GObject *obj, GTimer *timer);
 static void gda_connection_class_init (GdaConnectionClass *klass);
 static void gda_connection_init       (GdaConnection *cnc);
 static void gda_connection_dispose    (GObject *object);
-static void gda_connection_finalize   (GObject *object);
 static void gda_connection_set_property (GObject *object,
 					 guint param_id,
 					 const GValue *value,
@@ -388,7 +387,6 @@ gda_connection_class_init (GdaConnectionClass *klass)
 							    (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 
 	object_class->dispose = gda_connection_dispose;
-	object_class->finalize = gda_connection_finalize;
 
 	/* computing debug level */
 	if (debug_level == -1) {
@@ -534,28 +532,21 @@ gda_connection_dispose (GObject *object)
 		g_array_free (priv->trans_meta_context, TRUE);
 		priv->trans_meta_context = NULL;
 	}
+	if (priv->dsn) {
+		g_free (priv->dsn);
+		priv->dsn = NULL;
+	}
+	if (priv->cnc_string) {
+		g_free (priv->cnc_string);
+		priv->cnc_string = NULL;
+	}
+	if (priv->auth_string) {
+		g_free (priv->auth_string);
+		priv->auth_string = NULL;
+	}
 
 	/* chain to parent class */
   G_OBJECT_CLASS (gda_connection_parent_class)->dispose (object);
-}
-
-static void
-gda_connection_finalize (GObject *object)
-{
-	GdaConnection *cnc = (GdaConnection *) object;
-
-	g_return_if_fail (GDA_IS_CONNECTION (cnc));
-	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
-
-	/* free memory */
-	g_free (priv->dsn);
-	g_free (priv->cnc_string);
-	g_free (priv->auth_string);
-
-	g_rec_mutex_clear (&priv->rmutex);
-
-	/* chain to parent class */
-  G_OBJECT_CLASS (gda_connection_parent_class)->finalize (object);
 }
 
 /* module error */
