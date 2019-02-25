@@ -248,6 +248,13 @@ pending_blobs_free_list (GSList *blist)
 	g_slist_free (blist);
 }
 
+
+static void
+gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
+
+static void
+gda_sqlite_provider_iface_init (GdaProviderInterface *iface);
+
 /*
  * GObject methods
  */
@@ -255,15 +262,24 @@ typedef struct {
 	GPtrArray       *internal_stmt;
 } GdaSqliteProviderPrivate;
 
-#define gda_sqlite_provider_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_SQLITE_PROVIDER, GdaSqliteProviderPrivate)
 
-static void
-gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
+G_DEFINE_TYPE_WITH_CODE (GdaSqliteProvider, gda_sqlite_provider, GDA_TYPE_SERVER_PROVIDER,
+                         G_ADD_PRIVATE (GdaSqliteProvider)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_PROVIDER_META, gda_sqlite_provider_meta_iface_init)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_PROVIDER, gda_sqlite_provider_iface_init)
 
-static void gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass);
-static void gda_sqlite_provider_init       (GdaSqliteProvider *provider,
-					    GdaSqliteProviderClass *klass);
-static GObjectClass *parent_class = NULL;
+                        #ifdef HAVE_SQLITE
+                          GModule *module2;
+
+                          module2 = find_sqlite_library ("libsqlite3");
+                          if (module2)
+                            load_symbols (module2);
+                          if (s3r == NULL) {
+                            g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
+                          }
+                        #endif
+                         )
+
 
 /*
  * GdaServerProvider's virtual methods
@@ -757,7 +773,7 @@ get_table_nth_column_name (GdaServerProvider *provider, GdaConnection *cnc, cons
 	GdaDataModel *model;
 	gchar *fname = NULL;
 	GdaStatement *stm;
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	g_assert (table_name);
 	params_set = gda_set_new_inline (1, "tblname", G_TYPE_STRING, table_name);
@@ -900,14 +916,13 @@ gda_sqlite_provider_dispose (GObject *object)
   GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (object);
   GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (prov);
   g_ptr_array_unref (priv->internal_stmt);
+  priv->internal_stmt = NULL;
 }
 
 static void
 gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 {
-  parent_class = g_type_class_peek_parent (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	g_type_class_add_private (object_class, sizeof (GdaSqliteProviderPrivate));
 
   object_class->get_property = gda_sqlite_provider_get_property;
   object_class->set_property = gda_sqlite_provider_set_property;
@@ -926,7 +941,7 @@ gda_sqlite_provider_class_init (GdaSqliteProviderClass *klass)
 }
 
 static void
-gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqliteProviderClass *klass)
+gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv)
 {
   GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (sqlite_prv);
 	priv->internal_stmt = g_ptr_array_new_full (1, (GDestroyNotify) g_object_unref);
@@ -948,67 +963,6 @@ gda_sqlite_provider_init (GdaSqliteProvider *sqlite_prv, G_GNUC_UNUSED GdaSqlite
 	/* meta data init */
 	_gda_sqlite_provider_meta_init ((GdaServerProvider*) sqlite_prv);
 }
-
-GType
-gda_sqlite_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaSqliteProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sqlite_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaSqliteProvider),
-			0,
-			(GInstanceInitFunc) gda_sqlite_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0) {
-#ifdef WITH_BDBSQLITE
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
-#else
-  #ifdef STATIC_SQLITE
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
-  #else
-    #ifdef HAVE_SQLITE
-			GModule *module2;
-
-			module2 = find_sqlite_library ("libsqlite3");
-			if (module2)
-				load_symbols (module2);
-			if (s3r)
-				type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
-			else
-				g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
-    #else
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, CLASS_PREFIX "Provider", &info, 0);
-    #endif
-  #endif
-#endif
-			static GInterfaceInfo ifaceinfo = {
-				(GInterfaceInitFunc) gda_sqlite_provider_meta_iface_init,
-				NULL,
-				NULL
-			};
-			g_type_add_interface_static (type, GDA_TYPE_PROVIDER_META, &ifaceinfo);
-			static GInterfaceInfo ifaceproviderinfo = {
-				(GInterfaceInitFunc) gda_sqlite_provider_iface_init,
-				NULL,
-				NULL
-			};
-			g_type_add_interface_static (type, GDA_TYPE_PROVIDER, &ifaceproviderinfo);
-		}
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
-
 
 static GdaWorker *
 gda_sqlite_provider_create_worker (G_GNUC_UNUSED GdaServerProvider *provider, gboolean for_cnc)
@@ -1253,7 +1207,7 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 {
 	SqliteConnectionData *cdata;
 	GdaStatement *stm;
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	cdata = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
@@ -1824,7 +1778,7 @@ gda_sqlite_provider_begin_transaction (GdaServerProvider *provider, GdaConnectio
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	if (gda_connection_get_options (cnc) & GDA_CONNECTION_OPTIONS_READ_ONLY) {
 		gda_connection_add_event_string (cnc, _("Transactions are not supported in read-only mode"));
@@ -1868,7 +1822,7 @@ gda_sqlite_provider_commit_transaction (GdaServerProvider *provider, GdaConnecti
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	if (name) {
 		static GMutex mutex;
@@ -1908,7 +1862,7 @@ gda_sqlite_provider_rollback_transaction (GdaServerProvider *provider,
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	if (name) {
 		static GMutex mutex;
@@ -1945,7 +1899,7 @@ gda_sqlite_provider_add_savepoint (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	static GMutex mutex;
 	static GdaSet *params_set = NULL;
@@ -1974,7 +1928,7 @@ gda_sqlite_provider_rollback_savepoint (GdaServerProvider *provider, GdaConnecti
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	static GMutex mutex;
 	static GdaSet *params_set = NULL;
@@ -2002,7 +1956,7 @@ gda_sqlite_provider_delete_savepoint (GdaServerProvider *provider, GdaConnection
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (name && *name, FALSE);
-  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (provider);
+  GdaSqliteProviderPrivate *priv = gda_sqlite_provider_get_instance_private (GDA_SQLITE_PROVIDER (provider));
 
 	static GMutex mutex;
 	static GdaSet *params_set = NULL;
