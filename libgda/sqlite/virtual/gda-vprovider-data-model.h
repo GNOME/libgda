@@ -33,21 +33,10 @@ typedef enum {
 
 
 #define GDA_TYPE_VPROVIDER_DATA_MODEL            (gda_vprovider_data_model_get_type())
-#define GDA_VPROVIDER_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VPROVIDER_DATA_MODEL, GdaVproviderDataModel))
-#define GDA_VPROVIDER_DATA_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VPROVIDER_DATA_MODEL, GdaVproviderDataModelClass))
-#define GDA_IS_VPROVIDER_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VPROVIDER_DATA_MODEL))
-#define GDA_IS_VPROVIDER_DATA_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VPROVIDER_DATA_MODEL))
 
 G_BEGIN_DECLS
 
-typedef struct _GdaVproviderDataModel      GdaVproviderDataModel;
-typedef struct _GdaVproviderDataModelClass GdaVproviderDataModelClass;
-typedef struct _GdaVproviderDataModelPrivate GdaVproviderDataModelPrivate;
-
-struct _GdaVproviderDataModel {
-	GdaVirtualProvider            vprovider;
-	GdaVproviderDataModelPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaVproviderDataModel, gda_vprovider_data_model, GDA, VPROVIDER_DATA_MODEL, GdaVirtualProvider)
 
 struct _GdaVproviderDataModelClass {
 	GdaVirtualProviderClass       parent_class;
@@ -71,8 +60,6 @@ struct _GdaVproviderDataModelClass {
  * will generate a #GdaVconnectionDataModel connection object, from which data models can be added.
  */
 
-
-GType               gda_vprovider_data_model_get_type (void) G_GNUC_CONST;
 GdaVirtualProvider *gda_vprovider_data_model_new      (void);
 
 G_END_DECLS

@@ -1,5 +1,5 @@
 
-tchkpr = executable('check_parsercheck_parser',
+tchkpr = executable('check_parser',
 	['check_parser.c'],
 	c_args: [
 		'-include',

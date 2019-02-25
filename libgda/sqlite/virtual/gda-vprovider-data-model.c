@@ -51,14 +51,12 @@ GQuark gda_vprovider_data_model_error_quark (void)
 #define GDA_DEBUG_VIRTUAL
 #undef GDA_DEBUG_VIRTUAL
 
-struct _GdaVproviderDataModelPrivate {
+typedef struct  {
 	int foo;
-};
+} GdaVproviderDataModelPrivate;
 
-static void gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass);
-static void gda_vprovider_data_model_init       (GdaVproviderDataModel *prov, GdaVproviderDataModelClass *klass);
-static void gda_vprovider_data_model_finalize   (GObject *object);
-static GObjectClass  *parent_class = NULL;
+G_DEFINE_TYPE_WITH_PRIVATE (GdaVproviderDataModel, gda_vprovider_data_model, GDA_TYPE_VIRTUAL_PROVIDER)
+
 
 static GdaConnection *gda_vprovider_data_model_create_connection (GdaServerProvider *provider);
 static gboolean       gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnection *cnc,
@@ -117,68 +115,16 @@ GdaServerProviderBase data_model_base_functions = {
 static void
 gda_vprovider_data_model_class_init (GdaVproviderDataModelClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
 						(gpointer) &data_model_base_functions);
-
-	object_class->finalize = gda_vprovider_data_model_finalize;
 }
 
 
 static void
-gda_vprovider_data_model_init (GdaVproviderDataModel *prov, G_GNUC_UNUSED GdaVproviderDataModelClass *klass)
+gda_vprovider_data_model_init (GdaVproviderDataModel *prov)
 {
-	prov->priv = g_new (GdaVproviderDataModelPrivate, 1);
-}
-
-static void
-gda_vprovider_data_model_finalize (GObject *object)
-{
-	GdaVproviderDataModel *prov = (GdaVproviderDataModel *) object;
-
-	g_return_if_fail (GDA_IS_VPROVIDER_DATA_MODEL (prov));
-
-	/* free memory */
-	g_free (prov->priv);
-	prov->priv = NULL;
-
-	/* chain to parent class */
-	parent_class->finalize (object);
-}
-
-GType
-gda_vprovider_data_model_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaVproviderDataModelClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_vprovider_data_model_class_init,
-				NULL, NULL,
-				sizeof (GdaVproviderDataModel),
-				0,
-				(GInstanceInitFunc) gda_vprovider_data_model_init,
-				0
-			};
-			
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VIRTUAL_PROVIDER, "GdaVproviderDataModel", &info, 0);
-		g_mutex_unlock (&registering);
-		}
-	}
-
-	return type;
 }
 
 /**
@@ -422,7 +368,7 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 		m_params = gda_quark_list_new_from_string ("_IS_VIRTUAL=TRUE;EXTRA_FUNCTIONS=TRUE");
 
 	GdaServerProviderBase *parent_functions;
-	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_data_model_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	//g_print ("Open connection for Provider Name %\n", parent_functions->get_name(provider));
   if (parent_functions->open_connection) {
 	  if (! parent_functions->open_connection (GDA_SERVER_PROVIDER (provider), cnc, m_params, auth)) {
@@ -459,7 +405,7 @@ gda_vprovider_data_model_prepare_connection (GdaServerProvider *provider, GdaCon
 
 	/* calling the parent's function first */
 	GdaServerProviderBase *parent_functions;
-        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+        parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_data_model_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	//g_print ("Provider Class: %s\n", parent_functions->get_name (GDA_SERVER_PROVIDER (provider)));
   if (parent_functions->prepare_connection) {
 		if (! parent_functions->prepare_connection (GDA_SERVER_PROVIDER (provider), cnc, params, auth))
@@ -492,7 +438,7 @@ gda_vprovider_data_model_close_connection (GdaServerProvider *provider, GdaConne
 					    (GdaVconnectionDataModelFunc) cnc_close_foreach_func, cnc);
 
 	GdaServerProviderBase *parent_functions;
-	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_data_model_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	if (parent_functions->close_connection)
     return parent_functions->close_connection (provider, cnc);
   else {
@@ -511,7 +457,7 @@ gda_vprovider_data_model_statement_execute (GdaServerProvider *provider, GdaConn
 	_gda_vconnection_set_working_obj ((GdaVconnectionDataModel*) cnc, (GObject*) stmt);
 
 	GdaServerProviderBase *parent_functions;
-	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_data_model_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	retval = parent_functions->statement_execute (provider, cnc, stmt, params,
 						      model_usage, col_types,
 						      last_inserted_row, error);
@@ -573,7 +519,7 @@ static const gchar *
 gda_vprovider_data_model_get_name (G_GNUC_UNUSED GdaServerProvider *provider)
 {
   GdaServerProviderBase *parent_functions;
-	parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_data_model_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	if (parent_functions->get_name)
     return parent_functions->get_name (provider);
   else
