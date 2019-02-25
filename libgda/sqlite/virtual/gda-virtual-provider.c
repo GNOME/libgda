@@ -26,13 +26,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-server-provider-impl.h>
 
-#define PARENT_TYPE GDA_TYPE_SQLITE_PROVIDER
-#define CLASS(obj) (GDA_VIRTUAL_PROVIDER_CLASS (G_OBJECT_GET_CLASS (obj)))
-
-static void gda_virtual_provider_class_init (GdaVirtualProviderClass *klass);
-static void gda_virtual_provider_init       (GdaVirtualProvider *prov, GdaVirtualProviderClass *klass);
-static void gda_virtual_provider_finalize   (GObject *object);
-static GObjectClass *parent_class = NULL;
+G_DEFINE_TYPE (GdaVirtualProvider, gda_virtual_provider, GDA_TYPE_SQLITE_PROVIDER)
 
 /*
  * GdaVirtualProvider class implementation
@@ -40,60 +34,13 @@ static GObjectClass *parent_class = NULL;
 static void
 gda_virtual_provider_class_init (GdaVirtualProviderClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
 						(gpointer) NULL);
-
-	/* virtual methods */
-	object_class->finalize = gda_virtual_provider_finalize;
 }
 
 static void
-gda_virtual_provider_init (G_GNUC_UNUSED GdaVirtualProvider *vprov, G_GNUC_UNUSED GdaVirtualProviderClass *klass)
+gda_virtual_provider_init (G_GNUC_UNUSED GdaVirtualProvider *vprov)
 {
 }
 
-static void
-gda_virtual_provider_finalize (GObject *object)
-{
-	GdaVirtualProvider *prov = (GdaVirtualProvider *) object;
-
-	g_return_if_fail (GDA_IS_VIRTUAL_PROVIDER (prov));
-
-	/* chain to parent class */
-	parent_class->finalize (object);
-}
-
-GType
-gda_virtual_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaVirtualProviderClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_virtual_provider_class_init,
-				NULL, NULL,
-				sizeof (GdaVirtualProvider),
-				0,
-				(GInstanceInitFunc) gda_virtual_provider_init,
-				0
-			};
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (PARENT_TYPE, "GdaVirtualProvider", &info, G_TYPE_FLAG_ABSTRACT);
-		g_mutex_unlock (&registering);
-		}
-	}
-
-	return type;
-}

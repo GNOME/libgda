@@ -67,6 +67,7 @@
 #include <libgda/gda-debug-macros.h>
 #include <libgda/gda-provider-meta.h>
 #include <libgda/gda-provider.h>
+#include "gda-symbols-util.h"
 
 #define FILE_EXTENSION ".db"
 static gchar *get_table_nth_column_name (GdaServerProvider *prov, GdaConnection *cnc, const gchar *table_name, gint pos);
@@ -254,6 +255,8 @@ gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
 
 static void
 gda_sqlite_provider_iface_init (GdaProviderInterface *iface);
+
+extern Sqlite3ApiRoutines *s3r;
 
 /*
  * GObject methods

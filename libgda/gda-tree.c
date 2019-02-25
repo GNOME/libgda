@@ -314,9 +314,8 @@ gda_tree_clean (GdaTree *tree)
 
 	g_return_if_fail (GDA_IS_TREE (tree));
 	TO_IMPLEMENT; /* signal changes */
-	GdaTreePrivate *priv = gda_tree_get_instance_private (tree);
 
-	new_root = gda_tree_node_new (NULL);
+  new_root = gda_tree_node_new (NULL);
 
 	take_root_node (tree, new_root);
 }

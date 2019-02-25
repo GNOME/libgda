@@ -22,7 +22,7 @@
 #include <libgda/libgda.h>
 #include "gda-symbols-util.h"
 
-Sqlite3ApiRoutines *s3r = NULL;
+Sqlite3ApiRoutines *s3r;
 
 
 

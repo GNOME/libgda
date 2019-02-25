@@ -24,31 +24,19 @@
 
 #include <libgda/sqlite/gda-sqlite-provider.h>
 
-#define GDA_TYPE_VIRTUAL_PROVIDER            (gda_virtual_provider_get_type())
-#define GDA_VIRTUAL_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_VIRTUAL_PROVIDER, GdaVirtualProvider))
-#define GDA_VIRTUAL_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_VIRTUAL_PROVIDER, GdaVirtualProviderClass))
-#define GDA_IS_VIRTUAL_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_VIRTUAL_PROVIDER))
-#define GDA_IS_VIRTUAL_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_VIRTUAL_PROVIDER))
-
 G_BEGIN_DECLS
 
-typedef struct _GdaVirtualProvider      GdaVirtualProvider;
-typedef struct _GdaVirtualProviderClass GdaVirtualProviderClass;
+#define GDA_TYPE_VIRTUAL_PROVIDER            (gda_virtual_provider_get_type())
 
-struct _GdaVirtualProvider {
-	GdaSqliteProvider  provider;
-
-	/*< private >*/
-	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);
-};
+G_DECLARE_DERIVABLE_TYPE (GdaVirtualProvider, gda_virtual_provider, GDA, VIRTUAL_PROVIDER, GdaSqliteProvider)
 
 struct _GdaVirtualProviderClass {
 	GdaSqliteProviderClass      parent_class;
 
 	/*< private >*/
 	void (*_gda_reserved1) (void);
-	void (*_gda_reserved2) (void);};
+	void (*_gda_reserved2) (void);
+};
 
 /**
  * SECTION:gda-virtual-provider
@@ -59,8 +47,6 @@ struct _GdaVirtualProviderClass {
  *
  * This is a base virtual class for all virtual providers implementations.
  */
-
-GType          gda_virtual_provider_get_type          (void) G_GNUC_CONST;
 
 G_END_DECLS
 
