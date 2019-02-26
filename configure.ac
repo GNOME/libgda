@@ -605,10 +605,11 @@ then
 	        if test "$enable_crypto" = "yes"
 	        then
 			AC_MSG_ERROR([libcrypto (part of OpenSSL) support requested but not found])
+			enable_crypto=no
 	        fi)
 fi
 
-AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "$enable_crypto" = "yes"])
+AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "x$enable_crypto" = "xyes"])
 AC_SUBST(LIBCRYPTO_CFLAGS)
 AC_SUBST(LIBCRYPTO_LIBS)
 

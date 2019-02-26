@@ -63,11 +63,11 @@ before_script:
 autotools_build:
   stage: build
   script:
-  - ./autogen.sh --disable-crypto
+  - ./autogen.sh
   - make distclean
   - mkdir _build
   - cd _build
-  - ../configure
+  - ../configure --disable-crypto
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check

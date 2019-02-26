@@ -4,7 +4,7 @@ subdir('reuseable')
 subdir('sqlite')
 subdir('skel-implementation')
 
-if libcrypto_dep.found ()
+if libcrypto_dep.found () and not get_option('disable-crypto')
 subdir('sqlcipher')
 endif
 

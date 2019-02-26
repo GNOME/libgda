@@ -256,7 +256,8 @@ gda_sqlite_provider_meta_iface_init (GdaProviderMetaInterface *iface);
 static void
 gda_sqlite_provider_iface_init (GdaProviderInterface *iface);
 
-extern Sqlite3ApiRoutines *s3r;
+// API routines from library
+Sqlite3ApiRoutines *s3r;
 
 /*
  * GObject methods

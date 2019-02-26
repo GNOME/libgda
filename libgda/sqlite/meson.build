@@ -78,7 +78,7 @@ endif
 
 sqlite_cargs += ['-DSEARCH_LIB_PATH="'+sqlite_path+'"']
 
-if libcrypto_dep.found ()
+if libcrypto_dep.found () and not get_option('disable-crypto')
 sqlcipher_deps = []
 
 sqlcipher_sources = []

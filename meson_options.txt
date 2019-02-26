@@ -5,7 +5,7 @@ option('with-goocanvas', type : 'boolean', value : false, description : 'Enable 
 option('with-graphviz', type : 'boolean', value : false, description : 'Enable using Graphviz')
 option('enable-json', type : 'boolean', value : true, description : 'Enable support for JSON, disabled by default')
 option('enable-gda-gi', type : 'boolean', value : false, description : 'Enable GObject Introspection for libgda')
-option('disable-crypto', type : 'boolean', value : true, description : 'Disable SQLCipher database provider (using the libcrypto library, part of OpenSSL)') 
+option('disable-crypto', type : 'boolean', value : false, description : 'Disable SQLCipher database provider (using the libcrypto library, part of OpenSSL)')
 option('with-libsoup', type : 'boolean', value : true, description : 'Enable libsoup support')
 option('with-libsecret', type : 'boolean', value : false, description : 'Enable libsecret support')
 option('with-gnome-keyring', type : 'boolean', value : false, description : 'Enable gnome-keyring support')
