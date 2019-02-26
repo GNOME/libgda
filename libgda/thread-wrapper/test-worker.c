@@ -86,7 +86,7 @@ data3_free (Data3 *data)
 }
 
 static gpointer
-test3_worker_func (Data3 *data)
+test3_worker_func (Data3 *data, GError **error)
 {
 	gint *retval;
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
@@ -153,7 +153,7 @@ test3 (void)
  * Test 4: cancellation tests
  */
 static gpointer
-test4_worker_func (gpointer data)
+test4_worker_func (gpointer data, GError **error)
 {
 	/* just spend some idle time */
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
@@ -234,7 +234,7 @@ test4 (void)
  * Test 5: with main loop
  */
 static gpointer
-test5_worker_func (gpointer data)
+test5_worker_func (gpointer data, GError **error)
 {
 	/* just spend some idle time */
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
