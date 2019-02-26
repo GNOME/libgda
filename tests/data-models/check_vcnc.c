@@ -91,6 +91,7 @@ test1 (Data *data) {
 	provider = gda_vprovider_hub_new ();
 	virtual = gda_virtual_connection_open (provider, GDA_CONNECTION_OPTIONS_NONE, NULL);
 	g_assert (virtual);
+	g_assert (GDA_IS_VCONNECTION_HUB (virtual));
 
 	/* load CSV data models */
 	GdaDataModel *country_model, *city_model;
@@ -104,7 +105,8 @@ test1 (Data *data) {
 	g_free (file);
 	g_object_unref (options);
 
-	g_message ("Add data models to connection: city");
+	g_message ("Adding data models to virtal connection as inputs");
+	g_message ("Add data models to virtual connection: city");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
 						   city_model, "city", &error)) {
 		g_message ("Add city model error: %s", error->message);
@@ -112,7 +114,7 @@ test1 (Data *data) {
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
-	g_message ("Add data models to connection: country");
+	g_message ("Add data models to virtual connection: country");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
 						   country_model, "country", &error)) {
 		g_message ("Add country model error: %s", error->message);
@@ -120,9 +122,35 @@ test1 (Data *data) {
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
+	// Test data models in virtal connection
+	GdaDataModel *datamodel;
+	datamodel = gda_connection_execute_select_command (virtual, "SELECT * FROM city", &error);
+	if (datamodel == NULL) {
+		g_message ("Select data from city model error: %s", error->message);
+		g_clear_error (&error);
+		g_main_loop_quit (data->loop);
+		return G_SOURCE_REMOVE;
+	}
+	gchar *dump = NULL;
+	dump = gda_data_model_dump_as_string (datamodel);
+	g_message ("Selected data from imported data model city:\n%s", dump);
+	g_free (dump);
+	g_object_unref (datamodel);
+
+	datamodel = gda_connection_execute_select_command (virtual, "SELECT * FROM country", &error);
+	if (datamodel == NULL) {
+		g_message ("Select data from city model error: %s", error->message);
+		g_clear_error (&error);
+		g_main_loop_quit (data->loop);
+		return G_SOURCE_REMOVE;
+	}
+	dump = gda_data_model_dump_as_string (datamodel);
+	g_message ("Selected data from imported data model country:\n%s", dump);
+	g_free (dump);
+	g_object_unref (datamodel);
 
 	/* SQLite connection for outputs */
-	g_message ("SQLite connection for outputs");
+	g_message ("Open SQLite connection for outputs");
 	out_cnc = open_destination_connection (data, &error);
 	if (out_cnc == NULL) {
 		g_message ("Error opening destination %s", error->message);
@@ -132,7 +160,7 @@ test1 (Data *data) {
 	}
 
 	/* adding connections to the virtual connection */
-	g_message ("Add data models to connection");
+	g_message ("Add output connection to virtual connection hub");
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), out_cnc, "out", &error)) {
 		g_message ("Could not add connection to virtual connection: %s",
 			error->message);

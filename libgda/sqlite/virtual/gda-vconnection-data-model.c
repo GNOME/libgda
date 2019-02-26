@@ -157,12 +157,15 @@ gda_vconnection_data_model_dispose (GObject *object)
 
 	g_return_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc));
 
-	/* free memory */
-	priv->being_disposed = TRUE;
-	while (priv->table_data_list) {
-		GdaVConnectionTableData *td;
-		td = (GdaVConnectionTableData *) priv->table_data_list->data;
-		get_rid_of_vtable (cnc, td, TRUE, NULL);
+	if (priv->table_data_list != NULL) {
+		/* free memory */
+		priv->being_disposed = TRUE;
+		while (priv->table_data_list) {
+			GdaVConnectionTableData *td;
+			td = (GdaVConnectionTableData *) priv->table_data_list->data;
+			get_rid_of_vtable (cnc, td, TRUE, NULL);
+		}
+		priv->table_data_list = NULL;
 	}
 	gda_connection_close ((GdaConnection *) cnc, NULL);
 
@@ -302,7 +305,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	if (rc != SQLITE_OK) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     "%s", zErrMsg);
+			     _("Internal Error: when trying to add data model spec for virtual connetion: %s"), zErrMsg);
 		SQLITE3_CALL (sqlite3_free) (zErrMsg);
 		_gda_vconnection_data_model_table_data_free (td);
 		priv->table_data_list = g_slist_remove (priv->table_data_list, td);
@@ -580,7 +583,7 @@ vcontext_free (VContext *context)
 		g_object_unref (obj);
 	}
 	if (context->context_data) {
-		g_array_free (context->context_data, TRUE);
+		g_ptr_array_free (context->context_data, TRUE);
 		context->context_data = NULL;
 	}
 	g_free (context);
@@ -611,9 +614,7 @@ _gda_vconnection_set_working_obj (GdaVconnectionDataModel *cnc, GObject *obj)
 			if (! vc) {
 				vc = g_new0 (VContext, 1);
 				g_weak_ref_set (&(vc->context_object), obj);
-				vc->context_data = g_array_new (FALSE, FALSE,
-								sizeof (VirtualFilteredData*));
-				g_array_set_clear_func (vc->context_data, (GDestroyNotify) _gda_vconnection_virtual_filtered_data_unref);
+				vc->context_data = g_ptr_array_new_full (1, (GDestroyNotify) _gda_vconnection_virtual_filtered_data_unref);
 				vc->vtable = td;
 				g_hash_table_insert (td->context.hash, obj, vc);
 #ifdef DEBUG_VCONTEXT

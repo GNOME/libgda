@@ -218,7 +218,7 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 	gint n;
 	n = gda_data_model_get_n_columns (model);
 	n = (n >= 0) ? n : 1;
-	data->values_array = g_array_new (FALSE, FALSE, sizeof (GValue));
+	data->values_array = g_ptr_array_new_full (1, (GDestroyNotify) gda_value_free);
 	data->ncols = gda_data_model_get_n_columns (model);
 	data->nrows = -1;
 	data->rowid_offset = vtable->rows_offset;
@@ -249,13 +249,7 @@ virtual_filtered_data_free (VirtualFilteredData *data)
 		g_object_unref (data->iter);
 
 	if (data->values_array) {
-		guint i;
-		for (i = 0; i < data->values_array->len; i++) {
-			GValue *value;
-			value = & g_array_index (data->values_array, GValue, i);
-			g_value_reset (value);
-		}
-		g_array_free (data->values_array, TRUE);
+		g_ptr_array_free (data->values_array, TRUE);
 	}
 	g_free (data);
 
@@ -874,25 +868,22 @@ virtualNext (sqlite3_vtab_cursor *cur)
 				GdaHolder *h = (GdaHolder*) list->data;
 				GError *lerror = NULL;
 				if (! gda_holder_is_valid_e (h, &lerror)) {
-					GValue value = {0};
-					g_value_init (&value, G_TYPE_ERROR);
-					g_value_take_boxed (&value, lerror);
-					g_array_append_val (data->values_array, value);
+					GValue *value = gda_value_new (G_TYPE_ERROR);
+					g_value_take_boxed (value, lerror);
+					g_ptr_array_insert (data->values_array, -1, value);
 				}
 				else {
 					const GValue *cvalue;
 					cvalue = gda_holder_get_value (h);
 					if (cvalue && (G_VALUE_TYPE (cvalue) != 0)) {
-						GValue copy = {0};
-						g_value_init (&copy, G_VALUE_TYPE (cvalue));
-						g_value_copy (cvalue, &copy);
-						g_array_append_val (data->values_array, copy);
+						GValue *copy = gda_value_new (G_VALUE_TYPE (cvalue));
+						g_value_copy (cvalue, copy);
+						g_ptr_array_insert (data->values_array, -1, copy);
 					}
 					else {
-						GValue value = {0};
-						g_value_init (&value, G_TYPE_ERROR);
-						g_value_take_boxed (&value, lerror);
-						g_array_append_val (data->values_array, value);
+						GValue *value = gda_value_new (G_TYPE_ERROR);
+						g_value_take_boxed (value, lerror);
+						g_ptr_array_insert (data->values_array, -1, value);
 					}
 				}
 			}
@@ -944,10 +935,10 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 
 		g_assert (vtable->td->context.current_vcontext);
 		guint i;
-		GArray *values_array = vtable->td->context.current_vcontext->context_data;
+		GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
 		for (i = 0; i < values_array->len; i++) {
 			VirtualFilteredData *vd;
-			vd = g_array_index (values_array, VirtualFilteredData*, i);
+			vd = g_ptr_array_index (values_array, i);
 			if (vd->rowid_offset == (guint32) (rowid >> 32)) {
 				data = vd;
 				break;
@@ -956,7 +947,7 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 	}
 
 	if (data)
-		value = & g_array_index (data->values_array, GValue, row * data->ncols + col);
+		value = g_ptr_array_index (data->values_array, row * data->ncols + col);
 
 	if (!value)
 		g_set_error (error, GDA_VPROVIDER_DATA_MODEL_ERROR, GDA_VPROVIDER_DATA_MODEL_GENERAL_ERROR,
@@ -1180,13 +1171,13 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 	/* find a VirtualFilteredData corresponding to this filter */
 	VirtualFilteredData *data = NULL;
 	g_assert (vtable->td->context.current_vcontext);
-	GArray *values_array = vtable->td->context.current_vcontext->context_data;
+	GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
 
 	if (values_array->len > 0) {
 		guint i;
 		for (i = 0; i < values_array->len; i++) {
 			VirtualFilteredData *vd;
-			vd = g_array_index (values_array, VirtualFilteredData*, i);
+			vd = g_ptr_array_index (values_array, i);
 			if (vd->reuseable &&
 			    (vd->idxNum == idxNum) &&
 			    (vd->argc == argc) &&
@@ -1232,7 +1223,7 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 		if (! vtable->td->real_model)
 			return SQLITE_ERROR;
 		data = virtual_filtered_data_new (vtable, vtable->td->real_model, idxNum, idxStr, argc, argv);
-		g_array_prepend_val (values_array, data);
+		g_ptr_array_insert (values_array, -1, data);
 #ifdef DEBUG_VCONTEXT
 		g_print ("VData %p prepended to array %p wt %d\n", data, values_array,
 			 values_array->len);
@@ -1241,9 +1232,9 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 			VirtualFilteredData *ldata;
 			gint index;
 			index = values_array->len - 1;
-			ldata = g_array_index (values_array, VirtualFilteredData*, index);
+			ldata = g_ptr_array_index (values_array, index);
 			_gda_vconnection_virtual_filtered_data_unref (ldata);
-			g_array_remove_index (values_array, index);
+			g_ptr_array_remove_index (values_array, index);
 		}
 	}
 	
@@ -1598,12 +1589,12 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 	TRACE (tab, NULL);
 
 	g_assert (vtable->td->context.current_vcontext);
-	GArray *values_array = vtable->td->context.current_vcontext->context_data;
+	GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
 	if (values_array) {
 		guint i;
 		for (i = 0; i < values_array->len; i++) {
 			VirtualFilteredData *data;
-			data = g_array_index (values_array, VirtualFilteredData*, i);
+			data = g_ptr_array_index (values_array, i);
 			data->reuseable = FALSE;
 		}
 	}
