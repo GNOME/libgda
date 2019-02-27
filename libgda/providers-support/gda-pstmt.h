@@ -49,14 +49,6 @@ struct _GdaPStmt {
 	GObject       object;
 
 	GdaPStmtPrivate *priv;
-	gchar        *sql; /* actual SQL code used for this prepared statement, mem freed by GdaPStmt */
-        GSList       *param_ids; /* list of parameters' IDs (as gchar *), mem freed by GdaPStmt */
-
-	/* meta data */
-        gint          ncols;
-        GType        *types; /* array of ncols types */
-	GSList       *tmpl_columns; /* list of #GdaColumn objects which data models created from this prep. statement
-				     * can copy */
 
 	/*< private >*/
 	/* Padding for future expansion */
@@ -107,6 +99,17 @@ GType         gda_pstmt_get_type          (void) G_GNUC_CONST;
 void          gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
 void          gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
 GdaStatement *gda_pstmt_get_gda_statement (GdaPStmt *pstmt);
+
+
+gchar         *gda_pstmt_get_sql          (GdaPStmt *ps);
+void           gda_pstmt_set_sql          (GdaPStmt *ps, const gchar *sql);
+GSList        *gda_pstmt_get_param_ids    (GdaPStmt *ps);
+void           gda_pstmt_set_param_ids    (GdaPStmt *ps, GSList* params);
+gint           gda_pstmt_get_ncols        (GdaPStmt *ps);
+void           gda_pstmt_set_cols         (GdaPStmt *ps, gint ncols, GType *types);
+GSList        *gda_pstmt_get_tmpl_columns (GdaPStmt *ps);
+void           gda_pstmt_set_tmpl_columns (GdaPStmt *ps, GSList* columns);
+GType         *gda_pstmt_get_types        (GdaPStmt *ps);
 
 G_END_DECLS
 

@@ -1664,8 +1664,8 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
         ps = gda_postgres_pstmt_new (cnc, cdata->pconn, prep_stm_name);
 	g_free (prep_stm_name);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
-        _GDA_PSTMT (ps)->param_ids = param_ids;
-        _GDA_PSTMT (ps)->sql = sql;
+        gda_pstmt_set_param_ids (_GDA_PSTMT (ps), param_ids);
+        gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 	if (sql_can_cause_date_format_change (sql))
 		ps->date_format_change = TRUE;
 
@@ -1723,8 +1723,8 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 		GdaPostgresPStmt *ps;
 		PQclear (pg_res);
 		ps = gda_postgres_pstmt_new (cdata->cnc, cdata->pconn, prep_stm_name);
-		_GDA_PSTMT (ps)->param_ids = NULL;
-		_GDA_PSTMT (ps)->sql = g_strdup (sql);
+		gda_pstmt_set_param_ids (_GDA_PSTMT (ps), NULL);
+		gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 		if (sql_can_cause_date_format_change (sql))
 			ps->date_format_change = TRUE;
 
@@ -2020,13 +2020,13 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 	gint nb_params;
 	gboolean transaction_started = FALSE;
 
-	nb_params = g_slist_length (_GDA_PSTMT (ps)->param_ids);
+	nb_params = g_slist_length (gda_pstmt_get_param_ids (_GDA_PSTMT (ps)));
 	param_values = g_new0 (char *, nb_params);
 	param_lengths = g_new0 (int, nb_params);
 	param_formats = g_new0 (int, nb_params);
 	param_mem = g_new0 (gboolean, nb_params);
 
-	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 0, list = gda_pstmt_get_param_ids (_GDA_PSTMT (ps)); list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 		GdaHolder *h = NULL;
 
@@ -2148,15 +2148,15 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				prep_param_ids = gtps->param_ids;
-				gtps->param_ids = NULL;
+				prep_param_ids = gda_pstmt_get_param_ids (_GDA_PSTMT (gtps));
+				gda_pstmt_set_param_ids (gtps, NULL);
 				
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
 				/* restore previous @param_ids */
-				copied_param_ids = gtps->param_ids;
-				gtps->param_ids = prep_param_ids;
+				copied_param_ids =  gda_pstmt_get_param_ids (gtps);
+				gda_pstmt_set_param_ids (gtps, prep_param_ids);
 
 				/* execute */
 				obj = gda_postgres_provider_statement_execute (provider, cnc,
@@ -2168,7 +2168,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
 
-				gtps->param_ids = copied_param_ids;
+				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 
 				/*if (GDA_IS_DATA_MODEL (obj))
 				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
@@ -2285,8 +2285,8 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 
 	/* add a connection event for the execution */
 	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
-        gda_connection_add_event (cnc, event);
+	gda_connection_event_set_description (event,  gda_pstmt_get_sql (_GDA_PSTMT (ps)));
+	gda_connection_add_event (cnc, event);
 
 	/* execute prepared statement using C API: random access based */
 	PGresult *pg_res;

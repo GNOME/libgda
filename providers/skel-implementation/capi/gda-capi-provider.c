@@ -1071,8 +1071,8 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
 	/* create a prepared statement object */
 	/*ps = gda_capi_pstmt_new (...);*/
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
-        _GDA_PSTMT (ps)->param_ids = param_ids;
-        _GDA_PSTMT (ps)->sql = sql;
+       gda_pstmt_set_param_ids ( _GDA_PSTMT (ps), param_ids);
+        gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	g_object_unref (ps);
@@ -1159,7 +1159,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	GSList *list;
 	GdaConnectionEvent *event = NULL;
 	int i;
-	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 1, list = gda_pstmt_get_param_ids (_GDA_PSTMT (ps)); list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 		GdaHolder *h;
 		
@@ -1277,15 +1277,15 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				prep_param_ids = gtps->param_ids;
-				gtps->param_ids = NULL;
+				gda_pstmt_set_param_ids (prep_param_ids, gda_pstmt_get_param_ids (gtps));
+				gda_pstmt_set_param_ids (gtps, NULL);
 				
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
 				/* restore previous @param_ids */
-				copied_param_ids = gtps->param_ids;
-				gtps->param_ids = prep_param_ids;
+				copied_param_ids = gda_pstmt_get_param_ids (gtps);
+				gda_pstmt_set_param_ids (gtps, prep_param_ids);
 
 				/* execute */
 				obj = gda_capi_provider_statement_execute (provider, cnc,
@@ -1298,7 +1298,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
 
-				gtps->param_ids = copied_param_ids;
+				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 
 				/*if (GDA_IS_DATA_MODEL (obj))
 				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
@@ -1325,7 +1325,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	
 	/* add a connection event for the execution */
 	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
+        gda_connection_event_set_description (event, gda_pstmt_get_sql (_GDA_PSTMT (ps)));
         gda_connection_add_event (cnc, event);
 
 	if (empty_rs) {
@@ -1359,8 +1359,8 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 	}
 	
 	/* execute prepared statement using C API depending on its kind */
-	if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
-            ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
+	if (! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SELECT", 6) ||
+            ! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXPLAIN", 7)) {
 		GObject *data_model;
 		GdaDataModelAccessFlags flags;
 

@@ -184,9 +184,9 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 	gint *missing_cols, nb_missing;
 	GdaDataSelect *pmodel = (GdaDataSelect*) model;
 
-	missing_cols = g_new (gint, gda_data_select_get_prep_stmt(pmodel)->ncols);
-	for (nb_missing = 0, i = 0; i <  gda_data_select_get_prep_stmt(pmodel)->ncols; i++) {
-		if ( gda_data_select_get_prep_stmt(pmodel)->types[i] == GDA_TYPE_NULL)
+	missing_cols = g_new (gint, gda_pstmt_get_ncols (gda_data_select_get_prep_stmt(pmodel)));
+	for (nb_missing = 0, i = 0; i <  gda_pstmt_get_ncols (gda_data_select_get_prep_stmt(pmodel)); i++) {
+		if ( gda_pstmt_get_types (gda_data_select_get_prep_stmt(pmodel))[i] == GDA_TYPE_NULL)
 			missing_cols [nb_missing++] = i;
 	}
 
@@ -204,10 +204,10 @@ read_rows_to_init_col_types (GdaSqliteRecordset *model)
 		g_print ("Prefetched row %d of model %p\n", model->priv->next_row_num - 1, pmodel);
 #endif
 		for (i = nb_missing - 1; i >= 0; i--) {
-			if ( gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]] != GDA_TYPE_NULL) {
+			if ( gda_pstmt_get_types (gda_data_select_get_prep_stmt(pmodel)) [missing_cols [i]] != GDA_TYPE_NULL) {
 #ifdef GDA_DEBUG_NO
 				g_print ("Found type '%s' for col %d\n", 
-					 g_type_name ( gda_data_select_get_prep_stmt(pmodel)->types [missing_cols [i]]),
+					 g_type_name ( gda_pstmt_get_types (gda_data_select_get_prep_stmt(pmodel)) [missing_cols [i]]),
 					 missing_cols [i]);
 #endif
 				memmove (missing_cols + i, missing_cols + i + 1, sizeof (gint) * (nb_missing - i - 1));
@@ -248,43 +248,43 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
                 _gda_sqlite_compute_types_hash (cdata);
 
         /* make sure @ps reports the correct number of columns */
-	if (_GDA_PSTMT (ps)->ncols < 0)
-		_GDA_PSTMT (ps)->ncols = SQLITE3_CALL (sqlite3_column_count) (ps->sqlite_stmt) -
-			ps->nb_rowid_columns;
+	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), SQLITE3_CALL (sqlite3_column_count) (ps->sqlite_stmt) -
+			ps->nb_rowid_columns, gda_pstmt_get_types (_GDA_PSTMT (ps)));
 
         /* completing ps */
 	g_assert (! ps->stmt_used);
-        ps->stmt_used = TRUE;
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+	ps->stmt_used = TRUE;
+	if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
-									 gda_column_new ());
-		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_prepend (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)),
+		   gda_column_new ()));
+		gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_reverse (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps))));
 
 		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
-		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)), g_new (GType, gda_pstmt_get_ncols (_GDA_PSTMT (ps))));
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = GDA_TYPE_NULL;
 
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols)
+					if (i >= gda_pstmt_get_ncols (_GDA_PSTMT (ps)))
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-							   _GDA_PSTMT (ps)->ncols - 1);
+							   gda_pstmt_get_ncols (_GDA_PSTMT (ps)) - 1);
 					else 
-						_GDA_PSTMT (ps)->types [i] = col_types [i];
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = col_types [i];
 				}
 			}
 		}
 		
 		/* fill GdaColumn's data */
-		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-		     i < GDA_PSTMT (ps)->ncols; 
+		for (i=0, list = gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps));
+		     i < gda_pstmt_get_ncols (_GDA_PSTMT (ps));
 		     i++, list = list->next) {
 			GdaColumn *column;
 			gint real_col = i + ps->nb_rowid_columns;
@@ -293,8 +293,8 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 			gda_column_set_description (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
 			gda_column_set_name (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
 			gda_column_set_dbms_type (column, SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col));
-			if (_GDA_PSTMT (ps)->types [i] != GDA_TYPE_NULL)
-				gda_column_set_g_type (column, _GDA_PSTMT (ps)->types [i]);
+			if (gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] != GDA_TYPE_NULL)
+				gda_column_set_g_type (column, gda_pstmt_get_types (_GDA_PSTMT (ps)) [i]);
 		}
         }
 
@@ -333,8 +333,8 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 	GType gtype = GDA_TYPE_NULL;
 	gint real_col = colnum + ps->nb_rowid_columns;
 
-	if (_GDA_PSTMT (ps)->types [colnum] != GDA_TYPE_NULL)
-		return _GDA_PSTMT (ps)->types [colnum];
+	if (gda_pstmt_get_types (_GDA_PSTMT (ps)) [colnum] != GDA_TYPE_NULL)
+		return gda_pstmt_get_types (_GDA_PSTMT (ps)) [colnum];
 	
 	ctype = SQLITE3_CALL (sqlite3_column_origin_name) (ps->sqlite_stmt, real_col);
 	if (ctype && !strcmp (ctype, "rowid"))
@@ -388,10 +388,10 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	switch (rc) {
 	case  SQLITE_ROW: {
 		gint col, real_col;
-		prow = gda_row_new (_GDA_PSTMT (ps)->ncols);
-		for (col = 0; col < _GDA_PSTMT (ps)->ncols; col++) {
+		prow = gda_row_new (gda_pstmt_get_ncols (_GDA_PSTMT (ps)));
+		for (col = 0; col < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); col++) {
 			GValue *value;
-			GType type = _GDA_PSTMT (ps)->types [col];
+			GType type = gda_pstmt_get_types (_GDA_PSTMT (ps)) [col];
 			
 			real_col = col + ps->nb_rowid_columns;
 
@@ -421,10 +421,10 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				if (type != GDA_TYPE_NULL) {
 					GdaColumn *column;
 					
-					_GDA_PSTMT (ps)->types [col] = type;
+					gda_pstmt_get_types (_GDA_PSTMT (ps)) [col] = type;
 					column = gda_data_model_describe_column (GDA_DATA_MODEL (model), col);
 					gda_column_set_g_type (column, type);
-					column = (GdaColumn *) g_slist_nth_data (_GDA_PSTMT (ps)->tmpl_columns, col);
+					column = (GdaColumn *) g_slist_nth_data (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)), col);
 					gda_column_set_g_type (column, type);
 				}
 			}
@@ -656,7 +656,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 						     GDA_SERVER_PROVIDER_DATA_ERROR,
 						     "Unhandled type '%s' in SQLite recordset",
-						     gda_g_type_to_string (_GDA_PSTMT (ps)->types [col]));
+						     gda_g_type_to_string (gda_pstmt_get_types (_GDA_PSTMT (ps)) [col]));
 					gda_row_invalidate_value_e (prow, value, lerror);
 				}
 			}

@@ -554,36 +554,36 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	g_assert (ps->mysql_stmt);
 
 	/* make sure @ps reports the correct number of columns using the API*/
-        if (_GDA_PSTMT (ps)->ncols < 0)
-		_GDA_PSTMT(ps)->ncols = mysql_stmt_field_count (ps->mysql_stmt);
+	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
+		gda_pstmt_set_cols (_GDA_PSTMT(ps), mysql_stmt_field_count (ps->mysql_stmt), gda_pstmt_get_types (_GDA_PSTMT(ps)));
 
         /* completing @ps if not yet done */
 	g_assert (! ps->stmt_used);
         ps->stmt_used = TRUE;
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+        if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
-									 gda_column_new ());
-		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_prepend (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)),
+									 gda_column_new ()));
+		gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_reverse (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps))));
 
 		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
-		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)), g_new (GType,gda_pstmt_get_ncols (_GDA_PSTMT (ps))));
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = GDA_TYPE_NULL;
 
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols) {
+					if (i >= gda_pstmt_get_ncols (_GDA_PSTMT (ps))) {
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-							   _GDA_PSTMT (ps)->ncols - 1);
+							   gda_pstmt_get_ncols (_GDA_PSTMT (ps)) - 1);
 						break;
 					}
 					else
-						_GDA_PSTMT (ps)->types [i] = col_types [i];
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = col_types [i];
 				}
 			}
 		}
@@ -592,7 +592,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	/* get rid of old bound result if any */
 	if (ps->mysql_bind_result) {
 		gint i;
-		for (i = 0; i < ((GdaPStmt *) ps)->ncols; ++i) {
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); ++i) {
 			g_free (ps->mysql_bind_result[i].buffer);
 			g_free (ps->mysql_bind_result[i].is_null);
 			g_free (ps->mysql_bind_result[i].length);
@@ -605,21 +605,21 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	MYSQL_RES *mysql_res = mysql_stmt_result_metadata (ps->mysql_stmt);
 	MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 	
-	MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, GDA_PSTMT (ps)->ncols);
+	MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, gda_pstmt_get_ncols (_GDA_PSTMT (ps)));
 	GSList *list;
 
-	for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-	     i < GDA_PSTMT (ps)->ncols; 
+	for (i=0, list = gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps));
+	     i < gda_pstmt_get_ncols (_GDA_PSTMT (ps));
 	     i++, list = list->next) {
 		GdaColumn *column = GDA_COLUMN (list->data);
 		
 		/* use C API to set columns' information using gda_column_set_*() */
 		MYSQL_FIELD *field = &mysql_fields[i];
 		
-		GType gtype = _GDA_PSTMT(ps)->types[i];
+		GType gtype = gda_pstmt_get_types (_GDA_PSTMT (ps))[i];
 		if (gtype == GDA_TYPE_NULL) {
 			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
-			_GDA_PSTMT(ps)->types[i] = gtype;
+			gda_pstmt_get_types (_GDA_PSTMT (ps))[i] = gtype;
 		}
 		gda_column_set_g_type (column, gtype);
 		gda_column_set_name (column, field->name);
@@ -753,7 +753,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				       "http://gitlab.gnome.org/GNOME/libgda/issues");
 
 		gint col;
-		for (col = 0; col < gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols; ++col) {
+		for (col = 0; col < gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)); ++col) {
 			my_bool truncated;
 			mysql_bind_result[col].error = &truncated;
 			mysql_stmt_fetch_column (imodel->priv->mysql_stmt, &(mysql_bind_result[col]),
@@ -775,13 +775,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 	/* g_print ("%s: SQL=%s\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->sql); */
 
 	
-	GdaRow *row = gda_row_new (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols);
+	GdaRow *row = gda_row_new (gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)));
 	gint col;
-	for (col = 0; col < gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->ncols; ++col) {
+	for (col = 0; col < gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)); ++col) {
 		gint i = col;
 		
 		GValue *value = gda_row_get_value (row, i);
-		GType type = gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)->types[i];
+		GType type = gda_pstmt_get_types (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel))[i];
 		
 		/*g_print ("%s: #%d : TYPE=%d, GTYPE=%s\n", __func__, i, mysql_bind_result[i].buffer_type, g_type_name (type));*/
 

@@ -432,7 +432,6 @@ gda_vconnection_data_model_get_model (GdaVconnectionDataModel *cnc, const gchar 
 {
 	GdaVConnectionTableData *td;
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), NULL);
-	GdaVconnectionDataModelPrivate *priv = gda_vconnection_data_model_get_instance_private (cnc);
 	if (!table_name || !(*table_name))
 		return NULL;
 
@@ -457,7 +456,6 @@ gda_vconnection_data_model_get_table_name (GdaVconnectionDataModel *cnc, GdaData
 {
 	GdaVConnectionTableData *td;
 	g_return_val_if_fail (GDA_IS_VCONNECTION_DATA_MODEL (cnc), NULL);
-	GdaVconnectionDataModelPrivate *priv = gda_vconnection_data_model_get_instance_private (cnc);
 	if (!model)
 		return NULL;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);

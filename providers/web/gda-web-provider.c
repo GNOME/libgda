@@ -1331,8 +1331,8 @@ gda_web_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *
 		goto out;
 
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
-	_GDA_PSTMT (ps)->param_ids = param_ids;
-	_GDA_PSTMT (ps)->sql = sql;
+	gda_pstmt_set_param_ids (_GDA_PSTMT (ps), param_ids);
+	gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	g_object_unref (ps);
@@ -1422,15 +1422,15 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	xmlNewChild (root, NULL, BAD_CAST "token", BAD_CAST token);
 	g_free (token);
 	cmdnode = xmlNewChild (root, NULL, BAD_CAST "cmd", BAD_CAST "EXEC");
-	node = xmlNewTextChild (cmdnode, NULL, BAD_CAST "sql", BAD_CAST _GDA_PSTMT (ps)->sql);
+	node = xmlNewTextChild (cmdnode, NULL, BAD_CAST "sql", BAD_CAST gda_pstmt_get_sql (_GDA_PSTMT (ps)));
 	if ((gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) ||
 	    (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMPOUND))
 		xmlSetProp (node, BAD_CAST "type", BAD_CAST "SELECT");
 	else if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_UNKNOWN) {
-		if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "select", 6) ||
-		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "pragma", 6) ||
-		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "show", 4) ||
-		    ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "describe", 8))
+		if (! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "select", 6) ||
+		    ! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "pragma", 6) ||
+		    ! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "show", 4) ||
+		    ! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "describe", 8))
 			xmlSetProp (node, BAD_CAST "type", BAD_CAST "SELECT");
 	}
 	xmlNewChild (cmdnode, NULL, BAD_CAST "preparehash", BAD_CAST (ps->pstmt_hash));
@@ -1440,10 +1440,10 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	GdaConnectionEvent *event = NULL;
 	int i;
 	xmlNodePtr argsnode;
-	if (_GDA_PSTMT (ps)->param_ids)
+	if (gda_pstmt_get_param_ids (_GDA_PSTMT (ps)))
 		argsnode = xmlNewChild (cmdnode, NULL, BAD_CAST "arguments", NULL);
 
-	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 1, list = gda_pstmt_get_param_ids (_GDA_PSTMT (ps)); list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 		GdaHolder *h;
 		
@@ -1569,15 +1569,15 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				prep_param_ids = gtps->param_ids;
-				gtps->param_ids = NULL;
+				prep_param_ids = gda_pstmt_get_param_ids (_GDA_PSTMT (gtps));
+				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), NULL);
 				
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
 				/* restore previous @param_ids */
-				copied_param_ids = gtps->param_ids;
-				gtps->param_ids = prep_param_ids;
+				copied_param_ids = gda_pstmt_get_param_ids (_GDA_PSTMT (gtps));
+				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), prep_param_ids);
 
 				/* execute */
 				obj = gda_web_provider_statement_execute (provider, cnc,
@@ -1589,7 +1589,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
 
-				gtps->param_ids = copied_param_ids;
+				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 
 				/*if (GDA_IS_DATA_MODEL (obj))
 				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
@@ -1618,7 +1618,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 	
 	/* add a connection event for the execution */
 	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
+        gda_connection_event_set_description (event, gda_pstmt_get_sql (_GDA_PSTMT (ps)));
         gda_connection_add_event (cnc, event);
 
 	if (empty_rs) {

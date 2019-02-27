@@ -1809,8 +1809,8 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		return NULL;
 	else {
 		gda_pstmt_set_gda_statement (_GDA_PSTMT(ps), stmt);
-		_GDA_PSTMT(ps)->param_ids = param_ids;
-		_GDA_PSTMT(ps)->sql = sql;
+		gda_pstmt_set_param_ids (_GDA_PSTMT(ps), param_ids);
+		gda_pstmt_set_sql (_GDA_PSTMT(ps), sql);
 		return ps;
 	}
 	
@@ -1892,8 +1892,8 @@ prepare_stmt_simple (MysqlConnectionData  *cdata,
 	}
 	else {
 		ps = gda_mysql_pstmt_new (cdata->cnc, cdata->mysql, mysql_stmt);
-		_GDA_PSTMT(ps)->param_ids = NULL;
-		_GDA_PSTMT(ps)->sql = g_strdup (sql);
+		gda_pstmt_set_param_ids (_GDA_PSTMT (ps), NULL);
+		gda_pstmt_set_sql (_GDA_PSTMT(ps), sql);
 	}
 	
 	return ps;
@@ -2217,7 +2217,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	GdaConnectionEvent *event = NULL;
 	int i;
 	
-	gint nb_params = g_slist_length (_GDA_PSTMT (ps)->param_ids);
+	gint nb_params = g_slist_length (gda_pstmt_get_param_ids (_GDA_PSTMT (ps)));
 	/*g_print ("NB=%d, SQL=%s\n", nb_params, _GDA_PSTMT(ps)->sql);*/
 
 	MYSQL_BIND *mysql_bind_param = NULL;
@@ -2228,7 +2228,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		mem_to_free = g_slist_prepend (mem_to_free, mysql_bind_param);
 	}
 
-	for (i = 0, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 0, list = gda_pstmt_get_param_ids (_GDA_PSTMT (ps)); list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 
 		/* find requested parameter */
@@ -2346,15 +2346,15 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				prep_param_ids = gtps->param_ids;
-				gtps->param_ids = NULL;
+				prep_param_ids =gda_pstmt_get_param_ids (_GDA_PSTMT (gtps));
+				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), NULL);
 				
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
 				/* restore previous @param_ids */
-				copied_param_ids = gtps->param_ids;
-				gtps->param_ids = prep_param_ids;
+				copied_param_ids = gda_pstmt_get_param_ids (_GDA_PSTMT (gtps));
+				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), prep_param_ids);
 
 				/* execute */
 				obj = gda_mysql_provider_statement_execute (provider, cnc,
@@ -2366,7 +2366,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
 				g_slist_free (prep_param_ids);
 
-				gtps->param_ids = copied_param_ids;
+				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), copied_param_ids);
 
 				/*if (GDA_IS_DATA_MODEL (obj))
 				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
@@ -2657,7 +2657,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 	/* add a connection event for the execution */
 	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
+        gda_connection_event_set_description (event, gda_pstmt_get_sql (_GDA_PSTMT (ps)));
         gda_connection_add_event (cnc, event);
 
 	if (empty_rs) {
@@ -2706,11 +2706,11 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		my_ulonglong affected_rows;
 		affected_rows = mysql_stmt_affected_rows (ps->mysql_stmt);
 		if ((affected_rows == (my_ulonglong)~0) ||
-		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
-		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SHOW", 4) ||
-		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DESCRIBE", 8) ||
-		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXECUTE", 7) ||
-		    !g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
+		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SELECT", 6) ||
+		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SHOW", 4) ||
+		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "DESCRIBE", 8) ||
+		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXECUTE", 7) ||
+		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXPLAIN", 7)) {
 			if (mysql_stmt_store_result (ps->mysql_stmt)) {
 				_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
 			}

@@ -155,41 +155,45 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 		return FALSE;
 
 	/* make sure @ps reports the correct number of columns using the API*/
-        if (_GDA_PSTMT (ps)->ncols < 0) {
+	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0) {
 		xmlNodePtr child;
-		_GDA_PSTMT (ps)->ncols = 0;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), 0,
+				                gda_pstmt_get_types (_GDA_PSTMT (ps)));
 		for (child = data_node->children; child; child = child->next) {
 			if (!strcmp ((gchar*) child->name, "gda_array_field"))
-				_GDA_PSTMT (ps)->ncols ++;
+				gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)) + 1,
+				                    gda_pstmt_get_types (_GDA_PSTMT (ps)));
 		}
 	}
 
         /* completing @ps if not yet done */
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+        if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
-									 gda_column_new ());
-		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps),
+			                           g_slist_prepend (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)),
+			                                            gda_column_new ()));
+		gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps),
+		                            g_slist_reverse (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps))));
 
 		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
-		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)), g_new (GType, gda_pstmt_get_ncols (_GDA_PSTMT (ps))));
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = GDA_TYPE_NULL;
 
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols) {
+					if (i >= gda_pstmt_get_ncols (_GDA_PSTMT (ps))) {
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-							   _GDA_PSTMT (ps)->ncols - 1);
+							   gda_pstmt_get_ncols (_GDA_PSTMT (ps)) - 1);
 						break;
 					}
 					else
-						_GDA_PSTMT (ps)->types [i] = col_types [i];
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = col_types [i];
 				}
 			}
 		}
@@ -197,8 +201,8 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 		/* fill GdaColumn's data */
 		xmlNodePtr child;
 
-		for (child = data_node->children, i = 0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-		     child && (i < GDA_PSTMT (ps)->ncols);
+		for (child = data_node->children, i = 0, list = gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps));
+		     child && (i < gda_pstmt_get_ncols (GDA_PSTMT (ps)));
 		     child = child->next, i++, list = list->next) {
 			GdaColumn *column;
 			xmlChar *prop;
@@ -208,7 +212,7 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 				child = child->next;
 			column = GDA_COLUMN (list->data);
 
-			if (_GDA_PSTMT (ps)->types [i] == GDA_TYPE_NULL) {
+			if (gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] == GDA_TYPE_NULL) {
 				if (cdata && cdata->reuseable && cdata->reuseable->operations->re_get_type) {
 					prop = xmlGetProp (child, BAD_CAST "dbtype");
 					if (prop) {
@@ -216,7 +220,7 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 						type = cdata->reuseable->operations->re_get_type (cnc, cdata->reuseable,
 												  (gchar*) prop);
 						if (type != GDA_TYPE_NULL) {
-							_GDA_PSTMT (ps)->types [i] = type;
+							gda_pstmt_get_types (GDA_PSTMT (ps)) [i] = type;
 							gda_column_set_g_type (column, type);
 							typeset = TRUE;
 						}
@@ -231,18 +235,18 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 						type = gda_g_type_from_string ((gchar*) prop);
 						if (type == G_TYPE_INVALID)
 							type = GDA_TYPE_NULL;
-						_GDA_PSTMT (ps)->types [i] = type;
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = type;
 						gda_column_set_g_type (column, type);
 						xmlFree (prop);
 					}
 					else {
-						_GDA_PSTMT (ps)->types [i] = G_TYPE_STRING;
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = G_TYPE_STRING;
 						gda_column_set_g_type (column, G_TYPE_STRING);
 					}
 				}
 			}
 			else
-				gda_column_set_g_type (column, _GDA_PSTMT (ps)->types [i]);
+				gda_column_set_g_type (column, gda_pstmt_get_types (_GDA_PSTMT (ps)) [i]);
 			prop = xmlGetProp (child, BAD_CAST "name");
 			if (prop && *prop) {
 				gda_column_set_name (column, (gchar*) prop);

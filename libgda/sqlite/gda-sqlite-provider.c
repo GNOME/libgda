@@ -2928,8 +2928,8 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	/* create a prepared statement object */
 	ps = _gda_sqlite_pstmt_new (sqlite_stmt);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
-	_GDA_PSTMT (ps)->param_ids = param_ids;
-	_GDA_PSTMT (ps)->sql = sql;
+	gda_pstmt_set_param_ids (_GDA_PSTMT (ps), param_ids);
+	gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 	ps->rowid_hash = hash;
 	ps->nb_rowid_columns = nb_rows_added;
 	g_object_unref (real_stmt);
@@ -3319,7 +3319,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 			/* create a SQLitePreparedStatement */
 			ps = _gda_sqlite_pstmt_new (sqlite_stmt);
-			_GDA_PSTMT (ps)->sql = sql;
+			gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 
 			new_ps = TRUE;
 		}
@@ -3378,7 +3378,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	int i;
 	GSList *blobs_list = NULL; /* list of PendingBlob structures */
 
-	for (i = 1, list = _GDA_PSTMT (ps)->param_ids; list; list = list->next, i++) {
+	for (i = 1, list = gda_pstmt_get_param_ids (_GDA_PSTMT (ps)); list; list = list->next, i++) {
 		const gchar *pname = (gchar *) list->data;
 		GdaHolder *h = NULL;
 
@@ -3492,15 +3492,15 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				prep_param_ids = gtps->param_ids;
-				gtps->param_ids = NULL;
+				prep_param_ids = gda_pstmt_get_param_ids (gtps);
+				gda_pstmt_set_param_ids (gtps, NULL);
 				
 				/* actual copy */
 				gda_pstmt_copy_contents ((GdaPStmt *) ps, (GdaPStmt *) tps);
 
 				/* restore previous @param_ids */
-				copied_param_ids = gtps->param_ids;
-				gtps->param_ids = prep_param_ids;
+				copied_param_ids = gda_pstmt_get_param_ids (gtps);
+				gda_pstmt_set_param_ids (gtps, prep_param_ids);
 
 				/* execute */
 				obj = gda_sqlite_provider_statement_execute (provider, cnc,
@@ -3511,7 +3511,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				/* clear original @param_ids and restore copied one */
 				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
-				gtps->param_ids = copied_param_ids;
+				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 
 				/*if (GDA_IS_DATA_MODEL (obj))
 				  gda_data_model_dump ((GdaDataModel*) obj, NULL);*/
@@ -3694,13 +3694,13 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 	/* add a connection event */
 	event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_COMMAND);
-        gda_connection_event_set_description (event, _GDA_PSTMT (ps)->sql);
-        gda_connection_add_event (cnc, event);
+	gda_connection_event_set_description (event, gda_pstmt_get_sql (_GDA_PSTMT (ps)));
+	gda_connection_add_event (cnc, event);
 
 	/* treat prepared and bound statement */
-	if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "SELECT", 6) ||
-            ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "PRAGMA", 6) ||
-            ! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "EXPLAIN", 7)) {
+	if (! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SELECT", 6) ||
+		! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "PRAGMA", 6) ||
+		! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXPLAIN", 7)) {
 		GObject *data_model;
 		GdaDataModelAccessFlags flags;
 
@@ -3826,12 +3826,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			gchar *str = NULL;
 			gboolean count_changes = FALSE;
 
-                        if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "DELETE", 6)) {
+			if (! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "DELETE", 6)) {
 				count_changes = TRUE;
-                                str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
-                                                       changes);
+				str = g_strdup_printf ("DELETE %d (see SQLite documentation for a \"DELETE * FROM table\" query)",
+				                      changes);
 			}
-                        else if (! g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "INSERT", 6)) {
+			else if (! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "INSERT", 6)) {
 				sqlite3_int64 last_id;
 				count_changes = TRUE;
 				last_id = SQLITE3_CALL (sqlite3_last_insert_rowid) (handle);
@@ -3839,12 +3839,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				if (last_inserted_row)
 					*last_inserted_row = make_last_inserted_set (cnc, stmt, last_id);
 			}
-			else if (!g_ascii_strncasecmp (_GDA_PSTMT (ps)->sql, "UPDATE", 6)) {
+			else if (!g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "UPDATE", 6)) {
 				count_changes = TRUE;
 				str = g_strdup_printf ("UPDATE %d", changes);
 			}
-			else if (*(_GDA_PSTMT (ps)->sql)) {
-				gchar *tmp = g_ascii_strup (_GDA_PSTMT (ps)->sql, -1);
+			else if (*(gda_pstmt_get_sql (_GDA_PSTMT (ps)))) {
+				gchar *tmp = g_ascii_strup (gda_pstmt_get_sql (_GDA_PSTMT (ps)), -1);
 				for (str = tmp; *str && (*str != ' ') && (*str != '\t') &&
 					     (*str != '\n'); str++);
 				*str = 0;
@@ -3858,11 +3858,11 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			if (str) {
-                                event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
-                                gda_connection_event_set_description (event, str);
-                                g_free (str);
-                                gda_connection_add_event (cnc, event);
-                        }
+				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
+				                                             gda_connection_event_set_description (event, str);
+				                                             g_free (str);
+				                                             gda_connection_add_event (cnc, event);
+			}
 			gda_connection_internal_statement_executed (cnc, stmt, params, event);
 			SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
 			if (new_ps)

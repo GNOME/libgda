@@ -158,43 +158,43 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
 		return NULL;
 
 	/* make sure @ps reports the correct number of columns using the API*/
-        if (_GDA_PSTMT (ps)->ncols < 0)
-                /*_GDA_PSTMT (ps)->ncols = ...;*/
+        if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
+                /*gda_pstmt_set_ncols (_GDA_PSTMT (ps),  ...);*/
 		TO_IMPLEMENT;
 
         /* completing @ps if not yet done */
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+        if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
-									 gda_column_new ());
-		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_prepend (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)),
+									 gda_column_new ()));
+		gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_reverse (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps))));
 
 		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
-		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)), g_new (GType, gda_pstmt_get_ncols (_GDA_PSTMT (ps))));
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = GDA_TYPE_NULL;
 
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols) {
+					if (i >= gda_pstmt_get_ncols (_GDA_PSTMT (ps))) {
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-							   _GDA_PSTMT (ps)->ncols - 1);
+							   gda_pstmt_get_ncols (_GDA_PSTMT (ps)) - 1);
 						break;
 					}
 					else
-						_GDA_PSTMT (ps)->types [i] = col_types [i];
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = col_types [i];
 				}
 			}
 		}
 		
 		/* fill GdaColumn's data */
-		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-		     i < GDA_PSTMT (ps)->ncols; 
+		for (i=0, list = gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps));
+		     i < gda_pstmt_get_ncols (_GDA_PSTMT (ps));
 		     i++, list = list->next) {
 			GdaColumn *column;
 			

@@ -672,21 +672,21 @@ create_columns (GdaDataSelect *model)
 	if (!priv->prep_stmt)
 		return;
 
-	if (priv->prep_stmt->ncols < 0)
+	if (gda_pstmt_get_ncols (priv->prep_stmt) < 0)
 		g_error (_("INTERNAL implementation error: unknown number of columns in GdaPStmt, \nset number of columns before using with GdaDataSelect"));
-	if (priv->prep_stmt->tmpl_columns) {
+	if (gda_pstmt_get_tmpl_columns (priv->prep_stmt)) {
 		/* copy template columns */
 		GSList *list;
-		for (list = priv->prep_stmt->tmpl_columns; list; list = list->next)
+		for (list = gda_pstmt_get_tmpl_columns (priv->prep_stmt); list; list = list->next)
 			priv->sh->columns = g_slist_append (priv->sh->columns, g_object_ref (list->data));
 	}
 	else {
 		/* create columns */
-		for (i = 0; i < priv->prep_stmt->ncols; i++) {
+		for (i = 0; i < gda_pstmt_get_ncols (priv->prep_stmt); i++) {
 			GdaColumn *gda_col;
 			gda_col = gda_column_new ();
-			if (priv->prep_stmt->types)
-				gda_column_set_g_type (gda_col, priv->prep_stmt->types [i]);
+			if (gda_pstmt_get_types (priv->prep_stmt))
+				gda_column_set_g_type (gda_col, gda_pstmt_get_types (priv->prep_stmt) [i]);
 			priv->sh->columns = g_slist_append (priv->sh->columns, gda_col);
 		}
 	}
@@ -1391,9 +1391,9 @@ gda_data_select_set_modification_statement (GdaDataSelect *model, GdaStatement *
 					gda_column_set_g_type (gdacol, gda_holder_get_g_type (holder));
 					coltypeschanged = TRUE;
 				}
-				if (priv->prep_stmt && priv->prep_stmt->types &&
-				    (priv->prep_stmt->types [num] == GDA_TYPE_NULL))
-					priv->prep_stmt->types [num] = gda_holder_get_g_type (holder);
+				if (priv->prep_stmt && gda_pstmt_get_types (priv->prep_stmt) &&
+				    (gda_pstmt_get_types (priv->prep_stmt) [num] == GDA_TYPE_NULL))
+					gda_pstmt_get_types (priv->prep_stmt) [num] = gda_holder_get_g_type (holder);
 			}
 		}
 
@@ -1803,7 +1803,7 @@ gda_data_select_get_n_columns (GdaDataModel *model)
 	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (GDA_DATA_SELECT (model));
 
 	if (priv->prep_stmt)
-		return priv->prep_stmt->ncols;
+		return gda_pstmt_get_ncols (priv->prep_stmt);
 
 	return g_slist_length (priv->sh->columns);
 }
@@ -1970,11 +1970,11 @@ gda_data_select_get_value_at (GdaDataModel *model, gint col, gint row, GError **
 				return NULL;
 			}
 			GType *types = NULL;
-			if (priv->prep_stmt && priv->prep_stmt->types) {
-				types = g_new (GType, priv->prep_stmt->ncols + 1);
-				memcpy (types, priv->prep_stmt->types, /* Flawfinder: ignore */
-					sizeof (GType) * priv->prep_stmt->ncols);
-				types [priv->prep_stmt->ncols] = G_TYPE_NONE;
+			if (priv->prep_stmt && gda_pstmt_get_types (priv->prep_stmt)) {
+				types = g_new (GType, gda_pstmt_get_ncols (priv->prep_stmt) + 1);
+				memcpy (types, gda_pstmt_get_types (priv->prep_stmt), /* Flawfinder: ignore */
+					sizeof (GType) * gda_pstmt_get_ncols (priv->prep_stmt));
+				types [gda_pstmt_get_ncols (priv->prep_stmt)] = G_TYPE_NONE;
 			}
 			/*g_print ("*** Executing DelayedSelectStmt %p\n", dstmt);*/
 			tmpmodel = gda_connection_statement_execute_select_full (priv->cnc,
@@ -3683,11 +3683,11 @@ gda_data_select_rerun (GdaDataSelect *model, GError **error)
 	g_assert (priv->prep_stmt);
 	GType *types = NULL;
 
-	if (priv->prep_stmt->types) {
-		types = g_new (GType, priv->prep_stmt->ncols + 1);
-		memcpy (types, priv->prep_stmt->types, /* Flawfinder: ignore */
-			sizeof (GType) * priv->prep_stmt->ncols);
-		types [priv->prep_stmt->ncols] = G_TYPE_NONE;
+	if (gda_pstmt_get_types (priv->prep_stmt)) {
+		types = g_new (GType, gda_pstmt_get_ncols (priv->prep_stmt) + 1);
+		memcpy (types, gda_pstmt_get_types (priv->prep_stmt), /* Flawfinder: ignore */
+			sizeof (GType) * gda_pstmt_get_ncols (priv->prep_stmt));
+		types [gda_pstmt_get_ncols (priv->prep_stmt)] = G_TYPE_NONE;
 	}
 	new_model = (GdaDataSelect*) gda_connection_statement_execute_select_full (priv->cnc, select,
 										   priv->sh->ext_params,

@@ -34,6 +34,13 @@ static GObjectClass *parent_class = NULL;
 struct _GdaPStmtPrivate {
 	GRecMutex mutex;
 	GWeakRef gda_stmt_ref; /* holds a weak reference to #GdaStatement, or %NULL */
+	gchar        *sql; /* actual SQL code used for this prepared statement, mem freed by GdaPStmt */
+	GSList       *param_ids; /* list of parameters' IDs (as gchar *), mem freed by GdaPStmt */
+
+	/* meta data */
+	gint          ncols;
+	GType        *types; /* array of ncols types */
+	GSList       *tmpl_columns; /* list of #GdaColumn objects which data models created from this prep. statement can copy */
 };
 
 /**
@@ -87,11 +94,11 @@ gda_pstmt_init (GdaPStmt *pstmt, G_GNUC_UNUSED GdaPStmtClass *klass)
 	pstmt->priv = g_new0 (GdaPStmtPrivate, 1);
 	g_rec_mutex_init (& pstmt->priv->mutex);
 	g_weak_ref_init (&pstmt->priv->gda_stmt_ref, NULL);
-	pstmt->sql = NULL;
-	pstmt->param_ids = NULL;
-	pstmt->ncols = -1;
-	pstmt->types = NULL;
-	pstmt->tmpl_columns = NULL;
+	pstmt->priv->sql = NULL;
+	pstmt->priv->param_ids = NULL;
+	pstmt->priv->ncols = -1;
+	pstmt->priv->types = NULL;
+	pstmt->priv->tmpl_columns = NULL;
 }
 
 /*
@@ -139,25 +146,26 @@ gda_pstmt_finalize (GObject *object)
 	/* free memory */
 	g_rec_mutex_clear (& pstmt->priv->mutex);
 	g_weak_ref_clear (&pstmt->priv->gda_stmt_ref);
-	g_free (pstmt->priv);
 
-	if (pstmt->sql) {
-		g_free (pstmt->sql);
-		pstmt->sql = NULL;
+	if (pstmt->priv->sql != NULL) {
+		g_free (pstmt->priv->sql);
+		pstmt->priv->sql = NULL;
 	}
-	if (pstmt->param_ids) {
-		g_slist_foreach (pstmt->param_ids, (GFunc) g_free, NULL);
-		g_slist_free (pstmt->param_ids);
-		pstmt->param_ids = NULL;
+	if (pstmt->priv->param_ids != NULL) {
+		g_slist_foreach (pstmt->priv->param_ids, (GFunc) g_free, NULL);
+		g_slist_free (pstmt->priv->param_ids);
+		pstmt->priv->param_ids = NULL;
 	}
-	if (pstmt->types) {
-		g_free (pstmt->types);
-		pstmt->types = NULL;
+	if (pstmt->priv->types != NULL) {
+		g_free (pstmt->priv->types);
+		pstmt->priv->types = NULL;
 	}
-	if (pstmt->tmpl_columns) {
-		g_slist_foreach (pstmt->tmpl_columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (pstmt->tmpl_columns);
+	if (pstmt->priv->tmpl_columns != NULL) {
+		g_slist_foreach (pstmt->priv->tmpl_columns, (GFunc) g_object_unref, NULL);
+		g_slist_free (pstmt->priv->tmpl_columns);
+		pstmt->priv->tmpl_columns = NULL;
 	}
+	g_free (pstmt->priv);
 
 	/* chain to parent class */
 	parent_class->finalize (object);
@@ -213,29 +221,30 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 	g_rec_mutex_lock (& src->priv->mutex);
 	g_rec_mutex_lock (& dest->priv->mutex);
 
-	g_free (dest->sql);
-	dest->sql = NULL;
-	if (src->sql)
-		dest->sql = g_strdup (src->sql);
-	if (dest->param_ids) {
-		g_slist_foreach (dest->param_ids, (GFunc) g_free, NULL);
-		g_slist_free (dest->param_ids);
-		dest->param_ids = NULL;
+	g_free (dest->priv->sql);
+	dest->priv->sql = NULL;
+	if (src->priv->sql)
+		dest->priv->sql = g_strdup (src->priv->sql);
+	if (dest->priv->param_ids) {
+		g_slist_foreach (dest->priv->param_ids, (GFunc) g_free, NULL);
+		g_slist_free (dest->priv->param_ids);
+		dest->priv->param_ids = NULL;
 	}
-	for (list = src->param_ids; list; list = list->next) 
-		dest->param_ids = g_slist_append (dest->param_ids, g_strdup ((gchar *) list->data));
-	dest->ncols = src->ncols;
-
-	g_free (dest->types);
-	dest->types = NULL;
-	if (src->types) {
-		dest->types = g_new (GType, dest->ncols);
-		memcpy (dest->types, src->types, sizeof (GType) * dest->ncols); /* Flawfinder: ignore */
+	for (list = src->priv->param_ids; list; list = list->next)
+		dest->priv->param_ids = g_slist_append (dest->priv->param_ids, g_strdup ((gchar *) list->data));
+	dest->priv->ncols = src->priv->ncols;
+	if (dest->priv->types != NULL) {
+		g_free (dest->priv->types);
 	}
-	if (src->tmpl_columns) {
+	dest->priv->types = NULL;
+	if (src->priv->types) {
+		dest->priv->types = g_new (GType, dest->priv->ncols);
+		memcpy (dest->priv->types, src->priv->types, sizeof (GType) * dest->priv->ncols); /* Flawfinder: ignore */
+	}
+	if (src->priv->tmpl_columns) {
 		GSList *list;
-		for (list = src->tmpl_columns; list; list = list->next) 
-			dest->tmpl_columns = g_slist_append (dest->tmpl_columns, 
+		for (list = src->priv->tmpl_columns; list; list = list->next)
+			dest->priv->tmpl_columns = g_slist_append (dest->priv->tmpl_columns,
 							     gda_column_copy (GDA_COLUMN (list->data)));
 	}
 	GdaStatement *stmt;
@@ -270,4 +279,89 @@ gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
 	stmt = g_weak_ref_get (& pstmt->priv->gda_stmt_ref);
 	g_rec_mutex_unlock (& pstmt->priv->mutex);
 	return stmt;
+}
+/**
+ * gda_pstmt_get_sql:
+ * Actual SQL code used for this prepared statement, mem freed by GdaPStmt
+ */
+gchar*
+gda_pstmt_get_sql (GdaPStmt *ps) {
+	return ps->priv->sql;
+}
+/**
+ * gda_pstmt_set_sql:
+ *
+ * Set SQL code used for this prepared statement, mem freed by GdaPStmt
+ */
+void
+gda_pstmt_set_sql (GdaPStmt *ps, const gchar *sql) {
+	ps->priv->sql = g_strdup (sql);
+}
+/**
+ *gda_pstmt_get_param_ids:
+ *
+ * List of parameters' IDs (as gchar *)
+ */
+GSList*
+gda_pstmt_get_param_ids (GdaPStmt *ps) {
+	return ps->priv->param_ids;
+}
+
+/**
+ *gda_pstmt_set_param_ids:
+ *
+ * List of parameters' IDs (as gchar *), list is stolen
+ */
+void
+gda_pstmt_set_param_ids    (GdaPStmt *ps, GSList* params) {
+	ps->priv->param_ids = params;
+}
+/**
+ * gda_pstmt_get_ncols:
+ */
+gint
+gda_pstmt_get_ncols (GdaPStmt *ps) {
+	return ps->priv->ncols;
+}
+/**
+ * gda_pstmt_get_types:
+ *
+ * Set column's types for statement. @types is stalen and should
+ * no be modified
+ */
+GType*
+gda_pstmt_get_types (GdaPStmt *ps) {
+	return ps->priv->types;
+}
+/**
+ * gda_pstmt_set_cols:
+ *
+ * Set column's types for statement. @types is stalen and should
+ * no be modified
+ */
+void
+gda_pstmt_set_cols (GdaPStmt *ps, gint ncols, GType *types) {
+	ps->priv->ncols = ncols;
+	ps->priv->types = types;
+}
+/**
+ *gda_pstmt_get_tmpl_columns:
+ *
+ * List of #GdaColumn objects which data models created from this
+ * prepared statement can copy
+ */
+GSList*
+gda_pstmt_get_tmpl_columns (GdaPStmt *ps) {
+	return ps->priv->tmpl_columns;
+}
+/**
+ *gda_pstmt_set_tmpl_columns:
+ *
+ * Set the list of #GdaColumn objects which data models created from this
+ * prepared statement can copy. The list is stolen, so you should not
+ * free it.
+ */
+void
+gda_pstmt_set_tmpl_columns (GdaPStmt *ps, GSList* columns) {
+	ps->priv->tmpl_columns = columns;
 }

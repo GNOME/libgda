@@ -98,7 +98,7 @@ gda_mysql_pstmt_finalize (GObject  *object)
 		mysql_stmt_close (pstmt->mysql_stmt);
 
 	gint i;
-	for (i = 0; i < ((GdaPStmt *) pstmt)->ncols; ++i) {
+	for (i = 0; i < gda_pstmt_get_ncols ((GdaPStmt *) pstmt); ++i) {
 		g_free (pstmt->mysql_bind_result[i].buffer);
 		g_free (pstmt->mysql_bind_result[i].is_null);
 		g_free (pstmt->mysql_bind_result[i].length);

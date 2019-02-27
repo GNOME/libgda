@@ -265,59 +265,60 @@ static void
 finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGresult *pg_res, GType *col_types)
 {
 	/* make sure @ps reports the correct number of columns */
-        if (_GDA_PSTMT (ps)->ncols < 0) {
+        if ( gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0) {
 		if (pg_res)
-			_GDA_PSTMT (ps)->ncols = PQnfields (pg_res);
+			gda_pstmt_set_cols (_GDA_PSTMT (ps), PQnfields (pg_res), gda_pstmt_get_types (_GDA_PSTMT (ps)));
 		else
-			_GDA_PSTMT (ps)->ncols = 0;
+			gda_pstmt_set_cols (_GDA_PSTMT (ps), 0, gda_pstmt_get_types (_GDA_PSTMT (ps)));
 	}
 
         /* completing @ps if not yet done */
-        if (!_GDA_PSTMT (ps)->types && (_GDA_PSTMT (ps)->ncols > 0)) {
+        if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
 		gint i;
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->tmpl_columns = g_slist_prepend (_GDA_PSTMT (ps)->tmpl_columns, 
-									 gda_column_new ());
-		_GDA_PSTMT (ps)->tmpl_columns = g_slist_reverse (_GDA_PSTMT (ps)->tmpl_columns);
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps),
+			                            g_slist_prepend (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps)),
+			                            gda_column_new ()));
+		gda_pstmt_set_tmpl_columns (_GDA_PSTMT (ps), g_slist_reverse (gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps))));
 
 		/* create prepared statement's types, all types are initialized to GDA_TYPE_NULL */
-		_GDA_PSTMT (ps)->types = g_new (GType, _GDA_PSTMT (ps)->ncols);
-		for (i = 0; i < _GDA_PSTMT (ps)->ncols; i++)
-			_GDA_PSTMT (ps)->types [i] = GDA_TYPE_NULL;
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), gda_pstmt_get_ncols (_GDA_PSTMT (ps)), g_new (GType, gda_pstmt_get_ncols (_GDA_PSTMT (ps))));
+		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = GDA_TYPE_NULL;
 
 		if (col_types) {
 			for (i = 0; ; i++) {
 				if (col_types [i] > 0) {
 					if (col_types [i] == G_TYPE_NONE)
 						break;
-					if (i >= _GDA_PSTMT (ps)->ncols) {
+					if (i >= gda_pstmt_get_ncols (_GDA_PSTMT (ps))) {
 						g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-							   _GDA_PSTMT (ps)->ncols - 1);
+							   gda_pstmt_get_ncols (_GDA_PSTMT (ps)) - 1);
 						break;
 					}
 					else
-						_GDA_PSTMT (ps)->types [i] = col_types [i];
+						gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = col_types [i];
 				}
 			}
 		}
 		
 		/* fill GdaColumn's data */
-		for (i=0, list = _GDA_PSTMT (ps)->tmpl_columns; 
-		     i < GDA_PSTMT (ps)->ncols; 
+		for (i=0, list = gda_pstmt_get_tmpl_columns (_GDA_PSTMT (ps));
+		     i <gda_pstmt_get_ncols ( GDA_PSTMT (ps));
 		     i++, list = list->next) {
 			GdaColumn *column;
 			Oid postgres_type;
 			GType gtype;
 			column = GDA_COLUMN (list->data);
 			postgres_type = PQftype (pg_res, i);
-			gtype = _GDA_PSTMT (ps)->types [i];
+			gtype = gda_pstmt_get_types (_GDA_PSTMT (ps)) [i];
 			if (gtype == GDA_TYPE_NULL) {
 				gtype = _gda_postgres_type_oid_to_gda (cdata->cnc, cdata->reuseable, postgres_type);
-				_GDA_PSTMT (ps)->types [i] = gtype;
+				gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = gtype;
 			}
-			_GDA_PSTMT (ps)->types [i] = gtype;
+			gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] = gtype;
 			gda_column_set_g_type (column, gtype);
 			gda_column_set_name (column, PQfname (pg_res, i));
 			gda_column_set_description (column, PQfname (pg_res, i));
@@ -806,14 +807,14 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 	gchar *thevalue;
 	gint col;
 
-	for (col = 0; col < gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols; col++) {
+	for (col = 0; col < gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)); col++) {
 		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
 		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
 			gda_value_set_null (gda_row_get_value (prow, col));
 		else
 			set_value (gda_data_select_get_connection ((GdaDataSelect*) imodel),
 				   prow, gda_row_get_value (prow, col), 
-				   gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->types [col],
+				   gda_pstmt_get_types (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)) [col],
 				   thevalue, 
 				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col), error);
 	}
@@ -826,7 +827,7 @@ new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **
 	g_return_val_if_fail (GDA_IS_DATA_SELECT (imodel), NULL);
 	GdaRow *prow;
 
-	prow = gda_row_new (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)->ncols);
+	prow = gda_row_new (gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)));
 	set_prow_with_pg_res (imodel, prow, pg_res_rownum, error);
 	return prow;
 }
