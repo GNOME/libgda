@@ -27,14 +27,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_PSTMT            (gda_pstmt_get_type())
-#define GDA_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_PSTMT, GdaPStmt))
-#define GDA_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_PSTMT, GdaPStmtClass))
-#define GDA_IS_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_PSTMT))
-#define GDA_IS_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_PSTMT))
 
-typedef struct _GdaPStmt        GdaPStmt;
-typedef struct _GdaPStmtPrivate GdaPStmtPrivate;
-typedef struct _GdaPStmtClass   GdaPStmtClass;
+G_DECLARE_DERIVABLE_TYPE (GdaPStmt, gda_pstmt, GDA, PSTMT, GObject)
 
 /**
  * GdaPStmt:
@@ -45,16 +39,6 @@ typedef struct _GdaPStmtClass   GdaPStmtClass;
  * @tmpl_columns: (element-type Gda.Column): list of #GdaColumn objects which data models created from this prep. statement can copy
  *
  */
-struct _GdaPStmt {
-	GObject       object;
-
-	GdaPStmtPrivate *priv;
-
-	/*< private >*/
-	/* Padding for future expansion */
-	gpointer         _gda_reserved1;
-	gpointer         _gda_reserved2;
-};
 
 struct _GdaPStmtClass {
 	GObjectClass  parent_class;
@@ -95,7 +79,6 @@ struct _GdaPStmtClass {
  * if a weak one (which means it will be lost if the #GdaStatement object is destroyed).
  */
 
-GType         gda_pstmt_get_type          (void) G_GNUC_CONST;
 void          gda_pstmt_set_gda_statement (GdaPStmt *pstmt, GdaStatement *stmt);
 void          gda_pstmt_copy_contents     (GdaPStmt *src, GdaPStmt *dest);
 GdaStatement *gda_pstmt_get_gda_statement (GdaPStmt *pstmt);

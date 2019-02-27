@@ -1277,7 +1277,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 				gtps = (GdaPStmt *) tps;
 
 				/* keep @param_ids to avoid being cleared by gda_pstmt_copy_contents() */
-				gda_pstmt_set_param_ids (prep_param_ids, gda_pstmt_get_param_ids (gtps));
+				prep_param_ids = gda_pstmt_get_param_ids (gtps);
 				gda_pstmt_set_param_ids (gtps, NULL);
 				
 				/* actual copy */
