@@ -934,7 +934,7 @@ gda_connection_new_from_dsn_name (const gchar *dsn_name,
 	gchar *real_auth_string = NULL;
 
 	g_return_val_if_fail (dsn_name && *dsn_name, NULL);
-  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
 	gda_dsn_split (dsn_name, &real_dsn, &user, &pass);
 	if (!real_dsn) {
@@ -1039,7 +1039,7 @@ gda_connection_new_from_dsn (GdaDsnInfo *dsn,
 
   g_return_val_if_fail (dsn, NULL);
   g_return_val_if_fail (dsn->cnc_string, NULL);
-  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
 /* try to find provider */
   if (!dsn->provider)
@@ -1087,7 +1087,7 @@ gda_connection_open_from_dsn_name (const gchar *dsn_name,
   GdaConnection *cnc = NULL;
 
   g_return_val_if_fail (dsn_name && *dsn_name, NULL);
-  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
   cnc = gda_connection_new_from_dsn_name (dsn_name, auth_string, options, error);
 
@@ -1120,7 +1120,7 @@ gda_connection_open_from_dsn (GdaDsnInfo *dsn,
 
   g_return_val_if_fail (dsn, NULL);
   g_return_val_if_fail (dsn->cnc_string, NULL);
-  g_return_val_if_fail (error == NULL || *error != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
   cnc = gda_connection_new_from_dsn (dsn, auth_string, options, error);
 
