@@ -47,6 +47,7 @@ typedef struct {
 	int  (*sqlite3_changes)(sqlite3*);
 	int (*sqlite3_clear_bindings)(sqlite3_stmt*);
 	int  (*sqlite3_close)(sqlite3*);
+	int  (*sqlite3_close_v2)(sqlite3*);
 
 	const void * (*sqlite3_column_blob)(sqlite3_stmt*,int iCol);
 	int  (*sqlite3_column_bytes)(sqlite3_stmt*,int iCol);

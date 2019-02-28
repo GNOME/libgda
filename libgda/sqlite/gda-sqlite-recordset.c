@@ -115,9 +115,9 @@ gda_sqlite_recordset_dispose (GObject *object)
 		GdaSqlitePStmt *ps;
 		ps = GDA_SQLITE_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)));
 		if (ps != NULL) {
-			ps->stmt_used = FALSE;
+			_gda_sqlite_pstmt_set_is_used (ps, FALSE);
 			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
-			SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+			SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), NULL);
 		}
 
@@ -249,12 +249,12 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 
         /* make sure @ps reports the correct number of columns */
 	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
-		gda_pstmt_set_cols (_GDA_PSTMT (ps), SQLITE3_CALL (sqlite3_column_count) (ps->sqlite_stmt) -
-			ps->nb_rowid_columns, gda_pstmt_get_types (_GDA_PSTMT (ps)));
+		gda_pstmt_set_cols (_GDA_PSTMT (ps), SQLITE3_CALL (sqlite3_column_count) (_gda_sqlite_pstmt_get_stmt (ps)) -
+			_gda_sqlite_pstmt_get_nb_rowid_columns (ps), gda_pstmt_get_types (_GDA_PSTMT (ps)));
 
         /* completing ps */
-	g_assert (! ps->stmt_used);
-	ps->stmt_used = TRUE;
+	g_assert (! _gda_sqlite_pstmt_get_is_used (ps));
+	_gda_sqlite_pstmt_set_is_used (ps, TRUE);
 	if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		GSList *list;
@@ -287,12 +287,12 @@ _gda_sqlite_recordset_new (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_
 		     i < gda_pstmt_get_ncols (_GDA_PSTMT (ps));
 		     i++, list = list->next) {
 			GdaColumn *column;
-			gint real_col = i + ps->nb_rowid_columns;
+			gint real_col = i + _gda_sqlite_pstmt_get_nb_rowid_columns (ps);
 			
 			column = GDA_COLUMN (list->data);
-			gda_column_set_description (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
-			gda_column_set_name (column, SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col));
-			gda_column_set_dbms_type (column, SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col));
+			gda_column_set_description (column, SQLITE3_CALL (sqlite3_column_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
+			gda_column_set_name (column, SQLITE3_CALL (sqlite3_column_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
+			gda_column_set_dbms_type (column, SQLITE3_CALL (sqlite3_column_decltype) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 			if (gda_pstmt_get_types (_GDA_PSTMT (ps)) [i] != GDA_TYPE_NULL)
 				gda_column_set_g_type (column, gda_pstmt_get_types (_GDA_PSTMT (ps)) [i]);
 		}
@@ -331,16 +331,16 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 {
 	const gchar *ctype;
 	GType gtype = GDA_TYPE_NULL;
-	gint real_col = colnum + ps->nb_rowid_columns;
+	gint real_col = colnum + _gda_sqlite_pstmt_get_nb_rowid_columns (ps);
 
 	if (gda_pstmt_get_types (_GDA_PSTMT (ps)) [colnum] != GDA_TYPE_NULL)
 		return gda_pstmt_get_types (_GDA_PSTMT (ps)) [colnum];
 	
-	ctype = SQLITE3_CALL (sqlite3_column_origin_name) (ps->sqlite_stmt, real_col);
+	ctype = SQLITE3_CALL (sqlite3_column_origin_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 	if (ctype && !strcmp (ctype, "rowid"))
 		gtype = G_TYPE_INT64;
 	else {
-		ctype = SQLITE3_CALL (sqlite3_column_decltype) (ps->sqlite_stmt, real_col);
+		ctype = SQLITE3_CALL (sqlite3_column_decltype) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 		
 		if (ctype) {
 			GType *pg;
@@ -348,7 +348,7 @@ fuzzy_get_gtype (SqliteConnectionData *cdata, GdaSqlitePStmt *ps, gint colnum)
 			gtype = pg ? *pg : GDA_TYPE_NULL;
 		}
 		if (gtype == GDA_TYPE_NULL) 
-			gtype = _gda_sqlite_compute_g_type (SQLITE3_CALL (sqlite3_column_type) (ps->sqlite_stmt, real_col));
+			gtype = _gda_sqlite_compute_g_type (SQLITE3_CALL (sqlite3_column_type) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 	}
 
 	return gtype;
@@ -384,7 +384,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	if (model->priv->empty_forced)
 		rc = SQLITE_DONE;
 	else		
-		rc = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
+		rc = SQLITE3_CALL (sqlite3_step) (_gda_sqlite_pstmt_get_stmt (ps));
 	switch (rc) {
 	case  SQLITE_ROW: {
 		gint col, real_col;
@@ -393,23 +393,23 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			GValue *value;
 			GType type = gda_pstmt_get_types (_GDA_PSTMT (ps)) [col];
 			
-			real_col = col + ps->nb_rowid_columns;
+			real_col = col + _gda_sqlite_pstmt_get_nb_rowid_columns (ps);
 
 			if (type == GDA_TYPE_NULL) {
 				type = fuzzy_get_gtype (cdata, ps, col);
 				if (type == GDA_TYPE_BLOB) {
 					/* extra check: make sure we have a rowid for this blob, or fallback to binary */
-					if (ps->rowid_hash) {
+					if (_gda_sqlite_pstmt_get_rowid_hash (ps)) {
 						gint oidcol = 0;
 						const char *ctable;
-						ctable = SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col);
+						ctable = SQLITE3_CALL (sqlite3_column_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 						if (ctable)
-							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
+							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (_gda_sqlite_pstmt_get_rowid_hash (ps),
 												       ctable));
 						if (oidcol == 0) {
-							ctable = SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt, real_col);
+							ctable = SQLITE3_CALL (sqlite3_column_table_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 							if (ctable)
-								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
+								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (_gda_sqlite_pstmt_get_rowid_hash (ps),
 													       ctable));
 						}
 						if (oidcol == 0)
@@ -432,13 +432,13 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 			/* fill GValue */
 			value = gda_row_get_value (prow, col);
 			GError *may_error;
-			may_error = (GError*) SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, real_col);
+			may_error = (GError*) SQLITE3_CALL (sqlite3_column_blob) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 			if (may_error && g_hash_table_lookup (error_blobs_hash, may_error)) {
 				/*g_print ("Row invalidated: [%s]\n", may_error->message);*/
 				gda_row_invalidate_value_e (prow, value, may_error);
 				g_hash_table_remove (error_blobs_hash, may_error);
 			}
-			else if (SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col) == NULL) {
+			else if (SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps), real_col) == NULL) {
 				/* we have a NULL value */
 				gda_value_set_null (value);
 			}
@@ -449,7 +449,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					;
 				else if (type == G_TYPE_INT) {
 					gint64 i;
-					i = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if ((i > G_MAXINT) || (i < G_MININT)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -462,7 +462,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == G_TYPE_UINT) {
 					guint64 i;
-					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if (i > G_MAXUINT) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -474,19 +474,19 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						g_value_set_uint (value, (gint) i);
 				}
 				else if (type == G_TYPE_INT64)
-					g_value_set_int64 (value, SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col));
+					g_value_set_int64 (value, SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 				else if (type == G_TYPE_UINT64)
-					g_value_set_uint64 (value, (guint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt,
+					g_value_set_uint64 (value, (guint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps),
 												   real_col));
 				else if (type == G_TYPE_DOUBLE)
-					g_value_set_double (value, SQLITE3_CALL (sqlite3_column_double) (ps->sqlite_stmt,
+					g_value_set_double (value, SQLITE3_CALL (sqlite3_column_double) (_gda_sqlite_pstmt_get_stmt (ps),
 											  real_col));
 				else if (type == G_TYPE_STRING)
-					g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
+					g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
 												  real_col));
 				else if (type == GDA_TYPE_TEXT) {
 					GdaText *text = gda_text_new ();
-					gda_text_set_string (text, (const gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
+					gda_text_set_string (text, (const gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
 												  real_col));
 					g_value_take_boxed (value, text);
 				}
@@ -494,9 +494,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					GdaBinary *bin;
 					
 					bin = gda_binary_new ();
-					length = SQLITE3_CALL (sqlite3_column_bytes) (ps->sqlite_stmt, real_col);
+					length = SQLITE3_CALL (sqlite3_column_bytes) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if (length > 0) {
-						gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_column_blob) (ps->sqlite_stmt, /* Flawfinder: ignore */
+						gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_column_blob) (_gda_sqlite_pstmt_get_stmt (ps), /* Flawfinder: ignore */
 												       real_col), length);
 					}
 					gda_value_take_binary (value, bin);
@@ -505,29 +505,29 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					GdaBlobOp *bop = NULL;
 					gint oidcol = 0;
 
-					if (ps->rowid_hash) {
+					if (_gda_sqlite_pstmt_get_rowid_hash (ps)) {
 						const char *ctable;
-						ctable = SQLITE3_CALL (sqlite3_column_name) (ps->sqlite_stmt, real_col);
+						ctable = SQLITE3_CALL (sqlite3_column_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 						if (ctable)
-							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash,
+							oidcol = GPOINTER_TO_INT (g_hash_table_lookup (_gda_sqlite_pstmt_get_rowid_hash (ps),
 												       ctable));
 						if (oidcol == 0) {
-							ctable = SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt, real_col);
+							ctable = SQLITE3_CALL (sqlite3_column_table_name) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 							if (ctable)
-								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (ps->rowid_hash, 
+								oidcol = GPOINTER_TO_INT (g_hash_table_lookup (_gda_sqlite_pstmt_get_rowid_hash (ps),
 													       ctable));
 						}
 					}
 					if (oidcol != 0) {
 						gint64 rowid;
-						rowid = SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, oidcol - 1); /* remove 1
+						rowid = SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), oidcol - 1); /* remove 1
 													       because it was added in the first place */
 						bop = _gda_sqlite_blob_op_new (cnc,
-									       SQLITE3_CALL (sqlite3_column_database_name) (ps->sqlite_stmt, 
+									       SQLITE3_CALL (sqlite3_column_database_name) (_gda_sqlite_pstmt_get_stmt (ps),
 													    real_col),
-									       SQLITE3_CALL (sqlite3_column_table_name) (ps->sqlite_stmt,
+									       SQLITE3_CALL (sqlite3_column_table_name) (_gda_sqlite_pstmt_get_stmt (ps),
 													 real_col),
-									       SQLITE3_CALL (sqlite3_column_origin_name) (ps->sqlite_stmt,
+									       SQLITE3_CALL (sqlite3_column_origin_name) (_gda_sqlite_pstmt_get_stmt (ps),
 													  real_col),
 									      rowid);
 					}
@@ -547,17 +547,17 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 				}
 				else if (type == G_TYPE_BOOLEAN)
-					g_value_set_boolean (value, SQLITE3_CALL (sqlite3_column_int) (ps->sqlite_stmt, real_col) == 0 ? FALSE : TRUE);
+					g_value_set_boolean (value, SQLITE3_CALL (sqlite3_column_int) (_gda_sqlite_pstmt_get_stmt (ps), real_col) == 0 ? FALSE : TRUE);
 				else if (type == G_TYPE_DATE) {
 					GDate date;
 					if (!gda_parse_iso8601_date (&date, 
-								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
+								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
 												    real_col))) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid date '%s' (date format should be YYYY-MM-DD)"), 
-							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else
@@ -566,13 +566,13 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				else if (type == GDA_TYPE_TIME) {
 					GdaTime* timegda = gda_time_new ();
 					if (!gda_parse_iso8601_time (timegda,
-								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, 
+								     (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
 												    real_col))) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), 
-							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
@@ -584,14 +584,14 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 					GDateTime* timestamp = gda_parse_iso8601_timestamp (
-									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt,
+									  (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
 										real_col));
 					if (timestamp == NULL) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
 							     _("Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"),
-							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (ps->sqlite_stmt, real_col));
+							     (gchar *) SQLITE3_CALL (sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
@@ -601,7 +601,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == G_TYPE_CHAR) {
 					gint64 i;
-					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if ((i > G_MAXINT8) || (i < G_MININT8)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -614,7 +614,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == G_TYPE_UCHAR) {
 					gint64 i;
-					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if ((i > G_MAXUINT8) || (i < 0)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -627,7 +627,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == GDA_TYPE_SHORT) {
 					gint64 i;
-					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if ((i > G_MAXSHORT) || (i < G_MINSHORT)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -640,7 +640,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 				}
 				else if (type == GDA_TYPE_USHORT) {
 					gint64 i;
-					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (ps->sqlite_stmt, real_col);
+					i = (gint64) SQLITE3_CALL (sqlite3_column_int64) (_gda_sqlite_pstmt_get_stmt (ps), real_col);
 					if ((i > G_MAXUSHORT) || (i < 0)) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
@@ -674,7 +674,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		break;
 	case SQLITE_DONE:
 		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
-		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+		SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 		break;
 	case SQLITE_READONLY:
 	case SQLITE_MISUSE:
@@ -685,7 +685,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 	case SQLITE_ERROR:
 	default: {
 		GError *lerror = NULL;
-		SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+		SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 		if (rc == SQLITE_IOERR_TRUNCATE)
 			g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
 				     GDA_DATA_MODEL_TRUNCATED_ERROR, "%s", _("Truncated data"));

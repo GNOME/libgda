@@ -23,89 +23,160 @@
 #include "gda-sqlite.h"
 #include <string.h>
 
-static void gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass);
-static void gda_sqlite_pstmt_init       (GdaSqlitePStmt *pstmt, GdaSqlitePStmtClass *klass);
-static void gda_sqlite_pstmt_finalize    (GObject *object);
+static void _gda_sqlite_pstmt_dispose    (GObject *object);
 
-static GObjectClass *parent_class = NULL;
+typedef struct {
+	GWeakRef        provider;
+	sqlite3_stmt   *sqlite_stmt;
+	gboolean        stmt_used; /* TRUE if a recorset already uses this prepared statement,
+				    * necessary because only one recordset can use sqlite_stmt at a time */
+	GHashTable      *rowid_hash;
+	gint             nb_rowid_columns;
+} GdaSqlitePStmtPrivate;
 
-/**
- * _gda_sqlite_pstmt_get_type
- *
- * Returns: the #GType of GdaSqlitePStmt.
- */
-GType
-_gda_sqlite_pstmt_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaSqlitePStmtClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sqlite_pstmt_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaSqlitePStmt),
-			0,
-			(GInstanceInitFunc) gda_sqlite_pstmt_init,
-			0
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_PSTMT, CLASS_PREFIX "PStmt", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_PRIVATE (GdaSqlitePStmt, _gda_sqlite_pstmt, GDA_TYPE_PSTMT)
 
 static void 
-gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass)
+_gda_sqlite_pstmt_class_init (GdaSqlitePStmtClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual functions */
-	object_class->finalize = gda_sqlite_pstmt_finalize;
+	object_class->finalize = _gda_sqlite_pstmt_dispose;
 }
 
 static void
-gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt, G_GNUC_UNUSED GdaSqlitePStmtClass *klass)
+_gda_sqlite_pstmt_init (GdaSqlitePStmt *pstmt)
 {
-	g_return_if_fail (GDA_IS_PSTMT (pstmt));
-	pstmt->sqlite_stmt = NULL;
-	pstmt->stmt_used = FALSE;
-	pstmt->rowid_hash = NULL;
-	pstmt->nb_rowid_columns = 0;
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+	priv->sqlite_stmt = NULL;
+	priv->stmt_used = FALSE;
+	priv->rowid_hash = NULL;
+	priv->nb_rowid_columns = 0;
+	g_weak_ref_init (&priv->provider, NULL);
 }
 
 static void
-gda_sqlite_pstmt_finalize (GObject *object)
+_gda_sqlite_pstmt_dispose (GObject *object)
 {
 	GdaSqlitePStmt *pstmt = (GdaSqlitePStmt *) object;
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
 
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 
 	/* free memory */
-	if (pstmt->sqlite_stmt) 
-		SQLITE3_CALL (sqlite3_finalize) (pstmt->sqlite_stmt);
+	if (priv->sqlite_stmt != NULL) {
+		SQLITE3_CALL (sqlite3_finalize) (priv->sqlite_stmt);
+		priv->sqlite_stmt = NULL;
+	}
 
-	if (pstmt->rowid_hash)
-		g_hash_table_destroy (pstmt->rowid_hash);
+	if (priv->rowid_hash != NULL) {
+		g_hash_table_destroy (priv->rowid_hash);
+		priv->rowid_hash = NULL;
+	}
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (_gda_sqlite_pstmt_parent_class)->finalize (object);
 }
 
 GdaSqlitePStmt *
-_gda_sqlite_pstmt_new (sqlite3_stmt *sqlite_stmt)
+_gda_sqlite_pstmt_new (GdaSqliteProvider *provider, sqlite3_stmt *sqlite_stmt)
 {
 	GdaSqlitePStmt *pstmt;
 
 	pstmt = (GdaSqlitePStmt*) g_object_new (GDA_TYPE_SQLITE_PSTMT, NULL);
-	pstmt->sqlite_stmt = sqlite_stmt;
+
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	priv->sqlite_stmt = sqlite_stmt;
+	g_weak_ref_set (&priv->provider, provider);
 	return pstmt;
 }
+
+/**
+ * Returns: (transfer full): current #GdaSqliteProvider
+ */
+GdaSqliteProvider*
+_gda_sqlite_pstmt_get_provider (GdaSqlitePStmt *pstmt)
+{
+	g_return_val_if_fail (pstmt != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_PSTMT (pstmt), NULL);
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	return g_weak_ref_get (&priv->provider);
+}
+sqlite3_stmt*
+_gda_sqlite_pstmt_get_stmt (GdaSqlitePStmt *pstmt)
+{
+	g_return_val_if_fail (pstmt != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_PSTMT (pstmt), NULL);
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	return priv->sqlite_stmt;
+}
+gboolean
+_gda_sqlite_pstmt_get_is_used  (GdaSqlitePStmt *pstmt)
+{
+	g_return_val_if_fail (pstmt != NULL, FALSE);
+	g_return_val_if_fail (GDA_IS_SQLITE_PSTMT (pstmt), FALSE);
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	return priv->stmt_used;
+}
+void
+_gda_sqlite_pstmt_set_is_used (GdaSqlitePStmt *pstmt,
+                               gboolean used)
+{
+	g_return_if_fail (pstmt != NULL);
+	g_return_if_fail (GDA_IS_SQLITE_PSTMT (pstmt));
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+	priv->stmt_used = used;
+}
+
+GHashTable*
+_gda_sqlite_pstmt_get_rowid_hash (GdaSqlitePStmt *pstmt)
+{
+	g_return_val_if_fail (pstmt != NULL, NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_PSTMT (pstmt), NULL);
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	return priv->rowid_hash;
+}
+void
+_gda_sqlite_pstmt_set_rowid_hash (GdaSqlitePStmt *pstmt,
+                                  GHashTable *hash)
+{
+	g_return_if_fail (pstmt != NULL);
+	g_return_if_fail (GDA_IS_SQLITE_PSTMT (pstmt));
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	if (priv->rowid_hash != NULL) {
+		g_hash_table_unref (priv->rowid_hash);
+		priv->rowid_hash = NULL;
+	}
+	if (hash != NULL) {
+		priv->rowid_hash = g_hash_table_ref (hash);
+	} else {
+		priv->rowid_hash = NULL;
+	}
+}
+gint
+_gda_sqlite_pstmt_get_nb_rowid_columns (GdaSqlitePStmt *pstmt)
+{
+	g_return_val_if_fail (pstmt != NULL, -1);
+	g_return_val_if_fail (GDA_IS_SQLITE_PSTMT (pstmt), -1);
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	return priv->nb_rowid_columns;
+}
+void
+_gda_sqlite_pstmt_set_nb_rowid_columns (GdaSqlitePStmt *pstmt,
+                                        gint nb)
+{
+	g_return_if_fail (pstmt != NULL);
+	g_return_if_fail (GDA_IS_SQLITE_PSTMT (pstmt));
+	GdaSqlitePStmtPrivate *priv = _gda_sqlite_pstmt_get_instance_private (pstmt);
+
+	priv->nb_rowid_columns = nb;
+}
+

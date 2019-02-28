@@ -178,6 +178,8 @@ load_symbols (GModule *module)
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_close", (gpointer*) &(s3r->sqlite3_close)))
 		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_close_v2", (gpointer*) &(s3r->sqlite3_close_v2)))
+		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_column_blob", (gpointer*) &(s3r->sqlite3_column_blob)))
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_column_bytes", (gpointer*) &(s3r->sqlite3_column_bytes)))

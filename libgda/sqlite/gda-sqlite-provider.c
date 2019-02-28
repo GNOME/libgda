@@ -2926,12 +2926,12 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		g_object_unref (params);
 
 	/* create a prepared statement object */
-	ps = _gda_sqlite_pstmt_new (sqlite_stmt);
+	ps = _gda_sqlite_pstmt_new (GDA_SQLITE_PROVIDER (provider), sqlite_stmt);
 	gda_pstmt_set_gda_statement (_GDA_PSTMT (ps), stmt);
 	gda_pstmt_set_param_ids (_GDA_PSTMT (ps), param_ids);
 	gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
-	ps->rowid_hash = hash;
-	ps->nb_rowid_columns = nb_rows_added;
+	_gda_sqlite_pstmt_set_rowid_hash (ps, hash);
+	_gda_sqlite_pstmt_set_nb_rowid_columns (ps, nb_rows_added);
 	g_object_unref (real_stmt);
 	/*g_print ("%s(%s) => GdaSqlitePStmt %p\n", __FUNCTION__, sql, ps);*/
 	return ps;
@@ -3318,7 +3318,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 
 			/* create a SQLitePreparedStatement */
-			ps = _gda_sqlite_pstmt_new (sqlite_stmt);
+			ps = _gda_sqlite_pstmt_new (GDA_SQLITE_PROVIDER (provider), sqlite_stmt);
 			gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 
 			new_ps = TRUE;
@@ -3326,7 +3326,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		else
 			ps = (GdaSqlitePStmt *) gda_connection_get_prepared_statement (cnc, stmt);
 	}
-	else if (ps->stmt_used) {
+	else if (_gda_sqlite_pstmt_get_is_used (ps)) {
 		/* Don't use @ps => prepare stmt again */
 		GdaSqlitePStmt *nps;
 		nps = real_prepare (provider, cnc, stmt, error);
@@ -3338,7 +3338,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 
 	/* check that prepared stmt is not NULL, to avoid a crash */
-	if (!ps->sqlite_stmt) {
+	if (!_gda_sqlite_pstmt_get_stmt (ps)) {
 		GdaConnectionEvent *event;
 		const char *errmsg;
 
@@ -3355,8 +3355,8 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 	}
 
 	/* reset prepared stmt */
-	if ((SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt) != SQLITE_OK) ||
-	    (SQLITE3_CALL (sqlite3_clear_bindings) (ps->sqlite_stmt) != SQLITE_OK)) {
+	if ((SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps)) != SQLITE_OK) ||
+	    (SQLITE3_CALL (sqlite3_clear_bindings) (_gda_sqlite_pstmt_get_stmt (ps)) != SQLITE_OK)) {
 		GdaConnectionEvent *event;
 		const char *errmsg;
 
@@ -3402,7 +3402,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (!h) {
 			if (allow_noparam) {
 				/* bind param to NULL */
-				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+				SQLITE3_CALL (sqlite3_bind_null) (_gda_sqlite_pstmt_get_stmt (ps), i);
 				empty_rs = TRUE;
 				continue;
 			}
@@ -3422,7 +3422,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (!gda_holder_is_valid (h)) {
 			if (allow_noparam) {
 				/* bind param to NULL */
-				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+				SQLITE3_CALL (sqlite3_bind_null) (_gda_sqlite_pstmt_get_stmt (ps), i);
 				empty_rs = TRUE;
 				continue;
 			}
@@ -3472,7 +3472,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		if (!value || gda_value_is_null (value)) {
 			GdaStatement *rstmt;
 			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error))
-				SQLITE3_CALL (sqlite3_bind_null) (ps->sqlite_stmt, i);
+				SQLITE3_CALL (sqlite3_bind_null) (_gda_sqlite_pstmt_get_stmt (ps), i);
 			else if (!rstmt)
 				return NULL;
 			else {
@@ -3525,38 +3525,38 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			}
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_STRING)
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i,
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i,
 							  g_value_get_string (value), -1, SQLITE_TRANSIENT);
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TEXT) {
 			GdaText *text = (GdaText*) g_value_get_boxed (value);
 			const gchar *tstr = gda_text_get_string (text);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i,
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i,
 							  tstr, -1, SQLITE_TRANSIENT);
     }
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_int (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_int (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_LONG)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_long (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_long (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE)
-			SQLITE3_CALL (sqlite3_bind_double) (ps->sqlite_stmt, i, g_value_get_double (value));
+			SQLITE3_CALL (sqlite3_bind_double) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_double (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_FLOAT)
-			SQLITE3_CALL (sqlite3_bind_double) (ps->sqlite_stmt, i, g_value_get_float (value));
+			SQLITE3_CALL (sqlite3_bind_double) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_float (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_UINT)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_uint (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_uint (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_BOOLEAN)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_boolean (value) ? 1 : 0);
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_boolean (value) ? 1 : 0);
 		else if (G_VALUE_TYPE (value) == G_TYPE_INT64)
-			SQLITE3_CALL (sqlite3_bind_int64) (ps->sqlite_stmt, i, g_value_get_int64 (value));
+			SQLITE3_CALL (sqlite3_bind_int64) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_int64 (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_UINT64)
-			SQLITE3_CALL (sqlite3_bind_int64) (ps->sqlite_stmt, i, g_value_get_uint64 (value));
+			SQLITE3_CALL (sqlite3_bind_int64) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_uint64 (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_SHORT)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, gda_value_get_short (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, gda_value_get_short (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_USHORT)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, gda_value_get_ushort (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, gda_value_get_ushort (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_CHAR)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_schar (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_schar (value));
 		else if (G_VALUE_TYPE (value) == G_TYPE_UCHAR)
-			SQLITE3_CALL (sqlite3_bind_int) (ps->sqlite_stmt, i, g_value_get_uchar (value));
+			SQLITE3_CALL (sqlite3_bind_int) (_gda_sqlite_pstmt_get_stmt (ps), i, g_value_get_uchar (value));
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 			glong blob_len;
 			GdaBlob *blob = (GdaBlob*) gda_value_get_blob (value);
@@ -3594,7 +3594,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			pb->blob = blob;
 			blobs_list = g_slist_prepend (blobs_list, pb);
 
-			if (SQLITE3_CALL (sqlite3_bind_zeroblob) (ps->sqlite_stmt, i, (int) blob_len) !=
+			if (SQLITE3_CALL (sqlite3_bind_zeroblob) (_gda_sqlite_pstmt_get_stmt (ps), i, (int) blob_len) !=
 			    SQLITE_OK) {
 				event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
 				gda_connection_event_set_description (event,
@@ -3606,7 +3606,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 			GdaBinary *bin = (GdaBinary *) gda_value_get_binary (value);
-			SQLITE3_CALL (sqlite3_bind_blob) (ps->sqlite_stmt, i,
+			SQLITE3_CALL (sqlite3_bind_blob) (_gda_sqlite_pstmt_get_stmt (ps), i,
 							  gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
@@ -3634,7 +3634,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 
 			if (tofree)
 				gda_time_free (gtime);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, g_string_free (string, FALSE), -1, g_free);
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, g_string_free (string, FALSE), -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
 			gchar *str;
@@ -3643,7 +3643,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			ts = g_value_get_boxed (value);
 			str = g_strdup_printf ("%4d-%02d-%02d", g_date_get_year (ts),
 					       g_date_get_month (ts), g_date_get_day (ts));
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, str, -1, g_free);
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, str, -1, g_free);
 		}
 		else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
 			GDateTime *timestamp;
@@ -3663,13 +3663,13 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (tofree)
 				g_date_time_unref (timestamp);
 
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, string, -1, g_free);
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, string, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_NUMERIC) {
 			const GdaNumeric *gdan;
 
 			gdan = gda_value_get_numeric (value);
-			SQLITE3_CALL (sqlite3_bind_text) (ps->sqlite_stmt, i, gda_numeric_get_string((GdaNumeric*)gdan), -1, SQLITE_TRANSIENT);
+			SQLITE3_CALL (sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, gda_numeric_get_string((GdaNumeric*)gdan), -1, SQLITE_TRANSIENT);
 		}
 		else {
 			gchar *str;
@@ -3762,14 +3762,14 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		}
 
                 /* actually execute the command */
-                handle = SQLITE3_CALL (sqlite3_db_handle) (ps->sqlite_stmt);
-                status = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
+                handle = SQLITE3_CALL (sqlite3_db_handle) (_gda_sqlite_pstmt_get_stmt (ps));
+                status = SQLITE3_CALL (sqlite3_step) (_gda_sqlite_pstmt_get_stmt (ps));
                 guint tries = 0;
                 while (status == SQLITE_BUSY) {
                         if (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMMIT) {
                                 break;
                         }
-                        status = SQLITE3_CALL (sqlite3_step) (ps->sqlite_stmt);
+                        status = SQLITE3_CALL (sqlite3_step) (_gda_sqlite_pstmt_get_stmt (ps));
                         if (tries == 10) {
                                 break;
                         }
@@ -3779,7 +3779,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
                 if (status != SQLITE_DONE) {
                         if (SQLITE3_CALL (sqlite3_errcode) (handle) != SQLITE_OK) {
 				const char *errmsg;
-                                SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+                                SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 
 				errmsg = SQLITE3_CALL (sqlite3_errmsg) (handle);
                                 event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_ERROR);
@@ -3813,7 +3813,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			event = fill_blob_data (cnc, params, cdata, ps, blobs_list, error);
 			if (event) {
 				/* an error occurred */
-				SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+				SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 				if (new_ps)
 					g_object_unref (ps);
 				if (transaction_started)
@@ -3864,7 +3864,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				                                             gda_connection_add_event (cnc, event);
 			}
 			gda_connection_internal_statement_executed (cnc, stmt, params, event);
-			SQLITE3_CALL (sqlite3_reset) (ps->sqlite_stmt);
+			SQLITE3_CALL (sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 			if (new_ps)
 				g_object_unref (ps);
 
@@ -4269,10 +4269,7 @@ gda_sqlite_free_cnc_data (SqliteConnectionData *cdata)
 		return;
 
 	if (cdata->connection) {
-		gint status = SQLITE3_CALL (sqlite3_close) (cdata->connection);
-		if (status == SQLITE_BUSY) {
-			g_warning (_("SQLite: Connection data has been destroyed, but connection is BUSY, so was not closed"));
-		}
+		SQLITE3_CALL (sqlite3_close_v2) (cdata->connection);
 	}
 	g_free (cdata->file);
 	if (cdata->types_hash)

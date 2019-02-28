@@ -21,6 +21,7 @@
 #ifndef __GDA_SQLITE_PSTMT_H__
 #define __GDA_SQLITE_PSTMT_H__
 
+#include <libgda/sqlite/gda-sqlite-provider.h>
 #include <libgda/providers-support/gda-pstmt.h>
 #ifdef STATIC_SQLITE
 #include "sqlite-src/sqlite3.h"
@@ -35,30 +36,28 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_SQLITE_PSTMT            (_gda_sqlite_pstmt_get_type())
-#define GDA_SQLITE_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_PSTMT, GdaSqlitePStmt))
-#define GDA_SQLITE_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_PSTMT, GdaSqlitePStmtClass))
-#define GDA_IS_SQLITE_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_PSTMT))
-#define GDA_IS_SQLITE_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_PSTMT))
 
-typedef struct _GdaSqlitePStmt        GdaSqlitePStmt;
-typedef struct _GdaSqlitePStmtClass   GdaSqlitePStmtClass;
-
-struct _GdaSqlitePStmt {
-	GdaPStmt        object;
-
-	sqlite3_stmt   *sqlite_stmt;
-	gboolean        stmt_used; /* TRUE if a recorset already uses this prepared statement,
-				    * necessary because only one recordset can use sqlite_stmt at a time */
-	GHashTable      *rowid_hash;
-	gint             nb_rowid_columns;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaSqlitePStmt, _gda_sqlite_pstmt, GDA, SQLITE_PSTMT, GdaPStmt)
 
 struct _GdaSqlitePStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType           _gda_sqlite_pstmt_get_type  (void) G_GNUC_CONST;
-GdaSqlitePStmt *_gda_sqlite_pstmt_new       (sqlite3_stmt *sqlite_stmt);
+GdaSqlitePStmt                 *_gda_sqlite_pstmt_new          (GdaSqliteProvider *provider,
+                                                                sqlite3_stmt *sqlite_stmt);
+
+GdaSqliteProvider              *_gda_sqlite_pstmt_get_provider (GdaSqlitePStmt *pstmt);
+sqlite3_stmt                   *_gda_sqlite_pstmt_get_stmt     (GdaSqlitePStmt *pstmt);
+gboolean                       _gda_sqlite_pstmt_get_is_used   (GdaSqlitePStmt *pstmt);
+void                           _gda_sqlite_pstmt_set_is_used   (GdaSqlitePStmt *pstmt,
+                                                                gboolean used);
+
+GHashTable                     *_gda_sqlite_pstmt_get_rowid_hash (GdaSqlitePStmt *pstmt);
+void                            _gda_sqlite_pstmt_set_rowid_hash (GdaSqlitePStmt *pstmt,
+                                                                  GHashTable *hash);
+gint                            _gda_sqlite_pstmt_get_nb_rowid_columns (GdaSqlitePStmt *pstmt);
+void                            _gda_sqlite_pstmt_set_nb_rowid_columns (GdaSqlitePStmt *pstmt,
+                                                                        gint nb);
 
 G_END_DECLS
 
