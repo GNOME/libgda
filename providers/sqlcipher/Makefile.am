@@ -21,7 +21,7 @@ sqlite_sources = sqlite3.c sqlite3.h
 libmain.lo: sqlite3.h
 
 libgda_sqlcipher_la_SOURCES = \
-	$(sqlite_sources) \
+	gda-sqlcipher-provider.c \
 	sqlcipher.gresources.c \
 	libmain.c
 

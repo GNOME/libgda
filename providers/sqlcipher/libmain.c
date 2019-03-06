@@ -26,7 +26,7 @@
 #include <glib/gi18n-lib.h>
 #include <gmodule.h>
 #include <libgda/gda-config.h>
-#include "gda-sqlite-provider.h"
+#include "gda-sqlcipher-provider.h"
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
 #include <libgda/sqlite/gda-symbols-util.h>
@@ -109,7 +109,7 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_SQLITE_PROVIDER, NULL);
+	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_SQLCIPHER_PROVIDER, NULL);
         g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
         return prov;
 }

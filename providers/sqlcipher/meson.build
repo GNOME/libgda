@@ -69,10 +69,15 @@ sqlcipher_resources += sqlcipher_resourcesc
 sqlcipher_resources += sqlcipher_resourcesh
 
 libgda_sqlcipher_sources = files([
-	'libmain.c'
+	'libmain.c',
+	'gda-sqlcipher-provider.c'
 	])
 libgda_sqlcipher_sources += sqlcipher_resources
-libgda_sqlcipher_sources += sqlcipher_sources
+
+sqlcipherheaders = files(['gda-sqlcipher-provider.h'])
+libgda_sqlcipher_sources += sqlcipherheaders
+
+install_headers (sqlcipherheaders, subdir: join_paths(project_package, 'providers', 'sqlcipher'))
 
 if sqlcipher_internal
 libgda_sqlcipher_sources += files([
@@ -104,7 +109,8 @@ libgda_sqlcipher_provider = library ('gda-sqlcipher-'+project_api_version,
 		libcrypto_dep,
 		inc_libgda_sqlcipherh_dep,
 		inc_sqliteh_dep,
-		inc_libgdah_dep
+		inc_libgdah_dep,
+		inc_rooth_dep
 		],
 	c_args: sqlcipher_cargs,
 	link_with: libgda,

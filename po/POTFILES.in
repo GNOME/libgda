@@ -235,6 +235,7 @@ providers/reuseable/mysql/gda-mysql-meta.c
 providers/reuseable/mysql/gda-mysql-reuseable.c
 providers/reuseable/postgres/gda-postgres-meta.c
 providers/reuseable/postgres/gda-postgres-reuseable.c
+providers/sqlcipher/gda-sqlcipher-provider.c
 providers/sqlcipher/libmain.c
 providers/sqlcipher/sqlcipher_specs_add_column.xml.in
 providers/sqlcipher/sqlcipher_specs_auth.xml.in
