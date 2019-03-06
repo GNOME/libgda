@@ -35,10 +35,14 @@ G_DECLARE_DERIVABLE_TYPE (GdaSqliteProvider, gda_sqlite_provider, GDA, SQLITE_PR
 struct _GdaSqliteProviderClass {
 	GdaServerProviderClass parent_class;
 
+	gpointer (*get_api) (GdaSqliteProvider *prov);
+
 	/* Padding for future expansion */
 	void (*_gda_reserved1) (void);
 	void (*_gda_reserved2) (void);
 };
+
+gpointer gda_sqlite_provider_get_api (GdaSqliteProvider *prov);
 
 G_END_DECLS
 

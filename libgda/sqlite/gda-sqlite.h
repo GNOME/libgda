@@ -29,27 +29,18 @@
 #include <libgda/libgda.h>
 #include <libgda/gda-data-handler.h>
 #include <libgda/gda-connection-private.h>
+#include <libgda/sqlite/gda-sqlite-provider.h>
 
 #ifdef WITH_BDBSQLITE
   #include <dbsql.h>
   #include "gda-symbols-util.h"
   #define SQLITE3_CALL(x) (s3r->x)
 #else
-  #ifdef STATIC_SQLITE
-    #include "sqlite-src/sqlite3.h"
-    #define SQLITE3_CALL(x) (x)
-  #else
-    #ifdef HAVE_SQLITE
-      #include <sqlite3.h>
-      #include "gda-symbols-util.h"
-      #define SQLITE3_CALL(x) (s3r->x)
-      #if (SQLITE_VERSION_NUMBER < 3005000)
-        typedef sqlite_int64 sqlite3_int64;
-      #endif
-    #else
-      #include "sqlite-src/sqlite3.h"
-      #define SQLITE3_CALL(x) (x)
-    #endif
+  #include <sqlite3.h>
+  #include "gda-symbols-util.h"
+  #define SQLITE3_CALL(p,x) (((Sqlite3ApiRoutines*) gda_sqlite_provider_get_api(p))->x)
+  #if (SQLITE_VERSION_NUMBER < 3005000)
+    typedef sqlite_int64 sqlite3_int64;
   #endif
 #endif
 
@@ -59,6 +50,7 @@
 typedef struct {
 	GdaServerProviderConnectionData parent;
 	sqlite3      *connection;
+	GWeakRef     provider;
 	gchar        *file;
 	GHashTable   *types_hash; /* key = type name, value = pointer to a GType */
 	GType        *types_array;/* holds GType values, pointed by @types_hash */

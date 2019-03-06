@@ -141,161 +141,163 @@ find_sqlite_library (const gchar *name_part)
 }
 
 void
-load_symbols (GModule *module)
+load_symbols (GModule *module, Sqlite3ApiRoutines** apilib)
 {
 	g_assert (module);
-	s3r = g_new (Sqlite3ApiRoutines, 1);
+	(*apilib) = g_new (Sqlite3ApiRoutines, 1);
 
-	if (! g_module_symbol (module, "sqlite3_bind_blob", (gpointer*) &(s3r->sqlite3_bind_blob)))
+	if (! g_module_symbol (module, "sqlite3_bind_blob", (gpointer*) &((*apilib)->sqlite3_bind_blob)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_double", (gpointer*) &(s3r->sqlite3_bind_double)))
+	if (! g_module_symbol (module, "sqlite3_bind_double", (gpointer*) &((*apilib)->sqlite3_bind_double)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_int", (gpointer*) &(s3r->sqlite3_bind_int)))
+	if (! g_module_symbol (module, "sqlite3_bind_int", (gpointer*) &((*apilib)->sqlite3_bind_int)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_int64", (gpointer*) &(s3r->sqlite3_bind_int64)))
+	if (! g_module_symbol (module, "sqlite3_bind_int64", (gpointer*) &((*apilib)->sqlite3_bind_int64)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_null", (gpointer*) &(s3r->sqlite3_bind_null)))
+	if (! g_module_symbol (module, "sqlite3_bind_null", (gpointer*) &((*apilib)->sqlite3_bind_null)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_text", (gpointer*) &(s3r->sqlite3_bind_text)))
+	if (! g_module_symbol (module, "sqlite3_bind_text", (gpointer*) &((*apilib)->sqlite3_bind_text)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_bind_zeroblob", (gpointer*) &(s3r->sqlite3_bind_zeroblob)))
+	if (! g_module_symbol (module, "sqlite3_bind_zeroblob", (gpointer*) &((*apilib)->sqlite3_bind_zeroblob)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_blob_bytes", (gpointer*) &(s3r->sqlite3_blob_bytes)))
+	if (! g_module_symbol (module, "sqlite3_blob_bytes", (gpointer*) &((*apilib)->sqlite3_blob_bytes)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_blob_close", (gpointer*) &(s3r->sqlite3_blob_close)))
+	if (! g_module_symbol (module, "sqlite3_blob_close", (gpointer*) &((*apilib)->sqlite3_blob_close)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_blob_open", (gpointer*) &(s3r->sqlite3_blob_open)))
+	if (! g_module_symbol (module, "sqlite3_blob_open", (gpointer*) &((*apilib)->sqlite3_blob_open)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_blob_read", (gpointer*) &(s3r->sqlite3_blob_read)))
+	if (! g_module_symbol (module, "sqlite3_blob_read", (gpointer*) &((*apilib)->sqlite3_blob_read)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_blob_write", (gpointer*) &(s3r->sqlite3_blob_write)))
+	if (! g_module_symbol (module, "sqlite3_blob_write", (gpointer*) &((*apilib)->sqlite3_blob_write)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_busy_timeout", (gpointer*) &(s3r->sqlite3_busy_timeout)))
+	if (! g_module_symbol (module, "sqlite3_busy_timeout", (gpointer*) &((*apilib)->sqlite3_busy_timeout)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_changes", (gpointer*) &(s3r->sqlite3_changes)))
+	if (! g_module_symbol (module, "sqlite3_changes", (gpointer*) &((*apilib)->sqlite3_changes)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_clear_bindings", (gpointer*) &(s3r->sqlite3_clear_bindings)))
+	if (! g_module_symbol (module, "sqlite3_clear_bindings", (gpointer*) &((*apilib)->sqlite3_clear_bindings)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_close", (gpointer*) &(s3r->sqlite3_close)))
+	if (! g_module_symbol (module, "sqlite3_close", (gpointer*) &((*apilib)->sqlite3_close)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_close_v2", (gpointer*) &(s3r->sqlite3_close_v2)))
+	if (! g_module_symbol (module, "sqlite3_close_v2", (gpointer*) &((*apilib)->sqlite3_close_v2)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_blob", (gpointer*) &(s3r->sqlite3_column_blob)))
+	if (! g_module_symbol (module, "sqlite3_column_blob", (gpointer*) &((*apilib)->sqlite3_column_blob)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_bytes", (gpointer*) &(s3r->sqlite3_column_bytes)))
+	if (! g_module_symbol (module, "sqlite3_column_bytes", (gpointer*) &((*apilib)->sqlite3_column_bytes)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_count", (gpointer*) &(s3r->sqlite3_column_count)))
+	if (! g_module_symbol (module, "sqlite3_column_count", (gpointer*) &((*apilib)->sqlite3_column_count)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_database_name", (gpointer*) &(s3r->sqlite3_column_database_name)))
+	if (! g_module_symbol (module, "sqlite3_column_database_name", (gpointer*) &((*apilib)->sqlite3_column_database_name)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_decltype", (gpointer*) &(s3r->sqlite3_column_decltype)))
+	if (! g_module_symbol (module, "sqlite3_column_decltype", (gpointer*) &((*apilib)->sqlite3_column_decltype)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_double", (gpointer*) &(s3r->sqlite3_column_double)))
+	if (! g_module_symbol (module, "sqlite3_column_double", (gpointer*) &((*apilib)->sqlite3_column_double)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_int", (gpointer*) &(s3r->sqlite3_column_int)))
+	if (! g_module_symbol (module, "sqlite3_column_int", (gpointer*) &((*apilib)->sqlite3_column_int)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_int64", (gpointer*) &(s3r->sqlite3_column_int64)))
+	if (! g_module_symbol (module, "sqlite3_column_int64", (gpointer*) &((*apilib)->sqlite3_column_int64)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_name", (gpointer*) &(s3r->sqlite3_column_name)))
+	if (! g_module_symbol (module, "sqlite3_column_name", (gpointer*) &((*apilib)->sqlite3_column_name)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_origin_name", (gpointer*) &(s3r->sqlite3_column_origin_name)))
+	if (! g_module_symbol (module, "sqlite3_column_origin_name", (gpointer*) &((*apilib)->sqlite3_column_origin_name)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_table_name", (gpointer*) &(s3r->sqlite3_column_table_name)))
+	if (! g_module_symbol (module, "sqlite3_column_table_name", (gpointer*) &((*apilib)->sqlite3_column_table_name)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_text", (gpointer*) &(s3r->sqlite3_column_text)))
+	if (! g_module_symbol (module, "sqlite3_column_text", (gpointer*) &((*apilib)->sqlite3_column_text)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_column_type", (gpointer*) &(s3r->sqlite3_column_type)))
+	if (! g_module_symbol (module, "sqlite3_column_type", (gpointer*) &((*apilib)->sqlite3_column_type)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_config", (gpointer*) &(s3r->sqlite3_config)))
+	if (! g_module_symbol (module, "sqlite3_config", (gpointer*) &((*apilib)->sqlite3_config)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_create_function", (gpointer*) &(s3r->sqlite3_create_function)))
+	if (! g_module_symbol (module, "sqlite3_create_function", (gpointer*) &((*apilib)->sqlite3_create_function)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_create_module", (gpointer*) &(s3r->sqlite3_create_module)))
+	if (! g_module_symbol (module, "sqlite3_create_module", (gpointer*) &((*apilib)->sqlite3_create_module)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_db_handle", (gpointer*) &(s3r->sqlite3_db_handle)))
+	if (! g_module_symbol (module, "sqlite3_db_handle", (gpointer*) &((*apilib)->sqlite3_db_handle)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_declare_vtab", (gpointer*) &(s3r->sqlite3_declare_vtab)))
+	if (! g_module_symbol (module, "sqlite3_declare_vtab", (gpointer*) &((*apilib)->sqlite3_declare_vtab)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_errcode", (gpointer*) &(s3r->sqlite3_errcode)))
+	if (! g_module_symbol (module, "sqlite3_errcode", (gpointer*) &((*apilib)->sqlite3_errcode)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_errmsg", (gpointer*) &(s3r->sqlite3_errmsg)))
+	if (! g_module_symbol (module, "sqlite3_errmsg", (gpointer*) &((*apilib)->sqlite3_errmsg)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_exec", (gpointer*) &(s3r->sqlite3_exec)))
+	if (! g_module_symbol (module, "sqlite3_exec", (gpointer*) &((*apilib)->sqlite3_exec)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_extended_result_codes", (gpointer*) &(s3r->sqlite3_extended_result_codes)))
+	if (! g_module_symbol (module, "sqlite3_extended_result_codes", (gpointer*) &((*apilib)->sqlite3_extended_result_codes)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_finalize", (gpointer*) &(s3r->sqlite3_finalize)))
+	if (! g_module_symbol (module, "sqlite3_finalize", (gpointer*) &((*apilib)->sqlite3_finalize)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_free", (gpointer*) &(s3r->sqlite3_free)))
+	if (! g_module_symbol (module, "sqlite3_free", (gpointer*) &((*apilib)->sqlite3_free)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_free_table", (gpointer*) &(s3r->sqlite3_free_table)))
+	if (! g_module_symbol (module, "sqlite3_free_table", (gpointer*) &((*apilib)->sqlite3_free_table)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_get_table", (gpointer*) &(s3r->sqlite3_get_table)))
+	if (! g_module_symbol (module, "sqlite3_get_table", (gpointer*) &((*apilib)->sqlite3_get_table)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_last_insert_rowid", (gpointer*) &(s3r->sqlite3_last_insert_rowid)))
+	if (! g_module_symbol (module, "sqlite3_last_insert_rowid", (gpointer*) &((*apilib)->sqlite3_last_insert_rowid)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_malloc", (gpointer*) &(s3r->sqlite3_malloc)))
+	if (! g_module_symbol (module, "sqlite3_malloc", (gpointer*) &((*apilib)->sqlite3_malloc)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_mprintf", (gpointer*) &(s3r->sqlite3_mprintf)))
+	if (! g_module_symbol (module, "sqlite3_mprintf", (gpointer*) &((*apilib)->sqlite3_mprintf)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_open", (gpointer*) &(s3r->sqlite3_open)))
+	if (! g_module_symbol (module, "sqlite3_open", (gpointer*) &((*apilib)->sqlite3_open)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_open_v2", (gpointer*) &(s3r->sqlite3_open_v2)))
+	if (! g_module_symbol (module, "sqlite3_open_v2", (gpointer*) &((*apilib)->sqlite3_open_v2)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_prepare", (gpointer*) &(s3r->sqlite3_prepare)))
+	if (! g_module_symbol (module, "sqlite3_prepare", (gpointer*) &((*apilib)->sqlite3_prepare)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_prepare_v2", (gpointer*) &(s3r->sqlite3_prepare_v2)))
+	if (! g_module_symbol (module, "sqlite3_prepare_v2", (gpointer*) &((*apilib)->sqlite3_prepare_v2)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_reset", (gpointer*) &(s3r->sqlite3_reset)))
+	if (! g_module_symbol (module, "sqlite3_reset", (gpointer*) &((*apilib)->sqlite3_reset)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_blob", (gpointer*) &(s3r->sqlite3_result_blob)))
+	if (! g_module_symbol (module, "sqlite3_result_blob", (gpointer*) &((*apilib)->sqlite3_result_blob)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_double", (gpointer*) &(s3r->sqlite3_result_double)))
+	if (! g_module_symbol (module, "sqlite3_result_double", (gpointer*) &((*apilib)->sqlite3_result_double)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_error", (gpointer*) &(s3r->sqlite3_result_error)))
+	if (! g_module_symbol (module, "sqlite3_result_error", (gpointer*) &((*apilib)->sqlite3_result_error)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_int", (gpointer*) &(s3r->sqlite3_result_int)))
+	if (! g_module_symbol (module, "sqlite3_result_int", (gpointer*) &((*apilib)->sqlite3_result_int)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_int64", (gpointer*) &(s3r->sqlite3_result_int64)))
+	if (! g_module_symbol (module, "sqlite3_result_int64", (gpointer*) &((*apilib)->sqlite3_result_int64)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_null", (gpointer*) &(s3r->sqlite3_result_null)))
+	if (! g_module_symbol (module, "sqlite3_result_null", (gpointer*) &((*apilib)->sqlite3_result_null)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_result_text", (gpointer*) &(s3r->sqlite3_result_text)))
+	if (! g_module_symbol (module, "sqlite3_result_text", (gpointer*) &((*apilib)->sqlite3_result_text)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_step", (gpointer*) &(s3r->sqlite3_step)))
+	if (! g_module_symbol (module, "sqlite3_step", (gpointer*) &((*apilib)->sqlite3_step)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_table_column_metadata", (gpointer*) &(s3r->sqlite3_table_column_metadata)))
+	if (! g_module_symbol (module, "sqlite3_table_column_metadata", (gpointer*) &((*apilib)->sqlite3_table_column_metadata)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_threadsafe", (gpointer*) &(s3r->sqlite3_threadsafe)))
+	if (! g_module_symbol (module, "sqlite3_threadsafe", (gpointer*) &((*apilib)->sqlite3_threadsafe)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_blob", (gpointer*) &(s3r->sqlite3_value_blob)))
+	if (! g_module_symbol (module, "sqlite3_value_blob", (gpointer*) &((*apilib)->sqlite3_value_blob)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_bytes", (gpointer*) &(s3r->sqlite3_value_bytes)))
+	if (! g_module_symbol (module, "sqlite3_value_bytes", (gpointer*) &((*apilib)->sqlite3_value_bytes)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_int", (gpointer*) &(s3r->sqlite3_value_int)))
+	if (! g_module_symbol (module, "sqlite3_value_int", (gpointer*) &((*apilib)->sqlite3_value_int)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_int64", (gpointer*) &(s3r->sqlite3_value_int64)))
+	if (! g_module_symbol (module, "sqlite3_value_int64", (gpointer*) &((*apilib)->sqlite3_value_int64)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_double", (gpointer*) &(s3r->sqlite3_value_double)))
+	if (! g_module_symbol (module, "sqlite3_value_double", (gpointer*) &((*apilib)->sqlite3_value_double)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_text", (gpointer*) &(s3r->sqlite3_value_text)))
+	if (! g_module_symbol (module, "sqlite3_value_text", (gpointer*) &((*apilib)->sqlite3_value_text)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_value_type", (gpointer*) &(s3r->sqlite3_value_type)))
+	if (! g_module_symbol (module, "sqlite3_value_type", (gpointer*) &((*apilib)->sqlite3_value_type)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_key", (gpointer*) &(s3r->sqlite3_key)))
-		s3r->sqlite3_key = NULL;
-	if (! g_module_symbol (module, "sqlite3_rekey", (gpointer*) &(s3r->sqlite3_key)))
-		s3r->sqlite3_rekey = NULL;
+	if (! g_module_symbol (module, "sqlite3_key", (gpointer*) &((*apilib)->sqlite3_key)))
+		(*apilib)->sqlite3_key = NULL;
+	if (! g_module_symbol (module, "sqlite3_key_v2", (gpointer*) &((*apilib)->sqlite3_key_v2)))
+		(*apilib)->sqlite3_key_v2 = NULL;
+	if (! g_module_symbol (module, "sqlite3_rekey", (gpointer*) &((*apilib)->sqlite3_key)))
+		(*apilib)->sqlite3_rekey = NULL;
 
-	if (! g_module_symbol (module, "sqlite3_create_collation", (gpointer*) &(s3r->sqlite3_create_collation)))
+	if (! g_module_symbol (module, "sqlite3_create_collation", (gpointer*) &((*apilib)->sqlite3_create_collation)))
 		goto onerror;
-	if (! g_module_symbol (module, "sqlite3_enable_load_extension", (gpointer*) &(s3r->sqlite3_enable_load_extension)))
-		s3r->sqlite3_enable_load_extension = NULL;
+	if (! g_module_symbol (module, "sqlite3_enable_load_extension", (gpointer*) &((*apilib)->sqlite3_enable_load_extension)))
+		(*apilib)->sqlite3_enable_load_extension = NULL;
 	return;
 
  onerror:
-	g_free (s3r);
-	s3r = NULL;
+	g_free ((*apilib));
+	apilib = NULL;
 	g_module_close (module);	
 }
 

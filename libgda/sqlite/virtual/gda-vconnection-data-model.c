@@ -261,6 +261,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	gboolean retval = TRUE;
 	SqliteConnectionData *scnc;
 	GdaVconnectionDataModelPrivate *priv = gda_vconnection_data_model_get_instance_private (cnc);
+	GdaSqliteProvider *sprov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (cnc)));
 
 	static gint counter = 0;
 
@@ -300,13 +301,13 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	/* actually create the virtual table in @cnc */
 	prov = (GdaVirtualProvider *) gda_connection_get_provider (GDA_CONNECTION (cnc));
 	str = g_strdup_printf ("CREATE VIRTUAL TABLE %s USING %s ('%s')", td->table_name, G_OBJECT_TYPE_NAME (prov), td->unique_name);
-	rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
+	rc = SQLITE3_CALL (sprov, sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 	g_free (str);
 	if (rc != SQLITE_OK) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     _("Internal Error: when trying to add data model spec for virtual connetion: %s"), zErrMsg);
-		SQLITE3_CALL (sqlite3_free) (zErrMsg);
+		SQLITE3_CALL (sprov, sqlite3_free) (zErrMsg);
 		_gda_vconnection_data_model_table_data_free (td);
 		priv->table_data_list = g_slist_remove (priv->table_data_list, td);
 		retval = FALSE;
@@ -328,6 +329,7 @@ get_rid_of_vtable (GdaVconnectionDataModel *cnc, GdaVConnectionTableData *td, gb
 	char *zErrMsg = NULL;
 	gboolean allok = TRUE;
 	GdaVconnectionDataModelPrivate *priv = gda_vconnection_data_model_get_instance_private (cnc);
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (cnc)));
 
 	SqliteConnectionData *scnc;
 	scnc = (SqliteConnectionData*) gda_connection_internal_get_provider_data_error ((GdaConnection *) cnc, error);
@@ -336,14 +338,14 @@ get_rid_of_vtable (GdaVconnectionDataModel *cnc, GdaVConnectionTableData *td, gb
 
 	if (scnc) {
 		str = g_strdup_printf ("DROP TABLE %s", td->table_name);
-		rc = SQLITE3_CALL (sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
+		rc = SQLITE3_CALL (prov, sqlite3_exec) (scnc->connection, str, NULL, 0, &zErrMsg);
 		g_free (str);
 
 		if (rc != SQLITE_OK) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 				     "%s", zErrMsg);
-			SQLITE3_CALL (sqlite3_free) (zErrMsg);
+			SQLITE3_CALL (prov, sqlite3_free) (zErrMsg);
 			allok = FALSE;
 			if (!force)
 				return FALSE;

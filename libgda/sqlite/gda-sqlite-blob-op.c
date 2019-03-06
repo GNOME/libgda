@@ -28,6 +28,7 @@
 #include <sql-parser/gda-sql-parser.h>
 
 struct _GdaSqliteBlobOpPrivate {
+	GWeakRef      provider;
 	sqlite3_blob  *sblob;
 };
 
@@ -79,6 +80,7 @@ gda_sqlite_blob_op_init (GdaSqliteBlobOp *op, G_GNUC_UNUSED GdaSqliteBlobOpClass
 
 	op->priv = g_new0 (GdaSqliteBlobOpPrivate, 1);
 	op->priv->sblob = NULL;
+	g_weak_ref_init (&op->priv->provider, NULL);
 }
 
 static void
@@ -104,11 +106,16 @@ gda_sqlite_blob_op_finalize (GObject * object)
 
 	/* free specific information */
 	if (bop->priv->sblob) {
-		SQLITE3_CALL (sqlite3_blob_close) (bop->priv->sblob);
+		GdaSqliteProvider *prov = g_weak_ref_get (&bop->priv->provider);
+		if (prov != NULL) {
+			SQLITE3_CALL (prov, sqlite3_blob_close) (bop->priv->sblob);
+			g_object_unref (prov);
+		}
 #ifdef GDA_DEBUG_NO
 		g_print ("CLOSED blob %p\n", bop);
 #endif
 	}
+	g_weak_ref_clear (&bop->priv->provider);
 	g_free (bop->priv);
 	bop->priv = NULL;
 
@@ -130,6 +137,7 @@ _gda_sqlite_blob_op_new (GdaConnection *cnc,
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (table_name, NULL);
 	g_return_val_if_fail (column_name, NULL);
+	g_return_val_if_fail (GDA_IS_SQLITE_PROVIDER (gda_connection_get_provider (cnc)), NULL);
 
 	if (db_name) {
 		db = (gchar *) db_name;
@@ -145,13 +153,16 @@ _gda_sqlite_blob_op_new (GdaConnection *cnc,
 	    ! _gda_sqlite_check_transaction_started (cnc, &transaction_started, NULL))
 		return NULL;
 
-	rc = SQLITE3_CALL (sqlite3_blob_open) (cdata->connection, db ? db : "main",
-					       table, column_name, rowid,
-				1, /* Read & Write */
-				&(sblob));
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (cnc));
+
+	rc = SQLITE3_CALL (prov, sqlite3_blob_open) (cdata->connection,
+	                                       db ? db : "main",
+	                                       table, column_name, rowid,
+	                                       1, /* Read & Write */
+	                                       &(sblob));
 	if (rc != SQLITE_OK) {
 #ifdef GDA_DEBUG_NO
-		g_print ("ERROR: %s\n", SQLITE3_CALL (sqlite3_errmsg) (cdata->connection));
+		g_print ("ERROR: %s\n", SQLITE3_CALL (prov, sqlite3_errmsg) (cdata->connection));
 #endif
 		if (transaction_started)
 			gda_connection_rollback_transaction (cnc, NULL, NULL);
@@ -160,6 +171,7 @@ _gda_sqlite_blob_op_new (GdaConnection *cnc,
 
 	bop = g_object_new (GDA_TYPE_SQLITE_BLOB_OP, "connection", cnc, NULL);
 	bop->priv->sblob = sblob;
+	g_weak_ref_set (&bop->priv->provider, prov);
 #ifdef GDA_DEBUG_NO
 	g_print ("OPENED blob %p\n", bop);
 #endif
@@ -185,8 +197,11 @@ gda_sqlite_blob_op_get_length (GdaBlobOp *op)
 	bop = GDA_SQLITE_BLOB_OP (op);
 	g_return_val_if_fail (bop->priv, -1);
 	g_return_val_if_fail (bop->priv->sblob, -1);
+	GdaSqliteProvider *prov = g_weak_ref_get (&bop->priv->provider);
+	g_return_val_if_fail (prov != NULL, -1);
 
-	len = SQLITE3_CALL (sqlite3_blob_bytes) (bop->priv->sblob);
+	len = SQLITE3_CALL (prov, sqlite3_blob_bytes) (bop->priv->sblob);
+	g_object_unref (prov);
 	return len >= 0 ? len : 0;
 }
 
@@ -214,6 +229,9 @@ gda_sqlite_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	if (size > G_MAXINT)
 		return -1;
 
+	GdaSqliteProvider *prov = g_weak_ref_get (&bop->priv->provider);
+	g_return_val_if_fail (prov != NULL, -1);
+
 	bin = gda_blob_get_binary (blob);
 	gda_binary_set_data (bin, (guchar*) "", 0);
 
@@ -221,25 +239,32 @@ gda_sqlite_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 	int rsize;
 	int len;
 
-	len = SQLITE3_CALL (sqlite3_blob_bytes) (bop->priv->sblob);
-	if (len < 0)
+	len = SQLITE3_CALL (prov, sqlite3_blob_bytes) (bop->priv->sblob);
+	if (len < 0){
+		g_object_unref (prov);
 		return -1;
-	else if (len == 0)
+	} else if (len == 0) {
+		g_object_unref (prov);
 		return 0;
+	}
 		
 	rsize = (int) size;
-	if (offset >= len)
+	if (offset >= len) {
+		g_object_unref (prov);
 		return -1;
+	}
 
 	if (len - offset < rsize)
 		rsize = len - offset;
   
-	rc = SQLITE3_CALL (sqlite3_blob_read) (bop->priv->sblob, buffer, rsize, offset);
+	rc = SQLITE3_CALL (prov, sqlite3_blob_read) (bop->priv->sblob, buffer, rsize, offset);
 	if (rc != SQLITE_OK) {
 		gda_binary_reset_data (bin);
+		g_object_unref (prov);
 		return -1;
 	}
 	gda_binary_set_data (bin, buffer, rsize);
+	g_object_unref (prov);
 
 	return gda_binary_get_size (bin);
 }
@@ -261,9 +286,14 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 	g_return_val_if_fail (bop->priv->sblob, -1);
 	g_return_val_if_fail (blob, -1);
 
-	len = SQLITE3_CALL (sqlite3_blob_bytes) (bop->priv->sblob);
-	if (len < 0)
+	GdaSqliteProvider *prov = g_weak_ref_get (&bop->priv->provider);
+	g_return_val_if_fail (prov != NULL, -1);
+
+	len = SQLITE3_CALL (prov, sqlite3_blob_bytes) (bop->priv->sblob);
+	if (len < 0) {
+		g_object_unref (prov);
 		return -1;
+	}
 
 	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
 		/* use data through blob->op */
@@ -286,7 +316,7 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 			else
 				wlen = nread;
 
-			rc = SQLITE3_CALL (sqlite3_blob_write) (bop->priv->sblob,
+			rc = SQLITE3_CALL (prov, sqlite3_blob_write) (bop->priv->sblob,
 								gda_binary_get_data (gda_blob_get_binary (tmpblob)), wlen, offset + nbwritten);
 			if (rc != SQLITE_OK)
 				tmp_written = -1;
@@ -296,6 +326,7 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 			if (tmp_written < 0) {
 				/* treat error */
 				gda_blob_free ((gpointer) tmpblob);
+				g_object_unref (prov);
 				return -1;
 			}
 			nbwritten += tmp_written;
@@ -315,12 +346,13 @@ gda_sqlite_blob_op_write (GdaBlobOp *op, GdaBlob *blob, glong offset)
 		else
 			wlen = gda_binary_get_size (bin);
 
-		rc = SQLITE3_CALL (sqlite3_blob_write) (bop->priv->sblob, gda_binary_get_data (bin), wlen, offset);
+		rc = SQLITE3_CALL (prov, sqlite3_blob_write) (bop->priv->sblob, gda_binary_get_data (bin), wlen, offset);
 		if (rc != SQLITE_OK)
 			nbwritten = -1;
 		else
 			nbwritten = wlen;
 	}
+	g_object_unref (prov);
 
 	return nbwritten;
 }

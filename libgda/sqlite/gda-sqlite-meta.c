@@ -362,7 +362,7 @@ get_affinity (const gchar *type)
 }
 
 static gboolean
-fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash, 
+fill_udt_model (GdaSqliteProvider *prov, SqliteConnectionData *cdata, GHashTable *added_hash,
 		GdaDataModel *mod_model, const GValue *p_udt_schema, GError **error)
 {
 	gint status;
@@ -373,7 +373,7 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 
 	cstr = g_value_get_string (p_udt_schema);
 	str = g_strdup_printf ("SELECT name FROM %s.sqlite_master WHERE type='table' AND name not like 'sqlite_%%'", cstr);
-	status = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection, str, -1, &tables_stmt, NULL);
+	status = SQLITE3_CALL (prov, sqlite3_prepare_v2) (cdata->connection, str, -1, &tables_stmt, NULL);
 	g_free (str);
 	if ((status != SQLITE_OK) || !tables_stmt)
 		return FALSE;
@@ -381,31 +381,31 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 	if (!cdata->types_hash)
                 _gda_sqlite_compute_types_hash (cdata);
 
-	for (status = SQLITE3_CALL (sqlite3_step) (tables_stmt);
+	for (status = SQLITE3_CALL (prov, sqlite3_step) (tables_stmt);
 	     status == SQLITE_ROW;
-	     status = SQLITE3_CALL (sqlite3_step) (tables_stmt)) {
+	     status = SQLITE3_CALL (prov, sqlite3_step) (tables_stmt)) {
 		gchar *sql;
 		sqlite3_stmt *fields_stmt;
 		gint fields_status;
 
 		if (strcmp (cstr, "main")) 
 			sql = g_strdup_printf ("PRAGMA %s.table_info(%s);", cstr,
-					       SQLITE3_CALL (sqlite3_column_text) (tables_stmt, 0));
+					       SQLITE3_CALL (prov, sqlite3_column_text) (tables_stmt, 0));
 		else
 			sql = g_strdup_printf ("PRAGMA table_info('%s');",
-					       SQLITE3_CALL (sqlite3_column_text) (tables_stmt, 0));
-		fields_status = SQLITE3_CALL (sqlite3_prepare_v2) (cdata->connection, sql,
+					       SQLITE3_CALL (prov, sqlite3_column_text) (tables_stmt, 0));
+		fields_status = SQLITE3_CALL (prov, sqlite3_prepare_v2) (cdata->connection, sql,
 								   -1, &fields_stmt, NULL);
 		g_free (sql);
 		if ((fields_status != SQLITE_OK) || !fields_stmt)
 			break;
 		
-		for (fields_status = SQLITE3_CALL (sqlite3_step) (fields_stmt);
+		for (fields_status = SQLITE3_CALL (prov, sqlite3_step) (fields_stmt);
 		     fields_status == SQLITE_ROW; 
-		     fields_status = SQLITE3_CALL (sqlite3_step) (fields_stmt)) {
+		     fields_status = SQLITE3_CALL (prov, sqlite3_step) (fields_stmt)) {
 			GType gtype;
 			GType *pg;
-			const gchar *typname = (gchar *) SQLITE3_CALL (sqlite3_column_text) (fields_stmt, 2);
+			const gchar *typname = (gchar *) SQLITE3_CALL (prov, sqlite3_column_text) (fields_stmt, 2);
 			if (!typname || !(*typname)) 
 				continue;
 
@@ -435,9 +435,9 @@ fill_udt_model (SqliteConnectionData *cdata, GHashTable *added_hash,
 				g_hash_table_insert (added_hash, g_strdup (typname), GINT_TO_POINTER (1));
 			}
 		}
-		SQLITE3_CALL (sqlite3_finalize) (fields_stmt);
+		SQLITE3_CALL (prov, sqlite3_finalize) (fields_stmt);
 	}
-	SQLITE3_CALL (sqlite3_finalize) (tables_stmt);
+	SQLITE3_CALL (prov, sqlite3_finalize) (tables_stmt);
 
 	return retval;
 }
@@ -459,7 +459,7 @@ nocase_str_equal (gconstpointer v1, gconstpointer v2)
 }
 
 gboolean
-_gda_sqlite_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
+_gda_sqlite_meta__udt (GdaServerProvider *prov, GdaConnection *cnc,
 		       GdaMetaStore *store, GdaMetaContext *context, GError **error)
 {
 	SqliteConnectionData *cdata;
@@ -496,7 +496,7 @@ _gda_sqlite_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 		}
                 if (!strcmp (g_value_get_string (cvalue), TMP_DATABASE_NAME))
 			continue; /* nothing to do */
-		if (! fill_udt_model (cdata, added_hash, mod_model, cvalue, error)) {
+		if (! fill_udt_model (GDA_SQLITE_PROVIDER (prov), cdata, added_hash, mod_model, cvalue, error)) {
 			retval = FALSE;
                         break;
 		}
@@ -515,7 +515,7 @@ _gda_sqlite_meta__udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc
 }
 
 gboolean
-_gda_sqlite_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
+_gda_sqlite_meta_udt (GdaServerProvider *prov, GdaConnection *cnc,
 		      GdaMetaStore *store, GdaMetaContext *context, GError **error,
 		      G_GNUC_UNUSED const GValue *udt_catalog, const GValue *udt_schema)
 {
@@ -535,7 +535,7 @@ _gda_sqlite_meta_udt (G_GNUC_UNUSED GdaServerProvider *prov, GdaConnection *cnc,
 	mod_model = gda_meta_store_create_modify_data_model (store, context->table_name);
 	g_assert (mod_model);
 
-	if (! fill_udt_model (cdata, added_hash, mod_model, udt_schema, error))
+	if (! fill_udt_model (GDA_SQLITE_PROVIDER (prov), cdata, added_hash, mod_model, udt_schema, error))
 		retval = FALSE;
 
 	g_hash_table_destroy (added_hash);
@@ -968,6 +968,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			     G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_NONE};
 	GdaStatement *stmt;
 	GError *lerror = NULL;
+  GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (cnc)));
 	
 	schema_name = g_value_get_string (p_table_schema);
 	stmt = get_statement (I_PRAGMA_TABLE_INFO, schema_name, g_value_get_string (p_table_name), NULL);
@@ -1012,7 +1013,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			continue; /* ignore that table */
 		
 		this_col_name = g_value_get_string (nthis_col_pname);
-		if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection,
+		if (SQLITE3_CALL (prov, sqlite3_table_column_metadata) (cdata->connection,
 								  g_value_get_string (p_table_schema), 
 								  this_table_name, this_col_name,
 								  &pzDataType, &pzCollSeq,
@@ -1253,6 +1254,8 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 	gint i;
 	GdaStatement *stmt;
 	GError *lerror = NULL;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (cnc)));
+
 
 	schema_name = g_value_get_string (p_table_schema);
 
@@ -1301,7 +1304,7 @@ fill_constraints_tab_model (GdaConnection *cnc, SqliteConnectionData *cdata, Gda
 			continue; /* ignore that table */
 		
 		this_col_name = g_value_get_string (this_col_pname);
-		if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection,
+		if (SQLITE3_CALL (prov, sqlite3_table_column_metadata) (cdata->connection,
 								  g_value_get_string (p_table_schema), 
 								  this_table_name, this_col_name,
 								  &pzDataType, &pzCollSeq,
@@ -1829,6 +1832,7 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 	const gchar *schema_name, *const_name;
 	gint i;
 	GdaStatement *stmt;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (cnc));
 
 	schema_name = g_value_get_string (p_table_schema);
 	const_name = g_value_get_string (constraint_name);
@@ -1877,7 +1881,7 @@ fill_key_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata, GdaData
 				continue; /* ignore that table */
 			
 			this_col_name = g_value_get_string (this_col_pname);
-			if (SQLITE3_CALL (sqlite3_table_column_metadata) (cdata->connection, g_value_get_string (p_table_schema), 
+			if (SQLITE3_CALL (prov, sqlite3_table_column_metadata) (cdata->connection, g_value_get_string (p_table_schema),
 									 this_table_name, this_col_name,
 									 &pzDataType, &pzCollSeq,
 									 &pNotNull, &pPrimaryKey, &pAutoinc)

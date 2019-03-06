@@ -110,6 +110,7 @@ typedef struct {
 	int  (*sqlite3_value_type)(sqlite3_value*);
 
 	int  (*sqlite3_key)(sqlite3 *, const void *, int);
+	int  (*sqlite3_key_v2)(sqlite3 *, const char *, const void *, int);
 	int  (*sqlite3_rekey)(sqlite3 *, const void *, int);
 
 	int  (*sqlite3_create_collation) (sqlite3*, const char *, int, void*, int(*xCompare)(void*,int,const void*,int,const void*));
@@ -120,7 +121,7 @@ typedef struct {
 extern Sqlite3ApiRoutines *s3r;
 
 GModule *find_sqlite_library (const gchar *name_part);
-void     load_symbols (GModule *module);
+void     load_symbols (GModule *module, Sqlite3ApiRoutines **apilib);
 
 G_END_DECLS
 

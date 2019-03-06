@@ -66,7 +66,11 @@ _gda_sqlite_pstmt_dispose (GObject *object)
 
 	/* free memory */
 	if (priv->sqlite_stmt != NULL) {
-		SQLITE3_CALL (sqlite3_finalize) (priv->sqlite_stmt);
+		GdaSqliteProvider *prov = g_weak_ref_get (&priv->provider);
+		if (prov != NULL) {
+			SQLITE3_CALL (prov, sqlite3_finalize) (priv->sqlite_stmt);
+			g_object_unref (prov);
+		}
 		priv->sqlite_stmt = NULL;
 	}
 
@@ -74,6 +78,7 @@ _gda_sqlite_pstmt_dispose (GObject *object)
 		g_hash_table_destroy (priv->rowid_hash);
 		priv->rowid_hash = NULL;
 	}
+	g_weak_ref_clear (&priv->provider);
 
 	/* chain to parent class */
 	G_OBJECT_CLASS (_gda_sqlite_pstmt_parent_class)->finalize (object);

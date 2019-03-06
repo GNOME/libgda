@@ -72,7 +72,7 @@ static GObject        *gda_vprovider_data_model_statement_execute (GdaServerProv
 								   GError **error);
 static const gchar   *gda_vprovider_data_model_get_name (GdaServerProvider *provider);
 
-static GValue **create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value **argv);
+static GValue **create_gvalues_array_from_sqlite3_array (GdaSqliteProvider *prov, int argc, sqlite3_value **argv);
 
 
 /*
@@ -189,6 +189,7 @@ struct VirtualCursor {
 	sqlite3_vtab_cursor      base; /* base.pVtab is a pointer to the sqlite3_vtab virtual table */
 	VirtualFilteredData     *data; /* a ref is held here */
 	gint                     row; /* starts at 0 */
+	GWeakRef                 provider;
 };
 
 
@@ -198,6 +199,7 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 			   int idxNum, const char *idxStr, int argc, sqlite3_value **argv)
 {
 	VirtualFilteredData *data;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtable->cnc)));
 
 	g_assert (model);
 	data = g_new0 (VirtualFilteredData, 1);
@@ -206,7 +208,7 @@ virtual_filtered_data_new (VirtualTable *vtable, GdaDataModel *model,
 	data->idxNum = idxNum;
 	data->idxStr = idxStr ? g_strdup (idxStr) : NULL;
 	data->argc = argc;
-	data->argv = create_gvalues_array_from_sqlite3_array (argc, argv);
+	data->argv = create_gvalues_array_from_sqlite3_array (prov, argc, argv);
 	data->model = g_object_ref (model);
 	if (GDA_IS_DATA_PROXY (model))
 		data->iter = g_object_new (GDA_TYPE_DATA_MODEL_ITER,
@@ -381,9 +383,9 @@ gda_vprovider_data_model_open_connection (GdaServerProvider *provider, GdaConnec
 		gda_connection_add_event_string (cnc, _("Connection is closed"));
 		return FALSE;
 	}
-
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (provider);
 	/* Module to declare wirtual tables */
-	if (SQLITE3_CALL (sqlite3_create_module) (scnc->connection, G_OBJECT_TYPE_NAME (provider), &Module, cnc) != SQLITE_OK)
+	if (SQLITE3_CALL (prov, sqlite3_create_module) (scnc->connection, G_OBJECT_TYPE_NAME (provider), &Module, cnc) != SQLITE_OK)
 		return FALSE;
 	/*g_print ("==== Declared module for DB %p\n", scnc->connection);*/
 
@@ -529,6 +531,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	gchar *spec_name, *tmp;
 	GdaVConnectionTableData *td;
 	GHashTable *hash;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (cnc)));
 
 	TRACE (NULL, NULL);
 
@@ -545,7 +548,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	g_free (spec_name);
 	if (!td) {
 		/* wrong usage! */
-		*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Wrong usage of Libgda's virtual tables"));
+		*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Wrong usage of Libgda's virtual tables"));
 		return SQLITE_ERROR;
 	}
 
@@ -553,7 +556,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	if (td->spec->data_model) {
 		ncols = gda_data_model_get_n_columns (td->spec->data_model);
 		if (ncols <= 0) {
-			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Data model must have at least one column"));
+			*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Data model must have at least one column"));
 			return SQLITE_ERROR;
 		}
 		td->real_model = td->spec->data_model;
@@ -566,11 +569,11 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	if (!td->columns) {
 		if (error && error->message) {
 			int len = strlen (error->message) + 1;
-			*pzErr = SQLITE3_CALL (sqlite3_malloc) (sizeof (gchar) * len);
+			*pzErr = SQLITE3_CALL (prov, sqlite3_malloc) (sizeof (gchar) * len);
 			memcpy (*pzErr, error->message, len); /* Flawfinder: ignore */
 		}
 		else 
-			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Could not compute virtual table's columns"));
+			*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Could not compute virtual table's columns"));
 		return SQLITE_ERROR;
 	}
 	ncols = g_list_length (td->columns);
@@ -593,7 +596,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 			g_string_append (sql, ", ");
 		column = g_list_nth_data (td->columns, i);
 		if (!column) {
-			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model description for column %d"), i);
+			*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Can't get data model description for column %d"), i);
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
@@ -645,7 +648,7 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 		gtype = gda_column_get_g_type (column);
 		type = g_type_name (gtype);
 		if (!type) {
-			*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't get data model's column type for column %d"), i);
+			*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Can't get data model's column type for column %d"), i);
 			g_string_free (sql, TRUE);
 			return SQLITE_ERROR;
 		}
@@ -705,9 +708,9 @@ virtualCreate (sqlite3 *db, void *pAux, int argc, const char *const *argv, sqlit
 	vtable->rows_offset = 0;
 	*ppVtab = &(vtable->base);
 
-	if (SQLITE3_CALL (sqlite3_declare_vtab) (db, sql->str) != SQLITE_OK) {
+	if (SQLITE3_CALL (prov, sqlite3_declare_vtab) (db, sql->str) != SQLITE_OK) {
 		sqlite3_mutex_enter (sqlite3_db_mutex (db));
-		*pzErr = SQLITE3_CALL (sqlite3_mprintf) (_("Can't declare virtual table (\"%s\"): %s"), sql->str,
+		*pzErr = SQLITE3_CALL (prov, sqlite3_mprintf) (_("Can't declare virtual table (\"%s\"): %s"), sql->str,
 							 sqlite3_errmsg (db));
 		sqlite3_mutex_leave (sqlite3_db_mutex (db));
 
@@ -801,6 +804,8 @@ handle_data_model_exception (sqlite3_vtab *pVtab, GdaDataModel *model)
 {
 	GError **exceptions;
 	gint i;
+	VirtualTable *vtab = (VirtualTable*) pVtab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtab->cnc)));
 	exceptions = gda_data_model_get_exceptions (model);
 	if (!exceptions)
 		return SQLITE_OK;
@@ -824,8 +829,8 @@ handle_data_model_exception (sqlite3_vtab *pVtab, GdaDataModel *model)
 		if (!e)
 			e = trunc_error;
 		if (pVtab->zErrMsg)
-			SQLITE3_CALL (sqlite3_free) (pVtab->zErrMsg);
-		pVtab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			SQLITE3_CALL (prov, sqlite3_free) (pVtab->zErrMsg);
+		pVtab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 			("%s", e->message ? e->message : _("No detail"));
 		if (fatal_error)
 			return SQLITE_ERROR;
@@ -840,13 +845,14 @@ virtualNext (sqlite3_vtab_cursor *cur)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
 	VirtualFilteredData *data;
-	/*VirtualTable *vtable = (VirtualTable*) cur->pVtab;*/
+	VirtualTable *vtab = (VirtualTable*) cur->pVtab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtab->cnc)));
 
 	TRACE (cur->pVtab, cur);
 
 	data = cursor->data;
 	if (!data) {
-		cur->pVtab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+		cur->pVtab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 			(_("Internal SQLite error: no data to iterate on"));
 		return SQLITE_MISUSE;
 	}
@@ -963,17 +969,19 @@ static int
 virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 {
 	VirtualCursor *cursor = (VirtualCursor*) cur;
+	VirtualTable *vtab = (VirtualTable*) cur->pVtab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtab->cnc)));
 
 	TRACE (cur->pVtab, cur);
 	
 	if (i == ((VirtualTable*) cur->pVtab)->td->n_columns) {
 		/* private hidden column, which returns the row number */
-		SQLITE3_CALL (sqlite3_result_int) (ctx, cursor->row);
+		SQLITE3_CALL (prov, sqlite3_result_int) (ctx, cursor->row);
 		return SQLITE_OK;
 	}
 
 	if (i >= cursor->data->ncols) {
-		SQLITE3_CALL (sqlite3_result_text) (ctx, _("Column not found"), -1, SQLITE_TRANSIENT);
+		SQLITE3_CALL (prov, sqlite3_result_text) (ctx, _("Column not found"), -1, SQLITE_TRANSIENT);
 		return SQLITE_MISUSE;
 	}
 	
@@ -982,7 +990,7 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 	value = get_data_value ((VirtualTable*) cur->pVtab, cursor, cursor->row, 0, i, &lerror);
 	if (! value) {
 		g_hash_table_insert (error_blobs_hash, lerror, GINT_TO_POINTER (1));
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
+		SQLITE3_CALL (prov, sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
 	}
 	else if (G_VALUE_TYPE (value) == G_TYPE_ERROR) {
 		GError *lerror;
@@ -996,16 +1004,16 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 			g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_DATA_ERROR,
 				     _("No detail"));
 		g_hash_table_insert (error_blobs_hash, lerror, GINT_TO_POINTER (1));
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
+		SQLITE3_CALL (prov, sqlite3_result_blob) (ctx, lerror, sizeof (GError), NULL);
 	}
 	else if (!value || gda_value_is_null (value))
-		SQLITE3_CALL (sqlite3_result_null) (ctx);
+		SQLITE3_CALL (prov, sqlite3_result_null) (ctx);
 	else  if (G_VALUE_TYPE (value) == G_TYPE_INT) 
-		SQLITE3_CALL (sqlite3_result_int) (ctx, g_value_get_int (value));
+		SQLITE3_CALL (prov, sqlite3_result_int) (ctx, g_value_get_int (value));
 	else if (G_VALUE_TYPE (value) == G_TYPE_INT64) 
-		SQLITE3_CALL (sqlite3_result_int64) (ctx, g_value_get_int64 (value));
+		SQLITE3_CALL (prov, sqlite3_result_int64) (ctx, g_value_get_int64 (value));
 	else if (G_VALUE_TYPE (value) == G_TYPE_DOUBLE) 
-		SQLITE3_CALL (sqlite3_result_double) (ctx, g_value_get_double (value));
+		SQLITE3_CALL (prov, sqlite3_result_double) (ctx, g_value_get_double (value));
 	else if (G_VALUE_TYPE (value) == GDA_TYPE_BLOB) {
 		GdaBlob *blob;
 		GdaBinary *bin;
@@ -1014,18 +1022,18 @@ virtualColumn (sqlite3_vtab_cursor *cur, sqlite3_context *ctx, int i)
 		if (gda_blob_get_op (blob) &&
 		    (gda_binary_get_size (bin) != gda_blob_op_get_length (gda_blob_get_op(blob))))
 			gda_blob_op_read_all (gda_blob_get_op (blob), blob);
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, gda_binary_get_data (gda_blob_get_binary (blob)),
+		SQLITE3_CALL (prov, sqlite3_result_blob) (ctx, gda_binary_get_data (gda_blob_get_binary (blob)),
 		                                    gda_binary_get_size (gda_blob_get_binary (blob)),
 		                                    SQLITE_TRANSIENT);
 	}
 	else if (G_VALUE_TYPE (value) == GDA_TYPE_BINARY) {
 		GdaBinary *bin;
 		bin = gda_value_get_binary (value);
-		SQLITE3_CALL (sqlite3_result_blob) (ctx, gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
+		SQLITE3_CALL (prov, sqlite3_result_blob) (ctx, gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 	}
 	else {
 		gchar *str = gda_value_stringify (value);
-		SQLITE3_CALL (sqlite3_result_text) (ctx, str, -1, SQLITE_TRANSIENT);
+		SQLITE3_CALL (prov, sqlite3_result_text) (ctx, str, -1, SQLITE_TRANSIENT);
 		g_free (str);
 	}
 
@@ -1045,28 +1053,28 @@ virtualRowid (sqlite3_vtab_cursor *cur, sqlite_int64 *pRowid)
 
 /* NEVER returns %NULL */
 static GValue *
-create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
+create_value_from_sqlite3_value_notype (GdaSqliteProvider *prov, sqlite3_value *svalue)
 {
 	GValue *value;
 	value = g_new0 (GValue, 1);
 
-	switch (SQLITE3_CALL (sqlite3_value_type) (svalue)) {
+	switch (SQLITE3_CALL (prov, sqlite3_value_type) (svalue)) {
 	case SQLITE_INTEGER:
 		g_value_init (value, G_TYPE_INT64);
-		g_value_set_int64 (value, SQLITE3_CALL (sqlite3_value_int64) (svalue));
+		g_value_set_int64 (value, SQLITE3_CALL (prov, sqlite3_value_int64) (svalue));
 		break;
 	case SQLITE_FLOAT:
 		g_value_init (value, G_TYPE_DOUBLE);
-		g_value_set_double (value, SQLITE3_CALL (sqlite3_value_double) (svalue));
+		g_value_set_double (value, SQLITE3_CALL (prov, sqlite3_value_double) (svalue));
 		break;
 	case SQLITE_BLOB: {
 		GdaBinary *bin;
 		g_value_init (value, GDA_TYPE_BINARY);
 		bin = gda_binary_new ();
-		glong length = SQLITE3_CALL (sqlite3_value_bytes) (svalue);
+		glong length = SQLITE3_CALL (prov, sqlite3_value_bytes) (svalue);
 		if (length > 0) {
 			//gpointer data = g_new (guchar, length);
-			gda_binary_set_data (bin, SQLITE3_CALL (sqlite3_value_blob) (svalue), length);
+			gda_binary_set_data (bin, SQLITE3_CALL (prov, sqlite3_value_blob) (svalue), length);
 		}
 		gda_value_take_binary (value, bin);
 		break;
@@ -1077,7 +1085,7 @@ create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
 	case SQLITE3_TEXT:
 	default:
 		g_value_init (value, G_TYPE_STRING);
-		g_value_set_string (value, (gchar *) SQLITE3_CALL (sqlite3_value_text) (svalue));
+		g_value_set_string (value, (gchar *) SQLITE3_CALL (prov, sqlite3_value_text) (svalue));
 		break;
 	}
 	return value;
@@ -1087,7 +1095,7 @@ create_value_from_sqlite3_value_notype (sqlite3_value *svalue)
  * Returns: a new array of @argc values, and %NULL if @argc = 0
  */
 static GValue **
-create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value **argv)
+create_gvalues_array_from_sqlite3_array (GdaSqliteProvider *prov, int argc, sqlite3_value **argv)
 {
 	GValue **array;
 	gint i;
@@ -1095,7 +1103,7 @@ create_gvalues_array_from_sqlite3_array (int argc, sqlite3_value **argv)
 		return NULL;
 	array = g_new (GValue *, argc);
 	for (i = 0; i < argc; i++)
-		array[i] = create_value_from_sqlite3_value_notype (argv[i]);
+		array[i] = create_value_from_sqlite3_value_notype (prov, argv[i]);
 	return array;
 }
 
@@ -1103,6 +1111,7 @@ static void
 virtual_table_manage_real_data_model (VirtualTable *vtable, int idxNum, const char *idxStr,
 				      int argc, sqlite3_value **argv)
 {
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtable->cnc)));
 	/*g_print ("================== %s (VTable=> %p, %s)\n", __FUNCTION__,
 	  vtable, vtable->td->table_name);*/
 	if (!vtable->td->spec->create_filtered_model_func && !vtable->td->spec->create_model_func)
@@ -1116,7 +1125,7 @@ virtual_table_manage_real_data_model (VirtualTable *vtable, int idxNum, const ch
 	/* actual data model creation */
 	if (vtable->td->spec->create_filtered_model_func) {
 		GValue **gargv;
-		gargv = create_gvalues_array_from_sqlite3_array (argc, argv);
+		gargv = create_gvalues_array_from_sqlite3_array (prov, argc, argv);
 		vtable->td->real_model = vtable->td->spec->create_filtered_model_func (vtable->td->spec,
 										       idxNum, idxStr,
 										       argc, gargv);
@@ -1162,6 +1171,7 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 {
 	VirtualCursor *cursor = (VirtualCursor*) pVtabCursor;
 	VirtualTable *vtable = (VirtualTable*) pVtabCursor->pVtab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtable->cnc)));
 
 	TRACE (pVtabCursor->pVtab, pVtabCursor);
 #ifdef GDA_DEBUG_VIRTUAL
@@ -1185,7 +1195,7 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 				GValue **avalues;
 				gint i;
 				gboolean equal = TRUE;
-				avalues = create_gvalues_array_from_sqlite3_array (argc, argv);
+				avalues = create_gvalues_array_from_sqlite3_array (prov, argc, argv);
 				for (i = 0; i < argc; i++) {
 					GValue *v1, *v2;
 					v1 = vd->argv [i];
@@ -1426,6 +1436,7 @@ static int
 update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nData, sqlite3_value **apData)
 {
 	VirtualTable *vtable = (VirtualTable *) tab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtable->cnc)));
 
 	/* determine parameters required to execute MOD statement */
 	GdaStatement *stmt = NULL;
@@ -1452,14 +1463,14 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 		
 	if (! vtable->td->modif_stmt [ptype]) {
 		if (! stmt) {
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 				(_("No statement specified to modify the data"));
 			return SQLITE_READONLY;
 		}
 		
 		GdaSet *params;
 		if (! gda_statement_get_parameters (stmt, &params, NULL) || !params) {
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 				(_("Invalid statement specified to modify the data"));
 			g_object_unref (stmt);
 			return SQLITE_READONLY;
@@ -1479,7 +1490,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 			
 		id = gda_holder_get_id (holder);
 		if (!id) {
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 				(_("Invalid parameter in statement to modify the data"));
 			return SQLITE_READONLY;
 		}
@@ -1490,8 +1501,8 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 				GType type;
 				GValue *value;
 				type = gda_column_get_g_type (gda_data_model_describe_column (vtable->td->real_model, i));
-				if ((type != GDA_TYPE_NULL) && SQLITE3_CALL (sqlite3_value_text) (apData [i+2]))
-					value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (sqlite3_value_text) (apData [i+2]), type);
+				if ((type != GDA_TYPE_NULL) && SQLITE3_CALL (prov, sqlite3_value_text) (apData [i+2]))
+					value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (prov, sqlite3_value_text) (apData [i+2]), type);
 				else
 					value = gda_value_new_null ();
 				if (gda_holder_take_value (holder, value, NULL))
@@ -1499,7 +1510,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 			}
 		}
 		else if (*id == '-') {
-			gint64 rowid = SQLITE3_CALL (sqlite3_value_int64) (apData [0]);
+			gint64 rowid = SQLITE3_CALL (prov, sqlite3_value_int64) (apData [0]);
 			long int i;
 			const GValue *value;
 
@@ -1516,7 +1527,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 				      &exec_set, NULL);
 			if (! exec_set) {
 				/* can't give value to param named @id */
-				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+				tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 					(_("Invalid parameter in statement to modify the data"));
 				return SQLITE_READONLY;
 			}
@@ -1524,7 +1535,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 			if (! eh ||
 			    ! gda_holder_set_bind (holder, eh, NULL)) {
 				/* can't give value to param named @id */
-				tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+				tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 					(_("Invalid parameter in statement to modify the data"));
 				return SQLITE_READONLY;
 			}
@@ -1556,7 +1567,7 @@ update_data_select_model (sqlite3_vtab *tab, gint optype, G_GNUC_UNUSED int nDat
 							  vtable->td->modif_params [ptype],
 							  NULL, &lerror) == -1)) {
 		/* failed to execute */
-		tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+		tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 			(_("Failed to modify data: %s"),
 			 lerror && lerror->message ? lerror->message : _("No detail"));
 		g_clear_error (&lerror);
@@ -1580,6 +1591,7 @@ static int
 virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int64 *pRowid)
 {
 	VirtualTable *vtable = (VirtualTable *) tab;
+	GdaSqliteProvider *prov = GDA_SQLITE_PROVIDER (gda_connection_get_provider (GDA_CONNECTION (vtable->cnc)));
 	const gchar *api_misuse_error = NULL;
 	gint optype; /* 1 => DELETE
 		      * 2 => INSERT
@@ -1602,17 +1614,17 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 	/* determine operation type */
 	if (nData == 1)
 		optype = 1;
-	else if ((nData > 1) && (SQLITE3_CALL (sqlite3_value_type) (apData[0]) == SQLITE_NULL)) {
+	else if ((nData > 1) && (SQLITE3_CALL (prov, sqlite3_value_type) (apData[0]) == SQLITE_NULL)) {
 		optype = 2;
-		if (SQLITE3_CALL (sqlite3_value_type) (apData[1]) != SQLITE_NULL) {
+		if (SQLITE3_CALL (prov, sqlite3_value_type) (apData[1]) != SQLITE_NULL) {
 			/* argc>1 and argv[0] is not NULL: rowid is imposed by SQLite
 			 * which is not supported */
 			return SQLITE_READONLY;
 		}	}
-	else if ((nData > 1) && (SQLITE3_CALL (sqlite3_value_type) (apData[0]) == SQLITE_INTEGER)) {
+	else if ((nData > 1) && (SQLITE3_CALL (prov, sqlite3_value_type) (apData[0]) == SQLITE_INTEGER)) {
 		optype = 3;
-		if (SQLITE3_CALL (sqlite3_value_int) (apData[0]) != 
-		    SQLITE3_CALL (sqlite3_value_int) (apData[1])) {
+		if (SQLITE3_CALL (prov, sqlite3_value_int) (apData[0]) !=
+		    SQLITE3_CALL (prov, sqlite3_value_int) (apData[1])) {
 			/* argc>1 and argv[0]==argv[1]: rowid is imposed by SQLite 
 			 * which is not supported */
 			return SQLITE_READONLY;
@@ -1638,7 +1650,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			return update_data_select_model (tab, optype, nData, apData);
 		else {
 			TO_IMPLEMENT;
-			tab->zErrMsg = SQLITE3_CALL (sqlite3_mprintf)
+			tab->zErrMsg = SQLITE3_CALL (prov, sqlite3_mprintf)
 				(_("Data model representing the table is read only"));
 			return SQLITE_READONLY;
 		}
@@ -1651,8 +1663,8 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 
 	if (optype == 1) {
 		/* DELETE */
-		if (SQLITE3_CALL (sqlite3_value_type) (apData[0]) == SQLITE_INTEGER) {
-			gint rowid = SQLITE3_CALL (sqlite3_value_int) (apData [0]);
+		if (SQLITE3_CALL (prov, sqlite3_value_type) (apData[0]) == SQLITE_INTEGER) {
+			gint rowid = SQLITE3_CALL (prov, sqlite3_value_int) (apData [0]);
 			return gda_data_model_remove_row (vtable->td->real_model, rowid, NULL) ?
 				SQLITE_OK : SQLITE_READONLY;
 		}
@@ -1670,12 +1682,12 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 			GType type;
 			GValue *value;
 			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->td->real_model, i - 2));
-			if ((type != GDA_TYPE_NULL) && SQLITE3_CALL (sqlite3_value_text) (apData [i]))
-				value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (sqlite3_value_text) (apData [i]), type);
+			if ((type != GDA_TYPE_NULL) && SQLITE3_CALL (prov, sqlite3_value_text) (apData [i]))
+				value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (prov, sqlite3_value_text) (apData [i]), type);
 			else
 				value = gda_value_new_null ();
 			/*g_print ("TXT #%s# => value %p (type=%s) apData[]=%p\n",
-			  SQLITE3_CALL (sqlite3_value_text) (apData [i]), value,
+			  SQLITE3_CALL (prov, sqlite3_value_text) (apData [i]), value,
 			  g_type_name (type), apData[i]);*/
 			values = g_list_prepend (values, value);
 		}
@@ -1696,13 +1708,13 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 		for (i = 2; i < (nData - 1); i++) {
 			GValue *value;
 			GType type;
-			gint rowid = SQLITE3_CALL (sqlite3_value_int) (apData [0]);
+			gint rowid = SQLITE3_CALL (prov, sqlite3_value_int) (apData [0]);
 			gboolean res;
 			GError *error = NULL;
 
-			/*g_print ("%d => %s\n", i, SQLITE3_CALL (sqlite3_value_text) (apData [i]));*/
+			/*g_print ("%d => %s\n", i, SQLITE3_CALL (prov, sqlite3_value_text) (apData [i]));*/
 			type = gda_column_get_g_type (gda_data_model_describe_column (vtable->td->real_model, i - 2));
-			value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (sqlite3_value_text) (apData [i]), type);
+			value = gda_value_new_from_string ((const gchar*) SQLITE3_CALL (prov, sqlite3_value_text) (apData [i]), type);
 			res = gda_data_model_set_value_at (vtable->td->real_model, i - 2, rowid,
 							   value, &error);
 			gda_value_free (value);
