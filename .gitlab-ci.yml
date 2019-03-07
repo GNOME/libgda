@@ -46,6 +46,7 @@ variables:
                 libgladeui-dev
                 postgresql-client
                 postgresql-client-common
+                libsqlcipher-dev
 
   GIT_SUBMODULE_STRATEGY: normal
   SQLITE_DBCREATE_PARAMS: "DB_DIR=."

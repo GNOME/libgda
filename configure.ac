@@ -587,31 +587,6 @@ then
 fi
 AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
 
-dnl ******************************
-dnl Checks for libcrypto
-dnl ******************************
-AC_ARG_ENABLE([crypto],
-	AS_HELP_STRING([--disable-crypto], [Disable SQLCipher database provider (using the libcrypto library, part of OpenSSL)]),
-	[enable_crypto=$enableval],[enable_crypto=yes])
-
-if test "x$enable_crypto" = xyes
-then
-        LIBCRYPTO_MODULES="libcrypto"
-	PKG_CHECK_MODULES(LIBCRYPTO, $LIBCRYPTO_MODULES,
-	        if test "$enable_crypto" = "yes"
-	        then
-		        AC_DEFINE(HAVE_LIBCRYPTO, [], [Defined if cryptographic support is enabled])
-	        fi,
-	        if test "$enable_crypto" = "yes"
-	        then
-			AC_MSG_ERROR([libcrypto (part of OpenSSL) support requested but not found])
-			enable_crypto=no
-	        fi)
-fi
-
-AM_CONDITIONAL(HAVE_LIBCRYPTO, [test "x$enable_crypto" = "xyes"])
-AC_SUBST(LIBCRYPTO_CFLAGS)
-AC_SUBST(LIBCRYPTO_LIBS)
 
 dnl ******************************
 dnl Checks for libgcrypt
@@ -714,43 +689,75 @@ FIREBIRD_CHECK($lib)
 dnl Test for MDB Tools (for MS Access files)
 MDBTOOLS_CHECK([$lib])
 
-dnl test for system-installed SQLite
-dnl If no SQLite is found or if the SQLite found does not have the sqlite3_table_column_metadata()
-dnl function call, then use the embedded version
-dnl also, on Win32, always use the embedded version
-if test x"$platform_win32" = "xyes"
+dnl test for SQLite
+SQLITE_MODULES="sqlite3 >= 3.22.0"
+PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES,[
+	have_sqlite=yes
+	], [
+	have_sqlite=no
+	])
+if test x"$have_sqlite" = "xyes"
 then
-        AM_CONDITIONAL(HAVE_SQLITE, false)
+	AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
+
+	if test $sqlite3_api = 0
+	then
+		AC_MSG_ERROR([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, unable to create required SQLite provider])
+		have_sqlite=no
+	else
+		have_sqlite=yes
+		SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
+		SQLITE_PATH=`pkg-config --variable=libdir sqlite3`
+		AC_SUBST(SQLITE_CFLAGS)
+		AC_SUBST(SQLITE_LIBS)
+		AC_SUBST(SQLITE_VERS)
+		AC_SUBST(SQLITE_PATH)
+	fi
 else
-	AC_ARG_ENABLE(system-sqlite,
-		AS_HELP_STRING([--enable-system-sqlite], [Use SQLite installed on the system [default=no]]),
-        	[use_syst_sqlite=$enableval], [use_syst_sqlite="yes"])
+AC_MSG_ERROR([SQLite is not installed, unable to create required SQLite provider])
+fi
+AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 
-	if test "x$use_syst_sqlite" = "xyes"; then
-		SQLITE_MODULES="sqlite3 >= 3.22.0"
-		PKG_CHECK_MODULES(SQLITE, $SQLITE_MODULES, have_sqlite=yes, have_sqlite=no)
-		if test x"$have_sqlite" = "xyes"
+
+dnl test for SQLCipher
+SQLCIPHER_MODULES="sqlcipher >= 3.4"
+
+AC_ARG_ENABLE(sqlcipher,
+	AS_HELP_STRING([--disable-sqlcipher], [disable SQLCipher provider]),
+	[
+	enable_sqlcipher=$enableval
+	], [
+	enable_sqlcipher=yes
+	])
+
+have_sqlcipher=no
+if test x$enable_sqlcipher = xyes
+then
+	PKG_CHECK_MODULES(SQLCIPHER, $SQLCIPHER_MODULES,[
+		have_sqlcipher=yes
+		], [
+		have_sqlcipher=no
+		])
+	if test x"$have_sqlcipher" = "xyes"
+	then
+		AC_CHECK_LIB(sqlcipher, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLCIPHER_CFLAGS $SQLCIPHER_LIBS)
+
+		if test $sqlite3_api = 0
 		then
-			AC_CHECK_LIB(sqlite3, sqlite3_table_column_metadata,[sqlite3_api=1], [sqlite3_api=0], $SQLITE_CFLAGS $SQLITE_LIBS)
-
-			if test $sqlite3_api = 0
-        		then
-				AC_MSG_RESULT([Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA, using embedded SQLite])
-                		have_sqlite=no
-        		else
-                		AC_MSG_RESULT([Note: using system installed version of SQLite, meta data for functions will not be available])
-				have_sqlite=yes
-                		SQLITE_CFLAGS="$SQLITE_CFLAGS -DHAVE_SQLITE"
-				SQLITE_PATH=`pkg-config --variable=libdir sqlite3`
-                		AC_SUBST(SQLITE_CFLAGS)
-                		AC_SUBST(SQLITE_LIBS)
-                		AC_SUBST(SQLITE_VERS)
-                		AC_SUBST(SQLITE_PATH)
-        		fi
+			AC_MSG_ERROR([Installed SQLCipher was not compiled with the SQLITE_ENABLE_COLUMN_METADATA])
+			have_sqlite=no
+		else
+			have_sqlite=yes
+			SQLCIPHER_CFLAGS="$SQLCIPHER_CFLAGS -DHAVE_SQLITE"
+			SQLCIPHER_PATH=`pkg-config --variable=libdir sqlite3`
+			AC_SUBST(SQLCIPHER_CFLAGS)
+			AC_SUBST(SQLCIPHER_LIBS)
+			AC_SUBST(SQLCIPHER_VER)
+			AC_SUBST(SQLCIPHER_PATH)
 		fi
 	fi
-	AM_CONDITIONAL(HAVE_SQLITE, test x"$have_sqlite" = "xyes")
 fi
+AM_CONDITIONAL(HAVE_SQLCIPHER, test x"$have_sqlcipher" = "xyes")
 
 dnl ************************
 dnl Check for libsoup
@@ -1097,8 +1104,8 @@ echo "      MDB (MS Access) = $mdbtools_found"
 echo "      MySQL = $mysql_found"
 echo "      Oracle = $oracle_found"
 echo "      PostgreSQL = $postgres_found"
-echo "      SQLite = yes `if test x$have_sqlite = xyes; then echo '(from system installation)'; else echo '(embedded)'; fi`"
-echo "      SQLCipher = `if test x$enable_crypto != xyes; then echo no; else echo yes; fi`"
+echo "      SQLite = always"
+echo "      SQLCipher = `if test x$have_sqlcipher != xyes; then echo no; else echo yes; fi`"
 echo "      JDBC = $java_found"
 echo "      WEB = `if test x$have_libsoup = xyes; then echo yes; else echo no; fi`"
 echo "      LDAP = `if test x$ldap_found = xyes; then echo yes; else echo no; fi`"

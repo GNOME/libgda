@@ -11,7 +11,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libgda/sqlite \
 	-I$(top_builddir) \
 	$(COREDEPS_CFLAGS) \
-	$(LIBCRYPTO_CFLAGS) \
 	$(sqliteinc) \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1
 
@@ -24,8 +23,7 @@ libgda_sqlcipher_la_SOURCES = \
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_sqlcipher_la_LIBADD = \
 	$(top_builddir)/libgda/libgda-6.0.la \
-	$(COREDEPS_LIBS) \
-	$(LIBCRYPTO_LIBS)
+	$(COREDEPS_LIBS)
 
 xmldir   = $(datadir)/libgda-6.0
 xml_in_files = \
