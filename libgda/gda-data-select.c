@@ -3106,7 +3106,7 @@ gda_data_select_append_values (GdaDataModel *model, const GList *values, GError 
 	}
 	if (gda_data_select_get_n_rows (model) < 0) {
 		g_set_error (error, GDA_DATA_SELECT_ERROR, GDA_DATA_SELECT_ACCESS_ERROR,
-			     "%s", _("Cannot add a row because the number of rows in unknown"));
+			     "%s", _("Cannot add a row because the number of rows is unknown"));
 		return -1;
 	}
 

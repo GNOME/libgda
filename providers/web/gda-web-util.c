@@ -71,7 +71,7 @@ decode_buffer_response (GdaConnection *cnc, WebConnectionData *cdata, SoupBuffer
 
 	for (ptr = response; *ptr && (*ptr != '\n'); ptr++);
 	if (*ptr != '\n') {
-		gda_connection_add_event_string (cnc, _("Could not parse server's reponse"));
+		gda_connection_add_event_string (cnc, _("Could not parse server's response"));
 		return NULL;
 	}
 	*ptr = 0;

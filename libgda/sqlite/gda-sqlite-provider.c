@@ -120,7 +120,7 @@ make_pending_blob (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement
 		if (pos == -1) {
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-				     _("Parameter '%s' not found is statement"), hname);
+				     _("Parameter '%s' not found in statement"), hname);
 			goto out;
 		}
 		GdaSqlField *field;

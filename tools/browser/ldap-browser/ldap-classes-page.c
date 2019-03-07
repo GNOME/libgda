@@ -528,7 +528,7 @@ ldap_classes_customize (BrowserPage *page, GtkToolbar *toolbar, GtkHeaderBar *he
 	GtkToolItem *titem;
 	titem = gtk_tool_button_new (NULL, NULL);
 	gtk_tool_button_set_icon_name (GTK_TOOL_BUTTON (titem), "bookmark-new-symbolic");
-	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Add class Favorites"));
+	gtk_widget_set_tooltip_text (GTK_WIDGET (titem), _("Add class to Favorites"));
 	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), titem, -1);
 	gtk_actionable_set_action_name (GTK_ACTIONABLE (titem), "win.AddToFav");
 	gtk_widget_show (GTK_WIDGET (titem));

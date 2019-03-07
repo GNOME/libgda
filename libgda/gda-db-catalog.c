@@ -1010,13 +1010,16 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
   int buffer_size = 10;
   char buffer[buffer_size];
   int ctxt_res = 0;
+  gchar *uri;
   ctxt = xmlCreatePushParserCtxt (NULL, NULL, buffer, ctxt_res, NULL);
   if (!ctxt)
     {
+      uri = g_file_get_uri (xmlfile);
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
                    GDA_DB_CATALOG_FILE_READ,
-                   _("Can't create parse context for '%s'"), g_file_get_basename (xmlfile));
+                   _("Can't create parse context for '%s'"), uri);
+      g_free (uri);
       goto on_error;
     }
 
@@ -1031,7 +1034,7 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
           g_set_error (error,
                        GDA_DB_CATALOG_ERROR,
                        GDA_DB_CATALOG_PARSE_CHUNK,
-                       _("Error during xmlParseChunk with error '%d'"), rescheck);
+                       _("Error during parsing with error '%d'"), rescheck);
 
           goto on_error;
         }
@@ -1044,19 +1047,23 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
 
   if (!ctxt_res)
     {
+      uri = g_file_get_uri (xmlfile);
        g_set_error (error,
                     GDA_DB_CATALOG_ERROR,
                     GDA_DB_CATALOG_PARSE,
-                    _("Failed to parse file '%s'"), g_file_get_basename (xmlfile));
+                    _("Failed to parse file: '%s'"), uri);
+      g_free (uri);
       goto on_error;
     }
 
   if (!doc)
     {
+      uri = g_file_get_uri (xmlfile);
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
                    GDA_DB_CATALOG_DOC_NULL,
-                   _("xmlDoc object can't be created from xmfile name"));
+                   _("XML Document can't be created from file: '%s'"), uri);
+      g_free (uri);
       goto on_error;
     }
 
@@ -1065,7 +1072,7 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
       g_set_error (error,
                    GDA_DB_CATALOG_ERROR,
                    GDA_DB_CATALOG_INVALID_XML,
-                   _("xml file is not valid\n"));
+                   _("XML file is not valid\n"));
       goto on_error;
     }
 
