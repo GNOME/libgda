@@ -1,14 +1,6 @@
-if HAVE_SQLITE
-SUBDIRS=
+SUBDIRS= virtual
 sqlitelibs= $(SQLITE_LIBS)
 sqliteinc= $(SQLITE_CFLAGS)
-else
-SUBDIRS= sqlite-src
-sqlitelibs= $(top_builddir)/libgda/sqlite/sqlite-src/libsqlite.la
-sqliteinc= -I$(top_srcdir)/libgda/sqlite/sqlite-src \
-	-I$(top_builddir)/libgda/sqlite/sqlite-src -DSQLITE_API= -DSQLITE_PRIVATE=
-endif
-SUBDIRS+= virtual
 
 noinst_LTLIBRARIES = libgda-sqlite.la
 if BDBSQL

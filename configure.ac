@@ -974,7 +974,6 @@ libgda/handlers/Makefile
 libgda/providers-support/Makefile
 libgda/sql-parser/Makefile
 libgda/sqlite/Makefile
-libgda/sqlite/sqlite-src/Makefile
 libgda/sqlite/virtual/libgda-virtual.h
 libgda/sqlite/virtual/Makefile
 libgda/thread-wrapper/Makefile

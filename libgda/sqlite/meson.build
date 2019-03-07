@@ -4,9 +4,6 @@ mkkeywordhashf = files([
 
 mkkeywordhash = executable ('mkkeywordhash', mkkeywordhashf)
 
-if sqlite_internal
-	subdir('sqlite-src')
-endif
 subdir('virtual')
 
 gen_emb_string = executable('gen_emb_string', 'gen_emb_string.c')
