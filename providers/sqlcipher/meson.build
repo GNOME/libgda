@@ -104,7 +104,6 @@ libgda_sqlcipher_provider = library ('gda-sqlcipher-'+project_api_version,
 	dependencies: [
 		libgda_dep,
 		sqlcipher_deps,
-		libcrypto_dep,
 		inc_libgda_sqlcipherh_dep,
 		inc_sqliteh_dep,
 		inc_libgdah_dep,

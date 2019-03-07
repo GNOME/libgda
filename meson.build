@@ -116,7 +116,7 @@ endif
 
 
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4', required: false)
-if sqlcipher_dep.found() and not get_option('disable-crypto')
+if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
 	sqlcipher_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
 								required: true,
 								dependencies: sqlcipher_dep)
