@@ -98,6 +98,7 @@ typedef struct {
 	int (*sqlite3_config) (int, ...);
 
 	int  (*sqlite3_create_function)(sqlite3*,const char*,int,int,void*,void (*xFunc)(sqlite3_context*,int,sqlite3_value**),void (*xStep)(sqlite3_context*,int,sqlite3_value**),void (*xFinal)(sqlite3_context*));
+  int  (*sqlite3_create_function_v2)(sqlite3*,const char*,int,int,void*,void (*xFunc)(sqlite3_context*,int,sqlite3_value**),void (*xStep)(sqlite3_context*,int,sqlite3_value**),void (*xFinal)(sqlite3_context*),void(*xDestroy)(void*));
 	int (*sqlite3_create_module)(sqlite3*,const char*,const sqlite3_module*,void*);
 	sqlite3 * (*sqlite3_db_handle)(sqlite3_stmt*);
 	int (*sqlite3_declare_vtab)(sqlite3*,const char*);

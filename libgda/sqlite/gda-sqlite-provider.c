@@ -1376,10 +1376,11 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 
 			for (i = 0; i < sizeof (scalars) / sizeof (ScalarFunction); i++) {
 				ScalarFunction *func = (ScalarFunction *) &(scalars [i]);
-				gint res = (s3r->sqlite3_create_function) (cdata->connection,
+				g_object_ref (prov);
+				gint res = (s3r->sqlite3_create_function_v2) (cdata->connection,
 											 func->name, func->nargs,
 											 SQLITE_UTF8, prov,
-											 func->xFunc, NULL, NULL);
+											 func->xFunc, NULL, NULL, g_object_unref);
 				if (res != SQLITE_OK) {
 					gda_connection_add_event_string (cnc, _("Could not register function '%s'"),
 									 func->name);
@@ -1395,10 +1396,11 @@ gda_sqlite_provider_prepare_connection (GdaServerProvider *provider, GdaConnecti
 
 			for (i = 0; i < sizeof (regexp_functions) / sizeof (ScalarFunction); i++) {
 				ScalarFunction *func = (ScalarFunction *) &(regexp_functions [i]);
-				gint res = (s3r->sqlite3_create_function) (cdata->connection,
+				g_object_ref (prov);
+				gint res = (s3r->sqlite3_create_function_v2) (cdata->connection,
 											 func->name, func->nargs,
 											 SQLITE_UTF8, prov,
-											 func->xFunc, NULL, NULL);
+											 func->xFunc, NULL, NULL, g_object_unref);
 				if (res != SQLITE_OK) {
 					gda_connection_add_event_string (cnc, _("Could not register function '%s'"),
 									 func->name);
@@ -5310,6 +5312,8 @@ gda_sqlite_load_symbols (GModule *module, Sqlite3ApiRoutines** apilib)
 	if (! g_module_symbol (module, "sqlite3_config", (gpointer*) &((*apilib)->sqlite3_config)))
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_create_function", (gpointer*) &((*apilib)->sqlite3_create_function)))
+		goto onerror;
+	if (! g_module_symbol (module, "sqlite3_create_function_v2", (gpointer*) &((*apilib)->sqlite3_create_function_v2)))
 		goto onerror;
 	if (! g_module_symbol (module, "sqlite3_create_module", (gpointer*) &((*apilib)->sqlite3_create_module)))
 		goto onerror;
