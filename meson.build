@@ -107,34 +107,19 @@ lbdb_cargs = []
 # endforeach
 
 sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: false)
-sqlite_system_required = get_option('system-sqlite')
 sqlite_internal = true
 if sqlite_dep.found()
 	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
-								required: sqlite_system_required,
+								required: true,
 								dependencies: sqlite_dep)
-	if sqlite3_table_column_metadata
-		message('Using system installed SQLite library')
-		sqlite_internal = false
-	else
-		message('Using embeded SQLite library')
-	endif
 endif
 
 
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4', required: false)
-sqlcipher_system_required = get_option('system-sqlcipher')
-sqlcipher_internal = true
 if sqlcipher_dep.found() and not get_option('disable-crypto')
 	sqlcipher_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
-								required: sqlcipher_system_required,
+								required: true,
 								dependencies: sqlcipher_dep)
-	if sqlcipher_table_column_metadata
-		sqlcipher_internal = false
-		message('Using system installed SQLCipher library')
-	else
-		message('Using embeded SQLCipher library')
-	endif
 endif
 
 ldl = compiler.find_library('dl', required: false)

@@ -79,13 +79,11 @@ libgda_sqlcipher_sources += sqlcipherheaders
 
 install_headers (sqlcipherheaders, subdir: join_paths(project_package, 'providers', 'sqlcipher'))
 
-if sqlcipher_internal
-libgda_sqlcipher_sources += files([
-	'sqlite3.h',
-	'sqlite3.c',
-	])
-sqlcipher_deps += ldl
-endif
+sqlcipher_path = sqlcipher_dep.get_pkgconfig_variable('libdir')
+sqlcipher_cargs = ['-DHAVE_SQLITE']
+sqlcipher_deps = [sqlcipher_dep]
+
+sqlcipher_cargs += ['-DSEARCH_LIB_PATH="'+sqlcipher_path+'"']
 
 sqlcipher_cargs += [
 		'-include',
