@@ -67,7 +67,7 @@ autotools_build:
   - make distclean
   - mkdir _build
   - cd _build
-  - ../configure --disable-crypto
+  - ../configure
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
