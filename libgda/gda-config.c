@@ -1688,7 +1688,6 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
 		GDA_CONFIG_UNLOCK ();
 		return ip->instance;
 	}
-	
 	/* need to actually create the provider object */
 	if (!ip->handle) {
 		GdaProviderInfo *info = (GdaProviderInfo*) ip;
@@ -1847,6 +1846,7 @@ load_all_providers (void)
 	const gchar *dirname;
 	g_assert (unique_instance);
 	GdaConfigPrivate *priv = gda_config_get_instance_private (unique_instance);
+	GError *error = NULL;
 
 	dirname = g_getenv ("GDA_TOP_BUILD_DIR");
 	if (dirname) {
@@ -1864,8 +1864,11 @@ load_all_providers (void)
 	priv->providers_loaded = TRUE;
 
 	/* find SQLite provider, and instantiate it if not installed */
-	_gda_config_sqlite_provider = gda_config_get_provider ("SQLite", NULL);
+	_gda_config_sqlite_provider = gda_config_get_provider ("SQLite", &error);
 	if (!_gda_config_sqlite_provider) {
+		g_message (_("No default SQLite Provider Trying to create a new one. Error was: %s"),
+		          error && error->message ? error->message: _("No detail"));
+		g_clear_error (&error);
 		_gda_config_sqlite_provider = (GdaServerProvider*) 
 			g_object_new (GDA_TYPE_SQLITE_PROVIDER, NULL);
 	}

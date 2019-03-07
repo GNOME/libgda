@@ -19,7 +19,7 @@
 
 #include <glib/gi18n-lib.h>
 #include <providers/sqlcipher/gda-sqlcipher-provider.h>
-#include "libgda/sqlite/gda-symbols-util.h"
+#include <libgda/sqlite/gda-sqlite.h>
 
 // API routines from library
 Sqlite3ApiRoutines *libapi;
@@ -40,14 +40,18 @@ gda_sqlcipher_provider_class_init (GdaSqlcipherProviderClass *klass)
 {
   GModule *module2;
 
-  module2 = find_sqlite_library ("sqlcipher");
+  module2 = gda_sqlite_find_library ("sqlcipher");
   if (module2)
-    load_symbols (module2, &libapi);
-  if (s3r == NULL) {
-    g_warning (_("Can't find libsqlite3." G_MODULE_SUFFIX " file."));
+    gda_sqlite_load_symbols (module2, &libapi);
+  if (libapi == NULL) {
+    g_warning (_("Can't find sqlcipher." G_MODULE_SUFFIX " file."));
   }
   GDA_SQLITE_PROVIDER_CLASS (gda_sqlcipher_provider_parent_class)->get_api = gda_sqlcipher_provider_get_api_internal;
 }
 
 static void
-gda_sqlcipher_provider_init (GdaSqlcipherProvider *object) {}
+gda_sqlcipher_provider_init (GdaSqlcipherProvider *object) {
+  g_object_set (G_OBJECT (object), "is-default", TRUE, NULL);
+}
+
+

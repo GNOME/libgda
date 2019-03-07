@@ -27,7 +27,6 @@ libgda_sqlcipher_la_SOURCES = \
 
 libgda_sqlcipher_la_LDFLAGS = -export-dynamic -module -avoid-version $(NO_UNDEFINED) $(LIBTOOL_PROV_EXPORT_OPTIONS)
 libgda_sqlcipher_la_LIBADD = \
-	$(top_builddir)/libgda/sqlite/libgda-sqlcipher.la \
 	$(top_builddir)/libgda/libgda-6.0.la \
 	$(COREDEPS_LIBS) \
 	$(LIBCRYPTO_LIBS)

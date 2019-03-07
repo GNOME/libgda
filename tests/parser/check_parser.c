@@ -57,6 +57,7 @@ main (int argc, char** argv)
 	/* create parsers */
 	parsers_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	providers_model = gda_config_list_providers ();
+  g_message ("Providers found: %d", gda_data_model_get_n_rows (providers_model));
 	for (i = 0; i < gda_data_model_get_n_rows (providers_model); i++) {
 		const GValue *pname;
 		GError *lerror = NULL;
@@ -239,6 +240,7 @@ create_parser_for_provider (const gchar *prov_name)
 	GdaSqlParser *parser;
 	GError *error = NULL;
 
+	g_message ("Trying to get provider: %s", prov_name);
 	prov = gda_config_get_provider (prov_name, &error);
 	if (!prov) 
 		g_error ("Could not create provider for '%s': %s\n", prov_name,

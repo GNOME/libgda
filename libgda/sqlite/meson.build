@@ -43,9 +43,7 @@ sqlitesources_provider = files([
 	'gda-sqlite-util.c',
 	'gda-sqlite-util.h',
 	'gda-sqlite.h',
-	'keywords_hash.h',
-	'gda-symbols-util.h',
-	'gda-symbols-util.c'
+	'keywords_hash.h'
 	])
 sqlitesources = []
 sqlitesources += sqlitesources_provider
