@@ -16,10 +16,6 @@ AM_CPPFLAGS = \
 	-DSQLITE_HAS_CODEC -DSQLITE_API= -DSQLITE_PRIVATE= -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_THREADSAFE=1
 
 
-sqlite_sources = sqlite3.c sqlite3.h
-
-libmain.lo: sqlite3.h
-
 libgda_sqlcipher_la_SOURCES = \
 	gda-sqlcipher-provider.c \
 	sqlcipher.gresources.c \
