@@ -955,11 +955,9 @@ AM_CONDITIONAL(ENABLE_EXAMPLES, [test "$enable_examples" = "yes"])
 #   has problems but we do not want to patch that code.
 # We use -Wno-missing-field-initializers because recent glib versions introduced this 
 #  and they refuse to fix it: https://bugzilla.gnome.org/show_bug.cgi?id=662797
-#  We should remove -Wno-missing-field-initializers when we replace the use of 
-#  the deprecated G_STATIC_MUTEX_INIT macro.
 DK_ARG_ENABLE_WARNINGS([COREDEPS_WFLAGS],
 	[-Wall],
-	[-Wall -Wextra -Wformat-security -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -Wno-missing-field-initializers -DGSEAL_ENABLE],
+	[-Wall -Wextra -Wformat-security -Wno-address -Wno-unused-variable -Wno-unused-parameter -Wno-pointer-sign -DGSEAL_ENABLE],
 	[PANGO G GDK GDK_PIXBUF GTK])
 
 AC_SUBST(COREDEPS_CFLAGS)
