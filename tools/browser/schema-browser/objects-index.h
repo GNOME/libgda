@@ -51,6 +51,7 @@ struct _ObjectsIndexClass {
 GType                    objects_index_get_type (void) G_GNUC_CONST;
 
 GtkWidget               *objects_index_new      (TConnection *tcnc);
+void                     objects_index_update   (ObjectsIndex *index);
 
 G_END_DECLS
 

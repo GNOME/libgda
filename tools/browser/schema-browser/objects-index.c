@@ -177,9 +177,27 @@ objects_index_new (TConnection *tcnc)
         gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
         gtk_widget_show (label);
 
-	/* cloud */
+	objects_index_update (index);
+	/* search entry */
+	wid = gdaui_bar_add_search_entry (GDAUI_BAR (label));
+
+	g_signal_connect (wid, "changed",
+			  G_CALLBACK (find_changed_cb), index);
+
+	return (GtkWidget*) index;
+}
+
+void
+objects_index_update (ObjectsIndex *index)
+{
 	GdaMetaStruct *mstruct;
 	GtkWidget *cloud;
+	if (index->priv->cloud != NULL) {
+		g_signal_handlers_disconnect_by_func (GTK_WIDGET (index->priv->cloud),
+		                                      G_CALLBACK (cloud_object_selected_cb), index);
+		gtk_widget_destroy (GTK_WIDGET (index->priv->cloud));
+	}
+
 	mstruct = t_connection_get_meta_struct (index->priv->tcnc);
 	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
 	objects_cloud_show_schemas (OBJECTS_CLOUD (cloud), TRUE);
@@ -187,14 +205,6 @@ objects_index_new (TConnection *tcnc)
 	index->priv->cloud = OBJECTS_CLOUD (cloud);
 	g_signal_connect (cloud, "selected",
 			  G_CALLBACK (cloud_object_selected_cb), index);
-
-	/* search entry */
-	wid = gdaui_bar_add_search_entry (GDAUI_BAR (label));
-	
-	g_signal_connect (wid, "changed",
-			  G_CALLBACK (find_changed_cb), index);
-
-	return (GtkWidget*) index;
 }
 
 static void
