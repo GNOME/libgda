@@ -609,7 +609,7 @@ gda_sql_builder_add_field_value (GdaSqlBuilder *builder, const gchar *field_name
   if (!value)
     return;
   id1 = gda_sql_builder_add_id (builder, field_name);
-  id2 = gda_sql_builder_add_expr_value (builder, NULL, value);
+  id2 = gda_sql_builder_add_expr_value (builder, value);
   gda_value_free (value);
   gda_sql_builder_add_field_value_id (builder, id1, id2);
 }
@@ -643,7 +643,7 @@ gda_sql_builder_add_field_value_as_gvalue (GdaSqlBuilder *builder, const gchar *
 
   GdaSqlBuilderId id1, id2;
   id1 = gda_sql_builder_add_id (builder, field_name);
-  id2 = gda_sql_builder_add_expr_value (builder, NULL, value);
+  id2 = gda_sql_builder_add_expr_value (builder, value);
   gda_sql_builder_add_field_value_id (builder, id1, id2);
 }
 
@@ -780,7 +780,6 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
 /**
  * gda_sql_builder_add_expr_value:
  * @builder: a #GdaSqlBuilder object
- * @dh: (nullable): deprecated useless argument, just pass %NULL
  * @value: (nullable): value to set the expression to, or %NULL or a GDA_TYPE_NULL value to represent an SQL NULL
  *
  * Defines an expression in @builder which may be reused to build other parts of a statement.
@@ -796,7 +795,7 @@ gda_sql_builder_add_field_value_id (GdaSqlBuilder *builder, GdaSqlBuilderId fiel
  * Since: 4.2
  */
 GdaSqlBuilderId
-gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHandler *dh, const GValue *value)
+gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, const GValue *value)
 {
   g_return_val_if_fail (GDA_IS_SQL_BUILDER (builder), 0);
   GdaSqlBuilderPrivate *priv = gda_sql_builder_get_instance_private (builder);
@@ -877,7 +876,7 @@ gda_sql_builder_add_expr (GdaSqlBuilder *builder, G_GNUC_UNUSED GdaDataHandler *
 
   if (!value)
     return 0;
-  retval = gda_sql_builder_add_expr_value (builder, NULL, value);
+  retval = gda_sql_builder_add_expr_value (builder, value);
 
   gda_value_free (value);
 
