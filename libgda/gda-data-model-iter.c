@@ -91,7 +91,6 @@ enum
 	PROP_0,
 	PROP_DATA_MODEL,
 	PROP_CURRENT_ROW,
-	PROP_FORCED_MODEL,
 	PROP_UPDATE_MODEL
 };
 
@@ -157,11 +156,6 @@ gda_data_model_iter_class_init (GdaDataModelIterClass *class)
                                                                GDA_TYPE_DATA_MODEL, 
 							       (G_PARAM_READABLE | G_PARAM_WRITABLE |
 								G_PARAM_CONSTRUCT)));
-	g_object_class_install_property (object_class, PROP_FORCED_MODEL,
-					 g_param_spec_object ("forced-model", NULL, "Overrides the data model the iter "
-							      "is attached to (reserved for internal usage)", 
-                                                               GDA_TYPE_DATA_MODEL,
-							       (G_PARAM_READABLE | G_PARAM_WRITABLE)));
 	g_object_class_install_property (object_class, PROP_CURRENT_ROW,
 					 g_param_spec_int ("current-row", NULL, "Current represented row in the data model", 
 							   -1, G_MAXINT, -1,
@@ -571,10 +565,6 @@ gda_data_model_iter_set_property (GObject *object,
 			g_object_unref (ptr);
 			break;
 		}
-		case PROP_FORCED_MODEL: {
-			g_warning ("Deprecated property, not to be used");
-			break;
-                }
 		case PROP_CURRENT_ROW:
 			if (priv->row != g_value_get_int (value)) {
                                 priv->row = g_value_get_int (value);
@@ -609,15 +599,6 @@ gda_data_model_iter_get_property (GObject *object,
 				GObject *obj = g_weak_ref_get (&priv->data_model);
 				if (obj != NULL) {
 				  g_value_take_object (value, obj);
-				}
-			}
-			break;
-		case PROP_FORCED_MODEL:
-			{
-				g_warning ("Deprecated property, not to be used");
-				GObject *obj = g_weak_ref_get (&priv->data_model);
-				if (obj != NULL) {
-					g_value_take_object (value, obj);
 				}
 			}
 			break;
