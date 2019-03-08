@@ -125,7 +125,7 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 							g_string_append (tmp_out_types_str, "G_TYPE_BOOLEAN");
 						else if (type == G_TYPE_INT)
 							g_string_append (tmp_out_types_str, "G_TYPE_INT");
-						else if (type == G_TYPE_DATE_TIME) {
+						else if (type == G_TYPE_DATE_TIME || type == GDA_TYPE_TEXT) {
 							xmlChar *tname;
 							tname = xmlGetProp (node, BAD_CAST "name");
 							g_print ("Warning: ignoring table %s because the '%s' type is "
