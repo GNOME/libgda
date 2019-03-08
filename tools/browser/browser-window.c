@@ -400,6 +400,29 @@ browser_window_new (TConnection *tcnc, BrowserPerspectiveFactory *factory)
 	GMenuItem *mitem;
 	mitem = g_menu_item_new (_("Fullscreen"), "win.fullscreen");
 	g_menu_insert_item (bmenu, -1, mitem);
+	GMenuItem *open_cnc;
+	open_cnc = g_menu_item_new (_("Open Connection"), "app.opencnc");
+	g_menu_insert_item (bmenu, -1, open_cnc);
+	GMenuItem *bind_cnc;
+	bind_cnc = g_menu_item_new (_("Bind Connections"), "app.bind");
+	g_menu_insert_item (bmenu, -1, bind_cnc);
+	GMenuItem *listcnc;
+	listcnc = g_menu_item_new (_("Connections List"), "app.listcnc");
+	g_menu_insert_item (bmenu, -1, listcnc);
+	GMenuItem *newwin;
+	newwin = g_menu_item_new (_("New Window"), "app.newwin");
+	g_menu_insert_item (bmenu, -1, newwin);
+	GMenuItem *about;
+	about = g_menu_item_new (_("About"), "app.about");
+	g_menu_insert_item (bmenu, -1, about);
+#ifdef HAVE_GDU
+	GMenuItem *help;
+	help = g_menu_item_new (_("Help"), "app.newwin");
+	g_menu_insert_item (bmenu, -1, help);
+#endif
+	GMenuItem *quit;
+	quit = g_menu_item_new (_("Quit"), "app.quit");
+	g_menu_insert_item (bmenu, -1, quit);
 
 	smenu = g_menu_new ();
 	msection = g_menu_item_new_section (_("Perspectives"), G_MENU_MODEL (smenu));
