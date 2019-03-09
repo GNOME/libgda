@@ -50,6 +50,7 @@ struct _BrowserWindowClass
 	
 	/* signals */
 	void                (*fullscreen_changed) (BrowserWindow *bwin, gboolean fullscreen);
+	void                (*meta_updated) (BrowserWindow *bwin, GdaConnection *cnc);
 };
 
 /**

@@ -59,6 +59,7 @@ static void cnc_status_changed_cb (TConnection *tcnc, GdaConnectionStatus status
 
 enum {
         FULLSCREEN_CHANGED,
+        META_UPDATED,
         LAST_SIGNAL
 };
 
@@ -139,6 +140,15 @@ browser_window_class_init (BrowserWindowClass *klass)
                               NULL, NULL,
                               g_cclosure_marshal_VOID__BOOLEAN,
                               G_TYPE_NONE, 1, G_TYPE_BOOLEAN);
+
+	browser_window_signals[META_UPDATED] =
+                g_signal_new ("meta-updated",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_LAST,
+                              G_STRUCT_OFFSET (BrowserWindowClass, meta_updated),
+                              NULL, NULL,
+                              NULL,
+                              G_TYPE_NONE, 1, G_TYPE_OBJECT);
 
 	object_class->dispose = browser_window_dispose;
 }
@@ -724,6 +734,7 @@ connection_meta_update_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parame
     gtk_widget_destroy (msg);
     g_clear_error (&error);
   }
+  g_signal_emit (bwin, browser_window_signals[META_UPDATED], 0, bwin->priv->tcnc, NULL);
 	//gtk_widget_insert_action_group (GTK_WIDGET (bwin), "win", NULL);
 }
 

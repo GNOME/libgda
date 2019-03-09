@@ -82,6 +82,8 @@ static void
 objects_index_init (ObjectsIndex *index, G_GNUC_UNUSED ObjectsIndexClass *klass)
 {
 	index->priv = g_new0 (ObjectsIndexPrivate, 1);
+	index->priv->tcnc = NULL;
+	index->priv->cloud = NULL;
 
 	gtk_orientable_set_orientation (GTK_ORIENTABLE (index), GTK_ORIENTATION_VERTICAL);
 }
@@ -196,12 +198,15 @@ objects_index_update (ObjectsIndex *index)
 		g_signal_handlers_disconnect_by_func (GTK_WIDGET (index->priv->cloud),
 		                                      G_CALLBACK (cloud_object_selected_cb), index);
 		gtk_widget_destroy (GTK_WIDGET (index->priv->cloud));
+		index->priv->cloud = NULL;
+		g_message ("Destroied cloud object");
 	}
 
 	mstruct = t_connection_get_meta_struct (index->priv->tcnc);
 	cloud = objects_cloud_new (mstruct, OBJECTS_CLOUD_TYPE_TABLE);
 	objects_cloud_show_schemas (OBJECTS_CLOUD (cloud), TRUE);
 	gtk_box_pack_start (GTK_BOX (index), cloud, TRUE, TRUE, 0);
+	gtk_widget_show_all (GTK_WIDGET (index));
 	index->priv->cloud = OBJECTS_CLOUD (cloud);
 	g_signal_connect (cloud, "selected",
 			  G_CALLBACK (cloud_object_selected_cb), index);

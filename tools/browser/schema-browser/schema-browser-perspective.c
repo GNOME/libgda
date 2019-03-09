@@ -55,6 +55,7 @@ struct _SchemaBrowserPerspectivePrivate {
 	GtkWidget *favorites;
 	gboolean favorites_shown;
 	BrowserWindow *bwin;
+	GtkWidget *objects_index;
 };
 
 GType
@@ -124,6 +125,8 @@ static void fav_selection_changed_cb (GtkWidget *widget, gint fav_id, TFavorites
 				      const gchar *selection, SchemaBrowserPerspective *bpers);
 static void objects_index_selection_changed_cb (GtkWidget *widget, TFavoritesType fav_type,
 						const gchar *selection, SchemaBrowserPerspective *bpers);
+
+static void meta_updated (BrowserWindow *bwin, GdaConnection *cnc, SchemaBrowserPerspective *perps);
 /**
  * schema_browser_perspective_new
  *
@@ -159,15 +162,15 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	perspective->priv->notebook = nb;
 	gtk_paned_add2 (GTK_PANED (paned), nb);
 
-	wid = objects_index_new (tcnc);
-	g_signal_connect (wid, "selection-changed",
+	perspective->priv->objects_index = GTK_WIDGET (objects_index_new (tcnc));
+	g_signal_connect (perspective->priv->objects_index, "selection-changed",
 			  G_CALLBACK (objects_index_selection_changed_cb), bpers);
-	gtk_notebook_append_page (GTK_NOTEBOOK (nb), wid,
+	gtk_notebook_append_page (GTK_NOTEBOOK (nb), perspective->priv->objects_index,
 				  ui_make_tab_label_with_icon (_("Index"), "help-about", FALSE, NULL));
-	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), wid, TRUE);
+	gtk_notebook_set_tab_reorderable (GTK_NOTEBOOK (nb), perspective->priv->objects_index, TRUE);
 	gtk_notebook_set_group_name (GTK_NOTEBOOK (nb), "schema-browser");
 
-	gtk_notebook_set_menu_label (GTK_NOTEBOOK (nb), wid,
+	gtk_notebook_set_menu_label (GTK_NOTEBOOK (nb), perspective->priv->objects_index,
 				     ui_make_tab_label_with_icon (_("Index"), "help-about", FALSE, NULL));
 	gtk_box_pack_start (GTK_BOX (bpers), paned, TRUE, TRUE, 0);
 	gtk_widget_show_all (paned);
@@ -175,7 +178,14 @@ schema_browser_perspective_new (BrowserWindow *bwin)
 	if (perspective->priv->favorites && !perspective->priv->favorites_shown)
 		gtk_widget_hide (perspective->priv->favorites);
 
+	g_signal_connect (bwin, "meta-updated", G_CALLBACK (meta_updated), perspective);
+
 	return bpers;
+}
+
+static void meta_updated (BrowserWindow *bwin, GdaConnection *cnc, SchemaBrowserPerspective *perps)
+{
+	objects_index_update ((ObjectsIndex*) perps->priv->objects_index);
 }
 
 static void
