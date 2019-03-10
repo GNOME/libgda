@@ -62,6 +62,7 @@ demo_find_file (const char *base, GError **err)
 		gchar *filename;
 
 		filename = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "demo", base, NULL);
+    g_message ("File name: %s", filename);
 		if (!g_file_test (filename, G_FILE_TEST_EXISTS)) {
 			g_set_error (err, G_FILE_ERROR, G_FILE_ERROR_NOENT,
 				     "Cannot find demo data file \"%s\"", base);

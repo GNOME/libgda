@@ -1,0 +1,62 @@
+{
+    "app-id": "org.gnome.gda.Demoui",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "writable-sdk": true,
+    "command": "org.gnome.gda.Demoui",
+    "finish-args": [
+        "--share=network",
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=wayland",
+        "--filesystem=home",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro"
+    ],
+    "build-options": {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
+        }
+    },
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "/share/vala",
+        "*.la",
+        "*.a"
+    ],
+    "modules": [
+        {
+                "name": "gtksourceview",
+                "builddir": true,
+                "sources": [
+                        {
+                                "type": "archive",
+                                "url": "https://download.gnome.org/sources/gtksourceview/3.24/gtksourceview-3.24.9.tar.xz",
+                                "sha256": "699d76a453e6a3d3331906346e3dbfa25f2cbc9ec090e46635e9c6bb595e07c2"
+                        }
+                ]
+        },
+        {
+                "name": "demoui",
+                "config-opts": [
+                        "-Denable-tools=true"
+                        ],
+                "builddir": true,
+                "sources": [
+                        {
+                                "type": "git",
+                                "url": "./"
+                        }
+                ]
+        }
+    ]
+}

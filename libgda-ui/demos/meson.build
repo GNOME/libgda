@@ -10,7 +10,7 @@ geninclude = configure_file(
 	input: 'geninclude.pl.in',
 	output: 'genincluide.pl')
 
-demos = [
+demos = files([
 	'basic_form.c',
 	'data_model_dir.c',
 	'form.c',
@@ -31,7 +31,7 @@ demos = [
 	'tree.c',
 	'cloud.c',
 	'combo.c',
-	]
+	])
 
 demosh = custom_target('demos.h',
 	command: [
@@ -62,11 +62,15 @@ install_data('custom_layout.xml',
 	install_dir: join_paths(get_option('datadir'), project_package, 'demo')
 	)
 
-demo_sources = [
+install_data(demos,
+	install_dir: join_paths(get_option('datadir'), project_package, 'demo')
+	)
+
+demo_sources = files([
 	'main.c',
 	'demo-common.h',
-	demos
-	]
+	])
+demo_sources += demos
 
 gdaui_demo = executable('org.gnome.gda.Demoui',
 	demo_sources,
@@ -77,7 +81,12 @@ gdaui_demo = executable('org.gnome.gda.Demoui',
 	dependencies: demo_deps,
 	c_args: [
 		libgda_ui_cargs,
+		'-DPREFIX=\"'+get_option('prefix')+'\"',
+		'-DSYSCONFDIR=\"'+get_option('sysconfdir')+'\"',
+		'-DDATADIR=\"'+get_option('datadir')+'\"',
+		'-DLIBDIR=\"'+get_option('libdir')+'\"'
 	],
+	install: true
 	)
 
 endif

@@ -49,7 +49,7 @@ do_form_model_change (GtkWidget *do_widget)
 				    vbox, TRUE, TRUE, 0);
 		gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
 		
-		label = gtk_label_new ("The data in the same GdauiForm widget can be change don the fly.");
+		label = gtk_label_new ("The data in the same GdauiForm widget can be change on the fly.");
 		gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
 		/* creating data models */
