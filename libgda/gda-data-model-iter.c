@@ -1133,7 +1133,6 @@ gda_data_model_iter_set_value_at (GdaDataModelIter *iter, gint col, const GValue
 			     g_slist_length (gda_set_get_holders ((GdaSet *) iter)) - 1);
 		return FALSE;
 	}
-	g_print ("Updated: id: %s\n", gda_holder_get_id (holder));
 	return gda_holder_set_value (holder, value, error);
 }
 

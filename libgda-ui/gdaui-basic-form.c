@@ -745,7 +745,7 @@ destroy_entries (GdauiBasicForm *form)
 				g_object_unref ((GObject *) sentry->entry);
 				sentry->entry = NULL;
 			}
-			if (sentry->label) {
+			if (sentry->label != NULL) {
 				g_object_unref ((GObject *) sentry->label);
 				sentry->label = NULL;
 			}
