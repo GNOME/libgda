@@ -955,6 +955,8 @@ gda_data_proxy_set_property (GObject *object,
 
 				do_init (proxy);
 				already_set = TRUE;
+				g_object_unref (priv->model);
+				priv->model = NULL;
 			}
 
 			model = (GdaDataModel*) g_value_get_object (value);
