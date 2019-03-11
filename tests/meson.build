@@ -230,8 +230,8 @@ test('SqlRenderer', tsqlr,
 		]
 	)
 
-tso = executable('test-server-operation',
-	['test-server-operation.c'] ,
+tso = executable('test-server-operation-sqlite',
+	['test-server-operation-sqlite.c'] ,
 	c_args: [
 		'-include',
 		meson.build_root() + '/config.h',
@@ -246,7 +246,7 @@ tso = executable('test-server-operation',
 		],
 	install: false
 	)
-test('ServerOperation', tso,
+test('ServerOperationSQLite', tso,
 	env: [
 		'GDA_TOP_SRC_DIR='+meson.source_root(),
 		'GDA_TOP_BUILD_DIR='+meson.build_root()
