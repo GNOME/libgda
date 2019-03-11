@@ -207,9 +207,14 @@ test('SqlRenderer', tsqlr,
 		]
 	)
 
-tso = executable('test-server-operation',
-	['test-server-operation.c'] ,
-	c_args: test_cargs,
+tso = executable('test-server-operation-sqlite',
+	['test-server-operation-sqlite.c'] ,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -218,7 +223,7 @@ tso = executable('test-server-operation',
 		],
 	install: false
 	)
-test('ServerOperation', tso,
+test('ServerOperationSQLite', tso,
 	env: [
 		'GDA_TOP_SRC_DIR='+gda_top_src,
 		'GDA_TOP_BUILD_DIR='+gda_top_build
