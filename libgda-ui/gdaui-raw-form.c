@@ -488,7 +488,7 @@ gdaui_raw_form_set_property (GObject *object,
 				if (GDA_IS_DATA_PROXY (model)) {
 					/* clean all */
 					gdaui_raw_form_clean (form);
-					g_assert (!priv->proxy);
+					g_assert (priv->proxy == NULL);
 				}
 				else
 					g_object_set (G_OBJECT (priv->proxy), "model", model, NULL);

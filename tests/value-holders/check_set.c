@@ -184,7 +184,7 @@ static GError *
 t3_validate_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
 {
 	/* only accept GDA_VALUE_NULL or 444 value */
-	g_assert (!strcmp (token, "MyToken"));
+	g_assert (!g_strcmp0 (token, "MyToken"));
 
 	if (!strcmp (gda_holder_get_id (h), "H2")) {
 		if (gda_value_is_null (value) || (g_value_get_int (value) == 444)) {

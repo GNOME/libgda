@@ -193,11 +193,13 @@ gdaui_form_dispose (GObject *object)
 	form = GDAUI_FORM (object);
 	GdauiFormPrivate *priv = gdaui_form_get_instance_private (form);
 
-	g_signal_handlers_disconnect_by_func (priv->raw_form,
-					      G_CALLBACK (form_layout_changed_cb), form);
-	g_signal_handlers_disconnect_by_func (priv->raw_form,
-					      G_CALLBACK (form_selection_changed_cb), form);
-
+	if (priv->raw_form != NULL) {
+		g_signal_handlers_disconnect_by_func (priv->raw_form,
+		                                     G_CALLBACK (form_layout_changed_cb), form);
+	  g_signal_handlers_disconnect_by_func (priv->raw_form,
+		                                     G_CALLBACK (form_selection_changed_cb), form);
+		priv->raw_form = NULL;
+  }
 	/* for the parent class */
 	G_OBJECT_CLASS (gdaui_form_parent_class)->dispose (object);
 }

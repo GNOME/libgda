@@ -647,7 +647,7 @@ static void gda_set_finalize (GObject *object);
 static void set_remove_node (GdaSet *set, GdaSetNode *node);
 static void set_remove_source (GdaSet *set, GdaSetSource *source);
 
-
+static void holder_to_default_cb (GdaHolder *holder, GdaSet *dataset);
 static void changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
 static GError *validate_change_holder_cb (GdaHolder *holder, const GValue *value, GdaSet *dataset);
 static void source_changed_holder_cb (GdaHolder *holder, GdaSet *dataset);
@@ -785,12 +785,11 @@ GQuark gda_set_error_quark (void)
 	return quark;
 }
 
-
 static gboolean
 validate_accumulator (G_GNUC_UNUSED GSignalInvocationHint *ihint,
-		      GValue *return_accu,
-		      const GValue *handler_return,
-		      G_GNUC_UNUSED gpointer data)
+                     GValue *return_accu,
+                     const GValue *handler_return,
+                     G_GNUC_UNUSED gpointer data)
 {
 	GError *error;
 
@@ -807,7 +806,7 @@ m_validate_holder_change (G_GNUC_UNUSED GdaSet *set, G_GNUC_UNUSED GdaHolder *ho
 	return NULL;
 }
 
-static GError *
+static GError*
 m_validate_set (G_GNUC_UNUSED GdaSet *set)
 {
 	return NULL;
@@ -847,7 +846,7 @@ gda_set_class_init (GdaSetClass *class)
 			      G_SIGNAL_RUN_LAST,
 			      G_STRUCT_OFFSET (GdaSetClass, validate_holder_change),
 			      validate_accumulator, NULL,
-			      _gda_marshal_ERROR__OBJECT_VALUE, G_TYPE_ERROR, 2,
+			     _gda_marshal_ERROR__OBJECT_VALUE, G_TYPE_ERROR, 2,
 			      GDA_TYPE_HOLDER, G_TYPE_VALUE);
 	/**
 	 * GdaSet::validate-set:
@@ -1604,6 +1603,8 @@ gda_set_remove_holder (GdaSet *set, GdaHolder *holder)
 	}
 	g_signal_handlers_disconnect_by_func (holder,
 					      G_CALLBACK (holder_notify_cb), set);
+	g_signal_handlers_disconnect_by_func (holder,
+					      G_CALLBACK (holder_to_default_cb), set);
 
 	/* now destroy the GdaSetNode and the GdaSetSource if necessary */
 	node = gda_set_get_node (set, holder);
@@ -1870,6 +1871,12 @@ gda_set_add_holder (GdaSet *set, GdaHolder *holder)
 }
 
 static void
+holder_to_default_cb (GdaHolder *holder, GdaSet *dataset) {
+	g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+	              "to-default", gda_holder_get_value (holder));
+}
+
+static void
 holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 {
 	g_return_if_fail (GDA_IS_SET (dataset));
@@ -1894,6 +1901,13 @@ holder_notify_cb (GdaHolder *holder, GParamSpec *pspec, GdaSet *dataset)
 		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
 				     "description", desc);
 		gda_value_free (desc);
+	}
+	else if (!strcmp (pspec->name, "plugin")) {
+		GValue *plugin = gda_value_new (G_TYPE_STRING);
+		g_object_get_property (G_OBJECT (holder), "plugin", plugin);
+		g_signal_emit (G_OBJECT (dataset), gda_set_signals[HOLDER_ATTR_CHANGED], 0, holder,
+				     "plugin", plugin);
+		gda_value_free (plugin);
 	}
 }
 
@@ -1937,6 +1951,8 @@ gda_set_real_add_holder (GdaSet *set, GdaHolder *holder)
 		}
 		g_signal_connect (G_OBJECT (holder), "notify",
 				  G_CALLBACK (holder_notify_cb), set);
+		g_signal_connect (G_OBJECT (holder), "to-default",
+				  G_CALLBACK (holder_to_default_cb), set);
 		return TRUE;
 	}
 	else if (similar == holder)

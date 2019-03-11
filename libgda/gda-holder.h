@@ -49,7 +49,7 @@ struct _GdaHolderClass
 	void                     (*changed)          (GdaHolder *holder);
 	void                     (*source_changed)   (GdaHolder *holder);
 	GError                  *(*validate_change)  (GdaHolder *holder, const GValue *new_value);
-	void                     (*att_changed)      (GdaHolder *holder, const gchar *att_name, const GValue *att_value);
+	void                     (*to_default)      (GdaHolder *holder);
 
 	/*< private >*/
 	/* Padding for future expansion */

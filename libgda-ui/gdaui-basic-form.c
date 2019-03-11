@@ -482,7 +482,7 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 
 	sentry = get_single_entry_for_holder (form, param);
 
-	if (!strcmp (att_name, GDA_ATTRIBUTE_IS_DEFAULT)) {
+	if (!g_strcmp0 (att_name, "to-default")) {
 		GtkWidget *entry = NULL;
 		if (sentry)
 			entry = (GtkWidget*) sentry->entry;
@@ -511,7 +511,7 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 							   G_CALLBACK (entry_contents_modified), sentry);
 		}
 	}
-	else if (!strcmp (att_name, GDAUI_ATTRIBUTE_PLUGIN)) {
+	else if (!g_strcmp0 (att_name, "plugin")) {
 		if (sentry) {
 			/* recreate an entry widget */
 			create_entry_widget (sentry);
@@ -521,8 +521,8 @@ paramlist_param_attr_changed_cb (G_GNUC_UNUSED GdaSet *paramlist, GdaHolder *par
 		else
 			paramlist_public_data_changed_cb (priv->set_info, form);
 	}
-	else if (!strcmp (att_name, GDA_ATTRIBUTE_NAME) ||
-		 !strcmp (att_name, GDA_ATTRIBUTE_DESCRIPTION)) {
+	else if (!g_strcmp0 (att_name, "name") ||
+		 !g_strcmp0 (att_name, "description")) {
 		if (sentry) {
 			gchar *str, *title;
 			GdaSetSource *ss;

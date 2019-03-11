@@ -70,6 +70,7 @@ enum
 	CHANGED,
 	SOURCE_CHANGED,
 	VALIDATE_CHANGE,
+	TO_DEFAULT,
 	LAST_SIGNAL
 };
 
@@ -204,11 +205,24 @@ gda_holder_class_init (GdaHolderClass *class)
                               G_STRUCT_OFFSET (GdaHolderClass, validate_change),
                               validate_change_accumulator, NULL,
                               _gda_marshal_ERROR__VALUE, G_TYPE_ERROR, 1, G_TYPE_VALUE);
+	/**
+	 * GdaHolder::to-default:
+	 * @holder: the object which received the signal
+	 *
+	 * Gets emitted when @holder is set to its default value
+	 */
+	gda_holder_signals[TO_DEFAULT] =
+                g_signal_new ("to-default",
+                              G_TYPE_FROM_CLASS (object_class),
+                              G_SIGNAL_RUN_FIRST,
+                              G_STRUCT_OFFSET (GdaHolderClass, to_default),
+                              NULL, NULL,
+                              NULL, G_TYPE_NONE, 0);
 
         class->changed = NULL;
         class->source_changed = NULL;
         class->validate_change = m_validate_change;
-	class->att_changed = NULL;
+	class->to_default = NULL;
 
 	/* virtual functions */
 	object_class->dispose = gda_holder_dispose;
@@ -1463,6 +1477,7 @@ gda_holder_set_value_to_default (GdaHolder *holder)
 	}
 
 	g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
+	g_signal_emit (holder, gda_holder_signals[TO_DEFAULT], 0);
 
 	gda_holder_unlock ((GdaLockable*) holder);
 	return TRUE;
@@ -1549,7 +1564,6 @@ gda_holder_set_default_value (GdaHolder *holder, const GValue *value)
 		}
 
 		priv->default_value = gda_value_copy ((GValue *)value);
-		//g_signal_emit (holder, gda_holder_signals[CHANGED], 0);
 	}
 	
 	/* don't emit the "changed" signal */
