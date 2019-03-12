@@ -1,8 +1,8 @@
 noinst_LTLIBRARIES = libgda-test-6.0.la
 
 TESTS_ENVIRONMENT = GDA_TOP_SRC_DIR="$(abs_top_srcdir)" GDA_TOP_BUILD_DIR="$(abs_top_builddir)"
-TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation
-check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation
+TESTS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation-sqlite
+check_PROGRAMS = test-ddl-creator test-bin-converter test-sql-identifier test-identifiers-quotes test-sql-builder test-connection-string-split test-input-parsers test-quark-list test-sql-renderer test-server-operation-sqlite
 
 if HAVE_UI
 UI_EXTENSION = ui
@@ -103,10 +103,10 @@ test_sql_renderer_LDADD = \
 	libgda-test-6.0.la \
         $(COREDEPS_LIBS)
 
-test_server_operation_SOURCES = \
-        test-server-operation.c
+test_server_operation_sqlite_SOURCES = \
+        test-server-operation-sqlite.c
 
-test_server_operation_LDADD = \
+test_server_operation_sqlite_LDADD = \
         $(top_builddir)/libgda/libgda-6.0.la \
         $(COREDEPS_LIBS)
 
