@@ -693,7 +693,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   /* END RENAME_TABLE OPERATION */
   g_clear_object (&fixture->op);
 
-  /* START CREATE_VIEEW OPERATION */
+  /* START CREATE_VIEW OPERATION */
   fixture->op = gda_server_provider_create_operation (fixture->provider,
                                                       fixture->cnc,
                                                       GDA_SERVER_OPERATION_CREATE_VIEW,
@@ -770,6 +770,142 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
   /* END CREATE_VIEEW OPERATION */
+
+  g_clear_object (&fixture->op);
+
+  /* START CREATE_INDEX OPERATION */
+  fixture->op = gda_server_provider_create_operation (fixture->provider,
+                                                      fixture->cnc,
+                                                      GDA_SERVER_OPERATION_CREATE_INDEX,
+                                                      NULL,
+                                                      NULL);
+
+  g_assert_nonnull (fixture->op);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "UNIQUE",
+                                           NULL,
+                                           "/INDEX_DEF_P/INDEX_TYPE");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "MyIndex",
+                                           NULL,
+                                           "/INDEX_DEF_P/INDEX_NAME");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "NewEmployee",
+                                           NULL,
+                                           "/INDEX_DEF_P/INDEX_ON_TABLE");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "TRUE",
+                                           NULL,
+                                           "/INDEX_DEF_P/INDEX_IFNOTEXISTS");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "name",
+                                           NULL,
+                                           "/INDEX_FIELDS_S/%d/INDEX_FIELD",
+                                           0);
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "NOCASE",
+                                           NULL,
+                                           "/INDEX_FIELD_S/%d/INDEX_COLLATE",
+                                           0);
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "ASC",
+                                           NULL,
+                                           "/INDEX_FIELD_S/%d/INDEX_SORT_ORDER",
+                                           0);
+
+  g_assert_true (res);
+
+  res = gda_server_provider_perform_operation (fixture->provider,
+                                               fixture->cnc,
+                                               fixture->op,
+                                               NULL);
+
+  g_assert_true (res);
+  /* END CREATE_INDEX OPERATION */
+  g_clear_object (&fixture->op);
+
+  /* START DROP_INDEX OPERATION */
+  fixture->op = gda_server_provider_create_operation (fixture->provider,
+                                                      fixture->cnc,
+                                                      GDA_SERVER_OPERATION_DROP_INDEX,
+                                                      NULL,
+                                                      NULL);
+
+  g_assert_nonnull (fixture->op);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "MyIndex",
+                                           NULL,
+                                           "/INDEX_DESC_P/INDEX_NAME");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "TRUE",
+                                           NULL,
+                                           "/INDEX_DESC_P/INDEX_IFEXISTS");
+
+  g_assert_true (res);
+
+  res = gda_server_provider_perform_operation (fixture->provider,
+                                               fixture->cnc,
+                                               fixture->op,
+                                               NULL);
+
+  g_assert_true (res);
+  /* END DROP_INDEX OPERATION */
+
+  g_clear_object(&fixture->op);
+
+  /* START DROP_TABLE OPERATION */
+  fixture->op = gda_server_provider_create_operation (fixture->provider,
+                                                      fixture->cnc,
+                                                      GDA_SERVER_OPERATION_DROP_TABLE,
+                                                      NULL,
+                                                      NULL);
+
+  g_assert_nonnull (fixture->op);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "NewEmployee",
+                                           NULL,
+                                           "/TABLE_DESC_P/TABLE_NAME");
+
+  g_assert_true (res);
+
+  res = gda_server_operation_set_value_at (fixture->op,
+                                           "TRUE",
+                                           NULL,
+                                           "/TABLE_DESC_P/TABLE_IFEXISTS");
+
+  g_assert_true (res);
+
+  res = gda_server_provider_perform_operation (fixture->provider,
+                                               fixture->cnc,
+                                               fixture->op,
+                                               NULL);
+
+  g_assert_true (res);
+  /* END DROP_TABLE OPERATION */
 }
 
 void
