@@ -942,12 +942,14 @@ get_data_value (VirtualTable *vtable, VirtualCursor *cursor, gint row, gint64 ro
 		g_assert (vtable->td->context.current_vcontext);
 		guint i;
 		GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
-		for (i = 0; i < values_array->len; i++) {
-			VirtualFilteredData *vd;
-			vd = g_ptr_array_index (values_array, i);
-			if (vd->rowid_offset == (guint32) (rowid >> 32)) {
-				data = vd;
-				break;
+		if (values_array != NULL) {
+			for (i = 0; i < values_array->len; i++) {
+				VirtualFilteredData *vd;
+				vd = g_ptr_array_index (values_array, i);
+				if (vd->rowid_offset == (guint32) (rowid >> 32)) {
+					data = vd;
+					break;
+				}
 			}
 		}
 	}
@@ -1182,53 +1184,55 @@ virtualFilter (sqlite3_vtab_cursor *pVtabCursor, int idxNum, const char *idxStr,
 	VirtualFilteredData *data = NULL;
 	g_assert (vtable->td->context.current_vcontext);
 	GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
+	if (values_array != NULL) {
+		if (values_array->len > 0) {
+			guint i;
+			for (i = 0; i < values_array->len; i++) {
+				VirtualFilteredData *vd;
+				vd = g_ptr_array_index (values_array, i);
+				if (vd->reuseable &&
+					  (vd->idxNum == idxNum) &&
+					  (vd->argc == argc) &&
+					  ((!idxStr && !vd->idxStr) || (idxStr && vd->idxStr && !strcmp (idxStr, vd->idxStr)))) {
+					GValue **avalues;
+					gint i;
+					gboolean equal = TRUE;
+					avalues = create_gvalues_array_from_sqlite3_array (prov, argc, argv);
+					for (i = 0; i < argc; i++) {
+						GValue *v1, *v2;
+						v1 = vd->argv [i];
+						v2 = avalues [i];
 
-	if (values_array->len > 0) {
-		guint i;
-		for (i = 0; i < values_array->len; i++) {
-			VirtualFilteredData *vd;
-			vd = g_ptr_array_index (values_array, i);
-			if (vd->reuseable &&
-			    (vd->idxNum == idxNum) &&
-			    (vd->argc == argc) &&
-			    ((!idxStr && !vd->idxStr) || (idxStr && vd->idxStr && !strcmp (idxStr, vd->idxStr)))) {
-				GValue **avalues;
-				gint i;
-				gboolean equal = TRUE;
-				avalues = create_gvalues_array_from_sqlite3_array (prov, argc, argv);
-				for (i = 0; i < argc; i++) {
-					GValue *v1, *v2;
-					v1 = vd->argv [i];
-					v2 = avalues [i];
+						if (! ((!v1 && !v2) ||
+							     (v1 && v2 && (G_VALUE_TYPE (v1) == G_VALUE_TYPE (v2)) &&
+							!gda_value_differ (v1, v2)))) {
+							equal = FALSE;
+							break;
+						}
+					}
+					for (i = 0; i < argc; i++) {
+						GValue *v2;
+						v2 = avalues [i];
+						if (v2)
+							gda_value_free (v2);
+					}
+					g_free (avalues);
 
-					if (! ((!v1 && !v2) ||
-					       (v1 && v2 && (G_VALUE_TYPE (v1) == G_VALUE_TYPE (v2)) &&
-						!gda_value_differ (v1, v2)))) {
-						equal = FALSE;
+					if (equal) {
+						data = vd;
 						break;
 					}
-				}
-				for (i = 0; i < argc; i++) {
-					GValue *v2;
-					v2 = avalues [i];
-					if (v2)
-						gda_value_free (v2);
-				}
-				g_free (avalues);
-				
-				if (equal) {
-					data = vd;
-					break;
 				}
 			}
 		}
 	}
+
 #ifdef DEBUG_VCONTEXT
 	if (data)
 		g_print ("REUSE VData %p\n", data);
 #endif
 
-	if (!data) {
+	if (!data && values_array != NULL) {
 		virtual_table_manage_real_data_model (vtable, idxNum, idxStr, argc, argv);
 		if (! vtable->td->real_model)
 			return SQLITE_ERROR;
@@ -1602,7 +1606,7 @@ virtualUpdate (sqlite3_vtab *tab, int nData, sqlite3_value **apData, sqlite_int6
 
 	g_assert (vtable->td->context.current_vcontext);
 	GPtrArray *values_array = vtable->td->context.current_vcontext->context_data;
-	if (values_array) {
+	if (values_array != NULL) {
 		guint i;
 		for (i = 0; i < values_array->len; i++) {
 			VirtualFilteredData *data;
