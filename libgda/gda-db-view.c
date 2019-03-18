@@ -458,11 +458,15 @@ gda_db_view_set_replace (GdaDbView *self,
  * gda_db_view_create:
  * @self: a #GdaDbView instance
  * @cnc: open connection for the operation
+ * @ifnoexists: if set to %TRUE, the view will be created using IF NOT EXISTS flag
  * @error: error container
  *
  * This method performs CREATE_VIEW operation over @cnc using data stored in @self
  * It is a convenient method to perform operation. See gda_db_view_prepare_create() if better
  * flexibility is needed.
+ *
+ * For convenience, @ifnotexists should be used to specify if the view should be created if exist.
+ * The internal property "ifnoexists" will be ignored.
  *
  * Returns: %TRUE if no error, %FASLE otherwise
  *
@@ -471,6 +475,7 @@ gda_db_view_set_replace (GdaDbView *self,
 gboolean
 gda_db_view_create (GdaDbView *self,
                     GdaConnection *cnc,
+                    gboolean ifnotexists,
                     GError **error)
 {
   g_return_val_if_fail (self, FALSE);
@@ -483,6 +488,7 @@ gda_db_view_create (GdaDbView *self,
   GdaServerOperation *op = NULL;
 
   provider = gda_connection_get_provider (cnc);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
 
   op = gda_server_provider_create_operation (provider,
                                              cnc,
@@ -492,7 +498,28 @@ gda_db_view_create (GdaDbView *self,
   if (!op)
     goto on_error;
 
-  if (!gda_db_view_prepare_create (self, op, error))
+  if (!gda_server_operation_set_value_at (op,
+                                          gda_db_base_get_name (GDA_DB_BASE(self)),
+                                          error,
+                                          "/VIEW_DEF_P/VIEW_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op,
+                                          GDA_BOOL_TO_STR(priv->m_replace),
+                                          error,
+                                          "/VIEW_DEF_P/VIEW_OR_REPLACE"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op,
+                                          GDA_BOOL_TO_STR(priv->m_istemp),
+                                          error,
+                                          "/VIEW_DEF_P/VIEW_TEMP"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op,
+                                          priv->mp_defstring,
+                                          error,
+                                          "/VIEW_DEF_P/VIEW_DEF"))
     goto on_error;
 
   if(!gda_server_provider_perform_operation (provider, cnc, op, error))
@@ -541,11 +568,6 @@ gda_db_view_prepare_create (GdaDbView *self,
                                           "/VIEW_DEF_P/VIEW_OR_REPLACE"))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at (op,
-                                          GDA_BOOL_TO_STR(priv->m_ifnoexist),
-                                          error,
-                                          "/VIEW_DEF_P/VIEW_IFNOTEXISTS"))
-    return FALSE;
 
   if (!gda_server_operation_set_value_at (op,
                                           GDA_BOOL_TO_STR(priv->m_istemp),
@@ -562,4 +584,86 @@ gda_db_view_prepare_create (GdaDbView *self,
   return  TRUE;
 }
 
+/**
+ * gda_db_view_drop:
+ * @self: #GdaDbView instance to drop form the database
+ * @cnc: Connection to the database to perform the operation
+ * @ifexists: if %TRUE IF NOT EXISTS will be added to the SQL command
+ * @action: actions for referencing objecrs. See #GdaDbViewRefAction
+ * @error: instance of #GError to place the error
+ *
+ * This method call DDL comands to drop the view. 
+ *
+ * Returns: %TRUE if everything is ok and %FALSE otherwise.
+ * Since: 6.0
+ */
+gboolean
+gda_db_view_drop (GdaDbView *self,
+                  GdaConnection *cnc,
+                  gboolean ifexists,
+                  GdaDbViewRefAction action,
+                  GError **error)
+{
+  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (cnc && gda_connection_is_opened(cnc), FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+  gda_lockable_lock ((GdaLockable*)cnc);
+
+  GdaServerProvider *provider = NULL;
+  GdaServerOperation *op = NULL;
+  gchar *action_str = NULL;
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider,
+                                             cnc,
+                                             GDA_SERVER_OPERATION_DROP_VIEW,
+                                             NULL,
+                                             error);
+  if (!op)
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op,
+                                          gda_db_base_get_full_name(GDA_DB_BASE(self)),
+                                          error,
+                                          "/VIEW_DESC_P/VIEW_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR(ifexists), error,
+                                          "/VIEW_DESC_P/VIEW_IFEXISTS"))
+    goto on_error;
+
+  switch (action)
+    {
+    case GDA_DB_VIEW_RESTRICT:
+      action_str = g_strdup ("RESTRICT");
+      break;
+    case GDA_DB_VIEW_CASCADE:
+      action_str = g_strdup ("CASCADE");
+      break;
+    default:
+      g_debug("Wrong value for action. It is %s\n", action);
+      break;
+    }
+
+  if (!gda_server_operation_set_value_at (op, action_str, error,
+                                          "/VIEW_DESC_P/REFERENCED_ACTION"))
+    goto on_error;
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
+  gda_lockable_unlock ((GdaLockable*)cnc);
+  g_free (action_str);
+
+  return TRUE;
+
+on_error:
+  if (op) g_object_unref (op);
+  gda_lockable_unlock ((GdaLockable*)cnc);
+  g_free (action_str);
+  return FALSE;
+}
 
