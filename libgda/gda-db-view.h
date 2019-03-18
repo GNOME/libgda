@@ -1,6 +1,6 @@
 /* gda-db-view.h
  *
- * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2018-2019 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,6 +40,13 @@ struct _GdaDbViewClass
   GdaDbBaseClass parent_class;
 };
 
+typedef enum
+{
+  GDA_DB_VIEW_RESTRICT = 0,
+  GDA_DB_VIEW_CASCADE
+} GdaDbViewRefAction;
+
+
 GdaDbView*  gda_db_view_new            (void);
 
 gboolean     gda_db_view_get_istemp    (GdaDbView *self);
@@ -60,11 +67,18 @@ void         gda_db_view_set_replace   (GdaDbView *self,
 
 gboolean     gda_db_view_create        (GdaDbView *self,
                                         GdaConnection *cnc,
+                                        gboolean ifnotexists,
                                         GError **error);
 
 gboolean     gda_db_view_prepare_create (GdaDbView *self,
                                          GdaServerOperation *op,
                                          GError **error);
+
+gboolean     gda_db_view_drop          (GdaDbView *self,
+                                        GdaConnection *cnc,
+                                        gboolean ifexists,
+                                        GdaDbViewRefAction action,
+                                        GError **error);
 
 G_END_DECLS
 
