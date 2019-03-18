@@ -44,9 +44,10 @@ struct _GdaDbColumnClass
  *
  * Values used to describe the source of the error.
  */
-typedef  enum 
+typedef  enum
 {
-  GDA_DB_COLUMN_ERROR_TYPE
+  GDA_DB_COLUMN_ERROR_TYPE,
+  GDA_DB_COLUMN_ERROR_WRONG_OPERATION
 } GdaDbColumnError;
 
 #define GDA_DB_COLUMN_ERROR gda_db_column_error_quark()
@@ -106,6 +107,7 @@ gboolean        gda_db_column_prepare_create   (GdaDbColumn *self,
 gboolean        gda_db_column_prepare_add      (GdaDbColumn *self,
                                                 GdaServerOperation *op,
                                                 GError **error);
+
 G_END_DECLS
 
 #endif /* GDA_DB_COLUMN_H */
