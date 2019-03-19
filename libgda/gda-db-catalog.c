@@ -876,7 +876,7 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
   if (st) {
   /*TODO: add update option for views */
     for (it = priv->mp_views; it; it = it->next) {
-        st = gda_db_view_create (it->data, priv->cnc, error);
+        st = gda_db_view_create (it->data, priv->cnc, TRUE, error);
         if (!st) {
           break;
         }
