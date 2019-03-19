@@ -21,7 +21,7 @@
 #define __GDA_DB_TABLE_H__
 
 #include "gda-db-base.h"
-#include "gda-db-column.h" 
+#include "gda-db-column.h"
 #include "gda-db-fkey.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
@@ -81,8 +81,15 @@ gboolean        gda_db_table_create          (GdaDbTable *self,
 void            gda_db_table_append_fkey (GdaDbTable *self,
                                           GdaDbFkey *fkey);
 
-void            gda_db_table_append_constraint (GdaDbTable *self,
-                                                const gchar *constr);
+gboolean        gda_db_table_rename      (GdaDbTable *old_name,
+                                          GdaDbTable *new_name,
+                                          GdaConnection *cnc,
+                                          GError **error);
+
+gboolean        gda_db_table_add_column (GdaDbTable *self,
+                                         GdaDbColumn *col,
+                                         GdaConnection *cnc,
+                                         GError **error);
 
 G_END_DECLS
 
