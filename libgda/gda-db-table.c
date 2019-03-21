@@ -886,7 +886,8 @@ gda_db_table_add_column (GdaDbTable *self,
 
   if (!op)
     {
-      g_warning("ServerOperation is NULL\n");
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
+                   _("ServerOperation is NULL"));
       goto on_error;
     }
 
