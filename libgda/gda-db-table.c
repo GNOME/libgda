@@ -98,12 +98,14 @@ static const gchar *gdadbtablenodes[GDA_DB_TABLE_N_NODES] = {
 GdaDbTable *
 gda_db_table_new (void)
 {
+  G_DEBUG_HERE();
   return g_object_new (GDA_TYPE_DB_TABLE, NULL);
 }
 
 static void
 gda_db_table_finalize (GObject *object)
 {
+  G_DEBUG_HERE();
   GdaDbTable *self = (GdaDbTable *)object;
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
@@ -221,6 +223,7 @@ gda_db_table_parse_node (GdaDbBuildable *buildable,
                          xmlNodePtr	node,
                          GError      **error)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (node, FALSE);
 
@@ -287,6 +290,7 @@ gda_db_table_write_node (GdaDbBuildable *buildable,
                          xmlNodePtr       rootnode,
                          GError         **error)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (buildable, FALSE);
   g_return_val_if_fail (rootnode, FALSE);
 
@@ -335,6 +339,7 @@ void
 gda_db_table_set_comment (GdaDbTable *self,
                           const char  *tablecomment)
 {
+  G_DEBUG_HERE();
   g_return_if_fail (self);
 
   if (tablecomment)
@@ -358,6 +363,7 @@ void
 gda_db_table_set_is_temp (GdaDbTable *self,
                            gboolean istemp)
 {
+  G_DEBUG_HERE();
   g_return_if_fail (self);
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   priv->m_istemp = istemp;
@@ -374,6 +380,7 @@ gda_db_table_set_is_temp (GdaDbTable *self,
 const char*
 gda_db_table_get_comment (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (self, NULL);
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
   return priv->mp_comment;
@@ -392,6 +399,7 @@ gda_db_table_get_comment (GdaDbTable *self)
 gboolean
 gda_db_table_get_temp (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (self, FALSE);
 
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
@@ -412,6 +420,7 @@ gda_db_table_get_temp (GdaDbTable *self)
 gboolean
 gda_db_table_is_valid (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (self, FALSE);
 
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
@@ -441,6 +450,7 @@ gda_db_table_is_valid (GdaDbTable *self)
 GList*
 gda_db_table_get_columns (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (self, NULL);
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
@@ -462,6 +472,7 @@ gda_db_table_get_columns (GdaDbTable *self)
 GList*
 gda_db_table_get_fkeys (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (self, NULL);
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
@@ -481,6 +492,7 @@ gda_db_table_get_fkeys (GdaDbTable *self)
 gboolean
 gda_db_table_get_is_temp (GdaDbTable *self)
 {
+  G_DEBUG_HERE();
   g_return_val_if_fail (GDA_IS_DB_TABLE(self), FALSE);
 
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
@@ -506,6 +518,11 @@ gda_db_table_prepare_create (GdaDbTable *self,
                              gboolean ifnotexists,
                              GError **error)
 {
+  G_DEBUG_HERE();
+  g_return_val_if_fail(GDA_IS_DB_TABLE(self), FALSE);
+  g_return_val_if_fail(GDA_IS_SERVER_OPERATION(op), FALSE);
+  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at (op,
@@ -582,13 +599,17 @@ gda_db_table_update (GdaDbTable *self,
                      GdaConnection *cnc,
                      GError **error)
 {
-  g_return_val_if_fail (self, FALSE);
+  g_return_val_if_fail (GDA_IS_DB_TABLE(self), FALSE);
   g_return_val_if_fail (obj, FALSE);
-  g_return_val_if_fail (cnc, FALSE);
+  g_return_val_if_fail (GDA_IS_CONNECTION(cnc), FALSE);
   g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   if (!gda_connection_is_opened (cnc))
-    return FALSE;
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
 
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
@@ -851,7 +872,8 @@ gda_db_table_add_column (GdaDbTable *self,
 
   if (!gda_connection_is_opened (cnc))
     {
-      g_warning ("Connection is not opened");
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
       return FALSE;
     }
 
@@ -927,4 +949,186 @@ on_error:
   return FALSE;
 }
 
-G_END_DECLS
+/**
+ * gda_db_table_drop:
+ * @self:
+ * @cnc:
+ * @ifexists:
+ * @error:
+ *
+ * Drop table from the database. This mehod will call "DROP TABLE ..." SQL command.
+ *
+ * Returns: %TRUE if no error and %FALSE otherwise.
+ *
+ * Since: 6.0
+ */
+gboolean
+gda_db_table_drop (GdaDbTable *self,
+                   GdaConnection *cnc,
+                   gboolean ifexists,
+                   GError **error)
+{
+  G_DEBUG_HERE();
+  GdaServerProvider *provider = NULL;
+  GdaServerOperation *op = NULL;
+
+  g_return_val_if_fail (GDA_IS_DB_TABLE (self), FALSE);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR,  GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE (cnc));
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_DROP_TABLE,
+                                             NULL, error);
+
+  if (!op)
+    {
+      g_warning("ServerOperation is NULL\n");
+      goto on_error;
+    }
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name(GDA_DB_BASE(self)), error,
+                                          "/TABLE_DESC_P/TABLE_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifexists), error,
+                                          "/TABLE_DESC_P/TABLE_IFEXISTS"))
+    goto on_error;
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return TRUE;
+
+on_error:
+  if (op) g_object_unref (op);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return FALSE;
+}
+/**
+ * gda_db_table_add_index:
+ * @self: object to use
+ * @index: an instance of #GdaDbIndex to add
+ * @cnc: Connection to use
+ * @ifnotexists: use or not use "IF NOT EXISTS"
+ * @error: error container
+ *
+ * To drop the index see gda_db_index_drop()
+ *
+ * Returns: %TRUE if no error and %FALSE otherwise.
+ *
+ * Since: 6.0
+ */
+gboolean
+gda_db_table_add_index  (GdaDbTable *self,
+                         GdaDbIndex *index,
+                         GdaConnection *cnc,
+                         gboolean ifnotexists,
+                         GError **error)
+{
+  G_DEBUG_HERE();
+  GdaServerProvider *provider = NULL;
+  GdaServerOperation *op = NULL;
+
+  g_return_val_if_fail(GDA_IS_DB_TABLE (self), FALSE);
+  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
+  g_return_val_if_fail(GDA_IS_DB_INDEX(index), FALSE);
+  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE (cnc));
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_CREATE_INDEX,
+                                             NULL, error);
+
+  if (!op)
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
+                   _("ServerOperation is NULL"));
+      goto on_error;
+    }
+
+  if (gda_db_index_get_unique(index))
+    {
+      if (!gda_server_operation_set_value_at (op, "UNIQUE", error,
+                                              "/INDEX_DEF_P/INDEX_TYPE"))
+        goto on_error;
+    }
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (index)),
+                                          error, "/INDEX_DEF_P/INDEX_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE(self)),
+                                          error, "/INDEX_DEF_P/INDEX_ON_TABLE"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifnotexists),
+                                          error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
+    goto on_error;
+
+  GSList *it = gda_db_index_get_fields (index);
+  gint i = 0;
+
+  for (; it != NULL; it = it->next, i++)
+    {
+      GdaDbColumn *col = gda_db_index_field_get_column (GDA_DB_INDEX_FIELD (it->data));
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_column_get_name (col),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_FIELD",
+                                              i))
+        goto on_error;
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_index_field_get_collate_str (it->data),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_COLLATE",
+                                              i))
+        goto on_error;
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_index_field_get_sort_order_str (it->data),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_SORT_ORDER",
+                                              i))
+        goto on_error;
+    }
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
+
+  return TRUE;
+
+on_error:
+  if (op) g_object_unref (op);
+
+  return FALSE;
+}
+
