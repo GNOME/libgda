@@ -28,6 +28,7 @@
 #include "gda-server-operation.h"
 #include <libgda/sql-parser/gda-sql-statement.h>
 #include "gda-meta-struct.h"
+#include "gda-db-index.h"
 
 G_BEGIN_DECLS
 
@@ -46,7 +47,9 @@ struct _GdaDbTableClass {
  */
 typedef enum {
     GDA_DB_TABLE_COLUMN_EMPTY,
-}GdaDbTableError;
+    GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+    GDA_DB_TABLE_SERVER_OPERATION
+} GdaDbTableError;
 
 #define GDA_DB_TABLE_ERROR gda_db_table_error_quark()
 GQuark gda_db_table_error_quark(void);
@@ -91,6 +94,16 @@ gboolean        gda_db_table_add_column (GdaDbTable *self,
                                          GdaConnection *cnc,
                                          GError **error);
 
+gboolean        gda_db_table_drop       (GdaDbTable *self,
+                                         GdaConnection *cnc,
+                                         gboolean ifexists,
+                                         GError **error);
+
+gboolean        gda_db_table_add_index  (GdaDbTable *self,
+                                         GdaDbIndex *index,
+                                         GdaConnection *cnc,
+                                         gboolean ifnotexists,
+                                         GError **error);
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DB-TABLE_H */
