@@ -644,7 +644,7 @@ gda_db_view_drop (GdaDbView *self,
       action_str = g_strdup ("CASCADE");
       break;
     default:
-      g_debug("Wrong value for action. It is %s\n", action);
+      g_debug("Wrong value for action. It is %d\n", action);
       break;
     }
 
