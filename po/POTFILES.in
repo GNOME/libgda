@@ -31,6 +31,7 @@ libgda/gda-db-catalog.c
 libgda/gda-db-fkey.c
 libgda/gda-db-table.c
 libgda/gda-db-view.c
+libgda/gda-db-index.c
 libgda/gda-holder.c
 libgda/gda-init.c
 libgda/gda-log.c
