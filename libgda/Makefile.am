@@ -121,7 +121,9 @@ gda_headers = \
 	gda-db-table.h \
 	gda-db-buildable.h \
 	gda-db-view.h \
-	gda-db-catalog.h
+	gda-db-catalog.h \
+	gda-db-index.h \
+	gda-db-index-field.h
 
 gda_built_sources= \
 	$(builddir)/libgda.h \
@@ -185,7 +187,9 @@ gda_sources= \
 	gda-db-table.c \
 	gda-db-buildable.c \
 	gda-db-view.c \
-	gda-db-catalog.c
+	gda-db-catalog.c \
+	gda-db-index.c \
+	gda-db-index-field.c
 
 libgda_sources =  \
 	csv.h \
