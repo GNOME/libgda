@@ -14,8 +14,9 @@ option('with-examples', type : 'boolean', value : false, description : 'Compile 
 option('enable-tools', type : 'boolean', value : false, description : 'Enable build experimental GUI Tools')
 option('glade-catalog-dir', type : 'string', value : '', description : 'Use the given directory to install glade catalog files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
 option('glade-pixmap-dir', type : 'string', value : '', description : 'Use the given directory to install glade pixmap files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
-option('enable-gtk-doc', type : 'boolean', value : false, description : 'Enable documentation generation [default = false]')
+option('gtk_doc', type : 'boolean', value : false, description : 'Enable documentation generation [default = false]')
 option('enable-experimental', type : 'boolean', value : false, description : 'Enable experimental features [default = false]')
 option('enable-ldap', type : 'boolean', value : false, description : 'Enable experimental LDAP provider')
 option('enable-web', type : 'boolean', value : false, description : 'Enable experimental WEB provider')
 option('enable-test-flatpak', type : 'boolean', value : false, description : 'Enable Terminal Test Application ')
+
