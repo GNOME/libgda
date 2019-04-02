@@ -363,7 +363,7 @@ int main() {
 	subdir('control-center')
 endif
 
-if get_option('enable-gtk-doc')
+if get_option('gtk_doc')
         subdir('doc')
 endif
 

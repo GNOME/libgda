@@ -67,7 +67,7 @@ library_build:
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson _build --prefix=/usr -Denable-debug=true -Denable-gtk-doc=true
+  - meson _build --prefix=/usr -Denable-debug=true -Dgtk_doc=true
   - cd _build
   - ninja
   - broadwayd &
@@ -87,7 +87,11 @@ library_build:
 pages:
   stage: deploy_doc
   script:
+<<<<<<< HEAD
   - meson _build --prefix=/usr -Denable-gtk-doc=true -Denable-experimental=true -Denable-tools=true -Denable-ldap=true
+=======
+  - meson -Dgtk_doc=true _build
+>>>>>>> Meson: Fixing meson doc option
   - cd _build
   - ninja
   - ninja install
