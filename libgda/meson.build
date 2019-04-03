@@ -313,9 +313,12 @@ libgda_cargs += binreloc_cargs
 
 libgda_dep += sqlite_deps
 
-vala_sources = [
+vala_sources = []
+if get_option('enable-experimental')
+vala_sources += [
 	'gda-connection-provider.vala'
 	]
+endif
 
 vala_sourcesf = files(vala_sources)
 valac = find_program('valac')
