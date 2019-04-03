@@ -68,33 +68,10 @@ static GValue *aggregate_get_empty_value (GdaDataPivotAggregate aggregate);
 static gboolean aggregate_handle_new_value (CellData *cdata, const GValue *new_value);
 
 
-typedef struct {
-	GdaDataModel  *model; /* data to analyse */
-
-	GdaConnection *vcnc; /* to use data in @model for row and column fields */
-
-	GArray        *row_fields; /* array of (gchar *) field specifications */
-	GArray        *column_fields; /* array of (gchar *) field specifications */
-	GArray        *data_fields; /* array of (gchar *) field specifications */
-	GArray        *data_aggregates; /* array of GdaDataPivotAggregate, corresponding to @data_fields */
-
-	/* computed data */
-	GArray        *columns; /* Array of GdaColumn objects, for ALL columns! */
-	GdaDataModel  *results;
-} GdaDataPivotPrivate;
-
-/* properties */
-enum
-{
-        PROP_0,
-	PROP_MODEL,
-};
-
 #define TABLE_NAME "data"
 
 static void gda_data_pivot_class_init (GdaDataPivotClass *klass);
-static void gda_data_pivot_init       (GdaDataPivot *model,
-					      GdaDataPivotClass *klass);
+static void gda_data_pivot_init       (GdaDataPivot *model);
 static void gda_data_pivot_dispose    (GObject *object);
 
 static void gda_data_pivot_set_property (GObject *object,
@@ -121,57 +98,39 @@ static GdaColumn           *gda_data_pivot_describe_column (GdaDataModel *model,
 static GdaDataModelAccessFlags gda_data_pivot_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_pivot_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 
-static GObjectClass *parent_class = NULL;
 static GMutex provider_mutex;
 static GdaVirtualProvider *virtual_provider = NULL;
 
-/**
- * gda_data_pivot_get_type:
- *
- * Returns: the #GType of GdaDataPivot.
- */
-GType
-gda_data_pivot_get_type (void)
+
+typedef struct {
+	GdaDataModel  *model; /* data to analyse */
+
+	GdaConnection *vcnc; /* to use data in @model for row and column fields */
+
+	GArray        *row_fields; /* array of (gchar *) field specifications */
+	GArray        *column_fields; /* array of (gchar *) field specifications */
+	GArray        *data_fields; /* array of (gchar *) field specifications */
+	GArray        *data_aggregates; /* array of GdaDataPivotAggregate, corresponding to @data_fields */
+
+	/* computed data */
+	GArray        *columns; /* Array of GdaColumn objects, for ALL columns! */
+	GdaDataModel  *results;
+} GdaDataPivotPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataPivot, gda_data_pivot,G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataPivot)
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL,gda_data_pivot_data_model_init))
+/* properties */
+enum
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataPivotClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_pivot_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataPivot),
-			0,
-			(GInstanceInitFunc) gda_data_pivot_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) gda_data_pivot_data_model_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataPivot", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+  PROP_0,
+	PROP_MODEL,
+};
 
 static void 
 gda_data_pivot_class_init (GdaDataPivotClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
 	object_class->set_property = gda_data_pivot_set_property;
@@ -183,7 +142,6 @@ gda_data_pivot_class_init (GdaDataPivotClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_pivot_dispose;
-	g_type_class_add_private(object_class, sizeof(GdaDataPivotPrivate));
 }
 
 #define gda_data_pivot_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_PIVOT, GdaDataPivotPrivate)
@@ -214,7 +172,7 @@ gda_data_pivot_data_model_init (GdaDataModelInterface *iface)
 }
 
 static void
-gda_data_pivot_init (GdaDataPivot *model, G_GNUC_UNUSED GdaDataPivotClass *klass)
+gda_data_pivot_init (GdaDataPivot *model)
 {
 	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
 	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
@@ -302,7 +260,7 @@ gda_data_pivot_dispose (GObject *object)
 	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_data_pivot_parent_class)->dispose (object);
 }
 
 /* module error */
