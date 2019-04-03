@@ -54,7 +54,7 @@ main (int argc, char *argv[])
 
 	/* create data model */
 	GdaDataModel *model; 
-        model = data_model_errors_new ();
+        model = gda_data_model_errors_new ();
 	gda_data_model_dump (model, NULL);
 	
 	/* create UI */

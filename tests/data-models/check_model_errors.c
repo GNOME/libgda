@@ -173,7 +173,7 @@ test1 (GdaConnection *cnc)
 	GdaDataModel *model;
 	gint nfailed = 0;
 
-	model = data_model_errors_new ();
+	model = gda_data_model_errors_new ();
 	if (!model) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO
@@ -327,7 +327,7 @@ test2 (GdaConnection *cnc)
 
 #define TABLE_NAME "data"
 
-	model = data_model_errors_new ();
+	model = gda_data_model_errors_new ();
 	if (!model) {
 		nfailed++;
 #ifdef CHECK_EXTRA_INFO

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,27 +24,15 @@
 
 G_BEGIN_DECLS
 
-#define TYPE_DATA_MODEL_ERRORS            (data_model_errors_get_type())
-#define DATA_MODEL_ERRORS(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, TYPE_DATA_MODEL_ERRORS, DataModelErrors))
-#define DATA_MODEL_ERRORS_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, TYPE_DATA_MODEL_ERRORS, DataModelErrorsClass))
-#define IS_DATA_MODEL_ERRORS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, TYPE_DATA_MODEL_ERRORS))
-#define IS_DATA_MODEL_ERRORS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TYPE_DATA_MODEL_ERRORS))
+#define GDA_TYPE_DATA_MODEL_ERRORS            (gda_data_model_errors_get_type())
 
-typedef struct _DataModelErrors        DataModelErrors;
-typedef struct _DataModelErrorsClass   DataModelErrorsClass;
-typedef struct _DataModelErrorsPrivate DataModelErrorsPrivate;
+G_DECLARE_DERIVABLE_TYPE(GdaDataModelErrors, gda_data_model_errors, GDA, DATA_MODEL_ERRORS, GObject)
 
-struct _DataModelErrors {
-	GObject                 object;
-	DataModelErrorsPrivate *priv;
-};
-
-struct _DataModelErrorsClass {
+struct _GdaDataModelErrorsClass {
 	GObjectClass            parent_class;
 };
 
-GType         data_model_errors_get_type     (void) G_GNUC_CONST;
-GdaDataModel *data_model_errors_new          (void);
+GdaDataModel *gda_data_model_errors_new          (void);
 
 G_END_DECLS
 
