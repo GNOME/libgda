@@ -31,26 +31,14 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_RECORDSET            (_gda_sqlite_recordset_get_type())
-#define GDA_SQLITE_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_SQLITE_RECORDSET, GdaSqliteRecordset))
-#define GDA_SQLITE_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_SQLITE_RECORDSET, GdaSqliteRecordsetClass))
-#define GDA_IS_SQLITE_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_SQLITE_RECORDSET))
-#define GDA_IS_SQLITE_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_SQLITE_RECORDSET))
+#define GDA_TYPE_SQLITE_RECORDSET            (gda_sqlite_recordset_get_type())
 
-typedef struct _GdaSqliteRecordset        GdaSqliteRecordset;
-typedef struct _GdaSqliteRecordsetClass   GdaSqliteRecordsetClass;
-typedef struct _GdaSqliteRecordsetPrivate GdaSqliteRecordsetPrivate;
-
-struct _GdaSqliteRecordset {
-	GdaDataSelect                  model;
-	GdaSqliteRecordsetPrivate     *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaSqliteRecordset, gda_sqlite_recordset, GDA, SQLITE_RECORDSET, GdaDataSelect)
 
 struct _GdaSqliteRecordsetClass {
 	GdaDataSelectClass             parent_class;
 };
 
-GType         _gda_sqlite_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *_gda_sqlite_recordset_new       (GdaConnection *cnc, GdaSqlitePStmt *ps, GdaSet *exec_params,
 					       GdaDataModelAccessFlags flags, GType *col_types,
 					       gboolean force_empty);

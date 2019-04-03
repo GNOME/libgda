@@ -46,10 +46,8 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass);
-static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset,
-					     GdaSqliteRecordsetClass *klass);
+static void gda_sqlite_recordset_init       (GdaSqliteRecordset *recset);
 static void gda_sqlite_recordset_dispose   (GObject *object);
-static void gda_sqlite_recordset_finalize   (GObject *object);
 
 /* virtual methods */
 static gint    gda_sqlite_recordset_fetch_nb_rows (GdaDataSelect *model);
@@ -62,27 +60,28 @@ static GdaRow *fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_sto
 
 static void virt_cnc_set_working_obj (GdaConnection *cnc, GdaSqliteRecordset *model);
 
-struct _GdaSqliteRecordsetPrivate {
+typedef struct {
 	GWeakRef      provider;
 	gboolean      empty_forced;
 	gint          next_row_num;
 	GdaRow       *tmp_row; /* used in cursor mode */
-};
-static GObjectClass *parent_class = NULL;
+} GdaSqliteRecordsetPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE(GdaSqliteRecordset, gda_sqlite_recordset, GDA_TYPE_DATA_SELECT)
+
 GHashTable *error_blobs_hash = NULL;
 
 /*
  * Object init and finalize
  */
 static void
-gda_sqlite_recordset_init (GdaSqliteRecordset *recset,
-			   G_GNUC_UNUSED GdaSqliteRecordsetClass *klass)
+gda_sqlite_recordset_init (GdaSqliteRecordset *recset)
 {
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
-	recset->priv = g_new0 (GdaSqliteRecordsetPrivate, 1);
-	recset->priv->next_row_num = 0;
-	recset->priv->empty_forced = FALSE;
-	g_weak_ref_init (&recset->priv->provider, NULL);
+  GdaSqliteRecordsetPrivate *priv = gda_sqlite_recordset_get_instance_private (recset);
+	priv->next_row_num = 0;
+	priv->empty_forced = FALSE;
+	g_weak_ref_init (&priv->provider, NULL);
 }
 
 static void
@@ -91,10 +90,7 @@ gda_sqlite_recordset_class_init (GdaSqliteRecordsetClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	object_class->dispose = gda_sqlite_recordset_dispose;
-	object_class->finalize = gda_sqlite_recordset_finalize;
 	pmodel_class->fetch_nb_rows = gda_sqlite_recordset_fetch_nb_rows;
 	pmodel_class->fetch_random = gda_sqlite_recordset_fetch_random;
 
@@ -112,14 +108,14 @@ gda_sqlite_recordset_dispose (GObject *object)
 	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) object;
 
 	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
+  GdaSqliteRecordsetPrivate *priv = gda_sqlite_recordset_get_instance_private (recset);
 
-	if (recset->priv) {
 		GdaSqlitePStmt *ps;
 		ps = GDA_SQLITE_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)));
 		if (ps != NULL) {
 			_gda_sqlite_pstmt_set_is_used (ps, FALSE);
 			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), recset);
-			GdaSqliteProvider *prov = g_weak_ref_get (&recset->priv->provider);
+			GdaSqliteProvider *prov = g_weak_ref_get (&priv->provider);
 			if (prov != NULL) {
 				SQLITE3_CALL (prov, sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 				g_object_unref (prov);
@@ -127,61 +123,13 @@ gda_sqlite_recordset_dispose (GObject *object)
 			virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) recset), NULL);
 		}
 
-		if (recset->priv->tmp_row) {
-			g_object_unref (recset->priv->tmp_row);
-			recset->priv->tmp_row = NULL;
+		if (priv->tmp_row) {
+			g_object_unref (priv->tmp_row);
+			priv->tmp_row = NULL;
 		}
-		g_weak_ref_clear (&recset->priv->provider);
-	}
+		g_weak_ref_clear (&priv->provider);
 
-	parent_class->dispose (object);
-}
-
-static void
-gda_sqlite_recordset_finalize (GObject *object)
-{
-	GdaSqliteRecordset *recset = (GdaSqliteRecordset *) object;
-
-	g_return_if_fail (GDA_IS_SQLITE_RECORDSET (recset));
-
-	if (recset->priv) {
-		g_free (recset->priv);
-		recset->priv = NULL;
-	}
-
-	parent_class->finalize (object);
-}
-
-/*
- * Public functions
- */
-
-GType
-_gda_sqlite_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaSqliteRecordsetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sqlite_recordset_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaSqliteRecordset),
-			0,
-			(GInstanceInitFunc) gda_sqlite_recordset_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, CLASS_PREFIX "Recordset", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
+	G_OBJECT_CLASS (gda_sqlite_recordset_parent_class)->dispose (object);
 }
 
 static void
@@ -394,7 +342,9 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 
 	virt_cnc_set_working_obj (gda_data_select_get_connection ((GdaDataSelect*) model), model);
 
-	if (model->priv->empty_forced)
+  GdaSqliteRecordsetPrivate *priv = gda_sqlite_recordset_get_instance_private (model);
+
+	if (priv->empty_forced)
 		rc = SQLITE_DONE;
 	else		
 		rc = SQLITE3_CALL (prov, sqlite3_step) (_gda_sqlite_pstmt_get_stmt (ps));
@@ -677,16 +627,16 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		
 		if (do_store) {
 			/* insert row */
-			gda_data_select_take_row (GDA_DATA_SELECT (model), prow, model->priv->next_row_num);
+			gda_data_select_take_row (GDA_DATA_SELECT (model), prow, priv->next_row_num);
 		}
-		model->priv->next_row_num ++;
+		priv->next_row_num ++;
 		break;
 	}
 	case SQLITE_BUSY:
 		/* nothing to do */
 		break;
 	case SQLITE_DONE:
-		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
+		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), priv->next_row_num);
 		SQLITE3_CALL (prov, sqlite3_reset) (_gda_sqlite_pstmt_get_stmt (ps));
 		break;
 	case SQLITE_READONLY:
@@ -709,7 +659,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 		gda_data_select_add_exception (GDA_DATA_SELECT (model), lerror);
 		if (rc == SQLITE_ERROR)
 			g_propagate_error (error, g_error_copy (lerror));
-		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->next_row_num);
+		gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), priv->next_row_num);
 		break;
 	}
 	}
@@ -751,14 +701,17 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 	GdaSqliteRecordset *imodel;
 
 	imodel = GDA_SQLITE_RECORDSET (model);
-	if (imodel->priv->next_row_num >= rownum) {
+
+  GdaSqliteRecordsetPrivate *priv = gda_sqlite_recordset_get_instance_private (imodel);
+
+	if (priv->next_row_num >= rownum) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR, 
 			     "%s", _("Requested row could not be found"));
 		return TRUE;
 	}
 	for (*prow = fetch_next_sqlite_row (imodel, TRUE, error);
-	     *prow && (imodel->priv->next_row_num < rownum);
+	     *prow && (priv->next_row_num < rownum);
 	     *prow = fetch_next_sqlite_row (imodel, TRUE, error));
 
 	return TRUE;
@@ -767,7 +720,7 @@ gda_sqlite_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint row
 /*
  * Create a new filled #GdaRow object for the next cursor row
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by ipriv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
@@ -775,12 +728,13 @@ static gboolean
 gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaSqliteRecordset *imodel = (GdaSqliteRecordset*) model;
+  GdaSqliteRecordsetPrivate *priv = gda_sqlite_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->tmp_row) {
-		g_object_unref (imodel->priv->tmp_row);
-		imodel->priv->tmp_row = NULL;
+	if (priv->tmp_row) {
+		g_object_unref (priv->tmp_row);
+		priv->tmp_row = NULL;
 	}
-	if (imodel->priv->next_row_num != rownum) {
+	if (priv->next_row_num != rownum) {
 		GError *lerror = NULL;
 		*prow = NULL;
 		g_set_error (&lerror, GDA_DATA_MODEL_ERROR,
@@ -792,7 +746,7 @@ gda_sqlite_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownu
 		return FALSE;
 	}
 	*prow = fetch_next_sqlite_row (imodel, FALSE, error);
-	imodel->priv->tmp_row = *prow;
+	priv->tmp_row = *prow;
 
 	return TRUE;
 }
