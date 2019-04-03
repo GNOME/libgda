@@ -26,25 +26,8 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_DATA_META_WRAPPER            (_gda_data_meta_wrapper_get_type())
-#define GDA_DATA_META_WRAPPER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_META_WRAPPER, GdaDataMetaWrapper))
-#define GDA_DATA_META_WRAPPER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_DATA_META_WRAPPER, GdaDataMetaWrapperClass))
-#define GDA_IS_DATA_META_WRAPPER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_DATA_META_WRAPPER))
-#define GDA_IS_DATA_META_WRAPPER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_DATA_META_WRAPPER))
-
-typedef struct _GdaDataMetaWrapper        GdaDataMetaWrapper;
-typedef struct _GdaDataMetaWrapperClass   GdaDataMetaWrapperClass;
-typedef struct _GdaDataMetaWrapperPrivate GdaDataMetaWrapperPrivate;
-
-typedef enum {
-	GDA_DATA_META_WRAPPER_MODE_LC, /* quote identifier if there are some non lower case chars */
-	GDA_DATA_META_WRAPPER_MODE_UC  /* quote identifier if there are some non upper case chars */
-} GdaDataMetaWrapperMode;
-
-struct _GdaDataMetaWrapper {
-	GObject                        object;
-	GdaDataMetaWrapperPrivate   *priv;
-};
+#define GDA_TYPE_DATA_META_WRAPPER            (gda_data_meta_wrapper_get_type())
+G_DECLARE_DERIVABLE_TYPE(GdaDataMetaWrapper, gda_data_meta_wrapper, GDA, DATA_META_WRAPPER, GObject)
 
 struct _GdaDataMetaWrapperClass {
 	GObjectClass                   parent_class;
@@ -56,7 +39,12 @@ struct _GdaDataMetaWrapperClass {
 	void (*_gda_reserved4) (void);
 };
 
-GType         _gda_data_meta_wrapper_get_type    (void) G_GNUC_CONST;
+typedef enum {
+	GDA_DATA_META_WRAPPER_MODE_LC, /* quote identifier if there are some non lower case chars */
+	GDA_DATA_META_WRAPPER_MODE_UC  /* quote identifier if there are some non upper case chars */
+} GdaDataMetaWrapperMode;
+
+
 GdaDataModel *_gda_data_meta_wrapper_new         (GdaDataModel *model, gboolean reusable,
 						  gint *cols, gint size, GdaSqlIdentifierStyle mode,
 						  GdaSqlReservedKeywordsFunc reserved_keyword_func);

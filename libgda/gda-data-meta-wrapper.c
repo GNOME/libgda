@@ -62,34 +62,10 @@ comp_row_free (CompRow *row)
 	g_free (row);
 }
 
-struct _GdaDataMetaWrapperPrivate {
-	GdaDataModel *model;
-	gint nb_cols;
-
-	gint *cols_to_wrap;
-	gint cols_to_wrap_size;
-	GdaSqlIdentifierStyle mode;
-	GdaSqlReservedKeywordsFunc reserved_keyword_func;
-
-	GHashTable *computed_rows; /* key = row number, value = a CompRow pointer
-				    * may be %NULL if we don't keep computed values */
-	CompRow *buffer; /* may be %NULL if we keep computed values */
-
-	/* note: either @computed_rows or @buffer is NULL, not both and one is not NULL */
-};
-
-/* properties */
-enum
-{
-	PROP_0,
-	PROP_MODEL,
-};
 
 static void gda_data_meta_wrapper_class_init (GdaDataMetaWrapperClass *klass);
-static void gda_data_meta_wrapper_init       (GdaDataMetaWrapper *model,
-					      GdaDataMetaWrapperClass *klass);
+static void gda_data_meta_wrapper_init       (GdaDataMetaWrapper *model);
 static void gda_data_meta_wrapper_dispose    (GObject *object);
-static void gda_data_meta_wrapper_finalize   (GObject *object);
 
 static void gda_data_meta_wrapper_set_property (GObject *object,
 						    guint param_id,
@@ -108,55 +84,39 @@ static GdaColumn           *gda_data_meta_wrapper_describe_column (GdaDataModel 
 static GdaDataModelAccessFlags gda_data_meta_wrapper_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_meta_wrapper_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 
-static GObjectClass *parent_class = NULL;
 
-/**
- * gda_data_meta_wrapper_get_type:
- *
- * Returns: the #GType of GdaDataMetaWrapper.
- */
-GType
-_gda_data_meta_wrapper_get_type (void)
+typedef struct {
+	GdaDataModel *model;
+	gint nb_cols;
+
+	gint *cols_to_wrap;
+	gint cols_to_wrap_size;
+	GdaSqlIdentifierStyle mode;
+	GdaSqlReservedKeywordsFunc reserved_keyword_func;
+
+	GHashTable *computed_rows; /* key = row number, value = a CompRow pointer
+				    * may be %NULL if we don't keep computed values */
+	CompRow *buffer; /* may be %NULL if we keep computed values */
+
+	/* note: either @computed_rows or @buffer is NULL, not both and one is not NULL */
+} GdaDataMetaWrapperPrivate;
+
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataMetaWrapper, gda_data_meta_wrapper,G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataMetaWrapper)
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL,gda_data_meta_wrapper_data_model_init))
+
+/* properties */
+enum
 {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataMetaWrapperClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_meta_wrapper_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataMetaWrapper),
-			0,
-			(GInstanceInitFunc) gda_data_meta_wrapper_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-			(GInterfaceInitFunc) gda_data_meta_wrapper_data_model_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataMetaWrapper", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+	PROP_0,
+	PROP_MODEL,
+};
 
 static void 
 gda_data_meta_wrapper_class_init (GdaDataMetaWrapperClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* properties */
 	object_class->set_property = gda_data_meta_wrapper_set_property;
@@ -169,7 +129,6 @@ gda_data_meta_wrapper_class_init (GdaDataMetaWrapperClass *klass)
 
 	/* virtual functions */
 	object_class->dispose = gda_data_meta_wrapper_dispose;
-	object_class->finalize = gda_data_meta_wrapper_finalize;
 #ifdef GDA_DEBUG
 	test_keywords ();
 #endif
@@ -201,17 +160,17 @@ gda_data_meta_wrapper_data_model_init (GdaDataModelInterface *iface)
 }
 
 static void
-gda_data_meta_wrapper_init (GdaDataMetaWrapper *model, G_GNUC_UNUSED GdaDataMetaWrapperClass *klass)
+gda_data_meta_wrapper_init (GdaDataMetaWrapper *model)
 {
 	g_return_if_fail (GDA_IS_DATA_META_WRAPPER (model));
-	model->priv = g_new0 (GdaDataMetaWrapperPrivate, 1);
-	model->priv->model = NULL;
-	model->priv->cols_to_wrap = NULL;
-	model->priv->cols_to_wrap_size = 0;
-	model->priv->mode = GDA_DATA_META_WRAPPER_MODE_LC;
-	model->priv->reserved_keyword_func = NULL;
-	model->priv->computed_rows = NULL;
-	model->priv->buffer = NULL;
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (model);
+	priv->model = NULL;
+	priv->cols_to_wrap = NULL;
+	priv->cols_to_wrap_size = 0;
+	priv->mode = GDA_DATA_META_WRAPPER_MODE_LC;
+	priv->reserved_keyword_func = NULL;
+	priv->computed_rows = NULL;
+	priv->buffer = NULL;
 }
 
 static void
@@ -221,50 +180,33 @@ gda_data_meta_wrapper_dispose (GObject *object)
 
 	g_return_if_fail (GDA_IS_DATA_META_WRAPPER (model));
 
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (model);
+
 	/* free memory */
-	if (model->priv) {
 		/* random meta model free */
-		if (model->priv->model) {
-			g_object_unref (model->priv->model);
-			model->priv->model = NULL;
+		if (priv->model) {
+			g_object_unref (priv->model);
+			priv->model = NULL;
 		}
 
-		if (model->priv->computed_rows) {
-			g_hash_table_destroy (model->priv->computed_rows);
-			model->priv->computed_rows = NULL;
+		if (priv->computed_rows) {
+			g_hash_table_destroy (priv->computed_rows);
+			priv->computed_rows = NULL;
 		}
 
-		if (model->priv->buffer) {
-			comp_row_free (model->priv->buffer);
-			model->priv->buffer = NULL;
+		if (priv->buffer) {
+			comp_row_free (priv->buffer);
+			priv->buffer = NULL;
 		}
 
-		if (model->priv->cols_to_wrap) {
-			g_free (model->priv->cols_to_wrap);
-			model->priv->cols_to_wrap = NULL;
-			model->priv->cols_to_wrap_size = 0;
+		if (priv->cols_to_wrap) {
+			g_free (priv->cols_to_wrap);
+			priv->cols_to_wrap = NULL;
+			priv->cols_to_wrap_size = 0;
 		}
-	}
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-static void
-gda_data_meta_wrapper_finalize (GObject *object)
-{
-	GdaDataMetaWrapper *model = (GdaDataMetaWrapper *) object;
-
-	g_return_if_fail (GDA_IS_DATA_META_WRAPPER (model));
-
-	/* free memory */
-	if (model->priv) {
-		g_free (model->priv);
-		model->priv = NULL;
-	}
-
-	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS(gda_data_meta_wrapper_parent_class)->dispose (object);
 }
 
 static void
@@ -276,7 +218,7 @@ gda_data_meta_wrapper_set_property (GObject *object,
 	GdaDataMetaWrapper *model;
 
 	model = GDA_DATA_META_WRAPPER (object);
-	if (model->priv) {
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (model);
 		switch (param_id) {
 		case PROP_MODEL: {
 			GdaDataModel *mod = g_value_get_object(value);
@@ -287,12 +229,12 @@ gda_data_meta_wrapper_set_property (GObject *object,
 					return;
 				}
   
-                                if (model->priv->model)
-					g_object_unref (model->priv->model);
+                                if (priv->model)
+					g_object_unref (priv->model);
 
-				model->priv->model = mod;
+				priv->model = mod;
 				g_object_ref (mod);
-				model->priv->nb_cols = gda_data_model_get_n_columns (mod);
+				priv->nb_cols = gda_data_model_get_n_columns (mod);
 			}
 			break;
 		}
@@ -300,7 +242,6 @@ gda_data_meta_wrapper_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-	}
 }
 
 static void
@@ -312,16 +253,15 @@ gda_data_meta_wrapper_get_property (GObject *object,
 	GdaDataMetaWrapper *model;
 
 	model = GDA_DATA_META_WRAPPER (object);
-	if (model->priv) {
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (model);
 		switch (param_id) {
 		case PROP_MODEL:
-			g_value_set_object (value, G_OBJECT (model->priv->model));
+			g_value_set_object (value, G_OBJECT (priv->model));
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-	}
 }
 
 /**
@@ -344,20 +284,21 @@ _gda_data_meta_wrapper_new (GdaDataModel *model, gboolean reusable, gint *cols,
 	
 	retmodel = g_object_new (GDA_TYPE_DATA_META_WRAPPER,
 				 "model", model, NULL);
+  GdaDataMetaWrapperPrivate *retpriv = gda_data_meta_wrapper_get_instance_private (retmodel);
 			      
-	retmodel->priv->cols_to_wrap = g_new (gint, size);
-	memcpy (retmodel->priv->cols_to_wrap, cols, sizeof (gint) * size); /* Flawfinder: ignore */
-	retmodel->priv->cols_to_wrap_size = size;
-	retmodel->priv->mode = mode;
-	retmodel->priv->reserved_keyword_func = reserved_keyword_func;
+	retpriv->cols_to_wrap = g_new (gint, size);
+	memcpy (retpriv->cols_to_wrap, cols, sizeof (gint) * size); /* Flawfinder: ignore */
+	retpriv->cols_to_wrap_size = size;
+	retpriv->mode = mode;
+	retpriv->reserved_keyword_func = reserved_keyword_func;
 	
 	if (reusable)
-		retmodel->priv->computed_rows = g_hash_table_new_full (g_int_hash, g_int_equal,
+		retpriv->computed_rows = g_hash_table_new_full (g_int_hash, g_int_equal,
 								       NULL, (GDestroyNotify) comp_row_free);
 	else {
-		retmodel->priv->buffer = g_new0 (CompRow, 1);
-		retmodel->priv->buffer->size = size;
-		retmodel->priv->buffer->values = g_new0 (GValue *, size);
+		retpriv->buffer = g_new0 (CompRow, 1);
+		retpriv->buffer->size = size;
+		retpriv->buffer->values = g_new0 (GValue *, size);
 	}
 
 	return GDA_DATA_MODEL (retmodel);
@@ -372,9 +313,9 @@ gda_data_meta_wrapper_get_n_rows (GdaDataModel *model)
 	GdaDataMetaWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_META_WRAPPER (model), 0);
 	imodel = GDA_DATA_META_WRAPPER (model);
-	g_return_val_if_fail (imodel->priv, 0);
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (imodel);
 
-	return gda_data_model_get_n_rows (imodel->priv->model);
+	return gda_data_model_get_n_rows (priv->model);
 }
 
 static gint
@@ -383,10 +324,11 @@ gda_data_meta_wrapper_get_n_columns (GdaDataModel *model)
 	GdaDataMetaWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_META_WRAPPER (model), 0);
 	imodel = GDA_DATA_META_WRAPPER (model);
-	g_return_val_if_fail (imodel->priv, 0);
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (imodel);
+	g_return_val_if_fail (priv, 0);
 	
-	if (imodel->priv->model)
-		return imodel->priv->nb_cols;
+	if (priv->model)
+		return priv->nb_cols;
 	else
 		return 0;
 }
@@ -397,10 +339,10 @@ gda_data_meta_wrapper_describe_column (GdaDataModel *model, gint col)
 	GdaDataMetaWrapper *imodel;
 	g_return_val_if_fail (GDA_IS_DATA_META_WRAPPER (model), NULL);
 	imodel = GDA_DATA_META_WRAPPER (model);
-	g_return_val_if_fail (imodel->priv, NULL);
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (imodel);
 
-	if (imodel->priv->model)
-		return gda_data_model_describe_column (imodel->priv->model, col);
+	if (priv->model)
+		return gda_data_model_describe_column (priv->model, col);
 	else
 		return NULL;
 }
@@ -408,12 +350,6 @@ gda_data_meta_wrapper_describe_column (GdaDataModel *model, gint col)
 static GdaDataModelAccessFlags
 gda_data_meta_wrapper_get_access_flags (GdaDataModel *model)
 {
-	GdaDataMetaWrapper *imodel;
-
-	g_return_val_if_fail (GDA_IS_DATA_META_WRAPPER (model), 0);
-	imodel = GDA_DATA_META_WRAPPER (model);
-	g_return_val_if_fail (imodel->priv, 0);
-	
 	return GDA_DATA_MODEL_ACCESS_RANDOM;
 }
 
@@ -549,11 +485,12 @@ _gda_data_meta_wrapper_compute_value (const GValue *value, GdaSqlIdentifierStyle
 static gint
 get_index_col (GdaDataMetaWrapper *imodel, gint col)
 {
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (imodel);
 	gint i;
-	for (i = 0; i < imodel->priv->cols_to_wrap_size; i++) {
-		if (imodel->priv->cols_to_wrap [i] == col)
+	for (i = 0; i < priv->cols_to_wrap_size; i++) {
+		if (priv->cols_to_wrap [i] == col)
 			return i;
-		else if (imodel->priv->cols_to_wrap [i] > col)
+		else if (priv->cols_to_wrap [i] > col)
 			return -1;
 	}
 	return -1;
@@ -566,45 +503,46 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 
 	g_return_val_if_fail (GDA_IS_DATA_META_WRAPPER (model), NULL);
 	imodel = GDA_DATA_META_WRAPPER (model);
-	g_return_val_if_fail (imodel->priv, NULL);
-	g_return_val_if_fail (imodel->priv->model, NULL);
+  GdaDataMetaWrapperPrivate *priv = gda_data_meta_wrapper_get_instance_private (imodel);
+	g_return_val_if_fail (priv, NULL);
+	g_return_val_if_fail (priv->model, NULL);
 	g_return_val_if_fail (row >= 0, NULL);
 
-	if (col >= imodel->priv->nb_cols) {
+	if (col >= priv->nb_cols) {
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_COLUMN_OUT_OF_RANGE_ERROR,
-			     _("Column %d out of range (0-%d)"), col, imodel->priv->nb_cols - 1);
+			     _("Column %d out of range (0-%d)"), col, priv->nb_cols - 1);
 		return NULL;
 	}
 
 	gint indexcol = get_index_col (imodel, col);
 	if (indexcol == -1)
-		return gda_data_model_get_value_at (imodel->priv->model, col, row, error);
+		return gda_data_model_get_value_at (priv->model, col, row, error);
 
 	/* data may need to be changed */
-	if (imodel->priv->computed_rows) {
+	if (priv->computed_rows) {
 		CompRow *crow = NULL;
-		crow = g_hash_table_lookup (imodel->priv->computed_rows, &row);
+		crow = g_hash_table_lookup (priv->computed_rows, &row);
 		if (!crow || !(crow->values[indexcol]) || (crow->values[indexcol] == NON_COMP_VALUE)) {
 			const GValue *cvalue;
-			cvalue = gda_data_model_get_value_at (imodel->priv->model, col, row, error);
+			cvalue = gda_data_model_get_value_at (priv->model, col, row, error);
 			if (!cvalue)
 				return NULL;
 			
 			GValue *retval;
-			retval = _gda_data_meta_wrapper_compute_value (cvalue, imodel->priv->mode,
-								       imodel->priv->reserved_keyword_func);
+			retval = _gda_data_meta_wrapper_compute_value (cvalue, priv->mode,
+								       priv->reserved_keyword_func);
 			if (!retval)
 				return cvalue;
 			
 			if (!crow) {
 				crow = g_new0 (CompRow, 1);
 				crow->row = row;
-				crow->size = imodel->priv->cols_to_wrap_size;
+				crow->size = priv->cols_to_wrap_size;
 				crow->values = g_new (GValue *, crow->size);
 				gint i;
 				for (i = 0; i < crow->size; i++)
 					crow->values [i] = NON_COMP_VALUE;
-				g_hash_table_insert (imodel->priv->computed_rows, &(crow->row), crow);
+				g_hash_table_insert (priv->computed_rows, &(crow->row), crow);
 			}
 			crow->values[indexcol] = retval;
 			return retval;
@@ -614,18 +552,18 @@ gda_data_meta_wrapper_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 	}
 	else {
 		const GValue *cvalue;
-		cvalue = gda_data_model_get_value_at (imodel->priv->model, col, row, error);
+		cvalue = gda_data_model_get_value_at (priv->model, col, row, error);
 		if (!cvalue)
 			return NULL;
 
 		GValue *retval;
-		retval = _gda_data_meta_wrapper_compute_value (cvalue, imodel->priv->mode,
-							       imodel->priv->reserved_keyword_func);
+		retval = _gda_data_meta_wrapper_compute_value (cvalue, priv->mode,
+							       priv->reserved_keyword_func);
 		if (!retval)
 			return cvalue;
-		if (imodel->priv->buffer->values [indexcol])
-			gda_value_free (imodel->priv->buffer->values [indexcol]);
-		imodel->priv->buffer->values [indexcol] = retval;
+		if (priv->buffer->values [indexcol])
+			gda_value_free (priv->buffer->values [indexcol]);
+		priv->buffer->values [indexcol] = retval;
 		return retval;
 	}
 	return NULL;
