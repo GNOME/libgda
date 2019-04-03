@@ -6220,7 +6220,7 @@ typedef struct {
 } TryLockData;
 
 static gboolean
-itsignaler_trylock (ITSignaler *its, TryLockData *data)
+itsignaler_trylock (TryLockData *data)
 {
 	if (gda_connection_trylock (data->lockable)) {
 		g_main_loop_quit (data->loop);

@@ -186,7 +186,7 @@ sig_closure_marshal (GClosure *closure,
  * programmer to be propagated, when a PassedData pointer is available through the ITS
  */
 static gboolean
-propagate_signal (ITSignaler *its, SigClosure *sig_closure)
+propagate_signal (SigClosure *sig_closure)
 {
 	PassedData *data;
 	data = itsignaler_pop_notification (sig_closure->signal_its, 0);

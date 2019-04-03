@@ -714,10 +714,10 @@ gda_worker_forget_job (GdaWorker *worker, guint job_id)
 }
 
 static gboolean
-dc_callback (ITSignaler *its, DeclaredCallback *dc)
+dc_callback (DeclaredCallback *dc)
 {
 	WorkerJob *job;
-	job = itsignaler_pop_notification (its, 0);
+	job = itsignaler_pop_notification (dc->its, 0);
 	g_assert (job);
 
 	gpointer result;
@@ -841,7 +841,7 @@ do_timer_cb (GMainLoop *loop)
 }
 
 static gboolean
-do_itsignaler_cb (ITSignaler *its, GMainLoop *loop)
+do_itsignaler_cb (GMainLoop *loop)
 {
 	if (g_main_loop_is_running (loop))
 		g_main_loop_quit (loop);

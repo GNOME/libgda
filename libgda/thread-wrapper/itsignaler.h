@@ -48,8 +48,7 @@ GSource    *itsignaler_create_source (ITSignaler *its);
 /*
  * Returns: %FALSE if the source should be removed from the poll
  */
-typedef gboolean (*ITSignalerFunc) (ITSignaler *its, gpointer user_data);
-#define IT_SIGNALER_FUNC(f) ((ITSignalerFunc) (int (*)(ITSignaler*, void*)) (f))
+typedef gboolean (*ITSignalerFunc) (gpointer user_data);
 
 guint       itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpointer data, GDestroyNotify notify);
 gboolean    itsignaler_remove (ITSignaler *its, GMainContext *context, guint id);

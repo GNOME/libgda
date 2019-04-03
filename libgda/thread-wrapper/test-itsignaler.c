@@ -53,6 +53,7 @@ typedef struct {
 } Data;
 
 typedef struct {
+  ITSignaler *its;
 	gint       counter;
 	GMainLoop *loop;
 } CbData;
@@ -60,10 +61,15 @@ typedef struct {
 static gpointer thread1_start (ITSignaler *its);
 
 static gboolean
-source_callback (ITSignaler *its, CbData *cbdata)
+source_callback (CbData *cbdata)
 {
 	Data *data;
-	data = itsignaler_pop_notification (its, 0);
+	data = itsignaler_pop_notification (cbdata->its, 0);
+  if (data == NULL) {
+    g_warning ("No Data skiping");
+    g_main_loop_quit (cbdata->loop);
+		return FALSE;
+  }
 	if (cbdata->counter != data->counter) {
 		g_warning ("itsignaler_pop_notification() returned wrong value %d instead of %d",
 			   cbdata->counter, data->counter);
@@ -113,6 +119,7 @@ test1 (void)
 	itsignaler_unref (its);
 
 	CbData cbdata;
+  cbdata.its = its;
 	cbdata.counter = 0;
 	cbdata.loop = loop;
 	g_source_set_callback (source, G_SOURCE_FUNC (source_callback), &cbdata, NULL);

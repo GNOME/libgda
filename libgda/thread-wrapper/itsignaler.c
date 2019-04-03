@@ -664,7 +664,7 @@ itsignaler_push_notification (ITSignaler *its, gpointer data, GDestroyNotify des
 static gpointer
 itsignaler_pop_notification_non_block (ITSignaler *its)
 {
-	g_return_val_if_fail (its, NULL);
+	g_return_val_if_fail (its != NULL, NULL);
 
 #ifdef G_OS_WIN32
 	guint8 value;
@@ -875,11 +875,11 @@ its_source_dispatch (GSource *source, GSourceFunc callback, gpointer user_data)
 {
 	ITSSource *isource = (ITSSource*) source;
 	ITSignalerFunc func;
-	func = IT_SIGNALER_FUNC (callback);
+	func = (ITSignalerFunc) callback;
 
 	gboolean retval;
 	itsignaler_ref (isource->its);
-	retval = func (isource->its, user_data);
+	retval = func (user_data);
 	itsignaler_unref (isource->its);
 	return retval;
 }
