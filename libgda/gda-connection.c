@@ -495,8 +495,7 @@ gda_connection_dispose (GObject *object)
 	}
 
 	if (priv->events_list) {
-		g_list_foreach (priv->events_list, (GFunc) g_object_unref, NULL);
-		g_list_free (priv->events_list);
+		g_list_free_full (priv->events_list, (GDestroyNotify) g_object_unref);
 		priv->events_list = NULL;
 	}
 
@@ -2209,8 +2208,7 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
 	GdaSet *set = NULL;
 	if (holders) {
 		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 	}
 
 	retval = (gda_connection_statement_execute_non_select (cnc, insert, set, NULL, error) == -1) ? FALSE : TRUE;
@@ -2430,8 +2428,7 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
 	GdaSet *set = NULL;
 	if (holders) {
 		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 	}
 
 	retval = (gda_connection_statement_execute_non_select (cnc, update, set, NULL, error) == -1) ? FALSE : TRUE;
@@ -2532,8 +2529,7 @@ gda_connection_delete_row_from_table (GdaConnection *cnc, const gchar *table,
 	GdaSet *set = NULL;
 	if (holders) {
 		set = gda_set_new (holders);
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 	}
 
 	retval = (gda_connection_statement_execute_non_select (cnc, delete, set, NULL, error) == -1) ? FALSE : TRUE;
@@ -2669,8 +2665,7 @@ gda_connection_add_event (GdaConnection *cnc, GdaConnectionEvent *event)
 
 	/* clear external list of events */
 	if (priv->events_list) {
-		g_list_foreach (priv->events_list, (GFunc) g_object_unref, NULL);
-		g_list_free (priv->events_list);
+		g_list_free_full (priv->events_list, (GDestroyNotify) g_object_unref);
 		priv->events_list = NULL;
 	}
 
@@ -5247,8 +5242,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 	model = gda_connection_get_meta_store_data_v (cnc, meta_type, filters, error);
 
  onerror:
-	g_list_foreach (filters, (GFunc) g_object_unref, NULL);
-	g_list_free (filters);
+	g_list_free_full (filters, (GDestroyNotify) g_object_unref);
 
 	return model;
 }
@@ -6283,7 +6277,7 @@ gda_connection_lock (GdaLockable *lockable)
 		GSource *itsource;
 		itsource = itsignaler_create_source (its);
 		g_source_attach (itsource, context);
-		g_source_set_callback (itsource, (GSourceFunc) itsignaler_trylock, &lockdata, NULL);
+		g_source_set_callback (itsource, G_SOURCE_FUNC (itsignaler_trylock), &lockdata, NULL);
 		g_source_unref (itsource);
 
 		g_main_loop_run (loop);

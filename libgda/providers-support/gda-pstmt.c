@@ -107,8 +107,7 @@ gda_pstmt_dispose (GObject *object)
 		priv->sql = NULL;
 	}
 	if (priv->param_ids != NULL) {
-		g_slist_foreach (priv->param_ids, (GFunc) g_free, NULL);
-		g_slist_free (priv->param_ids);
+		g_slist_free_full (priv->param_ids, (GDestroyNotify) g_free);
 		priv->param_ids = NULL;
 	}
 	if (priv->types != NULL) {
@@ -116,8 +115,7 @@ gda_pstmt_dispose (GObject *object)
 		priv->types = NULL;
 	}
 	if (priv->tmpl_columns != NULL) {
-		g_slist_foreach (priv->tmpl_columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->tmpl_columns);
+		g_slist_free_full (priv->tmpl_columns, (GDestroyNotify) g_object_unref);
 		priv->tmpl_columns = NULL;
 	}
 
@@ -184,8 +182,7 @@ gda_pstmt_copy_contents (GdaPStmt *src, GdaPStmt *dest)
 	if (priv->sql)
 		dpriv->sql = g_strdup (priv->sql);
 	if (dpriv->param_ids) {
-		g_slist_foreach (dpriv->param_ids, (GFunc) g_free, NULL);
-		g_slist_free (dpriv->param_ids);
+		g_slist_free_full (dpriv->param_ids, (GDestroyNotify) g_free);
 		dpriv->param_ids = NULL;
 	}
 	for (list = priv->param_ids; list; list = list->next)

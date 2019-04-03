@@ -220,13 +220,11 @@ gda_data_model_dir_dispose (GObject * object)
 	}
 
 	if (priv->errors) {
-		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
-		g_slist_free (priv->errors);
+		g_slist_free_full (priv->errors, (GDestroyNotify) g_error_free);
 	}
 
 	if (priv->columns) {
-		g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->columns);
+		g_slist_free_full (priv->columns, (GDestroyNotify) g_object_unref);
 		priv->columns = NULL;
 	}
 
@@ -654,8 +652,7 @@ gda_data_model_dir_clean_errors (GdaDataModelDir *model)
 	GdaDataModelDirPrivate *priv = gda_data_model_dir_get_instance_private (model);
 
 	if (priv->errors) {
-		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
-		g_slist_free (priv->errors);
+		g_slist_free_full (priv->errors, (GDestroyNotify) g_error_free);
 		priv->errors = NULL;
 	}
 }

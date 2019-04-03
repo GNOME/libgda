@@ -99,8 +99,7 @@ gda_transaction_status_finalize (GObject *object)
 	}
 
 	if (priv->events) {
-		g_list_foreach (priv->events, (GFunc) event_free, NULL);
-		g_list_free (priv->events);
+		g_list_free_full (priv->events, (GDestroyNotify) event_free);
 		priv->events = NULL;
 	}
 

@@ -8,7 +8,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 - 2012 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011 - 2012, 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -258,8 +258,8 @@ gda_server_operation_dispose (GObject *object)
 	/* don't free priv->xml_spec_doc */
 
 	if (priv->sources) {
-		g_slist_foreach (priv->sources, (GFunc) g_object_unref, NULL);
-		g_clear_pointer(&priv->sources, g_slist_free);
+		g_slist_free_full (priv->sources, (GDestroyNotify) g_object_unref);
+		priv->sources = NULL;
 	}
 
 	/* chain to parent class */
@@ -833,8 +833,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 					if (errors) {
 						g_object_unref (model);
 						if (sources) {
-							g_slist_foreach (sources, (GFunc) g_object_unref, NULL);
-							g_slist_free (sources);
+							g_slist_free_full (sources, (GDestroyNotify) g_object_unref);
 							return NULL;
 						}
 					}

@@ -554,22 +554,32 @@ _gda_vconnection_data_model_table_data_free (GdaVConnectionTableData *td)
 	if (td->real_model)
 		g_object_unref (td->real_model);
 	if (td->columns) {
-		g_list_foreach (td->columns, (GFunc) g_object_unref, NULL);
-		g_list_free (td->columns);
+		g_list_free_full (td->columns, (GDestroyNotify) g_object_unref);
+    td->columns = NULL;
 	}
 	g_free (td->table_name);
+  td->table_name = NULL;
 	g_free (td->unique_name);
-	if (td->spec_free_func)
+  td->unique_name = NULL;
+	if (td->spec_free_func) {
 		td->spec_free_func (td->spec);
+    td->spec = NULL;
+  }
 	for (i = 0; i < PARAMS_NB; i++) {
-		if (td->modif_params[i])
+		if (td->modif_params[i]) {
 			g_object_unref (td->modif_params[i]);
-		if (td->modif_stmt[i])
+      td->modif_params[i] = NULL;
+    }
+		if (td->modif_stmt[i]) {
 			g_object_unref (td->modif_stmt[i]);
+      td->modif_stmt[i] = NULL;
+    }
 	}
 
-	if (td->context.hash)
+	if (td->context.hash) {
 		g_hash_table_destroy (td->context.hash);
+    td->context.hash = NULL;
+  }
 	g_free (td);
 }
 

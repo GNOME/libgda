@@ -95,8 +95,7 @@ void
 widget_data_free (WidgetData *wd)
 {
 	g_free (wd->path_name);
-	g_slist_foreach (wd->children, (GFunc) widget_data_free, NULL);
-	g_slist_free (wd->children);
+	g_slist_free_full (wd->children, (GDestroyNotify) widget_data_free);
 	g_free (wd);
 }
 
@@ -239,8 +238,7 @@ gdaui_server_operation_dispose (GObject *object)
 	}
 
 	if (priv->widget_data) {
-		g_slist_foreach (priv->widget_data, (GFunc) widget_data_free, NULL);
-		g_slist_free (priv->widget_data);
+		g_slist_free_full (priv->widget_data, (GDestroyNotify) widget_data_free);
 		priv->widget_data = NULL;
 	}
 

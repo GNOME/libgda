@@ -278,8 +278,7 @@ gda_tree_node_dispose (GObject *object)
 	GdaTreeNodePrivate *priv = gda_tree_node_get_instance_private (tnode);
 
 	if (priv->children != NULL) {
-		g_slist_foreach (priv->children, (GFunc) _gda_nodes_list_free, NULL);
-		g_slist_free (priv->children);
+		g_slist_free_full (priv->children, (GDestroyNotify) _gda_nodes_list_free);
 		priv->children = NULL;
 	}
 	if (priv->name != NULL) {
@@ -869,8 +868,7 @@ void
 _gda_nodes_list_free (GdaTreeNodesList *nl)
 {
 	if (nl->nodes) {
-		g_slist_foreach (nl->nodes, (GFunc) g_object_unref, NULL);
-		g_slist_free (nl->nodes);
+		g_slist_free_full (nl->nodes, (GDestroyNotify) g_object_unref);
 	}
 	g_object_unref (nl->mgr);
 	g_free (nl);

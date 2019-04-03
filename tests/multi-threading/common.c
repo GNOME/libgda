@@ -83,8 +83,7 @@ create_sqlite_db (const gchar *dir, const gchar *dbname, const gchar *sqlfile, G
 	if (g_slist_length (list) != g_slist_length ((GSList *) stmt_list))
 		retval = FALSE;
 
-	g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-	g_slist_free (list);
+	g_slist_free_full (list, (GDestroyNotify) g_object_unref);
 
 	g_assert (gda_connection_close (cnc, NULL));
 	g_object_unref (cnc);

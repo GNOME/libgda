@@ -196,8 +196,7 @@ gda_tree_dispose (GObject *object)
 	if (priv->root)
 		unset_root_node (tree);
 	if (priv->managers) {
-		g_slist_foreach (priv->managers, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->managers);
+		g_slist_free_full (priv->managers, (GDestroyNotify) g_object_unref);
 	}
 	/* chain to parent class */
 	G_OBJECT_CLASS (gda_tree_parent_class)->dispose (object);
@@ -483,8 +482,7 @@ gda_tree_get_nodes_in_path (GdaTree *tree, const gchar *tree_path, gboolean use_
 		segments = decompose_path_as_segments (tree_path, use_names);
 		nodes = real_gda_tree_get_nodes_in_path (tree, segments, use_names, NULL);
 		if (segments) {
-			g_slist_foreach (segments, (GFunc) g_free, NULL);
-			g_slist_free (segments);
+			g_slist_free_full (segments, (GDestroyNotify) g_free);
 		}
 	}
 	else {
@@ -639,8 +637,7 @@ gda_tree_get_node (GdaTree *tree, const gchar *tree_path, gboolean use_names)
 	g_assert (real_gda_tree_get_nodes_in_path (tree, segments, use_names, &node) == NULL);
 
 	if (segments) {
-		g_slist_foreach (segments, (GFunc) g_free, NULL);
-		g_slist_free (segments);
+		g_slist_free_full (segments, (GDestroyNotify) g_free);
 	}
 
 	return node;
@@ -798,8 +795,7 @@ split_indexed_path (const gchar *path, gboolean *out_error)
 			if ((*end < '0') || (*end > '9')) {
 				/* error */
 				*out_error = TRUE;
-				g_slist_foreach (list, (GFunc) g_free, NULL);
-				g_slist_free (list);
+				g_slist_free_full (list, (GDestroyNotify) g_free);
 				g_free (copy);
 				return NULL;
 			}

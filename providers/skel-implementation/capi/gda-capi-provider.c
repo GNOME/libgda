@@ -1295,8 +1295,7 @@ gda_capi_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 									   last_inserted_row,
 									   error);
 				/* clear original @param_ids and restore copied one */
-				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
-				g_slist_free (prep_param_ids);
+				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
 				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 

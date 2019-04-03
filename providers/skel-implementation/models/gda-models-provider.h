@@ -4,6 +4,7 @@
  * AUTHORS:
  *      TO_ADD: your name and email
  *      Vivien Malerba <malerba@gnome-db.org>
+ *      Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -26,17 +27,7 @@
 #include <virtual/gda-vprovider-data-model.h>
 
 #define GDA_TYPE_MODELS_PROVIDER            (gda_models_provider_get_type())
-#define GDA_MODELS_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MODELS_PROVIDER, GdaModelsProvider))
-#define GDA_MODELS_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MODELS_PROVIDER, GdaModelsProviderClass))
-#define GDA_IS_MODELS_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MODELS_PROVIDER))
-#define GDA_IS_MODELS_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MODELS_PROVIDER))
-
-typedef struct _GdaModelsProvider      GdaModelsProvider;
-typedef struct _GdaModelsProviderClass GdaModelsProviderClass;
-
-struct _GdaModelsProvider {
-	GdaVproviderDataModel      provider;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaModelsProvider, gda_models_provider, GDA, MODELS_PROVIDER, GdaVproviderDataModel)
 
 struct _GdaModelsProviderClass {
 	GdaVproviderDataModelClass parent_class;
@@ -44,7 +35,6 @@ struct _GdaModelsProviderClass {
 
 G_BEGIN_DECLS
 
-GType gda_models_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

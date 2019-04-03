@@ -176,14 +176,12 @@ gda_sql_parser_reset (GdaSqlParser *parser)
 	priv->error_pos = 0;
 
 	if (priv->parsed_statements) {
-		g_slist_foreach (priv->parsed_statements, (GFunc) gda_sql_statement_free, NULL);
-		g_slist_free (priv->parsed_statements);
+		g_slist_free_full (priv->parsed_statements, (GDestroyNotify) gda_sql_statement_free);
 		priv->parsed_statements = NULL;
 	}
 
 	if (priv->pushed_contexts) {
-		g_slist_foreach (priv->pushed_contexts, (GFunc) g_free, NULL);
-		g_slist_free (priv->pushed_contexts);
+		g_slist_free_full (priv->pushed_contexts, (GDestroyNotify) g_free);
 		priv->pushed_contexts = NULL;
 	}
 

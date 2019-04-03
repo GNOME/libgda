@@ -570,14 +570,12 @@ csv_free_stored_rows (GdaDataModelImport *model)
 	for (i = 0; i < priv->extract.csv.rows_read->len; i++) {
 		GSList *list = g_array_index (priv->extract.csv.rows_read,
 					      GSList *, i);
-		g_slist_foreach (list, (GFunc) gda_value_free, NULL);
-		g_slist_free (list);
+		g_slist_free_full (list, (GDestroyNotify) gda_value_free);
 	}
 
 	if (priv->extract.csv.pdata) {
 		if (priv->extract.csv.pdata->fields) {
-			g_slist_foreach (priv->extract.csv.pdata->fields, (GFunc) gda_value_free, NULL);
-			g_slist_free (priv->extract.csv.pdata->fields);
+			g_slist_free_full (priv->extract.csv.pdata->fields, (GDestroyNotify) gda_value_free);
 		}
 		g_free (priv->extract.csv.pdata);
 	}
@@ -601,8 +599,7 @@ gda_data_model_import_dispose (GObject *object)
 	}
 
 	if (priv->columns) {
-		g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->columns);
+		g_slist_free_full (priv->columns, (GDestroyNotify) g_object_unref);
 		priv->columns = NULL;
 	}
 
@@ -675,14 +672,12 @@ gda_data_model_import_finalize (GObject *object)
 
 	/* free memory */
 	if (priv->errors) {
-		g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
-		g_slist_free (priv->errors);
+		g_slist_free_full (priv->errors, (GDestroyNotify) g_error_free);
 		priv->errors = NULL;
 	}
 
 	if (priv->cursor_values) {
-		g_slist_foreach (priv->cursor_values, (GFunc) gda_value_free, NULL);
-		g_slist_free (priv->cursor_values);
+		g_slist_free_full (priv->cursor_values, (GDestroyNotify) gda_value_free);
 		priv->cursor_values = NULL;
 	}
 
@@ -701,8 +696,7 @@ find_option_as_string (GdaDataModelImport *model, const gchar *pname)
 	value = gda_set_get_holder_value (priv->options, pname);
 	if (value && !gda_value_is_null ((GValue *) value)) {
 		if (!gda_value_isa ((GValue *) value, G_TYPE_STRING))
-			g_warning (_("The '%s' option must hold a "
-				     "string value, ignored."), pname);
+			g_warning (_("The %s option must hold a string value, ignored."), pname);
 		else
 			return g_value_get_string ((GValue *) value);
 	}
@@ -1426,8 +1420,7 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	GSList *values = NULL;
 
 	if (priv->cursor_values) {
-		g_slist_foreach (priv->cursor_values, (GFunc) gda_value_free, NULL);
-		g_slist_free (priv->cursor_values);
+		g_slist_free_full (priv->cursor_values, (GDestroyNotify) gda_value_free);
 		priv->cursor_values = NULL;
 	}
 
@@ -1757,8 +1750,7 @@ gda_data_model_import_clean_errors (GdaDataModelImport *model)
 	g_return_if_fail (GDA_IS_DATA_MODEL_IMPORT (model));
 	GdaDataModelImportPrivate *priv = gda_data_model_import_get_instance_private (model);
 
-	g_slist_foreach (priv->errors, (GFunc) g_error_free, NULL);
-	g_slist_free (priv->errors);
+	g_slist_free_full (priv->errors, (GDestroyNotify) g_error_free);
 	priv->errors = NULL;
 }
 
@@ -1984,8 +1976,7 @@ gda_data_model_import_iter_next (GdaDataModel *model, GdaDataModelIter *iter)
 			GSList *list = g_array_index (priv->extract.csv.rows_read,
 						      GSList *, 0);
 			g_assert (list);
-			g_slist_foreach (list, (GFunc) gda_value_free, NULL);
-			g_slist_free (list);
+			g_slist_free_full (list, (GDestroyNotify) gda_value_free);
 			g_array_remove_index (priv->extract.csv.rows_read, 0);
 		}
 

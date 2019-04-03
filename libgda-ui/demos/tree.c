@@ -71,13 +71,18 @@ timout_cb (GdaTreeNode *node)
 	return TRUE;
 }
 
+void ref_objects (GObject *object, G_GNUC_UNUSED gpointer user_data)
+{
+  g_object_ref (object);
+}
+
 static GSList *
 node_func (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
 	   G_GNUC_UNUSED gboolean *out_error, G_GNUC_UNUSED GError **error)
 {
 	if (children_nodes) {
 		/* we don't create or modify already created GdaTreeNode object => simply ref them */
-		g_slist_foreach ((GSList*) children_nodes, (GFunc) g_object_ref, NULL);
+		g_slist_foreach ((GSList*) children_nodes, (GFunc) ref_objects, NULL);
 		return g_slist_copy ((GSList*) children_nodes);
 	}
 	else {

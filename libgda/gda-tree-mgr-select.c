@@ -307,8 +307,7 @@ gda_tree_mgr_select_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 
 			if (!gda_holder_is_valid (holder) || !(cvalue = gda_holder_get_value (holder))) {
 				if (list) {
-					g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-					g_slist_free (list);
+					g_slist_free_full (list, (GDestroyNotify) g_object_unref);
 				}
 
 				if (out_error)

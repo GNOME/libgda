@@ -64,8 +64,7 @@ static void
 gda_sql_statement_unknown_free (gpointer stmt)
 {
 	GdaSqlStatementUnknown *unknown = (GdaSqlStatementUnknown *) stmt;
-	g_slist_foreach (unknown->expressions, (GFunc) gda_sql_expr_free, NULL);
-	g_slist_free (unknown->expressions);
+	g_slist_free_full (unknown->expressions, (GDestroyNotify) gda_sql_expr_free);
 	g_free (unknown);
 }
 

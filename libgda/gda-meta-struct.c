@@ -2065,11 +2065,9 @@ gda_meta_db_object_free (GdaMetaDbObject *dbo)
 static void
 gda_meta_table_free_contents (GdaMetaTable *table)
 {
-	g_slist_foreach (table->columns, (GFunc) gda_meta_table_column_free, NULL);
-	g_slist_free (table->columns);
+	g_slist_free_full (table->columns, (GDestroyNotify) gda_meta_table_column_free);
 	g_free (table->pk_cols_array);
-	g_slist_foreach (table->fk_list, (GFunc) gda_meta_table_foreign_key_free, NULL);
-	g_slist_free (table->fk_list);
+	g_slist_free_full (table->fk_list, (GDestroyNotify) gda_meta_table_foreign_key_free);
 	g_slist_free (table->reverse_fk_list);
 }
 

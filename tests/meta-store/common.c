@@ -224,8 +224,7 @@ common_declare_expected_change (const gchar *table_name, GdaMetaStoreChangeType 
 			g_print ("Received no change but EXPECTED GdaMetaStoreChange: %s", estr);
 			exit (EXIT_FAILURE);
 		}
-		g_slist_foreach (expected_changes, (GFunc) g_free, NULL);
-		g_slist_free (expected_changes);
+		g_slist_free_full (expected_changes, (GDestroyNotify) g_free);
 		expected_changes = NULL;
 	}
 	else {

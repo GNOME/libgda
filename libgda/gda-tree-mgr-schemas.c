@@ -259,8 +259,7 @@ gda_tree_mgr_schemas_update_children (GdaTreeManager *manager, GdaTreeNode *node
 		cvalue = gda_data_model_iter_get_value_at (iter, 0);
 		if (!cvalue) {
 			if (list) {
-				g_slist_foreach (list, (GFunc) g_object_unref, NULL);
-				g_slist_free (list);
+				g_slist_free_full (list, (GDestroyNotify) g_object_unref);
 			}
 			if (out_error)
 				*out_error = TRUE;

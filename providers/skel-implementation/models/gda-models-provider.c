@@ -31,8 +31,7 @@
 #include <libgda/gda-debug-macros.h>
 
 static void gda_models_provider_class_init (GdaModelsProviderClass *klass);
-static void gda_models_provider_init       (GdaModelsProvider *provider,
-					    GdaModelsProviderClass *klass);
+static void gda_models_provider_init       (GdaModelsProvider *provider);
 static void gda_models_provider_finalize   (GObject *object);
 
 static const gchar *gda_models_provider_get_name (GdaServerProvider *provider);
@@ -43,8 +42,6 @@ static gboolean gda_models_provider_close_connection (GdaServerProvider *provide
 						      GdaConnection *cnc);
 static const gchar *gda_models_provider_get_server_version (GdaServerProvider *provider,
 							    GdaConnection *cnc);
-
-static GObjectClass *parent_class = NULL;
 
 /* 
  * private connection data destroy 
@@ -88,12 +85,12 @@ GdaServerProviderBase data_model_base_functions = {
         NULL, NULL, NULL, NULL, /* padding */
 };
 
+G_DEFINE_TYPE(GdaModelsProvider, gda_models_provider, GDA_TYPE_VPROVIDER_DATA_MODEL)
+
 static void
 gda_models_provider_class_init (GdaModelsProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
@@ -104,8 +101,7 @@ gda_models_provider_class_init (GdaModelsProviderClass *klass)
 }
 
 static void
-gda_models_provider_init (G_GNUC_UNUSED GdaModelsProvider *pg_prv,
-			  G_GNUC_UNUSED GdaModelsProviderClass *klass)
+gda_models_provider_init (G_GNUC_UNUSED GdaModelsProvider *pg_prv)
 {
 	/* initialization of provider instance is to add here */
 	TO_IMPLEMENT;
@@ -119,34 +115,7 @@ gda_models_provider_finalize (GObject *object)
 	g_return_if_fail (GDA_IS_MODELS_PROVIDER (pg_prv));
 
 	/* chain to parent class */
-	parent_class->finalize(object);
-}
-
-GType
-gda_models_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaModelsProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_models_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaModelsProvider),
-			0,
-			(GInstanceInitFunc) gda_models_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaModelsProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
+	G_OBJECT_CLASS (gda_models_provider_parent_class)->finalize (object);
 }
 
 /*
@@ -247,7 +216,7 @@ gda_models_provider_close_connection (GdaServerProvider *provider, GdaConnection
 
 	/* link to parent implementation */
 	GdaServerProviderBase *parent_functions;
-        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+        parent_functions = gda_server_provider_get_impl_functions_for_class (gda_models_provider_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
         return parent_functions->close_connection (provider, cnc);
 }
 

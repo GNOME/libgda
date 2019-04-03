@@ -183,8 +183,7 @@ clear_internal_state (GdaDataAccessWrapper *model)
 	GdaDataAccessWrapperPrivate *priv = gda_data_access_wrapper_get_instance_private (model);
 	if (priv) {
 		if (priv->columns) {
-			g_slist_foreach (priv->columns, (GFunc) g_object_unref, NULL);
-			g_slist_free (priv->columns);
+			g_slist_free_full (priv->columns, (GDestroyNotify) g_object_unref);
 			priv->columns = NULL;
 		}
 

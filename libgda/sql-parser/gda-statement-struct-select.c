@@ -70,19 +70,16 @@ _gda_sql_statement_select_free (gpointer stmt)
 	if (select->distinct_expr)
 		gda_sql_expr_free (select->distinct_expr);
 	if (select->expr_list) {
-		g_slist_foreach (select->expr_list, (GFunc) gda_sql_select_field_free, NULL);
-		g_slist_free (select->expr_list);
+		g_slist_free_full (select->expr_list, (GDestroyNotify) gda_sql_select_field_free);
 	}
 	gda_sql_select_from_free (select->from);
 	gda_sql_expr_free (select->where_cond);
 	if (select->group_by) {
-		g_slist_foreach (select->group_by, (GFunc) gda_sql_expr_free, NULL);
-		g_slist_free (select->group_by);
+		g_slist_free_full (select->group_by, (GDestroyNotify) gda_sql_expr_free);
 	}
 	gda_sql_expr_free (select->having_cond);
 	if (select->order_by) {
-		g_slist_foreach (select->order_by, (GFunc) gda_sql_select_order_free, NULL);
-		g_slist_free (select->order_by);
+		g_slist_free_full (select->order_by, (GDestroyNotify) gda_sql_select_order_free);
 	}
 	gda_sql_expr_free (select->limit_count);
 	gda_sql_expr_free (select->limit_offset);

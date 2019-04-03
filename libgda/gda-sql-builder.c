@@ -1634,8 +1634,7 @@ gda_sql_builder_select_group_by (GdaSqlBuilder *builder, GdaSqlBuilderId expr_id
                                     (GdaSqlExpr*) use_part (p, GDA_SQL_ANY_PART (sel)));
   else if (sel->group_by)
     {
-      g_slist_foreach (sel->group_by, (GFunc) gda_sql_expr_free, NULL);
-      g_slist_free (sel->group_by);
+      g_slist_free_full (sel->group_by, (GDestroyNotify) gda_sql_expr_free);
       sel->group_by = NULL;
     }
 }

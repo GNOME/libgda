@@ -68,8 +68,7 @@ _gda_sql_statement_compound_free (gpointer stmt)
 	GdaSqlStatementCompound *compound = (GdaSqlStatementCompound *) stmt;
 
 	if (compound->stmt_list) {
-		g_slist_foreach (compound->stmt_list, (GFunc) gda_sql_statement_free, NULL);
-		g_slist_free (compound->stmt_list);
+		g_slist_free_full (compound->stmt_list, (GDestroyNotify) gda_sql_statement_free);
 	}
 	g_free (compound);
 }

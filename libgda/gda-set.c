@@ -1061,8 +1061,7 @@ gda_set_copy (GdaSet *set)
 	holders = g_slist_reverse (holders);
 
 	copy = g_object_new (GDA_TYPE_SET, "holders", holders, NULL);
-	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-	g_slist_free (holders);
+	g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 
 	return copy;
 }
@@ -1172,8 +1171,7 @@ gda_set_new_inline (gint nb, ...)
 	if (allok) 
 		set = gda_set_new (holders);
 	if (holders) {
-		g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-		g_slist_free (holders);
+		g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 	}
 	return set;
 }
@@ -1564,10 +1562,8 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 		}
 	}
 
-	g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-	g_slist_free (holders);
-	g_slist_foreach (sources, (GFunc) g_object_unref, NULL);
-	g_slist_free (sources);
+	g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
+	g_slist_free_full (sources, (GDestroyNotify) g_object_unref);
 
 	return set;
 }

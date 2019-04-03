@@ -1016,13 +1016,11 @@ gda_config_dispose (GObject *object)
 		}
 
 		if (priv->dsn_list) {
-			g_slist_foreach (priv->dsn_list, (GFunc) gda_dsn_info_free, NULL);
-			g_slist_free (priv->dsn_list);
+			g_slist_free_full (priv->dsn_list, (GDestroyNotify) gda_dsn_info_free);
 			priv->dsn_list = NULL;
 		}
 		if (priv->prov_list) {
-			g_slist_foreach (priv->prov_list, (GFunc) internal_provider_free, NULL);
-			g_slist_free (priv->prov_list);
+			g_slist_free_full (priv->prov_list, (GDestroyNotify) internal_provider_free);
 			priv->prov_list = NULL;
 		}
 	}

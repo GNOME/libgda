@@ -521,7 +521,7 @@ static gint
 gda_data_model_array_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
-	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 	return priv->rows->len;
 }
 
@@ -529,7 +529,7 @@ static gint
 gda_data_model_array_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL_ARRAY (model), -1);
-	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 	return priv->number_of_columns;
 }
 
@@ -537,7 +537,7 @@ static GdaColumn *
 gda_data_model_array_describe_column (GdaDataModel *model, gint col)
 {
         GdaColumn *column;
-        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 
         if (col >= gda_data_model_get_n_columns (model)) {
                 g_warning ("Column %d out of range (0-%d)", col, gda_data_model_get_n_columns (model) - 1);
@@ -659,7 +659,7 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
         const GValue *gdavalue;
         GdaValueAttribute flags = 0;
         GdaColumn *column;
-        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 
         column = gda_data_model_array_describe_column (model, col);
         if (gda_column_get_allow_null (column))
@@ -683,7 +683,7 @@ gda_data_model_array_get_attributes_at (GdaDataModel *model, gint col, gint row)
 static GdaDataModelAccessFlags
 gda_data_model_array_get_access_flags (GdaDataModel *model)
 {
-        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+        GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
         GdaDataModelAccessFlags flags = GDA_DATA_MODEL_ACCESS_RANDOM |
                 GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD |
                 GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
@@ -859,20 +859,20 @@ gda_data_model_array_remove_row (GdaDataModel *model, gint row, GError **error)
 static void
 gda_data_model_array_freeze (GdaDataModel *model)
 {
-	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 	priv->notify_changes = FALSE;
 }
 
 static void
 gda_data_model_array_thaw (GdaDataModel *model)
 {
-	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 	priv->notify_changes = TRUE;
 }
 
 static gboolean
 gda_data_model_array_get_notify (GdaDataModel *model)
 {
-	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (model);
+	GdaDataModelArrayPrivate *priv = gda_data_model_array_get_instance_private (GDA_DATA_MODEL_ARRAY (model));
 	return priv->notify_changes;
 }

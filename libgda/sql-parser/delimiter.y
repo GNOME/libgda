@@ -70,7 +70,7 @@ stmt ::= exprlist(L) END_OF_FILE. {pdata->parsed_statement = gda_sql_statement_n
 
 // List of expressions
 %type exprlist {GSList *}
-%destructor exprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+%destructor exprlist {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_expr_free);}}
 exprlist(L) ::= exprlist(E) expr(X). {L = g_slist_prepend (E, X);}
 exprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
 

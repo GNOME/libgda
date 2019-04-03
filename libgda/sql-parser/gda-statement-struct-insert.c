@@ -75,8 +75,7 @@ gda_sql_statement_insert_free (gpointer stmt)
 	gda_sql_table_free (insert->table);
 	for (list = insert->values_list; list; list = list->next) {
 		if (list->data) {
-			g_slist_foreach ((GSList *) list->data, (GFunc) gda_sql_expr_free, NULL);
-			g_slist_free ((GSList *) list->data);
+			g_slist_free_full ((GSList *) list->data, (GDestroyNotify) gda_sql_expr_free);
 		}
 	}
 	g_slist_free (insert->values_list);

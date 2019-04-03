@@ -175,8 +175,7 @@ gda_batch_dispose (GObject *object)
 	batch = GDA_BATCH (object);
 	GdaBatchPrivate *priv = gda_batch_get_instance_private (batch);
 	if (priv->statements) {
-		g_slist_foreach (priv->statements, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->statements);
+		g_slist_free_full (priv->statements, (GDestroyNotify) g_object_unref);
 		priv->statements = NULL;
 	}
 

@@ -192,8 +192,7 @@ update_display (GdauiCloud *cloud)
 	gtk_text_buffer_get_end_iter (tbuffer, &end);
 	gtk_text_buffer_delete (tbuffer, &start, &end);
 	if (priv->selected_tags) {
-		g_slist_foreach (priv->selected_tags, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->selected_tags);
+		g_slist_free_full (priv->selected_tags, (GDestroyNotify) g_object_unref);
 		priv->selected_tags = NULL;
 		sync_iter_with_selection (cloud);
 		g_signal_emit_by_name (cloud, "selection-changed");
@@ -390,15 +389,21 @@ gdaui_cloud_dispose (GObject *object)
 	GdauiCloudPrivate *priv = gdaui_cloud_get_instance_private (cloud);
 
 	if (priv->selected_tags) {
-		g_slist_foreach (priv->selected_tags, (GFunc) g_object_unref, NULL);
-		g_slist_free (priv->selected_tags);
+		g_slist_free_full (priv->selected_tags, (GDestroyNotify) g_object_unref);
+    priv->selected_tags = NULL;
 	}
-	if (priv->iter)
+	if (priv->iter) {
 		g_object_unref (priv->iter);
-	if (priv->model)
+    priv->iter = NULL;
+  }
+	if (priv->model) {
 		g_object_unref (priv->model);
-	if (priv->tbuffer)
+    priv->model = NULL;
+  }
+	if (priv->tbuffer) {
 		g_object_unref (priv->tbuffer);
+    priv->tbuffer = NULL;
+  }
 
 	/* for the parent class */
 	G_OBJECT_CLASS (gdaui_cloud_parent_class)->dispose (object);

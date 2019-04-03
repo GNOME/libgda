@@ -412,8 +412,7 @@ emitted_signal_add (EmittedSignal *es)
 static void
 emitted_signals_reset (void)
 {
-	g_slist_foreach (signals_list, (GFunc) g_free, NULL);
-	g_slist_free (signals_list);
+	g_slist_free_full (signals_list, (GDestroyNotify) g_free);
 	signals_list = NULL;
 }
 

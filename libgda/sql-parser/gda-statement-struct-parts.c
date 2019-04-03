@@ -623,8 +623,7 @@ gda_sql_operation_free (GdaSqlOperation *operation)
 	if (!operation) return;
 
 	if (operation->operands) {
-		g_slist_foreach (operation->operands, (GFunc) gda_sql_expr_free, NULL);
-		g_slist_free (operation->operands);
+		g_slist_free_full (operation->operands, (GDestroyNotify) gda_sql_expr_free);
 	}
 	g_free (operation);
 }
@@ -905,12 +904,10 @@ gda_sql_case_free (GdaSqlCase *sc)
 	gda_sql_expr_free (sc->base_expr);
 	gda_sql_expr_free (sc->else_expr);
 	if (sc->when_expr_list) {
-		g_slist_foreach (sc->when_expr_list, (GFunc) gda_sql_expr_free, NULL);
-		g_slist_free (sc->when_expr_list);
+		g_slist_free_full (sc->when_expr_list, (GDestroyNotify) gda_sql_expr_free);
 	}
 	if (sc->then_expr_list) {
-		g_slist_foreach (sc->then_expr_list, (GFunc) gda_sql_expr_free, NULL);
-		g_slist_free (sc->then_expr_list);
+		g_slist_free_full (sc->then_expr_list, (GDestroyNotify) gda_sql_expr_free);
 	}
 	g_free (sc);
 }
@@ -1397,8 +1394,7 @@ gda_sql_select_join_free (GdaSqlSelectJoin *join)
 	if (!join) return;
 
 	gda_sql_expr_free (join->expr);
-	g_slist_foreach (join->use, (GFunc) gda_sql_field_free, NULL);
-	g_slist_free (join->use);
+	g_slist_free_full (join->use, (GDestroyNotify) gda_sql_field_free);
 
 	g_free (join);
 }
@@ -1559,12 +1555,10 @@ gda_sql_select_from_free (GdaSqlSelectFrom *from)
 	if (!from) return;
 
 	if (from->targets) {
-		g_slist_foreach (from->targets, (GFunc) gda_sql_select_target_free, NULL);
-		g_slist_free (from->targets);
+		g_slist_free_full (from->targets, (GDestroyNotify) gda_sql_select_target_free);
 	}
 	if (from->joins) {
-		g_slist_foreach (from->joins, (GFunc) gda_sql_select_join_free, NULL);
-		g_slist_free (from->joins);
+		g_slist_free_full (from->joins, (GDestroyNotify) gda_sql_select_join_free);
 	}
 
 	g_free (from);

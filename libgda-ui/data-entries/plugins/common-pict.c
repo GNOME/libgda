@@ -496,8 +496,7 @@ file_save_cb (GtkMenuItem *mitem, PictMenuData *menudata)
 	if (dlg)
 		gtk_widget_destroy (dlg);
 
-	g_slist_foreach (pictformat.formats, (GFunc) g_free, NULL);
-	g_slist_free (pictformat.formats);
+	g_slist_free_full (pictformat.formats, (GDestroyNotify) g_free);
 }
 
 static void

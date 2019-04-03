@@ -2097,8 +2097,7 @@ commit_row_modif (GdaDataProxy *proxy, RowModif *rm, gboolean adjust_display, GE
 
 			err = ! gda_data_model_set_values (priv->model, rm->model_row,
 							   values, error);
-			g_list_foreach (values, (GFunc) gda_value_free, NULL);
-			g_list_free (values);
+			g_list_free_full (values, (GDestroyNotify) gda_value_free);
 		}
 		else {
 			/* insert a new row */
@@ -3300,8 +3299,7 @@ gda_data_proxy_set_ordering_column (GdaDataProxy *proxy, gint col, GError **erro
 		if (!replaced) {
 			/* replace the whole ordering part */
 			if (selst->order_by) {
-				g_slist_foreach (selst->order_by, (GFunc) gda_sql_select_order_free, NULL);
-				g_slist_free (selst->order_by);
+				g_slist_free_full (selst->order_by, (GDestroyNotify) gda_sql_select_order_free);
 				selst->order_by = NULL;
 			}
 

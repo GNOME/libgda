@@ -1434,8 +1434,7 @@ tree_view_event_cb (GtkWidget *treeview, GdkEvent *event, GdauiRawGrid *grid)
 					gdaui_data_store_delete (priv->store, &iter);
 				cur_row = g_list_next (cur_row);
 			}
-			g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-			g_list_free (sel_rows);
+			g_list_free_full (sel_rows, (GDestroyNotify) gtk_tree_path_free);
 
 			done = TRUE;
 		}
@@ -2138,8 +2137,7 @@ tree_view_selection_changed_cb (GtkTreeSelection *selection, GdauiRawGrid *grid)
 
 			sel_rows = gtk_tree_selection_get_selected_rows (selection, &model);
 			has_selection = gtk_tree_model_get_iter (model, &iter, (GtkTreePath *) (sel_rows->data)) ? 1 : 0;
-			g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-			g_list_free (sel_rows);
+			g_list_free_full (sel_rows, (GDestroyNotify) gtk_tree_path_free);
 		}
 	}
 	else
@@ -2495,8 +2493,7 @@ gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
 							    gdaui_data_store_get_row_from_iter (GDAUI_DATA_STORE (model),
 												&iter))) {
 				gdaui_data_store_delete (priv->store, &iter);
-				g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-				g_list_free (sel_rows);
+				g_list_free_full (sel_rows, (GDestroyNotify) gtk_tree_path_free);
 				sel_rows = gtk_tree_selection_get_selected_rows (select, &model);
 			}
 			else
@@ -2520,8 +2517,7 @@ gdaui_raw_grid_perform_action (GdauiDataProxy *iface, GdauiAction action)
 			gdaui_data_store_undelete (priv->store, &iter);
 			cur_row = g_list_next (cur_row);
 		}
-		g_list_foreach (sel_rows, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free (sel_rows);
+		g_list_free_full (sel_rows, (GDestroyNotify) gtk_tree_path_free);
 
 		break;
 	}
@@ -2937,8 +2933,7 @@ gdaui_raw_grid_selector_get_selected_rows (GdauiDataSelector *iface)
 				g_array_append_val (selarray, row);
 			}
 		}
-		g_list_foreach (selected_rows, (GFunc) gtk_tree_path_free, NULL);
-		g_list_free (selected_rows);
+		g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
 		return selarray;
 	}
 	else

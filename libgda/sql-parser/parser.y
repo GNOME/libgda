@@ -468,8 +468,7 @@ opt_on_conflict(O) ::= OR ID(V). {O = V;}
 %type ins_extra_values {GSList*}
 %destructor ins_extra_values {GSList *list;
 		for (list = $$; list; list = list->next) {
-			g_slist_foreach ((GSList*) list->data, (GFunc) gda_sql_field_free, NULL); 
-			g_slist_free ((GSList*) list->data);
+			g_slist_free_full ((GSList*) list->data, (GDestroyNotify) gda_sql_field_free);
 		}
 		g_slist_free ($$);
 }
@@ -477,12 +476,12 @@ ins_extra_values(E) ::= ins_extra_values(A) COMMA LP rexprlist(L) RP. {E = g_sli
 ins_extra_values(E) ::= COMMA LP rexprlist(L) RP. {E = g_slist_append (NULL, g_slist_reverse (L));}
 
 %type inscollist_opt {GSList*}
-%destructor inscollist_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_field_free, NULL); g_slist_free ($$);}}
+%destructor inscollist_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_field_free);}}
 inscollist_opt(A) ::= .                       {A = NULL;}
 inscollist_opt(A) ::= LP inscollist(X) RP.    {A = X;}
 
 %type inscollist {GSList*}
-%destructor inscollist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_field_free, NULL); g_slist_free ($$);}}
+%destructor inscollist {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_field_free);}}
 inscollist(A) ::= inscollist(X) COMMA fullname(Y). {GdaSqlField *field;
 						    field = gda_sql_field_new (NULL);
 						    gda_sql_field_take_name (field, Y);
@@ -596,12 +595,12 @@ limit_opt(A) ::= LIMIT expr(X) OFFSET expr(Y). {A.count = X; A.offset = Y;}
 limit_opt(A) ::= LIMIT expr(X) COMMA expr(Y). {A.count = X; A.offset = Y;}
 
 %type orderby_opt {GSList *}
-%destructor orderby_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_select_order_free, NULL); g_slist_free ($$);}}
+%destructor orderby_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_order_free);}}
 orderby_opt(A) ::= .                          {A = 0;}
 orderby_opt(A) ::= ORDER BY sortlist(X).      {A = X;}
 
 %type sortlist {GSList *}
-%destructor sortlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_select_order_free, NULL); g_slist_free ($$);}}
+%destructor sortlist {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_order_free);}}
 sortlist(A) ::= sortlist(X) COMMA expr(Y) sortorder(Z). {GdaSqlSelectOrder *order;
 							 order = gda_sql_select_order_new (NULL);
 							 order->expr = Y;
@@ -627,7 +626,7 @@ having_opt(A) ::= .                     {A = NULL;}
 having_opt(A) ::= HAVING expr(X).       {A = X;}
 
 %type groupby_opt {GSList*}
-%destructor groupby_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+%destructor groupby_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_expr_free);}}
 groupby_opt(A) ::= .                      {A = 0;}
 groupby_opt(A) ::= GROUP BY rnexprlist(X). {A = g_slist_reverse (X);}
 
@@ -658,7 +657,7 @@ seltablist(L) ::= stl_prefix(P) seltarget(T) on_cond(C) using_opt(U). {
 }
 
 %type using_opt {GSList*}
-%destructor using_opt {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_field_free, NULL); g_slist_free ($$);}}
+%destructor using_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_field_free);}}
 using_opt(U) ::= USING LP inscollist(L) RP. {U = L;}
 using_opt(U) ::= .                          {U = NULL;}
 
@@ -709,10 +708,10 @@ seltarget(T) ::= LP compound(S) RP ID(A). {T = gda_sql_select_target_new (NULL);
 					     gda_sql_select_target_take_select (T, S);
 }
 %type selcollist {GSList *}
-%destructor selcollist {g_slist_foreach ($$, (GFunc) gda_sql_select_field_free, NULL); g_slist_free ($$);}
+%destructor selcollist {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_field_free);}
 
 %type sclp {GSList *}
-%destructor sclp {g_slist_foreach ($$, (GFunc) gda_sql_select_field_free, NULL); g_slist_free ($$);}
+%destructor sclp {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_field_free);}
 sclp(A) ::= selcollist(X) COMMA.             {A = X;}
 sclp(A) ::= .                                {A = NULL;}
 
@@ -760,13 +759,13 @@ distinct(E) ::= DISTINCT ON expr(X). [OR] {E = g_new0 (Distinct, 1); E->distinct
 
 // Non empty list of expressions
 %type rnexprlist {GSList *}
-%destructor rnexprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+%destructor rnexprlist {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_expr_free);}}
 rnexprlist(L) ::= rnexprlist(E) COMMA expr(X). {L = g_slist_prepend (E, X);}
 rnexprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
 
 // List of expressions
 %type rexprlist {GSList *}
-%destructor rexprlist {if ($$) {g_slist_foreach ($$, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$);}}
+%destructor rexprlist {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_expr_free);}}
 rexprlist(L) ::= . {L = NULL;}
 rexprlist(L) ::= rexprlist(E) COMMA expr(X). {L = g_slist_prepend (E, X);}
 rexprlist(L) ::= expr(E). {L = g_slist_append (NULL, E);}
@@ -938,8 +937,8 @@ case_operand(A) ::= expr(X).            {A = X;}
 case_operand(A) ::= .                   {A = NULL;}
 
 %type case_exprlist {CaseBody}
-%destructor case_exprlist {g_slist_foreach ($$.when_list, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$.when_list);
-	g_slist_foreach ($$.then_list, (GFunc) gda_sql_expr_free, NULL); g_slist_free ($$.then_list);}
+%destructor case_exprlist {g_slist_free_full ($$.when_list, (GDestroyNotify) gda_sql_expr_free);
+	g_slist_free_full ($$.then_list, (GDestroyNotify) gda_sql_expr_free);}
 
 case_exprlist(A) ::= case_exprlist(X) WHEN expr(Y) THEN expr(Z). {
 	A.when_list = g_slist_append (X.when_list, Y);

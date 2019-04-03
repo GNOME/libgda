@@ -875,7 +875,7 @@ its_source_dispatch (GSource *source, GSourceFunc callback, gpointer user_data)
 {
 	ITSSource *isource = (ITSSource*) source;
 	ITSignalerFunc func;
-	func = (ITSignalerFunc) callback;
+	func = IT_SIGNALER_FUNC (callback);
 
 	gboolean retval;
 	itsignaler_ref (isource->its);
@@ -919,7 +919,7 @@ itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpo
 	if (!source)
 		return 0;
 
-	g_source_set_callback (source, (GSourceFunc) func, data, notify);
+	g_source_set_callback (source, G_SOURCE_FUNC (func), data, notify);
 	id = g_source_attach (source, context);
 	g_source_unref (source);
 

@@ -154,13 +154,18 @@ gda_tree_mgr_label_new (const gchar *label)
 	return (GdaTreeManager*) mgr;
 }
 
+void ref_elements (GObject *object, G_GNUC_UNUSED gpointer user_data)
+{
+  g_object_ref (object);
+}
+
 static GSList *
 gda_tree_mgr_label_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
 				    G_GNUC_UNUSED gboolean *out_error, G_GNUC_UNUSED GError **error)
 {
 	if (children_nodes) {
 		GSList *list = g_slist_copy ((GSList*) children_nodes);
-		g_slist_foreach (list, (GFunc) g_object_ref, NULL);
+		g_slist_foreach (list, (GFunc) ref_elements, NULL);
 		return list;
 	}
 

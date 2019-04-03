@@ -115,7 +115,7 @@ test1 (void)
 	CbData cbdata;
 	cbdata.counter = 0;
 	cbdata.loop = loop;
-	g_source_set_callback (source, (GSourceFunc) source_callback, &cbdata, NULL);
+	g_source_set_callback (source, G_SOURCE_FUNC (source_callback), &cbdata, NULL);
 	g_source_attach (source, NULL);
 
 	GThread *th;

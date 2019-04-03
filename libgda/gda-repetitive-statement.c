@@ -57,8 +57,7 @@ gda_repetitive_statement_finalize (GObject *object)
 	priv = GDA_REPETITIVE_STATEMENT_PRIVATE (object);
 	
 	g_object_unref (priv->statement);
-	g_slist_foreach (priv->values_sets, (GFunc) g_object_unref, NULL);
-	g_slist_free (priv->values_sets);
+	g_slist_free_full (priv->values_sets, (GDestroyNotify) g_object_unref);
 
 	G_OBJECT_CLASS (gda_repetitive_statement_parent_class)->finalize (object);
 }
