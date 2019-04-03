@@ -27,20 +27,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_REPETITIVE_STATEMENT             (gda_repetitive_statement_get_type ())
-#define GDA_REPETITIVE_STATEMENT(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GDA_TYPE_REPETITIVE_STATEMENT, GdaRepetitiveStatement))
-#define GDA_REPETITIVE_STATEMENT_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GDA_TYPE_REPETITIVE_STATEMENT, GdaRepetitiveStatementClass))
-#define GDA_IS_REPETITIVE_STATEMENT(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GDA_TYPE_REPETITIVE_STATEMENT))
-#define GDA_IS_REPETITIVE_STATEMENT_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_REPETITIVE_STATEMENT))
-#define GDA_REPETITIVE_STATEMENT_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GDA_TYPE_REPETITIVE_STATEMENT, GdaRepetitiveStatementClass))
+G_DECLARE_DERIVABLE_TYPE(GdaRepetitiveStatement, gda_repetitive_statement, GDA, REPETITIVE_STATEMENT, GObject)
 
 struct _GdaRepetitiveStatementClass
 {
-	GObjectClass parent_class;
-};
-
-struct _GdaRepetitiveStatement
-{
-	GObject parent_instance;
+       GObjectClass parent_class;
 };
 
 /**
@@ -56,8 +47,6 @@ struct _GdaRepetitiveStatement
  *
  * Use the gda_connection_repetitive_statement_execute() method to execute the repetitive statement.
  */
-
-GType                   gda_repetitive_statement_get_type         (void) G_GNUC_CONST;
 
 GdaRepetitiveStatement* gda_repetitive_statement_new              (GdaStatement *stmt);
 gboolean                gda_repetitive_statement_get_template_set (GdaRepetitiveStatement *rstmt, GdaSet **set, GError **error);
