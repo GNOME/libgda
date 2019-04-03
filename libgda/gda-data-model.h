@@ -6,7 +6,7 @@
  * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
- * Copyright (C) 2011 Daniel Espinosa <despinosa@src.gnome.org>
+ * Copyright (C) 2011,2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,11 +37,6 @@
 #include <libgda/gda-data-model-iter.h>
 
 G_BEGIN_DECLS
-
-#define GDA_TYPE_DATA_MODEL            (gda_data_model_get_type())
-#define GDA_DATA_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_DATA_MODEL, GdaDataModel))
-#define GDA_IS_DATA_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_DATA_MODEL))
-#define GDA_DATA_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GDA_TYPE_DATA_MODEL, GdaDataModelIface))
 
 /* error reporting */
 extern GQuark gda_data_model_error_quark (void);
@@ -95,8 +90,12 @@ typedef enum {
 	GDA_DATA_MODEL_OTHER_ERROR
 } GdaDataModelError;
 
+
+#define GDA_TYPE_DATA_MODEL            (gda_data_model_get_type())
+G_DECLARE_INTERFACE (GdaDataModel, gda_data_model, GDA, DATA_MODEL, GObject)
+
 /* struct for the interface */
-struct _GdaDataModelIface {
+struct _GdaDataModelInterface {
 	GTypeInterface           g_iface;
 
 	/* virtual table */
@@ -182,8 +181,6 @@ struct _GdaDataModelIface {
  *
  * Finally, the #GdaDataModel object implements its own locking mechanism and can be used simultaneously from several threads.
  */
-
-GType               gda_data_model_get_type               (void) G_GNUC_CONST;
 
 GdaDataModelAccessFlags gda_data_model_get_access_flags   (GdaDataModel *model);
 

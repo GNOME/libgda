@@ -17,7 +17,7 @@
  * Copyright (C) 2008 Phil Longstaff <plongstaff@rogers.com>
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2011 - 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011 - 2013,2019 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  * Copyright (C) 2015 Corentin Noël <corentin@elementary.io>
  *
@@ -64,10 +64,8 @@
 #include "csv.h"
 
 extern gchar *gda_lang_locale;
-static GRecMutex init_rmutex;
-#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
-#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
-static void gda_data_model_class_init (gpointer g_class);
+
+static void gda_data_model_default_init (GdaDataModelInterface *iface);
 
 static xmlNodePtr gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
 					      const gint *rows, gint nb_rows, const gchar *name);
@@ -77,6 +75,8 @@ static gchar *real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean 
 						  gint max_width, gboolean dump_separators, gboolean dump_sep_line,
 						  gboolean use_data_handlers, gboolean dump_column_titles,
 						  const gint *rows, gint nb_rows, GError **error);
+
+G_DEFINE_INTERFACE (GdaDataModel, gda_data_model, G_TYPE_OBJECT)
 
 
 /* signals */
@@ -92,6 +92,100 @@ enum {
 
 static guint gda_data_model_signals[LAST_SIGNAL] = {0, 0, 0, 0, 0};
 
+static void gda_data_model_default_init (GdaDataModelInterface *iface)
+{
+  /**
+	 * GdaDataModel::changed:
+	 * @model: the #GdaDataModel
+	 *
+	 * Gets emitted when any value in @model has been changed
+	 */
+	gda_data_model_signals[CHANGED] =
+		g_signal_new ("changed",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+	/**
+	 * GdaDataModel::row-inserted:
+	 * @model: the #GdaDataModel
+	 * @row: the row number
+	 *
+	 * Gets emitted when a row has been inserted in @model
+	 */
+	gda_data_model_signals[ROW_INSERTED] =
+		g_signal_new ("row-inserted",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, row_inserted),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE, 1, G_TYPE_INT);
+	/**
+	 * GdaDataModel::row-updated:
+	 * @model: the #GdaDataModel
+	 * @row: the row number
+	 *
+	 * Gets emitted when a row has been modified in @model
+	 */
+	gda_data_model_signals[ROW_UPDATED] =
+		g_signal_new ("row-updated",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, row_updated),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE, 1, G_TYPE_INT);
+	/**
+	 * GdaDataModel::row-removed:
+	 * @model: the #GdaDataModel
+	 * @row: the row number
+	 *
+	 * Gets emitted when a row has been removed from @model
+	 */
+	gda_data_model_signals[ROW_REMOVED] =
+		g_signal_new ("row-removed",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, row_removed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__INT,
+			      G_TYPE_NONE, 1, G_TYPE_INT);
+	/**
+	 * GdaDataModel::reset:
+	 * @model: the #GdaDataModel
+	 *
+	 * Gets emitted when @model's contents has been completely reset (the number and
+	 * type of columns may also have changed)
+	 */
+	gda_data_model_signals[RESET] =
+		g_signal_new ("reset",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, reset),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+
+	/**
+	 * GdaDataModel::access-changed:
+	 * @model: the #GdaDataModel
+	 *
+	 * Gets emitted when @model's access flags have changed. Use
+	 * gda_data_model_get_access_flags() to get the access flags.
+	 */
+	gda_data_model_signals[ACCESS_CHANGED] =
+		g_signal_new ("access-changed",
+			      GDA_TYPE_DATA_MODEL,
+			      G_SIGNAL_RUN_LAST,
+			      G_STRUCT_OFFSET (GdaDataModelInterface, access_changed),
+			      NULL, NULL,
+			      g_cclosure_marshal_VOID__VOID,
+			      G_TYPE_NONE, 0);
+}
+
 /* module error */
 GQuark gda_data_model_error_quark (void)
 {
@@ -101,144 +195,12 @@ GQuark gda_data_model_error_quark (void)
         return quark;
 }
 
-GType
-gda_data_model_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdaDataModelIface),
-			(GBaseInitFunc) gda_data_model_class_init,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) NULL,
-			NULL,
-			NULL,
-			0,
-			0,
-			(GInstanceInitFunc) NULL,
-			0
-		};
-		
-		MUTEX_LOCK();
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_INTERFACE, "GdaDataModel", &info, 0);
-			g_type_interface_add_prerequisite (type, G_TYPE_OBJECT);
-		}
-		MUTEX_UNLOCK();
-	}
-	return type;
-}
-
-static void
-gda_data_model_class_init (G_GNUC_UNUSED gpointer g_class)
-{
-	static gboolean initialized = FALSE;
-
-	MUTEX_LOCK();
-	if (! initialized) {
-		/**
-		 * GdaDataModel::changed:
-		 * @model: the #GdaDataModel
-		 *
-		 * Gets emitted when any value in @model has been changed
-		 */
-		gda_data_model_signals[CHANGED] =
-			g_signal_new ("changed",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, changed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
-		/**
-		 * GdaDataModel::row-inserted:
-		 * @model: the #GdaDataModel
-		 * @row: the row number
-		 *
-		 * Gets emitted when a row has been inserted in @model
-		 */
-		gda_data_model_signals[ROW_INSERTED] =
-			g_signal_new ("row-inserted",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_inserted),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		/**
-		 * GdaDataModel::row-updated:
-		 * @model: the #GdaDataModel
-		 * @row: the row number
-		 *
-		 * Gets emitted when a row has been modified in @model
-		 */
-		gda_data_model_signals[ROW_UPDATED] =
-			g_signal_new ("row-updated",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_updated),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		/**
-		 * GdaDataModel::row-removed:
-		 * @model: the #GdaDataModel
-		 * @row: the row number
-		 *
-		 * Gets emitted when a row has been removed from @model
-		 */
-		gda_data_model_signals[ROW_REMOVED] =
-			g_signal_new ("row-removed",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, row_removed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__INT,
-				      G_TYPE_NONE, 1, G_TYPE_INT);
-		/**
-		 * GdaDataModel::reset:
-		 * @model: the #GdaDataModel
-		 *
-		 * Gets emitted when @model's contents has been completely reset (the number and
-		 * type of columns may also have changed)
-		 */
-		gda_data_model_signals[RESET] =
-			g_signal_new ("reset",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, reset),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
-
-		/**
-		 * GdaDataModel::access-changed:
-		 * @model: the #GdaDataModel
-		 *
-		 * Gets emitted when @model's access flags have changed. Use
-		 * gda_data_model_get_access_flags() to get the access flags.
-		 */
-		gda_data_model_signals[ACCESS_CHANGED] =
-			g_signal_new ("access-changed",
-				      GDA_TYPE_DATA_MODEL,
-				      G_SIGNAL_RUN_LAST,
-				      G_STRUCT_OFFSET (GdaDataModelIface, access_changed),
-				      NULL, NULL,
-				      g_cclosure_marshal_VOID__VOID,
-				      G_TYPE_NONE, 0);
-
-		initialized = TRUE;
-	}
-	MUTEX_UNLOCK();
-}
-
 static gboolean
 do_notify_changes (GdaDataModel *model)
 {
 	gboolean notify_changes = TRUE;
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_notify)
-		notify_changes = (GDA_DATA_MODEL_GET_CLASS (model)->get_notify) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_notify)
+		notify_changes = (GDA_DATA_MODEL_GET_IFACE (model)->get_notify) (model);
 	return notify_changes;
 }
 
@@ -381,8 +343,8 @@ gda_data_model_freeze (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->freeze)
-		(GDA_DATA_MODEL_GET_CLASS (model)->freeze) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->freeze)
+		(GDA_DATA_MODEL_GET_IFACE (model)->freeze) (model);
 }
 
 /**
@@ -396,8 +358,8 @@ gda_data_model_thaw (GdaDataModel *model)
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->thaw)
-		(GDA_DATA_MODEL_GET_CLASS (model)->thaw) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->thaw)
+		(GDA_DATA_MODEL_GET_IFACE (model)->thaw) (model);
 }
 
 /**
@@ -410,8 +372,8 @@ gboolean
 gda_data_model_get_notify (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_notify)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_notify) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_notify)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_notify) (model);
 	else
 		return TRUE;
 }
@@ -429,8 +391,8 @@ GdaDataModelAccessFlags
 gda_data_model_get_access_flags (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_access_flags) {
-		GdaDataModelAccessFlags flags = (GDA_DATA_MODEL_GET_CLASS (model)->get_access_flags) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_access_flags) {
+		GdaDataModelAccessFlags flags = (GDA_DATA_MODEL_GET_IFACE (model)->get_access_flags) (model);
 		if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
 			flags |= GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD;
 		return flags;
@@ -450,8 +412,8 @@ gda_data_model_get_n_rows (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_n_rows)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_n_rows) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_n_rows)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_n_rows) (model);
 	else 
 		return -1;
 }
@@ -467,8 +429,8 @@ gda_data_model_get_n_columns (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_n_columns)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_n_columns) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_n_columns)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_n_columns) (model);
 	else {
 		/* method not supported */
 		return -1;
@@ -495,8 +457,8 @@ gda_data_model_describe_column (GdaDataModel *model, gint col)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->describe_column)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->describe_column) (model, col);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->describe_column)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->describe_column) (model, col);
 	else {
 		/* method not supported */
 		return NULL;
@@ -667,8 +629,8 @@ gda_data_model_get_value_at (GdaDataModel *model, gint col, gint row, GError **e
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at) (model, col, row, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_value_at)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_value_at) (model, col, row, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -707,8 +669,8 @@ gda_data_model_get_typed_value_at (GdaDataModel *model, gint col, gint row, GTyp
 	const GValue *cvalue = NULL;
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at)
-		cvalue = (GDA_DATA_MODEL_GET_CLASS (model)->get_value_at) (model, col, row, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_value_at)
+		cvalue = (GDA_DATA_MODEL_GET_IFACE (model)->get_value_at) (model, col, row, error);
 
 	if (cvalue) {
 		if (nullok && 
@@ -751,8 +713,8 @@ gda_data_model_get_attributes_at (GdaDataModel *model, gint col, gint row)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), 0);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_attributes_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_attributes_at) (model, col, row);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_attributes_at)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_attributes_at) (model, col, row);
 	else {
 		GdaDataModelAccessFlags flags;
 		GdaValueAttribute attrs = GDA_VALUE_ATTR_NO_MODIF;
@@ -783,8 +745,8 @@ gda_data_model_set_value_at (GdaDataModel *model, gint col, gint row, const GVal
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at) (model, col, row, value, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->set_value_at)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->set_value_at) (model, col, row, value, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -817,9 +779,9 @@ gda_data_model_set_values (GdaDataModel *model, gint row, GList *values, GError 
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), FALSE);
 	
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->set_values)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->set_values) (model, row, values, error);
-	else if (GDA_DATA_MODEL_GET_CLASS (model)->set_value_at) {
+	if (GDA_DATA_MODEL_GET_IFACE (model)->set_values)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->set_values) (model, row, values, error);
+	else if (GDA_DATA_MODEL_GET_IFACE (model)->set_value_at) {
 		/* save the values */
 		gint col, ncols;
 		ncols = gda_data_model_get_n_columns (model);
@@ -886,8 +848,8 @@ gda_data_model_create_iter (GdaDataModel *model)
 
 	GdaDataModelIter *iter = NULL;
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->create_iter)
-		iter = (GDA_DATA_MODEL_GET_CLASS (model)->create_iter) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->create_iter)
+		iter = (GDA_DATA_MODEL_GET_IFACE (model)->create_iter) (model);
 	else
 		/* default method */
 		iter = GDA_DATA_MODEL_ITER (g_object_new (GDA_TYPE_DATA_MODEL_ITER,
@@ -916,8 +878,8 @@ gda_data_model_append_values (GdaDataModel *model, const GList *values, GError *
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->append_values)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->append_values) (model, values, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->append_values)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->append_values) (model, values, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -950,8 +912,8 @@ gda_data_model_append_row (GdaDataModel *model, GError **error)
 		return -1;
 	}
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->append_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->append_row) (model, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->append_row)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->append_row) (model, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -985,8 +947,8 @@ gda_data_model_remove_row (GdaDataModel *model, gint row, GError **error)
 		return FALSE;
 	}
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->remove_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->remove_row) (model, row, error);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->remove_row)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->remove_row) (model, row, error);
 	else {
 		/* method not supported */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,
@@ -1017,8 +979,8 @@ gda_data_model_get_row_from_values (GdaDataModel *model, GSList *values, gint *c
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), -1);
 	g_return_val_if_fail (values, -1);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->find_row)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->find_row) (model, values, cols_index);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->find_row)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->find_row) (model, values, cols_index);
 
         n_rows = gda_data_model_get_n_rows (model);
         n_cols = gda_data_model_get_n_columns (model);
@@ -1081,8 +1043,8 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 {
 	g_return_if_fail (GDA_IS_DATA_MODEL (model));
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->send_hint)
-		(GDA_DATA_MODEL_GET_CLASS (model)->send_hint) (model, hint, hint_value);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->send_hint)
+		(GDA_DATA_MODEL_GET_IFACE (model)->send_hint) (model, hint, hint_value);
 }
 
 /**
@@ -1103,8 +1065,8 @@ gda_data_model_get_exceptions (GdaDataModel *model)
 {
 	g_return_val_if_fail (GDA_IS_DATA_MODEL (model), NULL);
 
-	if (GDA_DATA_MODEL_GET_CLASS (model)->get_exceptions)
-		return (GDA_DATA_MODEL_GET_CLASS (model)->get_exceptions) (model);
+	if (GDA_DATA_MODEL_GET_IFACE (model)->get_exceptions)
+		return (GDA_DATA_MODEL_GET_IFACE (model)->get_exceptions) (model);
 	else
 		return NULL;
 }

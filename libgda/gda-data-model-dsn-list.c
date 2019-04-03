@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,7 +35,7 @@ typedef struct {
 	GValue *tmp_value;
 } GdaDataModelDsnListPrivate;
 
-static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_dsn_list_data_model_init (GdaDataModelInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDataModelDsnList, gda_data_model_dsn_list,G_TYPE_OBJECT,
                          G_ADD_PRIVATE (GdaDataModelDsnList)
@@ -59,7 +60,7 @@ static void dsn_changed_cb (GdaConfig *conf, GdaDsnInfo *info, GdaDataModelDsnLi
  * Object init and finalize
  */
 static void
-gda_data_model_dsn_list_data_model_init (GdaDataModelIface *iface)
+gda_data_model_dsn_list_data_model_init (GdaDataModelInterface *iface)
 {
         iface->get_n_rows = gda_data_model_dsn_list_get_n_rows;
         iface->get_n_columns = gda_data_model_dsn_list_get_n_columns;

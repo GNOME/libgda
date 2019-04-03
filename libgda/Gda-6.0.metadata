@@ -1,6 +1,7 @@
 // Vala Bindings for GDA
 ServerProviderMeta skip
 ServerProviderXa skip
+DataModelInterface skip
 // libxml2: replace xml.NodePtr by xml.Node* used by Vala bindings
 Set.new_from_spec_node.xml_spec type="Xml.Node*"
 DataModel.add_data_from_xml_node.node type="Xml.Node*"

@@ -4,7 +4,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018-2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@
 
 
 /* GdaDataModel interface */
-static void                 gda_data_model_dir_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_dir_data_model_init (GdaDataModelInterface *iface);
 static gint                 gda_data_model_dir_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_dir_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_dir_describe_column (GdaDataModel *model, gint col);
@@ -142,7 +142,7 @@ static void update_data_model (GdaDataModelDir *model);
  * Object init and dispose
  */
 static void
-gda_data_model_dir_data_model_init (GdaDataModelIface *iface)
+gda_data_model_dir_data_model_init (GdaDataModelInterface *iface)
 {
         iface->get_n_rows = gda_data_model_dir_get_n_rows;
         iface->get_n_columns = gda_data_model_dir_get_n_columns;

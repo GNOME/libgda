@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -113,7 +114,7 @@ static gboolean bind_source_model (GdaDataPivot *pivot, GError **error);
 static void clean_previous_population (GdaDataPivot *pivot);
 
 /* GdaDataModel interface */
-static void                 gda_data_pivot_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_pivot_data_model_init (GdaDataModelInterface *iface);
 static gint                 gda_data_pivot_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_pivot_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_pivot_describe_column (GdaDataModel *model, gint col);
@@ -188,7 +189,7 @@ gda_data_pivot_class_init (GdaDataPivotClass *klass)
 #define gda_data_pivot_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_PIVOT, GdaDataPivotPrivate)
 
 static void
-gda_data_pivot_data_model_init (GdaDataModelIface *iface)
+gda_data_pivot_data_model_init (GdaDataModelInterface *iface)
 {
 	iface->get_n_rows = gda_data_pivot_get_n_rows;
 	iface->get_n_columns = gda_data_pivot_get_n_columns;

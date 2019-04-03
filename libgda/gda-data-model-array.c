@@ -12,7 +12,7 @@
  * Copyright (C) 2008 Przemysław Grzegorczyk <pgrzegorczyk@gmail.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2011 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2011,2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,20 +38,6 @@
 #include <libgda/gda-data-model-extra.h>
 #include <libgda/gda-util.h>
 
-typedef struct  {
-	gboolean       notify_changes;
-        GHashTable    *column_spec;
-
-        gboolean       read_only;
-
-	/* number of columns in each row */
-	gint           number_of_columns;
-
-	/* the array of rows, each item is a GdaRow */
-	GPtrArray        *rows;
-} GdaDataModelArrayPrivate;
-#define gda_data_model_array_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_MODEL_ARRAY, GdaDataModelArrayPrivate)
-
 enum {
 	PROP_0,
 	PROP_READ_ONLY,
@@ -64,10 +50,8 @@ static void gda_data_model_array_finalize     (GObject *object);
 static void gda_data_model_array_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void gda_data_model_array_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
 
-static GObjectClass *parent_class = NULL;
-
 /* GdaDataModel interface */
-static void                 gda_data_model_array_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_array_data_model_init (GdaDataModelInterface *iface);
 static gint                 gda_data_model_array_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_array_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_array_describe_column (GdaDataModel *model, gint col);
@@ -91,8 +75,25 @@ static gboolean             gda_data_model_array_get_notify      (GdaDataModel *
  * GdaDataModelArray class implementation
  */
 
+typedef struct  {
+	gboolean       notify_changes;
+        GHashTable    *column_spec;
+
+        gboolean       read_only;
+
+	/* number of columns in each row */
+	gint           number_of_columns;
+
+	/* the array of rows, each item is a GdaRow */
+	GPtrArray        *rows;
+} GdaDataModelArrayPrivate;
+
+G_DEFINE_TYPE_WITH_CODE (GdaDataModelArray, gda_data_model_array,G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaDataModelArray)
+                         G_IMPLEMENT_INTERFACE(GDA_TYPE_DATA_MODEL,gda_data_model_array_data_model_init))
+
 static void
-gda_data_model_array_data_model_init (GdaDataModelIface *iface)
+gda_data_model_array_data_model_init (GdaDataModelInterface *iface)
 {
         iface->get_n_rows = gda_data_model_array_get_n_rows;
         iface->get_n_columns = gda_data_model_array_get_n_columns;
@@ -116,50 +117,10 @@ gda_data_model_array_data_model_init (GdaDataModelIface *iface)
         iface->send_hint = NULL;
 }
 
-GType
-gda_data_model_array_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaDataModelArrayClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_data_model_array_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaDataModelArray),
-			0,
-			(GInstanceInitFunc) gda_data_model_array_init,
-			0
-		};
-
-		static const GInterfaceInfo data_model_info = {
-                        (GInterfaceInitFunc) gda_data_model_array_data_model_init,
-                        NULL,
-                        NULL
-                };
-
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaDataModelArray", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_MODEL, &data_model_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
 static void
 gda_data_model_array_class_init (GdaDataModelArrayClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
-	g_type_class_add_private (object_class, sizeof (GdaDataModelArrayPrivate));
 
 	object_class->finalize = gda_data_model_array_finalize;
 	object_class->set_property = gda_data_model_array_set_property;
@@ -222,7 +183,7 @@ gda_data_model_array_finalize (GObject *object)
         priv->column_spec = NULL;
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_data_model_array_parent_class)->finalize (object);
 }
 
 static void

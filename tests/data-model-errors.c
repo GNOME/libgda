@@ -2,6 +2,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +54,7 @@ static void data_model_errors_init       (DataModelErrors *model,
 static void data_model_errors_dispose    (GObject *object);
 
 /* GdaDataModel interface */
-static void                 data_model_errors_data_model_init (GdaDataModelIface *iface);
+static void                 data_model_errors_data_model_init (GdaDataModelInterface *iface);
 static gint                 data_model_errors_get_n_rows      (GdaDataModel *model);
 static gint                 data_model_errors_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *data_model_errors_describe_column (GdaDataModel *model, gint col);
@@ -72,7 +73,7 @@ static GObjectClass *parent_class = NULL;
  * Object init and dispose
  */
 static void
-data_model_errors_data_model_init (GdaDataModelIface *iface)
+data_model_errors_data_model_init (GdaDataModelInterface *iface)
 {
         iface->get_n_rows = data_model_errors_get_n_rows;
         iface->get_n_columns = data_model_errors_get_n_columns;

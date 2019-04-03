@@ -20,7 +20,7 @@
 #include<gda-data-model-select.h>
 
 // GdaDataModel Interface
-static void gda_data_model_select_data_model_init (GdaDataModelIface *iface);
+static void gda_data_model_select_data_model_init (GdaDataModelInterface *iface);
 
 // GdaDataModelSelect object definition
 
@@ -451,7 +451,7 @@ gda_data_model_select_get_exceptions (GdaDataModel *model)
 }
 
 static void
-gda_data_model_select_data_model_init (GdaDataModelIface *iface)
+gda_data_model_select_data_model_init (GdaDataModelInterface *iface)
 {
 	iface->get_n_rows = gda_data_model_select_get_n_rows;
 	iface->get_n_columns = gda_data_model_select_get_n_columns;

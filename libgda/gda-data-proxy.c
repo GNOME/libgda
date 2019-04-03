@@ -8,7 +8,7 @@
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011 - 2012, 2018 Daniel Espinosa <despinosa@src.gnome.org>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
- * Copyright (C) 2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2018-2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,7 +68,7 @@ static void gda_data_proxy_get_property (GObject *object,
 					 GValue *value,
 					 GParamSpec *pspec);
 /* GdaDataModel interface */
-static void                 gda_data_proxy_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_proxy_data_model_init (GdaDataModelInterface *iface);
 
 static gint                 gda_data_proxy_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_proxy_get_n_columns   (GdaDataModel *model);
@@ -697,7 +697,7 @@ gda_data_proxy_class_init (GdaDataProxyClass *klass)
 }
 
 static void
-gda_data_proxy_data_model_init (GdaDataModelIface *iface)
+gda_data_proxy_data_model_init (GdaDataModelInterface *iface)
 {
 	iface->get_n_rows = gda_data_proxy_get_n_rows;
 	iface->get_n_columns = gda_data_proxy_get_n_columns;

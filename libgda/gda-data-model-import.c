@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
- * Copyright (C) 2013, 2018 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2013, 2018-2019 Daniel Espinosa <esodan@gmail.com>
  * Copyright (C) 2013 Miguel Angel Cabrera Moya <madmac2501@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
@@ -76,7 +76,7 @@ typedef struct {
 
 
 /* GdaDataModel interface */
-static void                 gda_data_model_import_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_import_data_model_init (GdaDataModelInterface *iface);
 static gint                 gda_data_model_import_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_import_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_import_describe_column (GdaDataModel *model, gint col);
@@ -292,7 +292,7 @@ gda_data_model_import_class_init (GdaDataModelImportClass *klass)
 }
 
 static void
-gda_data_model_import_data_model_init (GdaDataModelIface *iface)
+gda_data_model_import_data_model_init (GdaDataModelInterface *iface)
 {
 	iface->get_n_rows = gda_data_model_import_get_n_rows;
 	iface->get_n_columns = gda_data_model_import_get_n_columns;
