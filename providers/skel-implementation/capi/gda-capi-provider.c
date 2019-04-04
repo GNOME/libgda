@@ -46,9 +46,7 @@
  * GObject methods
  */
 static void gda_capi_provider_class_init (GdaCapiProviderClass *klass);
-static void gda_capi_provider_init       (GdaCapiProvider *provider,
-					  GdaCapiProviderClass *klass);
-static GObjectClass *parent_class = NULL;
+static void gda_capi_provider_init       (GdaCapiProvider *provider);
 
 /*
  * GdaServerProvider's virtual methods
@@ -149,7 +147,6 @@ static void gda_capi_free_cnc_data (CapiConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -260,6 +257,13 @@ GdaServerProviderXa xa_functions = {
 	NULL, NULL, NULL, NULL, /* padding */
 };
 
+typedef struct {
+  int dummy;
+  /* ADD YOUR DETAILS ABOUT YOUR PROVIDER */
+} GdaCapiProviderPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE(GdaCapiProvider, gda_capi_provider, GDA_TYPE_SERVER_PROVIDER)
+
 static void
 gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 {
@@ -270,15 +274,11 @@ gda_capi_provider_class_init (GdaCapiProviderClass *klass)
 						GDA_SERVER_PROVIDER_FUNCTIONS_META, (gpointer) &meta_functions);
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA, (gpointer) &xa_functions);
-
-	parent_class = g_type_class_peek_parent (klass);
 }
 
 static void
-gda_capi_provider_init (GdaCapiProvider *capi_prv, G_GNUC_UNUSED GdaCapiProviderClass *klass)
+gda_capi_provider_init (GdaCapiProvider *capi_prv)
 {
-	g_mutex_lock (&init_mutex);
-
 	if (!internal_stmt) {
 		InternalStatementItem i;
 		GdaSqlParser *parser;
@@ -297,34 +297,6 @@ gda_capi_provider_init (GdaCapiProvider *capi_prv, G_GNUC_UNUSED GdaCapiProvider
 
 	/* TO_ADD: any other provider's init should be added here */
 
-	g_mutex_unlock (&init_mutex);
-}
-
-GType
-gda_capi_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaCapiProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_capi_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaCapiProvider),
-			0,
-			(GInstanceInitFunc) gda_capi_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaCapiProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 

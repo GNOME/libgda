@@ -27,25 +27,12 @@
 #include <libgda/gda-server-provider.h>
 
 #define GDA_TYPE_CAPI_PROVIDER            (gda_capi_provider_get_type())
-#define GDA_CAPI_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_PROVIDER, GdaCapiProvider))
-#define GDA_CAPI_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_PROVIDER, GdaCapiProviderClass))
-#define GDA_IS_CAPI_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CAPI_PROVIDER))
-#define GDA_IS_CAPI_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_CAPI_PROVIDER))
-
-typedef struct _GdaCapiProvider      GdaCapiProvider;
-typedef struct _GdaCapiProviderClass GdaCapiProviderClass;
-
-struct _GdaCapiProvider {
-	GdaServerProvider      provider;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaCapiProvider, gda_capi_provider, GDA, CAPI_PROVIDER, GdaServerProvider)
 struct _GdaCapiProviderClass {
 	GdaServerProviderClass parent_class;
 };
 
 G_BEGIN_DECLS
-
-GType gda_capi_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
