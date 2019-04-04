@@ -29,25 +29,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CAPI_BLOB_OP            (gda_capi_blob_op_get_type())
-#define GDA_CAPI_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_BLOB_OP, GdaCapiBlobOp))
-#define GDA_CAPI_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_BLOB_OP, GdaCapiBlobOpClass))
-#define GDA_IS_CAPI_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CAPI_BLOB_OP))
-#define GDA_IS_CAPI_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_CAPI_BLOB_OP))
-
-typedef struct _GdaCapiBlobOp        GdaCapiBlobOp;
-typedef struct _GdaCapiBlobOpClass   GdaCapiBlobOpClass;
-typedef struct _GdaCapiBlobOpPrivate GdaCapiBlobOpPrivate;
-
-struct _GdaCapiBlobOp {
-	GdaBlobOp             parent;
-	GdaCapiBlobOpPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaCapiBlobOp, gda_capi_blob_op, GDA, CAPI_BLOB_OP, GdaBlobOp)
 struct _GdaCapiBlobOpClass {
 	GdaBlobOpClass        parent_class;
 };
 
-GType         gda_capi_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_capi_blob_op_new          (GdaConnection *cnc);
 
 /* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */

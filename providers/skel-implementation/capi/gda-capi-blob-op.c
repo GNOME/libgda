@@ -29,59 +29,27 @@
 #include <libgda/gda-blob-op-impl.h>
 #include <libgda/gda-debug-macros.h>
 
-struct _GdaCapiBlobOpPrivate {
-	GdaConnection *cnc;
-	/* TO_ADD: specific information describing a Blob in the C API */
-};
 
 static void gda_capi_blob_op_class_init (GdaCapiBlobOpClass *klass);
-static void gda_capi_blob_op_init       (GdaCapiBlobOp *blob,
-					 GdaCapiBlobOpClass *klass);
-static void gda_capi_blob_op_finalize   (GObject *object);
+static void gda_capi_blob_op_init       (GdaCapiBlobOp *blob);
+static void gda_capi_blob_op_dispose   (GObject *object);
 
 static glong gda_capi_blob_op_get_length (GdaBlobOp *op);
 static glong gda_capi_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
 static glong gda_capi_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
 
-static GObjectClass *parent_class = NULL;
 
-/*
- * Object init and finalize
- */
-GType
-gda_capi_blob_op_get_type (void)
-{
-	static GType type = 0;
+typedef struct {
+	GdaConnection *cnc;
+	/* TO_ADD: specific information describing a Blob in the C API */
+} GdaCapiBlobOpPrivate;
 
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaCapiBlobOpClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_capi_blob_op_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaCapiBlobOp),
-			0,
-			(GInstanceInitFunc) gda_capi_blob_op_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaCapiBlobOp", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_PRIVATE (GdaCapiBlobOp, gda_capi_blob_op, GDA_TYPE_BLOB_OP)
 
 static void
-gda_capi_blob_op_init (GdaCapiBlobOp *op,
-			   G_GNUC_UNUSED GdaCapiBlobOpClass *klass)
+gda_capi_blob_op_init (GdaCapiBlobOp *op)
 {
 	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (op));
-
-	op->priv = g_new0 (GdaCapiBlobOpPrivate, 1);
 
 	/* initialize specific structure */
 	TO_IMPLEMENT;
@@ -93,28 +61,19 @@ gda_capi_blob_op_class_init (GdaCapiBlobOpClass *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
 
-	object_class->finalize = gda_capi_blob_op_finalize;
+	object_class->dispose = gda_capi_blob_op_dispose;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_capi_blob_op_get_length;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_capi_blob_op_read;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_capi_blob_op_write;
 }
 
 static void
-gda_capi_blob_op_finalize (GObject * object)
+gda_capi_blob_op_dispose (GObject * object)
 {
-	GdaCapiBlobOp *bop = (GdaCapiBlobOp *) object;
-
-	g_return_if_fail (GDA_IS_CAPI_BLOB_OP (bop));
-
 	/* free specific information */
 	TO_IMPLEMENT;
-
-	g_free (bop->priv);
-	bop->priv = NULL;
-
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_capi_blob_op_parent_class)->dispose (object);
 }
 
 GdaBlobOp *
@@ -125,7 +84,10 @@ gda_capi_blob_op_new (GdaConnection *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	bop = g_object_new (GDA_TYPE_CAPI_BLOB_OP, "connection", cnc, NULL);
-	bop->priv->cnc = cnc;
+
+  GdaCapiBlobOpPrivate *priv = gda_capi_blob_op_get_instance_private (bop);
+
+	priv->cnc = cnc;
 	
 	return GDA_BLOB_OP (bop);
 }
@@ -140,8 +102,8 @@ gda_capi_blob_op_get_length (GdaBlobOp *op)
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
 	bop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (bop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
+  GdaCapiBlobOpPrivate *priv = gda_capi_blob_op_get_instance_private (bop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 
 	TO_IMPLEMENT;
 	return -1;
@@ -158,8 +120,8 @@ gda_capi_blob_op_read (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size)
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
 	bop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (bop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
+  GdaCapiBlobOpPrivate *priv = gda_capi_blob_op_get_instance_private (bop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
@@ -190,8 +152,8 @@ gda_capi_blob_op_write (GdaBlobOp *op, GdaBlob *blob, G_GNUC_UNUSED glong offset
 
 	g_return_val_if_fail (GDA_IS_CAPI_BLOB_OP (op), -1);
 	bop = GDA_CAPI_BLOB_OP (op);
-	g_return_val_if_fail (bop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (bop->priv->cnc), -1);
+  GdaCapiBlobOpPrivate *priv = gda_capi_blob_op_get_instance_private (bop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
 	if (gda_blob_get_op (blob) && (gda_blob_get_op (blob) != op)) {
