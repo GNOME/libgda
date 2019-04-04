@@ -42,48 +42,8 @@ static gboolean     gda_sqlite_handler_boolean_accepts_g_type         (GdaDataHa
 
 static const gchar *gda_sqlite_handler_boolean_get_descr              (GdaDataHandler *dh);
 
-struct  _GdaSqliteHandlerBooleanPriv {
-	gchar dummy;
-};
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-_gda_sqlite_handler_boolean_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaSqliteHandlerBooleanClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sqlite_handler_boolean_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaSqliteHandlerBoolean),
-			0,
-			(GInstanceInitFunc) gda_sqlite_handler_boolean_init,
-			NULL
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gda_sqlite_handler_boolean_data_handler_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, CLASS_PREFIX "HandlerBoolean", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_CODE (GdaSqliteHandlerBoolean, gda_sqlite_handler_boolean, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, gda_sqlite_handler_boolean_data_handler_init))
 
 static void
 gda_sqlite_handler_boolean_data_handler_init (GdaDataHandlerInterface *iface)
@@ -103,8 +63,6 @@ gda_sqlite_handler_boolean_class_init (GdaSqliteHandlerBooleanClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gda_sqlite_handler_boolean_dispose;
 }
 
@@ -112,7 +70,6 @@ static void
 gda_sqlite_handler_boolean_init (GdaSqliteHandlerBoolean *hdl)
 {
 	/* Private structure */
-	hdl->priv = g_new0 (GdaSqliteHandlerBooleanPriv, 1);
 	g_object_set_data (G_OBJECT (hdl), "name", "SqliteBoolean");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("Sqlite boolean representation"));
 }
@@ -120,19 +77,8 @@ gda_sqlite_handler_boolean_init (GdaSqliteHandlerBoolean *hdl)
 static void
 gda_sqlite_handler_boolean_dispose (GObject *object)
 {
-	GdaSqliteHandlerBoolean *hdl;
-
-	g_return_if_fail (GDA_IS_SQLITE_HANDLER_BOOLEAN (object));
-
-	hdl = GDA_SQLITE_HANDLER_BOOLEAN (object);
-
-	if (hdl->priv) {
-		g_free (hdl->priv);
-		hdl->priv = NULL;
-	}
-
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_sqlite_handler_boolean_parent_class)->dispose (object);
 }
 
 /*

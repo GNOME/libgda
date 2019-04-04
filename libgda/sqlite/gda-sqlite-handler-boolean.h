@@ -25,30 +25,15 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_HANDLER_BOOLEAN          (_gda_sqlite_handler_boolean_get_type())
-#define GDA_SQLITE_HANDLER_BOOLEAN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, _gda_sqlite_handler_boolean_get_type(), GdaSqliteHandlerBoolean)
-#define GDA_SQLITE_HANDLER_BOOLEAN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, _gda_sqlite_handler_boolean_get_type (), GdaSqliteHandlerBooleanClass)
-#define GDA_IS_SQLITE_HANDLER_BOOLEAN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, _gda_sqlite_handler_boolean_get_type ())
+#define GDA_TYPE_SQLITE_HANDLER_BOOLEAN          (gda_sqlite_handler_boolean_get_type())
+G_DECLARE_DERIVABLE_TYPE (GdaSqliteHandlerBoolean, gda_sqlite_handler_boolean, GDA, SQLITE_HANDLER_BOOLEAN, GObject)
 
-typedef struct _GdaSqliteHandlerBoolean      GdaSqliteHandlerBoolean;
-typedef struct _GdaSqliteHandlerBooleanClass GdaSqliteHandlerBooleanClass;
-typedef struct _GdaSqliteHandlerBooleanPriv  GdaSqliteHandlerBooleanPriv;
-
-/* struct for the object's data */
-struct _GdaSqliteHandlerBoolean
-{
-	GObject                 object;
-	GdaSqliteHandlerBooleanPriv  *priv;
-};
-
-/* struct for the object's class */
 struct _GdaSqliteHandlerBooleanClass
 {
 	GObjectClass           parent_class;
 };
 
 
-GType           _gda_sqlite_handler_boolean_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *_gda_sqlite_handler_boolean_new           (void);
 
 G_END_DECLS
