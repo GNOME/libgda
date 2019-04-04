@@ -469,8 +469,7 @@ gda_sql_function_free (GdaSqlFunction *function)
 
 	g_free (function->function_name);
 	if (function->args_list) {
-		g_slist_foreach (function->args_list, (GFunc) gda_sql_expr_free, NULL);
-		g_slist_free (function->args_list);
+		g_slist_free_full (function->args_list, (GDestroyNotify) gda_sql_expr_free);
 	}
 	g_free (function);
 }

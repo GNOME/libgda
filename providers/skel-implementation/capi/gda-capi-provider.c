@@ -1061,8 +1061,7 @@ gda_capi_provider_statement_prepare (GdaServerProvider *provider, GdaConnection 
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
                                              "%s", _("Unnamed parameter is not allowed in prepared statements"));
-                                g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-                                g_slist_free (param_ids);
+                                g_slist_free_full (param_ids, (GDestroyNotify) g_free);
                                 goto out;
                         }
                 }

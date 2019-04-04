@@ -80,8 +80,7 @@ gda_sql_statement_insert_free (gpointer stmt)
 	}
 	g_slist_free (insert->values_list);
 
-	g_slist_foreach (insert->fields_list, (GFunc) gda_sql_field_free, NULL);
-	g_slist_free (insert->fields_list);
+	g_slist_free_full (insert->fields_list, (GDestroyNotify) gda_sql_field_free);
 	if (insert->select) {
 		if (GDA_SQL_ANY_PART (insert->select)->type == GDA_SQL_ANY_STMT_SELECT)
 			_gda_sql_statement_select_free (insert->select);
