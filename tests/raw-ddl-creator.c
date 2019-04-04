@@ -39,7 +39,6 @@
 static void raw_ddl_creator_class_init (RawDDLCreatorClass *klass);
 static void raw_ddl_creator_init (RawDDLCreator *creator);
 static void raw_ddl_creator_dispose (GObject *object);
-static void raw_ddl_creator_finalize (GObject *object);
 
 static void raw_ddl_creator_set_property (GObject *object,
 					 guint param_id,
@@ -53,7 +52,6 @@ static void raw_ddl_creator_get_property (GObject *object,
 static gboolean load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **error);
 static GdaServerOperation *prepare_dbo_server_operation (RawDDLCreator *ddlc, GdaServerProvider *prov, GdaConnection *cnc,
 							 GdaMetaDbObject *dbo, GError **error);
-static GRecMutex init_mutex;
 
 typedef struct {
 	gchar  *prov;
@@ -70,7 +68,7 @@ static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
 static void ProviderSpecific_key_free (ProviderSpecificKey *key);
 static void ProviderSpecific_value_free (ProviderSpecificValue *value);
 
-struct _RawDDLCreatorPrivate {
+typedef struct {
 	GdaConnection *cnc;
 	GdaMetaStruct *d_mstruct;
 
@@ -79,11 +77,9 @@ struct _RawDDLCreatorPrivate {
 	GValue *schema;
 	gchar *quoted_catalog;
 	gchar *quoted_schema;
-};
+} RawDDLCreatorPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
+G_DEFINE_TYPE_WITH_PRIVATE (RawDDLCreator, raw_ddl_creator, G_TYPE_OBJECT)
 
 /* properties */
 enum {
@@ -99,32 +95,6 @@ GQuark raw_ddl_creator_error_quark (void) {
 	if (!quark)
 		quark = g_quark_from_static_string ("raw_ddl_creator_error");
 	return quark;
-}
-
-GType
-raw_ddl_creator_get_type (void) {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (RawDDLCreatorClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) raw_ddl_creator_class_init,
-			NULL,
-			NULL,
-			sizeof (RawDDLCreator),
-			0,
-			(GInstanceInitFunc) raw_ddl_creator_init,
-			0
-		};
-
-		g_rec_mutex_lock (&init_mutex);
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "RawDDLCreator", &info, 0);
-		g_rec_mutex_unlock (&init_mutex);
-	}
-	return type;
 }
 
 static guint
@@ -174,9 +144,6 @@ raw_ddl_creator_class_init (RawDDLCreatorClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	g_rec_mutex_lock (&init_mutex);
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* Properties */
 	object_class->set_property = raw_ddl_creator_set_property;
 	object_class->get_property = raw_ddl_creator_get_property;
@@ -191,25 +158,23 @@ raw_ddl_creator_class_init (RawDDLCreatorClass *klass)
 		(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY)));
 
 	object_class->dispose = raw_ddl_creator_dispose;
-	object_class->finalize = raw_ddl_creator_finalize;
 
-	g_rec_mutex_unlock (&init_mutex);
 }
 
 
 static void
 raw_ddl_creator_init (RawDDLCreator *creator)
 {
-	creator->priv = g_new0 (RawDDLCreatorPrivate, 1);
-	creator->priv->cnc = NULL;
-	creator->priv->d_mstruct = NULL;
-	creator->priv->provider_specifics = g_hash_table_new_full (ProviderSpecific_hash, ProviderSpecific_equal,
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (creator);
+	priv->cnc = NULL;
+	priv->d_mstruct = NULL;
+	priv->provider_specifics = g_hash_table_new_full (ProviderSpecific_hash, ProviderSpecific_equal,
 								   (GDestroyNotify) ProviderSpecific_key_free,
 								   (GDestroyNotify) ProviderSpecific_value_free);
-	creator->priv->catalog = NULL;
-	creator->priv->schema = NULL;
-	creator->priv->quoted_catalog = NULL;
-	creator->priv->quoted_schema = NULL;
+	priv->catalog = NULL;
+	priv->schema = NULL;
+	priv->quoted_catalog = NULL;
+	priv->quoted_schema = NULL;
 }
 
 static void
@@ -220,48 +185,29 @@ raw_ddl_creator_dispose (GObject *object)
 	g_return_if_fail (RAW_IS_DDL_CREATOR (object));
 
 	creator = RAW_DDL_CREATOR (object);
-	if (creator->priv) {
-		if (creator->priv->catalog)
-			gda_value_free (creator->priv->catalog);
-		if (creator->priv->schema)
-			gda_value_free (creator->priv->schema);
-		g_free (creator->priv->quoted_catalog);
-		g_free (creator->priv->quoted_schema);
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (creator);
 
-		if (creator->priv->cnc) {
-			g_object_unref (creator->priv->cnc);
-			creator->priv->cnc = NULL;
+		if (priv->catalog)
+			gda_value_free (priv->catalog);
+		if (priv->schema)
+			gda_value_free (priv->schema);
+		g_free (priv->quoted_catalog);
+		g_free (priv->quoted_schema);
+
+		if (priv->cnc) {
+			g_object_unref (priv->cnc);
+			priv->cnc = NULL;
 		}
 
-		if (creator->priv->d_mstruct) {
-			g_object_unref (creator->priv->d_mstruct);
-			creator->priv->d_mstruct = NULL;
+		if (priv->d_mstruct) {
+			g_object_unref (priv->d_mstruct);
+			priv->d_mstruct = NULL;
 		}
-	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (raw_ddl_creator_parent_class)->dispose (object);
 }
 
-static void
-raw_ddl_creator_finalize (GObject *object)
-{
-	RawDDLCreator *creator;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (RAW_IS_DDL_CREATOR (object));
-
-	creator = RAW_DDL_CREATOR (object);
-	if (creator->priv) {
-		if (creator->priv->provider_specifics)
-			g_hash_table_destroy (creator->priv->provider_specifics);
-		g_free (creator->priv);
-		creator->priv = NULL;
-	}
-
-	/* parent class */
-	parent_class->finalize (object);
-}
 
 static void
 raw_ddl_creator_set_property (GObject *object,
@@ -272,43 +218,45 @@ raw_ddl_creator_set_property (GObject *object,
 	RawDDLCreator *creator;
 
 	creator = RAW_DDL_CREATOR (object);
-	if (creator->priv) {
+
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (creator);
+
 		switch (param_id) {
 		case PROP_CNC_OBJECT:
-			if (creator->priv->cnc)
-				g_object_unref (creator->priv->cnc);
+			if (priv->cnc)
+				g_object_unref (priv->cnc);
 
-			creator->priv->cnc = g_value_get_object (value);
-			if (creator->priv->cnc)
-				g_object_ref (creator->priv->cnc);
+			priv->cnc = g_value_get_object (value);
+			if (priv->cnc)
+				g_object_ref (priv->cnc);
 			break;
 		case PROP_CATALOG:
-			if (creator->priv->catalog)
-				gda_value_free (creator->priv->catalog);
-			creator->priv->catalog = NULL;
-			g_free (creator->priv->quoted_catalog);
-			creator->priv->quoted_catalog = NULL;
+			if (priv->catalog)
+				gda_value_free (priv->catalog);
+			priv->catalog = NULL;
+			g_free (priv->quoted_catalog);
+			priv->quoted_catalog = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
-				creator->priv->catalog = gda_value_copy (value);
-				if (!creator->priv->cnc)
+				priv->catalog = gda_value_copy (value);
+				if (!priv->cnc)
 					g_warning ("The \"catalog\" property should be set after the \"cnc\" one");
-				creator->priv->quoted_catalog =
-					gda_sql_identifier_quote (g_value_get_string (value), creator->priv->cnc, NULL,
+				priv->quoted_catalog =
+					gda_sql_identifier_quote (g_value_get_string (value), priv->cnc, NULL,
 								  FALSE, FALSE);
 			}
 			break;
 		case PROP_SCHEMA:
-			if (creator->priv->schema)
-				gda_value_free (creator->priv->schema);
-			creator->priv->schema = NULL;
-			g_free (creator->priv->quoted_schema);
-			creator->priv->quoted_schema = NULL;
+			if (priv->schema)
+				gda_value_free (priv->schema);
+			priv->schema = NULL;
+			g_free (priv->quoted_schema);
+			priv->quoted_schema = NULL;
 			if (g_value_get_string (value) && *g_value_get_string (value)) {
-				creator->priv->schema = gda_value_copy (value);
-				if (!creator->priv->cnc)
+				priv->schema = gda_value_copy (value);
+				if (!priv->cnc)
 					g_warning ("The \"schema\" property should be set after the \"cnc\" one");
-				creator->priv->quoted_schema =
-					gda_sql_identifier_quote (g_value_get_string (value), creator->priv->cnc, NULL,
+				priv->quoted_schema =
+					gda_sql_identifier_quote (g_value_get_string (value), priv->cnc, NULL,
 								  FALSE, FALSE);
 			}
 			break;
@@ -316,7 +264,6 @@ raw_ddl_creator_set_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-	}
 }
 
 static void
@@ -327,21 +274,21 @@ raw_ddl_creator_get_property (GObject *object,
 {
 	RawDDLCreator *creator;
 	creator = RAW_DDL_CREATOR (object);
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (creator);
 
-	if (creator->priv) {
 		switch (param_id) {
 		case PROP_CNC_OBJECT:
-			g_value_set_object (value, (GObject *) creator->priv->cnc);
+			g_value_set_object (value, (GObject *) priv->cnc);
 			break;
 		case PROP_CATALOG:
-			if (creator->priv->catalog)
-				g_value_set_string (value, g_value_get_string (creator->priv->catalog));
+			if (priv->catalog)
+				g_value_set_string (value, g_value_get_string (priv->catalog));
 			else
 				g_value_set_string (value, NULL);
 			break;
 		case PROP_SCHEMA:
-			if (creator->priv->schema)
-				g_value_set_string (value, g_value_get_string (creator->priv->schema));
+			if (priv->schema)
+				g_value_set_string (value, g_value_get_string (priv->schema));
 			else
 				g_value_set_string (value, NULL);
 			break;
@@ -349,7 +296,6 @@ raw_ddl_creator_get_property (GObject *object,
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
 		}
-	}
 }
 
 /**
@@ -379,16 +325,17 @@ raw_ddl_creator_set_dest_from_file (RawDDLCreator *ddlc, const gchar *xml_spec_f
 {
 	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), FALSE);
 	g_return_val_if_fail (xml_spec_file && *xml_spec_file, FALSE);
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (ddlc);
 
-	if (ddlc->priv->d_mstruct)
-		g_object_unref (ddlc->priv->d_mstruct);
+	if (priv->d_mstruct)
+		g_object_unref (priv->d_mstruct);
 
-	ddlc->priv->d_mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, NULL);
+	priv->d_mstruct = (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, NULL);
 
-	if (!gda_meta_struct_load_from_xml_file (ddlc->priv->d_mstruct, NULL, NULL, xml_spec_file, error) ||
+	if (!gda_meta_struct_load_from_xml_file (priv->d_mstruct, NULL, NULL, xml_spec_file, error) ||
 	    !load_customization (ddlc, xml_spec_file, error)) {
-		g_object_unref (ddlc->priv->d_mstruct);
-		ddlc->priv->d_mstruct = NULL;
+		g_object_unref (priv->d_mstruct);
+		priv->d_mstruct = NULL;
 		return FALSE;
 	}
 	else
@@ -400,6 +347,7 @@ load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **er
 {
 	xmlNodePtr node;
 	xmlDocPtr doc;
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (ddlc);
 
 	/* load information schema's structure XML file */
 	doc = xmlParseFile (xml_spec_file);
@@ -458,7 +406,7 @@ load_customization (RawDDLCreator *ddlc, const gchar *xml_spec_file, GError **er
 							val->repl = g_strdup ((gchar *) tmp);
 							xmlFree (tmp);
 						}
-						g_hash_table_insert (ddlc->priv->provider_specifics, key, val);
+						g_hash_table_insert (priv->provider_specifics, key, val);
 						/*g_print ("RULE: %s, %s, %s => %s\n", key->prov,
 						  key->path, key->expr, val->repl);*/
 					}
@@ -534,6 +482,7 @@ create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov,
 	GSList *list;
 	gint index;
 	const gchar *repl;
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (ddlc);
 
 	op = gda_server_provider_create_operation (prov, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL, error);
 	if (!op)
@@ -547,7 +496,7 @@ create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov,
 		if (! gda_server_operation_set_value_at (op, tcol->column_name, error,
 							 "/FIELDS_A/@COLUMN_NAME/%d", index))
 			goto onerror;
-		repl = provider_specific_match (ddlc->priv->provider_specifics, prov, tcol->column_type ? tcol->column_type : "string",
+		repl = provider_specific_match (priv->provider_specifics, prov, tcol->column_type ? tcol->column_type : "string",
 						"/FIELDS_A/@COLUMN_TYPE");
 		if (! gda_server_operation_set_value_at (op, repl ? repl : "string", error,
 							 "/FIELDS_A/@COLUMN_TYPE/%d", index))
@@ -579,7 +528,7 @@ create_server_operation_for_table (RawDDLCreator *ddlc, GdaServerProvider *prov,
 		if (!fdata.allok)
 			goto onerror;
 
-		repl = provider_specific_match (ddlc->priv->provider_specifics, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
+		repl = provider_specific_match (priv->provider_specifics, prov, "dummy", "/FIELDS_A/@COLUMN_PKEY");
 		if (repl) {
 			if (! gda_server_operation_set_value_at (op, tcol->pkey ? "TRUE" : "FALSE", error,
 								 "/FIELDS_A/@COLUMN_PKEY/%d", index))
@@ -682,17 +631,18 @@ raw_ddl_creator_get_sql (RawDDLCreator *ddlc, GError **error)
 	GString *string;
 	gchar *sql;
 	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), NULL);
-	g_return_val_if_fail (ddlc->priv, NULL);
-	if (!ddlc->priv->cnc) {
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (ddlc);
+
+	if (!priv->cnc) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", "No connection specified");
 		return NULL;
 	}
 
 	/* render operations to SQL */
-	GdaServerProvider *prov = gda_connection_get_provider (ddlc->priv->cnc);
+	GdaServerProvider *prov = gda_connection_get_provider (priv->cnc);
 	GSList *objlist, *list;
-	objlist = gda_meta_struct_get_all_db_objects (ddlc->priv->d_mstruct);
+	objlist = gda_meta_struct_get_all_db_objects (priv->d_mstruct);
 
 	string = g_string_new ("");
 	for (list = objlist; list; list = list->next) {
@@ -704,7 +654,7 @@ raw_ddl_creator_get_sql (RawDDLCreator *ddlc, GError **error)
 			return NULL;
 		}
 		else {
-			sql = gda_server_provider_render_operation (prov, ddlc->priv->cnc, op, error);
+			sql = gda_server_provider_render_operation (prov, priv->cnc, op, error);
 			if (!sql) {
 				g_string_free (string, TRUE);
 				return NULL;
@@ -737,34 +687,35 @@ gboolean
 raw_ddl_creator_execute (RawDDLCreator *ddlc, GError **error)
 {
 	g_return_val_if_fail (RAW_IS_DDL_CREATOR (ddlc), FALSE);
-	g_return_val_if_fail (ddlc->priv, FALSE);
-	if (!ddlc->priv->cnc) {
+  RawDDLCreatorPrivate *priv = raw_ddl_creator_get_instance_private (ddlc);
+
+	if (!priv->cnc) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", "No connection specified");
 		return FALSE;
 	}
-	if (!ddlc->priv->d_mstruct) {
+	if (!priv->d_mstruct) {
 		g_set_error (error, RAW_DDL_CREATOR_ERROR, RAW_DDL_CREATOR_NO_CONNECTION_ERROR,
 			     "%s", "No destination database objects specified");
 		return FALSE;
 	}
 
 	/* begin transaction */
-	if (!gda_connection_begin_transaction (ddlc->priv->cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN,
+	if (!gda_connection_begin_transaction (priv->cnc, NULL, GDA_TRANSACTION_ISOLATION_UNKNOWN,
 					       error))
 		return FALSE;
 
 	/* execute operations */
-	GdaServerProvider *prov = gda_connection_get_provider (ddlc->priv->cnc);
+	GdaServerProvider *prov = gda_connection_get_provider (priv->cnc);
 	GSList *objlist, *list;
-	objlist = gda_meta_struct_get_all_db_objects (ddlc->priv->d_mstruct);
+	objlist = gda_meta_struct_get_all_db_objects (priv->d_mstruct);
 	for (list = objlist; list; list = list->next) {
 		GdaServerOperation *op;
 		op = prepare_dbo_server_operation (ddlc, prov, NULL, GDA_META_DB_OBJECT (list->data), error);
 		if (!op)
 			goto onerror;
 		else {
-			if (!gda_server_provider_perform_operation (prov, ddlc->priv->cnc, op, error)) {
+			if (!gda_server_provider_perform_operation (prov, priv->cnc, op, error)) {
 				g_object_unref (op);
 				goto onerror;
 			}
@@ -772,13 +723,13 @@ raw_ddl_creator_execute (RawDDLCreator *ddlc, GError **error)
 		g_object_unref (op);
 	}
 
-	if (!gda_connection_commit_transaction (ddlc->priv->cnc, NULL, error))
+	if (!gda_connection_commit_transaction (priv->cnc, NULL, error))
 		goto onerror;
 
 	return TRUE;
 
  onerror:
-	gda_connection_rollback_transaction (ddlc->priv->cnc, NULL, NULL);
+	gda_connection_rollback_transaction (priv->cnc, NULL, NULL);
 	return FALSE;
 }
 

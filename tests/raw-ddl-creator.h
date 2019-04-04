@@ -26,15 +26,15 @@
 
 G_BEGIN_DECLS
 
-typedef struct _RawDDLCreator        RawDDLCreator;
-typedef struct _RawDDLCreatorClass   RawDDLCreatorClass;
-typedef struct _RawDDLCreatorPrivate RawDDLCreatorPrivate;
-typedef struct _RawDDLCreatorClassPrivate RawDDLCreatorClassPrivate;
-
 #define RAW_TYPE_DDL_CREATOR          (raw_ddl_creator_get_type())
-#define RAW_DDL_CREATOR(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, raw_ddl_creator_get_type(), RawDDLCreator)
-#define RAW_DDL_CREATOR_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, raw_ddl_creator_get_type (), RawDDLCreatorClass)
-#define RAW_IS_DDL_CREATOR(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, raw_ddl_creator_get_type ())
+
+G_DECLARE_DERIVABLE_TYPE(RawDDLCreator, raw_ddl_creator, RAW, DDL_CREATOR, GObject)
+
+/* struct for the object's class */
+struct _RawDDLCreatorClass
+{
+	GObjectClass              parent_class;
+};
 
 /* error reporting */
 extern GQuark raw_ddl_creator_error_quark (void);
@@ -47,20 +47,7 @@ typedef enum {
 } RawDDLCreatorError;
 
 
-/* struct for the object's data */
-struct _RawDDLCreator
-{
-	GObject               object;
-	RawDDLCreatorPrivate  *priv;
-};
 
-/* struct for the object's class */
-struct _RawDDLCreatorClass
-{
-	GObjectClass              parent_class;
-};
-
-GType             raw_ddl_creator_get_type             (void) G_GNUC_CONST;
 RawDDLCreator    *raw_ddl_creator_new                  (void);
 
 gboolean          raw_ddl_creator_set_dest_from_file   (RawDDLCreator *ddlc, const gchar *xml_spec_file,
