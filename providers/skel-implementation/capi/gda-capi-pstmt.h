@@ -30,27 +30,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CAPI_PSTMT            (gda_capi_pstmt_get_type())
-#define GDA_CAPI_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_PSTMT, GdaCapiPStmt))
-#define GDA_CAPI_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_PSTMT, GdaCapiPStmtClass))
-#define GDA_IS_CAPI_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_CAPI_PSTMT))
-#define GDA_IS_CAPI_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_CAPI_PSTMT))
-
-typedef struct _GdaCapiPStmt        GdaCapiPStmt;
-typedef struct _GdaCapiPStmtClass   GdaCapiPStmtClass;
-
-struct _GdaCapiPStmt {
-	GdaPStmt        object;
-
-	/* TO_ADD: this structure holds any information necessary to reference a prepared statement, usually a connection
-         * handle from the C or C++ API
-         */
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaCapiPStmt, gda_capi_pstmt, GDA, CAPI_PSTMT, GdaPStmt)
 struct _GdaCapiPStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType         gda_capi_pstmt_get_type  (void) G_GNUC_CONST;
 /* TO_ADD: helper function to create a GdaCapiPStmt such as gda_capi_pstmt_new() with some specific arguments */
 
 G_END_DECLS

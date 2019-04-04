@@ -27,56 +27,29 @@
 #include <libgda/gda-debug-macros.h>
 
 static void gda_capi_pstmt_class_init (GdaCapiPStmtClass *klass);
-static void gda_capi_pstmt_init       (GdaCapiPStmt *pstmt, GdaCapiPStmtClass *klass);
-static void gda_capi_pstmt_finalize    (GObject *object);
+static void gda_capi_pstmt_init       (GdaCapiPStmt *pstmt);
+static void gda_capi_pstmt_dispose    (GObject *object);
 
-static GObjectClass *parent_class = NULL;
+typedef struct {
+  int dummy;
+	/* TO_ADD: this structure holds any information necessary to reference a prepared statement, usually a connection
+         * handle from the C or C++ API
+         */
+} GdaCapiPStmtPrivate;
 
-/**
- * gda_capi_pstmt_get_type
- *
- * Returns: the #GType of GdaCapiPStmt.
- */
-GType
-gda_capi_pstmt_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaCapiPStmtClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_capi_pstmt_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaCapiPStmt),
-			0,
-			(GInstanceInitFunc) gda_capi_pstmt_init,
-			0
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_PSTMT, "GdaCapiPStmt", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_PRIVATE (GdaCapiPStmt, gda_capi_pstmt, GDA_TYPE_PSTMT)
 
 static void 
 gda_capi_pstmt_class_init (GdaCapiPStmtClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual functions */
-	object_class->finalize = gda_capi_pstmt_finalize;
+	object_class->dispose = gda_capi_pstmt_dispose;
 }
 
 static void
-gda_capi_pstmt_init (GdaCapiPStmt *pstmt, G_GNUC_UNUSED GdaCapiPStmtClass *klass)
+gda_capi_pstmt_init (GdaCapiPStmt *pstmt)
 {
 	g_return_if_fail (GDA_IS_PSTMT (pstmt));
 	
@@ -85,7 +58,7 @@ gda_capi_pstmt_init (GdaCapiPStmt *pstmt, G_GNUC_UNUSED GdaCapiPStmtClass *klass
 }
 
 static void
-gda_capi_pstmt_finalize (GObject *object)
+gda_capi_pstmt_dispose (GObject *object)
 {
 	GdaCapiPStmt *pstmt = (GdaCapiPStmt *) object;
 
@@ -95,5 +68,5 @@ gda_capi_pstmt_finalize (GObject *object)
 	TO_IMPLEMENT; /* free some specific parts of @pstmt */
 
 	/* chain to parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_capi_pstmt_parent_class)->dispose (object);
 }
