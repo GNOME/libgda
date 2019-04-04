@@ -79,23 +79,9 @@ struct _GdaMetaStoreChange {
 	                               * value = a GValue pointer */
 };
 
-GType
-gda_meta_store_change_get_type (void)
-{
-	static GType type = 0;
+G_DEFINE_BOXED_TYPE (GdaMetaStoreChange, gda_meta_store_change, gda_meta_store_change_copy, gda_meta_store_change_free)
 
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		g_mutex_lock (&registering);
-                if (type == 0)
-			type = g_boxed_type_register_static ("GdaMetaStoreChange",
-							     (GBoxedCopyFunc) gda_meta_store_change_copy,
-							     (GBoxedFreeFunc) gda_meta_store_change_free);
-		g_mutex_unlock (&registering);
-	}
 
-	return type;
-}
 /**
  * gda_meta_store_change_new:
  *
@@ -669,14 +655,13 @@ typedef struct {
 
 	GRecMutex      mutex;
 } GdaMetaStorePrivate;
-#define gda_meta_store_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_META_STORE, GdaMetaStorePrivate)
+
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaMetaStore, gda_meta_store, G_TYPE_OBJECT)
 
 static void db_object_free    (DbObject *dbobj);
 static void create_db_objects (GdaMetaStoreClass *klass, GdaMetaStore *store);
 
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
 
 /* signals */
 enum {
@@ -703,32 +688,6 @@ GQuark gda_meta_store_error_quark (void) {
 	if (!quark)
 		quark = g_quark_from_static_string ("gda_meta_store_error");
 	return quark;
-}
-
-GType
-gda_meta_store_get_type (void) {
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdaMetaStoreClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_meta_store_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaMetaStore),
-			0,
-			(GInstanceInitFunc) gda_meta_store_init,
-			0
-		};
-
-		MUTEX_LOCK();
-		if (type == 0)
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaMetaStore", &info, 0);
-		MUTEX_UNLOCK();
-	}
-	return type;
 }
 
 static GdaStatement *
@@ -789,10 +748,6 @@ static void
 gda_meta_store_class_init (GdaMetaStoreClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	MUTEX_LOCK();
-	g_type_class_add_private (object_class, sizeof (GdaMetaStorePrivate));
-	parent_class = g_type_class_peek_parent (klass);
 
 	/**
 	 * GdaMetaStore::suggest-update:
@@ -939,7 +894,6 @@ gda_meta_store_class_init (GdaMetaStoreClass *klass)
 	g_string_free (string, TRUE);
 #endif
 
-	MUTEX_UNLOCK();
 }
 
 
@@ -981,7 +935,7 @@ gda_meta_store_constructor (GType type,
 	gboolean been_specified = FALSE;
 
 	MUTEX_LOCK();
-	object = G_OBJECT_CLASS (parent_class)->constructor (type,
+	object = G_OBJECT_CLASS (G_OBJECT_CLASS (gda_meta_store_parent_class))->constructor (type,
 		n_construct_properties,
 		construct_properties);
 	for (i = 0; i< n_construct_properties; i++) {
@@ -1156,7 +1110,7 @@ gda_meta_store_dispose (GObject *object)
 	}
 
 	/* parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_meta_store_parent_class)->dispose (object);
 }
 
 static void
@@ -1173,7 +1127,7 @@ gda_meta_store_finalize (GObject *object)
 		g_error_free (priv->init_error);
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_meta_store_parent_class)->finalize (object);
 }
 
 static void
@@ -2560,8 +2514,7 @@ db_object_free (DbObject *dbobj)
 static void
 table_info_free_contents (TableInfo *info)
 {
-	g_slist_foreach (info->columns, (GFunc) table_column_free, NULL);
-	g_slist_free (info->columns);
+	g_slist_free_full (info->columns, (GDestroyNotify) table_column_free);
 	if (info->current_all)
 		g_object_unref (info->current_all);
 	if (info->delete_all)
@@ -3754,8 +3707,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 
 out:
 	if (all_changes) {
-		g_slist_foreach (all_changes, (GFunc) gda_meta_store_change_free, NULL);
-		g_slist_free (all_changes);
+		g_slist_free_full (all_changes, (GDestroyNotify) gda_meta_store_change_free);
 	}
 	g_free (rows_to_del);
 	if (current)
