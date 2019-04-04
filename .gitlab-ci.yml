@@ -61,69 +61,69 @@ before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt update && apt -y install $DEPENDENCIES
 
-autotools_build:
-  stage: build
-  script:
-  - ./autogen.sh
-  - make distclean
-  - mkdir _build
-  - cd _build
-  - ../configure
-  - make
-  - broadwayd &
-  - GDK_BACKEND=broadway make check
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/tests/test-suite.log
-    - _build/tests/test-bin-converter.log
-    - _build/tests/test-ddl-creator.log
-    - _build/tests/test-input-parsers.log
-    - _build/tests/test-server-operation.log
-    - _build/tests/test-sql-identifier.log
-    - _build/tests/test-suite.log
-    - _build/tests/test-connection-string-split.log
-    - _build/tests/test-identifiers-quotes.log
-    - _build/tests/test-quark-list.log
-    - _build/tests/test-sql-builder.log
-    - _build/tests/test-sql-renderer.log
-    - _build/libgda/test-suite.log
-    - _build/libgda/test-cnc-exec.log
-    - _build/libgda/test-cnc-meta.log
-    - _build/libgda/test-cnc-open.log
-    - _build/tests/data-models/test-suite.log
-    - _build/tests/data-models/check_data_proxy.log
-    - _build/tests/data-models/check_empty_rs.log
-    - _build/tests/data-models/check_model_errors.log
-    - _build/tests/data-models/check_pivot.log
-    - _build/tests/data-models/check_vcnc.log
-    - _build/tests/data-models/check_data_select_iter.log
-    - _build/tests/data-models/check_model_copy.log
-    - _build/tests/data-models/check_model_import.log
-    - _build/tests/data-models/check_pmodel.log
-    - _build/tests/data-models/check_virtual.log
-    - _build/tests/meta-store/test-suite.log
-    - _build/tests/meta-store/check_meta_store_postgresql.log
-    - _build/tests/meta-store/check_meta_store_memory.log
-    - _build/tests/meta-store/check_meta_store_mysql.log
-    - _build/tests/meta-store/check_meta_store_postgresql.log
-    - _build/tests/meta-store/check_meta_store_sqlite.log
-    - _build/tests/value-holders/test-suite.log
-    - _build/tests/value-holders/check_holder.log
-    - _build/tests/value-holders/check_set.log
-    - _build/tests/value-holders/check_statement.log 
-    - _build/tests/parser/test-suite.log
-    - _build/tests/parser/check_dml_comp.log
-    - _build/tests/parser/check_normalization.log
-    - _build/tests/parser/check_parser.log
-    - _build/tests/parser/check_rewrite_for_default.log
-    - _build/tests/parser/check_script.log
-    - _build/tests/parser/check_validation.log
-    - _build/tests/providers/test-suite.log
-    - _build/tests/providers/check_mysql.log
-    - _build/tests/providers/check_postgres.log
-    - _build/tests/providers/check_sqlite.log 
-    expire_in: 1 week
+# autotools_build:
+#   stage: build
+#   script:
+#   - ./autogen.sh
+#   - make distclean
+#   - mkdir _build
+#   - cd _build
+#   - ../configure
+#   - make
+#   - broadwayd &
+#   - GDK_BACKEND=broadway make check
+#   artifacts:
+#     when: on_failure
+#     paths:
+#     - _build/tests/test-suite.log
+#     - _build/tests/test-bin-converter.log
+#     - _build/tests/test-ddl-creator.log
+#     - _build/tests/test-input-parsers.log
+#     - _build/tests/test-server-operation.log
+#     - _build/tests/test-sql-identifier.log
+#     - _build/tests/test-suite.log
+#     - _build/tests/test-connection-string-split.log
+#     - _build/tests/test-identifiers-quotes.log
+#     - _build/tests/test-quark-list.log
+#     - _build/tests/test-sql-builder.log
+#     - _build/tests/test-sql-renderer.log
+#     - _build/libgda/test-suite.log
+#     - _build/libgda/test-cnc-exec.log
+#     - _build/libgda/test-cnc-meta.log
+#     - _build/libgda/test-cnc-open.log
+#     - _build/tests/data-models/test-suite.log
+#     - _build/tests/data-models/check_data_proxy.log
+#     - _build/tests/data-models/check_empty_rs.log
+#     - _build/tests/data-models/check_model_errors.log
+#     - _build/tests/data-models/check_pivot.log
+#     - _build/tests/data-models/check_vcnc.log
+#     - _build/tests/data-models/check_data_select_iter.log
+#     - _build/tests/data-models/check_model_copy.log
+#     - _build/tests/data-models/check_model_import.log
+#     - _build/tests/data-models/check_pmodel.log
+#     - _build/tests/data-models/check_virtual.log
+#     - _build/tests/meta-store/test-suite.log
+#     - _build/tests/meta-store/check_meta_store_postgresql.log
+#     - _build/tests/meta-store/check_meta_store_memory.log
+#     - _build/tests/meta-store/check_meta_store_mysql.log
+#     - _build/tests/meta-store/check_meta_store_postgresql.log
+#     - _build/tests/meta-store/check_meta_store_sqlite.log
+#     - _build/tests/value-holders/test-suite.log
+#     - _build/tests/value-holders/check_holder.log
+#     - _build/tests/value-holders/check_set.log
+#     - _build/tests/value-holders/check_statement.log
+#     - _build/tests/parser/test-suite.log
+#     - _build/tests/parser/check_dml_comp.log
+#     - _build/tests/parser/check_normalization.log
+#     - _build/tests/parser/check_parser.log
+#     - _build/tests/parser/check_rewrite_for_default.log
+#     - _build/tests/parser/check_script.log
+#     - _build/tests/parser/check_validation.log
+#     - _build/tests/providers/test-suite.log
+#     - _build/tests/providers/check_mysql.log
+#     - _build/tests/providers/check_postgres.log
+#     - _build/tests/providers/check_sqlite.log
+#     expire_in: 1 week
 
 meson_build:
   stage: build
