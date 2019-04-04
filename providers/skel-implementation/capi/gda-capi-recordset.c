@@ -35,8 +35,7 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_capi_recordset_class_init (GdaCapiRecordsetClass *klass);
-static void gda_capi_recordset_init       (GdaCapiRecordset *recset,
-					     GdaCapiRecordsetClass *klass);
+static void gda_capi_recordset_init       (GdaCapiRecordset *recset);
 static void gda_capi_recordset_dispose   (GObject *object);
 
 /* virtual methods */
@@ -47,22 +46,21 @@ static gboolean gda_capi_recordset_fetch_prev (GdaDataSelect *model, GdaRow **pr
 static gboolean gda_capi_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 
-struct _GdaCapiRecordsetPrivate {
+typedef struct {
 	GdaConnection *cnc;
 	/* TO_ADD: specific information */
-};
-static GObjectClass *parent_class = NULL;
+} GdaCapiRecordsetPrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (GdaCapiRecordset, gda_capi_recordset, GDA_TYPE_DATA_SELECT)
 /*
  * Object init and finalize
  */
 static void
-gda_capi_recordset_init (GdaCapiRecordset *recset,
-			   G_GNUC_UNUSED GdaCapiRecordsetClass *klass)
+gda_capi_recordset_init (GdaCapiRecordset *recset)
 {
 	g_return_if_fail (GDA_IS_CAPI_RECORDSET (recset));
-	recset->priv = g_new0 (GdaCapiRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
+  GdaCapiRecordsetPrivate *priv = gda_capi_recordset_get_instance_private (recset);
+	priv->cnc = NULL;
 
 	/* initialize specific information */
 	TO_IMPLEMENT;
@@ -73,8 +71,6 @@ gda_capi_recordset_class_init (GdaCapiRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_capi_recordset_dispose;
 	pmodel_class->fetch_nb_rows = gda_capi_recordset_fetch_nb_rows;
@@ -91,51 +87,19 @@ gda_capi_recordset_dispose (GObject *object)
 	GdaCapiRecordset *recset = (GdaCapiRecordset *) object;
 
 	g_return_if_fail (GDA_IS_CAPI_RECORDSET (recset));
+  GdaCapiRecordsetPrivate *priv = gda_capi_recordset_get_instance_private (recset);
 
-	if (recset->priv) {
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
+	if (priv->cnc)
+		g_object_unref (priv->cnc);
 
-		/* free specific information */
-		TO_IMPLEMENT;
-		g_free (recset->priv);
-		recset->priv = NULL;
-	}
+	/* free specific information */
+	TO_IMPLEMENT;
+	g_free (priv);
+	priv = NULL;
 
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_capi_recordset_parent_class)->dispose (object);
 }
 
-/*
- * Public functions
- */
-
-GType
-gda_capi_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaCapiRecordsetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_capi_recordset_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaCapiRecordset),
-			0,
-			(GInstanceInitFunc) gda_capi_recordset_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaCapiRecordset", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 /*
  * the @ps struct is modified and transferred to the new data model created in
@@ -146,12 +110,12 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
 			GdaDataModelAccessFlags flags, GType *col_types)
 {
 	GdaCapiRecordset *model;
-        CapiConnectionData *cdata;
-        gint i;
+  CapiConnectionData *cdata;
+  gint i;
 	GdaDataModelAccessFlags rflags;
 
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (ps != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+  g_return_val_if_fail (ps != NULL, NULL);
 
 	cdata = (CapiConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
@@ -213,11 +177,12 @@ gda_capi_recordset_new (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_param
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_CAPI_RECORDSET, 
-			      "prepared-stmt", ps, 
-			      "model-usage", rflags, 
-			      "exec-params", exec_params, NULL);
-        model->priv->cnc = cnc;
+  model = g_object_new (GDA_TYPE_CAPI_RECORDSET,
+      "prepared-stmt", ps,
+      "model-usage", rflags,
+      "exec-params", exec_params, NULL);
+  GdaCapiRecordsetPrivate *priv = gda_capi_recordset_get_instance_private (model);
+  priv->cnc = cnc;
 	g_object_ref (cnc);
 
 	/* post init specific code */

@@ -31,25 +31,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CAPI_RECORDSET            (gda_capi_recordset_get_type())
-#define GDA_CAPI_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_RECORDSET, GdaCapiRecordset))
-#define GDA_CAPI_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_RECORDSET, GdaCapiRecordsetClass))
-#define GDA_IS_CAPI_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CAPI_RECORDSET))
-#define GDA_IS_CAPI_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_CAPI_RECORDSET))
-
-typedef struct _GdaCapiRecordset        GdaCapiRecordset;
-typedef struct _GdaCapiRecordsetClass   GdaCapiRecordsetClass;
-typedef struct _GdaCapiRecordsetPrivate GdaCapiRecordsetPrivate;
-
-struct _GdaCapiRecordset {
-	GdaDataSelect                model;
-	GdaCapiRecordsetPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaCapiRecordset, gda_capi_recordset, GDA, CAPI_RECORDSET, GdaDataSelect)
 struct _GdaCapiRecordsetClass {
 	GdaDataSelectClass             parent_class;
 };
 
-GType         gda_capi_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *gda_capi_recordset_new       (GdaConnection *cnc, GdaCapiPStmt *ps, GdaSet *exec_params,
 					    GdaDataModelAccessFlags flags, GType *col_types);
 
