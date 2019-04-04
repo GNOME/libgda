@@ -4,6 +4,7 @@
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2009 Bas Driessen <bas.driessen@xobas.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,48 +45,8 @@ static gboolean     gda_sqlite_handler_bin_accepts_g_type       (GdaDataHandler 
 
 static const gchar *gda_sqlite_handler_bin_get_descr              (GdaDataHandler *dh);
 
-struct  _GdaSqliteHandlerBinPriv {
-	gchar dummy;
-};
-
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-_gda_sqlite_handler_bin_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaSqliteHandlerBinClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_sqlite_handler_bin_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaSqliteHandlerBin),
-			0,
-			(GInstanceInitFunc) gda_sqlite_handler_bin_init,
-			NULL
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gda_sqlite_handler_bin_data_handler_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, CLASS_PREFIX "HandlerBin", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_CODE (GdaSqliteHandlerBin, gda_sqlite_handler_bin, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, gda_sqlite_handler_bin_data_handler_init))
 
 static void
 gda_sqlite_handler_bin_data_handler_init (GdaDataHandlerInterface *iface)
@@ -105,8 +66,6 @@ gda_sqlite_handler_bin_class_init (GdaSqliteHandlerBinClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gda_sqlite_handler_bin_dispose;
 }
 
@@ -114,7 +73,6 @@ static void
 gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 {
 	/* Private structure */
-	hdl->priv = g_new0 (GdaSqliteHandlerBinPriv, 1);
 	g_object_set_data (G_OBJECT (hdl), "name", "SqliteBin");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("SQLite binary representation"));
 }
@@ -122,20 +80,8 @@ gda_sqlite_handler_bin_init (GdaSqliteHandlerBin * hdl)
 static void
 gda_sqlite_handler_bin_dispose (GObject   * object)
 {
-	GdaSqliteHandlerBin *hdl;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_SQLITE_HANDLER_BIN (object));
-
-	hdl = GDA_SQLITE_HANDLER_BIN (object);
-
-	if (hdl->priv) {
-		g_free (hdl->priv);
-		hdl->priv = NULL;
-	}
-
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_sqlite_handler_bin_parent_class)->dispose (object);
 }
 
 /**

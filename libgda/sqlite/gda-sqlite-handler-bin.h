@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2006 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,24 +27,9 @@
 
 G_BEGIN_DECLS
 
-#define GDA_TYPE_SQLITE_HANDLER_BIN          (_gda_sqlite_handler_bin_get_type())
-#define GDA_SQLITE_HANDLER_BIN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, _gda_sqlite_handler_bin_get_type(), GdaSqliteHandlerBin)
-#define GDA_SQLITE_HANDLER_BIN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, _gda_sqlite_handler_bin_get_type (), GdaSqliteHandlerBinClass)
-#define GDA_IS_SQLITE_HANDLER_BIN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, _gda_sqlite_handler_bin_get_type ())
+#define GDA_TYPE_SQLITE_HANDLER_BIN          (gda_sqlite_handler_bin_get_type())
 
-
-typedef struct _GdaSqliteHandlerBin      GdaSqliteHandlerBin;
-typedef struct _GdaSqliteHandlerBinClass GdaSqliteHandlerBinClass;
-typedef struct _GdaSqliteHandlerBinPriv  GdaSqliteHandlerBinPriv;
-
-
-/* struct for the object's data */
-struct _GdaSqliteHandlerBin
-{
-	GObject                   object;
-
-	GdaSqliteHandlerBinPriv  *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaSqliteHandlerBin, gda_sqlite_handler_bin, GDA, SQLITE_HANDLER_BIN, GObject)
 
 /* struct for the object's class */
 struct _GdaSqliteHandlerBinClass
@@ -52,7 +38,6 @@ struct _GdaSqliteHandlerBinClass
 };
 
 
-GType           _gda_sqlite_handler_bin_get_type      (void) G_GNUC_CONST;
 GdaDataHandler *_gda_sqlite_handler_bin_new           (void);
 
 G_END_DECLS
