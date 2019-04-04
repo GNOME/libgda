@@ -31,22 +31,7 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_CAPI_PARSER            (gda_capi_parser_get_type())
-#define GDA_CAPI_PARSER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_CAPI_PARSER, GdaCapiParser))
-#define GDA_CAPI_PARSER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_CAPI_PARSER, GdaCapiParserClass))
-#define GDA_IS_CAPI_PARSER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_CAPI_PARSER))
-#define GDA_IS_CAPI_PARSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_CAPI_PARSER))
-
-typedef struct _GdaCapiParser GdaCapiParser;
-typedef struct _GdaCapiParserClass GdaCapiParserClass;
-typedef struct _GdaCapiParserPrivate GdaCapiParserPrivate;
-
-/* struct for the object's data */
-struct _GdaCapiParser
-{
-	GdaSqlParser          object;
-	GdaCapiParserPrivate *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaCapiParser, gda_capi_parser, GDA, CAPI_PARSER, GdaSqlParser)
 /* struct for the object's class */
 struct _GdaCapiParserClass
 {

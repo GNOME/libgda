@@ -32,34 +32,7 @@
 static void gda_capi_parser_class_init (GdaCapiParserClass *klass);
 static void gda_capi_parser_init (GdaCapiParser *stmt);
 
-GType
-gda_capi_parser_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaCapiParserClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_capi_parser_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaCapiParser),
-			0,
-			(GInstanceInitFunc) gda_capi_parser_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SQL_PARSER, "GdaCapiParser", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
+G_DEFINE_TYPE (GdaCapiParser, gda_capi_parser, GDA_TYPE_SQL_PARSER)
 /*
  * The interface to the LEMON-generated parser
  */
@@ -77,7 +50,7 @@ gda_capi_parser_class_init (GdaCapiParserClass * klass)
 	pclass->parser_free = gda_lemon_capi_parserFree;
 	pclass->parser_trace = gda_lemon_capi_parserTrace;
 	pclass->parser_parse = gda_lemon_capi_parser;
-	pclass->parser_tokens_trans = capi_parser_tokens;
+	pclass->parser_tokens_trans = NULL;
 }
 
 static void
