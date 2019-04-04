@@ -705,26 +705,31 @@ test_multiple_threads (GThreadFunc func, GdaConnection *virtual)
 
 /* executed in another thread */
 gpointer
-threads_select_random_start_thread (ThData *data, GError **error)
+threads_select_random_start_thread (ThData *data)
 {
 	GdaDataModel *model;
 	GdaDataModel *ref;
 	GdaDataModelIter *iter;
 	GThread *self;
 	gchar *str;
+  GError *error = NULL;
 
 	self = g_thread_self ();
 	g_message ("*** sub thread %p SELECT RANDOM\n", self);
 	model = run_sql_select (data->virtual, "SELECT * FROM countries WHERE code LIKE 'A%' ORDER BY code",
-				FALSE, error);
+				FALSE, &error);
 	if (!model) {
-		g_message ("Could not execute SELECT with forward iter only");
+		g_message ("Could not execute SELECT with forward iter only: %s",
+               error != NULL && error->message != NULL ? error->message : "No Datail");
+    g_clear_error (&error);
 		return NULL;
 	}
 
 	ref = load_from_file ("countriesA.xml");
-	if (!assert_data_model_equal (model, ref, error)) {
-		g_message ("Error: equal model vs ref");
+	if (!assert_data_model_equal (model, ref, &error)) {
+		g_message ("Error: equal model vs ref %s",
+               error != NULL && error->message != NULL ? error->message : "No Datail");
+    g_clear_error (&error);
 		return NULL;
 	}
 
