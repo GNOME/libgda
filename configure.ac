@@ -140,17 +140,6 @@ LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 AC_PROG_MAKE_SET
 
-dnl -- Initialize help system
-AC_ARG_WITH(help,
-AS_HELP_STRING([--with-help], [Enable building help (GdaBrowser)]),
-	[with_gdu=$withval]
-	,with_gdu=yes)
-if test x$with_gdu != xno; then
-   YELP_HELP_INIT
-   AC_DEFINE(HAVE_GDU, [1], [Help (GdaBrowser documentation) is built])
-fi
-AM_CONDITIONAL(HAVE_GDU, test x$with_gdu != xno)
-
 dnl ******************************
 dnl glib utilities
 dnl ******************************
@@ -205,10 +194,17 @@ have_goocanvas=no
 have_graphviz=no
 have_sourceview=no
 have_glade=no
+AC_ARG_ENABLE([experimental],
+	AS_HELP_STRING([--enable-experimental], [Enable experimental features (GTK+ widgets, additional interfaces)]),
+	[enable_experimental=$enableval],[enable_experimental=no])
+
 AC_ARG_WITH(ui,
 	AS_HELP_STRING([--with-ui], [Enable GTK+ extension and tools]),
 	,with_ui=auto)
 
+if test x"$enable_experimental" = "xyes"
+then
+AC_MSG_NOTICE([Enable Experimental Features])
 if test "$with_ui" = "auto" -o "$with_ui" = "yes"
 then
 	GTK_MODULES="gtk+-3.0 >= 3.12.0"
@@ -221,7 +217,28 @@ then
 		fi
 		have_ui=no])
 fi
+fi
 AM_CONDITIONAL(HAVE_UI, test x"$have_ui" = "xyes")
+
+dnl -- Initialize help system
+with_gdu=auto
+AC_ARG_WITH(help,
+AS_HELP_STRING([--with-help], [Enable building help (GdaBrowser)]),
+	[with_gdu=$withval]
+	,with_gdu=auto)
+
+if test x"$enable_experimental" = "xyes"
+then
+
+if test x$with_gdu != xno -a "$have_ui" ="xyes"
+then
+   YELP_HELP_INIT
+   AC_DEFINE(HAVE_GDU, [1], [Help (GdaBrowser documentation) is built])
+   with_gdu=yes
+fi
+fi
+AM_CONDITIONAL(HAVE_GDU, test x$with_gdu = xyes)
+
 if test "x$GTK_CFLAGS" != "x"
 then
 	GTK_CFLAGS="$GTK_CFLAGS -DHAVE_GTK_CLASSES"
@@ -533,6 +550,9 @@ AC_ARG_ENABLE([gdaui-gi],
     AS_HELP_STRING([--enable-gdaui-gi[=@<:@nauto/yes/no@:>@]], [Enable GObject Introspection for libgda-ui [default=yes]]),
     [enable_gdaui_gi=$enableval],[enable_gdaui_gi=auto])
 
+enable_gdaui_gi=no
+if test x"$enable_experimental" = "xyes"
+then
 if test "x$enable_gdaui_gi" != "xno" -a "x$enable_gda_gi" = "xyes"
 then
 	enable_gdaui_gi="yes"
@@ -545,12 +565,12 @@ then
 	AC_MSG_ERROR([Introspection for Libgda UI is requested but no GTK+ is available])
 fi
 
-AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
-
 if test "x$enable_gda_gi" != "xyes" -a "x$enable_gdaui_gi" = "xyes"
 then
 	AC_MSG_ERROR([GObject Introspection for GDA-UI is requested but GObject Introspection for GDA is disabled. Use --enable-gda-gi])
 fi
+fi
+AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$enable_gdaui_gi" = "yes"])
 
 dnl ******************************
 dnl Check for Vala Compiler
@@ -567,6 +587,7 @@ if test "x$VAPIGEN" != "xno"; then
     enable_vapigen="yes"
 fi
 
+enable_vala_bindings=no
 AC_ARG_ENABLE([gda-vala],
     AS_HELP_STRING([--enable-gda-vala[=@<:@auto/yes/no@:>@]], [Enable Vala bindings generation [default=auto]]),
     [enable_vala_bindings=$enableval],[enable_vala_bindings=auto])
@@ -581,9 +602,14 @@ enable_gdaui_vala="auto"
 AC_ARG_ENABLE([gdaui-vala],
     AS_HELP_STRING([--enable-gdaui-vala[=@<:@auto/yes/no@:>@]], [Enable Vala bindings for GDA-UI [default=auto]]),
     [enable_gdaui_vala=$enableval],[enable_gdaui_vala=auto])
+
+if test x"$enable_experimental" = "xyes"
+then
+
 if test "x$enable_vapigen" = "xyes" -a "x$enable_gdaui_vala" != "xno" -a "x$enable_vala_bindings" = "xyes"
 then
 	enable_gdaui_vala="yes"
+fi
 fi
 AM_CONDITIONAL(ENABLE_GDAUI_VALA, test "x$enable_gdaui_vala" = "xyes")
 
@@ -1079,6 +1105,7 @@ AC_OUTPUT
 dnl Print configuration summary
 echo ""
 echo " Configuration summary for version $GDA_VERSION"
+echo "   Enable Experimental Features = $enable_experimental"
 echo "   Installation prefix = $prefix"
 echo "   Building GTK+ UI extension: `if test x$have_ui != xno; then echo yes; else echo no; fi`"
 echo "   Installing Glade GTK+ UI extension catalog: `if test x$have_glade != xno; then echo yes; else echo no; fi`"
@@ -1087,7 +1114,7 @@ echo "   Building libgda GObject Introspection: `if test x$enable_gda_gi = xyes;
 echo "   Building libgda-ui GObject Introspection: `if test x$enable_gdaui_gi != xno; then echo yes; else echo no; fi`"
 echo "   Building Gtk-Doc: `if test x$enable_gtk_doc != xno; then echo yes; else echo no; fi`"
 echo "   Building Examples: `if test x$enable_examples = xyes; then echo yes; else echo no; fi`"
-echo "   Building Help (GdaBrowser): `if test x$with_gdu != xno; then echo yes; else echo no; fi`"
+echo "   Building Help (GdaBrowser): `if test x$with_gdu = xyes; then echo yes; else echo no; fi`"
 echo "   Building GDA Vala Bindings: `if test x$enable_vala_bindings != xyes; then echo no; else echo yes; fi`"
 echo "   Building GDA-UI Vala Bindings: `if test "x$enable_gdaui_vala" = "xyes"; then echo yes; else echo no; fi`"
 echo "   Building Vala Documentation:"
