@@ -26,59 +26,30 @@
 #include <libgda/gda-blob-op-impl.h>
 #include <libgda/gda-debug-macros.h>
 
-struct _GdaMysqlBlobOpPrivate {
-	GdaConnection  *cnc;
-	/* TO_ADD: specific information describing a Blob in the C API */
-};
 
 static void gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass *klass);
-static void gda_mysql_blob_op_init       (GdaMysqlBlobOp *blob,
-					 GdaMysqlBlobOpClass *klass);
-static void gda_mysql_blob_op_finalize   (GObject *object);
+static void gda_mysql_blob_op_init       (GdaMysqlBlobOp *blob);
+static void gda_mysql_blob_op_dispose   (GObject *object);
 
 static glong gda_mysql_blob_op_get_length (GdaBlobOp *op);
 static glong gda_mysql_blob_op_read       (GdaBlobOp *op, GdaBlob *blob, glong offset, glong size);
 static glong gda_mysql_blob_op_write      (GdaBlobOp *op, GdaBlob *blob, glong offset);
 
-static GObjectClass *parent_class = NULL;
 
-/*
- * Object init and finalize
- */
-GType
-gda_mysql_blob_op_get_type (void)
-{
-	static GType type = 0;
+typedef struct {
+	GdaConnection  *cnc;
+	/* TO_ADD: specific information describing a Blob in the C API */
+} GdaMysqlBlobOpPrivate;
 
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaMysqlBlobOpClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_mysql_blob_op_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaMysqlBlobOp),
-			0,
-			(GInstanceInitFunc) gda_mysql_blob_op_init,
-			NULL
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_BLOB_OP, "GdaMysqlBlobOp", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_PRIVATE (GdaMysqlBlobOp, gda_mysql_blob_op, GDA_TYPE_BLOB_OP)
+
 
 static void
-gda_mysql_blob_op_init (GdaMysqlBlobOp       *op,
-			G_GNUC_UNUSED GdaMysqlBlobOpClass  *klass)
+gda_mysql_blob_op_init (GdaMysqlBlobOp       *op)
 {
 	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (op));
-
-	op->priv = g_new0 (GdaMysqlBlobOpPrivate, 1);
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (op);
+  priv->cnc = NULL;
 
 	/* initialize specific structure */
 	TO_IMPLEMENT;
@@ -90,28 +61,22 @@ gda_mysql_blob_op_class_init (GdaMysqlBlobOpClass  *klass)
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaBlobOpClass *blob_class = GDA_BLOB_OP_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
-	object_class->finalize = gda_mysql_blob_op_finalize;
+	object_class->dispose = gda_mysql_blob_op_dispose;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->get_length = gda_mysql_blob_op_get_length;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->read = gda_mysql_blob_op_read;
 	GDA_BLOB_OP_FUNCTIONS (blob_class->functions)->write = gda_mysql_blob_op_write;
 }
 
 static void
-gda_mysql_blob_op_finalize (GObject  *object)
+gda_mysql_blob_op_dispose (GObject  *object)
 {
-	GdaMysqlBlobOp *pgop = (GdaMysqlBlobOp *) object;
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (GDA_MYSQL_BLOB_OP (object));
+	if (priv->cnc != NULL) {
+    g_object_unref (priv->cnc);
+    priv->cnc = NULL;
+  }
 
-	g_return_if_fail (GDA_IS_MYSQL_BLOB_OP (pgop));
-
-	/* free specific information */
-	TO_IMPLEMENT;
-
-	g_free (pgop->priv);
-	pgop->priv = NULL;
-
-	parent_class->finalize (object);
+	G_OBJECT_CLASS (gda_mysql_blob_op_parent_class)->finalize (object);
 }
 
 GdaBlobOp *
@@ -122,7 +87,10 @@ gda_mysql_blob_op_new (GdaConnection  *cnc)
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 
 	pgop = g_object_new (GDA_TYPE_MYSQL_BLOB_OP, "connection", cnc, NULL);
-	pgop->priv->cnc = cnc;
+
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (pgop);
+
+	priv->cnc = g_object_ref (cnc);
 	
 	return GDA_BLOB_OP (pgop);
 }
@@ -137,8 +105,8 @@ gda_mysql_blob_op_get_length (GdaBlobOp  *op)
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
 	pgop = GDA_MYSQL_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (pgop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 
 	TO_IMPLEMENT;
 	return -1;
@@ -157,8 +125,8 @@ gda_mysql_blob_op_read (GdaBlobOp  *op,
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
 	pgop = GDA_MYSQL_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (pgop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 	if (offset >= G_MAXINT)
 		return -1;
 	g_return_val_if_fail (blob, -1);
@@ -182,8 +150,8 @@ gda_mysql_blob_op_write (GdaBlobOp  *op,
 
 	g_return_val_if_fail (GDA_IS_MYSQL_BLOB_OP (op), -1);
 	pgop = GDA_MYSQL_BLOB_OP (op);
-	g_return_val_if_fail (pgop->priv, -1);
-	g_return_val_if_fail (GDA_IS_CONNECTION (pgop->priv->cnc), -1);
+  GdaMysqlBlobOpPrivate *priv = gda_mysql_blob_op_get_instance_private (pgop);
+	g_return_val_if_fail (GDA_IS_CONNECTION (priv->cnc), -1);
 	g_return_val_if_fail (blob, -1);
 
 	/* write blob using bin->data and bin->binary_length */

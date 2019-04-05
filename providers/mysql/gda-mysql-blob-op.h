@@ -25,25 +25,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_BLOB_OP            (gda_mysql_blob_op_get_type())
-#define GDA_MYSQL_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_BLOB_OP, GdaMysqlBlobOp))
-#define GDA_MYSQL_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_BLOB_OP, GdaMysqlBlobOpClass))
-#define GDA_IS_MYSQL_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_BLOB_OP))
-#define GDA_IS_MYSQL_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_BLOB_OP))
-
-typedef struct _GdaMysqlBlobOp        GdaMysqlBlobOp;
-typedef struct _GdaMysqlBlobOpClass   GdaMysqlBlobOpClass;
-typedef struct _GdaMysqlBlobOpPrivate GdaMysqlBlobOpPrivate;
-
-struct _GdaMysqlBlobOp {
-	GdaBlobOp               parent;
-	GdaMysqlBlobOpPrivate  *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaMysqlBlobOp, gda_mysql_blob_op, GDA, MYSQL_BLOB_OP, GdaBlobOp)
 struct _GdaMysqlBlobOpClass {
 	GdaBlobOpClass          parent_class;
 };
 
-GType         gda_mysql_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_mysql_blob_op_new          (GdaConnection  *cnc);
 
 /* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */
