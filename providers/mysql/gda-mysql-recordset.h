@@ -32,25 +32,11 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_RECORDSET            (gda_mysql_recordset_get_type())
-#define GDA_MYSQL_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_RECORDSET, GdaMysqlRecordset))
-#define GDA_MYSQL_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_RECORDSET, GdaMysqlRecordsetClass))
-#define GDA_IS_MYSQL_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_RECORDSET))
-#define GDA_IS_MYSQL_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_RECORDSET))
-
-typedef struct _GdaMysqlRecordset        GdaMysqlRecordset;
-typedef struct _GdaMysqlRecordsetClass   GdaMysqlRecordsetClass;
-typedef struct _GdaMysqlRecordsetPrivate GdaMysqlRecordsetPrivate;
-
-struct _GdaMysqlRecordset {
-	GdaDataSelect              model;
-	GdaMysqlRecordsetPrivate  *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE (GdaMysqlRecordset, gda_mysql_recordset, GDA, MYSQL_RECORDSET, GdaDataSelect)
 struct _GdaMysqlRecordsetClass {
 	GdaDataSelectClass         parent_class;
 };
 
-GType gda_mysql_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *gda_mysql_recordset_new       (GdaConnection *cnc, GdaMysqlPStmt *ps,
 					     GdaSet *exec_params, GdaDataModelAccessFlags flags, 
 					     GType *col_types);

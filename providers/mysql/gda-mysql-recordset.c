@@ -58,8 +58,7 @@ enum
 static void
 gda_mysql_recordset_class_init (GdaMysqlRecordsetClass  *klass);
 static void
-gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
-			  GdaMysqlRecordsetClass  *klass);
+gda_mysql_recordset_init (GdaMysqlRecordset       *recset);
 static void
 gda_mysql_recordset_dispose (GObject  *object);
 
@@ -87,7 +86,7 @@ gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
 			      gint            rownum,
 			      GError        **error);
 
-struct _GdaMysqlRecordsetPrivate {
+typedef struct {
 	GdaConnection  *cnc;
 	
 	MYSQL_STMT     *mysql_stmt;
@@ -99,26 +98,26 @@ struct _GdaMysqlRecordsetPrivate {
 	/* if no prepared statement available */
 	gint          ncols;
         GType        *types;
-};
-static GObjectClass *parent_class = NULL;
+} GdaMysqlRecordsetPrivate;
 
+G_DEFINE_TYPE_WITH_PRIVATE (GdaMysqlRecordset, gda_mysql_recordset, GDA_TYPE_DATA_SELECT)
 /*
  * Object init and finalize
  */
 static void
-gda_mysql_recordset_init (GdaMysqlRecordset       *recset,
-			  G_GNUC_UNUSED GdaMysqlRecordsetClass  *klass)
+gda_mysql_recordset_init (GdaMysqlRecordset       *recset)
 {
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
-	recset->priv = g_new0 (GdaMysqlRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
+
+	priv->cnc = NULL;
 
 	/* initialize specific information */
-	recset->priv->chunk_size = 1;
-	recset->priv->chunks_read = 0;
+	priv->chunk_size = 1;
+	priv->chunks_read = 0;
 
-	recset->priv->ncols = 0;
-	recset->priv->types = NULL;
+	priv->ncols = 0;
+	priv->types = NULL;
 }
 
 
@@ -126,7 +125,8 @@ gint
 gda_mysql_recordset_get_chunk_size (GdaMysqlRecordset  *recset)
 {
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
-	return recset->priv->chunk_size;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
+	return priv->chunk_size;
 }
 
 void
@@ -134,18 +134,19 @@ gda_mysql_recordset_set_chunk_size (GdaMysqlRecordset  *recset,
 				    gint                chunk_size)
 {
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
 
-	if (recset->priv->mysql_stmt == NULL)  // Creation is in progress so it's not set.
+	if (priv->mysql_stmt == NULL)  // Creation is in progress so it's not set.
 		return;
 
 #if MYSQL_VERSION_ID >= 50002
 	const unsigned long prefetch_rows = chunk_size;
-	if (mysql_stmt_attr_set (recset->priv->mysql_stmt, STMT_ATTR_PREFETCH_ROWS,
+	if (mysql_stmt_attr_set (priv->mysql_stmt, STMT_ATTR_PREFETCH_ROWS,
 				 (void *) &prefetch_rows)) {
-		g_warning ("%s: %s\n", __func__, mysql_stmt_error (recset->priv->mysql_stmt));
+		g_warning ("%s: %s\n", __func__, mysql_stmt_error (priv->mysql_stmt));
 		return;
 	}
-	recset->priv->chunk_size = chunk_size;
+	priv->chunk_size = chunk_size;
 	g_object_notify (G_OBJECT(recset), "chunk-size");
 #else
 	g_warning (_("Could not use CURSOR. Mysql version 5.0 at least is required. "
@@ -157,7 +158,9 @@ gint
 gda_mysql_recordset_get_chunks_read (GdaMysqlRecordset  *recset)
 {
 	g_return_val_if_fail (GDA_IS_MYSQL_RECORDSET (recset), -1);
-	return recset->priv->chunks_read;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
+
+	return priv->chunks_read;
 }
 
 
@@ -171,7 +174,6 @@ gda_mysql_recordset_set_property (GObject       *object,
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET(object));
-	g_return_if_fail (GDA_MYSQL_RECORDSET(object)->priv != NULL);
 
 	recordset = GDA_MYSQL_RECORDSET(object);
 
@@ -197,16 +199,16 @@ gda_mysql_recordset_get_property (GObject     *object,
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET(object));
-	g_return_if_fail (GDA_MYSQL_RECORDSET(object)->priv != NULL);
 
 	recordset = GDA_MYSQL_RECORDSET(object);
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recordset);
 
 	switch (param_id) {
 	case PROP_CHUNK_SIZE:
-		g_value_set_int (value, recordset->priv->chunk_size);
+		g_value_set_int (value, priv->chunk_size);
 		break;
 	case PROP_CHUNKS_READ:
-		g_value_set_int (value, recordset->priv->chunks_read);
+		g_value_set_int (value, priv->chunks_read);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -219,8 +221,6 @@ gda_mysql_recordset_class_init (GdaMysqlRecordsetClass  *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_mysql_recordset_dispose;
 	pmodel_class->fetch_nb_rows = gda_mysql_recordset_fetch_nb_rows;
@@ -258,59 +258,29 @@ gda_mysql_recordset_dispose (GObject  *object)
 	GdaMysqlRecordset *recset = (GdaMysqlRecordset *) object;
 
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
 
-	if (recset->priv) {
-		GDA_MYSQL_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)))->stmt_used = FALSE;
+	GDA_MYSQL_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)))->stmt_used = FALSE;
 
-		if (recset->priv->cnc) {
-			g_object_unref (G_OBJECT(recset->priv->cnc));
-			recset->priv->cnc = NULL;
-		}
-		if (recset->priv->tmp_row) {
-			g_object_unref (G_OBJECT(recset->priv->tmp_row));
-			recset->priv->tmp_row = NULL;
-		}
-		if (recset->priv->types)
-			g_free (recset->priv->types);
-
-		g_free (recset->priv);
-		recset->priv = NULL;
+	if (priv->cnc) {
+		g_object_unref (G_OBJECT(priv->cnc));
+		priv->cnc = NULL;
 	}
+	if (priv->tmp_row) {
+		g_object_unref (G_OBJECT(priv->tmp_row));
+		priv->tmp_row = NULL;
+	}
+	if (priv->types) {
+		g_free (priv->types);
+    priv->types = NULL;
+  }
 
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_mysql_recordset_parent_class)->dispose (object);
 }
 
 /*
  * Public functions
  */
-
-GType
-gda_mysql_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaMysqlRecordsetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_mysql_recordset_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaMysqlRecordset),
-			0,
-			(GInstanceInitFunc) gda_mysql_recordset_init,
-			NULL
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaMysqlRecordset", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 static GType
 _gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
@@ -420,19 +390,20 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
-			      "connection", cnc,
-			      "model-usage", rflags,
-			      NULL);
-        model->priv->cnc = cnc;
+  model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
+      "connection", cnc,
+      "model-usage", rflags,
+      NULL);
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (model);
+  priv->cnc = cnc;
 	g_object_ref (G_OBJECT(cnc));
 
 	/* columns & types */	
-	model->priv->ncols = mysql_field_count (cdata->mysql);
-	model->priv->types = g_new0 (GType, model->priv->ncols);
+	priv->ncols = mysql_field_count (cdata->mysql);
+	priv->types = g_new0 (GType, priv->ncols);
 	
 	/* create columns */
-	for (i = 0; i < model->priv->ncols; i++)
+	for (i = 0; i < priv->ncols; i++)
 		columns = g_slist_prepend (columns, gda_column_new ());
 	columns = g_slist_reverse (columns);
 
@@ -441,13 +412,13 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 			if (col_types [i] > 0) {
 				if (col_types [i] == G_TYPE_NONE)
 					break;
-				if (i >= model->priv->ncols) {
+				if (i >= priv->ncols) {
 					g_warning (_("Column %d out of range (0-%d), ignoring its specified type"), i,
-						   model->priv->ncols - 1);
+						   priv->ncols - 1);
 					break;
 				}
 				else
-					model->priv->types [i] = col_types [i];
+					priv->types [i] = col_types [i];
 			}
 		}
 	}
@@ -459,17 +430,17 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 
 	gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_affected_rows (cdata->mysql));
 	for (i=0, list = columns; 
-	     i < model->priv->ncols; 
+	     i < priv->ncols;
 	     i++, list = list->next) {
 		GdaColumn *column = GDA_COLUMN (list->data);
 		
 		/* use C API to set columns' information using gda_column_set_*() */
 		MYSQL_FIELD *field = &mysql_fields[i];
 		
-		GType gtype = model->priv->types [i];
+		GType gtype = priv->types [i];
 		if (gtype == GDA_TYPE_NULL) {
 			gtype = _gda_mysql_type_to_gda (cdata, field->type, field->charsetnr);
-			model->priv->types [i] = gtype;
+			priv->types [i] = gtype;
 		}
 		gda_column_set_g_type (column, gtype);
 		gda_column_set_name (column, field->name);
@@ -485,13 +456,13 @@ gda_mysql_recordset_new_direct (GdaConnection *cnc, GdaDataModelAccessFlags flag
 	for (mysql_row = mysql_fetch_row (mysql_res), rownum = 0;
 	     mysql_row;
 	     mysql_row = mysql_fetch_row (mysql_res), rownum++) {
-		GdaRow *row = gda_row_new (model->priv->ncols);
+		GdaRow *row = gda_row_new (priv->ncols);
 		gint col;
-		for (col = 0; col < model->priv->ncols; col++) {
+		for (col = 0; col < priv->ncols; col++) {
 			gint i = col;
 		
 			GValue *value = gda_row_get_value (row, i);
-			GType type = model->priv->types[i];
+			GType type = priv->types[i];
 			char *data = mysql_row[i];
 
 			if (!data || (type == GDA_TYPE_NULL))
@@ -694,16 +665,17 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		rflags = GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD;
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
-			      "connection", cnc,
-			      "prepared-stmt", ps,
-			      "model-usage", rflags,
-			      "exec-params", exec_params, 
-			      NULL);
-        model->priv->cnc = cnc;
+  model = g_object_new (GDA_TYPE_MYSQL_RECORDSET,
+      "connection", cnc,
+      "prepared-stmt", ps,
+      "model-usage", rflags,
+      "exec-params", exec_params,
+      NULL);
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (model);
+  priv->cnc = cnc;
 	g_object_ref (G_OBJECT(cnc));
 
-	model->priv->mysql_stmt = ps->mysql_stmt;
+	priv->mysql_stmt = ps->mysql_stmt;
 
 	gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_stmt_affected_rows (ps->mysql_stmt));
 
@@ -720,10 +692,12 @@ gda_mysql_recordset_fetch_nb_rows (GdaDataSelect *model)
 	GdaMysqlRecordset *imodel;
 
 	imodel = GDA_MYSQL_RECORDSET (model);
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
+
 	if (gda_data_select_get_advertized_nrows (model) >= 0)
 		return gda_data_select_get_advertized_nrows (model);
 
-	gda_data_select_set_advertized_nrows (model, mysql_stmt_affected_rows (imodel->priv->mysql_stmt));
+	gda_data_select_set_advertized_nrows (model, mysql_stmt_affected_rows (priv->mysql_stmt));
 	
 	return gda_data_select_get_advertized_nrows (model);
 }
@@ -734,12 +708,13 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 	//g_print ("%s(): NCOLS=%d  ROWNUM=%d\n", __func__, ((GdaDataSelect *) imodel)->prep_stmt->ncols, rownum);
 	int res;
 	MYSQL_BIND *mysql_bind_result;
-	g_return_val_if_fail (imodel->priv->mysql_stmt != NULL, NULL);
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
+	g_return_val_if_fail (priv->mysql_stmt != NULL, NULL);
 
 	mysql_bind_result = ((GdaMysqlPStmt *) gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel))->mysql_bind_result;
 	g_assert (mysql_bind_result);
 
-	res = mysql_stmt_fetch (imodel->priv->mysql_stmt);
+	res = mysql_stmt_fetch (priv->mysql_stmt);
 	if (res == MYSQL_NO_DATA) {
 		/* should not happen */
 		g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_ACCESS_ERROR,
@@ -756,7 +731,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		for (col = 0; col < gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel)); ++col) {
 			my_bool truncated;
 			mysql_bind_result[col].error = &truncated;
-			mysql_stmt_fetch_column (imodel->priv->mysql_stmt, &(mysql_bind_result[col]),
+			mysql_stmt_fetch_column (priv->mysql_stmt, &(mysql_bind_result[col]),
 						 (unsigned int)col, 0);
 			if (truncated)
 				g_string_append_printf (string, "\n  column %d is truncated\n", col);
@@ -768,7 +743,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		return NULL;
 	}
 	else if (res) {
-		_gda_mysql_make_error (imodel->priv->cnc, NULL, imodel->priv->mysql_stmt, error);
+		_gda_mysql_make_error (priv->cnc, NULL, priv->mysql_stmt, error);
 		return NULL;
 	}
 
@@ -1074,7 +1049,7 @@ gda_mysql_recordset_fetch_random (GdaDataSelect  *model,
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *row.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
@@ -1085,11 +1060,12 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 				GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->tmp_row)
-		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+	if (priv->tmp_row)
+		g_object_unref (G_OBJECT(priv->tmp_row));
 	*row = new_row_from_mysql_stmt (imodel, rownum, error);
-	imodel->priv->tmp_row = *row;
+	priv->tmp_row = *row;
 
 	return TRUE;
 }
@@ -1097,7 +1073,7 @@ gda_mysql_recordset_fetch_next (GdaDataSelect  *model,
 /*
  * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
@@ -1108,11 +1084,12 @@ gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
 				GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->tmp_row)
-		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+	if (priv->tmp_row)
+		g_object_unref (G_OBJECT(priv->tmp_row));
 	*row = new_row_from_mysql_stmt (imodel, rownum, error);
-	imodel->priv->tmp_row = *row;
+	priv->tmp_row = *row;
 
 	return TRUE;
 }
@@ -1120,7 +1097,7 @@ gda_mysql_recordset_fetch_prev (GdaDataSelect  *model,
 /*
  * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *row.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  * Before a new #GdaRow gets created, the previous one, if set, is discarded.
  */
@@ -1131,11 +1108,12 @@ gda_mysql_recordset_fetch_at (GdaDataSelect  *model,
 			      GError        **error)
 {
 	GdaMysqlRecordset *imodel = (GdaMysqlRecordset*) model;
+  GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->tmp_row)
-		g_object_unref (G_OBJECT(imodel->priv->tmp_row));
+	if (priv->tmp_row)
+		g_object_unref (G_OBJECT(priv->tmp_row));
 	*row = new_row_from_mysql_stmt (imodel, rownum, error);
-	imodel->priv->tmp_row = *row;
+	priv->tmp_row = *row;
 
 	return TRUE;
 }
