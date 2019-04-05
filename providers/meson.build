@@ -16,11 +16,11 @@ if ldap_found and get_option('enable-experimental')
 subdir('ldap')
 endif
 
-if found_jdbc
+if found_jdbc and get_option('enable-experimental')
 subdir('jdbc')
 endif
 
-if lbdb_found
+if lbdb_found and get_option('enable-experimental')
 subdir('bdb')
 endif
 
