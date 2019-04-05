@@ -27,25 +27,13 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_WEB_RECORDSET            (gda_web_recordset_get_type())
-#define GDA_WEB_RECORDSET(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_WEB_RECORDSET, GdaWebRecordset))
-#define GDA_WEB_RECORDSET_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_WEB_RECORDSET, GdaWebRecordsetClass))
-#define GDA_IS_WEB_RECORDSET(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_WEB_RECORDSET))
-#define GDA_IS_WEB_RECORDSET_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_WEB_RECORDSET))
 
-typedef struct _GdaWebRecordset        GdaWebRecordset;
-typedef struct _GdaWebRecordsetClass   GdaWebRecordsetClass;
-typedef struct _GdaWebRecordsetPrivate GdaWebRecordsetPrivate;
-
-struct _GdaWebRecordset {
-	GdaDataSelect           model;
-	GdaWebRecordsetPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaWebRecordset, gda_web_recordset, GDA, WEB_RECORDSET, GdaDataSelect)
 
 struct _GdaWebRecordsetClass {
 	GdaDataSelectClass      parent_class;
 };
 
-GType         gda_web_recordset_get_type  (void) G_GNUC_CONST;
 GdaDataModel *gda_web_recordset_new       (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 					   GdaDataModelAccessFlags flags, GType *col_types,
 					   const gchar *session_id, xmlNodePtr data_node, GError **error);

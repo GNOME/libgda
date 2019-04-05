@@ -34,8 +34,7 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_web_recordset_class_init (GdaWebRecordsetClass *klass);
-static void gda_web_recordset_init       (GdaWebRecordset *recset,
-					     GdaWebRecordsetClass *klass);
+static void gda_web_recordset_init       (GdaWebRecordset *recset);
 static void gda_web_recordset_dispose   (GObject *object);
 
 /* virtual methods */
@@ -43,24 +42,24 @@ static gint     gda_web_recordset_fetch_nb_rows (GdaDataSelect *model);
 static gboolean gda_web_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error);
 
 
-struct _GdaWebRecordsetPrivate {
+typedef struct {
 	GdaConnection *cnc;
 	
 	GdaDataModel *real_model;
 	GdaRow       *prow;
-};
-static GObjectClass *parent_class = NULL;
+} GdaWebRecordsetPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE(GdaWebRecordset, gda_web_recordset, GDA_TYPE_DATA_SELECT)
 
 /*
  * Object init and finalize
  */
 static void
-gda_web_recordset_init (GdaWebRecordset *recset,
-			   G_GNUC_UNUSED GdaWebRecordsetClass *klass)
+gda_web_recordset_init (GdaWebRecordset *recset)
 {
 	g_return_if_fail (GDA_IS_WEB_RECORDSET (recset));
-	recset->priv = g_new0 (GdaWebRecordsetPrivate, 1);
-	recset->priv->cnc = NULL;
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (recset);
+	priv->cnc = NULL;
 }
 
 static void
@@ -68,8 +67,6 @@ gda_web_recordset_class_init (GdaWebRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_web_recordset_dispose;
 	pmodel_class->fetch_nb_rows = gda_web_recordset_fetch_nb_rows;
@@ -86,53 +83,21 @@ gda_web_recordset_dispose (GObject *object)
 	GdaWebRecordset *recset = (GdaWebRecordset *) object;
 
 	g_return_if_fail (GDA_IS_WEB_RECORDSET (recset));
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (recset);
 
-	if (recset->priv) {
-		if (recset->priv->cnc) 
-			g_object_unref (recset->priv->cnc);
-		if (recset->priv->real_model)
-			g_object_unref (recset->priv->real_model);
-		if (recset->priv->prow)
-			g_object_unref (recset->priv->prow);
+	if (priv->cnc)
+		g_object_unref (priv->cnc);
+	if (priv->real_model)
+		g_object_unref (priv->real_model);
+	if (priv->prow)
+		g_object_unref (priv->prow);
 
-		g_free (recset->priv);
-		recset->priv = NULL;
-	}
-
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_web_recordset_parent_class)->dispose (object);
 }
 
 /*
  * Public functions
  */
-
-GType
-gda_web_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaWebRecordsetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_web_recordset_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaWebRecordset),
-			0,
-			(GInstanceInitFunc) gda_web_recordset_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaWebRecordset", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 /*
  * the @ps struct is modified and transferred to the new data model created in
@@ -144,11 +109,11 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
 		       const gchar *session_id, xmlNodePtr data_node, GError **error)
 {
 	GdaWebRecordset *model;
-        gint i;
+  gint i;
 	WebConnectionData *cdata;
 
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (ps != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+  g_return_val_if_fail (ps != NULL, NULL);
 
 	cdata = (WebConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
@@ -265,11 +230,12 @@ gda_web_recordset_new (GdaConnection *cnc, GdaWebPStmt *ps, GdaSet *exec_params,
         }
 
 	/* create data model */
-        model = g_object_new (GDA_TYPE_WEB_RECORDSET, 
-			      "prepared-stmt", ps, 
-			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, 
-			      "exec-params", exec_params, NULL);
-        model->priv->cnc = cnc;
+  model = g_object_new (GDA_TYPE_WEB_RECORDSET,
+      "prepared-stmt", ps,
+      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM,
+      "exec-params", exec_params, NULL);
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (model);
+  priv->cnc = cnc;
 	g_object_ref (cnc);
 
         return GDA_DATA_MODEL (model);
@@ -290,6 +256,7 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 	g_return_val_if_fail (GDA_IS_WEB_RECORDSET (rs), FALSE);
 	g_return_val_if_fail (data_node, FALSE);
 	g_return_val_if_fail (!strcmp ((gchar*) data_node->name, "gda_array"), FALSE);
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (rs);
 
 	/* modify the @data_node tree to set the correct data types */
 	ncols = gda_data_model_get_n_columns ((GdaDataModel*) rs);
@@ -316,7 +283,7 @@ gda_web_recordset_store (GdaWebRecordset *rs, xmlNodePtr data_node, GError **err
 			     _("Can't import data from web server"));
 		return FALSE;
 	}
-	rs->priv->real_model = data;
+	priv->real_model = data;
 
 	return TRUE;
 }
@@ -332,9 +299,10 @@ gda_web_recordset_fetch_nb_rows (GdaDataSelect *model)
 	imodel = GDA_WEB_RECORDSET (model);
 	if (gda_data_select_get_advertized_nrows (model) >= 0)
 		return gda_data_select_get_advertized_nrows (model);
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->real_model)
-		gda_data_select_set_advertized_nrows (model, gda_data_model_get_n_rows (imodel->priv->real_model));
+	if (priv->real_model)
+		gda_data_select_set_advertized_nrows (model, gda_data_model_get_n_rows (priv->real_model));
 
 	return gda_data_select_get_advertized_nrows (model);
 }
@@ -360,26 +328,28 @@ gda_web_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint rownum
 	GdaWebRecordset *imodel;
 
 	imodel = GDA_WEB_RECORDSET (model);
+  GdaWebRecordsetPrivate *priv = gda_web_recordset_get_instance_private (imodel);
 
-	if (*prow)
-                return TRUE;
+	if (*prow) {
+    return TRUE;
+  }
 
-	if (imodel->priv->real_model) {
+	if (priv->real_model) {
 		gint i, ncols;
 		ncols = gda_data_model_get_n_columns ((GdaDataModel*) model);
-		if (!imodel->priv->prow)
-			imodel->priv->prow = gda_row_new (ncols);
+		if (!priv->prow)
+			priv->prow = gda_row_new (ncols);
 		for (i = 0; i < ncols; i++) {
 			const GValue *cvalue;
 			GValue *pvalue;
-			cvalue = gda_data_model_get_value_at (imodel->priv->real_model, i, rownum, error);
+			cvalue = gda_data_model_get_value_at (priv->real_model, i, rownum, error);
 			if (!cvalue)
 				return FALSE;
-			pvalue = gda_row_get_value (imodel->priv->prow, i);
+			pvalue = gda_row_get_value (priv->prow, i);
 			gda_value_reset_with_type (pvalue, G_VALUE_TYPE (cvalue));
 			g_value_copy (cvalue, pvalue);
 		}
-		*prow = imodel->priv->prow;
+		*prow = priv->prow;
 		return TRUE;
 	}
 
