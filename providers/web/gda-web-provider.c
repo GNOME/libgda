@@ -46,9 +46,9 @@
  * GObject methods
  */
 static void gda_web_provider_class_init (GdaWebProviderClass *klass);
-static void gda_web_provider_init       (GdaWebProvider *provider,
-					 GdaWebProviderClass *klass);
-static GObjectClass *parent_class = NULL;
+static void gda_web_provider_init       (GdaWebProvider *provider);
+
+G_DEFINE_TYPE(GdaWebProvider, gda_web_provider, GDA_TYPE_SERVER_PROVIDER)
 
 /*
  * GdaServerProvider's virtual methods
@@ -210,8 +210,6 @@ GdaServerProviderMeta web_meta_functions = {
 static void
 gda_web_provider_class_init (GdaWebProviderClass *klass)
 {
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
@@ -227,35 +225,8 @@ gda_web_provider_class_init (GdaWebProviderClass *klass)
 }
 
 static void
-gda_web_provider_init (G_GNUC_UNUSED GdaWebProvider *web_prv, G_GNUC_UNUSED GdaWebProviderClass *klass)
+gda_web_provider_init (G_GNUC_UNUSED GdaWebProvider *web_prv)
 {
-}
-
-GType
-gda_web_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaWebProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_web_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaWebProvider),
-			0,
-			(GInstanceInitFunc) gda_web_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaWebProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 static GdaWorker *
@@ -1249,8 +1220,7 @@ gda_web_provider_statement_prepare (GdaServerProvider *provider, GdaConnection *
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
                                              "%s", _("Unnamed parameter is not allowed in prepared statements"));
-                                g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-                                g_slist_free (param_ids);
+                                g_slist_free_full (param_ids, (GDestroyNotify) g_free);
                                 goto out;
                         }
                 }
@@ -1586,8 +1556,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 									  col_types,
 									  last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
-				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
-				g_slist_free (prep_param_ids);
+				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
 				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 

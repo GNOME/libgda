@@ -27,17 +27,8 @@
 #include <libgda/gda-server-provider.h>
 
 #define GDA_TYPE_WEB_PROVIDER            (gda_web_provider_get_type())
-#define GDA_WEB_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_WEB_PROVIDER, GdaWebProvider))
-#define GDA_WEB_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_WEB_PROVIDER, GdaWebProviderClass))
-#define GDA_IS_WEB_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_WEB_PROVIDER))
-#define GDA_IS_WEB_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_WEB_PROVIDER))
 
-typedef struct _GdaWebProvider      GdaWebProvider;
-typedef struct _GdaWebProviderClass GdaWebProviderClass;
-
-struct _GdaWebProvider {
-	GdaServerProvider      provider;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaWebProvider, gda_web_provider, GDA, WEB_PROVIDER, GdaServerProvider)
 
 struct _GdaWebProviderClass {
 	GdaServerProviderClass parent_class;
@@ -45,7 +36,6 @@ struct _GdaWebProviderClass {
 
 G_BEGIN_DECLS
 
-GType gda_web_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
