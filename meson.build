@@ -110,7 +110,6 @@ sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: false)
 sqlite_internal = true
 if sqlite_dep.found()
 	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
-								required: true,
 								dependencies: sqlite_dep)
 endif
 
@@ -118,7 +117,6 @@ endif
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4', required: false)
 if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
 	sqlcipher_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
-								required: true,
 								dependencies: sqlcipher_dep)
 endif
 
@@ -367,8 +365,9 @@ endif
 libgda_pc = configure_file(
 	input: 'libgda-'+project_api_version+'.pc.in',
 	output: 'libgda-'+project_api_version+'.pc',
-	configuration: conf,
-	install: true,
+	configuration: conf
+	)
+install_data(libgda_pc,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 
@@ -376,8 +375,9 @@ if libxslt_dep.found()
 	libgda_xslt_pc = configure_file(
 		input: 'libgda-xslt-'+project_api_version+'.pc.in',
 		output: 'libgda-xslt-'+project_api_version+'.pc',
-		configuration: conf,
-		install: true,
+		configuration: conf
+		)
+	install_data(libgda_xslt_pc,
 		install_dir: join_paths(get_option('libdir'),'pkgconfig')
 		)
 endif
@@ -386,15 +386,17 @@ if enable_ui
 libgdaui_pc = configure_file(
 	input: 'libgda-ui-'+project_api_version+'.pc.in',
 	output: 'libgda-ui-'+project_api_version+'.pc',
-	configuration: conf,
-	install: true,
+	configuration: conf
+	)
+install_data(libgdaui_pc,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 libgda_report_pc = configure_file(
 	input: 'libgda-report-'+project_api_version+'.pc.in',
 	output: 'libgda-report-'+project_api_version+'.pc',
-	configuration: conf,
-	install: true,
+	configuration: conf
+	)
+install_data(libgda_report_pc,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 endif
