@@ -13,6 +13,7 @@ libgda 5.91.0
  - Fixed open connections to SQLite, PostgreSQL and MySQL providers
  - Blacklisted providers: FireBird, Oracle, Java ODBC, MS Access, BDB, LDAP, MySQL
  - Fixed warnings
+ - Removed Autotools (was 89479e9d2372177036d2d0f6b01a50e5f21d076f 05 april 2019)
 
 libgda-ui 5.91.0
  - Ported almost all public API to use g_autoptr() and remove public private struct
