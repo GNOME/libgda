@@ -7,6 +7,7 @@
  * Copyright (C) 2004 Jürg Billeter <j@bitron.ch>
  * Copyright (C) 2004 Szalai Ferenc <szferi@einstein.ki.iif.hu>
  * Copyright (C) 2005 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,9 +42,7 @@
 #include <libgda/gda-connection-internal.h> /* for gda_connection_increase/decrease_usage() */
 
 static void gda_ldap_provider_class_init (GdaLdapProviderClass *klass);
-static void gda_ldap_provider_init       (GdaLdapProvider *provider,
-					  GdaLdapProviderClass *klass);
-static void gda_ldap_provider_finalize   (GObject *object);
+static void gda_ldap_provider_init       (GdaLdapProvider *provider);
 
 static const gchar *gda_ldap_provider_get_name (GdaServerProvider *provider);
 static const gchar *gda_ldap_provider_get_version (GdaServerProvider *provider);
@@ -58,8 +57,7 @@ static GObject *gda_ldap_provider_statement_execute (GdaServerProvider *provider
 static const gchar *gda_ldap_provider_get_server_version (GdaServerProvider *provider,
 							  GdaConnection *cnc);
 
-static GObjectClass *parent_class = NULL;
-
+G_DEFINE_TYPE (GdaLdapProvider, gda_ldap_provider, GDA_TYPE_VPROVIDER_DATA_MODEL)
 /* 
  * private connection data destroy 
  */
@@ -107,8 +105,6 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
@@ -122,53 +118,14 @@ gda_ldap_provider_class_init (GdaLdapProviderClass *klass)
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						(gpointer) NULL);
 
-	object_class->finalize = gda_ldap_provider_finalize;
 }
 
 static void
-gda_ldap_provider_init (G_GNUC_UNUSED GdaLdapProvider *pg_prv,
-			G_GNUC_UNUSED GdaLdapProviderClass *klass)
+gda_ldap_provider_init (G_GNUC_UNUSED GdaLdapProvider *pg_prv)
 {
 	/* nothing specific there */
 }
 
-static void
-gda_ldap_provider_finalize (GObject *object)
-{
-	GdaLdapProvider *pg_prv = (GdaLdapProvider *) object;
-
-	g_return_if_fail (GDA_IS_LDAP_PROVIDER (pg_prv));
-
-	/* chain to parent class */
-	parent_class->finalize(object);
-}
-
-GType
-gda_ldap_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaLdapProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_ldap_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaLdapProvider),
-			0,
-			(GInstanceInitFunc) gda_ldap_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VPROVIDER_DATA_MODEL, "GdaLdapProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 /*
  * Get provider name request
@@ -402,7 +359,7 @@ gda_ldap_provider_prepare_connection (GdaServerProvider *provider, GdaConnection
 
 	/* calling the parent's function first */
 	GdaServerProviderBase *parent_functions;
-        parent_functions = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+        parent_functions = gda_server_provider_get_impl_functions_for_class (gda_ldap_provider_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	if (parent_functions->prepare_connection) {
 		if (! parent_functions->prepare_connection (GDA_SERVER_PROVIDER (provider), cnc, params, auth))
 			return FALSE;
@@ -666,7 +623,7 @@ gda_ldap_provider_close_connection (GdaServerProvider *provider, GdaConnection *
 	}
 
 	GdaServerProviderBase *fset;
-	fset = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	fset = gda_server_provider_get_impl_functions_for_class (gda_ldap_provider_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	return fset->close_connection (provider, cnc);
 }
 
@@ -1077,7 +1034,7 @@ gda_ldap_provider_statement_execute (GdaServerProvider *provider, GdaConnection 
 		return NULL;
 
 	GdaServerProviderBase *fset;
-	fset = gda_server_provider_get_impl_functions_for_class (parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
+	fset = gda_server_provider_get_impl_functions_for_class (gda_ldap_provider_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
 	return fset->statement_execute (provider, cnc, stmt, params,
 					model_usage, col_types,
 					last_inserted_row, error);

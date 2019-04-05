@@ -22,26 +22,14 @@
 
 #include <virtual/gda-vprovider-data-model.h>
 
+G_BEGIN_DECLS
+
 #define GDA_TYPE_LDAP_PROVIDER            (gda_ldap_provider_get_type())
-#define GDA_LDAP_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_LDAP_PROVIDER, GdaLdapProvider))
-#define GDA_LDAP_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_LDAP_PROVIDER, GdaLdapProviderClass))
-#define GDA_IS_LDAP_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_LDAP_PROVIDER))
-#define GDA_IS_LDAP_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_LDAP_PROVIDER))
-
-typedef struct _GdaLdapProvider      GdaLdapProvider;
-typedef struct _GdaLdapProviderClass GdaLdapProviderClass;
-
-struct _GdaLdapProvider {
-	GdaVproviderDataModel      provider;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaLdapProvider, gda_ldap_provider, GDA, LDAP_PROVIDER, GdaVproviderDataModel)
 
 struct _GdaLdapProviderClass {
 	GdaVproviderDataModelClass parent_class;
 };
-
-G_BEGIN_DECLS
-
-GType gda_ldap_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
