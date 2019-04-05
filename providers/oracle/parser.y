@@ -593,7 +593,7 @@ limit_opt(A) ::= LIMIT expr(X) OFFSET expr(Y). {A.count = X; A.offset = Y;}
 limit_opt(A) ::= LIMIT expr(X) COMMA expr(Y). {A.count = X; A.offset = Y;}
 
 %type orderby_opt {GSList *}
-%destructor orderby_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_order_free, NULL);}}
+%destructor orderby_opt {if ($$) {g_slist_free_full ($$, (GDestroyNotify) gda_sql_select_order_free);}}
 orderby_opt(A) ::= .                          {A = 0;}
 orderby_opt(A) ::= ORDER BY sortlist(X).      {A = X;}
 
