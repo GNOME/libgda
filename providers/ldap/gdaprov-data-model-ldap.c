@@ -299,8 +299,7 @@ gda_data_model_ldap_dispose (GObject *object)
 		if (model->priv->row_mult)
 			row_multiplier_free (model->priv->row_mult);
 		if (model->priv->columns) {
-                        g_list_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
-                        g_list_free (model->priv->columns);
+                        g_list_free_full (model->priv->columns, (GDestroyNotify) g_object_unref);
                         model->priv->columns = NULL;
                 }
 		if (model->priv->attributes) {
@@ -424,8 +423,7 @@ gda_data_model_ldap_set_property (GObject *object,
 			csv = g_value_get_string (value);
 			if (csv && *csv) {
 				if (model->priv->columns) {
-					g_list_foreach (model->priv->columns, (GFunc) g_object_unref, NULL);
-					g_list_free (model->priv->columns);
+					g_list_free_full (model->priv->columns, (GDestroyNotify) g_object_unref);
 				}
 				if (model->priv->column_mv_actions) {
 					g_array_free (model->priv->column_mv_actions, TRUE);
