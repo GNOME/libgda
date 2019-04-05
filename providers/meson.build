@@ -28,6 +28,6 @@ if mysql_dep.found()
 subdir('mysql')
 endif
 
-if soup_dep.found() and get_option('with-libsoup') and mysql_dep.found() and postgres_dep.found()
+if soup_dep.found() and get_option('with-libsoup') and mysql_dep.found() and postgres_dep.found() and get_option('enable-web') and get_option('enable-experimental')
 subdir('web')
 endif
