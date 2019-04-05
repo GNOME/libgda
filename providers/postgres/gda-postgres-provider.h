@@ -4,6 +4,7 @@
  * Copyright (C) 2002 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2003 Akira TAGOH <tagoh@gnome-db.org>
  * Copyright (C) 2007 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,26 +27,15 @@
 
 #include <libgda/gda-server-provider.h>
 
+G_BEGIN_DECLS
+
 #define GDA_TYPE_POSTGRES_PROVIDER            (gda_postgres_provider_get_type())
-#define GDA_POSTGRES_PROVIDER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProvider))
-#define GDA_POSTGRES_PROVIDER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_PROVIDER, GdaPostgresProviderClass))
-#define GDA_IS_POSTGRES_PROVIDER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_PROVIDER))
-#define GDA_IS_POSTGRES_PROVIDER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_PROVIDER))
 
-typedef struct _GdaPostgresProvider      GdaPostgresProvider;
-typedef struct _GdaPostgresProviderClass GdaPostgresProviderClass;
-
-struct _GdaPostgresProvider {
-	GdaServerProvider      provider;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaPostgresProvider, gda_postgres_provider, GDA, POSTGRES_PROVIDER, GdaServerProvider)
 
 struct _GdaPostgresProviderClass {
 	GdaServerProviderClass parent_class;
 };
-
-G_BEGIN_DECLS
-
-GType gda_postgres_provider_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 

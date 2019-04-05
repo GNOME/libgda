@@ -13,7 +13,7 @@
  * Copyright (C) 2006 - 2015 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2010 David King <davidk@openismus.com>
- * Copyright (C) 2017 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2017-2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -61,9 +61,9 @@
  * GObject methods
  */
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
-static void gda_postgres_provider_init       (GdaPostgresProvider *provider,
-					      GdaPostgresProviderClass *klass);
-static GObjectClass *parent_class = NULL;
+static void gda_postgres_provider_init       (GdaPostgresProvider *provider);
+
+G_DEFINE_TYPE (GdaPostgresProvider, gda_postgres_provider, GDA_TYPE_SERVER_PROVIDER)
 
 /*
  * GdaServerProvider's virtual methods
@@ -169,7 +169,6 @@ static void gda_postgres_free_cnc_data (PostgresConnectionData *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -245,8 +244,6 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 {
 	GdaServerProviderClass *provider_class = GDA_SERVER_PROVIDER_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (provider_class,
 						GDA_SERVER_PROVIDER_FUNCTIONS_BASE,
@@ -263,10 +260,8 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 }
 
 static void
-gda_postgres_provider_init (GdaPostgresProvider *postgres_prv, G_GNUC_UNUSED GdaPostgresProviderClass *klass)
+gda_postgres_provider_init (GdaPostgresProvider *postgres_prv)
 {
-	g_mutex_lock (&init_mutex);
-
 	if (!internal_stmt) {
 		InternalStatementItem i;
 		GdaSqlParser *parser;
@@ -282,35 +277,6 @@ gda_postgres_provider_init (GdaPostgresProvider *postgres_prv, G_GNUC_UNUSED Gda
 
 	/* meta data init */
 	_gda_postgres_provider_meta_init ((GdaServerProvider*) postgres_prv);
-
-	g_mutex_unlock (&init_mutex);
-}
-
-GType
-gda_postgres_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaPostgresProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_postgres_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaPostgresProvider),
-			0,
-			(GInstanceInitFunc) gda_postgres_provider_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaPostgresProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 static GdaWorker *
@@ -1652,8 +1618,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
                         else {
                                 g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
                                              "%s", _("Unnamed parameter is not allowed in prepared statements"));
-                                g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-                                g_slist_free (param_ids);
+                                g_slist_free_full (param_ids, (GDestroyNotify) g_free);
 				g_free (prep_stm_name);
                                 goto out_err;
                         }
@@ -1851,8 +1816,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
 			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
 				if (holders) {
-					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-					g_slist_free (holders);
+					g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 					holders = NULL;
 				}
 				break;
@@ -1864,8 +1828,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, Oid last_id)
 		if (holders) {
 			holders = g_slist_reverse (holders);
 			set = gda_set_new (holders);
-			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-			g_slist_free (holders);
+			g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 		}
 
 		return set;
@@ -2165,8 +2128,7 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 									       col_types,
 									       last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
-				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
-				g_slist_free (prep_param_ids);
+				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
 				gda_pstmt_set_param_ids (gtps, copied_param_ids);
 
