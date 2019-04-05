@@ -16,6 +16,7 @@
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2007 Armin Burgmeier <armin@openismus.com>
  * Copyright (C) 2007 - 2014 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinsa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -65,8 +66,7 @@
  * GObject methods
  */
 static void gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass);
-static void gda_mysql_provider_init       (GdaMysqlProvider       *provider,
-					   GdaMysqlProviderClass  *klass);
+static void gda_mysql_provider_init       (GdaMysqlProvider       *provider);
 static void gda_mysql_provider_set_property (GObject *object,
 					     guint param_id,
 					     const GValue *value,
@@ -75,7 +75,13 @@ static void gda_mysql_provider_get_property (GObject *object,
 					     guint param_id,
 					     GValue *value,
 					     GParamSpec *pspec);
-static GObjectClass *parent_class = NULL;
+
+typedef struct {
+	gboolean               test_mode; /* for tests ONLY */
+	gboolean               test_identifiers_case_sensitive; /* for tests ONLY */
+} GdaMysqlProviderPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaMysqlProvider, gda_mysql_provider, GDA_TYPE_SERVER_PROVIDER)
 
 /* properties */
 enum
@@ -235,7 +241,6 @@ static void gda_mysql_free_cnc_data (MysqlConnectionData  *cdata);
  * TO_ADD: any prepared statement to be used internally by the provider should be
  *         declared here, as constants and as SQL statements
  */
-static GMutex init_mutex;
 static GdaStatement **internal_stmt = NULL;
 
 typedef enum {
@@ -299,15 +304,13 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
-
 	/* Properties */
-        object_class->set_property = gda_mysql_provider_set_property;
-        object_class->get_property = gda_mysql_provider_get_property;
+  object_class->set_property = gda_mysql_provider_set_property;
+  object_class->get_property = gda_mysql_provider_get_property;
 
 	g_object_class_install_property (object_class, PROP_IDENT_CASE_SENSITIVE,
-                                         g_param_spec_boolean ("identifiers-case-sensitive", NULL, NULL, TRUE,
-							       G_PARAM_READABLE | G_PARAM_WRITABLE));
+                                  g_param_spec_boolean ("identifiers-case-sensitive", NULL, NULL, TRUE,
+                                                        G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 	/* set virtual functions */
 	gda_server_provider_set_impl_functions (GDA_SERVER_PROVIDER_CLASS (klass),
@@ -325,12 +328,10 @@ gda_mysql_provider_class_init (GdaMysqlProviderClass  *klass)
 }
 
 static void
-gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
-			 G_GNUC_UNUSED GdaMysqlProviderClass  *klass)
+gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv)
 {
-	g_mutex_lock (&init_mutex);
-
-	if (!internal_stmt) {
+  GdaMysqlProviderPrivate *priv = gda_mysql_provider_get_instance_private (mysql_prv);
+  if (!internal_stmt) {
 		InternalStatementItem i;
 		GdaSqlParser *parser;
 
@@ -342,42 +343,13 @@ gda_mysql_provider_init (GdaMysqlProvider       *mysql_prv,
 				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
 		}
 	}
-
 	/* meta data init */
 	_gda_mysql_provider_meta_init ((GdaServerProvider*) mysql_prv);
 
 	/* for tests */
-	mysql_prv->test_mode = FALSE;
-	mysql_prv->test_identifiers_case_sensitive = TRUE;
+	priv->test_mode = FALSE;
+	priv->test_identifiers_case_sensitive = TRUE;
 
-	g_mutex_unlock (&init_mutex);
-}
-
-GType
-gda_mysql_provider_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static GTypeInfo info = {
-			sizeof (GdaMysqlProviderClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_mysql_provider_class_init,
-			NULL, NULL,
-			sizeof (GdaMysqlProvider),
-			0,
-			(GInstanceInitFunc) gda_mysql_provider_init,
-			NULL
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SERVER_PROVIDER, "GdaMysqlProvider", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
 }
 
 static void
@@ -388,10 +360,11 @@ gda_mysql_provider_set_property (GObject *object,
 {
 	GdaMysqlProvider *mysql_prv;
 	mysql_prv = GDA_MYSQL_PROVIDER (object);
+  GdaMysqlProviderPrivate *priv = gda_mysql_provider_get_instance_private (mysql_prv);
 	switch (param_id) {
 	case PROP_IDENT_CASE_SENSITIVE:
-		mysql_prv->test_identifiers_case_sensitive = g_value_get_boolean (value);
-		mysql_prv->test_mode = TRUE;
+		priv->test_identifiers_case_sensitive = g_value_get_boolean (value);
+		priv->test_mode = TRUE;
 		break;
 	}
 }
@@ -404,9 +377,10 @@ gda_mysql_provider_get_property (GObject *object,
 {
 	GdaMysqlProvider *mysql_prv;
 	mysql_prv = GDA_MYSQL_PROVIDER (object);
+  GdaMysqlProviderPrivate *priv = gda_mysql_provider_get_instance_private (mysql_prv);
 	switch (param_id) {
 	case PROP_IDENT_CASE_SENSITIVE:
-		g_value_set_boolean (value, mysql_prv->test_identifiers_case_sensitive);
+		g_value_set_boolean (value, priv->test_identifiers_case_sensitive);
 		break;
 	}
 }
@@ -1794,8 +1768,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_PREPARE_STMT_ERROR,
 				     "%s", _("Unnamed statement parameter is not allowed in prepared statement."));
-			g_slist_foreach (param_ids, (GFunc) g_free, NULL);
-			g_slist_free (param_ids);
+			g_slist_free_full (param_ids, (GDestroyNotify) g_free);
 			param_ids = NULL;
 			mysql_stmt_close (mysql_stmt);
 			goto cleanup;
@@ -2052,8 +2025,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong las
 			cvalue = gda_data_model_get_value_at (model, i, 0, NULL);
 			if (!cvalue || !gda_holder_set_value (h, cvalue, NULL)) {
 				if (holders) {
-					g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-					g_slist_free (holders);
+					g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 					holders = NULL;
 				}
 				break;
@@ -2065,8 +2037,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong las
 		if (holders) {
 			holders = g_slist_reverse (holders);
 			set = gda_set_new (holders);
-			g_slist_foreach (holders, (GFunc) g_object_unref, NULL);
-			g_slist_free (holders);
+			g_slist_free_full (holders, (GDestroyNotify) g_object_unref);
 		}
 
 		return set;
@@ -2077,8 +2048,7 @@ static void
 free_bind_param_data (GSList *mem_to_free)
 {
 	if (mem_to_free) {
-		g_slist_foreach (mem_to_free, (GFunc) g_free, NULL);
-		g_slist_free (mem_to_free);
+		g_slist_free_full (mem_to_free, (GDestroyNotify) g_free);
 	}
 }
 
@@ -2363,8 +2333,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 									    col_types,
 									    last_inserted_row, error);
 				/* clear original @param_ids and restore copied one */
-				g_slist_foreach (prep_param_ids, (GFunc) g_free, NULL);
-				g_slist_free (prep_param_ids);
+				g_slist_free_full (prep_param_ids, (GDestroyNotify) g_free);
 
 				gda_pstmt_set_param_ids (_GDA_PSTMT (gtps), copied_param_ids);
 
@@ -3037,14 +3006,15 @@ gda_mysql_provider_identifier_quote (GdaServerProvider *provider, GdaConnection 
 	GdaSqlReservedKeywordsFunc kwfunc;
 	MysqlConnectionData *cdata = NULL;
 	gboolean case_sensitive = TRUE;
+  GdaMysqlProviderPrivate *priv = gda_mysql_provider_get_instance_private (GDA_MYSQL_PROVIDER (provider));
 
 	if (cnc) {
 		cdata = (MysqlConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 		if (cdata) 
 			case_sensitive = cdata->reuseable->identifiers_case_sensitive;
 	}
-	if (!cdata && ((GdaMysqlProvider*) provider)->test_mode)
-		case_sensitive = ((GdaMysqlProvider*) provider)->test_identifiers_case_sensitive;
+	if (!cdata && priv->test_mode)
+		case_sensitive = priv->test_identifiers_case_sensitive;
 
 	kwfunc = _gda_mysql_reuseable_get_reserved_keywords_func
 		(cdata ? (GdaProviderReuseable*) cdata->reuseable : NULL);
