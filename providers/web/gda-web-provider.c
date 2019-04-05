@@ -2,6 +2,7 @@
  * Copyright (C) 2009 - 2015 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 - 2014 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinosa <malerba@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1403,7 +1404,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 		    ! g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "describe", 8))
 			xmlSetProp (node, BAD_CAST "type", BAD_CAST "SELECT");
 	}
-	xmlNewChild (cmdnode, NULL, BAD_CAST "preparehash", BAD_CAST (ps->pstmt_hash));
+	xmlNewChild (cmdnode, NULL, BAD_CAST "preparehash", BAD_CAST (gda_web_pstmt_get_pstmt_hash (ps)));
 
 	/* bind statement's parameters */
 	GSList *list;
@@ -1676,8 +1677,7 @@ gda_web_provider_statement_execute (GdaServerProvider *provider, GdaConnection *
 		else if (!strcmp ((gchar*) node->name, "preparehash")) {
 			xmlChar *contents;
 			contents = xmlNodeGetContent (node);
-			g_free (ps->pstmt_hash);
-			ps->pstmt_hash = g_strdup ((gchar*) contents);
+			gda_web_pstmt_set_pstmt_hash (ps, (gchar*) contents);
 			xmlFree (contents);
 		}
 	}

@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <malerba@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,27 +28,17 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_WEB_PSTMT            (gda_web_pstmt_get_type())
-#define GDA_WEB_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_WEB_PSTMT, GdaWebPStmt))
-#define GDA_WEB_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_WEB_PSTMT, GdaWebPStmtClass))
-#define GDA_IS_WEB_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_WEB_PSTMT))
-#define GDA_IS_WEB_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_WEB_PSTMT))
 
-typedef struct _GdaWebPStmt        GdaWebPStmt;
-typedef struct _GdaWebPStmtClass   GdaWebPStmtClass;
-
-struct _GdaWebPStmt {
-	GdaPStmt        object;
-
-	GdaConnection  *cnc;
-	gchar          *pstmt_hash;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaWebPStmt, gda_web_pstmt, GDA, WEB_PSTMT, GdaPStmt)
 
 struct _GdaWebPStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType         gda_web_pstmt_get_type  (void) G_GNUC_CONST;
-GdaWebPStmt  *gda_web_pstmt_new (GdaConnection *cnc, const gchar *pstmt_hash);
+GdaWebPStmt  *gda_web_pstmt_new              (GdaConnection *cnc, const gchar *pstmt_hash);
+gchar        *gda_web_pstmt_get_pstmt_hash   (GdaWebPStmt *stmt);
+void          gda_web_pstmt_set_pstmt_hash   (GdaWebPStmt *stmt, const gchar *pstmt_hash);
+void          gda_web_pstmt_free_pstmt_hash  (GdaWebPStmt *stmt);
 
 G_END_DECLS
 
