@@ -26,25 +26,12 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_POSTGRES_BLOB_OP            (gda_postgres_blob_op_get_type())
-#define GDA_POSTGRES_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_BLOB_OP, GdaPostgresBlobOp))
-#define GDA_POSTGRES_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_BLOB_OP, GdaPostgresBlobOpClass))
-#define GDA_IS_POSTGRES_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_POSTGRES_BLOB_OP))
-#define GDA_IS_POSTGRES_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_POSTGRES_BLOB_OP))
-
-typedef struct _GdaPostgresBlobOp        GdaPostgresBlobOp;
-typedef struct _GdaPostgresBlobOpClass   GdaPostgresBlobOpClass;
-typedef struct _GdaPostgresBlobOpPrivate GdaPostgresBlobOpPrivate;
-
-struct _GdaPostgresBlobOp {
-	GdaBlobOp                 parent;
-	GdaPostgresBlobOpPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaPostgresBlobOp, gda_postgres_blob_op, GDA, POSTGRES_BLOB_OP, GdaBlobOp)
 
 struct _GdaPostgresBlobOpClass {
 	GdaBlobOpClass            parent_class;
 };
 
-GType         gda_postgres_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_postgres_blob_op_new          (GdaConnection *cnc);
 GdaBlobOp    *gda_postgres_blob_op_new_with_id  (GdaConnection *cnc, const gchar *sql_id);
 gboolean      gda_postgres_blob_op_declare_blob (GdaPostgresBlobOp *pgop);

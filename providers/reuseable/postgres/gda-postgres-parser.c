@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,35 +29,7 @@
 static void gda_postgres_parser_class_init (GdaPostgresParserClass *klass);
 static void gda_postgres_parser_init (GdaPostgresParser *stmt);
 
-GType
-gda_postgres_parser_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaPostgresParserClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_postgres_parser_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaPostgresParser),
-			0,
-			(GInstanceInitFunc) gda_postgres_parser_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_from_name ("GdaPostgresParser");
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SQL_PARSER, "GdaPostgresParser", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE(GdaPostgresParser, gda_postgres_parser, GDA_TYPE_SQL_PARSER)
 
 /*
  * The interface to the LEMON-generated parser
