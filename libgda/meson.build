@@ -263,7 +263,7 @@ libgda_source_all += [
 	]
 
 ldap_cargs = []
-if ldap_found and get_option('enable-experimental')
+if ldap_found and get_option('enable-ldap') and get_option('enable-experimental')
 ldaph_sources = files ([
 	'gda-data-model-ldap.h',
 	'gda-tree-mgr-ldap.h'
