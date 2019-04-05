@@ -88,7 +88,7 @@ dummy_gda_data_model_ldap_class_init (GdaDataModelLdapClass *klass)
 }
 
 static void
-dummy_gda_data_model_ldap_data_model_init (GdaDataModelIface *iface)
+dummy_gda_data_model_ldap_data_model_init (GdaDataModelInterface *iface)
 {
   iface->get_n_rows = NULL;
   iface->get_n_columns = NULL;

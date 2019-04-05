@@ -145,7 +145,7 @@ static GList *_ldap_compute_columns (GdaConnection *cnc, const gchar *attributes
 				     MultipleValueAction default_mva, GArray **out_mv_actions);
 
 /* GdaDataModel interface */
-static void                 gda_data_model_ldap_data_model_init (GdaDataModelIface *iface);
+static void                 gda_data_model_ldap_data_model_init (GdaDataModelInterface *iface);
 static gint                 gda_data_model_ldap_get_n_rows      (GdaDataModel *model);
 static gint                 gda_data_model_ldap_get_n_columns   (GdaDataModel *model);
 static GdaColumn           *gda_data_model_ldap_describe_column (GdaDataModel *model, gint col);
@@ -182,7 +182,7 @@ gdaprov_data_model_ldap_iter_move_next (GdaDataModelIter *iter) {
  * Object init and dispose
  */
 static void
-gda_data_model_ldap_data_model_init (GdaDataModelIface *iface)
+gda_data_model_ldap_data_model_init (GdaDataModelInterface *iface)
 {
         iface->get_n_rows = gda_data_model_ldap_get_n_rows;
         iface->get_n_columns = gda_data_model_ldap_get_n_columns;
