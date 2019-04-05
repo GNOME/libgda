@@ -5,6 +5,7 @@
  * Copyright (C) 2001 - 2012 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2002 - 2003 Gonzalo Paniagua Javier <gonzalo@ximian.com>
  * Copyright (C) 2005 Bas Driessen <bas.driessen@xobas.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

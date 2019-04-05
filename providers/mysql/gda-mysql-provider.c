@@ -2171,7 +2171,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		g_object_ref (ps);
 
 	g_assert (ps);
-	if (ps->stmt_used) {
+	if (gda_mysql_pstmt_get_stmt_used (ps)) {
                 /* Don't use @ps => prepare stmt again */
                 GdaMysqlPStmt *nps;
                 nps = real_prepare (provider, cnc, stmt, error);
@@ -2593,9 +2593,9 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 		}
 	}
 		
-	if (!event && mysql_bind_param && mysql_stmt_bind_param (ps->mysql_stmt, mysql_bind_param)) {
-		//g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (ps->mysql_stmt));
-		event = _gda_mysql_make_error (cnc, cdata->mysql, ps->mysql_stmt, error);
+	if (!event && mysql_bind_param && mysql_stmt_bind_param (gda_mysql_pstmt_get_mysql_stmt (ps), mysql_bind_param)) {
+		//g_warning ("mysql_stmt_bind_param failed: %s\n", mysql_stmt_error (gda_mysql_pstmt_get_mysql_stmt (ps)));
+		event = _gda_mysql_make_error (cnc, cdata->mysql, gda_mysql_pstmt_get_mysql_stmt (ps), error);
 	}
 
 	if (event) {
@@ -2611,8 +2611,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 	    gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) {
 #if MYSQL_VERSION_ID >= 50002
 		const unsigned long cursor_type = CURSOR_TYPE_READ_ONLY;
-		if (mysql_stmt_attr_set (ps->mysql_stmt, STMT_ATTR_CURSOR_TYPE, (void *) &cursor_type)) {
-			_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, NULL);
+		if (mysql_stmt_attr_set (gda_mysql_pstmt_get_mysql_stmt (ps), STMT_ATTR_CURSOR_TYPE, (void *) &cursor_type)) {
+			_gda_mysql_make_error (cnc, NULL, gda_mysql_pstmt_get_mysql_stmt (ps), NULL);
 			g_object_unref (ps);
 			free_bind_param_data (mem_to_free);
 			return NULL;
@@ -2653,8 +2653,8 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 		/* This is a re-prepare of the statement.  The function mysql_stmt_prepare
 		 * will handle this on the server side. */
-		if (mysql_stmt_prepare (ps->mysql_stmt, sql_for_empty, strlen (sql_for_empty))) {
-			_gda_mysql_make_error (cdata->cnc, NULL, ps->mysql_stmt, error);
+		if (mysql_stmt_prepare (gda_mysql_pstmt_get_mysql_stmt (ps), sql_for_empty, strlen (sql_for_empty))) {
+			_gda_mysql_make_error (cdata->cnc, NULL, gda_mysql_pstmt_get_mysql_stmt (ps), error);
 			g_object_unref (ps);
 			free_bind_param_data (mem_to_free);
 			return NULL;
@@ -2666,22 +2666,22 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 
 	
 	GObject *return_value = NULL;
-	if (mysql_stmt_execute (ps->mysql_stmt)) {
-		event = _gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
+	if (mysql_stmt_execute (gda_mysql_pstmt_get_mysql_stmt (ps))) {
+		event = _gda_mysql_make_error (cnc, NULL, gda_mysql_pstmt_get_mysql_stmt (ps), error);
 		gda_connection_add_event (cnc, event);
 	}
 	else {
 		/* execute prepared statement using C API depending on its kind */
 		my_ulonglong affected_rows;
-		affected_rows = mysql_stmt_affected_rows (ps->mysql_stmt);
+		affected_rows = mysql_stmt_affected_rows (gda_mysql_pstmt_get_mysql_stmt (ps));
 		if ((affected_rows == (my_ulonglong)~0) ||
 		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SELECT", 6) ||
 		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "SHOW", 4) ||
 		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "DESCRIBE", 8) ||
 		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXECUTE", 7) ||
 		    !g_ascii_strncasecmp (gda_pstmt_get_sql (_GDA_PSTMT (ps)), "EXPLAIN", 7)) {
-			if (mysql_stmt_store_result (ps->mysql_stmt)) {
-				_gda_mysql_make_error (cnc, NULL, ps->mysql_stmt, error);
+			if (mysql_stmt_store_result (gda_mysql_pstmt_get_mysql_stmt (ps))) {
+				_gda_mysql_make_error (cnc, NULL, gda_mysql_pstmt_get_mysql_stmt (ps), error);
 			}
 			else {
 				GdaDataModelAccessFlags flags;

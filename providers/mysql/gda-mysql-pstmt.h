@@ -26,38 +26,24 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_PSTMT            (gda_mysql_pstmt_get_type())
-#define GDA_MYSQL_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_PSTMT, GdaMysqlPStmt))
-#define GDA_MYSQL_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_PSTMT, GdaMysqlPStmtClass))
-#define GDA_IS_MYSQL_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_MYSQL_PSTMT))
-#define GDA_IS_MYSQL_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_MYSQL_PSTMT))
 
-typedef struct _GdaMysqlPStmt        GdaMysqlPStmt;
-typedef struct _GdaMysqlPStmtClass   GdaMysqlPStmtClass;
-
-struct _GdaMysqlPStmt {
-	GdaPStmt        object;
-
-	GdaConnection  *cnc;
-
-	MYSQL          *mysql;
-	MYSQL_STMT     *mysql_stmt;
-	gboolean        stmt_used; /* TRUE if a recorset already uses this prepared statement,
-                                    * necessary because only one recordset can use mysql_stmt at a time */
-	MYSQL_BIND     *mysql_bind_result;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaMysqlPStmt, gda_mysql_pstmt, GDA, MYSQL_PSTMT, GdaPStmt)
 
 struct _GdaMysqlPStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType
-gda_mysql_pstmt_get_type  (void) G_GNUC_CONST;
 /* TO_ADD: helper function to create a GdaMysqlPStmt such as gda_mysql_pstmt_new() with some specific arguments */
 
-GdaMysqlPStmt *
-gda_mysql_pstmt_new       (GdaConnection  *cnc,
-			   MYSQL          *mysql,
-			   MYSQL_STMT     *mysql_stmt);
+GdaMysqlPStmt *gda_mysql_pstmt_new                   (GdaConnection  *cnc,
+                                                      MYSQL          *mysql,
+                                                      MYSQL_STMT     *mysql_stmt);
+gboolean       gda_mysql_pstmt_get_stmt_used         (GdaMysqlPStmt *stmt);
+void           gda_mysql_pstmt_set_stmt_used         (GdaMysqlPStmt *stmt, gboolean used);
+MYSQL_STMT    *gda_mysql_pstmt_get_mysql_stmt        (GdaMysqlPStmt *stmt);
+MYSQL_BIND    *gda_mysql_pstmt_get_mysql_bind_result (GdaMysqlPStmt *stmt);
+void           gda_mysql_pstmt_set_mysql_bind_result (GdaMysqlPStmt *stmt, MYSQL_BIND *bind);
+void           gda_mysql_pstmt_free_mysql_bind_result (GdaMysqlPStmt *stmt);
 
 
 G_END_DECLS

@@ -13,6 +13,7 @@
  * Copyright (C) 2005 Mike Fisk <mfisk@woozle.org>
  * Copyright (C) 2005 Álvaro Peña <alvaropg@telefonica.net>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -260,7 +261,7 @@ gda_mysql_recordset_dispose (GObject  *object)
 	g_return_if_fail (GDA_IS_MYSQL_RECORDSET (recset));
   GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (recset);
 
-	GDA_MYSQL_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object)))->stmt_used = FALSE;
+	gda_mysql_pstmt_set_stmt_used (GDA_MYSQL_PSTMT (gda_data_select_get_prep_stmt (GDA_DATA_SELECT (object))), FALSE);
 
 	if (priv->cnc) {
 		g_object_unref (G_OBJECT(priv->cnc));
@@ -522,15 +523,15 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	if (!cdata)
 		return NULL;
 
-	g_assert (ps->mysql_stmt);
+	g_assert (gda_mysql_pstmt_get_mysql_stmt(ps));
 
 	/* make sure @ps reports the correct number of columns using the API*/
 	if (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) < 0)
-		gda_pstmt_set_cols (_GDA_PSTMT(ps), mysql_stmt_field_count (ps->mysql_stmt), gda_pstmt_get_types (_GDA_PSTMT(ps)));
+		gda_pstmt_set_cols (_GDA_PSTMT(ps), mysql_stmt_field_count (gda_mysql_pstmt_get_mysql_stmt(ps)), gda_pstmt_get_types (_GDA_PSTMT(ps)));
 
         /* completing @ps if not yet done */
-	g_assert (! ps->stmt_used);
-        ps->stmt_used = TRUE;
+	g_assert (! gda_mysql_pstmt_get_stmt_used (ps));
+        gda_mysql_pstmt_set_stmt_used (ps, TRUE);
         if (!gda_pstmt_get_types (_GDA_PSTMT (ps)) && (gda_pstmt_get_ncols (_GDA_PSTMT (ps)) > 0)) {
 		/* create prepared statement's columns */
 		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); i++)
@@ -561,19 +562,12 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 	}
 
 	/* get rid of old bound result if any */
-	if (ps->mysql_bind_result) {
-		gint i;
-		for (i = 0; i < gda_pstmt_get_ncols (_GDA_PSTMT (ps)); ++i) {
-			g_free (ps->mysql_bind_result[i].buffer);
-			g_free (ps->mysql_bind_result[i].is_null);
-			g_free (ps->mysql_bind_result[i].length);
-		}
-		g_free (ps->mysql_bind_result);
-		ps->mysql_bind_result = NULL;
+	if (gda_mysql_pstmt_get_mysql_bind_result (ps)) {
+    gda_mysql_pstmt_free_mysql_bind_result (ps);
 	}
 
 	/* fill bind result */
-	MYSQL_RES *mysql_res = mysql_stmt_result_metadata (ps->mysql_stmt);
+	MYSQL_RES *mysql_res = mysql_stmt_result_metadata (gda_mysql_pstmt_get_mysql_stmt(ps));
 	MYSQL_FIELD *mysql_fields = mysql_fetch_fields (mysql_res);
 	
 	MYSQL_BIND *mysql_bind_result = g_new0 (MYSQL_BIND, gda_pstmt_get_ncols (_GDA_PSTMT (ps)));
@@ -650,13 +644,13 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 			 field->flags & UNSIGNED_FLAG);*/
 	}
 	
-	if (mysql_stmt_bind_result (ps->mysql_stmt, mysql_bind_result)) {
+	if (mysql_stmt_bind_result (gda_mysql_pstmt_get_mysql_stmt(ps), mysql_bind_result)) {
 		g_warning ("mysql_stmt_bind_result failed: %s\n",
-			   mysql_stmt_error (ps->mysql_stmt));
+			   mysql_stmt_error (gda_mysql_pstmt_get_mysql_stmt(ps)));
 	}
 	
 	mysql_free_result (mysql_res);
-	ps->mysql_bind_result = mysql_bind_result;
+	gda_mysql_pstmt_set_mysql_bind_result (ps, mysql_bind_result);
 
 	/* determine access mode: RANDOM or CURSOR FORWARD are the only supported */
 	if (flags & GDA_DATA_MODEL_ACCESS_RANDOM)
@@ -675,9 +669,9 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
   priv->cnc = cnc;
 	g_object_ref (G_OBJECT(cnc));
 
-	priv->mysql_stmt = ps->mysql_stmt;
+	priv->mysql_stmt = gda_mysql_pstmt_get_mysql_stmt(ps);
 
-	gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_stmt_affected_rows (ps->mysql_stmt));
+	gda_data_select_set_advertized_nrows ((GdaDataSelect *) model, mysql_stmt_affected_rows (gda_mysql_pstmt_get_mysql_stmt(ps)));
 
         return GDA_DATA_MODEL (model);
 }
@@ -711,7 +705,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
   GdaMysqlRecordsetPrivate *priv = gda_mysql_recordset_get_instance_private (imodel);
 	g_return_val_if_fail (priv->mysql_stmt != NULL, NULL);
 
-	mysql_bind_result = ((GdaMysqlPStmt *) gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel))->mysql_bind_result;
+	mysql_bind_result = gda_mysql_pstmt_get_mysql_bind_result ((GdaMysqlPStmt *) gda_data_select_get_prep_stmt ((GdaDataSelect *) imodel));
 	g_assert (mysql_bind_result);
 
 	res = mysql_stmt_fetch (priv->mysql_stmt);
