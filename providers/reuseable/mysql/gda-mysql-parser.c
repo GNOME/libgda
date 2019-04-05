@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2010 David King <davidk@openismus.com>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,36 +29,7 @@
 static void gda_mysql_parser_class_init (GdaMysqlParserClass *klass);
 static void gda_mysql_parser_init (GdaMysqlParser *stmt);
 
-GType
-gda_mysql_parser_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaMysqlParserClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_mysql_parser_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaMysqlParser),
-			0,
-			(GInstanceInitFunc) gda_mysql_parser_init,
-			0
-		};
-		
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_from_name ("GdaMysqlParser");
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_SQL_PARSER, "GdaMysqlParser", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
-
+G_DEFINE_TYPE (GdaMysqlParser, gda_mysql_parser, GDA_TYPE_SQL_PARSER)
 /*
  * The interface to the LEMON-generated parser
  */
@@ -75,7 +47,7 @@ gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 	pclass->parser_free = gda_lemon_mysql_parserFree;
 	pclass->parser_trace = gda_lemon_mysql_parserTrace;
 	pclass->parser_parse = gda_lemon_mysql_parser;
-	pclass->parser_tokens_trans = mysql_parser_tokens;
+	pclass->parser_tokens_trans = NULL;
 }
 
 static void

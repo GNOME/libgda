@@ -276,8 +276,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		}
 		g_string_append_c (string, ')');
 	}
-	g_slist_foreach (pkfields, (GFunc) g_free, NULL);
-	g_slist_free (pkfields);
+	g_slist_free_full (pkfields, (GDestroyNotify) g_free);
 
 	/* foreign keys */
 	first = TRUE;

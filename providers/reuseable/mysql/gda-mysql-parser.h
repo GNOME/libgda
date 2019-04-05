@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,29 +27,14 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_PARSER            (gda_mysql_parser_get_type())
-#define GDA_MYSQL_PARSER(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_MYSQL_PARSER, GdaMysqlParser))
-#define GDA_MYSQL_PARSER_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_MYSQL_PARSER, GdaMysqlParserClass))
-#define GDA_IS_MYSQL_PARSER(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_MYSQL_PARSER))
-#define GDA_IS_MYSQL_PARSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_MYSQL_PARSER))
 
-typedef struct _GdaMysqlParser GdaMysqlParser;
-typedef struct _GdaMysqlParserClass GdaMysqlParserClass;
-typedef struct _GdaMysqlParserPrivate GdaMysqlParserPrivate;
-
-/* struct for the object's data */
-struct _GdaMysqlParser
-{
-	GdaSqlParser          object;
-	GdaMysqlParserPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE (GdaMysqlParser, gda_mysql_parser, GDA, MYSQL_PARSER, GdaSqlParser)
 
 /* struct for the object's class */
 struct _GdaMysqlParserClass
 {
 	GdaSqlParserClass      parent_class;
 };
-
-GType gda_mysql_parser_get_type (void) G_GNUC_CONST;
 
 G_END_DECLS
 
