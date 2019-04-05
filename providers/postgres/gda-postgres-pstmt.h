@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 - 2013 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinsa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,33 +27,17 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_POSTGRES_PSTMT            (gda_postgres_pstmt_get_type())
-#define GDA_POSTGRES_PSTMT(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_POSTGRES_PSTMT, GdaPostgresPStmt))
-#define GDA_POSTGRES_PSTMT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_POSTGRES_PSTMT, GdaPostgresPStmtClass))
-#define GDA_IS_POSTGRES_PSTMT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE(obj, GDA_TYPE_POSTGRES_PSTMT))
-#define GDA_IS_POSTGRES_PSTMT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), GDA_TYPE_POSTGRES_PSTMT))
 
-typedef struct _GdaPostgresPStmt        GdaPostgresPStmt;
-typedef struct _GdaPostgresPStmtClass   GdaPostgresPStmtClass;
-
-struct _GdaPostgresPStmt {
-	GdaPStmt        object;
-	
-	/* PostgreSQL identifies a prepared statement by its name, which we'll keep here,
-	 * along with a pointer to a GdaConnection and a PGconn because when the prepared
-	 * statement is destroyed, we need to call "DEALLOCATE..."
-	 */
-	GdaConnection  *cnc;
-	PGconn         *pconn;
-	gchar          *prep_name;
-	gboolean        date_format_change; /* TRUE if this statement may incur a date format change */
-};
+G_DECLARE_DERIVABLE_TYPE (GdaPostgresPStmt, gda_postgres_pstmt, GDA, POSTGRES_PSTMT, GdaPStmt)
 
 struct _GdaPostgresPStmtClass {
 	GdaPStmtClass  parent_class;
 };
 
-GType             gda_postgres_pstmt_get_type  (void) G_GNUC_CONST;
 GdaPostgresPStmt *gda_postgres_pstmt_new       (GdaConnection *cnc, PGconn *pconn, const gchar *prep_name);
+const gchar      *gda_postgres_pstmt_get_prep_name (GdaPostgresPStmt *pstmt);
+gboolean          gda_postgres_pstmt_get_date_format_change (GdaPostgresPStmt *pstmt);
+void              gda_postgres_pstmt_set_date_format_change (GdaPostgresPStmt *pstmt, gboolean change);
 
 G_END_DECLS
 

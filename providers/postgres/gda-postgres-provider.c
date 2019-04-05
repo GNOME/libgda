@@ -1632,7 +1632,7 @@ gda_postgres_provider_statement_prepare (GdaServerProvider *provider, GdaConnect
         gda_pstmt_set_param_ids (_GDA_PSTMT (ps), param_ids);
         gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 	if (sql_can_cause_date_format_change (sql))
-		ps->date_format_change = TRUE;
+		gda_postgres_pstmt_set_date_format_change (ps, TRUE);
 
 	gda_connection_add_prepared_statement (cnc, stmt, (GdaPStmt *) ps);
 	g_object_unref (ps);
@@ -1691,7 +1691,7 @@ prepare_stmt_simple (PostgresConnectionData *cdata, const gchar *sql, GError **e
 		gda_pstmt_set_param_ids (_GDA_PSTMT (ps), NULL);
 		gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
 		if (sql_can_cause_date_format_change (sql))
-			ps->date_format_change = TRUE;
+		  gda_postgres_pstmt_set_date_format_change (ps, TRUE);
 
 		return ps;
 	}
@@ -2277,9 +2277,9 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 		date_format_change = sql_can_cause_date_format_change (esql);
 	}
 	else {
-		pg_res = PQexecPrepared (cdata->pconn, ps->prep_name, nb_params, (const char * const *) param_values,
+		pg_res = PQexecPrepared (cdata->pconn, gda_postgres_pstmt_get_prep_name (ps), nb_params, (const char * const *) param_values,
 					 param_lengths, param_formats, 0);
-		date_format_change = ps->date_format_change;
+		date_format_change = gda_postgres_pstmt_get_date_format_change (ps);
 	}
 
 	params_freev (param_values, param_mem, nb_params);
