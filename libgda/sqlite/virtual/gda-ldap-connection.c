@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 - 2015 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,14 +56,9 @@ _ldap_table_map_free (LdapTableMap *map)
 	g_free (map);
 }
 
-struct _GdaLdapConnectionPrivate {
-	GSList   *maps; /* list of #LdapTableMap, no ref held there */
-	gchar    *startup_file;
-	gboolean  loading_startup_file;
-};
 
 static void gda_ldap_connection_class_init (GdaLdapConnectionClass *klass);
-static void gda_ldap_connection_init       (GdaLdapConnection *cnc, GdaLdapConnectionClass *klass);
+static void gda_ldap_connection_init       (GdaLdapConnection *cnc);
 static void gda_ldap_connection_dispose    (GObject *object);
 static void gda_ldap_connection_set_property (GObject *object,
 					      guint param_id,
@@ -73,19 +69,26 @@ static void gda_ldap_connection_get_property (GObject *object,
 					      GValue *value,
 					      GParamSpec *pspec);
 
-static GObjectClass *parent_class = NULL;
+typedef struct {
+	GSList   *maps; /* list of #LdapTableMap, no ref held there */
+	gchar    *startup_file;
+	gboolean  loading_startup_file;
+} GdaLdapConnectionPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaLdapConnection, gda_ldap_connection, GDA_TYPE_VCONNECTION_DATA_MODEL)
 
 /* properties */
 enum
 {
-        PROP_0,
+  PROP_0,
 	PROP_STARTUP_FILE
 };
 
 static void
 update_connection_startup_file (GdaLdapConnection *cnc)
 {
-	if (! cnc->priv->startup_file || cnc->priv->loading_startup_file)
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+	if (! priv->startup_file || priv->loading_startup_file)
 		return;
 
 	GSList *list;
@@ -93,7 +96,7 @@ update_connection_startup_file (GdaLdapConnection *cnc)
 	GError *lerror = NULL;
 
 	string = g_string_new ("");
-	for (list = cnc->priv->maps; list; list = list->next) {
+	for (list = priv->maps; list; list = list->next) {
 		LdapTableMap *map = (LdapTableMap*) list->data;
 		g_string_append_printf (string, "CREATE LDAP TABLE %s ", map->table_name);
 		if (map->base_dn)
@@ -117,7 +120,7 @@ update_connection_startup_file (GdaLdapConnection *cnc)
 			g_assert_not_reached ();
 		}
 	}
-	if (! g_file_set_contents (cnc->priv->startup_file, string->str, -1, &lerror)) {
+	if (! g_file_set_contents (priv->startup_file, string->str, -1, &lerror)) {
 		GdaConnectionEvent *event;
 		gchar *msg;
 		event = gda_connection_point_available_event (GDA_CONNECTION (cnc),
@@ -136,8 +139,9 @@ static void
 dump_vtables (GdaLdapConnection *cnc)
 {
 	GSList *list;
-	g_print ("LDAP tables: %d\n", g_slist_length (cnc->priv->maps));
-	for (list = cnc->priv->maps; list; list = list->next) {
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+	g_print ("LDAP tables: %d\n", g_slist_length (priv->maps));
+	for (list = priv->maps; list; list = list->next) {
 		LdapTableMap *map = (LdapTableMap*) list->data;
 		g_print ("    LDAP Vtable: %s (map %p)\n", map->table_name, map);
 	}
@@ -151,8 +155,8 @@ vtable_created (GdaVconnectionDataModel *cnc, const gchar *table_name)
 	g_print ("VTable created: %s\n", table_name);
 	dump_vtables (GDA_LDAP_CONNECTION (cnc));
 #endif
-	if (GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_created)
-		GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_created (cnc, table_name);
+	if (GDA_VCONNECTION_DATA_MODEL_CLASS (gda_ldap_connection_parent_class)->vtable_created)
+		GDA_VCONNECTION_DATA_MODEL_CLASS (gda_ldap_connection_parent_class)->vtable_created (cnc, table_name);
 	update_connection_startup_file (GDA_LDAP_CONNECTION (cnc));
 }
 
@@ -164,17 +168,18 @@ vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 	GSList *list;
 
 	lcnc = (GdaLdapConnection*) cnc;
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (lcnc);
 
-	/* if @lcnc->priv is NULL, then @cnc is currently being destroyed */
-	if (lcnc->priv) {
-		for (list = lcnc->priv->maps; list; list = list->next) {
+	/* if @priv is NULL, then @cnc is currently being destroyed */
+	if (priv) {
+		for (list = priv->maps; list; list = list->next) {
 			if (!strcmp (((LdapTableMap*)list->data)->table_name, table_name)) {
 				map = (LdapTableMap*)list->data;
 				break;
 			}
 		}
 		if (map) {
-			lcnc->priv->maps = g_slist_remove (lcnc->priv->maps, map);
+			priv->maps = g_slist_remove (priv->maps, map);
 #ifdef GDA_DEBUG_NO
 			g_print ("VTable dropped: %s\n", table_name);
 			dump_vtables (lcnc);
@@ -182,10 +187,10 @@ vtable_dropped (GdaVconnectionDataModel *cnc, const gchar *table_name)
 		}
 	}
 
-	if (GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_dropped)
-		GDA_VCONNECTION_DATA_MODEL_CLASS (parent_class)->vtable_dropped (cnc, table_name);
+	if (GDA_VCONNECTION_DATA_MODEL_CLASS (gda_ldap_connection_parent_class)->vtable_dropped)
+		GDA_VCONNECTION_DATA_MODEL_CLASS (gda_ldap_connection_parent_class)->vtable_dropped (cnc, table_name);
 
-	if (lcnc->priv)
+	if (priv)
 		update_connection_startup_file (GDA_LDAP_CONNECTION (cnc));
 }
 
@@ -197,14 +202,13 @@ gda_ldap_connection_class_init (GdaLdapConnectionClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-	parent_class = g_type_class_peek_parent (klass);
 	object_class->dispose = gda_ldap_connection_dispose;
 	GDA_VCONNECTION_DATA_MODEL_CLASS (klass)->vtable_created = vtable_created;
 	GDA_VCONNECTION_DATA_MODEL_CLASS (klass)->vtable_dropped = vtable_dropped;
 
 	/* Properties */
-        object_class->set_property = gda_ldap_connection_set_property;
-        object_class->get_property = gda_ldap_connection_get_property;
+  object_class->set_property = gda_ldap_connection_set_property;
+  object_class->get_property = gda_ldap_connection_get_property;
 	g_object_class_install_property (object_class, PROP_STARTUP_FILE,
                                          g_param_spec_string ("startup-file", NULL, _("File used to store startup data"), NULL,
                                                               (G_PARAM_READABLE | G_PARAM_WRITABLE)));
@@ -214,23 +218,26 @@ static void
 dsn_set_cb (GdaLdapConnection *cnc, G_GNUC_UNUSED GParamSpec *pspec, G_GNUC_UNUSED gpointer data)
 {
 	gchar *fname, *tmp, *dsn;
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+
 	g_object_get (cnc, "dsn", &dsn, NULL);
 	tmp = g_strdup_printf ("ldap-%s.start", dsn);
 	g_free (dsn);
 	fname = g_build_path (G_DIR_SEPARATOR_S, g_get_user_data_dir (),
 			      "libgda", tmp, NULL);
 	g_free (tmp);
-	g_free (cnc->priv->startup_file);
-	cnc->priv->startup_file = fname;
+	g_free (priv->startup_file);
+	priv->startup_file = fname;
 }
 
 static void
 conn_opened_cb (GdaLdapConnection *cnc, G_GNUC_UNUSED gpointer data)
 {
-	if (!cnc->priv->startup_file)
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+	if (!priv->startup_file)
 		return;
 
-	cnc->priv->loading_startup_file = TRUE;
+	priv->loading_startup_file = TRUE;
 
 	GdaSqlParser *parser;
 	GdaBatch *batch;
@@ -238,7 +245,7 @@ conn_opened_cb (GdaLdapConnection *cnc, G_GNUC_UNUSED gpointer data)
 	parser = gda_connection_create_parser (GDA_CONNECTION (cnc));
 	if (!parser)
 		parser = gda_sql_parser_new ();
-	batch = gda_sql_parser_parse_file_as_batch (parser, cnc->priv->startup_file, &lerror);
+	batch = gda_sql_parser_parse_file_as_batch (parser, priv->startup_file, &lerror);
 	if (batch) {
 		GSList *list;
 		list = gda_connection_batch_execute (GDA_CONNECTION (cnc), batch, NULL, 0, &lerror);
@@ -259,16 +266,16 @@ conn_opened_cb (GdaLdapConnection *cnc, G_GNUC_UNUSED gpointer data)
 	}
 	g_object_unref (parser);
 
-	cnc->priv->loading_startup_file = FALSE;
+	priv->loading_startup_file = FALSE;
 }
 
 static void
-gda_ldap_connection_init (GdaLdapConnection *cnc, G_GNUC_UNUSED GdaLdapConnectionClass *klass)
+gda_ldap_connection_init (GdaLdapConnection *cnc)
 {
-	cnc->priv = g_new (GdaLdapConnectionPrivate, 1);
-	cnc->priv->maps = NULL;
-	cnc->priv->startup_file = NULL;
-	cnc->priv->loading_startup_file = FALSE;
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+  priv->maps = NULL;
+	priv->startup_file = NULL;
+	priv->loading_startup_file = FALSE;
 
 	g_signal_connect (cnc, "notify::dsn",
 			  G_CALLBACK (dsn_set_cb), NULL);
@@ -282,48 +289,20 @@ gda_ldap_connection_dispose (GObject *object)
 	GdaLdapConnection *cnc = (GdaLdapConnection *) object;
 
 	g_return_if_fail (GDA_IS_LDAP_CONNECTION (cnc));
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
 
 	/* free memory */
-	if (cnc->priv) {
-		if (cnc->priv->maps)
-			g_slist_free (cnc->priv->maps);
-		g_free (cnc->priv->startup_file);
-		g_free (cnc->priv);
-		cnc->priv = NULL;
-	}
+	if (priv->maps) {
+		g_slist_free (priv->maps);
+    priv->maps = NULL;
+  }
+  if (priv->startup_file != NULL) {
+	  g_free (priv->startup_file);
+    priv->startup_file = NULL;
+  }
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-GType
-gda_ldap_connection_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		if (type == 0) {
-			static GTypeInfo info = {
-				sizeof (GdaLdapConnectionClass),
-				(GBaseInitFunc) NULL,
-				(GBaseFinalizeFunc) NULL,
-				(GClassInitFunc) gda_ldap_connection_class_init,
-				NULL, NULL,
-				sizeof (GdaLdapConnection),
-				0,
-				(GInstanceInitFunc) gda_ldap_connection_init,
-				0
-			};
-			
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_VCONNECTION_DATA_MODEL, "GdaLdapConnection", &info, 0);
-		g_mutex_unlock (&registering);
-		}
-	}
-
-	return type;
+	G_OBJECT_CLASS(gda_ldap_connection_parent_class)->dispose (object);
 }
 
 static void
@@ -332,33 +311,32 @@ gda_ldap_connection_set_property (GObject *object,
 				  const GValue *value,
 				  GParamSpec *pspec)
 {
-        GdaLdapConnection *cnc;
-        cnc = GDA_LDAP_CONNECTION (object);
-        if (cnc->priv) {
-                switch (param_id) {
-                case PROP_STARTUP_FILE: {
-			if (cnc->priv->startup_file) {
-				/* don't override any preexisting setting from a DSN */
-				gchar *dsn;
-				g_object_get (cnc, "dsn", &dsn, NULL);
-				if (dsn)
-					g_free (dsn);
-				else {
-					g_free (cnc->priv->startup_file);
-					cnc->priv->startup_file = NULL;
-				}
-			}
-			if (! cnc->priv->startup_file) {
-				if (g_value_get_string (value))
-					cnc->priv->startup_file = g_value_dup_string (value);
-			}
-			break;
-		}
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-                }
-	}
+  GdaLdapConnection *cnc;
+  cnc = GDA_LDAP_CONNECTION (object);
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+  switch (param_id) {
+    case PROP_STARTUP_FILE: {
+      if (priv->startup_file) {
+        /* don't override any preexisting setting from a DSN */
+        gchar *dsn;
+        g_object_get (cnc, "dsn", &dsn, NULL);
+        if (dsn) {
+        g_free (dsn);
+        } else {
+          g_free (priv->startup_file);
+          priv->startup_file = NULL;
+        }
+      }
+      if (! priv->startup_file) {
+        if (g_value_get_string (value))
+          priv->startup_file = g_value_dup_string (value);
+      }
+      break;
+    }
+    default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+            break;
+  }
 }
 
 static void
@@ -368,17 +346,20 @@ gda_ldap_connection_get_property (GObject *object,
 				  GParamSpec *pspec)
 {
 	GdaLdapConnection *cnc;
-        cnc = GDA_LDAP_CONNECTION (object);
-        if (cnc->priv) {
-                switch (param_id) {
-                case PROP_STARTUP_FILE:
-			g_value_set_string (value, cnc->priv->startup_file);
+  cnc = GDA_LDAP_CONNECTION (object);
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
+  switch (param_id) {
+    case PROP_STARTUP_FILE:
+			g_value_set_string (value, priv->startup_file);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-                        break;
-                }
-	}	
+      break;
+  }
+}
+
+static void unref_objects (GObject *object, G_GNUC_UNUSED gpointer user_data) {
+  g_object_unref (object);
 }
 
 static GList *
@@ -387,7 +368,7 @@ _ldap_create_columns_func (GdaVconnectionDataModelSpec *spec, G_GNUC_UNUSED GErr
 	LdapTableMap *map = (LdapTableMap *) spec;
 	if (!map->columns)
 		map->columns = gda_data_model_ldap_compute_columns (map->ldap_cnc, map->attributes);
-	g_list_foreach (map->columns, (GFunc) g_object_ref, NULL);
+	g_list_foreach (map->columns, (GFunc) unref_objects, NULL);
 	return g_list_copy (map->columns);
 }
 
@@ -723,6 +704,7 @@ gda_ldap_connection_declare_table (GdaLdapConnection *cnc, const gchar *table_na
 	LdapTableMap *map;
 	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
 	
 	map = g_new0 (LdapTableMap, 1);
 	GDA_VCONNECTION_DATA_MODEL_SPEC (map)->data_model = NULL;
@@ -742,11 +724,11 @@ gda_ldap_connection_declare_table (GdaLdapConnection *cnc, const gchar *table_na
 		map->attributes = g_strdup (attributes);
 	map->scope = scope ? scope : GDA_LDAP_SEARCH_BASE;
 
-	cnc->priv->maps = g_slist_append (cnc->priv->maps, map);	
+	priv->maps = g_slist_append (priv->maps, map);
 	if (!gda_vconnection_data_model_add (GDA_VCONNECTION_DATA_MODEL (cnc),
 					     (GdaVconnectionDataModelSpec*) map,
                                              (GDestroyNotify) _ldap_table_map_free, table_name, error)) {
-		cnc->priv->maps = g_slist_remove (cnc->priv->maps, map);
+		priv->maps = g_slist_remove (priv->maps, map);
                 return FALSE;
 	}
 
@@ -771,9 +753,10 @@ gda_ldap_connection_undeclare_table (GdaLdapConnection *cnc, const gchar *table_
 	GdaVconnectionDataModelSpec *specs;
 	g_return_val_if_fail (GDA_IS_LDAP_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (table_name && *table_name, FALSE);
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
 
 	specs =  gda_vconnection_data_model_get (GDA_VCONNECTION_DATA_MODEL (cnc), table_name);
-	if (specs && ! g_slist_find (cnc->priv->maps, specs)) {
+	if (specs && ! g_slist_find (priv->maps, specs)) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     "%s", _("Can't remove non LDAP virtual table"));
@@ -807,6 +790,7 @@ gda_ldap_connection_describe_table (GdaLdapConnection *cnc, const gchar *table_n
 {
 	GdaVconnectionDataModelSpec *specs;
 	LdapTableMap *map;
+  GdaLdapConnectionPrivate *priv = gda_ldap_connection_get_instance_private (cnc);
 
 	if (out_base_dn)
 		*out_base_dn = NULL;
@@ -821,7 +805,7 @@ gda_ldap_connection_describe_table (GdaLdapConnection *cnc, const gchar *table_n
 	g_return_val_if_fail (table_name && *table_name, FALSE);
 
 	specs =  gda_vconnection_data_model_get (GDA_VCONNECTION_DATA_MODEL (cnc), table_name);
-	if (specs && ! g_slist_find (cnc->priv->maps, specs)) {
+	if (specs && ! g_slist_find (priv->maps, specs)) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_MISUSE_ERROR,
 			     "%s", _("Can't describe non LDAP virtual table"));

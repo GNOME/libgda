@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 - 2014 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinosa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,22 +25,7 @@
 #include <libgda/gda-data-model-ldap.h>
 
 #define GDA_TYPE_LDAP_CONNECTION            (gda_ldap_connection_get_type())
-#define GDA_LDAP_CONNECTION(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_LDAP_CONNECTION, GdaLdapConnection))
-#define GDA_LDAP_CONNECTION_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_LDAP_CONNECTION, GdaLdapConnectionClass))
-#define GDA_IS_LDAP_CONNECTION(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_LDAP_CONNECTION))
-#define GDA_IS_LDAP_CONNECTION_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_LDAP_CONNECTION))
-
-G_BEGIN_DECLS
-
-typedef struct _GdaLdapConnection      GdaLdapConnection;
-typedef struct _GdaLdapConnectionClass GdaLdapConnectionClass;
-typedef struct _GdaLdapConnectionPrivate GdaLdapConnectionPrivate;
-
-struct _GdaLdapConnection {
-	GdaVconnectionDataModel      parent;
-	GdaLdapConnectionPrivate    *priv;
-};
-
+G_DECLARE_DERIVABLE_TYPE(GdaLdapConnection, gda_ldap_connection, GDA, LDAP_CONNECTION, GdaVconnectionDataModel)
 struct _GdaLdapConnectionClass {
 	GdaVconnectionDataModelClass parent_class;
 
@@ -119,8 +105,6 @@ struct _GdaLdapConnectionClass {
  * <programlisting>SELECT * FROM users WHERE cn MATCH '%doe%' AND uid=123;</programlisting>
  * will be optimized because of the "AND".
  */
-
-GType          gda_ldap_connection_get_type        (void) G_GNUC_CONST;
 
 const gchar   *gda_ldap_connection_get_base_dn     (GdaLdapConnection *cnc);
 gboolean       gda_ldap_connection_declare_table   (GdaLdapConnection *cnc, const gchar *table_name,
