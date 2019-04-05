@@ -50,7 +50,7 @@ gda_capi_parser_class_init (GdaCapiParserClass * klass)
 	pclass->parser_free = gda_lemon_capi_parserFree;
 	pclass->parser_trace = gda_lemon_capi_parserTrace;
 	pclass->parser_parse = gda_lemon_capi_parser;
-	pclass->parser_tokens_trans = NULL;
+	pclass->parser_tokens_trans = capi_parser_tokens;
 }
 
 static void

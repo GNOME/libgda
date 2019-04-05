@@ -47,7 +47,7 @@ gda_mysql_parser_class_init (GdaMysqlParserClass * klass)
 	pclass->parser_free = gda_lemon_mysql_parserFree;
 	pclass->parser_trace = gda_lemon_mysql_parserTrace;
 	pclass->parser_parse = gda_lemon_mysql_parser;
-	pclass->parser_tokens_trans = NULL;
+	pclass->parser_tokens_trans = mysql_parser_tokens;
 }
 
 static void
