@@ -25,25 +25,13 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_WEB_BLOB_OP            (gda_web_blob_op_get_type())
-#define GDA_WEB_BLOB_OP(obj)            (G_TYPE_CHECK_INSTANCE_CAST (obj, GDA_TYPE_WEB_BLOB_OP, GdaWebBlobOp))
-#define GDA_WEB_BLOB_OP_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST (klass, GDA_TYPE_WEB_BLOB_OP, GdaWebBlobOpClass))
-#define GDA_IS_WEB_BLOB_OP(obj)         (G_TYPE_CHECK_INSTANCE_TYPE (obj, GDA_TYPE_WEB_BLOB_OP))
-#define GDA_IS_WEB_BLOB_OP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GDA_TYPE_WEB_BLOB_OP))
 
-typedef struct _GdaWebBlobOp        GdaWebBlobOp;
-typedef struct _GdaWebBlobOpClass   GdaWebBlobOpClass;
-typedef struct _GdaWebBlobOpPrivate GdaWebBlobOpPrivate;
-
-struct _GdaWebBlobOp {
-	GdaBlobOp             parent;
-	GdaWebBlobOpPrivate *priv;
-};
+G_DECLARE_DERIVABLE_TYPE(GdaWebBlobOp, gda_web_blob_op, GDA, WEB_BLOB_OP, GdaBlobOp)
 
 struct _GdaWebBlobOpClass {
 	GdaBlobOpClass        parent_class;
 };
 
-GType         gda_web_blob_op_get_type     (void) G_GNUC_CONST;
 GdaBlobOp    *gda_web_blob_op_new          (GdaConnection *cnc);
 
 /* TO_ADD: more convenient API to create a GdaBlobOp with some specific information as argument */
