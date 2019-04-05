@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 - 2012 Vivien Malerba <malerba@gnome-db.org>
+ * Copyright (C) 2019 Daniel Espinsa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,22 +27,8 @@
 G_BEGIN_DECLS
 
 #define GDA_TYPE_MYSQL_HANDLER_BOOLEAN          (gda_mysql_handler_boolean_get_type())
-#define GDA_MYSQL_HANDLER_BOOLEAN(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gda_mysql_handler_boolean_get_type(), GdaMysqlHandlerBoolean)
-#define GDA_MYSQL_HANDLER_BOOLEAN_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gda_mysql_handler_boolean_get_type (), GdaMysqlHandlerBooleanClass)
-#define GDA_IS_MYSQL_HANDLER_BOOLEAN(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gda_mysql_handler_boolean_get_type ())
+G_DECLARE_DERIVABLE_TYPE (GdaMysqlHandlerBoolean, gda_mysql_handler_boolean, GDA, MYSQL_HANDLER_BOOLEAN, GObject)
 
-typedef struct _GdaMysqlHandlerBoolean      GdaMysqlHandlerBoolean;
-typedef struct _GdaMysqlHandlerBooleanClass GdaMysqlHandlerBooleanClass;
-typedef struct _GdaMysqlHandlerBooleanPriv  GdaMysqlHandlerBooleanPriv;
-
-/* struct for the object's data */
-struct _GdaMysqlHandlerBoolean
-{
-	GObject                 object;
-	GdaMysqlHandlerBooleanPriv  *priv;
-};
-
-/* struct for the object's class */
 struct _GdaMysqlHandlerBooleanClass
 {
 	GObjectClass           parent_class;

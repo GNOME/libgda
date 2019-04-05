@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010 - 2013 Vivien Malerba <malerba@gnome-db.org>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
+ * Copyright (C) 2019 Daniel Espinsa <esodan@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,48 +43,13 @@ static gboolean     gda_mysql_handler_boolean_accepts_g_type         (GdaDataHan
 
 static const gchar *gda_mysql_handler_boolean_get_descr              (GdaDataHandler *dh);
 
-struct  _GdaMysqlHandlerBooleanPriv {
+typedef struct {
 	gchar dummy;
-};
+} GdaMysqlHandlerBooleanPrivate;
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass *parent_class = NULL;
-
-GType
-gda_mysql_handler_boolean_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaMysqlHandlerBooleanClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_mysql_handler_boolean_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaMysqlHandlerBoolean),
-			0,
-			(GInstanceInitFunc) gda_mysql_handler_boolean_init,
-			NULL
-		};		
-
-		static const GInterfaceInfo data_entry_info = {
-			(GInterfaceInitFunc) gda_mysql_handler_boolean_data_handler_init,
-			NULL,
-			NULL
-		};
-
-		g_mutex_lock (&registering);
-		if (type == 0) {
-			type = g_type_register_static (G_TYPE_OBJECT, "GdaMysqlHandlerBoolean", &info, 0);
-			g_type_add_interface_static (type, GDA_TYPE_DATA_HANDLER, &data_entry_info);
-		}
-		g_mutex_unlock (&registering);
-	}
-	return type;
-}
+G_DEFINE_TYPE_WITH_CODE (GdaMysqlHandlerBoolean, gda_mysql_handler_boolean, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GdaMysqlHandlerBoolean)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DATA_HANDLER, gda_mysql_handler_boolean_data_handler_init))
 
 static void
 gda_mysql_handler_boolean_data_handler_init (GdaDataHandlerInterface *iface)
@@ -103,8 +69,6 @@ gda_mysql_handler_boolean_class_init (GdaMysqlHandlerBooleanClass * class)
 {
 	GObjectClass   *object_class = G_OBJECT_CLASS (class);
 	
-	parent_class = g_type_class_peek_parent (class);
-
 	object_class->dispose = gda_mysql_handler_boolean_dispose;
 }
 
@@ -112,7 +76,6 @@ static void
 gda_mysql_handler_boolean_init (GdaMysqlHandlerBoolean *hdl)
 {
 	/* Private structure */
-	hdl->priv = g_new0 (GdaMysqlHandlerBooleanPriv, 1);
 	g_object_set_data (G_OBJECT (hdl), "name", "MySQLBoolean");
 	g_object_set_data (G_OBJECT (hdl), "descr", _("MySQL boolean representation"));
 }
@@ -120,19 +83,8 @@ gda_mysql_handler_boolean_init (GdaMysqlHandlerBoolean *hdl)
 static void
 gda_mysql_handler_boolean_dispose (GObject *object)
 {
-	GdaMysqlHandlerBoolean *hdl;
-
-	g_return_if_fail (GDA_IS_MYSQL_HANDLER_BOOLEAN (object));
-
-	hdl = GDA_MYSQL_HANDLER_BOOLEAN (object);
-
-	if (hdl->priv) {
-		g_free (hdl->priv);
-		hdl->priv = NULL;
-	}
-
 	/* for the parent class */
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_mysql_handler_boolean_parent_class)->dispose (object);
 }
 
 /**
