@@ -23,13 +23,8 @@
 #include "gda-tree-node.h"
 #include <sqlite/virtual/gda-ldap-connection.h>
 
-struct _GdaTreeMgrLdapPriv {
-	GdaLdapConnection *cnc;
-	gchar             *dn;
-};
-
 static void gda_tree_mgr_ldap_class_init (GdaTreeMgrLdapClass *klass);
-static void gda_tree_mgr_ldap_init       (GdaTreeMgrLdap *tmgr1, GdaTreeMgrLdapClass *klass);
+static void gda_tree_mgr_ldap_init       (GdaTreeMgrLdap *tmgr1);
 static void gda_tree_mgr_ldap_dispose    (GObject *object);
 static void gda_tree_mgr_ldap_set_property (GObject *object,
 					    guint param_id,
@@ -44,7 +39,6 @@ static void gda_tree_mgr_ldap_get_property (GObject *object,
 static GSList *gda_tree_mgr_ldap_update_children (GdaTreeManager *manager, GdaTreeNode *node, const GSList *children_nodes,
 						  gboolean *out_error, GError **error);
 
-static GObjectClass *parent_class = NULL;
 
 /* properties */
 enum {
@@ -52,6 +46,13 @@ enum {
 	PROP_CNC,
 	PROP_DN,
 };
+
+typedef struct {
+	GdaLdapConnection *cnc;
+	gchar             *dn;
+} GdaTreeMgrLdapPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaTreeMgrLdap, gda_tree_mgr_ldap, GDA_TYPE_TREE_MANAGER)
 
 /*
  * GdaTreeMgrLdap class implementation
@@ -61,8 +62,6 @@ static void
 gda_tree_mgr_ldap_class_init (GdaTreeMgrLdapClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	/* virtual methods */
 	((GdaTreeManagerClass*) klass)->update_children = gda_tree_mgr_ldap_update_children;
@@ -94,10 +93,11 @@ gda_tree_mgr_ldap_class_init (GdaTreeMgrLdapClass *klass)
 }
 
 static void
-gda_tree_mgr_ldap_init (GdaTreeMgrLdap *mgr, G_GNUC_UNUSED GdaTreeMgrLdapClass *klass)
+gda_tree_mgr_ldap_init (GdaTreeMgrLdap *mgr)
 {
-	g_return_if_fail (GDA_IS_TREE_MGR_LDAP (mgr));
-	mgr->priv = g_new0 (GdaTreeMgrLdapPriv, 1);
+  GdaTreeMgrLdapPrivate *priv = gda_tree_mgr_ldap_get_instance_private (mgr);
+  priv->cnc = NULL;
+  priv->dn = NULL;
 }
 
 static void
@@ -106,52 +106,19 @@ gda_tree_mgr_ldap_dispose (GObject *object)
 	GdaTreeMgrLdap *mgr = (GdaTreeMgrLdap *) object;
 
 	g_return_if_fail (GDA_IS_TREE_MGR_LDAP (mgr));
+  GdaTreeMgrLdapPrivate *priv = gda_tree_mgr_ldap_get_instance_private (mgr);
 
-	if (mgr->priv) {
-		if (mgr->priv->cnc)
-			g_object_unref (mgr->priv->cnc);
-		g_free (mgr->priv->dn);
-		g_free (mgr->priv);
-		mgr->priv = NULL;
-	}
+	if (priv->cnc) {
+		g_object_unref (priv->cnc);
+    priv->cnc = NULL;
+  }
+  if (priv->dn) {
+	  g_free (priv->dn);
+    priv->dn = NULL;
+  }
 
 	/* chain to parent class */
-	parent_class->dispose (object);
-}
-
-/**
- * gda_tree_mgr_ldap_get_type:
- *
- * Returns: the GType
- *
- * Since: 4.2.8
- */
-GType
-gda_tree_mgr_ldap_get_type (void)
-{
-        static GType type = 0;
-
-        if (G_UNLIKELY (type == 0)) {
-                static GMutex registering;
-                static const GTypeInfo info = {
-                        sizeof (GdaTreeMgrLdapClass),
-                        (GBaseInitFunc) NULL,
-                        (GBaseFinalizeFunc) NULL,
-                        (GClassInitFunc) gda_tree_mgr_ldap_class_init,
-                        NULL,
-                        NULL,
-                        sizeof (GdaTreeMgrLdap),
-                        0,
-                        (GInstanceInitFunc) gda_tree_mgr_ldap_init,
-			0
-                };
-
-                g_mutex_lock (&registering);
-                if (type == 0)
-                        type = g_type_register_static (GDA_TYPE_TREE_MANAGER, "GdaTreeMgrLdap", &info, 0);
-                g_mutex_unlock (&registering);
-        }
-        return type;
+	G_OBJECT_CLASS (gda_tree_mgr_ldap_parent_class)->dispose (object);
 }
 
 static void
@@ -160,24 +127,24 @@ gda_tree_mgr_ldap_set_property (GObject *object,
 				const GValue *value,
 				GParamSpec *pspec)
 {
-        GdaTreeMgrLdap *mgr;
+  GdaTreeMgrLdap *mgr;
 
-        mgr = GDA_TREE_MGR_LDAP (object);
-        if (mgr->priv) {
-                switch (param_id) {
+  mgr = GDA_TREE_MGR_LDAP (object);
+  GdaTreeMgrLdapPrivate *priv = gda_tree_mgr_ldap_get_instance_private (mgr);
+
+  switch (param_id) {
 		case PROP_CNC:
-			mgr->priv->cnc = (GdaLdapConnection*) g_value_get_object (value);
-			if (mgr->priv->cnc)
-				g_object_ref (mgr->priv->cnc);
+			priv->cnc = (GdaLdapConnection*) g_value_get_object (value);
+			if (priv->cnc)
+				g_object_ref (priv->cnc);
 			break;
 		case PROP_DN:
-                        mgr->priv->dn = g_value_dup_string (value);
-                        break;
+      priv->dn = g_value_dup_string (value);
+      break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+  }
 }
 
 static void
@@ -186,22 +153,22 @@ gda_tree_mgr_ldap_get_property (GObject *object,
 				GValue *value,
 				GParamSpec *pspec)
 {
-        GdaTreeMgrLdap *mgr;
+  GdaTreeMgrLdap *mgr;
 
-        mgr = GDA_TREE_MGR_LDAP (object);
-        if (mgr->priv) {
-                switch (param_id) {
+  mgr = GDA_TREE_MGR_LDAP (object);
+  GdaTreeMgrLdapPrivate *priv = gda_tree_mgr_ldap_get_instance_private (mgr);
+
+  switch (param_id) {
 		case PROP_CNC:
-			g_value_set_object (value, mgr->priv->cnc);
+			g_value_set_object (value, priv->cnc);
 			break;
 		case PROP_DN:
-			g_value_set_string (value, mgr->priv->dn);
+			g_value_set_string (value, priv->dn);
                         break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
 			break;
-                }
-        }
+  }
 }
 
 /**
@@ -236,8 +203,9 @@ gda_tree_mgr_ldap_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 {
 	GdaTreeMgrLdap *mgr = GDA_TREE_MGR_LDAP (manager);
 	gchar *real_dn = NULL;
+  GdaTreeMgrLdapPrivate *priv = gda_tree_mgr_ldap_get_instance_private (mgr);
 
-	if (!mgr->priv->cnc) {
+	if (!priv->cnc) {
 		g_set_error (error, GDA_TREE_MANAGER_ERROR, GDA_TREE_MANAGER_UNKNOWN_ERROR,
 			     _("No LDAP connection specified"));
 		if (out_error)
@@ -245,8 +213,8 @@ gda_tree_mgr_ldap_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 		return NULL;
 	}
 
-	if (mgr->priv->dn)
-		real_dn = g_strdup (mgr->priv->dn);
+	if (priv->dn)
+		real_dn = g_strdup (priv->dn);
 	else if (node) {
 		/* looking for a dn in @node's attributes */
 		const GValue *cvalue;
@@ -256,7 +224,7 @@ gda_tree_mgr_ldap_update_children (GdaTreeManager *manager, GdaTreeNode *node,
 	}
 
 	GdaLdapEntry **entries;
-	entries = gda_ldap_get_entry_children (mgr->priv->cnc, real_dn, NULL, error);
+	entries = gda_ldap_get_entry_children (priv->cnc, real_dn, NULL, error);
 	g_free (real_dn);
 	if (entries) {
 		gint i;
