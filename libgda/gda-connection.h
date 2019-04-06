@@ -260,7 +260,7 @@ typedef enum {
 } GdaConnectionMetaType;
 
 
-GdaConnection       *gda_connection_open_from_dsn_name   (const gchar *dsn,
+GdaConnection       *gda_connection_open_from_dsn_name   (const gchar *dsn_name,
                                                           const gchar *auth_string,
                                                           GdaConnectionOptions options,
                                                           GError **error);

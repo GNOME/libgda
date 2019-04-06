@@ -239,6 +239,8 @@ gda_pstmt_get_gda_statement (GdaPStmt *pstmt)
 /**
  * gda_pstmt_get_sql:
  * Actual SQL code used for this prepared statement, mem freed by GdaPStmt
+ *
+ * Returns: (transfer none): SQL command used
  */
 gchar*
 gda_pstmt_get_sql (GdaPStmt *pstmt) {
@@ -251,59 +253,82 @@ gda_pstmt_get_sql (GdaPStmt *pstmt) {
  * Set SQL code used for this prepared statement, mem freed by GdaPStmt
  */
 void
-gda_pstmt_set_sql (GdaPStmt *pstmt, const gchar *sql) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_set_sql (GdaPStmt *ps, const gchar *sql) {
+  g_return_if_fail (ps != NULL);
+  g_return_if_fail (GDA_IS_PSTMT (ps));
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	priv->sql = g_strdup (sql);
 }
 /**
- *gda_pstmt_get_param_ids:
+ * gda_pstmt_get_param_ids:
  *
  * List of parameters' IDs (as gchar *)
+ *
+ * Returns: (element-type utf8) (transfer none): a list of string with parameters ID's
  */
 GSList*
-gda_pstmt_get_param_ids (GdaPStmt *pstmt) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_get_param_ids (GdaPStmt *ps) {
+  g_return_val_if_fail (ps != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_PSTMT (ps), NULL);
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	return priv->param_ids;
 }
 
 /**
- *gda_pstmt_set_param_ids:
+ * gda_pstmt_set_param_ids:
+ * @ps: a #GdaPStmt
+ * @params: (element-type utf8) (transfer full): a list of strings with ID's to set
  *
  * List of parameters' IDs (as gchar *), list is stolen
  */
 void
-gda_pstmt_set_param_ids    (GdaPStmt *pstmt, GSList* params) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_set_param_ids    (GdaPStmt *ps, GSList* params) {
+  g_return_if_fail (ps != NULL);
+  g_return_if_fail (GDA_IS_PSTMT (ps));
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	priv->param_ids = params;
 }
 /**
  * gda_pstmt_get_ncols:
+ *
+ * Returns: number of columns or -1 if something is wrong
  */
 gint
-gda_pstmt_get_ncols (GdaPStmt *pstmt) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_get_ncols (GdaPStmt *ps) {
+  g_return_val_if_fail (ps != NULL, -1);
+  g_return_val_if_fail (GDA_IS_PSTMT (ps), -1);
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	return priv->ncols;
 }
 /**
  * gda_pstmt_get_types:
  *
- * Set column's types for statement. @types is stalen and should
- * no be modified
+ * Set column's types for statement. @types will be stolen and should
+ * no be modified anymore.
+ *
+ * Returns: (array) (transfer none): an array of #GType used in the columns
  */
 GType*
-gda_pstmt_get_types (GdaPStmt *pstmt) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_get_types (GdaPStmt *ps) {
+  g_return_val_if_fail (ps != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_PSTMT (ps), NULL);
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	return priv->types;
 }
 /**
  * gda_pstmt_set_cols:
+ * @ps: a #GdaPStmt
+ * @ncols: number of columns and size of given array
+ * @types: (array length=ncols) (transfer full): an array of types to use for each column
  *
  * Set column's types for statement. @types is stalen and should
  * no be modified
  */
 void
-gda_pstmt_set_cols (GdaPStmt *pstmt, gint ncols, GType *types) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_set_cols (GdaPStmt *ps, gint ncols, GType *types) {
+  g_return_if_fail (ps != NULL);
+  g_return_if_fail (GDA_IS_PSTMT (ps));
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	priv->ncols = ncols;
 	priv->types = types;
 }
@@ -312,21 +337,29 @@ gda_pstmt_set_cols (GdaPStmt *pstmt, gint ncols, GType *types) {
  *
  * List of #GdaColumn objects which data models created from this
  * prepared statement can copy
+ *
+ * Returns: (element-type Gda.Column) (transfer none): a list of #GdaColumn objects
  */
 GSList*
-gda_pstmt_get_tmpl_columns (GdaPStmt *pstmt) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_get_tmpl_columns (GdaPStmt *ps) {
+  g_return_val_if_fail (ps != NULL, NULL);
+  g_return_val_if_fail (GDA_IS_PSTMT (ps), NULL);
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	return priv->tmpl_columns;
 }
 /**
- *gda_pstmt_set_tmpl_columns:
+ * gda_pstmt_set_tmpl_columns:
+ * @ps: a #GdaPStmt
+ * @columns: (element-type Gda.Column) (transfer full): a list of #GdaColumn
  *
  * Set the list of #GdaColumn objects which data models created from this
  * prepared statement can copy. The list is stolen, so you should not
  * free it.
  */
 void
-gda_pstmt_set_tmpl_columns (GdaPStmt *pstmt, GSList* columns) {
-	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (pstmt);
+gda_pstmt_set_tmpl_columns (GdaPStmt *ps, GSList* columns) {
+  g_return_if_fail (ps != NULL);
+  g_return_if_fail (GDA_IS_PSTMT (ps));
+	GdaPStmtPrivate *priv = gda_pstmt_get_instance_private (ps);
 	priv->tmpl_columns = columns;
 }

@@ -1098,7 +1098,7 @@ gda_connection_open_from_dsn_name (const gchar *dsn_name,
 
 /**
  * gda_connection_open_from_dsn:
- * @dsn_name: data sourcename.
+ * @dsn: data sourcename.
  * @auth_string: (nullable): authentication string, or %NULL
  * @options: options for the connection (see #GdaConnectionOptions).
  * @error: a place to store an error, or %NULL
@@ -5248,7 +5248,7 @@ gda_connection_get_meta_store_data (GdaConnection *cnc,
 }
 
 /**
- * gda_connection_get_meta_store_data_v: (rename-to get_meta_store_data)
+ * gda_connection_get_meta_store_data_v: (rename-to gda_connection_get_meta_store_data)
  * @cnc: a #GdaConnection object.
  * @meta_type: describes which data to get.
  * @error: a place to store errors, or %NULL

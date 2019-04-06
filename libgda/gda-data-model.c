@@ -1048,7 +1048,7 @@ gda_data_model_send_hint (GdaDataModel *model, GdaDataModelHint hint, const GVal
 }
 
 /**
- * gda_data_model_get_exceptions: (virtual get_exceptions)
+ * gda_data_model_get_exceptions:
  * @model: a #GdaDataModel
  *
  * Get the global data model exception(s) that occurred when using @model.

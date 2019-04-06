@@ -209,7 +209,6 @@ gda_data_model_select_new (GdaConnection *cnc, GdaStatement *stm, GdaSet *params
  * gda_data_model_select_new_from_string:
  * @cnc: an opened #GdaConnection
  * @sql: a string representing a SELECT SQL to execute
- * @params: (nullable): a #GdaSet with the parameters to ejecute the SELECT SQL statement
  *
  * Returns: (transfer full): a new #GdaDataModelSelect object
  */

@@ -1647,7 +1647,6 @@ gda_time_new_from_values (gushort hour, gushort minute, gushort second, gulong f
  * @fraction: fraction of seconds
  * @timezone: timezone in seconds added to UTC
  *
- * Returns: (transfer full): the a new value storing a time
  * Since: 6.0
  */
 void
@@ -1702,7 +1701,6 @@ gda_time_new_from_date_time (GDateTime *dt)
  * gda_time_set_from_date_time:
  * @dt: a #GDateTime to get time from
  *
- * Returns: (transfer full): the a new value storing a time
  * Since: 6.0
  */
 void

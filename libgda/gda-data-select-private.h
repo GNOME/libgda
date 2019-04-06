@@ -20,7 +20,11 @@
 #ifndef __GDA_DATA_SELECT_PRIVATE_H__
 #define __GDA_DATA_SELECT_PRIVATE_H__
 
-
+/**
+ * gda_data_select_get_prep_stmt:
+ *
+ * Returns: (transfer none):
+ */
 GdaPStmt               *gda_data_select_get_prep_stmt (GdaDataSelect *model);
 gint                    gda_data_select_get_nb_stored_rows (GdaDataSelect *model);
 gint                    gda_data_select_get_advertized_nrows (GdaDataSelect *model);

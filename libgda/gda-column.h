@@ -61,7 +61,7 @@ GdaColumn      *gda_column_new                (void);
 GdaColumn      *gda_column_copy               (GdaColumn *column);
 
 const gchar    *gda_column_get_description          (GdaColumn *column);
-void            gda_column_set_description          (GdaColumn *column, const gchar *title);
+void            gda_column_set_description          (GdaColumn *column, const gchar *descr);
 
 const gchar    *gda_column_get_name           (GdaColumn *column);
 void            gda_column_set_name           (GdaColumn *column, const gchar *name);
