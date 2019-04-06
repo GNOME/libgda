@@ -2748,7 +2748,7 @@ typedef gboolean (*Meta5Func) (GdaServerProvider *, GdaConnection *, GdaMetaStor
 static gpointer
 worker_meta (WorkerMetaData *data, GError **error)
 {
-	Meta0Func *fset;
+	gpointer *fset;
 	fset = _gda_server_provider_get_impl_functions (data->provider, data->worker, GDA_SERVER_PROVIDER_FUNCTIONS_META);
 
 	gboolean retval;
