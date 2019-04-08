@@ -50,8 +50,7 @@
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 static void gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass);
-static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset,
-					       GdaPostgresRecordsetClass *klass);
+static void gda_postgres_recordset_init       (GdaPostgresRecordset *recset);
 static void gda_postgres_recordset_dispose   (GObject *object);
 
 static void gda_postgres_recordset_set_property (GObject *object,
@@ -82,8 +81,7 @@ static gboolean fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_e
 static gboolean fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error);
 static gboolean fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fetch_error, GError **error);
 
-
-struct _GdaPostgresRecordsetPrivate {
+typedef struct {
 	/* random access attributes */
 	PGresult         *pg_res;
 
@@ -98,8 +96,10 @@ struct _GdaPostgresRecordsetPrivate {
         gint              pg_pos; /* from G_MININT to G_MAXINT */
         gint              pg_res_size; /* The number of rows in the current chunk - usually equal to chunk_size when iterating forward or backward. */
         gint              pg_res_inf; /* The row number of the first row in the current chunk. Don't use if (@pg_res_size <= 0). */
-};
-static GObjectClass *parent_class = NULL;
+} GdaPostgresRecordsetPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaPostgresRecordset, gda_postgres_recordset, GDA_TYPE_DATA_SELECT)
+
 
 /* properties */
 enum
@@ -113,17 +113,17 @@ enum
  * Object init and finalize
  */
 static void
-gda_postgres_recordset_init (GdaPostgresRecordset *recset, G_GNUC_UNUSED GdaPostgresRecordsetClass *klass)
+gda_postgres_recordset_init (GdaPostgresRecordset *recset)
 {
 	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
-	recset->priv = g_new0 (GdaPostgresRecordsetPrivate, 1);
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (recset);
 
-	recset->priv->pg_res = NULL;
-        recset->priv->pg_pos = G_MININT;
-        recset->priv->pg_res_size = 0;
+	priv->pg_res = NULL;
+  priv->pg_pos = G_MININT;
+  priv->pg_res_size = 0;
 
-	recset->priv->chunk_size = 10;
-        recset->priv->chunks_read = 0;
+	priv->chunk_size = 10;
+  priv->chunks_read = 0;
 }
 
 static void
@@ -131,8 +131,6 @@ gda_postgres_recordset_class_init (GdaPostgresRecordsetClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
 	GdaDataSelectClass *pmodel_class = GDA_DATA_SELECT_CLASS (klass);
-
-	parent_class = g_type_class_peek_parent (klass);
 
 	object_class->dispose = gda_postgres_recordset_dispose;
 	pmodel_class->fetch_nb_rows = gda_postgres_recordset_fetch_nb_rows;
@@ -163,29 +161,30 @@ gda_postgres_recordset_dispose (GObject *object)
 	GdaPostgresRecordset *recset = (GdaPostgresRecordset *) object;
 
 	g_return_if_fail (GDA_IS_POSTGRES_RECORDSET (recset));
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (recset);
 
-	if (recset->priv) {
-		if (recset->priv->tmp_row)
-			g_object_unref (recset->priv->tmp_row);
+		if (priv->tmp_row) {
+			g_object_unref (priv->tmp_row);
+      priv->tmp_row = NULL;
+    }
 
-		if (recset->priv->pg_res)
-			PQclear (recset->priv->pg_res);
+		if (priv->pg_res) {
+			PQclear (priv->pg_res);
+      priv->pg_res = NULL;
+    }
 
-		if (recset->priv->cursor_name) {
+		if (priv->cursor_name) {
 			gchar *str;
 			PGresult *pg_res;
-			str = g_strdup_printf ("CLOSE %s", recset->priv->cursor_name);
-			pg_res = PQexec (recset->priv->pconn, str);
+			str = g_strdup_printf ("CLOSE %s", priv->cursor_name);
+			pg_res = PQexec (priv->pconn, str);
 			g_free (str);
 			PQclear (pg_res);
-			g_free (recset->priv->cursor_name);
+			g_free (priv->cursor_name);
+      priv->cursor_name = NULL;
 		}
 
-		g_free (recset->priv);
-		recset->priv = NULL;
-	}
-
-	parent_class->dispose (object);
+	G_OBJECT_CLASS (gda_postgres_recordset_parent_class)->dispose (object);
 }
 
 static void
@@ -194,17 +193,16 @@ gda_postgres_recordset_set_property (GObject *object,
 				     const GValue *value,
 				     GParamSpec *pspec)
 {
-        GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
-        if (model->priv) {
-                switch (param_id) {
-                case PROP_CHUNCK_SIZE:
-                        model->priv->chunk_size = g_value_get_int (value);
-                        break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
+  GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+  switch (param_id) {
+  case PROP_CHUNCK_SIZE:
+    priv->chunk_size = g_value_get_int (value);
+    break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+		break;
+  }
 }
 
 static void
@@ -214,52 +212,23 @@ gda_postgres_recordset_get_property (GObject *object,
 				     GParamSpec *pspec)
 {
         GdaPostgresRecordset *model = (GdaPostgresRecordset *) object;
-        if (model->priv) {
-                switch (param_id) {
-                case PROP_CHUNCK_SIZE:
-                        g_value_set_int (value, model->priv->chunk_size);
-                        break;
-                case PROP_CHUNCKS_READ:
-                        g_value_set_int (value, model->priv->chunks_read);
-                        break;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
-			break;
-                }
-        }
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+  switch (param_id) {
+  case PROP_CHUNCK_SIZE:
+    g_value_set_int (value, priv->chunk_size);
+    break;
+  case PROP_CHUNCKS_READ:
+    g_value_set_int (value, priv->chunks_read);
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
+    break;
+  }
 }
 
 /*
  * Public functions
  */
-
-GType
-gda_postgres_recordset_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static GMutex registering;
-		static const GTypeInfo info = {
-			sizeof (GdaPostgresRecordsetClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gda_postgres_recordset_class_init,
-			NULL,
-			NULL,
-			sizeof (GdaPostgresRecordset),
-			0,
-			(GInstanceInitFunc) gda_postgres_recordset_init,
-			0
-		};
-		g_mutex_lock (&registering);
-		if (type == 0)
-			type = g_type_register_static (GDA_TYPE_DATA_SELECT, "GdaPostgresRecordset", &info, 0);
-		g_mutex_unlock (&registering);
-	}
-
-	return type;
-}
 
 static void
 finish_prep_stmt_init (PostgresConnectionData *cdata, GdaPostgresPStmt *ps, PGresult *pg_res, GType *col_types)
@@ -331,10 +300,10 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 				   PGresult *pg_res, GType *col_types)
 {
 	GdaPostgresRecordset *model;
-        PostgresConnectionData *cdata;
+  PostgresConnectionData *cdata;
 
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (ps, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+  g_return_val_if_fail (ps, NULL);
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
@@ -348,8 +317,9 @@ gda_postgres_recordset_new_random (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 			      "prepared-stmt", ps, 
 			      "model-usage", GDA_DATA_MODEL_ACCESS_RANDOM, 
 			      "exec-params", exec_params, NULL);
-	model->priv->pg_res = pg_res;
-	gda_data_select_set_advertized_nrows ((GdaDataSelect*) model, PQntuples (model->priv->pg_res));
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+	priv->pg_res = pg_res;
+	gda_data_select_set_advertized_nrows ((GdaDataSelect*) model, PQntuples (priv->pg_res));
 
 	return GDA_DATA_MODEL (model);
 }
@@ -362,10 +332,10 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 				   gchar *cursor_name, GType *col_types)
 {
 	GdaPostgresRecordset *model;
-        PostgresConnectionData *cdata;
+  PostgresConnectionData *cdata;
 
-        g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
-        g_return_val_if_fail (ps, NULL);
+  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
+  g_return_val_if_fail (ps, NULL);
 
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, NULL);
 	if (!cdata)
@@ -406,8 +376,9 @@ gda_postgres_recordset_new_cursor (GdaConnection *cnc, GdaPostgresPStmt *ps, Gda
 			      "prepared-stmt", ps, "model-usage", 
 			      GDA_DATA_MODEL_ACCESS_CURSOR_FORWARD | GDA_DATA_MODEL_ACCESS_CURSOR_BACKWARD, 
 			      "exec-params", exec_params, NULL);
-	model->priv->pconn = cdata->pconn;
-	model->priv->cursor_name = cursor_name;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+	priv->pconn = cdata->pconn;
+	priv->cursor_name = cursor_name;
 	gboolean fetch_error;
 	fetch_next_chunk (model, &fetch_error, NULL);
 
@@ -426,9 +397,11 @@ gda_postgres_recordset_fetch_nb_rows (GdaDataSelect *model)
 	if (gda_data_select_get_advertized_nrows (model) >= 0)
 		return gda_data_select_get_advertized_nrows (model);
 
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
+
 	/* use C API to determine number of rows,if possible */
-	if (!imodel->priv->cursor_name)
-		gda_data_select_set_advertized_nrows (model, PQntuples (imodel->priv->pg_res));
+	if (!priv->cursor_name)
+		gda_data_select_set_advertized_nrows (model, PQntuples (priv->pg_res));
 
 	return gda_data_select_get_advertized_nrows (model);
 }
@@ -445,8 +418,9 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), FALSE);
 
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset *) model;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 
-	if (!imodel->priv->pg_res) {
+	if (!priv->pg_res) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     "%s", _("Internal error"));
 		return TRUE;
@@ -458,8 +432,8 @@ gda_postgres_recordset_fetch_random (GdaDataSelect *model, GdaRow **prow, gint r
 	if (gda_data_select_get_nb_stored_rows (model) == gda_data_select_get_advertized_nrows (model)) {
 		/* all the rows have been converted from PGresult to GdaRow objects => we can
 		 * discard the PGresult */
-		PQclear (imodel->priv->pg_res);
-		imodel->priv->pg_res = NULL;
+		PQclear (priv->pg_res);
+		priv->pg_res = NULL;
 	}
 
 	return TRUE;
@@ -473,8 +447,9 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
 	gint i;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 	
-	if (!imodel->priv->pg_res) {
+	if (!priv->pg_res) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			     "%s", _("Internal error"));
 		return FALSE;
@@ -491,29 +466,30 @@ gda_postgres_recordset_store_all (GdaDataSelect *model, GError **error)
 /*
  * Create a new filled #GdaRow object for the next cursor row, and put it into *prow.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		if (imodel->priv->tmp_row)
-			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
+		if (priv->tmp_row)
+			set_prow_with_pg_res (imodel, priv->tmp_row, rownum - priv->pg_res_inf, error);
 		else
-			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-		*prow = imodel->priv->tmp_row;
+			priv->tmp_row = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+		*prow = priv->tmp_row;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_next_chunk (imodel, &fetch_error, error)) {
-			if (imodel->priv->tmp_row)
-				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
+			if (priv->tmp_row)
+				set_prow_with_pg_res (imodel, priv->tmp_row, rownum - priv->pg_res_inf, error);
 			else
-				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-			*prow = imodel->priv->tmp_row;
+				priv->tmp_row = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+			*prow = priv->tmp_row;
 		}
 	}
 	return TRUE;
@@ -522,29 +498,30 @@ gda_postgres_recordset_fetch_next (GdaDataSelect *model, GdaRow **prow, gint row
 /*
  * Create a new filled #GdaRow object for the previous cursor row, and put it into *prow.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		if (imodel->priv->tmp_row)
-			set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
+		if (priv->tmp_row)
+			set_prow_with_pg_res (imodel, priv->tmp_row, rownum - priv->pg_res_inf, error);
 		else
-			imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-		*prow = imodel->priv->tmp_row;
+			priv->tmp_row = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+		*prow = priv->tmp_row;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_prev_chunk (imodel, &fetch_error, error)) {
-			if (imodel->priv->tmp_row)
-				set_prow_with_pg_res (imodel, imodel->priv->tmp_row, rownum - imodel->priv->pg_res_inf, error);
+			if (priv->tmp_row)
+				set_prow_with_pg_res (imodel, priv->tmp_row, rownum - priv->pg_res_inf, error);
 			else
-				imodel->priv->tmp_row = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-			*prow = imodel->priv->tmp_row;
+				priv->tmp_row = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+			*prow = priv->tmp_row;
 		}
 	}
 	return TRUE;
@@ -553,28 +530,29 @@ gda_postgres_recordset_fetch_prev (GdaDataSelect *model, GdaRow **prow, gint row
 /*
  * Create a new filled #GdaRow object for the cursor row at position @rownum, and put it into *prow.
  *
- * Each new #GdaRow created is referenced only by imodel->priv->tmp_row (the #GdaDataSelect implementation
+ * Each new #GdaRow created is referenced only by priv->tmp_row (the #GdaDataSelect implementation
  * never keeps a reference to it).
  */
 static gboolean
 gda_postgres_recordset_fetch_at (GdaDataSelect *model, GdaRow **prow, gint rownum, GError **error)
 {
 	GdaPostgresRecordset *imodel = (GdaPostgresRecordset*) model;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 
-	if (imodel->priv->tmp_row) {
-		g_object_unref (imodel->priv->tmp_row);
-		imodel->priv->tmp_row = NULL;
+	if (priv->tmp_row) {
+		g_object_unref (priv->tmp_row);
+		priv->tmp_row = NULL;
 	}
 
 	if (row_is_in_current_pg_res (imodel, rownum)) {
-		*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-		imodel->priv->tmp_row = *prow;
+		*prow = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+		priv->tmp_row = *prow;
 	}
 	else {
 		gboolean fetch_error = FALSE;
 		if (fetch_row_number_chunk (imodel, rownum, &fetch_error, error)) {
-			*prow = new_row_from_pg_res (imodel, rownum - imodel->priv->pg_res_inf, error);
-			imodel->priv->tmp_row = *prow;
+			*prow = new_row_from_pg_res (imodel, rownum - priv->pg_res_inf, error);
+			priv->tmp_row = *prow;
 		}
 	}
 	return TRUE;
@@ -794,8 +772,9 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 static gboolean
 row_is_in_current_pg_res (GdaPostgresRecordset *model, gint row)
 {
-	if ((model->priv->pg_res) && (model->priv->pg_res_size > 0) &&
-            (row >= model->priv->pg_res_inf) && (row < model->priv->pg_res_inf + model->priv->pg_res_size))
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+	if ((priv->pg_res) && (priv->pg_res_size > 0) &&
+            (row >= priv->pg_res_inf) && (row < priv->pg_res_inf + priv->pg_res_size))
                 return TRUE;
         else
                 return FALSE;
@@ -806,17 +785,18 @@ set_prow_with_pg_res (GdaPostgresRecordset *imodel, GdaRow *prow, gint pg_res_ro
 {
 	gchar *thevalue;
 	gint col;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (imodel);
 
 	for (col = 0; col < gda_pstmt_get_ncols (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)); col++) {
-		thevalue = PQgetvalue (imodel->priv->pg_res, pg_res_rownum, col);
-		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (imodel->priv->pg_res, pg_res_rownum, col)))
+		thevalue = PQgetvalue (priv->pg_res, pg_res_rownum, col);
+		if (thevalue && (*thevalue != '\0' ? FALSE : PQgetisnull (priv->pg_res, pg_res_rownum, col)))
 			gda_value_set_null (gda_row_get_value (prow, col));
 		else
 			set_value (gda_data_select_get_connection ((GdaDataSelect*) imodel),
 				   prow, gda_row_get_value (prow, col), 
 				   gda_pstmt_get_types (gda_data_select_get_prep_stmt ((GdaDataSelect*) imodel)) [col],
 				   thevalue, 
-				   PQgetlength (imodel->priv->pg_res, pg_res_rownum, col), error);
+				   PQgetlength (priv->pg_res, pg_res_rownum, col), error);
 	}
 }
 
@@ -835,13 +815,14 @@ new_row_from_pg_res (GdaPostgresRecordset *imodel, gint pg_res_rownum, GError **
 static gboolean
 fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error)
 {
-	if (model->priv->pg_res) {
-		PQclear (model->priv->pg_res);
-		model->priv->pg_res = NULL;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+	if (priv->pg_res) {
+		PQclear (priv->pg_res);
+		priv->pg_res = NULL;
 	}
 	*fetch_error = FALSE;
 
-	if (model->priv->pg_pos == G_MAXINT) 
+	if (priv->pg_pos == G_MAXINT)
 		return FALSE;
 
 	gchar *str;
@@ -849,68 +830,68 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 	int status;
 
 	str = g_strdup_printf ("FETCH FORWARD %d FROM %s;",
-			       model->priv->chunk_size, model->priv->cursor_name);
+			       priv->chunk_size, priv->cursor_name);
 #ifdef GDA_PG_DEBUG
 	g_print ("QUERY: %s\n", str);
 #endif
-        model->priv->pg_res = PQexec (model->priv->pconn, str);
+        priv->pg_res = PQexec (priv->pconn, str);
         g_free (str);
-        status = PQresultStatus (model->priv->pg_res);
-	model->priv->chunks_read ++;
+        status = PQresultStatus (priv->pg_res);
+	priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
 		_gda_postgres_make_error (gda_data_select_get_connection ((GdaDataSelect*) model), 
-					  model->priv->pconn, model->priv->pg_res, error);
-                PQclear (model->priv->pg_res);
-                model->priv->pg_res = NULL;
-		model->priv->pg_res_size = 0;
+					  priv->pconn, priv->pg_res, error);
+                PQclear (priv->pg_res);
+                priv->pg_res = NULL;
+		priv->pg_res_size = 0;
                 retval = FALSE;
 		*fetch_error = TRUE;
         }
 	else {
 #ifdef GDA_PG_DEBUG
-		dump_pg_res (model->priv->pg_res);
+		dump_pg_res (priv->pg_res);
 #endif
 
                 //PQntuples() returns the number of rows in the result:
-                const gint nbtuples = PQntuples (model->priv->pg_res);
-		model->priv->pg_res_size = nbtuples;
+                const gint nbtuples = PQntuples (priv->pg_res);
+		priv->pg_res_size = nbtuples;
 
                 if (nbtuples > 0) {
-			/* model->priv->pg_res_inf */
-			if (model->priv->pg_pos == G_MININT)
-				model->priv->pg_res_inf = 0;
+			/* priv->pg_res_inf */
+			if (priv->pg_pos == G_MININT)
+				priv->pg_res_inf = 0;
 			else
-				model->priv->pg_res_inf = model->priv->pg_pos + 1;
+				priv->pg_res_inf = priv->pg_pos + 1;
 
-			/* GDA_DATA_SELECT (model)->advertized_nrows and model->priv->pg_pos */
-			if (nbtuples < model->priv->chunk_size) {
-				if (model->priv->pg_pos == G_MININT) 
+			/* GDA_DATA_SELECT (model)->advertized_nrows and priv->pg_pos */
+			if (nbtuples < priv->chunk_size) {
+				if (priv->pg_pos == G_MININT)
 					gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), nbtuples);
 				else
-					gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model),model->priv->pg_pos + nbtuples + 1);
+					gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model),priv->pg_pos + nbtuples + 1);
 
-				model->priv->pg_pos = G_MAXINT;				
+				priv->pg_pos = G_MAXINT;
 			}
 			else {
-				if (model->priv->pg_pos == G_MININT)
-					model->priv->pg_pos = nbtuples - 1;
+				if (priv->pg_pos == G_MININT)
+					priv->pg_pos = nbtuples - 1;
 				else
-					model->priv->pg_pos += nbtuples;
+					priv->pg_pos += nbtuples;
 			}
 		}
 		else {
-			if (model->priv->pg_pos == G_MININT)
+			if (priv->pg_pos == G_MININT)
 				gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), 0);
 			else
-				gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), model->priv->pg_pos + 1); /* total number of rows */
-			model->priv->pg_pos = G_MAXINT;
+				gda_data_select_set_advertized_nrows (GDA_DATA_SELECT (model), priv->pg_pos + 1); /* total number of rows */
+			priv->pg_pos = G_MAXINT;
 			retval = FALSE;
 		}
 	}
 
 #ifdef GDA_PG_DEBUG
-	g_print ("--> SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", model->priv->pg_res_size, model->priv->pg_res_inf,
-		 GDA_DATA_SELECT (model)->advertized_nrows, model->priv->pg_pos);
+	g_print ("--> SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", priv->pg_res_size, priv->pg_res_inf,
+		 GDA_DATA_SELECT (model)->advertized_nrows, priv->pg_pos);
 #endif
 
 	return retval;
@@ -919,15 +900,16 @@ fetch_next_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 static gboolean
 fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **error)
 {
-	if (model->priv->pg_res) {
-		PQclear (model->priv->pg_res);
-		model->priv->pg_res = NULL;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+	if (priv->pg_res) {
+		PQclear (priv->pg_res);
+		priv->pg_res = NULL;
 	}
 	*fetch_error = FALSE;
 
-	if (model->priv->pg_pos == G_MININT) 
+	if (priv->pg_pos == G_MININT)
 		return FALSE;
-	else if (model->priv->pg_pos == G_MAXINT) 
+	else if (priv->pg_pos == G_MAXINT)
 		g_assert (gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) >= 0); /* total number of rows MUST be known at this point */
 
 	gchar *str;
@@ -935,66 +917,66 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 	int status;
 	gint noffset;
 	
-	if (model->priv->pg_pos == G_MAXINT)
-		noffset = model->priv->chunk_size + 1;
+	if (priv->pg_pos == G_MAXINT)
+		noffset = priv->chunk_size + 1;
 	else
-		noffset = model->priv->pg_res_size + model->priv->chunk_size;
+		noffset = priv->pg_res_size + priv->chunk_size;
 	str = g_strdup_printf ("MOVE BACKWARD %d FROM %s; FETCH FORWARD %d FROM %s;",
-			       noffset, model->priv->cursor_name,
-			       model->priv->chunk_size, model->priv->cursor_name);
+			       noffset, priv->cursor_name,
+			       priv->chunk_size, priv->cursor_name);
 #ifdef GDA_PG_DEBUG
 	g_print ("QUERY: %s\n", str);
 #endif
-        model->priv->pg_res = PQexec (model->priv->pconn, str);
+        priv->pg_res = PQexec (priv->pconn, str);
         g_free (str);
-        status = PQresultStatus (model->priv->pg_res);
-	model->priv->chunks_read ++;
+        status = PQresultStatus (priv->pg_res);
+	priv->chunks_read ++;
         if (status != PGRES_TUPLES_OK) {
 		_gda_postgres_make_error (gda_data_select_get_connection ((GdaDataSelect*) model),
-					  model->priv->pconn, model->priv->pg_res, error);
-                PQclear (model->priv->pg_res);
-                model->priv->pg_res = NULL;
-		model->priv->pg_res_size = 0;
+					  priv->pconn, priv->pg_res, error);
+                PQclear (priv->pg_res);
+                priv->pg_res = NULL;
+		priv->pg_res_size = 0;
                 retval = FALSE;
 		*fetch_error = TRUE;
         }
 	else {
 #ifdef GDA_PG_DEBUG
-		dump_pg_res (model->priv->pg_res);
+		dump_pg_res (priv->pg_res);
 #endif
 
                 //PQntuples() returns the number of rows in the result:
-                const gint nbtuples = PQntuples (model->priv->pg_res);
-		model->priv->pg_res_size = nbtuples;
+                const gint nbtuples = PQntuples (priv->pg_res);
+		priv->pg_res_size = nbtuples;
 
                 if (nbtuples > 0) {
-			/* model->priv->pg_res_inf */
-			if (model->priv->pg_pos == G_MAXINT)
-				model->priv->pg_res_inf = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - nbtuples;
+			/* priv->pg_res_inf */
+			if (priv->pg_pos == G_MAXINT)
+				priv->pg_res_inf = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - nbtuples;
 			else
-				model->priv->pg_res_inf = 
-					MAX (model->priv->pg_res_inf - (noffset - model->priv->chunk_size), 0);
+				priv->pg_res_inf =
+					MAX (priv->pg_res_inf - (noffset - priv->chunk_size), 0);
 
-			/* model->priv->pg_pos */
-			if (nbtuples < model->priv->chunk_size) {
-				model->priv->pg_pos = G_MAXINT;
+			/* priv->pg_pos */
+			if (nbtuples < priv->chunk_size) {
+				priv->pg_pos = G_MAXINT;
 			}
 			else {
-				if (model->priv->pg_pos == G_MAXINT)
-					model->priv->pg_pos = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - 1;
+				if (priv->pg_pos == G_MAXINT)
+					priv->pg_pos = gda_data_select_get_advertized_nrows (GDA_DATA_SELECT (model)) - 1;
 				else
-					model->priv->pg_pos = MAX (model->priv->pg_pos - noffset, -1) + nbtuples;
+					priv->pg_pos = MAX (priv->pg_pos - noffset, -1) + nbtuples;
 			}
 		}
 		else {
-			model->priv->pg_pos = G_MAXINT;
+			priv->pg_pos = G_MAXINT;
 			retval = FALSE;
 		}
 	}
 
 #ifdef GDA_PG_DEBUG
-	g_print ("<-- SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", model->priv->pg_res_size, model->priv->pg_res_inf,
-		 GDA_DATA_SELECT (model)->advertized_nrows, model->priv->pg_pos);
+	g_print ("<-- SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", priv->pg_res_size, priv->pg_res_inf,
+		 GDA_DATA_SELECT (model)->advertized_nrows, priv->pg_pos);
 #endif
 
 	return retval;
@@ -1003,9 +985,10 @@ fetch_prev_chunk (GdaPostgresRecordset *model, gboolean *fetch_error, GError **e
 static gboolean
 fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fetch_error, GError **error)
 {
-        if (model->priv->pg_res) {
-                PQclear (model->priv->pg_res);
-                model->priv->pg_res = NULL;
+  GdaPostgresRecordsetPrivate *priv = gda_postgres_recordset_get_instance_private (model);
+        if (priv->pg_res) {
+                PQclear (priv->pg_res);
+                priv->pg_res = NULL;
         }
 	*fetch_error = FALSE;
 
@@ -1015,49 +998,49 @@ fetch_row_number_chunk (GdaPostgresRecordset *model, int row_index, gboolean *fe
 
         /* Postgres's FETCH ABSOLUTE seems to use a 1-based index: */
         str = g_strdup_printf ("FETCH ABSOLUTE %d FROM %s;",
-                               row_index + 1, model->priv->cursor_name);
+                               row_index + 1, priv->cursor_name);
 #ifdef GDA_PG_DEBUG
         g_print ("QUERY: %s\n", str);
 #endif
-        model->priv->pg_res = PQexec (model->priv->pconn, str);
+        priv->pg_res = PQexec (priv->pconn, str);
         g_free (str);
-        status = PQresultStatus (model->priv->pg_res);
-        model->priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
+        status = PQresultStatus (priv->pg_res);
+        priv->chunks_read ++; /* Not really correct, because we are only fetching 1 row, not a whole chunk of rows. */
         if (status != PGRES_TUPLES_OK) {
 		_gda_postgres_make_error (gda_data_select_get_connection ((GdaDataSelect*) model), 
-					  model->priv->pconn, model->priv->pg_res, error);
-                PQclear (model->priv->pg_res);
-                model->priv->pg_res = NULL;
-                model->priv->pg_res_size = 0;
+					  priv->pconn, priv->pg_res, error);
+                PQclear (priv->pg_res);
+                priv->pg_res = NULL;
+                priv->pg_res_size = 0;
                 retval = FALSE;
 		*fetch_error = TRUE;
         }
         else {
 #ifdef GDA_PG_DEBUG
-                dump_pg_res (model->priv->pg_res);
+                dump_pg_res (priv->pg_res);
 #endif
 
                 //PQntuples() returns the number of rows in the result:
-                const gint nbtuples = PQntuples (model->priv->pg_res);
-                model->priv->pg_res_size = nbtuples;
+                const gint nbtuples = PQntuples (priv->pg_res);
+                priv->pg_res_size = nbtuples;
 
                 if (nbtuples > 0) {
                         /* Remember the row number for the start of this chunk:
                          * (actually a chunk of just 1 record in this case.) */
-                        model->priv->pg_res_inf = row_index;
+                        priv->pg_res_inf = row_index;
 
-                        /* don't change model->priv->nrows because we can't know if we have reached the end */
-                        model->priv->pg_pos = row_index;
+                        /* don't change priv->nrows because we can't know if we have reached the end */
+                        priv->pg_pos = row_index;
                 }
                 else {
-                        model->priv->pg_pos = G_MAXINT;
+                        priv->pg_pos = G_MAXINT;
                         retval = FALSE;
                 }
         }
 
 #ifdef GDA_PG_DEBUG
-        g_print ("--> SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", model->priv->pg_res_size, model->priv->pg_res_inf,
-                 model->priv->nrows, model->priv->pg_pos);
+        g_print ("--> SIZE = %d (inf = %d) nrows = %d, pg_pos = %d\n", priv->pg_res_size, priv->pg_res_inf,
+                 priv->nrows, priv->pg_pos);
 #endif
 
         return retval;
