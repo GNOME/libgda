@@ -337,18 +337,21 @@ valacs += custom_target('vala-lib',
 	)
 endforeach
 
+libgda_deps = [
+	libgda_dep,
+	#ldap_deps,
+	gda_keywordshash_dep,
+	inc_sqliteh_dep,
+	inc_libsql_parserh_dep
+	]
+
+
 libgda = library(
 	'gda-'+project_api_version,
 	libgda_source_all+valacs,
 	soversion : LT_VERSION+'.'+LT_AGE+'.'+LT_REVISION,
 	version : LT_VERSION,
-	dependencies : [
-		libgda_dep,
-		#ldap_deps,
-		gda_keywordshash_dep,
-		inc_sqliteh_dep,
-		inc_libsql_parserh_dep
-		],
+	dependencies : libgda_deps,
 	c_args : [
 		libgda_cargs,
 		ldap_cargs,
@@ -356,6 +359,11 @@ libgda = library(
 		],
 	install : true
 	)
+
+libgda_dep = declare_dependency(include_directories : inc_libgdah,
+  link_with : libgda,
+  dependencies: libgda_deps
+  )
 
 # GObject Introspection
 if girscanner.found()
