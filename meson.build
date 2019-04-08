@@ -272,7 +272,7 @@ sqlite_xml_fnames = [
 	]
 sqlite_xml_fnamesext = []
 foreach fn : sqlite_xml_fnames
-	sqlite_xml_fnamesext += [join_paths(meson.source_root(), 'providers','sqlite',fn+'.xml.in')]
+	sqlite_xml_fnamesext += [join_paths(meson.current_source_dir(), 'providers','sqlite',fn+'.xml.in')]
 endforeach
 
 sqlite_xml_inf = files(sqlite_xml_fnamesext)
