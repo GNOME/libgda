@@ -256,8 +256,6 @@ if get_option('enable-debug')
   c_args += '-DGDA_DEBUG'
 endif
 
-add_global_arguments(c_args, language : 'c')
-
 # Files references by sqlite embedded and provider
 sqlite_xml_fnames = [
 	'sqlite_specs_dsn',

@@ -16,12 +16,7 @@ testsf = files([
 
 tchki = executable('check_model_import',
 	['check_model_import.c'] + common_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -39,12 +34,7 @@ test('ModelImport', tchki,
 
 tchkv = executable('check_virtual',
 	['check_virtual.c'] + common_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -62,12 +52,7 @@ test('Virtual', tchkv,
 
 tchkdp = executable('check_data_proxy',
 	['check_data_proxy.c'] + common_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -87,12 +72,7 @@ test('DataProxy', tchkdp,
 
 tchkmc = executable('check_model_copy',
 	['check_model_copy.c'] + common_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -110,12 +90,7 @@ test('ModelCopy', tchkmc,
 
 tchkpm = executable('check_pmodel',
 	['check_pmodel.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -136,12 +111,7 @@ test('PModel', tchkpm,
 
 tchkemrs = executable('check_empty_rs',
 	['check_empty_rs.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -160,12 +130,7 @@ test('EmptyRS', tchkemrs,
 
 tchkmerr = executable('check_model_errors',
 	['check_model_errors.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -183,12 +148,7 @@ test('ModelErrors', tchkmerr,
 	)
 tchkvcnc = executable('check_vcnc',
 	['check_vcnc.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -206,14 +166,14 @@ test('VirtualConnection', tchkvcnc,
 		]
 	)
 
+tchkpivot_cargs = [
+	'-DROOT_DIR="'+meson.source_root()+'"'
+	]
+tchkpivot_cargs += test_cargs
+
 tchkpivot = executable('check_pivot',
 	['check_pivot.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: tchkpivot_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -230,14 +190,14 @@ test('Pivot', tchkpivot,
 		]
 	)
 
+tchkdsi_cargs = [
+	'-DBUILD_DIR="'+meson.current_build_dir()+'"'
+	]
+tchkdsi_cargs += test_cargs
 
 tchkdsi = executable('check_data_select_iter',
 	['check_data_select_iter.c'],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DBUILD_DIR="'+meson.current_build_dir()+'"'
-		],
+	c_args: tchkdsi_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,

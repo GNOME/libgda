@@ -129,6 +129,8 @@ mysql_args += [
 	'-DCLASS_PREFIX="GdaMySQL"'
 	]
 
+mysql_args += c_args
+
 libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 	libgda_mysql_sources,
 	dependencies: [

@@ -50,6 +50,13 @@ libgda_sqlite_providerpc = configure_file(
 			configuration : conf,
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
 			)
+
+libgda_models_provider_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		]
+libgda_models_provider_cargs += c_args
+
 libgda_models_provider = library ('libgda-models',
 	libgda_models_sources,
 	dependencies: [
@@ -58,10 +65,7 @@ libgda_models_provider = library ('libgda-models',
 		inc_libgda_modelsh_dep,
 		inc_sqliteh_dep,
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		],
+	c_args: libgda_models_provider_cargs,
 	link_with: libgda,
 	install: false,
 	)

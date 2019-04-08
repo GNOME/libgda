@@ -141,6 +141,13 @@ libgda_capi_sources += capi_lemon_parserc
 libgda_capi_sources += capi_lemon_parserh
 libgda_capi_sources += capi_token_types
 
+libgda_capi_provider_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		]
+
+libgda_capi_provider_cargs += c_args
+
 libgda_capi_provider = library ('gda-capi',
 	libgda_capi_sources,
 	dependencies: [
@@ -150,10 +157,7 @@ libgda_capi_provider = library ('gda-capi',
 		inc_libgda_capih_dep,
 		inc_sqliteh_dep,
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		],
+	c_args: libgda_capi_provider_cargs,
 	link_args: [
 		'-export-dynamic',
 		],

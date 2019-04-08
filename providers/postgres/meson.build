@@ -99,6 +99,13 @@ libgda_postgres_providerpc = configure_file(
 
 libgda_postgres_sources += libgda_pg_sources
 
+libgda_postgres_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		]
+
+libgda_postgres_cargs += c_args
+
 libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 	libgda_postgres_sources,
 	dependencies: [
@@ -107,10 +114,7 @@ libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 		pg_reusable_dep,
 		inc_postgresh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		],
+	c_args: libgda_postgres_cargs,
 	link_args: [
 		'-export-dynamic',
 		],

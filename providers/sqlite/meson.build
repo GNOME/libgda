@@ -62,6 +62,14 @@ libgda_sqlite_providerpc = configure_file(output : 'libgda-sqlite-'+project_api_
 			configuration : conf,
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
 			)
+
+libgda_sqlite_provider_cargs = [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-I'+join_paths(get_option ('prefix'), get_option('includedir'))
+		]
+libgda_sqlite_provider_cargs += c_args
+
 libgda_sqlite_provider = library ('gda-sqlite-'+project_api_version,
 	libgda_sqlite_sources,
 	dependencies: [
@@ -71,11 +79,7 @@ libgda_sqlite_provider = library ('gda-sqlite-'+project_api_version,
 		inc_sqliteh_dep,
 		inc_libgdah_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-I'+join_paths(get_option ('prefix'), get_option('includedir'))
-		],
+	c_args: libgda_sqlite_provider_cargs,
 	link_with: libgda,
 	install: true,
 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')

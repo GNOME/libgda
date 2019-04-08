@@ -310,6 +310,7 @@ libgda_cargs = [
 
 libgda_cargs += sqlite_cargs
 libgda_cargs += binreloc_cargs
+libgda_cargs += c_args
 
 libgda_dep += sqlite_deps
 

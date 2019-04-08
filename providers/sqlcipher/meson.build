@@ -94,6 +94,8 @@ sqlcipher_cargs += [
 		'-DSQLITE_ENABLE_COLUMN_METADATA',
 		'-DSQLITE_THREADSAFE=1'
 		]
+sqlcipher_cargs += c_args
+
 
 libgda_sqlcipher_providerpc = configure_file(output : 'libgda-sqlcipher-'+project_api_version+'.pc',
 			configuration : conf,

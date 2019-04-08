@@ -1,3 +1,10 @@
+test_cargs = [
+	'-include',
+	meson.build_root() + '/config.h',
+	'-DCHECK_FILES="'+meson.source_root()+'"',
+	'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+	]
+test_cargs += c_args
 
 test_headers = files([
 	'raw-ddl-creator.h'
@@ -24,12 +31,7 @@ tests_sources += common_sources
 
 trddlc = executable('test-ddl-creator test',
 	['test-ddl-creator.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -45,15 +47,9 @@ test('RawDdlCreator', trddlc,
 		]
 	)
 
-
 tbc = executable('test-bin-converter',
 	['test-bin-converter.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -69,14 +65,10 @@ test('BinConverter', tbc,
 		]
 	)
 
+
 tsqli = executable('test-sql-identifier',
 	['test-sql-identifier.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -94,12 +86,7 @@ test('SqlIdentifier', tsqli,
 
 tiq = executable('test-identifiers-quotes',
 	['test-identifiers-quotes.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -117,12 +104,7 @@ test('IdentifiersQuotes', tiq,
 
 tsqlb = executable('test-sql-builder',
 	['test-sql-builder.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -140,12 +122,7 @@ test('SqlBuilder', tsqlb,
 
 tcstrs = executable('test-connection-string-split',
 	['test-connection-string-split.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -163,12 +140,7 @@ test('ConnectionStringSplit', tcstrs,
 
 tipar = executable('test-input-parsers',
 	['test-input-parsers.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -186,12 +158,7 @@ test('InputParsers', tipar,
 
 tqkl = executable('test-quark-list',
 	['test-quark-list.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -209,12 +176,7 @@ test('QuarkList', tqkl,
 
 tsqlr = executable('test-sql-renderer',
 	['test-sql-renderer.c'] + tests_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -232,12 +194,7 @@ test('SqlRenderer', tsqlr,
 
 tso = executable('test-server-operation',
 	['test-server-operation.c'] ,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
@@ -255,11 +212,7 @@ test('ServerOperation', tso,
 
 tmp = executable('test-provider-meta',
 	['test-provider-meta.c'] ,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DBUILD_DIR="'+meson.current_build_dir()+'"'
-		],
+	c_args: test_cargs,
 	link_with: libgda,
 	dependencies: [
 		libgda_dep,
