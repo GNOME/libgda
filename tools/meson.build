@@ -5,7 +5,6 @@ subdir('misc')
 subdir('common')
 subdir('base')
 subdir('help')
-subdir('resources')
 
 gda_sql_sources = files([
 	'tools-main.c'
@@ -69,8 +68,9 @@ gda_sql_man = configure_file(
 	)
 install_man(gda_sql_man)
 
-
 if enable_ui
+
+subdir('resources')
 
 browser_deps = [
 	libgda_dep,
