@@ -5,7 +5,7 @@ extbl = executable('gda-test-blob',
 	['gda-test-blob.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: libgda,
 	dependencies: [
@@ -22,7 +22,7 @@ extv = executable('virtual-test',
 	['virtual-test.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: libgda,
 	dependencies: [
@@ -39,7 +39,7 @@ extv2 = executable('virtual-test-2',
 	['virtual-test-2.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: libgda,
 	dependencies: [
@@ -57,7 +57,7 @@ extuide = executable('gdaui-test-data-entries',
 	['gdaui-test-data-entries.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: [libgda,  libgdaui],
 	dependencies: [
@@ -74,7 +74,7 @@ extuiwe = executable('gdaui-test-widget-entry',
 	['gdaui-test-widget-entry.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: [libgda,  libgdaui],
 	dependencies: [
@@ -91,7 +91,7 @@ extuier = executable('gdaui-test-errors',
 	['gdaui-test-errors.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: [libgda,  libgdaui],
 	dependencies: [
@@ -108,7 +108,7 @@ extuier = executable('gdaui-test-rt-editor',
 	['gdaui-test-rt-editor.c'] + tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_with: [libgda,  libgdaui],
 	dependencies: [
