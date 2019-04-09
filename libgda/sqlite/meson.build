@@ -51,7 +51,7 @@ sqlitesources += sqlitehanderbinh
 
 sqlite_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DPNAME="SQLite"', '-DCLASS_PREFIX="GdaSqlite"'
 	]
 sqlite_path = ''

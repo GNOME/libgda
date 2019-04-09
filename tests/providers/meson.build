@@ -9,8 +9,8 @@ tchksqlite = executable('check_sqlite',
 	['check_sqlite.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -24,8 +24,8 @@ tchksqlite = executable('check_sqlite',
 test('ProviderSQLite', tchksqlite,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -35,8 +35,8 @@ tchksqlcipher = executable('check_sqlcipher',
 	['check_sqlcipher.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -49,8 +49,8 @@ tchksqlcipher = executable('check_sqlcipher',
 	)
 test('ProviderSQLCipher', tchksqlcipher,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 endif
@@ -61,8 +61,8 @@ tchkpg = executable('check_postgres',
 	['check_postgres.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -77,8 +77,8 @@ test('ProviderPostgreSQL', tchkpg,
 	timeout: 300,
 	is_parallel: false,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -86,8 +86,8 @@ tchkpg = executable('check_postgresql_ddl',
 	['check_postgresql_ddl.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -102,8 +102,8 @@ test('ProviderPostgreSQLDDL', tchkpg,
 	timeout: 300,
 	is_parallel: false,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -111,8 +111,8 @@ tchkpg_mu1 = executable('check_postgres_meta_partial_1',
 	['check_postgres_meta_partial-1.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -127,8 +127,8 @@ test('ProviderMetaPartialUpdate1PostgreSQL', tchkpg_mu1,
 	timeout: 300,
 	is_parallel: false,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -136,8 +136,8 @@ tchkpg_mu2 = executable('check_postgres_meta_partial_2',
 	['check_postgres_meta_partial-2.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -152,8 +152,8 @@ test('ProviderMetaPartialUpdate2PostgreSQL', tchkpg_mu2,
 	timeout: 600,
 	is_parallel: false,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -164,8 +164,8 @@ tchkmysql = executable('check_mysql',
 	['check_mysql.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_SQL_FILES="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DCHECK_SQL_FILES="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -179,8 +179,8 @@ tchkmysql = executable('check_mysql',
 test('ProviderMySQL', tchkmysql,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 endif

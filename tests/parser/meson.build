@@ -3,8 +3,8 @@ tchkpr = executable('check_parser',
 	['check_parser.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -17,8 +17,8 @@ tchkpr = executable('check_parser',
 	)
 test('Parser', tchkpr,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -26,8 +26,8 @@ tchkval = executable('check_validation',
 	['check_validation.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -40,8 +40,8 @@ tchkval = executable('check_validation',
 	)
 test('Validation', tchkval,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -49,8 +49,8 @@ tchkval = executable('check_normalization',
 	['check_normalization.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -63,8 +63,8 @@ tchkval = executable('check_normalization',
 	)
 test('Normalization', tchkval,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -72,8 +72,8 @@ tchkdlmc = executable('check_dml_comp',
 	['check_dml_comp.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -86,8 +86,8 @@ tchkdlmc = executable('check_dml_comp',
 	)
 test('DlmComp', tchkdlmc,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -95,8 +95,8 @@ tchkscript = executable('check_script',
 	['check_script.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -109,8 +109,8 @@ tchkscript = executable('check_script',
 	)
 test('Script', tchkscript,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -118,8 +118,8 @@ tchkrwd = executable('check_rewrite_for_default',
 	['check_rewrite_for_default.c'],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -132,8 +132,8 @@ tchkrwd = executable('check_rewrite_for_default',
 	)
 test('RewriteDefault', tchkrwd,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 

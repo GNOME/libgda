@@ -9,8 +9,8 @@ tchkmthp = executable('check_parser',
 	['check_parser.c'] + methread_common_sources + common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -23,8 +23,8 @@ tchkmthp = executable('check_parser',
 	)
 test('MultiThreadParser', tchkmthp,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -32,8 +32,8 @@ tchkmthlk = executable('check_cnc_lock',
 	['check_cnc_lock.c'] + methread_common_sources + common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -47,7 +47,7 @@ tchkmthlk = executable('check_cnc_lock',
 test('MultiThreadConnectionLock', tchkmthlk,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)

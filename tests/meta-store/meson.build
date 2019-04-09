@@ -7,8 +7,8 @@ tchkmst = executable('check_meta_store_memory',
 	['check_meta_store_memory.c'] + meta_store_common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DTOP_SRC_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DTOP_SRC_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -21,8 +21,8 @@ tchkmst = executable('check_meta_store_memory',
 	)
 test('MetaStoreMemory', tchkmst,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -30,8 +30,8 @@ tchkmstsqlite = executable('check_meta_store_sqlite',
 	['check_meta_store_sqlite.c'] + meta_store_common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DTOP_SRC_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DTOP_SRC_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -45,8 +45,8 @@ tchkmstsqlite = executable('check_meta_store_sqlite',
 test('MetaStoreSqlite', tchkmstsqlite,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -54,8 +54,8 @@ tchkmstspg = executable('check_meta_store_postgresql',
 	['check_meta_store_postgresql.c'] + meta_store_common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DTOP_SRC_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DTOP_SRC_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -69,8 +69,8 @@ tchkmstspg = executable('check_meta_store_postgresql',
 test('MetaStorePostgres', tchkmstspg,
 	timeout: 200,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -78,8 +78,8 @@ tchkmstsmysql = executable('check_meta_store_mysql',
 	['check_meta_store_mysql.c'] + meta_store_common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DTOP_SRC_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DTOP_SRC_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -93,7 +93,7 @@ tchkmstsmysql = executable('check_meta_store_mysql',
 test('MetaStoreMySQL', tchkmstsmysql,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)

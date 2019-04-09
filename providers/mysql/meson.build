@@ -125,7 +125,7 @@ libgda_mysql_sources += libgda_reusable_mysql_sources
 
 mysql_args += [
 	'-include',
-	meson.build_root() + '/config.h',
+	join_paths(gda_top_build, 'config.h'),
 	'-DCLASS_PREFIX="GdaMySQL"'
 	]
 

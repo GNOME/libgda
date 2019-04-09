@@ -101,7 +101,7 @@ libgda_postgres_sources += libgda_pg_sources
 
 libgda_postgres_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		]
 
 libgda_postgres_cargs += c_args

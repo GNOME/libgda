@@ -1,8 +1,8 @@
 test_cargs = [
 	'-include',
-	'config.h',
+	join_paths(gda_top_build, 'config.h'),
 	'-DCHECK_FILES="'+meson.source_root()+'"',
-	'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+	'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 	]
 test_cargs += general_cargs
 
@@ -42,8 +42,8 @@ trddlc = executable('test-ddl-creator test',
 	)
 test('RawDdlCreator', trddlc,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -60,8 +60,8 @@ tbc = executable('test-bin-converter',
 	)
 test('BinConverter', tbc,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -79,8 +79,8 @@ tsqli = executable('test-sql-identifier',
 	)
 test('SqlIdentifier', tsqli,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -97,8 +97,8 @@ tiq = executable('test-identifiers-quotes',
 	)
 test('IdentifiersQuotes', tiq,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -115,8 +115,8 @@ tsqlb = executable('test-sql-builder',
 	)
 test('SqlBuilder', tsqlb,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -133,8 +133,8 @@ tcstrs = executable('test-connection-string-split',
 	)
 test('ConnectionStringSplit', tcstrs,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -151,8 +151,8 @@ tipar = executable('test-input-parsers',
 	)
 test('InputParsers', tipar,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -169,8 +169,8 @@ tqkl = executable('test-quark-list',
 	)
 test('QuarkList', tqkl,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -187,8 +187,8 @@ tsqlr = executable('test-sql-renderer',
 	)
 test('SqlRenderer', tsqlr,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -205,8 +205,8 @@ tso = executable('test-server-operation',
 	)
 test('ServerOperation', tso,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -223,8 +223,8 @@ tmp = executable('test-provider-meta',
 	)
 # test('ProviderMeta', tmp,
 # 	env: [
-# 		'GDA_TOP_SRC_DIR='+meson.source_root(),
-# 		'GDA_TOP_BUILD_DIR='+meson.build_root()
+# 		'GDA_TOP_SRC_DIR='+gda_top_src,
+# 		'GDA_TOP_BUILD_DIR='+gda_top_build
 # 		]
 # 	)
 

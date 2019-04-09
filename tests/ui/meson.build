@@ -7,9 +7,9 @@ tckuis = executable('check_sets',
 	['check_sets.c'] + test_ui_common,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: [libgda, libgdaui],
 	dependencies: [
@@ -31,9 +31,9 @@ tckuirgm = executable('check_raw_grid_model',
 	['check_raw_grid_model.c'] + test_ui_common,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: [libgda, libgdaui],
 	dependencies: [

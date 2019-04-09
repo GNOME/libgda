@@ -143,7 +143,7 @@ libgda_capi_sources += capi_token_types
 
 libgda_capi_provider_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		]
 
 libgda_capi_provider_cargs += c_args

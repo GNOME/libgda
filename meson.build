@@ -36,6 +36,10 @@ LT_VERSION='6'
 
 compiler = meson.get_compiler('c')
 
+# Use this variables to access top source and top build dirs when used as subproject
+gda_top_src = meson.current_source_dir()
+gda_top_build = meson.current_build_dir()
+
 glib_genmarshal = find_program('glib-genmarshal', required : true)
 
 glib_mkenums = find_program('glib-mkenums', required : true)

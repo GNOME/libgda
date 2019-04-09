@@ -87,7 +87,7 @@ sqlcipher_cargs += ['-DSEARCH_LIB_PATH="'+sqlcipher_path+'"']
 
 sqlcipher_cargs += [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DSQLITE_HAS_CODEC',
 		'-DSQLITE_API=',
 		'-DSQLITE_PRIVATE=',

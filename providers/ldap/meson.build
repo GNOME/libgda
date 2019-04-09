@@ -96,7 +96,7 @@ libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
 		],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	link_args: [
 		'-export-dynamic',

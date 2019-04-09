@@ -11,7 +11,7 @@ foreach xt : models_xml_fnames
 		input: xt+'.xml.in',
 		output: xt+'.xml.in.h',
 		type: 'xml',
-		po_dir: join_paths(meson.build_root(),'po')
+		po_dir: join_paths(gda_top_build,'po')
 		)
 	models_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
@@ -53,7 +53,7 @@ libgda_sqlite_providerpc = configure_file(
 
 libgda_models_provider_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		]
 libgda_models_provider_cargs += c_args
 

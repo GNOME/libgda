@@ -65,7 +65,7 @@ libgda_sqlite_providerpc = configure_file(output : 'libgda-sqlite-'+project_api_
 
 libgda_sqlite_provider_cargs = [
 		'-include',
-		'config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-I'+join_paths(get_option ('prefix'), get_option('includedir'))
 		]
 libgda_sqlite_provider_cargs += c_args

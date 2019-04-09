@@ -8,8 +8,8 @@ tchkhdl = executable('check_holder',
 	['check_holder.c']+value_holders_common_sources+common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -22,8 +22,8 @@ tchkhdl = executable('check_holder',
 	)
 test('ValueHolder', tchkhdl,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -31,8 +31,8 @@ tchkset = executable('check_set',
 	['check_set.c']+value_holders_common_sources+common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -45,8 +45,8 @@ tchkset = executable('check_set',
 	)
 test('ValueHolderSet', tchkset,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -54,8 +54,8 @@ tchkstm = executable('check_statement',
 	['check_statement.c']+value_holders_common_sources+common_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"',
 		],
 	link_with: libgda,
 	dependencies: [
@@ -68,7 +68,7 @@ tchkstm = executable('check_statement',
 	)
 test('ValueHolderStatement', tchkstm,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)

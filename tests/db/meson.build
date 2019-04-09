@@ -9,9 +9,9 @@ tbc = executable('check-db-catalog',
 	db_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -24,8 +24,8 @@ tbc = executable('check-db-catalog',
 test('dbcatalog', tbc,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -33,9 +33,9 @@ dbtb = executable('check_db_base',
 	'check-db-base.c',
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -48,8 +48,8 @@ dbtb = executable('check_db_base',
 test('dbbase', dbtb,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -59,9 +59,9 @@ dbtc = executable('check_db_column',
 	'check-db-column.c',
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -74,8 +74,8 @@ dbtc = executable('check_db_column',
 test('dbcolumn', dbtc,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -83,9 +83,9 @@ dbtv = executable('check_db_view',
 	'check-db-view.c',
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -98,17 +98,17 @@ dbtv = executable('check_db_view',
 test('dbview', dbtv,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 dbfkey = executable('check_db_fkey',
 	'check-db-fkey.c',
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -121,17 +121,17 @@ dbfkey = executable('check_db_fkey',
 test('dbfkey', dbfkey,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 dbcreate = executable('check_db_create',
 	'check-db-db-create.c',
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -144,8 +144,8 @@ dbcreate = executable('check_db_create',
 test('dbcreate', dbcreate,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -157,9 +157,9 @@ tcpg = executable('check-db-catalog-postgresql',
 	db_catalog_pg_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
@@ -172,7 +172,7 @@ tcpg = executable('check-db-catalog-postgresql',
 test('dbcatalog-postgresql', tcpg,
 	timeout: 300,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)

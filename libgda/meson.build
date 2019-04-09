@@ -1,7 +1,6 @@
 inc_libgdah = include_directories ('.')
 inc_libgdah_dep = declare_dependency (include_directories : inc_libgdah)
 
-
 # Build auxiliary executables and libraries
 subdir('sqlite')
 subdir('sql-parser')
@@ -303,7 +302,7 @@ libgda_dep += [inc_libgdah_dep]
 
 libgda_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		'-DABI_VERSION='+project_api_version,
 		'-DABI_NAME='+project_api_name,
 	]
@@ -439,15 +438,15 @@ tco = executable('test_cnc_open', 'test-cnc-open.c',
 	)
 test('OpenConnection', tco,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root(),
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build,
 		'GDA_SHOW_PROVIDER_LOADING_ERROR=1'
 		]
 	)
 
 tce = executable('test_cnc_exec', 'test-cnc-exec.c',
 	c_args: [
-		'-DROOT_DIR="'+meson.source_root()+'"'
+		'-DROOT_DIR="'+gda_top_src+'"'
 		],
 	dependencies: [
 		libgda_dep,
@@ -458,14 +457,14 @@ tce = executable('test_cnc_exec', 'test-cnc-exec.c',
 	)
 test('OpenConnectionExecute', tce,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
 tcm = executable('test_cnc_meta', 'test-cnc-meta.c',
 	c_args: [
-		'-DROOT_DIR="'+meson.source_root()+'"'
+		'-DROOT_DIR="'+gda_top_src+'"'
 		],
 	dependencies: [
 		libgda_dep,
@@ -476,8 +475,8 @@ tcm = executable('test_cnc_meta', 'test-cnc-meta.c',
 	)
 test('OpenConnectionMeta', tcm,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
 
@@ -486,7 +485,7 @@ ttw = executable('test-raw-itsignaler',
 	test_raw_itsignaler_sources,
 	c_args: [
 		'-include',
-		'config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	dependencies: [
 		libgda_dep,
@@ -501,7 +500,7 @@ ttws = executable('test-itsignaler',
 	test_itsignaler_sources,
 	c_args: [
 		'-include',
-		'config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	dependencies: [
 		libgda_dep,
@@ -515,7 +514,7 @@ test('ItSignaler', ttws)
 ttwbs = executable('test-blocking-itsignaler',
 	test_block_itsignaler_sources,
 	c_args: [
-		'-include','config.h',
+		'-include',join_paths(gda_top_build, 'config.h'),
 		],
 	dependencies: [
 		libgda_dep,
@@ -530,7 +529,7 @@ ttww = executable('test-worker',
 	test_worker_sources,
 	c_args: [
 		'-include',
-		'config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	dependencies: [
 		libgda_dep,
@@ -545,7 +544,7 @@ ttwd = executable('test-connect',
 	test_worker_sources,
 	c_args: [
 		'-include',
-		'config.h',
+		join_paths(gda_top_build, 'config.h'),
 		],
 	dependencies: [
 		libgda_dep,
