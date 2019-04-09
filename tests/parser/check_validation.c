@@ -33,7 +33,7 @@ GdaConnection *cnc;
 static gint do_test (const xmlChar *id, const xmlChar *sql, gboolean valid_expected);
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	xmlDocPtr doc;
         xmlNodePtr root, node;

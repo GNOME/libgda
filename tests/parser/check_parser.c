@@ -33,7 +33,7 @@ static gint do_test (GdaSqlParser *parser, const xmlChar *id, const xmlChar *sql
 		     const xmlChar *error_line, const xmlChar *error_col);
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	xmlDocPtr doc;
         xmlNodePtr root, node;

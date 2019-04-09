@@ -39,7 +39,7 @@ TestFunc tests[] = {
 };
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	gchar *fname;
 	GError *error = NULL;
@@ -98,7 +98,7 @@ typedef struct _ThData {
 } ThData;
 
 static gboolean
-test_multiple_threads (GThreadFunc func, GError **error)
+test_multiple_threads (GThreadFunc func, G_GNUC_UNUSED GError **error)
 {
 	ThData data[NTHREADS];
 	gint i;

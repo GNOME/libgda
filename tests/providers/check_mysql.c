@@ -26,7 +26,7 @@ extern GdaConnection   *cnc;
 extern gboolean         params_provided;
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	int number_failed = 0;
 	gchar **env;

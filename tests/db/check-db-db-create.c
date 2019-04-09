@@ -39,7 +39,7 @@ typedef struct {
 
 static void
 test_db_db_create_start(CheckCreatedb *self,
-                         gconstpointer user_data)
+                         G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_init ();
   self->catalog = NULL;
@@ -107,7 +107,7 @@ test_db_db_create_start(CheckCreatedb *self,
 
 static void
 test_db_db_create_finish (CheckCreatedb *self,
-                           gconstpointer user_data)
+                           G_GNUC_UNUSED gconstpointer user_data)
 {
 /* Dropping all tables */
   GdaServerOperation *op = gda_connection_create_operation (self->cnc,
@@ -137,7 +137,7 @@ test_db_db_create_finish (CheckCreatedb *self,
 
 static void
 test_db_db_create_test1 (CheckCreatedb *self,
-                          gconstpointer user_data)
+                          G_GNUC_UNUSED gconstpointer user_data)
 {
   GValue *value_name = gda_value_new (G_TYPE_STRING);
 

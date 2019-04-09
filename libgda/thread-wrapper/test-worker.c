@@ -36,7 +36,7 @@ int test13 (void);
 
 
 int
-main (int argc, char** argv)
+main ()
 {
 	gint nfailed = 0;
 
@@ -86,7 +86,7 @@ data3_free (Data3 *data)
 }
 
 static gpointer
-test3_worker_func (Data3 *data, GError **error)
+test3_worker_func (Data3 *data, G_GNUC_UNUSED GError **error)
 {
 	gint *retval;
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
@@ -153,7 +153,7 @@ test3 (void)
  * Test 4: cancellation tests
  */
 static gpointer
-test4_worker_func (gpointer data, GError **error)
+test4_worker_func (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	/* just spend some idle time */
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
@@ -234,7 +234,7 @@ test4 (void)
  * Test 5: with main loop
  */
 static gpointer
-test5_worker_func (gpointer data, GError **error)
+test5_worker_func (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	/* just spend some idle time */
 	g_print ("%s() called from thread %p\n", __FUNCTION__, g_thread_self());
@@ -260,7 +260,7 @@ test5_idle_push_jobs (GdaWorker *worker)
 }
 
 static void
-test5_worker_callback (GdaWorker *worker, guint job_id, gpointer result_data, GError *error, GMainLoop *loop)
+test5_worker_callback (G_GNUC_UNUSED GdaWorker *worker, guint job_id, G_GNUC_UNUSED gpointer result_data, G_GNUC_UNUSED GError *error, GMainLoop *loop)
 {
 	static guint i = 0;
 	i++;
@@ -305,7 +305,7 @@ test5 (void)
  * - job finishes before timer
  */
 static gpointer
-test6_worker_func (gint *timeout_ms, GError **error)
+test6_worker_func (gint *timeout_ms, G_GNUC_UNUSED GError **error)
 {
 	if (*timeout_ms > 0)
 		g_usleep ((gulong) *timeout_ms * 1000);
@@ -452,14 +452,14 @@ test7 (void)
  * Test 8: submit a job from within the worker thread
  */
 static gpointer
-test8_sub_func (gpointer unused_data, GError **error)
+test8_sub_func (G_GNUC_UNUSED gpointer unused_data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("%s() called in thread %p\n", __FUNCTION__, g_thread_self());
 	return "test8_sub_func";
 }
 
 static gpointer
-test8_func (GdaWorker *worker, GError **error)
+test8_func (GdaWorker *worker, G_GNUC_UNUSED GError **error)
 {
 	guint jid;
 	jid = gda_worker_submit_job (worker, NULL, (GdaWorkerFunc) test8_sub_func, NULL, NULL, NULL, error);
@@ -541,7 +541,7 @@ typedef struct {
 } Test9Data;
 
 static void
-test9data_free (Test9Data *data)
+test9data_free (G_GNUC_UNUSED Test9Data *data)
 {
 	/* should not be called by GdaWorker, instead it is freed manually using g_free()  */
 	g_assert_not_reached ();
@@ -549,7 +549,7 @@ test9data_free (Test9Data *data)
 
 /* function run by the worker thread */
 static gpointer
-test9_job_func (Test9Data *data, GError **error)
+test9_job_func (Test9Data *data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("job_func (thread => %p, data => %p)\n", g_thread_self(), data);
 	data->out = data->in;
@@ -558,7 +558,7 @@ test9_job_func (Test9Data *data, GError **error)
 
 /* function called back in the context which submitted the jobs */
 static void
-test9_worker_cb (GdaWorker *worker, guint job_id, Test9Data *data, GError *error, GThread *thread)
+test9_worker_cb (G_GNUC_UNUSED GdaWorker *worker, G_GNUC_UNUSED guint job_id, Test9Data *data, G_GNUC_UNUSED GError *error, GThread *thread)
 {
 	g_print ("%s (thread => %p, result_data => %p)\n", __FUNCTION__, g_thread_self(), data);
 
@@ -660,7 +660,7 @@ test9 (void)
  * Test 10: test gda_worker_wait_job()
  */
 static gpointer
-test10_func_slow (gpointer data, GError **error)
+test10_func_slow (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("In %s()...\n", __FUNCTION__);
 	g_usleep (500000); /* wait half a second */
@@ -669,7 +669,7 @@ test10_func_slow (gpointer data, GError **error)
 }
 
 static gpointer
-test10_func_fast (gpointer data, GError **error)
+test10_func_fast (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("Passed through %s()...\n", __FUNCTION__);
 	return (gpointer) 0x02;
@@ -711,7 +711,7 @@ test10 (void)
  * Test 11: test gda_worker_do_job(), no timeout
  */
 static gpointer
-test11_func (gpointer data, GError **error)
+test11_func (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("In %s()...\n", __FUNCTION__);
 	g_usleep (500000); /* wait half a second */
@@ -720,7 +720,7 @@ test11_func (gpointer data, GError **error)
 }
 
 static gpointer
-test11_func_e (gpointer data, GError **error)
+test11_func_e (G_GNUC_UNUSED gpointer data, GError **error)
 {
 	g_print ("In %s()...\n", __FUNCTION__);
 	g_usleep (500000); /* wait half a second */
@@ -777,7 +777,7 @@ test11 (void)
  * Test 12: gda_worker_do_job() for quick jobs
  */
 static gpointer
-test12_func (gpointer data, GError **error)
+test12_func (G_GNUC_UNUSED gpointer data, G_GNUC_UNUSED GError **error)
 {
 	/* make it as quick as possible */
 	return (gpointer) 0x02;
@@ -816,7 +816,7 @@ test12 (void)
  * Test 13: gda_worker_do_job() for several jobs
  */
 static gpointer
-test13_func (gpointer data, GError **error)
+test13_func (gpointer data, G_GNUC_UNUSED GError **error)
 {
 	g_print ("%s (%s) in thread %p\n", __FUNCTION__, (gchar *) data, g_thread_self ());
 	static guint i = 1;

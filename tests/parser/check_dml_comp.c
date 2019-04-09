@@ -34,7 +34,7 @@ static gint do_test (const xmlChar *id, const xmlChar *sql,
 		     const gchar *computed_type, const xmlChar *computed_exp, gboolean require_pk);
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	xmlDocPtr doc;
         xmlNodePtr root, node;

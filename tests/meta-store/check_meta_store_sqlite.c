@@ -23,7 +23,7 @@
 #include "common.h"
 
 int 
-main(int argc, char ** argv)
+main(G_GNUC_UNUSED int argc, G_GNUC_UNUSED char ** argv)
 {
 	GdaMetaStore *store;
 	GFile *pdir;

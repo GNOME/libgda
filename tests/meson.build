@@ -1,10 +1,10 @@
 test_cargs = [
 	'-include',
-	meson.build_root() + '/config.h',
+	'config.h',
 	'-DCHECK_FILES="'+meson.source_root()+'"',
 	'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
 	]
-test_cargs += c_args
+test_cargs += general_cargs
 
 test_headers = files([
 	'raw-ddl-creator.h'

@@ -32,7 +32,7 @@ typedef struct {
 
 static void
 test_db_base_start (BaseFixture *self,
-		     gconstpointer user_data)
+		     G_GNUC_UNUSED gconstpointer user_data)
 {
 	self->obj = gda_db_base_new();
 
@@ -40,7 +40,7 @@ test_db_base_start (BaseFixture *self,
 
 static void
 test_db_base_finish (BaseFixture *self,
-		      gconstpointer user_data)
+		      G_GNUC_UNUSED gconstpointer user_data)
 {
 	if (self->obj)
 		g_object_unref (self->obj);
@@ -48,7 +48,7 @@ test_db_base_finish (BaseFixture *self,
 
 static void
 test_db_base_run1 (BaseFixture *self,
-		   gconstpointer user_data)
+		   G_GNUC_UNUSED gconstpointer user_data)
 {
 	const gchar *catalog = "First";
 	const gchar *schema = "Second";
@@ -75,7 +75,7 @@ test_db_base_run1 (BaseFixture *self,
 
 static void
 test_db_base_run2 (BaseFixture *self,
-		   gconstpointer user_data)
+		   G_GNUC_UNUSED gconstpointer user_data)
 {
 	const gchar *catalog = "First";
 	const gchar *schema = "Second";
@@ -106,7 +106,7 @@ test_db_base_run2 (BaseFixture *self,
 
 static void
 test_db_base_run3 (BaseFixture *self,
-		   gconstpointer user_data)
+		   G_GNUC_UNUSED gconstpointer user_data)
 {
 	const gchar *schema = "Second";
 	const gchar *name = "Third";
@@ -131,7 +131,7 @@ test_db_base_run3 (BaseFixture *self,
 
 static void
 test_db_base_run4 (BaseFixture *self,
-		   gconstpointer user_data)
+		   G_GNUC_UNUSED gconstpointer user_data)
 {
 	const gchar *name = "Third";
 
@@ -156,7 +156,7 @@ test_db_base_run4 (BaseFixture *self,
 
 static void
 test_db_base_run5 (BaseFixture *self,
-		   gconstpointer user_data)
+		   G_GNUC_UNUSED gconstpointer user_data)
 {
 	const gchar *catalog = "First";
 	const gchar *name = "Third";

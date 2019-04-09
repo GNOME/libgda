@@ -43,7 +43,7 @@ typedef struct {
 
 static void
 test_db_view_name (CheckDbObject *self,
-                    gconstpointer user_data)
+                    G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *name = NULL;
 
@@ -54,7 +54,7 @@ test_db_view_name (CheckDbObject *self,
 
 static void
 test_db_view_temp (CheckDbObject *self,
-                    gconstpointer user_data)
+                    G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean istemp = FALSE;
 
@@ -65,7 +65,7 @@ test_db_view_temp (CheckDbObject *self,
 
 static void
 test_db_view_replace (CheckDbObject *self,
-                       gconstpointer user_data)
+                       G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean replace = FALSE;
 
@@ -76,7 +76,7 @@ test_db_view_replace (CheckDbObject *self,
 
 static void
 test_db_view_ifnoexist (CheckDbObject *self,
-                         gconstpointer user_data)
+                         G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean ifnoexist = FALSE;
 
@@ -87,7 +87,7 @@ test_db_view_ifnoexist (CheckDbObject *self,
 
 static void
 test_db_view_defstr (CheckDbObject *self,
-                      gconstpointer user_data)
+                      G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *defstr = NULL;
 
@@ -105,7 +105,7 @@ test_db_view_general (void)
 
 static void
 test_db_view_start (CheckDbObject *self,
-                     gconstpointer user_data)
+                     G_GNUC_UNUSED gconstpointer user_data)
 {
   self->doc = NULL;
   self->xmlfile = NULL;
@@ -147,7 +147,7 @@ test_db_view_start (CheckDbObject *self,
 
 static void
 test_db_view_finish (CheckDbObject *self,
-                      gconstpointer user_data)
+                      G_GNUC_UNUSED gconstpointer user_data)
 {
   g_free (self->xmlfile);
   g_object_unref (self->view);

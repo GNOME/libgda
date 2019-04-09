@@ -156,7 +156,7 @@ check_result (ATest *test, const gchar *result, const gchar *expected, gboolean 
 
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	gda_init ();
 	guint i, nfailed = 0;

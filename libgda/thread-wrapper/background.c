@@ -168,7 +168,7 @@ compute_wait_delay (void)
  * MAIN part of the "background" thread
  */
 static gpointer
-background_main (gpointer data)
+background_main (G_GNUC_UNUSED gpointer data)
 {
 	GTimer *timer;
 	guint elapsed_ms = 0;
@@ -502,7 +502,7 @@ bg_update_stats (BackgroundStats type)
 }
 #else
 void
-bg_update_stats (BackgroundStats type)
+bg_update_stats (G_GNUC_UNUSED BackgroundStats type)
 {
 }
 #endif

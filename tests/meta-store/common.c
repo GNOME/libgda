@@ -104,7 +104,7 @@ find_expected_change (const gchar *change_as_str)
 }
 
 static void
-meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
+meta_changed_cb (G_GNUC_UNUSED GdaMetaStore *store, GSList *changes, G_GNUC_UNUSED gpointer data)
 {
 	GSList *gl;
 	for (gl = changes; gl; gl = gl->next) {
@@ -131,7 +131,7 @@ meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data)
 }
 
 static GError *
-suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data)
+suggest_update_cb (G_GNUC_UNUSED GdaMetaStore *store, GdaMetaContext *context, G_GNUC_UNUSED gpointer data)
 {
 	gint i;
 	g_print ("test: Update suggested for table %s:\n", context->table_name);

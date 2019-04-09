@@ -31,7 +31,7 @@ typedef struct {
 
 static void
 test_server_operation_provider (CheckOPObject *self,
-                                gconstpointer user_data)
+                                G_GNUC_UNUSED gconstpointer user_data)
 {
   GdaServerProvider *server = NULL;
   GdaConnection *cnc = NULL;
@@ -47,7 +47,7 @@ test_server_operation_provider (CheckOPObject *self,
 
 static void
 test_server_operation_start (CheckOPObject *self,
-                             gconstpointer user_data)
+                             G_GNUC_UNUSED gconstpointer user_data)
 {
   self->cnc = gda_connection_open_from_string ("SQLite", "DB_DIR=.;DB_NAME=op_test_db", NULL,
                                                GDA_CONNECTION_OPTIONS_NONE, NULL);
@@ -65,7 +65,7 @@ test_server_operation_start (CheckOPObject *self,
 
 static void
 test_server_operation_finish (CheckOPObject *self,
-                              gconstpointer user_data)
+                              G_GNUC_UNUSED gconstpointer user_data)
 {
   g_object_unref (self->op);
   gda_connection_close (self->cnc,NULL);

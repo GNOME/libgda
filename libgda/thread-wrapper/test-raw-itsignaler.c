@@ -47,7 +47,7 @@ typedef struct {
 static gpointer thread1_start (ITSignaler *its);
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	g_print ("Test started\n");
 

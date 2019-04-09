@@ -46,7 +46,7 @@ TestFunc tests[] = {
 };
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	guint i, ntests = 0, number_failed = 0;
 
@@ -168,7 +168,7 @@ check_iter_contents (GdaDataModel *model, GdaDataModelIter *iter)
  * Returns the number of failures 
  */
 static gint
-test1 (GdaConnection *cnc)
+test1 (G_GNUC_UNUSED GdaConnection *cnc)
 {
 	GdaDataModel *model;
 	gint nfailed = 0;
@@ -315,7 +315,7 @@ compare_data_models (GdaDataModel *model1, GdaDataModel *model2, GError **error)
  * Returns the number of failures 
  */
 static gint
-test2 (GdaConnection *cnc)
+test2 (G_GNUC_UNUSED GdaConnection *cnc)
 {
 	GdaDataModel *model = NULL;
 	gint nfailed = 0;

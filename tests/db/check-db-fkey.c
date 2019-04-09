@@ -45,7 +45,7 @@ typedef struct {
 
 static void
 test_db_fkey_run2 (CheckDbObject *self,
-                    gconstpointer user_data)
+                    G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *reftable = NULL;
 
@@ -92,7 +92,7 @@ test_db_fkey_run1 (void)
 
 static void
 test_db_fkey_run3 (CheckDbObject *self,
-                    gconstpointer user_data)
+                    G_GNUC_UNUSED gconstpointer user_data)
 {
   xmlNodePtr node = NULL;
   xmlDocPtr doc = NULL;
@@ -118,7 +118,7 @@ test_db_fkey_run3 (CheckDbObject *self,
 
 static void
 test_db_fkey_start (CheckDbObject *self,
-                     gconstpointer user_data)
+                     G_GNUC_UNUSED gconstpointer user_data)
 {
   self->doc = NULL;
   self->xmlfile = NULL;
@@ -170,7 +170,7 @@ test_db_fkey_start (CheckDbObject *self,
 
 static void
 test_db_fkey_finish (CheckDbObject *self,
-                      gconstpointer user_data)
+                      G_GNUC_UNUSED gconstpointer user_data)
 {
   g_free (self->xmlfile);
   g_object_unref (self->fkey);

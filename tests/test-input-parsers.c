@@ -29,7 +29,7 @@ static gboolean test_time_handler (void);
 static gboolean test_timestamp_handler (void);
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	gint nfailed = 0;
 

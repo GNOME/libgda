@@ -34,7 +34,7 @@ extern gboolean         fork_tests;
 //static int test_timestamp_change_format (void);
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	int number_failed = 0;
 	fork_tests = FALSE;

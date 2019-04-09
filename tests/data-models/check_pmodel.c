@@ -103,7 +103,7 @@ TestFunc tests[] = {
 };
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	guint i, ntests = 0, number_failed = 0;
 	GdaConnection *cnc;
@@ -1254,7 +1254,7 @@ test11 (GdaConnection *cnc)
 	return nfailed;
 }
 
-void iter_row_changed (GdaDataModelIter *iter, gint row) {
+void iter_row_changed (G_GNUC_UNUSED GdaDataModelIter *iter, gint row) {
 	g_print ("Iter row-changed signal emitted for row: %d\n", row);
 }
 /*

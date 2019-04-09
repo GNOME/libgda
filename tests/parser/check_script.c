@@ -33,7 +33,7 @@ static GdaSqlParser *create_parser_for_provider (const gchar *prov_name);
 static gint do_test (GdaSqlParser *parser, const xmlChar *id, const xmlChar *file, xmlNodePtr test_node);
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	xmlDocPtr doc;
         xmlNodePtr root, node;

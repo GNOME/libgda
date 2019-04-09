@@ -70,7 +70,7 @@ TestFunc tests[] = {
 };
 
 int 
-main (int argc, char** argv)
+main ()
 {
 #if GLIB_CHECK_VERSION(2,36,0)
 #else
@@ -822,7 +822,7 @@ test9 (GError **error)
  */
 
 static GError *
-t10_validate_change_cb (GdaHolder *h, const GValue *value, gchar *token)
+t10_validate_change_cb (G_GNUC_UNUSED GdaHolder *h, const GValue *value, gchar *token)
 {
 	/* only accept GDA_VALUE_NULL or the "hi!" G_TYPE_STRING value */
 	g_assert (!strcmp (token, "AToken"));

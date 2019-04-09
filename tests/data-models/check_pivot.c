@@ -31,7 +31,7 @@ static gint test_column_formats (GdaDataPivot *pivot);
 static gint test_on_data (GdaConnection *cnc);
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	int number_failed = 0;
 	GdaDataModel *source;

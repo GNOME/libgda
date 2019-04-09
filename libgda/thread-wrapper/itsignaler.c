@@ -798,7 +798,9 @@ GSourceFuncs funcs = {
 	its_source_prepare,
 	its_source_check,
 	its_source_dispatch,
-	its_source_finalize
+	its_source_finalize,
+  NULL,
+  NULL
 };
 
 /**
@@ -845,7 +847,7 @@ itsignaler_create_source (ITSignaler *its)
 }
 
 static gboolean
-its_source_prepare (GSource *source, gint *timeout_)
+its_source_prepare (G_GNUC_UNUSED GSource *source, gint *timeout_)
 {
 	*timeout_ = -1;
 	return FALSE;
@@ -937,7 +939,7 @@ itsignaler_add (ITSignaler *its, GMainContext *context, ITSignalerFunc func, gpo
  * Returns: %TRUE if the source has been removed
  */
 gboolean
-itsignaler_remove (ITSignaler *its, GMainContext *context, guint id)
+itsignaler_remove (G_GNUC_UNUSED ITSignaler *its, GMainContext *context, guint id)
 {
 	GSource *source;
 	source = g_main_context_find_source_by_id (context, id);

@@ -28,7 +28,7 @@ static gboolean test1 (void);
 static gboolean test2 (void);
 
 int 
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	gint nfailed = 0;
 	gda_init ();

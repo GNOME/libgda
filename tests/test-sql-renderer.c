@@ -252,7 +252,7 @@ do_a_test (GdaServerProvider *prov, GdaSqlParser *parser)
 }
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	GdaDataModel *model;
 	guint i, nrows;

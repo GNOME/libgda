@@ -29,7 +29,7 @@ static guint test3 (void);
 static guint test4 (void);
 static guint test5 (void);
 
-int main(int argc, const char *argv[])
+int main(G_GNUC_UNUSED int argc, G_GNUC_UNUSED const char *argv[])
 {
 	gda_init ();
 	guint nfailed = 0;
@@ -310,7 +310,7 @@ test4 (void)
 }
 
 static void
-t5_status_changed_cb (GdaConnection *cnc, GdaConnectionStatus status, guint *nsignals)
+t5_status_changed_cb (G_GNUC_UNUSED GdaConnection *cnc, GdaConnectionStatus status, guint *nsignals)
 {
 	gchar *status_str[] = {
 		"CLOSED",

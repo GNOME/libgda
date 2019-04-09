@@ -49,7 +49,7 @@ typedef enum {
 static void parse_contents (FILE *stream, SourceType type);
 static HashEntry *find_entry_for_token (char *token);
 int 
-main (int argc,char** argv)
+main ()
 {
 	int i;
 	FILE *fd_imposed;

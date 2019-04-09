@@ -39,7 +39,7 @@ typedef struct {
 
 static void
 test_db_column_check_name (CheckDbObject *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *cname = gda_db_column_get_name (self->column);
   g_assert_cmpstr (cname, ==,"column_name");
@@ -55,7 +55,7 @@ test_db_column_check_name (CheckDbObject *self,
 
 static void
 test_db_column_check_default (CheckDbObject *self,
-                               gconstpointer user_data)
+                               G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *cname = gda_db_column_get_default (self->column);
   g_assert_cmpstr (cname, ==,"12.34");
@@ -71,7 +71,7 @@ test_db_column_check_default (CheckDbObject *self,
 
 static void
 test_db_column_check_check (CheckDbObject *self,
-                             gconstpointer user_data)
+                             G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *cname = gda_db_column_get_check (self->column);
   g_assert_cmpstr (cname, ==,"compound_id > 0");
@@ -88,7 +88,7 @@ test_db_column_check_check (CheckDbObject *self,
 
 static void
 test_db_column_check_type (CheckDbObject *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar *ctype = gda_db_column_get_ctype (self->column);
   g_assert_cmpstr (ctype, ==,"string");
@@ -107,7 +107,7 @@ test_db_column_check_type (CheckDbObject *self,
 
 static void
 test_db_column_check_unique (CheckDbObject *self,
-                              gconstpointer user_data)
+                              G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = FALSE;
   res = gda_db_column_get_unique (self->column);
@@ -124,7 +124,7 @@ test_db_column_check_unique (CheckDbObject *self,
 
 static void
 test_db_column_check_pkey (CheckDbObject *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = FALSE;
   res = gda_db_column_get_pkey (self->column);
@@ -141,7 +141,7 @@ test_db_column_check_pkey (CheckDbObject *self,
 
 static void
 test_db_column_check_nnul (CheckDbObject *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = TRUE;
 
@@ -159,7 +159,7 @@ test_db_column_check_nnul (CheckDbObject *self,
 
 static void
 test_db_column_check_autoinc (CheckDbObject *self,
-                               gconstpointer user_data)
+                               G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = TRUE;
 
@@ -178,7 +178,7 @@ test_db_column_check_autoinc (CheckDbObject *self,
 
 static void
 test_db_column_check_comment (CheckDbObject *self,
-                               gconstpointer user_data)
+                               G_GNUC_UNUSED gconstpointer user_data)
 {
   const gchar* comstr = gda_db_column_get_comment (self->column);
 
@@ -195,7 +195,7 @@ test_db_column_check_comment (CheckDbObject *self,
 
 static void
 test_db_column_check_size (CheckDbObject *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   guint size = gda_db_column_get_size (self->column);
 
@@ -212,7 +212,7 @@ test_db_column_check_size (CheckDbObject *self,
 
 static void
 test_db_column_startup (CheckDbObject *self,
-                         gconstpointer user_data)
+                         G_GNUC_UNUSED gconstpointer user_data)
 {
   self->doc = NULL;
   self->xmlfile = NULL;
@@ -247,7 +247,7 @@ test_db_column_startup (CheckDbObject *self,
 
 static void
 test_db_column_cleanup (CheckDbObject *self,
-                         gconstpointer user_data)
+                         G_GNUC_UNUSED gconstpointer user_data)
 {
   g_free (self->xmlfile);
   g_object_unref (self->column);

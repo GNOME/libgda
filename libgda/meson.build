@@ -485,7 +485,7 @@ ttw = executable('test-raw-itsignaler',
 	test_raw_itsignaler_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		'config.h',
 		],
 	dependencies: [
 		libgda_dep,
@@ -500,7 +500,7 @@ ttws = executable('test-itsignaler',
 	test_itsignaler_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		'config.h',
 		],
 	dependencies: [
 		libgda_dep,
@@ -514,8 +514,7 @@ test('ItSignaler', ttws)
 ttwbs = executable('test-blocking-itsignaler',
 	test_block_itsignaler_sources,
 	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
+		'-include','config.h',
 		],
 	dependencies: [
 		libgda_dep,
@@ -530,7 +529,7 @@ ttww = executable('test-worker',
 	test_worker_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		'config.h',
 		],
 	dependencies: [
 		libgda_dep,
@@ -545,7 +544,7 @@ ttwd = executable('test-connect',
 	test_worker_sources,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		'config.h',
 		],
 	dependencies: [
 		libgda_dep,

@@ -77,7 +77,7 @@ identifier_needs_quotes (const gchar *str)
 }
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	guint i, nfailed = 0;
 	for (i = 0; i < G_N_ELEMENTS (tests); i++) {

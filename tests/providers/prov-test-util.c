@@ -155,7 +155,7 @@ prov_test_check_types_schema (GdaConnection *cnc)
 	GdaDataModel *schema_m;
 	GError *error = NULL;
 	gchar *str;
-	GdaMetaContext mcontext = {"_builtin_data_types", 0, NULL, NULL};
+	GdaMetaContext mcontext = {"_builtin_data_types", 0, NULL, NULL, NULL};
 	g_print ("updating [%s]\n", mcontext.table_name);
 	if (! gda_connection_update_meta_store (cnc, &mcontext, &error)) {
 		g_warning ("Can't update meta store: %s\n",

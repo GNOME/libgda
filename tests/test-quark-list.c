@@ -68,7 +68,7 @@ test_quark (GdaQuarkList *ql, guint *out_ntests)
 }
 
 int
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	GdaQuarkList *ql, *ql2;
 	guint nfailed = 0;

@@ -38,7 +38,7 @@ ATestData tests [] = {
 };
 
 int 
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	GError *error = NULL;	
 	gint i, nfailed;

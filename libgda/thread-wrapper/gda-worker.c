@@ -458,7 +458,7 @@ gda_worker_unref (GdaWorker *worker)
 static guint
 _gda_worker_submit_job_with_its (GdaWorker *worker, ITSignaler *reply_its, GdaWorkerFunc func,
 				 gpointer data, GDestroyNotify data_destroy_func,
-				 GDestroyNotify result_destroy_func, GError **error)
+				 GDestroyNotify result_destroy_func, G_GNUC_UNUSED GError **error)
 {
 	guint jid = 0;
 	WorkerJob *job;

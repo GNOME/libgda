@@ -1057,7 +1057,7 @@ void FindActions(struct lemon *lemp)
 static int resolve_conflict(
   struct action *apx,
   struct action *apy,
-  struct symbol *errsym   /* The error symbol (if defined.  NULL otherwise) */
+  G_GNUC_UNUSED struct symbol *errsym   /* The error symbol (if defined.  NULL otherwise) */
 ){
   struct symbol *spx, *spy;
   int errcnt = 0;
@@ -1397,7 +1397,7 @@ int disable_header = 0;
 int disable_c = 0;
 
 /* The main program.  Parse the command line and do it... */
-int main(int argc, char **argv)
+int main(G_GNUC_UNUSED int argc, char **argv)
 {
   static int version = 0;
   static int rpflag = 0;

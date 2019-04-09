@@ -73,7 +73,7 @@ ATest the_tests[] = {
 };
 
 int
-main (int argc, char *argv[])
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char *argv[])
 {
 #if GLIB_CHECK_VERSION(2,36,0)
 #else

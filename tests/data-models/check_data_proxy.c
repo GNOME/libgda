@@ -72,7 +72,7 @@ static void free_values_list (GList *list);
 
 
 int
-main (int argc, char **argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 {
 	int number_failed = 0;
 
@@ -191,7 +191,7 @@ main (int argc, char **argv)
 }
 
 static GError *
-validate_row_changes (GdaDataProxy *proxy, gint row, gint proxied_row, gchar *token)
+validate_row_changes (GdaDataProxy *proxy, gint row, G_GNUC_UNUSED gint proxied_row, G_GNUC_UNUSED gchar *token)
 {
 	const GValue *cvalue;
 	/* refuse if population < 100 */
@@ -1442,7 +1442,7 @@ wait_for_signals (void)
 }
 
 static void
-proxy_reset_cb (GdaDataModel *model, gchar *detail)
+proxy_reset_cb (G_GNUC_UNUSED GdaDataModel *model, G_GNUC_UNUSED gchar *detail)
 {
 #ifdef CHECK_EXTRA_INFO
 	g_print ("RESET\n");
@@ -1450,7 +1450,7 @@ proxy_reset_cb (GdaDataModel *model, gchar *detail)
 }
 
 static void
-proxy_row_cb (GdaDataModel *model, gint row, gchar *detail)
+proxy_row_cb (G_GNUC_UNUSED GdaDataModel *model, gint row, gchar *detail)
 {
 	gchar *str;
 

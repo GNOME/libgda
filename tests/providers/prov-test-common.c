@@ -529,7 +529,7 @@ prov_test_common_check_meta_identifiers (gboolean case_sensitive, gboolean updat
 	GdaDataModel* data;
 	GValue *value, *value2;
 	const GValue *cvalue;
-	GdaMetaContext mcontext = {"_tables", 1, NULL, NULL};
+	GdaMetaContext mcontext = {"_tables", 1, NULL, NULL, NULL};
 	GdaConnectionOptions options;
 
 #ifdef CHECK_EXTRA_INFO

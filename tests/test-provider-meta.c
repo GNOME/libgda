@@ -30,8 +30,7 @@ typedef struct {
 void test_iface (void);
 
 gint
-main (gint   argc,
-      gchar *argv[])
+main (G_GNUC_UNUSED gint   argc, G_GNUC_UNUSED gchar *argv[])
 {
   gchar *duri, *strc, *cstr, *db, *fpath;
   const gchar *pdir;

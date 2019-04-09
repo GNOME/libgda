@@ -231,7 +231,7 @@ gda_data_model_errors_get_n_rows (GdaDataModel *model)
 }
 
 static gint
-gda_data_model_errors_get_n_columns (GdaDataModel *model)
+gda_data_model_errors_get_n_columns (G_GNUC_UNUSED GdaDataModel *model)
 {
 	return NCOLS;
 }
@@ -248,7 +248,7 @@ gda_data_model_errors_describe_column (GdaDataModel *model, gint col)
 }
 
 static GdaDataModelAccessFlags
-gda_data_model_errors_get_access_flags (GdaDataModel *model)
+gda_data_model_errors_get_access_flags (G_GNUC_UNUSED GdaDataModel *model)
 {
 	GdaDataModelAccessFlags flags;
 
@@ -312,7 +312,7 @@ gda_data_model_errors_get_value_at (GdaDataModel *model, gint col, gint row, GEr
 }
 
 static GdaValueAttribute
-gda_data_model_errors_get_attributes_at (GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
+gda_data_model_errors_get_attributes_at (G_GNUC_UNUSED GdaDataModel *model, gint col, G_GNUC_UNUSED gint row)
 {
 	GdaValueAttribute flags = 0;
 	if ((col < 0) || (col > NCOLS)) {
@@ -365,7 +365,7 @@ gda_data_model_errors_set_value_at (GdaDataModel *model, gint col, gint row, con
 
 
 static gint
-gda_data_model_errors_append_values (GdaDataModel *model, G_GNUC_UNUSED const GList *values, GError **error)
+gda_data_model_errors_append_values (G_GNUC_UNUSED GdaDataModel *model, G_GNUC_UNUSED const GList *values, GError **error)
 {
 	TO_IMPLEMENT;
 	g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_FEATURE_NON_SUPPORTED_ERROR,

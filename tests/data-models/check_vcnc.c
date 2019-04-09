@@ -56,7 +56,7 @@ static gboolean check_date (GdaConnection *virtual, GError **error);
 static gboolean test1 (Data *data);
 
 int
-main (int argc, char *argv[])
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char *argv[])
 {
   GMainLoop *loop;
   gda_init ();
@@ -436,7 +436,7 @@ load_from_file (const gchar *filename)
 }
 
 static void
-move_iter_forward (GdaDataModelIter *iter, const gchar *iter_name, gint nb, GdaDataModel *ref, gint start_row)
+move_iter_forward (GdaDataModelIter *iter, G_GNUC_UNUSED const gchar *iter_name, gint nb, GdaDataModel *ref, gint start_row)
 {
 	gint i;
 	for (i = 0; i < nb; i++) {

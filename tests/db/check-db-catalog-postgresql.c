@@ -240,7 +240,7 @@ static void create_countries_table (CheckDbObject *self) {
 
 static void
 test_db_catalog_start (CheckDbObject *self,
-                     gconstpointer user_data)
+                     G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_init();
   self->catalog = NULL;
@@ -307,7 +307,7 @@ test_db_catalog_start (CheckDbObject *self,
 
 static void
 test_db_catalog_finish (CheckDbObject *self,
-                      gconstpointer user_data)
+                      G_GNUC_UNUSED gconstpointer user_data)
 {
   if (self->cnc != NULL) {
     gda_connection_close(self->cnc,NULL);
@@ -319,7 +319,7 @@ test_db_catalog_finish (CheckDbObject *self,
 
 static void
 test_tables (CheckDbObject *self,
-             gconstpointer user_data)
+             G_GNUC_UNUSED gconstpointer user_data)
 {
   if (!self->cont) {
     g_message ("Test skiped");

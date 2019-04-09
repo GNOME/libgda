@@ -53,7 +53,7 @@ main (gint   argc,
 }
 
 void
-init_data (CheckIter *data, gconstpointer user_data) {
+init_data (CheckIter *data, G_GNUC_UNUSED gconstpointer user_data) {
   GString *strc, *cstr;
   GdaConnection *cnn;
   GdaDataModel *model;
@@ -125,13 +125,13 @@ init_data (CheckIter *data, gconstpointer user_data) {
 
 
 void
-finish_data (CheckIter *data, gconstpointer user_data) {
+finish_data (CheckIter *data, G_GNUC_UNUSED gconstpointer user_data) {
   g_object_unref (data->model);
   g_object_unref (data->cnn);
 }
 
 
-void test_move_to (CheckIter *data, gconstpointer user_data) {
+void test_move_to (CheckIter *data, G_GNUC_UNUSED gconstpointer user_data) {
   GdaDataModel *model = data->model;
   GdaDataModelIter *iter;
   const GValue *value;

@@ -56,7 +56,7 @@ TestFunc tests[] = {
 };
 
 int 
-main (int argc, char** argv)
+main ()
 {
 #if GLIB_CHECK_VERSION(2,36,0)
 #else
@@ -181,7 +181,7 @@ test2 (GError **error)
  * "validate-holder-change" signal
  */
 static GError *
-t3_validate_holder_change (GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
+t3_validate_holder_change (G_GNUC_UNUSED GdaSet *set, GdaHolder *h, const GValue *value, gchar *token)
 {
 	/* only accept GDA_VALUE_NULL or 444 value */
 	g_assert (!g_strcmp0 (token, "MyToken"));
@@ -471,7 +471,8 @@ emitted_signals_check_empty (gpointer obj, const gchar *signal_name, GError **er
 }
 
 static void
-set_3_cb (GObject *obj, GdaHolder *holder, const gchar *attr_name, const GValue *value, gchar *sig_name)
+set_3_cb (GObject *obj, GdaHolder *holder, G_GNUC_UNUSED const gchar *attr_name,
+          G_GNUC_UNUSED const GValue *value, gchar *sig_name)
 {
 	EmittedSignal *es;
 	es = g_new0 (EmittedSignal, 1);

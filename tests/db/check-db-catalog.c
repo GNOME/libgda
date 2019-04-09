@@ -58,7 +58,7 @@ typedef struct {
 
 static void
 test_db_catalog_start (CheckDbObject *self,
-                     gconstpointer user_data)
+                     G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_init();
   self->xmlfile = NULL;
@@ -99,7 +99,7 @@ test_db_catalog_start (CheckDbObject *self,
 
 static void
 test_db_catalog_start_db (DbCatalogCnc *self,
-                           gconstpointer user_data)
+                           G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_init();
 
@@ -166,7 +166,7 @@ test_db_catalog_start_db (DbCatalogCnc *self,
 
 static void
 test_db_catalog_finish (CheckDbObject *self,
-                      gconstpointer user_data)
+                      G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_connection_close(self->cnc,NULL);
   g_free (self->xmlfile);
@@ -177,7 +177,7 @@ test_db_catalog_finish (CheckDbObject *self,
 
 static void
 test_db_catalog_finish_db (DbCatalogCnc *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   gda_connection_close(self->cnc,NULL);
   g_object_unref (self->cnc);
@@ -191,7 +191,7 @@ test_db_catalog_finish_db (DbCatalogCnc *self,
 
 static void
 test_db_catalog_parse_xml_path (CheckDbObject *self,
-                                gconstpointer user_data)
+                                G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = gda_db_catalog_parse_file_from_path(self->catalog,
                                                       self->xmlfile,
@@ -202,7 +202,7 @@ test_db_catalog_parse_xml_path (CheckDbObject *self,
 
 static void
 test_db_catalog_parse_xml_file (CheckDbObject *self,
-                                gconstpointer user_data)
+                                G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = gda_db_catalog_parse_file (self->catalog,self->file,NULL);
   g_assert_true (res);
@@ -210,7 +210,7 @@ test_db_catalog_parse_xml_file (CheckDbObject *self,
 
 static void
 test_db_catalog_validate_xml (CheckDbObject *self,
-                              gconstpointer user_data)
+                              G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = gda_db_catalog_validate_file_from_path (self->xmlfile,NULL);
   g_assert_true (res);
@@ -218,7 +218,7 @@ test_db_catalog_validate_xml (CheckDbObject *self,
 
 static void
 test_db_catalog_create_db (CheckDbObject *self,
-                           gconstpointer user_data)
+                           G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = gda_db_catalog_parse_file_from_path(self->catalog,
                                                       self->xmlfile,
@@ -244,7 +244,7 @@ test_db_catalog_create_db (CheckDbObject *self,
 
 static void
 test_db_catalog_parse_cnc (DbCatalogCnc *self,
-                            gconstpointer user_data)
+                            G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean open_res;
   const gchar* dntypes = "dntypes";

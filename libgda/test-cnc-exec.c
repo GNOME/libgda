@@ -25,7 +25,7 @@ static guint test1 (void);
 static guint test2 (void);
 
 
-int main(int argc, const char *argv[])
+int main(G_GNUC_UNUSED int argc, G_GNUC_UNUSED const char *argv[])
 {
 	gda_init ();
 	guint nfailed = 0;

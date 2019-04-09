@@ -122,7 +122,7 @@ sig_closure_marshal (GClosure *closure,
                      guint n_param_values,
                      const GValue *param_values,
                      gpointer invocation_hint,
-                     gpointer marshal_data)
+                     G_GNUC_UNUSED gpointer marshal_data)
 {
         SigClosure *sig_closure;
         sig_closure = (SigClosure *) closure;
@@ -268,7 +268,7 @@ gda_signal_connect (gpointer instance,
 		    const gchar *detailed_signal,
 		    GCallback c_handler,
 		    gpointer data,
-		    GClosureNotify destroy_data,
+		    G_GNUC_UNUSED GClosureNotify destroy_data,
 		    GConnectFlags connect_flags,
 		    GMainContext *context)
 {

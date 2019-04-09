@@ -32,7 +32,7 @@ typedef struct {
 static gpointer thread1_start (ITSignaler *its);
 
 int
-main (int argc, char** argv)
+main ()
 {
 	g_print ("Test started\n");
 

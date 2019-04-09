@@ -77,7 +77,7 @@ static gpointer start_thread (ThData *data);
 
 
 int 
-main (int argc, char** argv)
+main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 {
 	xmlDocPtr doc;
 	GdaSqlParser *parser;
@@ -165,7 +165,7 @@ main (int argc, char** argv)
 }
 
 static void
-set_mode_foreach (gpointer key, gpointer value, gpointer pmode)
+set_mode_foreach (G_GNUC_UNUSED gpointer key, gpointer value, gpointer pmode)
 {
 	g_object_set (G_OBJECT (value), "mode", GPOINTER_TO_INT (pmode), NULL);
 }

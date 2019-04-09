@@ -44,8 +44,8 @@ girscanner = find_program('g-ir-scanner', required:false)
 
 valadoc = find_program('valadoc', required: false)
 
-inc_rooth = include_directories ('.')
-inc_rooth_dep = declare_dependency (include_directories : inc_rooth)
+libgda_inc_rooth = include_directories ('.')
+inc_rooth_dep = declare_dependency (include_directories : libgda_inc_rooth)
 
 req_ver_glib = '>= 2.38.0'
 glib_dep = dependency('glib-2.0', version : req_ver_glib)
@@ -202,6 +202,9 @@ endif
 configh = configure_file(output : 'config.h',
 			configuration : confh)
 
+general_cargs = [
+	'-DLIBGDA_ABI_NAME='+project_api_name
+	]
 c_args = ['-Wall',
 	'-Wextra',
 	'-Wformat-security',
@@ -210,8 +213,10 @@ c_args = ['-Wall',
 	'-Wno-unused-parameter',
 	'-Wno-pointer-sign',
 	'-Wno-missing-field-initializers',
-	'-DGSEAL_ENABLE',
-	'-DLIBGDA_ABI_NAME='+project_api_name]
+	'-DGSEAL_ENABLE'
+	]
+
+c_args += general_cargs
 
 glade_catalog = ''
 glade_pixmap = ''
