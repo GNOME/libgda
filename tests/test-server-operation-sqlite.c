@@ -51,7 +51,7 @@ typedef struct
 
 static void
 test_server_operation_start (TestObjectFixture *fixture,
-                             gconstpointer *user_data)
+                             gconstpointer user_data)
 {
   fixture->cnc = NULL;
   fixture->provider = NULL;
@@ -75,7 +75,7 @@ test_server_operation_start (TestObjectFixture *fixture,
 
 static void
 test_server_operation_finish (TestObjectFixture *fixture,
-                              gconstpointer *user_data)
+                              gconstpointer user_data)
 {
   gboolean res = gda_connection_close (fixture->cnc, NULL);
 
