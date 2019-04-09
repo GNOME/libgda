@@ -10,6 +10,8 @@ services:
 
 stages:
   - build
+  - doc_generation
+  - deploy_doc
 
 variables:
   POSTGRES_DB: test
@@ -61,7 +63,7 @@ before_script:
   - export DEBIAN_FRONTEND=noninteractive
   - apt update && apt -y install $DEPENDENCIES
 
-meson_build:
+library_build:
   stage: build
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
@@ -98,8 +100,24 @@ meson_build:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
+documentation_build:
+  stage: doc_generation
+  script:
+  - meson _build --prefix=/usr -Denable-gtk-doc=true
+  - cd _build
+  - ninja
+  - ninja install
+  allow_failure: true
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/meson-log.txt
+    - _build/doc/C/libgda/html
+    - _build/doc/Gda-6.0
+    expire_in: 1 week
+
 pages:
-  stage: build
+  stage: deploy_doc
   script:
   - meson -Denable-gtk-doc=true _build
   - cd _build
@@ -112,6 +130,7 @@ pages:
   - mkdir ../public/vala
   - mv doc/Gda-6.0 ../public/vala
   - cp libgda/libgda-6.0.vapi ../public/vala
+  allow_failure: true
   artifacts:
     paths:
     - public
