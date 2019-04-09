@@ -28,7 +28,7 @@ libgda_xslt = library(
 			],
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h')
 		],
 	link_with: libgda,
 	install : true
