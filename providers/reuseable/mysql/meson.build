@@ -69,7 +69,7 @@ mysql_lemon_parserh_dep = declare_dependency(sources: mysql_lemon_parserh)
 
 mysql_gendef = executable('my_gen_def', 'gen_def.c',
 	c_args: [
-		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
+		'-DIMPOSED_HEADER="'+join_paths (gda_top_build, 'libgda', 'sql-parser','token_types.h')+'"',
 		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'
 		],
 	dependencies: [mysql_lemon_parserh_dep],

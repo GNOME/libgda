@@ -58,7 +58,7 @@ pg_lemon_parserh_dep = declare_dependency(sources: pg_lemon_parserh)
 
 postgres_gendef = executable('pg_gen_def', 'gen_def.c',
 	c_args: [
-		'-DIMPOSED_HEADER="'+join_paths (meson.build_root(), 'libgda', 'sql-parser','token_types.h')+'"',
+		'-DIMPOSED_HEADER="'+join_paths (gda_top_build, 'libgda', 'sql-parser','token_types.h')+'"',
 		'-DPARSER_HEADER_PATH="'+join_paths(meson.current_build_dir(),'parser.h')+'"'
 		],
 	dependencies: [pg_lemon_parserh_dep],
