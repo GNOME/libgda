@@ -413,7 +413,7 @@ install_data(libgda_report_pc,
 	)
 endif
 
-if get_option('enable-tools') and get_option('enable-experimental')
+if get_option('enable-tools')
 subdir('tools')
 endif
 subdir('tests')

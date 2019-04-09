@@ -4,8 +4,11 @@ inc_browserh_dep = declare_dependency (include_directories : inc_browserh)
 subdir('misc')
 subdir('common')
 subdir('base')
+
+if get_option('enable-experimental')
 subdir('help')
 subdir('resources')
+endif
 
 gda_sql_sources = files([
 	'tools-main.c'
