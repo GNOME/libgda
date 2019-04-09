@@ -88,7 +88,7 @@ library_build:
 pages:
   stage: deploy_doc
   script:
-  - meson _build --prefix=/usr -Dgtk_doc=true -Denable-experimental=true -Denable-tools=true -Denable-ldap=true
+  - meson _build --prefix=/usr -Dgtk_doc=true -Dexperimental=true -Denable-tools=true -Denable-ldap=true
   - cd _build
   - ninja
   - ninja install
