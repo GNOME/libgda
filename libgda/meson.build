@@ -363,7 +363,7 @@ libgda = library(
 
 libgdadep = declare_dependency(include_directories : inc_libgdah,
   link_with : libgda,
-  dependencies: libgda_deps
+  dependencies: libgda_external_dep
   )
 
 # GObject Introspection

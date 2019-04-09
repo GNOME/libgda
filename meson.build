@@ -129,14 +129,17 @@ ldl = compiler.find_library('dl', required: false)
 sed = find_program('sed')
 compile_resources = find_program('glib-compile-resources')
 
-libgda_dep = [
+libgda_external_dep = [
 	glib_dep,
 	gobject_dep,
 	gio_dep,
-	gmodule_no_export_dep,
 	libxml_dep,
 	inc_rooth_dep
 	]
+libgda_dep = [
+	gmodule_no_export_dep,
+	]
+libgda_dep += libgda_external_dep
 
 # LDAP
 ldap_found = false
