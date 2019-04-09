@@ -83,6 +83,7 @@ mysql_token_types = custom_target('mysql_token_types',
 	output: 'mysql_token_types.h',
 	install: false
 	)
+mysql_token_types_dep = declare_dependency(sources: mysql_token_types)
 
 libgda_reusable_mysql_sources = files([
 	'gda-mysql-reuseable.c',
@@ -95,8 +96,7 @@ libgda_reusable_mysql_sources = files([
 
 libgda_reusable_mysql_sources += [
 	mysql_lemon_parserh,
-	mysql_lemon_parserc,
-	mysql_token_types
+	mysql_lemon_parserc
 	]
 
 mysql_reusable_dep = []
@@ -104,3 +104,4 @@ mysql_reusable_dep += mysql_keywordshash_50_dep
 mysql_reusable_dep += mysql_keywordshash_51_dep
 mysql_reusable_dep += mysql_keywordshash_54_dep
 mysql_reusable_dep += mysql_keywordshash_60_dep
+mysql_reusable_dep += mysql_token_types_dep
