@@ -73,6 +73,8 @@ pg_token_types = custom_target('pg_token_types',
 	install: false,
 	)
 
+pg_token_types_dep = declare_dependency(sources: pg_token_types)
+
 libgda_pg_sources = files([
 	'gda-postgres-reuseable.c',
 	'gda-postgres-reuseable.h',
@@ -90,3 +92,4 @@ pg_reusable_dep = []
 pg_reusable_dep += pg_keywordshash_82_dep
 pg_reusable_dep += pg_keywordshash_83_dep
 pg_reusable_dep += pg_keywordshash_84_dep
+pg_reusable_dep += pg_token_types_dep
