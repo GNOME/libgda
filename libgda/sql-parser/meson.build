@@ -35,7 +35,7 @@ gda_sql_parser_enums = gnome_module.mkenums_simple('gda-sql-parser-enum-types', 
 
 gendef_exe = executable('gen_def', 'gen_def.c',
 	c_args: [
-		'-DSRCDIR="'+join_paths (meson.source_root(), 'libgda', 'sql-parser')+'"',
+		'-DSRCDIR="'+meson.current_source_dir()+'"',
 		'-DBUILDDIR="'+meson.current_build_dir()+'"'
 		]
 	)
