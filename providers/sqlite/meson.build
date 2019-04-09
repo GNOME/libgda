@@ -23,7 +23,7 @@ endforeach
 sqlite_resourcesc = custom_target('sqlite_resourcesc',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','sqlite'),
+		'--sourcedir='+meson.current_source_dir(),
 		'--generate-source',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -38,7 +38,7 @@ sqlite_resourcesc = custom_target('sqlite_resourcesc',
 sqlite_resourcesh = custom_target('sqlite_resourcesh',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','sqlite'),
+		'--sourcedir='+meson.current_source_dir(),
 		'--generate-header',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -65,7 +65,7 @@ libgda_sqlite_providerpc = configure_file(output : 'libgda-sqlite-'+project_api_
 
 libgda_sqlite_provider_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		'config.h',
 		'-I'+join_paths(get_option ('prefix'), get_option('includedir'))
 		]
 libgda_sqlite_provider_cargs += c_args
