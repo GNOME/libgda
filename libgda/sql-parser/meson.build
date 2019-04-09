@@ -86,7 +86,7 @@ token_types = custom_target('token_types',
 	output: 'token_types.h',
 	install: false
 	)
-
+token_types_dep = declare_dependency(sources: token_types)
 
 
 # mkenums_out = gnome_module.mkenums('s-enum-types-c',
@@ -144,7 +144,6 @@ libgda_sql_parser_sources += [
 			lemon_parserc,
 			lemon_parserh,
 			lemon_delimiterc,
-			lemon_delimiterh,
-			token_types
+			lemon_delimiterh
 			]
 

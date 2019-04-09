@@ -343,7 +343,8 @@ libgda_deps = [
 	#ldap_deps,
 	gda_keywordshash_dep,
 	inc_sqliteh_dep,
-	inc_libsql_parserh_dep
+	inc_libsql_parserh_dep,
+	token_types_dep
 	]
 
 
@@ -361,7 +362,7 @@ libgda = library(
 	install : true
 	)
 
-libgda_dep = declare_dependency(include_directories : inc_libgdah,
+libgdadep = declare_dependency(include_directories : inc_libgdah,
   link_with : libgda,
   dependencies: libgda_deps
   )
