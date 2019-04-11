@@ -66,9 +66,8 @@ source_callback (CbData *cbdata)
 	Data *data;
 	data = itsignaler_pop_notification (cbdata->its, 0);
   if (data == NULL) {
-    g_warning ("No Data skiping");
-    g_main_loop_quit (cbdata->loop);
-		return FALSE;
+    g_message ("No Data skiping");
+		return TRUE;
   }
 	if (cbdata->counter != data->counter) {
 		g_warning ("itsignaler_pop_notification() returned wrong value %d instead of %d",
