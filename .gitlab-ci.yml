@@ -119,7 +119,7 @@ documentation_build:
 pages:
   stage: deploy_doc
   script:
-  - meson -Denable-gtk-doc=true _build
+  - meson _build --prefix=/usr -Denable-gtk-doc=true -Denable-experimental=true -Denable-tools=true -Denable-ldap=true
   - cd _build
   - ninja
   - ninja install
