@@ -74,21 +74,6 @@ library_build:
   - broadwayd &
   - GDK_BACKEND=broadway meson test
   - ninja install
-  - mkdir ../public
-  - mv doc/index.html ../public/
-  - mkdir ../public/C
-  - mkdir ../public/C/libgda-6.0
-  - mkdir ../public/C/libgdaui-6.0
-  - mv doc/C/libgda/html/* ../public/C/libgda-6.0
-  - mv doc/C/libgdaui/html/* ../public/C/libgdaui-6.0
-  - mkdir ../public/vala
-  - mv doc/Gda-6.0 ../public/vala
-  - mv doc/Gdaui-6.0 ../public/vala
-  - cp libgda/libgda-6.0.vapi ../public/vala
-  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
-  artifacts:
-    paths:
-    - public
   artifacts:
     when: on_failure
     paths:
