@@ -84,6 +84,12 @@ libgda_ldap_providerpc = configure_file(
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
 			)
 
+libgda_ldap_provider_cargs = [
+		'-include',
+		join_paths(gda_top_build, 'config.h'),
+		]
+libgda_ldap_provider_cargs += c_args
+
 libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
 	libgda_ldap_sources,
 	dependencies: [
@@ -94,10 +100,7 @@ libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
 		inc_libgdah_dep,
 		inc_libgda_ldaph_dep
 		],
-	c_args: [
-		'-include',
-		join_paths(gda_top_build, 'config.h'),
-		],
+	c_args: libgda_ldap_provider_cargs,
 	link_args: [
 		'-export-dynamic',
 		],

@@ -21,6 +21,12 @@ libgda_report_sources += libgda_report_engine_sources
 libgda_report_sources += libgda_report_docbook_sources
 libgda_report_sources += libgda_report_rml_sources
 
+libgda_report_cargs = [
+	'-include',
+	meson.build_root() + '/config.h',
+	]
+libgda_report_cargs += c_args
+
 libgda_report = library(
 	'gda-report-'+project_api_version,
 	libgda_report_sources,
@@ -33,10 +39,7 @@ libgda_report = library(
 			inc_libgdah_dep,
 			inc_sqliteh_dep
 			],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		],
+	c_args: libgda_report_cargs,
 	link_with: libgda,
 	install : true
 	)

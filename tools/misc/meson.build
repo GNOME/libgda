@@ -1,3 +1,9 @@
+gda_tools_cargs = [
+		'-include',
+		join_paths(gda_top_build, 'config.h'),
+		'-DROOT_DIR="'+gda_top_src+'"'
+		]
+gda_tools_cargs += c_args
 
 executable('gda-list-config-'+project_api_version,
 	'gda-list-config.c',
@@ -8,11 +14,7 @@ executable('gda-list-config-'+project_api_version,
 		inc_libgdah_dep,
 		inc_sqliteh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: gda_tools_cargs,
 	install: true
 	)
 
@@ -31,11 +33,7 @@ executable('gda-list-server-op-'+project_api_version,
 		inc_libgdah_dep,
 		inc_sqliteh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: gda_tools_cargs,
 	install: true
 	)
 
@@ -49,11 +47,7 @@ executable('information-schema-doc',
 		inc_libgdah_dep,
 		inc_sqliteh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: gda_tools_cargs,
 	)
 
 
@@ -66,9 +60,5 @@ executable('information-schema-types',
 		inc_libgdah_dep,
 		inc_sqliteh_dep
 		],
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: gda_tools_cargs,
 	)

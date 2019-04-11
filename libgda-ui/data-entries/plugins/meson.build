@@ -12,6 +12,8 @@ data_entries_plugins_cargs = [
 	'-DLIBDIR="'+plugindir+'"'
 	]
 
+data_entries_plugins_cargs += c_args
+
 gcrypt_headers= []
 gcrypt_sources= []
 if libcryp_config.found()

@@ -22,8 +22,10 @@ gda_sql_deps = [
 
 gda_sql_cargs = [
 		'-include',
-		meson.build_root() + '/config.h',
+		join_paths(gda_top_build, 'config.h'),
 		]
+gda_sql_cargs += c_args
+
 if soup_dep.found()
 	gda_sql_cargs += [
 		'-DLIBSOUP=1'
@@ -34,8 +36,8 @@ endif
 
 tools_cargs = [
 	'-include',
-	meson.build_root() + '/config.h',
-	'-DROOT_DIR="'+meson.source_root()+'"',
+	join_paths(gda_top_build, 'config.h'),
+	'-DROOT_DIR="'+gda_top_src+'"',
 	'-DIS_BROWSER',
 	'-DHAVE_GTK_CLASSES'
 	]
@@ -44,6 +46,8 @@ tools_cargs += [
 	'-DHAVE_LDAP'
 	]
 endif
+
+tools_cargs += c_args
 
 gda_sql = executable('gda-sql-'+project_api_version,
 	gda_sql_sources,
@@ -88,7 +92,7 @@ endif
 browser_resourcesc = custom_target('browser_resourcesc',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'tools','resources'),
+		'--sourcedir='+join_paths(gda_top_src,'tools','resources'),
 		'--generate-source',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -103,7 +107,7 @@ browser_resourcesc = custom_target('browser_resourcesc',
 browser_resourcesh = custom_target('browser_resourcesh',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'tools','resources'),
+		'--sourcedir='+join_paths(gda_top_src,'tools','resources'),
 		'--generate-header',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -135,7 +139,7 @@ if windows
 	gda_browser_link_args += ['-mwindows']
 	win_res = win.compile_resources('gda-browser-res.rc',
 		depend_files: 'gda-browser.ico',
-		include_directories: join_paths(meson.source_root(),'tools')
+		include_directories: join_paths(gda_top_src,'tools')
 	)
 	gda_browser_sources += win_res
 endif
@@ -172,19 +176,15 @@ tsplitter_sources += basetool_sources
 
 tsplitter = executable('test-splitter',
 	tsplitter_sources,
-	c_args: [
-		'-include',
-		meson.build_root() + '/config.h',
-		'-DROOT_DIR="'+meson.source_root()+'"'
-		],
+	c_args: gda_sql_cargs,
 	link_with: libgda,
 	dependencies: tsplitter_deps,
 	install: false
 	)
 test('Splitter', tsplitter,
 	env: [
-		'GDA_TOP_SRC_DIR='+meson.source_root(),
-		'GDA_TOP_BUILD_DIR='+meson.build_root()
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_src
 		]
 	)
 endif

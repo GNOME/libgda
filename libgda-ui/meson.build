@@ -18,6 +18,7 @@ libgda_ui_cargs = [
 	'-DGDA_ABI_VERSION="'+project_api_version+'"'
 	]
 libgda_ui_cargs += iso_codes_cargs
+libgda_ui_cargs += c_args
 libgda_ui_headers = files([
 	'gdaui-basic-form.h',
 	'gdaui-combo.h',
