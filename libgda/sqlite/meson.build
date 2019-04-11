@@ -2,7 +2,10 @@ mkkeywordhashf = files([
 	'mkkeywordhash.c'
 ])
 
-mkkeywordhash = executable ('mkkeywordhash', mkkeywordhashf)
+mkkeywordhash = executable ('mkkeywordhash',
+	mkkeywordhashf,
+	c_args: c_args
+	)
 
 subdir('virtual')
 
