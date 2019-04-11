@@ -623,7 +623,9 @@ itsignaler_push_notification (ITSignaler *its, gpointer data, GDestroyNotify des
 	nd = g_new (NotificationData, 1);
 	nd->data = data;
 	nd->destroy_func = destroy_func;
-	g_async_queue_push (its->data_queue, nd);
+  g_async_queue_lock (its->data_queue);
+	g_async_queue_push_unlocked (its->data_queue, nd);
+  g_async_queue_unlock (its->data_queue);
 
 	/* actual notification */
 #ifdef G_OS_WIN32
@@ -706,7 +708,9 @@ itsignaler_pop_notification_non_block (ITSignaler *its)
 
 	/* actual notification contents */
 	NotificationData *nd;
-	nd = (NotificationData*) g_async_queue_try_pop (its->data_queue);
+  g_async_queue_lock (its->data_queue);
+	nd = (NotificationData*) g_async_queue_pop_unlocked (its->data_queue);
+  g_async_queue_unlock (its->data_queue);
 	if (nd) {
 		gpointer retval;
 		retval = nd->data;

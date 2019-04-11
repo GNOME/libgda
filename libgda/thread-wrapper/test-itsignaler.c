@@ -63,19 +63,22 @@ static gpointer thread1_start (ITSignaler *its);
 static gboolean
 source_callback (CbData *cbdata)
 {
+  if (cbdata == NULL) {
+    g_warning ("Raice condition, data is null");
+    g_main_loop_quit (cbdata->loop);
+		return G_SOURCE_REMOVE;
+  }
 	Data *data;
 	data = itsignaler_pop_notification (cbdata->its, 0);
-  if (data == NULL) {
-    g_message ("No Data skiping");
-		return TRUE;
+  if (data != NULL) {
+	  if (cbdata->counter != data->counter) {
+		  g_warning ("itsignaler_pop_notification() returned wrong value %d instead of %d",
+			     cbdata->counter, data->counter);
+		  return EXIT_FAILURE;
+	  }
+	  g_print ("Popped %d\n", data->counter);
+	  g_free (data);
   }
-	if (cbdata->counter != data->counter) {
-		g_warning ("itsignaler_pop_notification() returned wrong value %d instead of %d",
-			   cbdata->counter, data->counter);
-		return EXIT_FAILURE;
-	}
-	g_print ("Popped %d\n", data->counter);
-	g_free (data);
 
 	cbdata->counter ++;
 	if (cbdata->counter == MAX_ITERATIONS * 2) {
@@ -85,6 +88,8 @@ source_callback (CbData *cbdata)
 	else
 		return TRUE;
 }
+
+static GMutex mutex;
 
 int
 test1 (void)
@@ -117,12 +122,14 @@ test1 (void)
 	source = itsignaler_create_source (its);
 	itsignaler_unref (its);
 
+  g_mutex_lock (&mutex);
 	CbData cbdata;
   cbdata.its = its;
 	cbdata.counter = 0;
 	cbdata.loop = loop;
 	g_source_set_callback (source, G_SOURCE_FUNC (source_callback), &cbdata, NULL);
 	g_source_attach (source, NULL);
+  g_mutex_unlock (&mutex);
 
 	GThread *th;
 	th = g_thread_new ("sub", (GThreadFunc) thread1_start, its);
@@ -158,16 +165,20 @@ thread1_start (ITSignaler *its)
 	itsignaler_ref (its);
 	for (counter = 0, i = 0; i < MAX_ITERATIONS; i++) {
 		Data *data;
+    g_mutex_lock (&mutex);
 		data = g_new0 (Data, 1);
 		data->counter = counter++;
 #ifndef PERF
 		g_print ("Pushing %d...\n", counter);
 #endif
 		itsignaler_push_notification (its, data, g_free);
+    g_mutex_unlock (&mutex);
 
+    g_mutex_lock (&mutex);
 		data = g_new0 (Data, 1);
 		data->counter = counter++;
 		itsignaler_push_notification (its, data, g_free);
+    g_mutex_unlock (&mutex);
 	}
 	itsignaler_unref (its);
 	return (gpointer) 0x01;
@@ -188,11 +199,13 @@ test2 (void)
 	GMainLoop *loop;
 	loop = g_main_loop_new (NULL, FALSE);
 
+  g_mutex_lock (&mutex);
 	CbData cbdata;
 	cbdata.counter = 0;
 	cbdata.loop = loop;
 	itsignaler_add (its, NULL, (ITSignalerFunc) source_callback, &cbdata, NULL);
 	itsignaler_unref (its);
+  g_mutex_unlock (&mutex);
 
 	GThread *th;
 	th = g_thread_new ("sub", (GThreadFunc) thread1_start, its);
