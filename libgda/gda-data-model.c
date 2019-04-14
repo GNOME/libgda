@@ -63,8 +63,6 @@
 #endif
 #include "csv.h"
 
-extern gchar *gda_lang_locale;
-
 static void gda_data_model_default_init (GdaDataModelInterface *iface);
 
 static xmlNodePtr gda_data_model_to_xml_node (GdaDataModel *model, const gint *cols, gint nb_cols, 
@@ -1750,7 +1748,7 @@ add_xml_row (GdaDataModel *model, xmlNodePtr xml_row, GError **error)
 	gboolean retval = TRUE;
 	gint pos = 0;
 
-	const gchar *lang = gda_lang_locale;
+	const gchar *lang = setlocale(LC_ALL, NULL);
 
 	values = g_ptr_array_new ();
 	g_ptr_array_set_size (values, gda_data_model_get_n_columns (model));

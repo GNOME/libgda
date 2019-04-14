@@ -40,8 +40,6 @@
 #include <locale.h>
 #endif
 
-extern gchar *gda_lang_locale;
-
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-decl.h>
 #include <libgda/gda-enums.h>
@@ -1413,7 +1411,7 @@ xml_fetch_next_row (GdaDataModelImport *model)
 	const xmlChar *name;
 	gint ret;
 
-	const gchar *lang = gda_lang_locale;
+	const gchar *lang = setlocale(LC_ALL, NULL);
 
 	GSList *columns = priv->columns;
 	GdaColumn *last_column = NULL;

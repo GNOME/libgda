@@ -118,7 +118,6 @@ libgda_headers = files([
 	'gda-util.h',
 	'gda-value.h',
 	'gda-xa-transaction.h',
-	'libgda-global-variables.h',
 	'gda-data-pivot.h'
 ])
 libgda_headers_all = []

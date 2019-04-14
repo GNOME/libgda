@@ -61,8 +61,6 @@
 #include <libgda/sqlite/keywords_hash.h>
 #include "keywords_hash.code" /* this one is dynamically generated */
 
-extern gchar *gda_lang_locale;
-
 /**
  * gda_g_type_to_string:
  * @type: Type to convert from.
@@ -717,7 +715,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
 	vnode = node->children;
 	if (vnode) {
 		xmlChar *this_lang, *isnull;
-		const gchar *lang = gda_lang_locale;
+		const gchar *lang = setlocale(LC_ALL, NULL);
 
 		while (vnode) {
 			if (xmlNodeIsText (vnode)) {

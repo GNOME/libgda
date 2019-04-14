@@ -45,8 +45,6 @@
 #include <glib/gi18n-lib.h>
 #include <gio/gio.h>
 
-extern gchar *gda_lang_locale;
-
 typedef struct {
 	GdaServerOperationType  op_type;
 	gboolean                cnc_set;
@@ -803,7 +801,7 @@ load_xml_spec (GdaServerOperation *op, xmlNodePtr specnode, const gchar *root, G
 {
 	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
 	xmlNodePtr node;
-	const gchar *lang = gda_lang_locale;
+	const gchar *lang = setlocale(LC_ALL, NULL);
 	GSList *retlist = NULL;
 	Node *parent = NULL;
 

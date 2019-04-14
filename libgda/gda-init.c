@@ -43,7 +43,7 @@
  * global variables
  *
  * REM: to use them from another Windows DLL, they have to be declared like:
- *     __declspec(dllimport) extern gchar *gda_numeric_locale;
+ *     __declspec(dllimport) extern gchar *_gda_server_op_dtd;
  *
  * Better yet is to define the IMPORT macro as:
  *
@@ -52,15 +52,12 @@
  *     #else
  *       #define IMPORT
  *     #endif
- *     IMPORT extern gchar *gda_numeric_locale;
+ *     IMPORT extern gchar *_gda_server_op_dtd;
  */
 xmlDtdPtr       _gda_server_op_dtd = NULL;
 xmlDtdPtr		_gda_db_catalog_dtd = NULL;
 
-static gboolean numeric_locale_dyn = FALSE;
-gchar          *gda_numeric_locale = "";
-static gboolean lang_locale_dyn = FALSE;
-gchar          *gda_lang_locale = "";
+static gchar          *gda_lang_locale = "";
 
 /**
  * gda_locale_changed:
@@ -77,35 +74,11 @@ gchar          *gda_lang_locale = "";
 void
 gda_locale_changed (void)
 {
-	/* free previous setting */
-	if (numeric_locale_dyn)
-		g_free (gda_numeric_locale);
-	if (lang_locale_dyn)
-		g_free (gda_lang_locale);
-
-	/* net new settings */
-	gda_numeric_locale = setlocale (LC_NUMERIC, NULL);
-	if (gda_numeric_locale) {
-		numeric_locale_dyn = TRUE;
-		gda_numeric_locale = g_strdup (gda_numeric_locale);
-	}
-	else {
-		numeric_locale_dyn = FALSE;
-		gda_numeric_locale = "";
-	}
 #ifdef HAVE_LC_MESSAGES
-        gda_lang_locale = setlocale (LC_MESSAGES, NULL);
+  gda_lang_locale = setlocale (LC_MESSAGES, NULL);
 #else
-        gda_lang_locale = setlocale (LC_CTYPE, NULL);
+  gda_lang_locale = setlocale (LC_CTYPE, NULL);
 #endif
-	if (gda_lang_locale) {
-		lang_locale_dyn = TRUE;
-		gda_lang_locale = g_strdup (gda_lang_locale);
-	}
-	else {
-		lang_locale_dyn = FALSE;
-		gda_lang_locale = "";
-	}
 }
 
 /**

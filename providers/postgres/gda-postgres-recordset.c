@@ -42,7 +42,6 @@
 #include "gda-postgres-blob-op.h"
 #include "gda-postgres-util.h"
 #include <gda-data-select-private.h>
-#include <libgda/libgda-global-variables.h>
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
 #endif

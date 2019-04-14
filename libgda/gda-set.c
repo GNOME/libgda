@@ -1461,7 +1461,7 @@ gda_set_new_from_spec_node (xmlNodePtr xml_spec, GError **error)
 	GdaSet *set = NULL;
 	GSList *holders = NULL, *sources = NULL;
 	GSList *list;
-	const gchar *lang = gda_lang_locale;
+	const gchar *lang = setlocale(LC_ALL, NULL);
 
 	xmlNodePtr cur;
 	gboolean allok = TRUE;
