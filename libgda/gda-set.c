@@ -41,7 +41,6 @@
 #include "gda-util.h"
 #include <libgda/gda-custom-marshal.h>
 
-extern xmlDtdPtr gda_paramlist_dtd;
 extern gchar *gda_lang_locale;
 
 /**
@@ -1335,55 +1334,97 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 		return NULL;
 
 	{
-                /* doc validation */
-                xmlValidCtxtPtr validc;
-                int xmlcheck;
+    /* doc validation */
+    xmlValidCtxtPtr validc;
+    int xmlcheck;
 		gchar *err_str = NULL;
 		xmlDtdPtr old_dtd = NULL;
+	  xmlDtdPtr gda_paramlist_dtd = NULL;
+    GString *dtdpath;
+    GFile *gda_data_dir;
+    gchar *gda_data_dir_path;
+    GFile *file;
+	  gchar *path;
 
-                validc = g_new0 (xmlValidCtxt, 1);
-                validc->userData = &err_str;
-                validc->error = xml_validity_error_func;
-                validc->warning = NULL;
+    validc = g_new0 (xmlValidCtxt, 1);
+    validc->userData = &err_str;
+    validc->error = xml_validity_error_func;
+    validc->warning = NULL;
 
-                xmlcheck = xmlDoValidityCheckingDefaultValue;
-                xmlDoValidityCheckingDefaultValue = 1;
+    xmlcheck = xmlDoValidityCheckingDefaultValue;
+    xmlDoValidityCheckingDefaultValue = 1;
 
-                /* replace the DTD with ours */
-		if (gda_paramlist_dtd) {
+    /* replace the DTD with ours */
+		/* paramlist DTD */
+    gda_data_dir = g_file_new_for_path (LIBGDA_ABI_NAME);
+    gda_data_dir_path = g_file_get_uri (gda_data_dir);
+    dtdpath = g_string_new (gda_data_dir_path);
+    g_free (gda_data_dir_path);
+    g_object_unref (gda_data_dir);
+    g_string_append (dtdpath, "/dtd/libgda-paramlist.dtd");
+    file = g_file_new_for_path (dtdpath->str);
+    g_string_free (dtdpath, TRUE);
+	  if (g_file_query_exists (file, NULL)) {
+	    path = g_file_get_path (file);
+      gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*) path);
+      g_free (path);
+    }
+    g_object_unref (file);
+
+	  if (!gda_paramlist_dtd) {
+		  if (g_getenv ("GDA_TOP_SRC_DIR")) {
+        dtdpath = g_string_new (g_getenv ("GDA_TOP_SRC_DIR"));
+        g_string_append (dtdpath, "/libgda/libgda-paramlist.dtd");
+        file = g_file_new_for_path (dtdpath->str);
+        g_string_free (dtdpath, TRUE);
+        path = g_file_get_path (file);
+			  gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*) path);
+        g_free (path);
+        g_object_unref (file);
+		  }
+		  if (!gda_paramlist_dtd)
+			  g_message (_("Could not parse '%s': XML data import validation will not be performed (some weird errors may occur)"),
+				     path);
+	  }
+	  if (gda_paramlist_dtd) {
+		  gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
+    }
+    if (gda_paramlist_dtd) {
 			old_dtd = doc->intSubset;
 			doc->intSubset = gda_paramlist_dtd;
 		}
 
 #ifndef G_OS_WIN32
-                if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
+    if (doc->intSubset && !xmlValidateDocument (validc, doc)) {
 			if (gda_paramlist_dtd)
 				doc->intSubset = old_dtd;
-                        xmlFreeDoc (doc);
-                        g_free (validc);
-			
-                        if (err_str) {
-                                g_set_error (error,
-                                             GDA_SET_ERROR,
-                                             GDA_SET_XML_SPEC_ERROR,
-                                             "XML spec. does not conform to DTD:\n%s", err_str);
-                                g_free (err_str);
-                        }
-                        else
-                                g_set_error (error,
-                                             GDA_SET_ERROR,
-                                             GDA_SET_XML_SPEC_ERROR,
-                                             "%s", "XML spec. does not conform to DTD");
+        xmlFreeDoc (doc);
+        g_free (validc);
 
-                        xmlDoValidityCheckingDefaultValue = xmlcheck;
-                        return NULL;
-                }
-#endif
-		if (gda_paramlist_dtd)
-			doc->intSubset = old_dtd;
-                xmlDoValidityCheckingDefaultValue = xmlcheck;
-                g_free (validc);
+        if (err_str) {
+                g_set_error (error,
+                             GDA_SET_ERROR,
+                             GDA_SET_XML_SPEC_ERROR,
+                             "XML spec. does not conform to DTD:\n%s", err_str);
+                g_free (err_str);
         }
+        else
+                g_set_error (error,
+                             GDA_SET_ERROR,
+                             GDA_SET_XML_SPEC_ERROR,
+                             "%s", "XML spec. does not conform to DTD");
+
+        xmlDoValidityCheckingDefaultValue = xmlcheck;
+        return NULL;
+    }
+#endif
+		if (gda_paramlist_dtd) {
+			doc->intSubset = old_dtd;
+      xmlFreeDtd (gda_paramlist_dtd);
+    }
+    xmlDoValidityCheckingDefaultValue = xmlcheck;
+    g_free (validc);
+  }
 
 	/* doc is now non NULL */
 	root = xmlDocGetRootElement (doc);

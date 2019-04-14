@@ -54,7 +54,6 @@
  *     #endif
  *     IMPORT extern gchar *gda_numeric_locale;
  */
-xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       _gda_server_op_dtd = NULL;
 xmlDtdPtr		_gda_db_catalog_dtd = NULL;
 
@@ -183,27 +182,6 @@ gda_init (void)
 
 	/* binreloc */
 	gda_gbr_init ();
-
-	/* paramlist DTD */
-	gda_paramlist_dtd = NULL;
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
-	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-
-	if (!gda_paramlist_dtd) {
-		if (g_getenv ("GDA_TOP_SRC_DIR")) {
-			g_free (file);
-			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-paramlist.dtd", NULL);
-			gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-		}
-		if (!gda_paramlist_dtd)
-			g_message (_("Could not parse '%s': "
-				     "XML data import validation will not be performed (some weird errors may occur)"),
-				   file);
-	}
-	if (gda_paramlist_dtd)
-		gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
-	g_free (file);
 
 	/* server operation DTD */
 	_gda_server_op_dtd = NULL;
