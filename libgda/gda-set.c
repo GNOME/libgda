@@ -42,8 +42,6 @@
 #include <libgda/gda-custom-marshal.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
-extern gchar *gda_lang_locale;
-
 /**
  * GdaSetGroup:
  * @nodes: (element-type Gda.SetNode): list of GdaSetNode, at least one entry

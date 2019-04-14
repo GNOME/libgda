@@ -58,35 +58,11 @@ xmlDtdPtr		_gda_db_catalog_dtd = NULL;
 
 static gchar          *gda_lang_locale = "";
 
-/**
- * gda_locale_changed:
- *
- * Call this function whenever the setlocale() function has been called
- * to change the current locale; this function is first called by gda_init() so you
- * don't need to call it if you have set the locale before calling gda_init().
- *
- * Failing to call this function after having changed the current locale may result
- * in Libgda reverting to the previous set locale.
- *
- * Since: 4.2.3
- */
-void
-gda_locale_changed (void)
-{
-#ifdef HAVE_LC_MESSAGES
-  gda_lang_locale = setlocale (LC_MESSAGES, NULL);
-#else
-  gda_lang_locale = setlocale (LC_CTYPE, NULL);
-#endif
-}
 
 /**
  * gda_init:
  *
  * Initializes the GDA library, must be called prior to any Libgda usage.
- *
- * Please note that if you call setlocale() to modify the current locale, you should also
- * call gda_locale_changed() before using Libgda again.
  */
 void
 gda_init (void)
@@ -149,8 +125,6 @@ gda_init (void)
 	/* force TZ init */
 	tzset ();
 
-	/* acquire locale */
-	gda_locale_changed ();
 
 	/* binreloc */
 	gda_gbr_init ();
