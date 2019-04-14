@@ -1,0 +1,45 @@
+{
+    "app-id": "org.gnome.gda.Test",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "command": "org.gnome.gda.Test",
+    "finish-args": [
+        "--filesystem=home",
+        "--filesystem=xdg-run/dconf",
+        "--filesystem=~/.config/dconf:ro"
+    ],
+    "build-options": {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
+        }
+    },
+    "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "/share/vala",
+        "*.la",
+        "*.a"
+    ],
+    "modules": [
+        {
+                "name": "test",
+                "config-opts": [
+                        "-Denable-test-flatpak=true"
+                        ],
+                "sources": [
+                        {
+                                "type": "git",
+                                "url": "./"
+                        }
+                ]
+        }
+    ]
+}
