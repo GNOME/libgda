@@ -5,7 +5,7 @@
     <h2>C API</h2>
     <p>GDA is written in C, checkout its API documentation.
     <h3>GDA library</h3>
-    <p>C API <a href="C/libgda-@GDA_API_VERSION@">Gda documentation</a></p>
+    <p>C API <a href="C/libgda">Gda documentation</a></p>
     <h2>Vala API</h2>
       <p>GDA has GObject Introspection support, so Vala Bindings are automatically generated.</p>
     <h3>GDA library Vala Bindings</h3>
