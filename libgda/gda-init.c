@@ -54,7 +54,6 @@
  *     #endif
  *     IMPORT extern gchar *gda_numeric_locale;
  */
-xmlDtdPtr       _gda_array_dtd = NULL;
 xmlDtdPtr       gda_paramlist_dtd = NULL;
 xmlDtdPtr       _gda_server_op_dtd = NULL;
 xmlDtdPtr		_gda_db_catalog_dtd = NULL;
@@ -184,27 +183,6 @@ gda_init (void)
 
 	/* binreloc */
 	gda_gbr_init ();
-
-	/* array DTD */
-	_gda_array_dtd = NULL;
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-array.dtd", NULL);
-	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		_gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-
-	if (!_gda_array_dtd) {
-		if (g_getenv ("GDA_TOP_SRC_DIR")) {
-			g_free (file);
-			file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-array.dtd", NULL);
-			_gda_array_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-		}
-		if (!_gda_array_dtd)
-			g_message (_("Could not parse '%s': "
-				     "XML data import validation will not be performed (some weird errors may occur)"),
-				   file);
-	}
-	if (_gda_array_dtd)
-		_gda_array_dtd->name = xmlStrdup((xmlChar*) "gda_array");
-	g_free (file);
 
 	/* paramlist DTD */
 	gda_paramlist_dtd = NULL;
