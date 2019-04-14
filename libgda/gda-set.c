@@ -40,6 +40,7 @@
 #include "gda-server-provider.h"
 #include "gda-util.h"
 #include <libgda/gda-custom-marshal.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 extern gchar *gda_lang_locale;
 
@@ -1340,9 +1341,6 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 		gchar *err_str = NULL;
 		xmlDtdPtr old_dtd = NULL;
 	  xmlDtdPtr gda_paramlist_dtd = NULL;
-    GString *dtdpath;
-    GFile *gda_data_dir;
-    gchar *gda_data_dir_path;
     GFile *file;
 	  gchar *path;
 
@@ -1356,36 +1354,26 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 
     /* replace the DTD with ours */
 		/* paramlist DTD */
-    gda_data_dir = g_file_new_for_path (LIBGDA_ABI_NAME);
-    gda_data_dir_path = g_file_get_uri (gda_data_dir);
-    dtdpath = g_string_new (gda_data_dir_path);
-    g_free (gda_data_dir_path);
-    g_object_unref (gda_data_dir);
-    g_string_append (dtdpath, "/dtd/libgda-paramlist.dtd");
-    file = g_file_new_for_path (dtdpath->str);
-    g_string_free (dtdpath, TRUE);
+    path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-paramlist.dtd", NULL);
+    file = g_file_new_for_path (path);
 	  if (g_file_query_exists (file, NULL)) {
-	    path = g_file_get_path (file);
       gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*) path);
-      g_free (path);
     }
-    g_object_unref (file);
 
 	  if (!gda_paramlist_dtd) {
 		  if (g_getenv ("GDA_TOP_SRC_DIR")) {
-        dtdpath = g_string_new (g_getenv ("GDA_TOP_SRC_DIR"));
-        g_string_append (dtdpath, "/libgda/libgda-paramlist.dtd");
-        file = g_file_new_for_path (dtdpath->str);
-        g_string_free (dtdpath, TRUE);
-        path = g_file_get_path (file);
-			  gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*) path);
-        g_free (path);
-        g_object_unref (file);
+        gchar *ipath;
+
+			  ipath = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-paramlist.dtd", NULL);
+			  gda_paramlist_dtd = xmlParseDTD (NULL, (xmlChar*) ipath);
+        g_free (ipath);
 		  }
 		  if (!gda_paramlist_dtd)
 			  g_message (_("Could not parse '%s': XML data import validation will not be performed (some weird errors may occur)"),
 				     path);
 	  }
+    g_free (path);
+    g_object_unref (file);
 	  if (gda_paramlist_dtd) {
 		  gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
     }

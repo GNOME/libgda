@@ -37,6 +37,7 @@
 #include <libgda/gda-data-model-private.h>
 #include <libgda/gda-data-model-import.h>
 #include <libgda/gda-data-model-array.h>
+#include <libgda/binreloc/gda-binreloc.h>
 #include "gda-util.h"
 #include <string.h>
 #ifdef HAVE_LOCALE_H
@@ -96,7 +97,6 @@ enum
 	PROP_SPEC_RESOURCE
 };
 
-extern xmlDtdPtr _gda_server_op_dtd;
 static GObjectClass *parent_class = NULL;
 
 typedef struct _Node {
@@ -711,6 +711,9 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	xmlValidCtxtPtr validc;
 	int xmlcheck;
 	xmlDtdPtr old_dtd = NULL;
+  xmlDtdPtr _gda_server_op_dtd = NULL;
+  GFile *file;
+  gchar *path;
 	
 	validc = g_new0 (xmlValidCtxt, 1);
 	validc->userData = op;
@@ -721,7 +724,33 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	xmlDoValidityCheckingDefaultValue = 1;
 	
 	/* replace the DTD with ours */
-	if (_gda_server_op_dtd) {
+  /* server operation DTD */
+	path = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd", "libgda-server-operation.dtd", NULL);
+  file = g_file_new_for_path (path);
+	if (g_file_query_exists (file, NULL)) {
+		_gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*) path);
+  }
+
+	if (!_gda_server_op_dtd) {
+		if (g_getenv ("GDA_TOP_SRC_DIR")) {
+      gchar *ipath;
+
+			ipath = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda", "libgda-server-operation.dtd", NULL);
+			_gda_server_op_dtd = xmlParseDTD (NULL, (xmlChar*) ipath);
+      g_free (ipath);
+		}
+		if (!_gda_server_op_dtd)
+			g_message (_("Could not parse '%s': "
+				     "Validation for XML files for server operations will not be performed (some weird errors may occur)"),
+				   path);
+	}
+  g_free (path);
+  g_object_unref (file);
+
+	if (_gda_server_op_dtd)
+		_gda_server_op_dtd->name = xmlStrdup((xmlChar*) "serv_op");
+
+  if (_gda_server_op_dtd) {
 		old_dtd = doc->intSubset;
 		doc->intSubset = _gda_server_op_dtd;
 	}
@@ -759,8 +788,10 @@ use_xml_spec (GdaServerOperation *op, xmlDocPtr doc, const gchar *xmlfile)
 	
 	xmlDoValidityCheckingDefaultValue = xmlcheck;
 	g_free (validc);
-	if (_gda_server_op_dtd)
+	if (_gda_server_op_dtd) {
 		doc->intSubset = old_dtd;
+    xmlFreeDtd (_gda_server_op_dtd);
+  }
 	priv->xml_spec_doc = doc;
 
 	return TRUE;
