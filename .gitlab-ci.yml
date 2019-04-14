@@ -119,7 +119,7 @@ pages:
   - mv doc/Gda-6.0 ../public/vala
   - cp libgda/libgda-6.0.vapi ../public/vala
   - mv doc/Gdaui-6.0 ../public/vala
-  - cp libgda/libgdaui-6.0.vapi ../public/vala
+  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
   allow_failure: true
   artifacts:
     paths:
