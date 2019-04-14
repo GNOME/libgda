@@ -111,10 +111,15 @@ pages:
   - mkdir ../public
   - mv doc/index.html ../public/
   - mkdir ../public/C
-  - mv doc/C/* ../public/C/
+  - mkdir ../public/C/libgda
+  - mv doc/C/libgda/html/* ../public/C/libgda/
+  - mkdir ../public/C/libgdaui
+  - mv doc/C/libgdaui/html/* ../public/C/libgdaui/
   - mkdir ../public/vala
   - mv doc/Gda-6.0 ../public/vala
   - cp libgda/libgda-6.0.vapi ../public/vala
+  - mv doc/Gdaui-6.0 ../public/vala
+  - cp libgda/libgdaui-6.0.vapi ../public/vala
   allow_failure: true
   artifacts:
     paths:

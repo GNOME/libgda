@@ -10,5 +10,7 @@
       <p>GDA has GObject Introspection support, so Vala Bindings are automatically generated.</p>
     <h3>GDA library Vala Bindings</h3>
       <p>GDA has GObject Introspection support, <a href="vala/libgda-@GDA_API_VERSION@.vapi">Vala Bindings</a> and <a href="vala/Gda-@GDA_API_VERSION@/index.htm">Vala Bindings Documentation</a></p>
+    <h3>GDA GTK Widgets library Vala Bindings</h3>
+      <p>GDA GTK has GObject Introspection support, <a href="vala/libgda-@GDA_API_VERSION@.vapi">Vala Bindings</a> and <a href="vala/Gdaui-@GDA_API_VERSION@/index.htm">GTK Vala Bindings Documentation</a></p>
   </body>
 </html>
