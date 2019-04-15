@@ -121,6 +121,7 @@ typedef struct {
 
 	/* multi threading locking */
 	GRecMutex             rmutex;
+  gboolean              mutex_initalized;
 
 	/* auto meta data update */
 	GArray               *trans_meta_context; /* Array of GdaMetaContext pointers */
@@ -435,6 +436,7 @@ gda_connection_init (GdaConnection *cnc)
 
 	GdaConnectionPrivate *priv = gda_connection_get_instance_private (cnc);
 	g_rec_mutex_init (&priv->rmutex);
+  priv->mutex_initalized = TRUE;
 	priv->provider_obj = NULL;
 	priv->dsn = NULL;
 	priv->cnc_string = NULL;
@@ -543,6 +545,10 @@ gda_connection_dispose (GObject *object)
 		g_free (priv->auth_string);
 		priv->auth_string = NULL;
 	}
+  if (priv->mutex_initalized) {
+    g_rec_mutex_clear (&priv->rmutex);
+    priv->mutex_initalized = FALSE;
+  }
 
 	/* chain to parent class */
   G_OBJECT_CLASS (gda_connection_parent_class)->dispose (object);
