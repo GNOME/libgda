@@ -2386,7 +2386,6 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 	sql_list = g_slist_reverse (sql_list);
 
 	str = NULL;
-	string = g_string_new ("");
 	switch (op->operator_type) {
 	case GDA_SQL_OPERATOR_TYPE_EQ:
 		if (SQL_OPERAND (sql_list->next->data)->is_null)
@@ -2480,7 +2479,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 		if (sql_list->next && !(sql_list->next->next) &&
 		    *(SQL_OPERAND (sql_list->next->data)->sql)=='(')
 			add_p = FALSE;
-
+	  string = g_string_new ("");
 		string = g_string_append (string, SQL_OPERAND (sql_list->data)->sql);
 		if (op->operator_type == GDA_SQL_OPERATOR_TYPE_IN)
 			g_string_append (string, " IN ");
@@ -2497,6 +2496,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 			g_string_append_c (string, ')');
 		str = string->str;
 		g_string_free (string, FALSE);
+    string = NULL;
 		break;
 	}
 	case GDA_SQL_OPERATOR_TYPE_CONCAT:
