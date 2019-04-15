@@ -5984,6 +5984,7 @@ void
 _gda_prepared_estatement_free (PreparedStatementRef *ps) {
 	g_object_unref (ps->statement);
 	g_object_unref (ps->prepared_stmt);
+  g_free (ps);
 }
 
 /**

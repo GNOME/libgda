@@ -1372,10 +1372,8 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
 	  }
     g_free (path);
     g_object_unref (file);
-	  if (gda_paramlist_dtd) {
+	  if (gda_paramlist_dtd != NULL) {
 		  gda_paramlist_dtd->name = xmlStrdup((xmlChar*) "data-set-spec");
-    }
-    if (gda_paramlist_dtd) {
 			old_dtd = doc->intSubset;
 			doc->intSubset = gda_paramlist_dtd;
 		}
@@ -1404,10 +1402,12 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
         return NULL;
     }
 #endif
-		if (gda_paramlist_dtd) {
+		if (gda_paramlist_dtd != NULL) {
 			doc->intSubset = old_dtd;
       xmlFreeDtd (gda_paramlist_dtd);
+      gda_paramlist_dtd = NULL;
     }
+    g_assert (gda_paramlist_dtd == NULL);
     xmlDoValidityCheckingDefaultValue = xmlcheck;
     g_free (validc);
   }
