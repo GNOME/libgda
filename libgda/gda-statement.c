@@ -621,7 +621,7 @@ static gchar *default_render_distinct (GdaSqlStatementSelect *select, GdaSqlRend
  * to specialize some aspects of SQL rendering to be adapted to the database,'s own SQL dialect
  * (for example SQLite rewrites the 'FALSE' and 'TRUE' literals as '0' and 'NOT 0').
  * 
- * Returns: a new string, or %NULL if an error occurred
+ * Returns: (transfer full): a new string, or %NULL if an error occurred
  */
 gchar *
 gda_statement_to_sql_real (GdaStatement *stmt, GdaSqlRenderingContext *context, GError **error)

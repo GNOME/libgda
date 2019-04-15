@@ -2981,6 +2981,7 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	_gda_sqlite_pstmt_set_nb_rowid_columns (ps, nb_rows_added);
 	g_object_unref (real_stmt);
 	/*g_print ("%s(%s) => GdaSqlitePStmt %p\n", __FUNCTION__, sql, ps);*/
+  g_free (sql);
 	return ps;
 
  out_err:
@@ -2991,7 +2992,9 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 		g_slist_free (used_params);
 	if (params)
 		g_object_unref (params);
-	g_free (sql);
+  if (sql != NULL) {
+    g_free (sql);
+  }
 	return NULL;
 }
 
