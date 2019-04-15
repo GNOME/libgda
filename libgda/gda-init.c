@@ -39,25 +39,6 @@
 #include <libgda/binreloc/gda-binreloc.h>
 #include <sql-parser/gda-sql-parser.h>
 
-/*
- * global variables
- *
- * REM: to use them from another Windows DLL, they have to be declared like:
- *     __declspec(dllimport) extern gchar *_gda_server_op_dtd;
- *
- * Better yet is to define the IMPORT macro as:
- *
- *     #ifdef G_OS_WIN32
- *       #define IMPORT __declspec(dllimport)
- *     #else
- *       #define IMPORT
- *     #endif
- *     IMPORT extern gchar *_gda_server_op_dtd;
- */
-xmlDtdPtr		_gda_db_catalog_dtd = NULL;
-
-static gchar          *gda_lang_locale = "";
-
 
 /**
  * gda_init:
@@ -128,32 +109,6 @@ gda_init (void)
 
 	/* binreloc */
 	gda_gbr_init ();
-
-  /* GdaDbCreator DTD */
-  _gda_db_catalog_dtd = NULL;
-	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd",
-                                "libgda-db-catalog.dtd", NULL);
-	if (g_file_test (file, G_FILE_TEST_EXISTS))
-		_gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-  else
-    {
-	    if (g_getenv ("GDA_TOP_SRC_DIR"))
-        {
-          g_free (file);
-          file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda",
-                                   "libgda-db-catalog.dtd", NULL);
-          _gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-		    }
-	  }
-
-  if (!_gda_db_catalog_dtd)
-	  g_message (_("Could not parse '%s': "
-                 "Validation for XML files for GdaDbCreator will not be performed (some weird errors may occur)"),
-               file);
-  else
-		_gda_db_catalog_dtd->name = xmlStrdup((xmlChar*) "db-catalog");
-
-	g_free (file);
 
   initialized = TRUE;
 	g_mutex_unlock (&init_mutex);

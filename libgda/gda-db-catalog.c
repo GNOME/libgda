@@ -27,6 +27,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gi18n-lib.h>
+#include <libgda/binreloc/gda-binreloc.h>
 
 #include "gda-server-provider.h"
 #include <libgda/gda-lockable.h>
@@ -72,9 +73,6 @@ enum {
 };
 
 static GParamSpec *properties [N_PROPS] = {NULL};
-
-/* Originally defined in gda-init.c */
-extern xmlDtdPtr _gda_db_catalog_dtd;
 
 /**
  * gda_db_catalog_new:
@@ -206,6 +204,38 @@ gda_db_catalog_init (GdaDbCatalog *self)
   priv->cnc = NULL;
 }
 
+xmlDtdPtr
+_gda_db_catalog_get_dtd ()
+{
+  xmlDtdPtr		_gda_db_catalog_dtd = NULL;
+  gchar *file;
+  /* GdaDbCreator DTD */
+	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd",
+                                "libgda-db-catalog.dtd", NULL);
+	if (g_file_test (file, G_FILE_TEST_EXISTS))
+		_gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+  else
+    {
+	    if (g_getenv ("GDA_TOP_SRC_DIR"))
+        {
+          g_free (file);
+          file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda",
+                                   "libgda-db-catalog.dtd", NULL);
+          _gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
+		    }
+	  }
+
+  if (!_gda_db_catalog_dtd)
+	  g_message (_("Could not parse '%s': "
+                 "Validation for XML files for GdaDbCreator will not be performed (some weird errors may occur)"),
+               file);
+  else
+		_gda_db_catalog_dtd->name = xmlStrdup((xmlChar*) "db-catalog");
+
+	g_free (file);
+  return _gda_db_catalog_dtd;
+}
+
 static gboolean
 _gda_db_catalog_validate_doc (xmlDocPtr doc,
                               GError **error)
@@ -225,7 +255,14 @@ _gda_db_catalog_validate_doc (xmlDocPtr doc,
       goto on_error;
     }
 
-  int valid = xmlValidateDtd (ctx, doc,_gda_db_catalog_dtd);
+  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
+
+  int valid = 0;
+
+  if (_gda_db_catalog_dtd != NULL) {
+    valid = xmlValidateDtd (ctx, doc,_gda_db_catalog_dtd);
+    xmlFreeDtd (_gda_db_catalog_dtd);
+  }
 
   if (!valid)
     {
@@ -395,6 +432,9 @@ gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
 {
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (xmlfile,FALSE);
+
+  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
+
   g_return_val_if_fail (_gda_db_catalog_dtd,FALSE);
 
   xmlDocPtr doc = NULL;
@@ -447,6 +487,9 @@ gda_db_catalog_validate_file_from_path (const gchar *xmlfile,
                                         GError **error)
 {
   g_return_val_if_fail (xmlfile, FALSE);
+
+  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
+
   g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   xmlDocPtr doc = NULL;
@@ -990,6 +1033,9 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
 {
   g_return_val_if_fail (self, FALSE);
   g_return_val_if_fail (xmlfile, FALSE);
+
+  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
+
   g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   GFileInputStream *istream = NULL;
