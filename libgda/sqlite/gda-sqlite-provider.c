@@ -2982,6 +2982,8 @@ real_prepare (GdaServerProvider *provider, GdaConnection *cnc, GdaStatement *stm
 	g_object_unref (real_stmt);
 	/*g_print ("%s(%s) => GdaSqlitePStmt %p\n", __FUNCTION__, sql, ps);*/
   g_free (sql);
+	if (hash)
+		g_hash_table_destroy (hash);
 	return ps;
 
  out_err:

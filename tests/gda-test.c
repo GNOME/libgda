@@ -14,7 +14,7 @@ int main() {
     g_message ("Error messages: %s", error->message);
   }
 	g_object_unref(cnc);
-  g_message ("Exists without errors");
+  g_message ("Test finished");
 	return EXIT_SUCCESS;
 }
 

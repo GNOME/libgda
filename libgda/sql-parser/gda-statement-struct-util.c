@@ -344,8 +344,8 @@ gda_sql_identifier_prepare_for_compare (gchar *str)
 		gchar *ptr;
 		for (ptr = str; *ptr; ptr++)
 			*ptr = g_ascii_tolower (*ptr);
-		return str;
 	}
+	return str;
 }
 
 /*

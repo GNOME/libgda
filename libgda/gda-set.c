@@ -1407,7 +1407,6 @@ gda_set_new_from_spec_string (const gchar *xml_spec, GError **error)
       xmlFreeDtd (gda_paramlist_dtd);
       gda_paramlist_dtd = NULL;
     }
-    g_assert (gda_paramlist_dtd == NULL);
     xmlDoValidityCheckingDefaultValue = xmlcheck;
     g_free (validc);
   }
