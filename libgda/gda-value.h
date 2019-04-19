@@ -91,7 +91,7 @@ gchar*                            gda_numeric_get_string (const GdaNumeric *nume
 void                              gda_numeric_free (GdaNumeric *numeric);
 
 /**
- * GdaTime: (ref-func gda_time_new) (unref-func gda_time_free) (get-value-func gda_value_get_time) (set-value-func gda_value_set_time)
+ * GdaTime:
  *
  * Represents a time information.
  */
@@ -121,6 +121,7 @@ void                              gda_time_set_timezone (GdaTime* time, glong ti
 gboolean                          gda_time_valid (const GdaTime *time);
 void                              gda_time_change_timezone (GdaTime *time, glong ntz);
 void                              gda_time_to_timezone (GdaTime *time, GTimeZone *ntz);
+void                              gda_time_to_utc (GdaTime *time);
 gchar*                            gda_time_to_string (GdaTime *time);
 gchar*                            gda_time_to_string_local (GdaTime *time);
 gchar*                            gda_time_to_string_utc (GdaTime *time);

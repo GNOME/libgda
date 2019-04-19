@@ -1477,23 +1477,6 @@ struct _GdaTime {
 	GDateTime *dt;
 };
 
-GType
-gda_time_get_type(void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		type = g_boxed_type_register_static ("GdaTime",
-						     (GBoxedCopyFunc) gda_time_copy,
-						     (GBoxedFreeFunc) gda_time_free);
-
-		g_value_register_transform_func (G_TYPE_STRING, type, string_to_time);
-		g_value_register_transform_func (type, G_TYPE_STRING, time_to_string);
-	}
-
-	return type;
-}
-
 /**
  * gda_time_copy:
  *
@@ -1521,6 +1504,15 @@ gda_time_free (GdaTime* boxed)
 	g_free (boxed);
 }
 
+static void
+gda_time_register_transform_func (GType typeid)
+{
+  g_value_register_transform_func (G_TYPE_STRING, typeid, string_to_time);
+	g_value_register_transform_func (typeid, G_TYPE_STRING, time_to_string);
+}
+
+G_DEFINE_BOXED_TYPE_WITH_CODE (GdaTime, gda_time, gda_time_copy, gda_time_free,
+                          gda_time_register_transform_func (g_define_type_id))
 /**
  * gda_value_take_time:
  * @value: a #GValue that will store @val.
@@ -1618,6 +1610,17 @@ gda_time_to_string_utc (GdaTime *time)
 	g_time_zone_unref (tz);
 	g_date_time_unref (ndt);
 	return str;
+}
+/**
+ * gda_time_to_utc:
+ * @time: a #GdaTime
+ *
+ * Change time zone to UTC.
+ */
+void
+gda_time_to_utc (GdaTime *time)
+{
+  g_date_time_to_utc (time->dt);
 }
 
 /**

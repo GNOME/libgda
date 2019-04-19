@@ -539,9 +539,8 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						if (gda_time_get_timezone (timegda) == GDA_TIMEZONE_INVALID)
-							gda_time_set_timezone (timegda, 0); /* set to GMT */
-						gda_value_set_time (value, timegda);
+						gda_time_to_utc (timegda);
+						g_value_set_boxed (value, timegda);
 					}
 					gda_time_free (timegda);
 				}
