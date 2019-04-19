@@ -100,17 +100,7 @@ gda_sql_statement_get_contents_infos  (GdaSqlStatementType type)
 	return contents[type];
 }
 
-GType
-gda_sql_statement_get_type (void)
-{
-	static GType our_type = 0;
-
-	if (our_type == 0)
-		our_type = g_boxed_type_register_static ("GdaSqlStatement",
-			(GBoxedCopyFunc) gda_sql_statement_copy,
-			(GBoxedFreeFunc) gda_sql_statement_free);
-	return our_type;
-}
+G_DEFINE_BOXED_TYPE(GdaSqlStatement, gda_sql_statement, gda_sql_statement_copy, gda_sql_statement_free)
 
 /**
  * gda_sql_statement_new

@@ -1648,6 +1648,7 @@ gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
 		return mod;
 	}
 	else {
+		gda_sql_statement_free (sqlst);
 		/* error => leave *out_stmt to %NULL */
 		return TRUE;
 	}

@@ -139,7 +139,7 @@ gda_statement_class_init (GdaStatementClass * klass)
 	object_class->set_property = gda_statement_set_property;
 	object_class->get_property = gda_statement_get_property;
 	g_object_class_install_property (object_class, PROP_STRUCTURE,
-					 g_param_spec_pointer ("structure", NULL, NULL, 
+					 g_param_spec_boxed ("structure", NULL, NULL, GDA_TYPE_SQL_STATEMENT,
 							       G_PARAM_WRITABLE | G_PARAM_READABLE));
 }
 
@@ -238,7 +238,7 @@ gda_statement_set_property (GObject *object,
 				g_free (priv->requested_types);
 				priv->requested_types = NULL;
 			}
-			priv->internal_struct = gda_sql_statement_copy (g_value_get_pointer (value));
+			priv->internal_struct = g_value_dup_boxed (value);
 			g_signal_emit (stmt, gda_statement_signals [RESET], 0);
 			break;
 		default:
@@ -259,7 +259,7 @@ gda_statement_get_property (GObject *object,
 
 	switch (param_id) {
 		case PROP_STRUCTURE:
-			g_value_set_pointer (value, gda_sql_statement_copy (priv->internal_struct));
+			g_value_set_boxed (value, priv->internal_struct);
 			break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
