@@ -3493,7 +3493,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		}
 		else if (gda_holder_value_is_default (h) && !gda_holder_get_value (h)) {
 			/* create a new GdaStatement to handle all default values and execute it instead */
-			GdaSqlStatement *sqlst;
+			GdaSqlStatement *sqlst = NULL;
 			GError *lerror = NULL;
 			sqlst = gda_statement_rewrite_for_default_values (stmt, params, TRUE, &lerror);
 			if (!sqlst) {
@@ -3506,7 +3506,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 				break;
 			}
 
-			GdaStatement *rstmt;
+			GdaStatement *rstmt = NULL;
 			GObject *res;
 			rstmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
 			gda_sql_statement_free (sqlst);
@@ -3524,12 +3524,12 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 		const GValue *value = gda_holder_get_value (h);
 		/*g_print ("BINDING param '%s' to GdaHolder %p, valued to [%s]\n", pname, h, gda_value_stringify (value));*/
 		if (!value || gda_value_is_null (value)) {
-			GdaStatement *rstmt;
+			GdaStatement *rstmt = NULL;
 			if (! gda_rewrite_statement_for_null_parameters (stmt, params, &rstmt, error))
 				SQLITE3_CALL (prov, sqlite3_bind_null) (_gda_sqlite_pstmt_get_stmt (ps), i);
-			else if (!rstmt)
+			else if (rstmt == NULL) {
 				return NULL;
-			else {
+      } else {
 				/* The strategy here is to execute @rstmt using its prepared
 				 * statement, but with common data from @ps. Beware that
 				 * the @param_ids attribute needs to be retained (i.e. it must not

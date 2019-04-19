@@ -1628,7 +1628,8 @@ gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
 					   GdaStatement **out_stmt, GError **error)
 {
 	GdaSqlStatement *sqlst;
-	gboolean mod;
+	gboolean mod = FALSE;
+	gboolean ret = FALSE;
 	g_return_val_if_fail (GDA_IS_STATEMENT (stmt), FALSE);
 	g_return_val_if_fail (!params || GDA_IS_SET (params), FALSE);
 
@@ -1642,16 +1643,13 @@ gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
 		if (out_stmt) {
 			if (mod) {
 				*out_stmt = g_object_new (GDA_TYPE_STATEMENT, "structure", sqlst, NULL);
-				gda_sql_statement_free (sqlst);
+        ret = mod;
 			}
 		}
-		return mod;
 	}
-	else {
-		gda_sql_statement_free (sqlst);
-		/* error => leave *out_stmt to %NULL */
-		return TRUE;
-	}
+	gda_sql_statement_free (sqlst);
+	/* error => leave *out_stmt to %NULL */
+	return ret;
 }
 
 

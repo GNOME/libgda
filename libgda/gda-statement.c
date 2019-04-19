@@ -205,11 +205,11 @@ gda_statement_dispose (GObject *object)
 	stmt = GDA_STATEMENT (object);
 	GdaStatementPrivate *priv = gda_statement_get_instance_private (stmt);
 
-	if (priv->requested_types) {
+	if (priv->requested_types != NULL) {
 		g_free (priv->requested_types);
 		priv->requested_types = NULL;
 	}
-	if (priv->internal_struct) {
+	if (priv->internal_struct != NULL) {
 		gda_sql_statement_free (priv->internal_struct);
 		priv->internal_struct = NULL;
 	}
