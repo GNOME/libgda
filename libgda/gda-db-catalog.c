@@ -212,10 +212,9 @@ _gda_db_catalog_get_dtd ()
   /* GdaDbCreator DTD */
 	file = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, "dtd",
                                 "libgda-db-catalog.dtd", NULL);
-	if (g_file_test (file, G_FILE_TEST_EXISTS))
+	if (g_file_test (file, G_FILE_TEST_EXISTS)) {
 		_gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
-  else
-    {
+  } else {
 	    if (g_getenv ("GDA_TOP_SRC_DIR"))
         {
           g_free (file);
@@ -225,12 +224,13 @@ _gda_db_catalog_get_dtd ()
 		    }
 	  }
 
-  if (!_gda_db_catalog_dtd)
+  if (_gda_db_catalog_dtd != NULL) {
+    _gda_db_catalog_dtd->name = xmlStrdup((xmlChar*) "db-catalog");
+  } else {
 	  g_message (_("Could not parse '%s': "
                  "Validation for XML files for GdaDbCreator will not be performed (some weird errors may occur)"),
                file);
-  else
-		_gda_db_catalog_dtd->name = xmlStrdup((xmlChar*) "db-catalog");
+  }
 
 	g_free (file);
   return _gda_db_catalog_dtd;
@@ -433,10 +433,6 @@ gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
   g_return_val_if_fail (self,FALSE);
   g_return_val_if_fail (xmlfile,FALSE);
 
-  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
-
-  g_return_val_if_fail (_gda_db_catalog_dtd,FALSE);
-
   xmlDocPtr doc = NULL;
 
   doc = xmlParseFile (xmlfile);
@@ -487,10 +483,6 @@ gda_db_catalog_validate_file_from_path (const gchar *xmlfile,
                                         GError **error)
 {
   g_return_val_if_fail (xmlfile, FALSE);
-
-  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
-
-  g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   xmlDocPtr doc = NULL;
 
@@ -1033,10 +1025,6 @@ gda_db_catalog_parse_file (GdaDbCatalog *self,
 {
   g_return_val_if_fail (self, FALSE);
   g_return_val_if_fail (xmlfile, FALSE);
-
-  xmlDtdPtr _gda_db_catalog_dtd = _gda_db_catalog_get_dtd ();
-
-  g_return_val_if_fail (_gda_db_catalog_dtd, FALSE);
 
   GFileInputStream *istream = NULL;
   xmlDocPtr doc = NULL;
