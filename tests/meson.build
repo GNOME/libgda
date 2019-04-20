@@ -1,3 +1,16 @@
+vg = find_program('valgrind', required: false)
+if vg.found ()
+add_test_setup('valgrind',
+  exe_wrapper : [vg,
+  	'--tool=memcheck',
+  	'--leak-check=full',
+  	'--leak-resolution=high',
+  	'--num-callers=20',
+  	'--suppressions='+join_paths(meson.current_source_dir (), 'gtk.suppression'),
+  	'--log-file=vgdump'],
+  timeout_multiplier : 100)
+endif
+
 test_cargs = [
 	'-include',
 	join_paths(gda_top_build, 'config.h'),
