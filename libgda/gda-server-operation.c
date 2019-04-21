@@ -217,7 +217,6 @@ gda_server_operation_init (GdaServerOperation *operation)
 
 	g_return_if_fail (GDA_IS_SERVER_OPERATION (operation));
 
-	priv = g_new0 (GdaServerOperationPrivate, 1);
 	priv->allnodes = NULL;
 	priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
   priv->doc_hash = NULL; /* key = file name, value = xmlDocPtr */
