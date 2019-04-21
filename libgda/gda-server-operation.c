@@ -59,6 +59,7 @@ typedef struct {
 	GSList                 *allnodes; /* list of all the Node structures, referenced here only */
 	GSList                 *topnodes; /* list of the "/(*)" named nodes, not referenced here  */
 	GHashTable             *info_hash; /* key = path, value = a GdaServerOperationNode */
+  GHashTable             *doc_hash;
 } GdaServerOperationPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaServerOperation, gda_server_operation, G_TYPE_OBJECT)
@@ -219,6 +220,7 @@ gda_server_operation_init (GdaServerOperation *operation)
 	priv = g_new0 (GdaServerOperationPrivate, 1);
 	priv->allnodes = NULL;
 	priv->info_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+  priv->doc_hash = NULL; /* key = file name, value = xmlDocPtr */
 }
 
 static void
@@ -259,6 +261,10 @@ gda_server_operation_dispose (GObject *object)
 		g_slist_free_full (priv->sources, (GDestroyNotify) g_object_unref);
 		priv->sources = NULL;
 	}
+  if (priv->doc_hash) {
+    g_hash_table_unref (priv->doc_hash);
+    priv->doc_hash = NULL;
+  }
 
 	/* chain to parent class */
 	G_OBJECT_CLASS (gda_server_operation_parent_class)->dispose (object);
@@ -524,7 +530,6 @@ gda_server_operation_set_property (GObject *object,
 {
 	GdaServerOperation *op = GDA_SERVER_OPERATION (object);
 	GdaServerOperationPrivate *priv = gda_server_operation_get_instance_private (op);
-	static GHashTable *doc_hash = NULL; /* key = file name, value = xmlDocPtr */
 
 	switch (param_id) {
 	case PROP_CNC:
@@ -565,8 +570,8 @@ gda_server_operation_set_property (GObject *object,
 		if (!xmlfile)
 			return;
 
-		if (doc_hash) {
-			doc = g_hash_table_lookup (doc_hash, xmlfile);
+		if (priv->doc_hash) {
+			doc = g_hash_table_lookup (priv->doc_hash, xmlfile);
 			if (doc) {
 				priv->xml_spec_doc = doc;
 				break;
@@ -582,10 +587,10 @@ gda_server_operation_set_property (GObject *object,
 		if (doc) {
 			if (!use_xml_spec (op, doc, xmlfile))
 				return;
-			if (!doc_hash)
-				doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+			if (!priv->doc_hash)
+				priv->doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
 								  g_free, (GDestroyNotify) xmlFreeDoc);
-			g_hash_table_insert (doc_hash, g_strdup (xmlfile), doc);
+			g_hash_table_insert (priv->doc_hash, g_strdup (xmlfile), doc);
 		}
 		else {
 			g_warning (_("GdaServerOperation: could not load file '%s'"), xmlfile);
@@ -601,8 +606,8 @@ gda_server_operation_set_property (GObject *object,
 			return;
 
 		xmlDocPtr doc = NULL;
-		if (doc_hash) {
-			doc = g_hash_table_lookup (doc_hash, resource_name);
+		if (priv->doc_hash) {
+			doc = g_hash_table_lookup (priv->doc_hash, resource_name);
 			if (doc) {
 				priv->xml_spec_doc = doc;
 				break;
@@ -626,10 +631,10 @@ gda_server_operation_set_property (GObject *object,
 		if (doc) {
 			if (!use_xml_spec (op, doc, NULL))
 				return;
-			if (!doc_hash)
-				doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal, 
+			if (!priv->doc_hash)
+				priv->doc_hash = g_hash_table_new_full (g_str_hash, g_str_equal,
 								  g_free, (GDestroyNotify) xmlFreeDoc);
-			g_hash_table_insert (doc_hash, g_strdup (resource_name), doc);
+			g_hash_table_insert (priv->doc_hash, g_strdup (resource_name), doc);
 		}
 		else {
 			g_warning (_("GdaServerOperation: could not load specified contents"));
