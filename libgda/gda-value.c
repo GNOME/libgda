@@ -1501,6 +1501,7 @@ void
 gda_time_free (GdaTime* boxed)
 {
 	g_date_time_unref (boxed->dt);
+  boxed->dt = NULL;
 	g_free (boxed);
 }
 
@@ -2177,7 +2178,8 @@ gda_value_new_time_from_timet (time_t val)
 	GValue *value = gda_value_new (GDA_TYPE_TIME);
 	GDateTime *dt = g_date_time_new_from_unix_local (val);
 	GdaTime *t = gda_time_new_from_date_time (dt);
-	gda_value_set_time (value, t);
+  g_date_time_unref (dt);
+	g_value_take_boxed (value, t);
 
 	return value;
 }
