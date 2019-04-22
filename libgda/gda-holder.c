@@ -997,19 +997,22 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	 */
 	if (!priv->is_freeable) {
 		gda_holder_unlock ((GdaLockable*) holder);
-		g_warning (_("Can't use this method to set value because there is already a static value"));
+		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_CHANGE_ERROR,
+                 (_("Can't use this method to set value because there is already a static value")));
 		return FALSE;
 	}
+	new_value = value;
 	// If value's type is compatible to current holder's value's type transform it
 	if (value && priv->g_type != G_VALUE_TYPE (value)
 	   && g_value_type_transformable (G_VALUE_TYPE (value), priv->g_type))
 	{
 		new_value = gda_value_new (priv->g_type);
 		g_value_transform (value, new_value);
-		if (!do_copy && value)
-			gda_value_free (value);
-	} else {
-		new_value = value;
+	}
+  else {
+    if (do_copy && value != NULL) {
+      new_value = gda_value_copy (value);
+    }
 	}
 	/* holder will be changed? */
 	newnull = !new_value || GDA_VALUE_HOLDS_NULL (new_value);
@@ -1025,7 +1028,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 	/* holder's validity */
 	newvalid = TRUE;
 	if (newnull && priv->not_null) {
-		g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
+	  g_set_error (error, GDA_HOLDER_ERROR, GDA_HOLDER_VALUE_NULL_ERROR,
 			     _("(%s): Holder does not allow NULL values"),
 			     priv->id);
 		newvalid = FALSE;
@@ -1056,7 +1059,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 
 	/* end of procedure if the value has not been changed, after calculating the holder's validity */
 	if (!changed) {
-		if (!do_copy && new_value)
+		if (new_value)
 			gda_value_free (new_value);
 		priv->invalid_forced = FALSE;
 		if (priv->invalid_error) {
@@ -1079,7 +1082,7 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 				 lerror->message);
 #endif
 			g_propagate_error (error, lerror);
-			if (!do_copy) 
+			if (new_value)
 				gda_value_free (new_value);
 			gda_holder_unlock ((GdaLockable*) holder);
 			return FALSE;
@@ -1113,7 +1116,10 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 			 holder, priv->full_bind, priv->full_bind);
 #endif
 		gda_holder_unlock ((GdaLockable*) holder);
-		return real_gda_holder_set_value (priv->full_bind, new_value, do_copy, error);
+    gboolean ret = real_gda_holder_set_value (priv->full_bind, new_value, do_copy, error);
+    if (new_value)
+      gda_value_free (new_value);
+		return ret;
 	}
 	else {
 		if (priv->value) {
@@ -1123,13 +1129,9 @@ real_gda_holder_set_value (GdaHolder *holder, GValue *value, gboolean do_copy, G
 
 		if (new_value) {
 			if (newvalid) {
-				if (do_copy)
-					priv->value = gda_value_copy (new_value);
-				else
-					priv->value = new_value;
+				priv->value = gda_value_copy (new_value);
 			}
-			else if (!do_copy) 
-				gda_value_free (new_value);
+			gda_value_free (new_value);
 		}
 
 		gda_holder_unlock ((GdaLockable*) holder);

@@ -35,7 +35,8 @@ extern GQuark gda_holder_error_quark (void);
 typedef enum {
 	GDA_HOLDER_STRING_CONVERSION_ERROR,
 	GDA_HOLDER_VALUE_TYPE_ERROR,
-	GDA_HOLDER_VALUE_NULL_ERROR
+	GDA_HOLDER_VALUE_NULL_ERROR,
+  GDA_HOLDER_VALUE_CHANGE_ERROR
 } GdaHolderError;
 
 #define GDA_TYPE_HOLDER          (gda_holder_get_type())
