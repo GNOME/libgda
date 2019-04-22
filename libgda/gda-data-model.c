@@ -1984,7 +1984,6 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 			g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 				     _("Destination column %d can't be NULL but has no correspondence in the "
 				       "source data model"), i);
-      g_object_unref (from_iter);
 			return FALSE;
 		}
 		if (param) {
@@ -1998,7 +1997,6 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 					     gda_g_type_to_string (gda_column_get_g_type (column)),
 					     col,
 					     gda_g_type_to_string (gda_holder_get_g_type (param)));
-        g_object_unref (from_iter);
 				return FALSE;
 			}
 		}
@@ -2136,12 +2134,17 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	}
 	
 	/* free memory */
-  g_list_free_full (append_values, (GDestroyNotify) gda_value_free);
-	g_free (append_types);
-  g_object_unref (from_iter);
-  if (copy_params) {
-    g_slist_free (copy_params);
-  }
+	{
+		GList *vlist;
+
+		vlist = append_values;
+		while (vlist) {
+			if (vlist->data)
+				gda_value_free ((GValue *) vlist->data);
+			vlist = g_list_next (vlist);
+		}
+		g_free (append_types);
+	}
 
 	if (retval && (to_row >= 0)) {
 		/* remove extra rows */
