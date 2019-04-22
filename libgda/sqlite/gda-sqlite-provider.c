@@ -3664,31 +3664,13 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 							  gda_binary_get_data (bin), gda_binary_get_size (bin), SQLITE_TRANSIENT);
 		}
 		else if (G_VALUE_TYPE (value) == GDA_TYPE_TIME) {
-			GString *string;
+			gchar *string;
 			GdaTime *gtime;
-			gboolean tofree = FALSE;
 
 			gtime = (GdaTime *) gda_value_get_time (value);
+      string = gda_time_to_string_utc (gtime);
 
-			string = g_string_new ("");
-			if (gda_time_get_timezone (gtime) != GDA_TIMEZONE_INVALID) {
-				/* SQLite cant' store timezone information, so if timezone information is
-				 * provided, we do our best and convert it to GMT */
-				gtime = gda_time_copy (gtime);
-				tofree = TRUE;
-				gda_time_change_timezone (gtime, 0);
-			}
-
-			g_string_append_printf (string, "%02u:%02u:%02u",
-						gda_time_get_hour (gtime),
-						gda_time_get_minute (gtime),
-						gda_time_get_second (gtime));
-			if (gda_time_get_fraction (gtime) > 0)
-				g_string_append_printf (string, ".%lu", gda_time_get_fraction (gtime));
-
-			if (tofree)
-				gda_time_free (gtime);
-			SQLITE3_CALL (prov, sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, g_string_free (string, FALSE), -1, g_free);
+			SQLITE3_CALL (prov, sqlite3_bind_text) (_gda_sqlite_pstmt_get_stmt (ps), i, string, -1, g_free);
 		}
 		else if (G_VALUE_TYPE (value) == G_TYPE_DATE) {
 			gchar *str;

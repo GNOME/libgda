@@ -753,21 +753,20 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 		}
 		if (context->flags & GDA_STATEMENT_SQL_TIMEZONE_TO_GMT) {
 			if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_TIME)) {
-				GdaTime *nts;
-				nts = (GdaTime*) gda_value_get_time (value);
-				if (nts && (gda_time_get_timezone (nts) != GDA_TIMEZONE_INVALID)) {
-					nts = gda_time_copy (nts);
-					gda_time_change_timezone (nts, 0);
-					gda_time_set_timezone (nts, GDA_TIMEZONE_INVALID);
-					GValue v = {0};
-					g_value_init (&v, GDA_TYPE_TIME);
-					gda_value_set_time (&v, nts);
-					gda_time_free (nts);
-					gchar *tmp;
-					tmp = gda_data_handler_get_sql_from_value (dh, &v);
-					g_value_reset (&v);
-					return tmp;
-				}
+				GdaTime *t;
+        GdaTime *nt;
+				t = g_value_get_boxed (value);
+
+        if (t != NULL) {
+          nt = gda_time_to_utc (t);
+			    GValue v = {0};
+			    g_value_init (&v, GDA_TYPE_TIME);
+			    g_value_take_boxed (&v, nt);
+				  gchar *tmp;
+				  tmp = gda_data_handler_get_sql_from_value (dh, &v);
+				  g_value_reset (&v);
+				  return tmp;
+        }
 			}
 			else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
 				GDateTime *nts;

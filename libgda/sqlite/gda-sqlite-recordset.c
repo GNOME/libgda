@@ -527,22 +527,21 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						g_value_set_boxed (value, &date);
 				}
 				else if (type == GDA_TYPE_TIME) {
-					GdaTime* timegda = gda_time_new ();
-					if (!gda_parse_iso8601_time (timegda,
-								     (gchar *) SQLITE3_CALL (prov, sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
-												    real_col))) {
+          const gchar *str = (const gchar *) SQLITE3_CALL (prov, sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
+												    real_col);
+					GdaTime* timegda = gda_parse_iso8601_time (
+                            str);
+					if (timegda == NULL) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,
 							     GDA_SERVER_PROVIDER_DATA_ERROR,
-							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), 
+							     _("Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"),
 							     (gchar *) SQLITE3_CALL (prov, sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps), real_col));
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						gda_time_to_utc (timegda);
-						g_value_set_boxed (value, timegda);
+						g_value_take_boxed (value, timegda);
 					}
-					gda_time_free (timegda);
 				}
 				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
 					GDateTime* timestamp = gda_parse_iso8601_timestamp (
@@ -557,8 +556,7 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 						gda_row_invalidate_value_e (prow, value, lerror);
 					}
 					else {
-						g_value_set_boxed (value, timestamp);
-					  g_date_time_unref (timestamp);
+						g_value_take_boxed (value, timestamp);
 					}
 				}
 				else if (type == G_TYPE_CHAR) {

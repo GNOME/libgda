@@ -612,19 +612,16 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 				     "%s", _("Internal error"));
 	}
 	else if (type == GDA_TYPE_TIME) {
-		GdaTime* timegda = gda_time_new ();
-		if (!gda_parse_iso8601_time (timegda, thevalue)) {
+		GdaTime* timegda = gda_parse_iso8601_time (thevalue);
+		if (timegda == NULL) {
 			gda_row_invalidate_value (row, value); 
 			g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 				     GDA_SERVER_PROVIDER_DATA_ERROR,
 				     _("Invalid time '%s' (time format should be HH:MM:SS[.ms])"), thevalue);
 		}
 		else {
-			if (gda_time_get_timezone (timegda) == GDA_TIMEZONE_INVALID)
-				gda_time_set_timezone (timegda, 0); /* set to GMT */
-			gda_value_set_time (value, timegda);
+			g_value_take_boxed (value, timegda);
 		}
-		gda_time_free (timegda);
 	}
 	else if (type == G_TYPE_INT64)
 		g_value_set_int64 (value, atoll (thevalue));

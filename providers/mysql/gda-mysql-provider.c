@@ -2388,24 +2388,16 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 				mysql_bind_param[i].is_null = (my_bool*)1;
 			}
 			else {
-				gboolean tofree = FALSE;
-				if (gda_time_get_timezone (ts) != GDA_TIMEZONE_INVALID) {
-					/* MySQL does not store timezone information, so if timezone information is
-					 * provided, we do our best and convert it to GMT */
-					ts = gda_time_copy (ts);
-					tofree = TRUE;
-					gda_time_change_timezone (ts, 0);
-				}
+        GdaTime *nts = gda_time_to_utc (ts);
 
 				MYSQL_TIME *mtime;
 				mtime = g_new0 (MYSQL_TIME, 1);
 				mem_to_free = g_slist_prepend (mem_to_free, mtime);
-				mtime->hour = gda_time_get_hour (ts);
-				mtime->minute = gda_time_get_minute (ts);
-				mtime->second = gda_time_get_second (ts);
-				mtime->second_part = gda_time_get_fraction (ts);
-				if (tofree)
-					gda_time_free (ts);
+				mtime->hour = gda_time_get_hour (nts);
+				mtime->minute = gda_time_get_minute (nts);
+				mtime->second = gda_time_get_second (nts);
+				mtime->second_part = gda_time_get_fraction (nts);
+				gda_time_free (nts);
 
 				mysql_bind_param[i].buffer_type= MYSQL_TYPE_TIME;
 				mysql_bind_param[i].buffer= (char *)mtime;

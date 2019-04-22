@@ -3192,8 +3192,8 @@ gda_parse_formatted_date (GDate *gdate, const gchar *value, GDateDMY first, GDat
 }
 
 
-static gboolean
-_parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong timezone, const char **out_endptr)
+static GdaTime *
+_parse_iso8601_time (const gchar *value, gchar sep, glong timezone, const char **out_endptr)
 {
 	unsigned long int tmp;
 	const char *endptr;
@@ -3204,18 +3204,18 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 
 
 	if ((*value < '0') || (*value > '9'))
-		return FALSE;
+		return NULL;
 
 	/* hour */
 	guint8 iter;
 	for (iter = 0, tmp = 0, endptr = value; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter++, endptr++) {
 		tmp = tmp * 10 + *endptr - '0';
 		if (tmp > 23)
-			return FALSE;
+			return NULL;
 	}
 	h = tmp;
 	if ((sep && *endptr != sep) || !*endptr)
-		return FALSE;
+		return NULL;
 
 	/* minutes */
 	if (sep)
@@ -3223,85 +3223,83 @@ _parse_iso8601_time (GdaTime *timegda, const gchar *value, gchar sep, glong time
 	for (tmp = 0, iter = 0 ; (*endptr >= '0') && (*endptr <= '9') && (iter < 2); iter ++, endptr++) {
 		tmp = tmp * 10 + *endptr - '0';
 		if (tmp > 59)
-			return FALSE;
+			return NULL;
 	}
 	m = tmp;
 	if ((sep && *endptr != sep) || !*endptr)
-		return FALSE;
+		return NULL;
 
 	/* seconds */
 	if (sep)
 		endptr++;
 	if (sep == 0 && (*endptr == ' ' || *endptr == ':'))
-		return FALSE;
+		return NULL;
 	seconds = g_strtod ((const gchar*) endptr, &stz);
 	if (seconds >= 60.0) {
 		*out_endptr = stz;
-		return FALSE;
+		return NULL;
 	}
-	tz = g_time_zone_new_local ();
+	tz = g_time_zone_new_utc ();
 	if (stz != NULL) {
 		g_time_zone_unref (tz);
 		tz = g_time_zone_new (stz);
 		if (tz == NULL) {
-			tz = g_time_zone_new_local ();
+			tz = g_time_zone_new_utc ();
 		}
 		for (; *endptr; endptr++);
 	}
-	GDateTime *dt = g_date_time_new (tz, 1978, 1, 1, h, m, seconds);
-
-	gda_time_set_from_date_time (timegda, dt);
+	GdaTime *dt = (GdaTime*) g_date_time_new (tz, 1978, 1, 1, h, m, seconds);
 
 	g_time_zone_unref (tz);
 
 	*out_endptr = endptr;
-	return TRUE;
+	return dt;
 }
 
 /**
  * gda_parse_iso8601_time:
- * @timegda: a pointer to a #GdaTime structure which will be filled
  * @value: a string
  *
  * Extracts time parts from @value, and sets @timegda's contents
  *
- * Accepted date format is "HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
+ * Accepted date format is "HH:MM:SS[.ms][TZ]" where TZ is +hour or -hour.
+ * If no time zone is given UTC is used.
  *
- * Returns: %TRUE if no error occurred
+ * Returns: (transfer full): a new parsed #GdaTime
  */
-gboolean
-gda_parse_iso8601_time (GdaTime *timegda, const gchar *value)
+GdaTime *
+gda_parse_iso8601_time (const gchar *value)
 {
-	g_return_val_if_fail (timegda, FALSE);
-
 	g_return_val_if_fail (value != NULL, FALSE);
-
-	const char *endptr;
-	return _parse_iso8601_time (timegda, value, ':', 0, &endptr);
+  gchar *str = g_strdup_printf ("1970-01-01T%s", value);
+  g_message ("Time ISO to parse: %s", str);
+  GDateTime *dt;
+  GTimeZone *tz = g_time_zone_new_utc ();
+  dt = g_date_time_new_from_iso8601 (str, tz);
+  g_time_zone_unref (tz);
+  g_free (str);
+  str = g_date_time_format (dt, "%FT%T%:z");
+  g_message ("Parsed time: %s", str);
+  g_free (str);
+  return (GdaTime*) dt;
 }
 
 /**
  * gda_parse_formatted_time:
- * @timegda: a pointer to a #GdaTime structure which will be filled
  * @value: a string
  * @sep: the time separator, usually ':'. If equal to @0, then the expexted format will be HHMMSS...
  *
- * Returns: %TRUE if no error occurred
+ * Returns: (transfer full): a new parsed #GdaTime
  *
- * Since: 5.2
+ * Since: 6.0
  */
-gboolean
-gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep)
+GdaTime *
+gda_parse_formatted_time (const gchar *value, gchar sep)
 {
-	g_return_val_if_fail (timegda, FALSE);
-
 	if (!value)
-		return FALSE;
+		return NULL;
 	const char *endptr;
-	if (! _parse_iso8601_time (timegda, value, sep, 0, &endptr) || *endptr)
-		return FALSE;
-	else
-		return TRUE;
+	return _parse_iso8601_time (value, sep, 0, &endptr);
 }
 
 /**
@@ -3346,7 +3344,7 @@ gda_parse_formatted_timestamp (const gchar *value,
 
 	const char *endptr;
 	GDate gdate;
-	GdaTime* timegda = gda_time_new ();
+	GdaTime* timegda = NULL;
 
 	if (!value)
 		return NULL;
@@ -3363,7 +3361,8 @@ gda_parse_formatted_timestamp (const gchar *value,
 		value = endptr + 1;
 		if (value != NULL) {
 			/* time part */
-			if (! _parse_iso8601_time (timegda, value, ':', 0, &endptr) || *endptr)
+      timegda = _parse_iso8601_time (value, ':', 0, &endptr);
+			if (timegda == NULL  || *endptr)
 				return NULL;
 		}
 	}
@@ -3383,12 +3382,13 @@ gda_parse_formatted_timestamp (const gchar *value,
 		return NULL;
 	gdouble seconds;
 	seconds = (gdouble) gda_time_get_second (timegda) + gda_time_get_fraction (timegda) / 1000000;
-	return g_date_time_new (tz,
+	GDateTime *ret = g_date_time_new (tz,
 													g_date_get_year (&gdate),
 													g_date_get_month (&gdate),
 													g_date_get_day (&gdate),
 													gda_time_get_hour (timegda),
 													gda_time_get_minute (timegda),
 													seconds);
-
+  gda_time_free (timegda);
+  return ret;
 }

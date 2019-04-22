@@ -118,12 +118,12 @@ void         gda_connection_string_split (const gchar *string, gchar **out_cnc_p
  * Date and time parsing from ISO 8601 (well, part of it)
  */
 gboolean     gda_parse_iso8601_date (GDate *gdate, const gchar *value);
-gboolean     gda_parse_iso8601_time (GdaTime *timegda, const gchar *value);
+GdaTime     *gda_parse_iso8601_time (const gchar *value);
 
 GDateTime    *gda_parse_iso8601_timestamp (const gchar *value);
 gboolean     gda_parse_formatted_date (GDate *gdate, const gchar *value,
 				       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
-gboolean     gda_parse_formatted_time (GdaTime *timegda, const gchar *value, gchar sep);
+GdaTime     *gda_parse_formatted_time (const gchar *value, gchar sep);
 GDateTime   *gda_parse_formatted_timestamp (const gchar *value,
 					    GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
 

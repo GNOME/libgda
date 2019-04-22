@@ -109,16 +109,18 @@ test1 (Data *data) {
 	g_message ("Add data models to virtual connection: city");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
 						   city_model, "city", &error)) {
-		g_message ("Add city model error: %s", error->message);
-		g_error_free (error);
+		g_message ("Add city model error: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
 	g_message ("Add data models to virtual connection: country");
 	if (!gda_vconnection_data_model_add_model (GDA_VCONNECTION_DATA_MODEL (virtual),
 						   country_model, "country", &error)) {
-		g_message ("Add country model error: %s", error->message);
-		g_error_free (error);
+		g_message ("Add country model error: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
@@ -126,7 +128,8 @@ test1 (Data *data) {
 	GdaDataModel *datamodel;
 	datamodel = gda_connection_execute_select_command (virtual, "SELECT * FROM city", &error);
 	if (datamodel == NULL) {
-		g_message ("Select data from city model error: %s", error->message);
+		g_message ("Select data from city model error: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
 		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
@@ -139,7 +142,8 @@ test1 (Data *data) {
 
 	datamodel = gda_connection_execute_select_command (virtual, "SELECT * FROM country", &error);
 	if (datamodel == NULL) {
-		g_message ("Select data from city model error: %s", error->message);
+		g_message ("Select data from city model error: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
 		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
@@ -153,8 +157,9 @@ test1 (Data *data) {
 	g_message ("Open SQLite connection for outputs");
 	out_cnc = open_destination_connection (data, &error);
 	if (out_cnc == NULL) {
-		g_message ("Error opening destination %s", error->message);
-		g_error_free (error);
+		g_message ("Error opening destination %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
@@ -163,47 +168,52 @@ test1 (Data *data) {
 	g_message ("Add output connection to virtual connection hub");
 	if (!gda_vconnection_hub_add (GDA_VCONNECTION_HUB (virtual), out_cnc, "out", &error)) {
 		g_message ("Could not add connection to virtual connection: %s",
-			error->message);
-		g_error_free (error);
-                data->fails += 1;
-                g_main_loop_quit (data->loop);
-                return G_SOURCE_REMOVE;
-        }
+			error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+    data->fails += 1;
+    g_main_loop_quit (data->loop);
+    return G_SOURCE_REMOVE;
+  }
 
 	g_message ("Update/Delete check");
 	if (!check_update_delete (virtual, &error)) {
-		g_message ("Error at update-delete: %s", error->message);
-		g_error_free (error);
+		g_message ("Error at update-delete: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
 
 	g_message ("*** Copying data into 'countries' virtual table...\n");
 	if (!assert_run_sql_non_select (virtual, "INSERT INTO out.countries SELECT * FROM country", NULL, &error)) {
-		g_message ("Error: Check Siumultaneos select random: %s", error->message);
-		g_error_free (error);
+		g_message ("Error: Check Siumultaneos select random: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
 
 	g_message ("Check simultaneous select ramdom");
 	if (!check_simultanous_select_random (virtual, &error)) {
-		g_message ("Error: Check Siumultaneos select random: %s", error->message);
-		g_error_free (error);
+		g_message ("Error: Check Siumultaneos select random: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
 	g_message ("Check simultaneous select forward");
 	if (!check_simultanous_select_forward (virtual, &error)) {
-		g_message ("Error: Check Simultaneos select forward: %s", error->message);
-		g_error_free (error);
+		g_message ("Error: Check Simultaneos select forward: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
 
 	if (!check_date (virtual, &error)) {
-		g_message ("Error: Check Date: %s", error->message);
-		g_error_free (error);
+		g_message ("Error: Check Date: %s", error && error->message ? error->message : "No detail");
+    data->fails += 1;
+		g_clear_error (&error);
 		g_main_loop_quit (data->loop);
 		return G_SOURCE_REMOVE;
 	}
@@ -212,17 +222,19 @@ test1 (Data *data) {
 	check_threads_select_random (virtual);
 
 
-        if (! gda_connection_close (virtual, &error)) {
-		g_message ("gda_connection_close(virtual) error: %s", error->message);
-                data->fails += 1;
-                g_main_loop_quit (data->loop);
-                return G_SOURCE_REMOVE;
+  if (! gda_connection_close (virtual, &error)) {
+		g_message ("gda_connection_close(virtual) error: %s", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+    data->fails += 1;
+    g_main_loop_quit (data->loop);
+    return G_SOURCE_REMOVE;
 	}
-        if (! gda_connection_close (out_cnc, &error)) {
-		g_message ("gda_connection_close(out_cnc) error: %s", error->message);
-                data->fails += 1;
-                g_main_loop_quit (data->loop);
-                return G_SOURCE_REMOVE;
+  if (! gda_connection_close (out_cnc, &error)) {
+		g_message ("gda_connection_close(out_cnc) error: %s", error && error->message ? error->message : "No detail");
+		g_clear_error (&error);
+    data->fails += 1;
+    g_main_loop_quit (data->loop);
+    return G_SOURCE_REMOVE;
   }
   g_main_loop_quit (data->loop);
   return G_SOURCE_REMOVE;
@@ -790,37 +802,37 @@ check_date (GdaConnection *virtual, GError **error)
 	const GValue *cvalue, *exp;
 	cvalue = gda_data_model_get_value_at (model, 0, 0, error);
 	if (! cvalue) {
-		g_message ("Could not get timestamp value");
+		g_warning ("Could not get timestamp value");
 		return FALSE;
 	}
 	exp = gda_set_get_holder_value (set, "ts");
 	if (gda_value_differ (cvalue, exp)) {
-		g_message ("Expected value '%s', got '%s'\n",
-			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		g_warning ("Expected Timestamp value '%s', got '%s'\n",
+		    gda_value_stringify (exp), gda_value_stringify (cvalue));
 		return FALSE;
 	}
 
 	cvalue = gda_data_model_get_value_at (model, 1, 0, error);
 	if (! cvalue) {
-		g_message ("Could not get timestamp value");
-                return FALSE;
+		g_warning ("Could not get timestamp value");
+    return FALSE;
 	}
 	exp = gda_set_get_holder_value (set, "adate");
 	if (gda_value_differ (cvalue, exp)) {
-		g_message ("Expected value '%s', got '%s'\n",
-			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		g_warning ("Expected Date value '%s', got '%s'\n",
+		    gda_value_stringify (exp), gda_value_stringify (cvalue));
 		return FALSE;
 	}
 
 	cvalue = gda_data_model_get_value_at (model, 2, 0, error);
 	if (! cvalue) {
-		g_message ("Could not get timestamp value");
-                return FALSE;
+		g_warning ("Could not get timestamp value");
+    return FALSE;
 	}
 	exp = gda_set_get_holder_value (set, "atime");
 	if (gda_value_differ (cvalue, exp)) {
-		g_message ("Expected value '%s', got '%s'\n",
-			 gda_value_stringify (exp), gda_value_stringify (cvalue));
+		g_warning ("Expected Time value '%s', got '%s'\n",
+		    gda_value_stringify (exp), gda_value_stringify (cvalue));
 		return FALSE;
 	}
 

@@ -2208,21 +2208,15 @@ gda_postgres_provider_statement_execute (GdaServerProvider *provider, GdaConnect
 			g_assert (timdh);
 
 			GdaTime *gdatime;
-			gdatime = (GdaTime*) gda_value_get_time (value);
-			if (gda_time_get_timezone (gdatime) != GDA_TIMEZONE_INVALID) {
-				/* PostgreSQL does not store timezone information, so if timezone information is
-				 * provided, we do our best and convert it to GMT */
-				gdatime = gda_time_copy (gdatime);
-				gda_time_change_timezone (gdatime, 0);
-				GValue *rv;
-				rv = gda_value_new (GDA_TYPE_TIME);
-				gda_value_set_time (rv, gdatime);
-				gda_time_free (gdatime);
-				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, rv);
-				gda_value_free (rv);
-			}
-			else
-				param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, value);
+      GdaTime *ngdatime;
+
+			gdatime = g_value_get_boxed (value);
+			GValue *rv;
+      ngdatime = gda_time_to_utc (gdatime);
+			rv = gda_value_new (GDA_TYPE_TIME);
+      g_value_take_boxed (rv, ngdatime);
+			param_values [i] = gda_handler_time_get_no_locale_str_from_value (timdh, rv);
+			gda_value_free (rv);
 		}
 		else {
 			GdaDataHandler *dh;

@@ -160,9 +160,10 @@ test_parse_iso8601_time (void)
 
 	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
 		TestTime td = timedata[i];
-		GdaTime* time = gda_time_new ();
+		GdaTime* time = NULL;
     g_print ("Time to parse: %s\n", td.in_string);
-    g_assert (gda_parse_iso8601_time (time, td.in_string) == td.exp_retval);
+    time = gda_parse_iso8601_time (td.in_string);
+    g_assert ((time != NULL) == td.exp_retval);
     if (!td.exp_retval)
       continue;
 		g_print ("test_parse_iso8601_time: result for gda_parse_iso8601_time (\"%s\"):\n"
@@ -302,14 +303,12 @@ TestTime timedata2[] = {
 	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
 	{"12 0000Z",FALSE, 12, 0, 0, 0, 0},
 	{"1201 00Z",FALSE, 12, 1, 0, 0, 0},
-	{"120102 Z",TRUE, 12, 1, 2, 0, 0},
-	{"120102.Z",TRUE, 12, 1, 2, 0, 0},
-	{"120102:Z",TRUE, 12, 1, 2, 0, 0},
+	{"120102Z",TRUE, 12, 1, 2, 0, 0},
 	{"120102.123Z",TRUE, 12, 1, 2, 123000, 0},
-	{"120102-2",TRUE, 12, 1, 2, 0, -2l*60*60},
+	{"120102-02",TRUE, 12, 1, 2, 0, -2l*60*60},
 	{"120102+11",TRUE, 12, 1, 2, 0, 11l*60*60},
 	{"120102.1234+11",TRUE, 12, 1, 2, 123400, 11l*60*60},
-	{"120102.123456-3",TRUE, 12, 1, 2, 123456, -3l*60*60},
+	{"120102.123456-03",TRUE, 12, 1, 2, 123456, -3l*60*60},
 };
 
 static gboolean
