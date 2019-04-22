@@ -727,7 +727,7 @@ numeric_to_string (const GValue *src, GValue *dest)
 	if (numeric)
 		g_value_set_string (dest, numeric->number);
 	else
-		g_value_set_string (dest, "0.0");
+		g_value_set_string (dest, "NULL");
 }
 
 static void
@@ -1080,7 +1080,7 @@ time_to_string (const GValue *src, GValue *dest)
 		g_string_free (string, FALSE);
 	}
 	else
-		g_value_set_string (dest, "00:00:00");
+		g_value_set_string (dest, "NULL");
 }
 
 /* Transform a String GValue to a GdaTime from a string like "12:30:15+01" */
@@ -2341,8 +2341,13 @@ gda_value_stringify (const GValue *value)
 		g_ascii_formatd (buffer, sizeof (buffer), "%f", g_value_get_double (value));
 		return g_strdup (buffer);
 	}
-	else if (type == GDA_TYPE_NUMERIC)
-		return gda_numeric_get_string (gda_value_get_numeric (value));
+	else if (type == GDA_TYPE_NUMERIC) {
+		gchar *str = gda_numeric_get_string (gda_value_get_numeric (value));
+    if (str == NULL) {
+      str = g_strdup ("NULL");
+    }
+    return str;
+  }
 	else if (type == G_TYPE_DATE) {
 		GDate *date;
 		date = (GDate *) g_value_get_boxed (value);
@@ -2357,7 +2362,7 @@ gda_value_stringify (const GValue *value)
 							date->year, date->month, date->day);
 		}
 		else
-			return g_strdup ("0000-00-00");
+			return g_strdup ("NULL");
 	}
 	else if (g_value_type_transformable (G_VALUE_TYPE (value), G_TYPE_STRING)) {
 		GValue *string;

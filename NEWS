@@ -2,6 +2,7 @@ libgda 5.2.9
  - Fix Sun JRE 1.8 detection
  - Drop unneeded JAVAH variable check
  - Fix build for System Installed SQLite libs
+ - Non-Dates and Timestamps values returns 'NULL' string when converted
 
 libgda 5.2.8 2018-12-03
  - Fix a typo on sv translation
