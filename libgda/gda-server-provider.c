@@ -4307,49 +4307,6 @@ gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, c
 }
 
 /**
- * gda_server_provider_load_file_contents:
- * @inst_dir: directory where the database provider has been installed
- * @data_dir: DATA directory to look for ($prefix/share)
- * @filename: name of the file to load
- *
- * Loads and returns the contents of @filename, which is searched in several places
- * This function should only be used by database provider's
- * implementations
- *
- * Returns: (transfer full): a new string containing @filename's contents, or %NULL if not found or if an error occurred
- */
-gchar *
-gda_server_provider_load_file_contents (const gchar *inst_dir, const gchar *data_dir, const gchar *filename)
-{
-	gchar *contents, *file;
-
-	file = g_build_filename (inst_dir, filename, NULL);
-
-	if (g_file_get_contents (file, &contents, NULL, NULL))
-		goto theend;
-
-	g_free (file);
-	file = g_build_filename (inst_dir, "..", filename, NULL);
-	if (g_file_get_contents (file, &contents, NULL, NULL))
-		goto theend;
-
-	g_free (file);
-	file = g_build_filename (data_dir, filename, NULL);
-	if (g_file_get_contents (file, &contents, NULL, NULL))
-		goto theend;
-
-	g_free (file);
-	file = g_build_filename (inst_dir, "..", "..", "..", "share", "libgda-6.0", filename, NULL);
-	if (g_file_get_contents (file, &contents, NULL, NULL))
-		goto theend;
-	contents = NULL;
-
- theend:
-	g_free (file);
-	return contents;
-}
-
-/**
  * gda_server_provider_load_resource_contents:
  * @prov_name: the provider's name
  * @resource: the name of the resource to load
