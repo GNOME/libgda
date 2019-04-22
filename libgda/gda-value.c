@@ -409,8 +409,9 @@ gda_text_free (GdaText *text)
 {
 	g_return_if_fail (text);
 	if (text->str != NULL) {
-		g_free (text);
+		g_free (text->str);
 	}
+  g_free (text);
 }
 
 /**
@@ -459,7 +460,7 @@ gda_text_take_string (GdaText *text, gchar *str) {
   if (text->str != NULL) {
     g_free (text->str);
   }
-  text->str = NULL;
+  text->str = str;
 }
 static void
 string_to_text (const GValue *src, GValue *dest)
@@ -495,7 +496,11 @@ static GdaText*
 gda_text_copy (GdaText *boxed)
 {
 	GdaText *t = gda_text_new ();
-	t->str = g_strdup (boxed->str);
+  if (boxed->str != NULL) {
+	  t->str = g_strdup (boxed->str);
+  } else {
+    t->str = NULL;
+  }
 	return t;
 }
 
@@ -1845,7 +1850,7 @@ gda_time_valid (const GdaTime *time)
 GdaTime*
 gda_time_to_timezone (GdaTime *time, GTimeZone *ntz)
 {
-	g_return_if_fail (time);
+	g_return_val_if_fail (time, NULL);
 	return (GdaTime*) g_date_time_to_timezone ((GDateTime*) time, ntz);
 }
 
