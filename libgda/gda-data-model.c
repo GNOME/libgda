@@ -1991,6 +1991,7 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 			    (gda_holder_get_g_type (param) != G_TYPE_INVALID) &&
 			    !g_value_type_transformable (gda_holder_get_g_type (param), 
 							 gda_column_get_g_type (column))) {
+			  g_slist_free (copy_params);
 				g_set_error (error, GDA_DATA_MODEL_ERROR, GDA_DATA_MODEL_VALUE_TYPE_ERROR,
 					     _("Destination column %d has a gda type (%s) incompatible with "
 					       "source column %d type (%s)"), i,
@@ -2134,6 +2135,9 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	}
 	
 	/* free memory */
+  if (copy_params) {
+	  g_slist_free (copy_params);
+  }
   g_list_free_full (append_values, (GDestroyNotify) gda_value_free);
 	g_free (append_types);
 
