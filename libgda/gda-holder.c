@@ -366,8 +366,10 @@ gda_holder_copy (GdaHolder *orig)
 	holder = GDA_HOLDER (obj);
 	GdaHolderPrivate *cpriv = gda_holder_get_instance_private (holder);
 
-	if (priv->id)
-		cpriv->id = g_strdup (priv->id);
+	if (priv->id) {
+		g_free (cpriv->id);
+    cpriv->id = g_strdup (priv->id);
+  }
 	if (priv->name)
 		cpriv->name = g_strdup (priv->name);
 	if (priv->desc)
@@ -517,32 +519,35 @@ gda_holder_dispose (GObject *object)
 
 	holder = GDA_HOLDER (object);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
-	if (priv) {
-		gda_holder_set_bind (holder, NULL, NULL);
-		gda_holder_set_full_bind (holder, NULL);
+	gda_holder_set_bind (holder, NULL, NULL);
+	gda_holder_set_full_bind (holder, NULL);
 
-		if (priv->source_model) {
-			g_object_unref (priv->source_model);
-			priv->source_model = NULL;
-		}
+  if (priv->id != NULL) {
+    g_free (priv->id);
+    priv->id = NULL;
+  }
 
-		priv->g_type = G_TYPE_INVALID;
+	if (priv->source_model) {
+		g_object_unref (priv->source_model);
+		priv->source_model = NULL;
+	}
 
-		if (priv->value) {
-			if (priv->is_freeable)
-				gda_value_free (priv->value);
-			priv->value = NULL;
-		}
+	priv->g_type = G_TYPE_INVALID;
 
-		if (priv->default_value) {
-			gda_value_free (priv->default_value);
-			priv->default_value = NULL;
-		}
+	if (priv->value) {
+		if (priv->is_freeable)
+			gda_value_free (priv->value);
+		priv->value = NULL;
+	}
 
-		if (priv->invalid_error) {
-			g_error_free (priv->invalid_error);
-			priv->invalid_error = NULL;
-		}
+	if (priv->default_value) {
+		gda_value_free (priv->default_value);
+		priv->default_value = NULL;
+	}
+
+	if (priv->invalid_error) {
+		g_error_free (priv->invalid_error);
+		priv->invalid_error = NULL;
 	}
 
 	/* parent class */
