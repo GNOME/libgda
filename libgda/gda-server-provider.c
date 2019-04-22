@@ -4264,49 +4264,6 @@ _gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *prov, GdaConnect
 }
 
 /**
- * gda_server_provider_find_file:
- * @prov: a #GdaServerProvider
- * @inst_dir: directory where @prov is installed
- * @filename: name of the file to find
- *
- * Finds the location of a @filename. This function should only be used by database provider's
- * implementations
- *
- * Returns: (transfer full): the complete path to @filename, or %NULL if not found
- */
-gchar *
-gda_server_provider_find_file (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename)
-{
-	gchar *file = NULL;
-	const gchar *dirname;
-
-	g_return_val_if_fail (GDA_IS_SERVER_PROVIDER (prov), NULL);
-	dirname = g_object_get_data (G_OBJECT (prov), "GDA_PROVIDER_DIR");
-	if (dirname)
-		file = g_build_filename (dirname, filename, NULL);
-
-	if (!file ||
-	    (file && !g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR))) {
-		g_free (file);
-		file = g_build_filename (inst_dir, filename, NULL);
-		if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
-			g_free (file);
-			file = NULL;
-			if (dirname) {
-				/* look in the parent dir, to handle the case where the lib is in a .libs dir */
-				file = g_build_filename (dirname, "..", filename, NULL);
-				if (! g_file_test (file, G_FILE_TEST_EXISTS | G_FILE_TEST_IS_REGULAR)) {
-					g_free (file);
-					file = NULL;
-				}
-			}
-		}
-	}
-
-	return file;
-}
-
-/**
  * gda_server_provider_load_resource_contents:
  * @prov_name: the provider's name
  * @resource: the name of the resource to load

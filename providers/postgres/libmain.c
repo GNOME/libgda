@@ -29,7 +29,6 @@
 #include "gda-postgres.h"
 #include "gda-postgres-provider.h"
 
-static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
@@ -48,8 +47,6 @@ g_module_check_init (G_GNUC_UNUSED GModule *module)
 void
 g_module_unload (G_GNUC_UNUSED GModule *module)
 {
-        g_free (module_path);
-        module_path = NULL;
 }
 
 /*
@@ -58,16 +55,6 @@ g_module_unload (G_GNUC_UNUSED GModule *module)
 void
 plugin_init (const gchar *real_path)
 {
-	/* This is never freed, but that is OK. It is only called once. */
-	/* But it would be nice to have some cleanup function just to shut valgrind up. murrayc. */
-        if (real_path) {
-		if(module_path) {
- 			g_free (module_path);
-			module_path = NULL;
-		}
-
-                module_path = g_strdup (real_path);
-	}
 }
 
 const gchar *
@@ -94,6 +81,5 @@ plugin_create_provider (void)
 	GdaServerProvider *prov;
 
 	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_POSTGRES_PROVIDER, NULL);
-        g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
-        return prov;
+  return prov;
 }

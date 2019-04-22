@@ -70,9 +70,8 @@ typedef struct {
 	GType          g_type;
 	gchar         *dbms_type;
 } GdaServerProviderHandlerInfo;
-
-GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *prov, GdaConnection *cnc, 
-							     GType g_type, const gchar *dbms_type);
+GdaDataHandler *gda_server_provider_handler_find            (GdaServerProvider *prov, GdaConnection *cnc,
+                                                             GType g_type, const gchar *dbms_type);
 void            gda_server_provider_handler_declare         (GdaServerProvider *prov, GdaDataHandler *dh,
 							     GdaConnection *cnc, 
 							     GType g_type, const gchar *dbms_type);
@@ -81,7 +80,6 @@ void            _gda_server_provider_handlers_clear_for_cnc (GdaServerProvider *
 /*
  * misc
  */
-gchar         *gda_server_provider_find_file                (GdaServerProvider *prov, const gchar *inst_dir, const gchar *filename);
 gchar         *gda_server_provider_load_resource_contents   (const gchar *prov_name, const gchar *resource);
 
 G_END_DECLS

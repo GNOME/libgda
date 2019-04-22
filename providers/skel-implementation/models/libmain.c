@@ -28,7 +28,6 @@
 #include "gda-models.h"
 #include "gda-models-provider.h"
 
-static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
@@ -47,8 +46,6 @@ g_module_check_init (G_GNUC_UNUSED GModule *module)
 void
 g_module_unload (G_GNUC_UNUSED GModule *module)
 {
-        g_free (module_path);
-        module_path = NULL;
 }
 
 /*
@@ -57,8 +54,6 @@ g_module_unload (G_GNUC_UNUSED GModule *module)
 void
 plugin_init (const gchar *real_path)
 {
-        if (real_path)
-                module_path = g_strdup (real_path);
 }
 
 const gchar *
@@ -95,7 +90,6 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 
-        prov = (GdaServerProvider *) g_object_new (GDA_TYPE_MODELS_PROVIDER, NULL);
-        g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
-        return prov;
+  prov = (GdaServerProvider *) g_object_new (GDA_TYPE_MODELS_PROVIDER, NULL);
+  return prov;
 }

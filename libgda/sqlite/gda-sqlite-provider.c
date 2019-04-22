@@ -1566,51 +1566,28 @@ static gchar *
 gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection *cnc,
 				      GdaServerOperation *op, GError **error)
 {
-        gchar *sql = NULL;
-        gchar *file;
-        gchar *str;
-	gchar *dir;
-
-	/* test @op's validity */
-	file = g_strdup_printf (PNAME "_specs_%s.xml",
-				gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
-        str = g_utf8_strdown (file, -1);
-        g_free (file);
-
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, str);
-	g_free (dir);
+  gchar *sql = NULL;
+  gchar *str;
+	str = g_strdup_printf ("/spec/" PNAME "/" PNAME "_specs_%s.raw.xml",
+			gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
+	gchar *res = g_utf8_strdown (str, -1);
 	g_free (str);
-        if (! file) {
-		str = g_strdup_printf ("/spec/" PNAME "/" PNAME "_specs_%s.raw.xml",
-				gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)));
-		gchar *res = g_utf8_strdown (str, -1);
-		g_free (str);
-		GBytes *contents;
-		contents = g_resources_lookup_data (res,
-						    G_RESOURCE_LOOKUP_FLAGS_NONE,
-						    error);
-		if (contents == NULL) {
-			g_assert (*error != NULL);
+	GBytes *contents;
+	contents = g_resources_lookup_data (res,
+					    G_RESOURCE_LOOKUP_FLAGS_NONE,
+					    error);
+	if (contents == NULL) {
+		g_assert (*error != NULL);
 #ifdef GDA_DEBUG
-			g_print ("Error at getting specs '%s': %s\n", res, (*error)->message);
+		g_print ("Error at getting specs '%s': %s\n", res, (*error)->message);
 #endif
-			g_free (str);
-			g_free (res);
-			return NULL;
-		}
+		g_free (str);
 		g_free (res);
-		/* else: TO_IMPLEMENT */
-		g_bytes_unref (contents);
-        }
-	else {
-		if (!gda_server_operation_is_valid (op, file, error)) {
-			g_assert (*error != NULL);
-			g_free (file);
-			return NULL;
-		}
-		g_free (file);
+		return NULL;
 	}
+	g_free (res);
+	/* else: TO_IMPLEMENT */
+	g_bytes_unref (contents);
 
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {

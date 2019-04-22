@@ -509,41 +509,26 @@ gda_capi_provider_create_operation (GdaServerProvider *provider, GdaConnection *
 				    GdaServerOperationType type, G_GNUC_UNUSED GdaSet *options,
 				    GError **error)
 {
-        gchar *file;
-        GdaServerOperation *op;
-        gchar *str;
+  gchar *file;
+  GdaServerOperation *op;
+  gchar *str;
 	gchar *dir;
 
 	if (cnc) {
 		g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 		g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	}
+  file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
+  str = g_strdup_printf ("capi_specs_%s", file);
+  g_free (file);
 
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (type), -1);
-        str = g_strdup_printf ("capi_specs_%s", file);
-        g_free (file);
+	file = g_strdup_printf ("/spec/capi/%s.raw.xml", str);
+	g_free (str);
+	op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
+						 "spec-resource", file, NULL));
+  g_free (file);
 
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
-
-	if (file) {
-		g_free (str);
-		op = gda_server_operation_new (type, file);
-		g_free (file);
-	}
-	else {
-		file = g_strdup_printf ("/spec/capi/%s.raw.xml", str);
-		g_free (str);
-		op = GDA_SERVER_OPERATION (g_object_new (GDA_TYPE_SERVER_OPERATION, "op-type", type,
-							 "spec-resource", file, NULL));
-		g_free (file);
-        }
-
-        return op;
+  return op;
 }
 
 /*
@@ -564,32 +549,16 @@ gda_capi_provider_render_operation (GdaServerProvider *provider, GdaConnection *
 	}
 
 	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("capi_specs_%s", file);
-        g_free (file);
+  file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
+  str = g_strdup_printf ("capi_specs_%s", file);
+  g_free (file);
 	
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
-
-	if (file) {
-		g_free (str);
-		if (!gda_server_operation_is_valid (op, file, error)) {
-			g_free (file);
-			return NULL;
-		}
+	file = g_strdup_printf ("/spec/mysql/%s.raw.xml", str);
+	g_free (str);
+	if (!gda_server_operation_is_valid_from_resource (op, file, error)) {
+		g_free (file);
+		return NULL;
 	}
-	else {
-		file = g_strdup_printf ("/spec/mysql/%s.raw.xml", str);
-		g_free (str);
-		if (!gda_server_operation_is_valid_from_resource (op, file, error)) {
-			g_free (file);
-			return NULL;
-		}
-        }
 	g_free (file);
 
 	/* actual rendering */

@@ -819,9 +819,9 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 				     GdaServerOperation  *op,
 				     GError             **error)
 {
-        gchar *sql = NULL;
-        gchar *file;
-        gchar *str;
+  gchar *sql = NULL;
+  gchar *file;
+  gchar *str;
 	gchar *dir;
 
 	if (cnc) {
@@ -830,33 +830,16 @@ gda_mysql_provider_render_operation (GdaServerProvider   *provider,
 	}
 
 	/* test @op's validity */
-        file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
-        str = g_strdup_printf ("mysql_specs_%s", file);
-        g_free (file);
+  file = g_utf8_strdown (gda_server_operation_op_type_to_string (gda_server_operation_get_op_type (op)), -1);
+  str = g_strdup_printf ("mysql_specs_%s", file);
+  g_free (file);
 
-	gchar *tmp;
-	tmp = g_strdup_printf ("%s.xml", str);
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        file = gda_server_provider_find_file (provider, dir, tmp);
-	g_free (dir);
-	g_free (tmp);
-
-        if (file) {
-		g_free (str);
-		if (!gda_server_operation_is_valid (op, file, error)) {
-			g_free (file);
-			return NULL;
-		}
+	file = g_strdup_printf ("/spec/mysql/%s.raw.xml", str);
+	g_free (str);
+	if (!gda_server_operation_is_valid_from_resource (op, file, error)) {
+		g_free (file);
+		return NULL;
 	}
-	else {
-		file = g_strdup_printf ("/spec/mysql/%s.raw.xml", str);
-		g_free (str);
-		if (!gda_server_operation_is_valid_from_resource (op, file, error)) {
-			g_free (file);
-			return NULL;
-		}
-        }
-	g_free (file);
 
 	/* actual rendering */
         switch (gda_server_operation_get_op_type (op)) {

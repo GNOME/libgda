@@ -1696,18 +1696,16 @@ gda_config_get_provider (const gchar *provider_name, GError **error)
 			return NULL;
 		}
 
-		void (*plugin_init) (const gchar *);
+		void (*plugin_init) (void);
 		if (g_module_symbol (ip->handle, "plugin_init", (gpointer *) &plugin_init)) {
-			gchar *dirname = g_path_get_dirname (info->location);
-			plugin_init (dirname);
-			g_free (dirname);
+			plugin_init ();
 		}
 	}
 
 	g_module_symbol (ip->handle, "plugin_create_provider", (gpointer) &plugin_create_provider);
-	if (plugin_create_provider)
-		ip->instance = plugin_create_provider ();
-	else {
+	if (plugin_create_provider) {
+	  ip->instance = plugin_create_provider ();
+  } else {
 		g_module_symbol (ip->handle, "plugin_create_sub_provider", (gpointer) &plugin_create_sub_provider);
 		if (plugin_create_sub_provider)
 			ip->instance = plugin_create_sub_provider (provider_name);
