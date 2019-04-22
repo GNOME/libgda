@@ -20,10 +20,6 @@ gda_handler_numerical_get_type
 gda_handler_bin_get_type
 gda_handler_type_get_type
 gda_data_model_array_get_type
-@LIBGDA_BDB_TYPE@
-@LIBGDA_LDAP_TYPE@
-@LIBGDA_LDAP_TYPE2@
-@LIBGDA_LDAP_TYPE3@
 gda_data_model_dir_get_type
 gda_row_get_type
 gda_data_model_get_type

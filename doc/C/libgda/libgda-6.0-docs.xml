@@ -32,7 +32,6 @@
       <title>Connection</title>
       <xi:include href="xml/gda-connection.xml"/>
       <xi:include href="xml/gda-connection-event.xml"/>
-      <xi:include href="xml/gda-ldap-connection.xml"/>
       <xi:include href="xml/gda-xa-transaction.xml"/>
       <xi:include href="xml/gda-transaction-status.xml"/>
       <xi:include href="xml/gda-virtual-connection.xml"/>
@@ -55,11 +54,9 @@
       <title>Data Model</title>
       <xi:include href="xml/gda-data-model.xml"/>
       <xi:include href="xml/gda-data-model-array.xml"/>
-      <xi:include href="xml/gda-data-model-bdb.xml"/>
       <xi:include href="xml/gda-data-model-dir.xml"/>
       <xi:include href="xml/gda-data-model-import.xml"/>
       <xi:include href="xml/gda-data-model-iter.xml"/>
-      <xi:include href="xml/gda-data-model-ldap.xml"/>
       <xi:include href="xml/gda-data-access-wrapper.xml"/>
       <xi:include href="xml/gda-column.xml"/>
       <xi:include href="xml/gda-row.xml"/>
@@ -117,7 +114,6 @@
       <xi:include href="xml/gda-tree-manager.xml"/>
       <xi:include href="xml/gda-tree-mgr-columns.xml"/>
       <xi:include href="xml/gda-tree-mgr-label.xml"/>
-      <xi:include href="xml/gda-tree-mgr-ldap.xml"/>
       <xi:include href="xml/gda-tree-mgr-schemas.xml"/>
       <xi:include href="xml/gda-tree-mgr-select.xml"/>
       <xi:include href="xml/gda-tree-mgr-tables.xml"/>

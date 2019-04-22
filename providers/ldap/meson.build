@@ -2,6 +2,21 @@
 inc_libgda_ldaph = include_directories ('.')
 inc_libgda_ldaph_dep = declare_dependency (include_directories : inc_libgda_ldaph)
 
+ldaph_sources = files ([
+	'gda-ldap-connection.h',
+	'gda-data-model-ldap.h',
+	'gda-tree-mgr-ldap.h'
+	])
+install_headers(ldaph_sources,
+	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
+	)
+
+ldapc_sources = files ([
+	'gda-ldap-connection.c',
+	'gda-data-model-ldap.c',
+	'gda-tree-mgr-ldap.c'
+	])
+
 libgda_ldap_sources = files([
 	'gdaprov-data-model-ldap.c',
 	'gdaprov-data-model-ldap.h',
@@ -12,6 +27,9 @@ libgda_ldap_sources = files([
 	'gda-ldap.h',
 	'libmain.c'
 	])
+
+libgda_ldap_sources += ldaph_sources
+libgda_ldap_sources += ldapc_sources
 
 ldap_xml_fnames = [
 	'ldap_specs_auth',

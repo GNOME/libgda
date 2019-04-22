@@ -260,26 +260,6 @@ libgda_source_all += [
 	libgda_binreloc_sources
 	]
 
-ldap_cargs = []
-if ldap_found and get_option('enable-ldap') and get_option('enable-experimental')
-ldaph_sources = files ([
-	'gda-data-model-ldap.h',
-	'gda-tree-mgr-ldap.h'
-	])
-libgda_headers_all += ldaph_sources
-install_headers(ldaph_sources,
-	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
-	)
-
-ldapc_sources = files ([
-	'gda-data-model-ldap.c',
-	'gda-tree-mgr-ldap.c'
-	])
-libgda_source_all += ldapc_sources
-ldap_cargs += [
-	'-DHAVE_LDAP'
-	]
-endif
 
 if lbdb_found
 	lbdbh_sources = files ([
@@ -354,7 +334,6 @@ libgda = library(
 	dependencies : libgda_deps,
 	c_args : [
 		libgda_cargs,
-		ldap_cargs,
 		lbdb_cargs
 		],
 	install : true
