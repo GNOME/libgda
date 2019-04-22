@@ -30,7 +30,6 @@
 #include <libgda/gda-server-provider-extra.h>
 #include <libgda/binreloc/gda-binreloc.h>
 
-static gchar      *module_path = NULL;
 const gchar       *plugin_get_name (void);
 const gchar       *plugin_get_description (void);
 gchar             *plugin_get_dsn_spec (void);
@@ -49,8 +48,6 @@ g_module_check_init (G_GNUC_UNUSED GModule *module)
 void
 g_module_unload (G_GNUC_UNUSED GModule *module)
 {
-        g_free (module_path);
-        module_path = NULL;
 }
 
 /*
@@ -59,8 +56,6 @@ g_module_unload (G_GNUC_UNUSED GModule *module)
 void
 plugin_init (const gchar *real_path)
 {
-        if (real_path)
-                module_path = g_strdup (real_path);
 }
 
 const gchar *
@@ -78,29 +73,13 @@ plugin_get_description (void)
 gchar *
 plugin_get_dsn_spec (void)
 {
-	gchar *ret, *dir;
-
-	dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-	ret = gda_server_provider_load_file_contents (module_path, dir, "sqlcipher_specs_dsn.xml");
-	g_free (dir);
-	if (ret)
-		return ret;
-	else
-		return gda_server_provider_load_resource_contents ("sqlcipher", "sqlcipher_specs_dsn.raw.xml");
+	return gda_server_provider_load_resource_contents ("sqlcipher", "sqlcipher_specs_dsn.raw.xml");
 }
 
 gchar *
 plugin_get_auth_spec (void)
 {
-	gchar *ret, *dir;
-
-        dir = gda_gbr_get_file_path (GDA_DATA_DIR, LIBGDA_ABI_NAME, NULL);
-        ret = gda_server_provider_load_file_contents (module_path, dir, "sqlcipher_specs_auth.xml");
-        g_free (dir);
-	if (ret)
-		return ret;
-	else
-		return gda_server_provider_load_resource_contents ("sqlcipher", "sqlcipher_specs_auth.raw.xml");
+	return gda_server_provider_load_resource_contents ("sqlcipher", "sqlcipher_specs_auth.raw.xml");
 }
 
 GdaServerProvider *
@@ -108,6 +87,5 @@ plugin_create_provider (void)
 {
 	GdaServerProvider *prov;
 	prov = (GdaServerProvider*) g_object_new (GDA_TYPE_SQLCIPHER_PROVIDER, NULL);
-        g_object_set_data ((GObject *) prov, "GDA_PROVIDER_DIR", module_path);
-        return prov;
+  return prov;
 }
