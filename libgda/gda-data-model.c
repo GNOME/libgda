@@ -2134,17 +2134,8 @@ gda_data_model_import_from_model (GdaDataModel *to, GdaDataModel *from,
 	}
 	
 	/* free memory */
-	{
-		GList *vlist;
-
-		vlist = append_values;
-		while (vlist) {
-			if (vlist->data)
-				gda_value_free ((GValue *) vlist->data);
-			vlist = g_list_next (vlist);
-		}
-		g_free (append_types);
-	}
+  g_list_free_full (append_values, (GDestroyNotify) gda_value_free);
+	g_free (append_types);
 
 	if (retval && (to_row >= 0)) {
 		/* remove extra rows */
