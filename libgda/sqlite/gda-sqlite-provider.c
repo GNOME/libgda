@@ -3351,6 +3351,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			/* create a SQLitePreparedStatement */
 			ps = _gda_sqlite_pstmt_new (GDA_SQLITE_PROVIDER (provider), sqlite_stmt);
 			gda_pstmt_set_sql (_GDA_PSTMT (ps), sql);
+      g_free (sql);
 
 			new_ps = TRUE;
 		}
