@@ -36,6 +36,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: normal
 
 before_script:
+  - export DEBIAN_FRONTEND=noninteractive
   - apt update && apt -y install $DEPENDENCIES
 
 autotools_build:
