@@ -22,7 +22,7 @@
 #define __GDA_LDAP_CONNECTION_H__
 
 #include <virtual/gda-vconnection-data-model.h>
-#include <libgda/gda-data-model-ldap.h>
+#include "gda-data-model-ldap.h"
 
 #define GDA_TYPE_LDAP_CONNECTION            (gda_ldap_connection_get_type())
 G_DECLARE_DERIVABLE_TYPE(GdaLdapConnection, gda_ldap_connection, GDA, LDAP_CONNECTION, GdaVconnectionDataModel)

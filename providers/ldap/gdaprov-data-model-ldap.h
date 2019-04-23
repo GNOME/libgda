@@ -25,7 +25,7 @@
 #ifndef __GDA_PROXY_DATA_MODEL_LDAP_H__
 #define __GDA_PROXY_DATA_MODEL_LDAP_H__
 
-#include <libgda/gda-data-model-ldap.h>
+#include "gda-data-model-ldap.h"
 
 G_BEGIN_DECLS
 

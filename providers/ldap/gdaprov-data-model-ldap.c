@@ -20,13 +20,13 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <libgda/gda-data-model-ldap.h>
+#include "gda-data-model-ldap.h"
 #include <libgda/gda-connection.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-holder.h>
 #include <libgda/gda-util.h>
 #include <libgda/sqlite/virtual/gda-virtual-connection.h>
-#include <libgda/sqlite/virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 #include "gda-ldap.h"
 #include "gda-ldap-util.h"
 #include "gdaprov-data-model-ldap.h"

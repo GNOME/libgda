@@ -33,7 +33,7 @@
 #include <glib.h>
 #include <libgda/libgda.h>
 #include <libgda/gda-connection-private.h>
-#include <virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 
 /*
  * Note about thread safety:

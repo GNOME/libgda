@@ -21,7 +21,7 @@
 #include <libgda/libgda.h>
 #include "gda-tree-mgr-ldap.h"
 #include "gda-tree-node.h"
-#include <sqlite/virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 
 static void gda_tree_mgr_ldap_class_init (GdaTreeMgrLdapClass *klass);
 static void gda_tree_mgr_ldap_init       (GdaTreeMgrLdap *tmgr1);

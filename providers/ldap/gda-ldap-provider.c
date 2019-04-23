@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include <virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 #include <libgda/gda-server-provider-impl.h>
 #include <libgda/gda-data-model-iter.h>
 #include <libgda/gda-util.h>

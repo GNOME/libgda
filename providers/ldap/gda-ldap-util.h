@@ -26,7 +26,7 @@
 
 #include <glib.h>
 #include "gda-ldap.h"
-#include <virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 
 /*
  * Attributes

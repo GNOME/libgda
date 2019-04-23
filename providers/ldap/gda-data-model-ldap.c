@@ -19,10 +19,10 @@
  */
 
 #include <string.h>
-#include <libgda/gda-data-model-ldap.h>
+#include "gda-data-model-ldap.h"
 #include <libgda/gda-connection.h>
 #include <libgda/gda-config.h>
-#include <virtual/gda-ldap-connection.h>
+#include "gda-ldap-connection.h"
 #include <gmodule.h>
 #include <glib/gi18n-lib.h>
 
