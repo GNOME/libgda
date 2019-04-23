@@ -5418,6 +5418,7 @@ gda_connection_get_meta_store_data_v (GdaConnection *cnc, GdaConnectionMetaType 
 	}
 	parser = gda_sql_parser_new ();
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, error);
+  g_object_unref (parser);
 	if (stmt == NULL) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_INTERNAL_ERROR,
 			      _("Internal error while creating statement to retrieve data: %s"),
