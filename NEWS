@@ -14,6 +14,12 @@ libgda 5.91.0
  - Blacklisted providers: FireBird, Oracle, Java ODBC, MS Access, BDB, LDAP, MySQL
  - Fixed warnings
  - Removed Autotools (was 89479e9d2372177036d2d0f6b01a50e5f21d076f 05 april 2019)
+ - Simplified providers plugin system
+ - Many memory leaks fixes
+ - Aisolate LDAP as a provider, no more in main library
+ - Fixed documentation generation using meson
+ - Removed Autotools build system
+ - Added experimental features, use -Denable-experimental=true to use them
 
 libgda-ui 5.91.0
  - Ported almost all public API to use g_autoptr() and remove public private struct
@@ -22,6 +28,7 @@ libgda-ui 5.91.0
  - GDA Control Center now is able to create Data Sources
  - Fixed warnings
  - Replaced deprated GTK+ 3.0 API
+ - Moved as a experimental features
 
 ================================================================================
 libgda 5.90.1
