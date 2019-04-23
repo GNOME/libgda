@@ -159,6 +159,19 @@
     </chapter>
   </part>
 
+  <part id="api-deprecated">
+    <title>API Deprecated</title>
+      <xi:include href="xml/api-index-deprecated.xml"/>
+  </part>
+  <part id="api-index-full">
+    <title>API Deprecated</title>
+      <xi:include href="xml/api-index-full.xml"/>
+  </part>
+  <part id="annotation-glossary">
+    <title>Annotation Glossary</title>
+      <xi:include href="xml/annotation-glossary.xml"/>
+  </part>
+
   <part id="part_index">
     <title>Appendix</title>
       <xi:include href="fdl-appendix.sgml"/>

@@ -1,28 +1,51 @@
 ## Process this file with automake to produce Makefile.in
 
-AUTOMAKE_OPTIONS = 1.6
-
 # The name of the module.
 DOC_MODULE=gda-browser
 
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=$(DOC_MODULE)-docs.sgml
 
+# The directory containing the source code. Relative to $(srcdir)
+DOC_SOURCE_DIR=$(top_srcdir)/tools/browser
+
+
+# Extra options to pass to gtkdoc-scangobj
+SCANGOBJ_OPTIONS=--verbose
+
 # Extra options to supply to gtkdoc-scan
 SCAN_OPTIONS=--deprecated-guards="GDA_DISABLE_DEPRECATED"
 
-# Extra options to pass to gtkdoc-scangobj
-SCANGOBJ_OPTIONS=
+# Extra options to supply to gtkdoc-mkdb
+MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="binreloc"
 
-# The directory containing the source code. Relative to $(srcdir)
-DOC_SOURCE_DIR=../
+# Extra options to supply to gtkdoc-mkhtml
+MKHTML_OPTIONS=
 
-# Used for dependencies.
+# Extra options to supply to gtkdoc-fixref. Normally not needed.
+# e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
+FIXXREF_OPTIONS=
+
+# Used for dependencies. The docs will be rebuilt if any of these change.
+# e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
+# e.g. CFILE_GLOB=$(top_srcdir)/gtk/*.c
 HFILE_GLOB=
 CFILE_GLOB=
 
-# Header files to ignore when scanning
+# Extra header to include when scanning, which are not under DOC_SOURCE_DIR
+# e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h
+EXTRA_HFILES=
+
+# Header files or dirs to ignore when scanning. Use base file/dir names
+# e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h private_code
 IGNORE_HFILES= marshal.h canvas dummy-perspective
+
+
+# Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
+content_files = fdl-appendix.sgml
+
+# Images to copy into HTML directory
+HTML_IMAGES = UILayout.png
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
@@ -65,33 +88,18 @@ GTKDOC_LIBS = \
 	$(GTK_LIBS) \
 	$(GTKSOURCEVIEW_LIBS)
 
-# Extra options to supply to gtkdoc-mkdb
-MKDB_OPTIONS=--sgml-mode --output-format=xml --ignore-files="binreloc"
-
-# Extra SGML files that are included by $(DOC_MAIN_SGML_FILE)
-content_files = fdl-appendix.sgml
-
-# Images to copy into HTML directory
-HTML_IMAGES = UILayout.png
-
-# Extra options to supply to gtkdoc-fixref
-FIXXREF_OPTIONS=
-
 include $(top_srcdir)/gtk-doc.make
 
 
-# Files not to distribute
-# for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
-# for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
-DISTCLEANFILES = $(DOC_MODULE)-doc.pdf
+# Comment this out if you don't want 'make check' to test you doc status
+# and run some sanity checks
+# if ENABLE_GTK_DOC
+# TESTS_ENVIRONMENT = \
+#   DOC_MODULE=$(DOC_MODULE) DOC_MAIN_SGML_FILE=$(DOC_MAIN_SGML_FILE) \
+#   SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir)
+# TESTS = $(GTKDOC_CHECK)
+# endif
 
-DOC_STAMPS += pdf-build.stamp
+
 CLEANFILES += $(DOC_STAMPS)
 
-# Create the PDF
-PDF: pdf-build.stamp
-pdf-build.stamp:
-	if test -f $(srcdir)/$(DOC_MAIN_SGML_FILE); then \
-		dblatex $(srcdir)/$(DOC_MAIN_SGML_FILE) -o $(DOC_MODULE)-doc.pdf ; \
-	fi
-	touch pdf-build.stamp
