@@ -48,12 +48,43 @@ libgda-ui 5.90.0
  - Improved GObject Introspection bindings
  - Improved Vala Bindings
 
-libgda 5.2.5
+libgda 5.2.9
+ - Fix Sun JRE 1.8 detection
+ - Fix JDK 11.0 detection
+ - Drop unneeded JAVAH variable check
+ - Fix build for System Installed SQLite libs
+ - Non-Dates and Timestamps values returns 'NULL' string when converted
+ - Fix --with-ui, now UI is buildable when enable
+
+libgda 5.2.8 2018-12-03
+ - Fix a typo on sv translation
+ - Please note: releases 5.2.6 and 5.2.7 were unable to be published at
+   downdload.gnome.org
+
+libgda 5.2.7 2018-11-07
+ - SQLite provider uses system installed one by default
+ - Revome build's date from documentation
+ - introspection: removed system install in favor of --prefix
+
+libgda 5.2.6 2018-10-03
+ - Fixed compilation on MacOS
+ - All Vala bindings and Vala extensions are built by default using --enable-vala,
+   added --disable* switch to disable some or all of them
+ - Fixes on outdated unit tests
+ - Removed unused Vala extensions
+ - Translations:
+	- es (Daniel Mustieles)
+
+libgda 5.2.5 2018-09-25
  - GdaConnection has removed the use of g_object_weak_*, improving
    multi-threading behaviour
+ - Prepared statements now use GWeakRef for weak references
+ - GdaDataPivot use instance providers and locking
+ - GdaVConnectionDataModel use GRecMutex
  - Updated SQLite to 3.8.11.1
  - Fix SQLCipher build by embedding source code for 3.4.2 version
  - Fix SQLCipher disabling
+ - Updated GObject Introspection annotations
  - Fix Doc generation
  - Bugs corrected: #787685 #789382 #761560 #761529 #760420 #761424 #754263 #754208
  - Corrected HTML output containing <SCRIPT> tag
