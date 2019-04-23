@@ -241,18 +241,6 @@ gda_data_handler_get_descr (GdaDataHandler *dh)
 	return NULL;
 }
 
-static guint
-gtype_hash (gconstpointer key)
-{
-        return GPOINTER_TO_UINT (key);
-}
-
-static gboolean
-gtype_equal (gconstpointer a, gconstpointer b)
-{
-        return (GType) a == (GType) b ? TRUE : FALSE;
-}
-
 /**
  * gda_data_handler_get_default:
  * @for_type: a #GType type
@@ -263,47 +251,59 @@ gtype_equal (gconstpointer a, gconstpointer b)
  *
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
- * Returns: (transfer none): a #GdaDataHandler which must not be modified or destroyed.
+ * Returns: (transfer full): a #GdaDataHandler which must not be modified or destroyed.
  *
  * Since: 4.2.3
  */
 GdaDataHandler *
 gda_data_handler_get_default (GType for_type)
 {
-	static GMutex mutex;
-	static GHashTable *hash = NULL;
 	GdaDataHandler *dh;
 
-	g_mutex_lock (&mutex);
-	if (!hash) {
-		hash = g_hash_table_new_full (gtype_hash, gtype_equal,
-					      NULL, (GDestroyNotify) g_object_unref);
-
-                g_hash_table_insert (hash, (gpointer) G_TYPE_INT64, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT64, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BINARY, gda_handler_bin_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_BLOB, gda_handler_bin_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_BOOLEAN, gda_handler_boolean_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DOUBLE, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_INT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_NUMERIC, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_FLOAT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_SHORT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_USHORT, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_STRING, gda_handler_string_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TEXT, gda_handler_text_new ());
-                g_hash_table_insert (hash, (gpointer) GDA_TYPE_TIME, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_DATE_TIME, gda_handler_time_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_CHAR, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UCHAR, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_ULONG, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_LONG, gda_handler_numerical_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_GTYPE, gda_handler_type_new ());
-                g_hash_table_insert (hash, (gpointer) G_TYPE_UINT, gda_handler_numerical_new ());
-	}
-	g_mutex_unlock (&mutex);
-
-	dh = g_hash_table_lookup (hash, (gpointer) for_type);
+  if (for_type == G_TYPE_INT64) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_UINT64) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == GDA_TYPE_BINARY) {
+    dh = gda_handler_bin_new ();
+  } else if (for_type == GDA_TYPE_BLOB) {
+    dh = gda_handler_bin_new ();
+  } else if (for_type == G_TYPE_BOOLEAN) {
+    dh = gda_handler_boolean_new ();
+  } else if (for_type == G_TYPE_DATE) {
+    dh = gda_handler_time_new ();
+  } else if (for_type == G_TYPE_DOUBLE) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_INT) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == GDA_TYPE_NUMERIC) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_FLOAT) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == GDA_TYPE_SHORT) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == GDA_TYPE_USHORT) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_STRING) {
+    dh = gda_handler_string_new ();
+  } else if (for_type == GDA_TYPE_TEXT) {
+    dh = gda_handler_text_new ();
+  } else if (for_type == GDA_TYPE_TIME) {
+    dh = gda_handler_time_new ();
+  } else if (for_type == G_TYPE_DATE_TIME) {
+    dh = gda_handler_time_new ();
+  } else if (for_type == G_TYPE_CHAR) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_UCHAR) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_ULONG) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_LONG) {
+    dh = gda_handler_numerical_new ();
+  } else if (for_type == G_TYPE_GTYPE) {
+    dh = gda_handler_type_new ();
+  } else if (for_type == G_TYPE_UINT) {
+    dh = gda_handler_numerical_new ();
+  }
 	return dh;
 }

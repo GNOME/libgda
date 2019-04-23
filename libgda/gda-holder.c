@@ -923,8 +923,10 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 		gda_holder_lock ((GdaLockable*) holder);
 		if (!dh)
 			dh = gda_data_handler_get_default (priv->g_type);
-		if (dh)
+		if (dh) {
 			gdaval = gda_data_handler_get_value_from_str (dh, value, priv->g_type);
+      g_object_unref (dh);
+    }
 		
 		if (gdaval)
 			retval = real_gda_holder_set_value (holder, gdaval, FALSE, error);
