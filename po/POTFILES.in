@@ -23,7 +23,6 @@ libgda/gda-data-model-dir.c
 libgda/gda-data-model-dsn-list.c
 libgda/gda-data-model-import.c
 libgda/gda-data-model-iter.c
-libgda/gda-data-model-ldap.c
 libgda/gda-data-pivot.c
 libgda/gda-data-proxy.c
 libgda/gda-data-select.c
@@ -50,7 +49,6 @@ libgda/gda-statement.c
 libgda/gda-tree.c
 libgda/gda-tree-mgr-columns.c
 libgda/gda-tree-mgr-label.c
-libgda/gda-tree-mgr-ldap.c
 libgda/gda-tree-mgr-schemas.c
 libgda/gda-tree-mgr-select.c
 libgda/gda-tree-mgr-tables.c
@@ -78,7 +76,6 @@ libgda/sqlite/gda-sqlite-provider.c
 libgda/sqlite/gda-sqlite-pstmt.c
 libgda/sqlite/gda-sqlite-recordset.c
 libgda/sqlite/gda-sqlite-util.c
-libgda/sqlite/virtual/gda-ldap-connection.c
 libgda/sqlite/virtual/gda-vconnection-data-model.c
 libgda/sqlite/virtual/gda-vconnection-hub.c
 libgda/sqlite/virtual/gda-virtual-connection.c
@@ -174,8 +171,11 @@ providers/jdbc/GdaJValue.c
 providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in
 providers/jdbc/jdbc_specs_dsn.xml.in
 providers/jdbc/libmain.c
+providers/ldap/gda-data-model-ldap.c
+providers/ldap/gda-ldap-connection.c
 providers/ldap/gda-ldap-provider.c
 providers/ldap/gda-ldap-util.c
+providers/ldap/gda-tree-mgr-ldap.c
 providers/ldap/gdaprov-data-model-ldap.c
 providers/ldap/ldap_specs_auth.xml.in
 providers/ldap/ldap_specs_dsn.xml.in
