@@ -10,7 +10,6 @@ services:
 
 stages:
   - build
-  - doc_generation
   - deploy_doc
 
 variables:
@@ -68,7 +67,7 @@ library_build:
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson _build --prefix=/usr -Denable-debug=true
+  - meson _build --prefix=/usr -Denable-debug=true -Denable-gtk-doc=true
   - cd _build
   - ninja
   - broadwayd &
@@ -83,22 +82,6 @@ library_build:
     - _build/doc/C/libgdaui/html
     - _build/doc/Gda-6.0
     - _build/doc/Gdaui-6.0
-    expire_in: 1 week
-
-documentation_build:
-  stage: doc_generation
-  script:
-  - meson _build --prefix=/usr -Denable-gtk-doc=true -Denable-experimental=true -Denable-tools=true -Denable-ldap=true
-  - cd _build
-  - ninja
-  - ninja install
-  allow_failure: true
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/meson-logs/meson-log.txt
-    - _build/doc/C/libgda/html
-    - _build/doc/Gda-6.0
     expire_in: 1 week
 
 pages:
