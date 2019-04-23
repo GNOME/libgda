@@ -20,7 +20,7 @@
 #include <libgda/libgda.h>
 #include "mgr-ldap-classes.h"
 #include "gda-tree-node.h"
-#include <sqlite/virtual/gda-ldap-connection.h>
+#include <providers/ldap/gda-ldap-connection.h>
 #include "../ui-support.h"
 
 struct _MgrLdapClassesPriv {

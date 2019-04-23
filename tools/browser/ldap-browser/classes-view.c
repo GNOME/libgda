@@ -23,7 +23,7 @@
 #include "../dnd.h"
 #include "../ui-support.h"
 #include "../gdaui-bar.h"
-#include <virtual/gda-ldap-connection.h>
+#include <providers/ldap/gda-ldap-connection.h>
 #include "mgr-ldap-classes.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda/gda-debug-macros.h>

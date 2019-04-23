@@ -148,6 +148,7 @@ executable('org.gnome.gda.Browser',
 	gda_browser_sources,
 	link_with: [
 		libgda,
+		libldap_provider,
 		libgdaui
 		],
 	dependencies: browser_deps,

@@ -8,7 +8,7 @@ ldaph_sources = files ([
 	'gda-tree-mgr-ldap.h'
 	])
 install_headers(ldaph_sources,
-	install_dir: join_paths(get_option('includedir'),project_package,'libgda')
+	install_dir: join_paths(get_option('includedir'),project_package,'providers','ldap')
 	)
 
 ldapc_sources = files ([
@@ -108,7 +108,7 @@ libgda_ldap_provider_cargs = [
 		]
 libgda_ldap_provider_cargs += c_args
 
-libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
+libldap_provider = library ('gda-ldap-'+project_api_version,
 	libgda_ldap_sources,
 	dependencies: [
 		libgda_dep,
@@ -126,3 +126,6 @@ libgda_ldap_provider = library ('gda-ldap-'+project_api_version,
 	install: true,
 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 	)
+
+libldap_provider_dep = declare_dependency(link_with: libldap_provider)
+

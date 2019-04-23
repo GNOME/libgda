@@ -29,7 +29,7 @@
 #include "../browser-page.h"
 #include "../browser-window.h"
 #include "common/t-connection.h"
-#include <virtual/gda-ldap-connection.h>
+#include <providers/ldap/gda-ldap-connection.h>
 #include "mgr-ldap-classes.h"
 #include <libgda-ui/gdaui-tree-store.h>
 #include <libgda/gda-debug-macros.h>

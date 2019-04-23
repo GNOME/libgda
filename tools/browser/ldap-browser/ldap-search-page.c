@@ -27,7 +27,7 @@
 #include "../browser-page.h"
 #include "../browser-window.h"
 #include "common/t-connection.h"
-#include <virtual/gda-ldap-connection.h>
+#include <providers/ldap/gda-ldap-connection.h>
 #include "../ui-formgrid.h"
 #include "vtable-dialog.h"
 #include <libgda/gda-debug-macros.h>

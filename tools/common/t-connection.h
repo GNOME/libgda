@@ -23,7 +23,7 @@
 #include "t-favorites.h"
 #include "t-decl.h"
 #ifdef HAVE_LDAP
-#include <libgda/sqlite/virtual/gda-ldap-connection.h>
+#include <providers/ldap/gda-ldap-connection.h>
 #endif
 
 G_BEGIN_DECLS

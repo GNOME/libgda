@@ -22,8 +22,8 @@
 #include <libgda/libgda.h>
 #include <gtk/gtk.h>
 #ifdef HAVE_LDAP
-  #include <libgda/sqlite/virtual/gda-ldap-connection.h>
-  #include <virtual/gda-ldap-connection.h>
+  #include <providers/ldap/gda-ldap-connection.h>
+  #include <providers/ldap/gda-ldap-connection.h>
 #endif /* HAVE_LDAP */
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <common/t-connection.h>
