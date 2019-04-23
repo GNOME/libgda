@@ -537,7 +537,7 @@ typedef struct {
 	gint         *ident_cols;
 	gint          ident_cols_size;
 
-	gint          gtype_column; /* -1 if no column represents a GType */
+	GType          gtype_column; /* -1 if no column represents a GType */
 } TableInfo;
 static void table_info_free_contents (TableInfo *info);
 
@@ -2537,6 +2537,7 @@ table_info_free_contents (TableInfo *info)
 	g_free (info->pk_cols_array);
 	g_free (info->type_cols_array);
 	g_slist_free (info->fk_list);
+	g_slist_free (info->reverse_fk_list);
 	if (info->ident_cols)
 		g_free (info->ident_cols);
 }
@@ -3474,7 +3475,7 @@ gda_meta_store_modify_v (GdaMetaStore *store, const gchar *table_name,
 						goto out;
 					}
 					/* optionaly test reported GType validity */
-					if ((j == schema_set->gtype_column) &&
+					if ((G_VALUE_TYPE (value) == schema_set->gtype_column) &&
 					    (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
 						GType gtype;
 						g_assert (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_STRING));
