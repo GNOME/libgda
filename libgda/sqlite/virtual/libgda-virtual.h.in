@@ -32,6 +32,5 @@
 #include <virtual/gda-vconnection-data-model.h>
 #include <virtual/gda-vconnection-hub.h>
 
-@LIBGDA_LDAP_VINC@
 
 #endif
