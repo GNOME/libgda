@@ -189,7 +189,7 @@ AC_ARG_WITH(ui,
 		with_ui=auto
 	])
 
-if test "$with_ui" = xauto -o "$with_ui" = xyes
+if test x"$with_ui" = xauto -o x"$with_ui" = xyes
 then
 	GTK_MODULES="gtk+-3.0 >= 3.0.0"
 	PKG_CHECK_MODULES(GTK, $GTK_MODULES, [
