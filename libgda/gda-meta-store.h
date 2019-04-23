@@ -115,13 +115,10 @@ typedef struct {
 	GHashTable             *columns;/* Added since 5.2 */
 } GdaMetaContext;
 
-typedef struct _GdaMetaStoreClassPrivate GdaMetaStoreClassPrivate;
-
 /* struct for the object's class */
 struct _GdaMetaStoreClass
 {
 	GObjectClass              parent_class;
-	GdaMetaStoreClassPrivate *cpriv;
 
 	/* signals the changes */
 	void     (*meta_reset)    (GdaMetaStore *store);
