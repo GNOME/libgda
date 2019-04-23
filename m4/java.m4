@@ -178,6 +178,11 @@ m4_define([_JAVA_CHECK_INTERNAL],
 		    JTYPE="Sun JRE 1.8"
 		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
 		    ;;
+                JRE11.0.*)
+		    try_java=true
+		    JTYPE="Sun JRE 11.0"
+		    JFLAGS="-Xlint:unchecked -Xlint:deprecation"
+		    ;;
                 JREgcj-4*)
 		    try_java=true
 		    JTYPE="GCJ"
@@ -217,7 +222,7 @@ m4_define([_JAVA_CHECK_INTERNAL],
 	                    ;;
 	                *)
 	                    RUN_JAVA(JAVA_LIBS, [-classpath ${srcdir} getsp -libs])
-	                    JAVA_LIBS="${JAVA_LIBS} -ljvm"
+	                    JAVA_LIBS="${JAVA_LIBS} -L${JAVA_HOME}/lib/server -ljvm"
 			    RUN_JAVA(JAVA_LD_PATH, [-classpath ${srcdir} getsp -ldpath])
 	           	    ;;
 	            esac
