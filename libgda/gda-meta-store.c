@@ -854,7 +854,7 @@ gda_meta_store_init (GdaMetaStore *store)
 	priv->provider_specifics = g_hash_table_new (ProviderSpecific_hash, ProviderSpecific_equal);
 	priv->db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	create_db_objects (priv, NULL);
-        priv->table_cond_info_hash = g_hash_table_new (g_str_hash, g_str_equal);
+  priv->table_cond_info_hash = g_hash_table_new (g_str_hash, g_str_equal);
 
 	priv->prep_stmts[STMT_SET_VERSION] =
 		compute_prepared_stmt (priv->parser,
@@ -1075,36 +1075,61 @@ gda_meta_store_dispose (GObject *object)
 
 	store = GDA_META_STORE (object);
 	GdaMetaStorePrivate *priv = gda_meta_store_get_instance_private (store);
-	if (priv) {
-		GSList *list;
+	GSList *list;
 
-		if (priv->extract_stmt_hash) {
-			g_hash_table_destroy (priv->extract_stmt_hash);
-			priv->extract_stmt_hash = NULL;
-		}
-
-		if (priv->override_mode)
-			_gda_meta_store_cancel_data_reset (store, NULL);
-
-		g_free (priv->catalog);
-		g_free (priv->schema);
-
-		/* custom db objects */
-		g_hash_table_destroy (priv->p_db_objects_hash);
-		for (list = priv->p_db_objects; list; list = list->next) {
-			if (DB_OBJECT (list->data)->store == store)
-				db_object_free (DB_OBJECT (list->data));
-		}
-		g_slist_free (priv->p_db_objects);
-
-		/* internal connection */
-		if (priv->cnc) {
-			g_object_unref (G_OBJECT (priv->cnc));
-			priv->cnc = NULL;
-		}
-
-		g_rec_mutex_clear (& (priv->mutex));
+	if (priv->extract_stmt_hash) {
+		g_hash_table_destroy (priv->extract_stmt_hash);
+		priv->extract_stmt_hash = NULL;
 	}
+
+	if (priv->override_mode)
+		_gda_meta_store_cancel_data_reset (store, NULL);
+
+	g_free (priv->catalog);
+	g_free (priv->schema);
+
+	/* custom db objects */
+	g_hash_table_destroy (priv->p_db_objects_hash);
+	for (list = priv->p_db_objects; list; list = list->next) {
+		if (DB_OBJECT (list->data)->store == store)
+			db_object_free (DB_OBJECT (list->data));
+	}
+	g_slist_free (priv->p_db_objects);
+
+	/* internal connection */
+	if (priv->cnc) {
+		g_object_unref (G_OBJECT (priv->cnc));
+		priv->cnc = NULL;
+	}
+  if (priv->db_objects) {
+    g_slist_free_full (priv->db_objects, (GDestroyNotify) db_object_free);
+    priv->db_objects = NULL;
+  }
+  if (priv->db_objects_hash) {
+    g_hash_table_unref (priv->db_objects_hash);
+    priv->db_objects_hash = NULL;
+  }
+  if (priv->table_cond_info_hash) {
+    g_hash_table_unref (priv->table_cond_info_hash);
+    priv->table_cond_info_hash = NULL;
+  }
+  if (priv->provider_specifics) {
+    g_hash_table_unref (priv->provider_specifics);
+    priv->provider_specifics = NULL;
+  }
+  if (priv->prep_stmts) {
+    g_object_unref (priv->prep_stmts[STMT_SET_VERSION]);
+	  g_object_unref (priv->prep_stmts[STMT_UPD_VERSION]);
+	  g_object_unref (priv->prep_stmts[STMT_GET_VERSION]);
+	  g_object_unref (priv->prep_stmts[STMT_DEL_ATT_VALUE]);
+	  g_object_unref (priv->prep_stmts[STMT_SET_ATT_VALUE]);
+	  g_object_unref (priv->prep_stmts[STMT_ADD_DECLARE_FK]);
+	  g_object_unref (priv->prep_stmts[STMT_DEL_DECLARE_FK]);
+    g_free (priv->prep_stmts);
+    priv->prep_stmts = NULL;
+  }
+
+	g_rec_mutex_clear (& (priv->mutex));
 
 	/* parent class */
 	G_OBJECT_CLASS (gda_meta_store_parent_class)->dispose (object);
