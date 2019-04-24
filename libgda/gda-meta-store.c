@@ -2536,7 +2536,7 @@ table_info_free_contents (TableInfo *info)
 		g_object_unref (info->params);
 	g_free (info->pk_cols_array);
 	g_free (info->type_cols_array);
-	g_slist_free (info->fk_list);
+	g_slist_free_full (info->fk_list, (GDestroyNotify) table_fkey_free);
 	g_slist_free (info->reverse_fk_list);
 	if (info->ident_cols)
 		g_free (info->ident_cols);
