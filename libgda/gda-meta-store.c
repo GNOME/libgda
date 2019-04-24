@@ -1101,6 +1101,10 @@ gda_meta_store_dispose (GObject *object)
 		g_object_unref (G_OBJECT (priv->cnc));
 		priv->cnc = NULL;
 	}
+	if (priv->parser) {
+		g_object_unref (G_OBJECT (priv->parser));
+		priv->parser = NULL;
+	}
   if (priv->db_objects) {
     g_slist_free_full (priv->db_objects, (GDestroyNotify) db_object_free);
     priv->db_objects = NULL;
