@@ -851,7 +851,12 @@ gda_meta_store_init (GdaMetaStore *store)
   /* Class private data */
 	priv->prep_stmts = g_new0 (GdaStatement *, STMT_LAST);
 	priv->parser = gda_sql_parser_new ();
-	priv->provider_specifics = g_hash_table_new (ProviderSpecific_hash, ProviderSpecific_equal);
+	priv->provider_specifics = g_hash_table_new_full (ProviderSpecific_hash,
+                                                    ProviderSpecific_equal,
+                                                    (GDestroyNotify) g_free,
+                                                    (GDestroyNotify) g_free);
+
+	/* priv->provider_specifics = g_hash_table_new (ProviderSpecific_hash, ProviderSpecific_equal); */
 	priv->db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
 	create_db_objects (priv, NULL);
   priv->table_cond_info_hash = g_hash_table_new (g_str_hash, g_str_equal);
