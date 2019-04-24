@@ -1616,7 +1616,8 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 		}
 		if ((fkid  == -1) || (fkid != g_value_get_int (cvalue))) {
 			gchar *constname;
-			GValue *v2, *v3, *v4, *v5 = NULL;
+			//GValue *v2;
+      GValue *v3, *v4, *v5 = NULL;
 			const GValue *cv6, *cv7;
 
 			fkid = g_value_get_int (cvalue);
@@ -1635,7 +1636,7 @@ fill_constraints_ref_model (GdaConnection *cnc, G_GNUC_UNUSED SqliteConnectionDa
 				continue;
 			}
 		
-			g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "FOREIGN KEY");
+			//g_value_set_string ((v2 = gda_value_new (G_TYPE_STRING)), "FOREIGN KEY");
 			g_value_set_string ((v3 = gda_value_new (G_TYPE_STRING)), g_value_get_string (cvalue));
 			g_value_set_string ((v4 = gda_value_new (G_TYPE_STRING)), "primary_key");
 			if (!constraint_name_n)
