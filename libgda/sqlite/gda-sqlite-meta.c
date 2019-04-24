@@ -996,7 +996,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 		const gchar *this_table_name;
 		const gchar *this_col_name;
 		const GValue *this_col_pname;
-		GValue *nthis_col_pname;
+		GValue *nthis_col_pname = NULL;
 		GType gtype = GDA_TYPE_NULL;
 		const GValue *cvalue;
 		
@@ -1009,8 +1009,10 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 
 		this_table_name = g_value_get_string (p_table_name);
 		g_assert (this_table_name);
-		if (!strcmp (this_table_name, "sqlite_sequence"))
+		if (!strcmp (this_table_name, "sqlite_sequence")) {
+      gda_value_free (nthis_col_pname);
 			continue; /* ignore that table */
+    }
 		
 		this_col_name = g_value_get_string (nthis_col_pname);
 		if (SQLITE3_CALL (prov, sqlite3_table_column_metadata) (cdata->connection,
@@ -1081,6 +1083,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 			g_value_set_string ((v6 = gda_value_new (G_TYPE_STRING)), g_type_name (gtype));
 		cvalue = gda_data_model_get_value_at (tmpmodel, 4, i, error);
 		if (!cvalue) {
+      gda_value_free (nthis_col_pname);
 			retval = FALSE;
 			break;
 		}
@@ -1110,6 +1113,7 @@ fill_columns_model (GdaConnection *cnc, SqliteConnectionData *cdata,
 				    FALSE, NULL, /* is_updatable */
 				    FALSE, NULL /* column_comments */))
 			retval = FALSE;
+
 	}
 
 	g_object_unref (tmpmodel);
