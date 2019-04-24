@@ -619,6 +619,8 @@ typedef struct {
 
 static guint ProviderSpecific_hash (gconstpointer key);
 static gboolean ProviderSpecific_equal (gconstpointer a, gconstpointer b);
+static void provider_specific_key_free (ProviderSpecificKey *key);
+static void provider_specific_value_free (ProviderSpecificValue *val);
 
 typedef struct {
 	GdaConnection *cnc;
@@ -721,6 +723,19 @@ ProviderSpecific_equal (gconstpointer a, gconstpointer b)
 		return FALSE;
 	else
 		return TRUE;
+}
+
+static void
+provider_specific_key_free (ProviderSpecificKey *key)
+{
+  g_free (key->expr);
+  g_free (key);
+}
+static void
+provider_specific_value_free (ProviderSpecificValue *val)
+{
+  g_free (val->repl);
+  g_free (val);
 }
 
 static gboolean
@@ -853,8 +868,8 @@ gda_meta_store_init (GdaMetaStore *store)
 	priv->parser = gda_sql_parser_new ();
 	priv->provider_specifics = g_hash_table_new_full (ProviderSpecific_hash,
                                                     ProviderSpecific_equal,
-                                                    (GDestroyNotify) g_free,
-                                                    (GDestroyNotify) g_free);
+                                                    (GDestroyNotify) provider_specific_key_free,
+                                                    (GDestroyNotify) provider_specific_value_free);
 
 	/* priv->provider_specifics = g_hash_table_new (ProviderSpecific_hash, ProviderSpecific_equal); */
 	priv->db_objects_hash = g_hash_table_new (g_str_hash, g_str_equal);
