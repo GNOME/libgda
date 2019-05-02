@@ -634,9 +634,7 @@ geometric_point_to_string (const GValue *src, GValue *dest)
 		str = g_strdup_printf ("(%.*g,%.*g)", DBL_DIG, point->x,
 				       DBL_DIG, point->y);
 	else
-		str = g_strdup_printf ("(%.*g,%.*g)",
-				       DBL_DIG, 0.,
-				       DBL_DIG, 0.);
+		str = g_strdup ("NULL");
 	g_value_take_string (dest, str);
 }
 
@@ -1342,7 +1340,7 @@ timestamp_to_string (const GValue *src, GValue *dest)
 		g_string_free (string, FALSE);
 	}
 	else
-		g_value_set_string (dest, "0000-00-00 00:00:00");
+		g_value_set_string (dest, "NULL");
 }
 
 GType
@@ -2898,7 +2896,7 @@ short_to_string (const GValue *src, GValue *dest)
 	if (GDA_VALUE_HOLDS_SHORT (src))
 		str = g_strdup_printf ("%d", gda_value_get_short ((GValue *) src));
 	else
-		str = g_strdup_printf ("%d", gda_value_get_ushort ((GValue *) src));
+		str = g_strdup ("NULL");
 
 	g_value_take_string (dest, str);
 }
