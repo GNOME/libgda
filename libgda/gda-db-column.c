@@ -1100,18 +1100,18 @@ gda_db_column_prepare_add (GdaDbColumn *self,
   GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   if(!gda_server_operation_set_value_at (op, priv->mp_name, error,
-                                        "/COLUMN_DEF_P/COLUMN_NAME/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_NAME"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op,priv->mp_type, error,
-                                        "/COLUMN_DEF_P/COLUMN_TYPE/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_TYPE"))
     return FALSE;
 
   gchar *sizestr = NULL;
   sizestr = g_strdup_printf ("%d", priv->m_size);
 
   if(!gda_server_operation_set_value_at (op, sizestr, error,
-                                        "/COLUMN_DEF_P/COLUMN_SIZE/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_SIZE"))
     {
       g_free (sizestr);
       return FALSE;
@@ -1120,27 +1120,27 @@ gda_db_column_prepare_add (GdaDbColumn *self,
     g_free (sizestr);
 
   if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_nnul), error,
-                                        "/COLUMN_DEF_P/COLUMN_NNUL/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_NNUL"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_autoinc), error,
-                                        "/COLUMN_DEF_P/COLUMN_AUTOINC/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_AUTOINC"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_unique), error,
-                                        "/COLUMN_DEF_P/COLUMN_UNIQUE/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_UNIQUE"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_pkey), error,
-                                        "/COLUMN_DEF_P/COLUMN_PKEY/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_PKEY"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op, priv->mp_default, error,
-                                        "/COLUMN_DEF_P/COLUMN_DEFAULT/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_DEFAULT"))
     return FALSE;
 
   if(!gda_server_operation_set_value_at (op, priv->mp_check, error,
-                                        "/COLUMN_DEF_P/COLUMN_CHECK/%d", priv->m_scale))
+                                        "/COLUMN_DEF_P/COLUMN_CHECK"))
     return FALSE;
 
   return TRUE;
