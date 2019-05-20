@@ -95,7 +95,7 @@ void                              gda_numeric_free (GdaNumeric *numeric);
  *
  * Represents a time information.
  */
-typedef struct GDateTime GdaTime;
+typedef struct _GDateTime GdaTime;
 
 GType                             gda_time_get_type (void) G_GNUC_CONST;
 GdaTime*                          gda_time_new (void);
