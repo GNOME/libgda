@@ -17,7 +17,7 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-
+#define G_LOG_DOMAIN "gda-db-table"
 #include "gda-db-table.h"
 #include "gda-db-fkey.h"
 #include "gda-db-column.h"
@@ -561,6 +561,7 @@ _gda_db_compare_column_meta (GdaMetaTableColumn *a,
   const gchar *namea = a->column_name;
   const gchar *nameb = gda_db_column_get_name (b);
 
+	g_debug("Checking %s and %s\n", namea, nameb);
   return g_strcmp0 (namea,nameb);
 }
 

@@ -1,6 +1,6 @@
 /* gda-db-catalog.c
  *
- * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2018-2019 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,6 +17,8 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+
+#define G_LOG_DOMAIN "gda-db-catalog"
 
 #include "gda-db-catalog.h"
 #include "gda-db-table.h"
@@ -890,18 +892,21 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
 
       mobj = gda_meta_struct_complement (mstruct, GDA_META_DB_TABLE, catalog, schema,name, NULL);
 
-      if (mobj) {
-        st = gda_db_table_update (it->data,GDA_META_TABLE(mobj), priv->cnc, error);
-        if (!st) {
-          break;
-        }
-      }
-      else {
-        st = gda_db_table_create (it->data,priv->cnc, TRUE, error);
-        if (!st) {
-          break;
-        }
-      }
+      if (mobj)
+				{
+					g_debug("Object %s was found in the database\n", gda_db_base_get_name(GDA_DB_BASE(it->data)));
+					st = gda_db_table_update (it->data,GDA_META_TABLE(mobj), priv->cnc, error);
+
+					if (!st)
+						break;
+				}
+			else
+				{
+					st = gda_db_table_create (it->data,priv->cnc, TRUE, error);
+
+					if (!st)
+						break;
+				}
     } /* End of for loop */
 
   gda_value_free (catalog);
