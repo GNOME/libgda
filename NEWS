@@ -1,3 +1,10 @@
+libgda-6.0.0
+ - PostgreSQL now support GdaText values, so take care because some SELECT operations
+   concatenating strings return GdaText values instead of strings.
+ - Lot of memory leaks fixed
+
+================================================================================
+
 libgda 5.91.0
  - Added support for PostgreSQL version up to 11.0
  - Added new GdaText type for large texts types support

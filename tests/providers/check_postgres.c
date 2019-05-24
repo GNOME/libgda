@@ -77,6 +77,7 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 		number_failed += prov_test_common_load_data ();
 		number_failed += prov_test_common_check_cursor_models ();
 		number_failed += prov_test_common_check_data_select ();
+    number_failed += prov_test_common_values ();
 		number_failed += prov_test_common_clean ();
 	}
 

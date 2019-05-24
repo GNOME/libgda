@@ -585,6 +585,11 @@ set_value (GdaConnection *cnc, GdaRow *row, GValue *value, GType type, const gch
 
 	if (type == G_TYPE_BOOLEAN)
 		g_value_set_boolean (value, (*thevalue == 't') ? TRUE : FALSE);
+	else if (type == GDA_TYPE_TEXT) {
+    GdaText *txt = gda_text_new ();
+    gda_text_set_string (txt, thevalue);
+    g_value_take_boxed (value, txt);
+  }
 	else if (type == G_TYPE_STRING) 
 		g_value_set_string (value, thevalue);
 	else if (type == G_TYPE_INT)

@@ -38,5 +38,6 @@ int prov_test_common_check_timestamp (void);
 int prov_test_common_check_date (void);
 int prov_test_common_clean (void);
 int prov_test_common_check_bigint (void);
+int prov_test_common_values (void);
 
 #endif

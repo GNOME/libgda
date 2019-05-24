@@ -1078,13 +1078,14 @@ prov_test_common_check_timestamp (void)
 		number_failed ++;
 		goto out;
 	}
-	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_STRING, FALSE, &error);
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, GDA_TYPE_TEXT, FALSE, &error);
 	if (!cvalue) {
 		g_free (str);
 		number_failed ++;
 		goto out;
-	}	
-	if (strncmp (str, g_value_get_string (cvalue), 10)) { /* only compare date parts */
+	}
+  GdaText *text = g_value_get_boxed (cvalue);
+	if (strncmp (str, gda_text_get_string (text), 10)) { /* only compare date parts */
 		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Returned GdaDataHandler returned wrong result: '%s' and expected '%s'", str, g_value_get_string (cvalue));
 		g_free (str);
@@ -1238,13 +1239,14 @@ prov_test_common_check_date (void)
 		number_failed ++;
 		goto out;
 	}
-	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, G_TYPE_STRING, FALSE, &error);
+	cvalue = gda_data_model_get_typed_value_at (model, 0, 0, GDA_TYPE_TEXT, FALSE, &error);
 	if (!cvalue) {
 		g_free (str);
 		number_failed ++;
 		goto out;
-	}	
-	if (strncmp (str, g_value_get_string (cvalue), 10)) { /* only compare date parts */
+	}
+  GdaText *text = g_value_get_boxed (cvalue);
+	if (strncmp (str, gda_text_get_string (text), 10)) { /* only compare date parts */
 		g_set_error (&error, TEST_ERROR, TEST_ERROR_GENERIC,
 			     "Returned GdaDataHandler returned wrong result: '%s' and expected '%s'", str, g_value_get_string (cvalue));
 		g_free (str);
@@ -1361,6 +1363,77 @@ out:
 	if (error)
 		g_error_free (error);
 #endif
+
+	return number_failed;
+}
+
+/*
+ *
+ * Test Value type conversion support
+ *
+ */
+int
+prov_test_common_values (void)
+{
+	GError *error = NULL;
+	int number_failed = 0;
+
+#ifdef CHECK_EXTRA_INFO
+	g_print ("\n============= %s() =============\n", __FUNCTION__);
+#endif
+
+	gchar* sql = "CREATE TABLE IF NOT EXISTS test_values (name TEXT)";
+  gda_connection_execute_non_select_command (cnc, sql, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    return 1;
+  }
+  sql = "INSERT INTO test_values (name) VALUES ('test text')";
+  gda_connection_execute_non_select_command (cnc, sql, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    return 1;
+  }
+  sql = "SELECT name FROM test_values";
+  GdaDataModel *res = gda_connection_execute_select_command (cnc, sql, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    return 1;
+  }
+  g_assert (res != NULL);
+  g_assert (gda_data_model_get_n_rows (res) >= 0);
+  const GValue *valo = gda_data_model_get_value_at (res, 0, 0, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    number_failed++;
+  }
+  GdaColumn *col = gda_data_model_describe_column (res, 0);
+  g_assert (gda_column_get_g_type (col) == GDA_TYPE_TEXT);
+  g_message ("Column of Type GdaText: as %s", g_type_name (G_VALUE_TYPE (valo)));
+  g_assert (G_VALUE_TYPE (valo) == GDA_TYPE_TEXT);
+  const GValue *val = gda_data_model_get_typed_value_at (res, 0, 0, GDA_TYPE_TEXT, TRUE, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    number_failed++;
+  } else {
+    GValue *dst = gda_value_new (G_TYPE_STRING);
+    g_assert (g_value_type_transformable (G_VALUE_TYPE (val), G_VALUE_TYPE (dst)));
+    g_assert (g_value_transform (val, dst));
+  }
+
+  sql = "DROP TABLE IF EXISTS  test_values";
+  gda_connection_execute_non_select_command (cnc, sql, &error);
+  if (error != NULL) {
+    g_warning ("Error: %s",
+                error && error->message ? error->message : "No detail");
+    return 1;
+  }
+  g_message ("Dropped Table 'test_values'");
 
 	return number_failed;
 }

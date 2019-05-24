@@ -241,7 +241,7 @@
     </gda_array_row>
     <gda_array_row>
       <gda_value>text</gda_value>
-      <gda_value>gchararray</gda_value>
+      <gda_value>GdaText</gda_value>
       <gda_value>variable-length string, no limit specified</gda_value>
       <gda_value isnull="t"/>
     </gda_array_row>
