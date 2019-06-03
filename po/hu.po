@@ -1,24 +1,23 @@
 # Hungarian translation of libgda.
-# Copyright (C) 1999-2016 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2016, 2019 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 #
-# Szabolcs BAN <shooby@gnome.hu>, 1999-2000.
-# Balázs Meskó <meskobalazs@gmail.com>, 2016.
-# Balázs Úr <urbalazs@gmail.com>, 2016.
+# Szabolcs Bán <shooby at gnome dot hu>, 1999, 2000.
+# Balázs Meskó <mesko.balazs at fsf dot hu>, 2016.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2016, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda 5.2\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-11 12:52+0000\n"
-"PO-Revision-Date: 2016-03-12 09:11+0000\n"
-"Last-Translator: Meskó Balázs <meskobalazs@gmail.com>\n"
-"Language-Team: Hungarian <fsf@gnome.hu>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
+"POT-Creation-Date: 2019-05-02 16:06+0000\n"
+"PO-Revision-Date: 2019-06-03 22:17+0200\n"
+"Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
+"Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 18.12.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. title
@@ -104,14 +103,14 @@ msgstr "A böngészőprogram nem hajtható végre"
 #: ../libgda/gda-config.c:533 ../libgda/gda-config.c:1068
 #: ../libgda/gda-config.c:1179 ../libgda/gda-config.c:1237
 #: ../libgda/gda-config.c:1314 ../libgda/gda-connection.c:1734
-#: ../libgda/gda-data-model.c:2475 ../libgda/gda-data-model.c:2483
+#: ../libgda/gda-data-model.c:2455 ../libgda/gda-data-model.c:2463
 #: ../libgda/gda-data-model-dir.c:388 ../libgda/gda-data-model-import.c:1721
-#: ../libgda/gda-data-pivot.c:1284 ../libgda/gda-data-pivot.c:1314
-#: ../libgda/gda-data-pivot.c:1412 ../libgda/gda-data-pivot.c:1525
+#: ../libgda/gda-data-pivot.c:1295 ../libgda/gda-data-pivot.c:1325
+#: ../libgda/gda-data-pivot.c:1423 ../libgda/gda-data-pivot.c:1536
 #: ../libgda/gda-data-proxy.c:3123 ../libgda/gda-data-select.c:400
 #: ../libgda/gda-data-select.c:2308 ../libgda/gda-data-select.c:2318
 #: ../libgda/gda-data-select.c:3766 ../libgda/gda-holder.c:545
-#: ../libgda/gda-holder.c:1951 ../libgda/gda-server-operation.c:633
+#: ../libgda/gda-holder.c:1943 ../libgda/gda-server-operation.c:633
 #: ../libgda/gda-server-operation.c:1037 ../libgda/gda-set.c:1184
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
 #: ../libgda/sqlite/gda-sqlite-provider.c:2703
@@ -122,9 +121,9 @@ msgstr "A böngészőprogram nem hajtható végre"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3412
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:819
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1547
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:424
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:823
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1559
 #: ../libgda/thread-wrapper/gda-thread-provider.c:452
 #: ../libgda/thread-wrapper/gda-thread-provider.c:532
 #: ../libgda-ui/data-entries/common-bin.c:81
@@ -721,7 +720,7 @@ msgstr "Nincs „%s” nevű DSN meghatározva"
 #: ../libgda/gda-connection.c:815
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
-msgstr "Nem lehet álltani a(z) „%s” tulajdonságot, ha a kapcsolat már nyitott."
+msgstr "Nem lehet álltani a(z) „%s” tulajdonságot, ha a kapcsolat már nyitott"
 
 #: ../libgda/gda-connection.c:1113 ../libgda/gda-connection.c:1272
 #: ../libgda/thread-wrapper/gda-thread-provider.c:425
@@ -795,9 +794,9 @@ msgstr "Nem szerezhető meg a kapcsolódási zár"
 
 #: ../libgda/gda-connection.c:3279 ../libgda/gda-connection.c:3518
 #: ../libgda/gda-connection.c:3892 ../libgda/gda-connection.c:3992
-#: ../libgda/gda-connection.c:4088 ../libgda/gda-connection.c:6568
+#: ../libgda/gda-connection.c:4088 ../libgda/gda-connection.c:6585
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:169
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:401
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:405
 #: ../libgda/thread-wrapper/gda-thread-provider.c:1718
 #, c-format
 msgid "Connection is closed"
@@ -854,11 +853,11 @@ msgstr "Érvénytelen szűrési argumentumok"
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
-"Kapcsolat tranzakciós státusz követése: nem létezik tranzakció ehhez: %s"
+"Kapcsolat tranzakciós állapotának követése: nem létezik tranzakció ehhez: %s"
 
 #: ../libgda/gda-data-access-wrapper.c:636
-#: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:439
-#: ../libgda/gda-data-model-array.c:670 ../libgda/gda-data-model-bdb.c:657
+#: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:438
+#: ../libgda/gda-data-model-array.c:669 ../libgda/gda-data-model-bdb.c:657
 #: ../libgda/gda-data-model-bdb.c:761 ../libgda/gda-data-model-bdb.c:790
 #: ../libgda/gda-data-model-dir.c:786 ../libgda/gda-data-model-dir.c:885
 #: ../libgda/gda-data-model-dir.c:927 ../libgda/gda-data-model-dsn-list.c:311
@@ -866,7 +865,7 @@ msgstr ""
 #: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1320 ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860 ../libgda/gda-data-select.c:2927
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:918
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:922
 #: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
@@ -919,14 +918,14 @@ msgstr "Az összehasonlított adatmodell sorainak számát nem lehet lekérdezni
 
 #: ../libgda/gda-data-comparator.c:583 ../libgda/gda-data-comparator.c:619
 msgid "Differences computation cancelled on signal handling"
-msgstr "A különbségek kiszámítása megszakítva a szignál kezelésekor\t"
+msgstr "A különbségek kiszámítása megszakítva a szignál kezelésekor"
 
 #: ../libgda/gda-data-model-array.c:180
 msgid "Whether data model can be modified"
 msgstr "A modellek módosíthatóak-e"
 
-#: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
-#: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:797
+#: ../libgda/gda-data-model-array.c:508 ../libgda/gda-data-model-array.c:660
+#: ../libgda/gda-data-model-array.c:747 ../libgda/gda-data-model-dir.c:797
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1337
 #: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3632
 #: ../libgda/gda-data-proxy.c:3670 ../libgda/gda-data-select.c:1853
@@ -935,8 +934,8 @@ msgstr "A modellek módosíthatóak-e"
 msgid "Row %d out of range (0-%d)"
 msgstr "A(z) %d. sor tartományon kívül esik (0-%d)"
 
-#: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
-#: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:800
+#: ../libgda/gda-data-model-array.c:512 ../libgda/gda-data-model-array.c:663
+#: ../libgda/gda-data-model-array.c:750 ../libgda/gda-data-model-dir.c:800
 #: ../libgda/gda-data-model-dir.c:974 ../libgda/gda-data-model-dir.c:1340
 #: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3635
 #: ../libgda/gda-data-proxy.c:3673 ../libgda/gda-data-select.c:1856
@@ -945,25 +944,25 @@ msgstr "A(z) %d. sor tartományon kívül esik (0-%d)"
 msgid "Row %d not found (empty data model)"
 msgstr "A(z) %d. sor nem található (üres adatmodell)"
 
-#: ../libgda/gda-data-model-array.c:654
+#: ../libgda/gda-data-model-array.c:653
 msgid "No row in data model"
 msgstr "Nincsenek sorok az adatmodellben"
 
-#: ../libgda/gda-data-model-array.c:686
+#: ../libgda/gda-data-model-array.c:685
 msgid "Data model has no data"
 msgstr "Az adatmodellben nincsenek adatok"
 
-#: ../libgda/gda-data-model-array.c:741 ../libgda/gda-data-model-array.c:785
-#: ../libgda/gda-data-model-array.c:824 ../libgda/gda-data-model-array.c:859
+#: ../libgda/gda-data-model-array.c:740 ../libgda/gda-data-model-array.c:784
+#: ../libgda/gda-data-model-array.c:823 ../libgda/gda-data-model-array.c:858
 msgid "Attempting to modify a read-only data model"
 msgstr "Csak olvasható adatmodell módosításának kísérlete"
 
-#: ../libgda/gda-data-model-array.c:791 ../libgda/gda-data-model-array.c:830
-#: ../libgda/gda-data-model.c:864
+#: ../libgda/gda-data-model-array.c:790 ../libgda/gda-data-model-array.c:829
+#: ../libgda/gda-data-model.c:855
 msgid "Too many values in list"
 msgstr "Túl sok érték van a listában"
 
-#: ../libgda/gda-data-model-array.c:884
+#: ../libgda/gda-data-model-array.c:883
 msgid "Row not found in data model"
 msgstr "A sor nem található az adatmodellben"
 
@@ -998,111 +997,111 @@ msgstr "GdaBinary érték várt, kapott: „%s”"
 msgid "Key modification is not supported"
 msgstr "A kulcsmódosítás nem támogatott"
 
-#: ../libgda/gda-data-model.c:705
+#: ../libgda/gda-data-model.c:699
 msgid "Data model does not support getting individual value"
 msgstr "Az adatmodell nem támogatja az egyedi értékek lekérését"
 
-#: ../libgda/gda-data-model.c:748 ../libgda/gda-data-model.c:758
+#: ../libgda/gda-data-model.c:742 ../libgda/gda-data-model.c:752
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
 msgstr "Az adatmodell érvénytelen, „%s” típusú értéket adott vissza"
 
-#: ../libgda/gda-data-model.c:755
+#: ../libgda/gda-data-model.c:749
 msgid "Data model returned invalid NULL value"
 msgstr "Az adatmodell érvénytelen, NULL értéket adott vissza"
 
-#: ../libgda/gda-data-model.c:825
+#: ../libgda/gda-data-model.c:817
 msgid "Data model does not support setting individual value"
 msgstr "Az adatmodell nem támogatja az egyedi értékek beállítását"
 
-#: ../libgda/gda-data-model.c:883
+#: ../libgda/gda-data-model.c:874
 msgid "Data model does not support setting values"
 msgstr "Az adatmodell nem támogatja az értékek beállítását"
 
-#: ../libgda/gda-data-model.c:1047 ../libgda/gda-data-model.c:1083
+#: ../libgda/gda-data-model.c:1032 ../libgda/gda-data-model.c:1067
 msgid "Data model does not support row append"
 msgstr "Az adatmodell nem támogatja a sorok hozzáfűzését"
 
-#: ../libgda/gda-data-model.c:1074
+#: ../libgda/gda-data-model.c:1058
 msgid "Model does not allow row insertion"
 msgstr "A modell nem támogatja a sorok beszúrását"
 
-#: ../libgda/gda-data-model.c:1111
+#: ../libgda/gda-data-model.c:1094
 msgid "Model does not allow row deletion"
 msgstr "A modell nem támogatja a sorok törlését"
 
-#: ../libgda/gda-data-model.c:1120
+#: ../libgda/gda-data-model.c:1103
 msgid "Data model does not support row removal"
 msgstr "Az adatmodell nem támogatja a sorok törlését"
 
-#: ../libgda/gda-data-model.c:1299 ../libgda/gda-data-model.c:1338
-#: ../libgda/gda-data-model.c:1352
+#: ../libgda/gda-data-model.c:1279 ../libgda/gda-data-model.c:1318
+#: ../libgda/gda-data-model.c:1332
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
 msgstr ""
 "A(z) „%s” paraméternek karakterláncot kell tartalmaznia, figyelmen kívül "
 "hagyva."
 
-#: ../libgda/gda-data-model.c:1361 ../libgda/gda-data-model.c:1371
-#: ../libgda/gda-data-model.c:1381 ../libgda/gda-data-model.c:1423
+#: ../libgda/gda-data-model.c:1341 ../libgda/gda-data-model.c:1351
+#: ../libgda/gda-data-model.c:1361 ../libgda/gda-data-model.c:1403
+#: ../libgda/gda-data-model.c:1448 ../libgda/gda-data-model.c:1458
 #: ../libgda/gda-data-model.c:1468 ../libgda/gda-data-model.c:1478
-#: ../libgda/gda-data-model.c:1488 ../libgda/gda-data-model.c:1498
-#: ../libgda/gda-data-model.c:1526 ../libgda/gda-data-model.c:1536
-#: ../libgda/gda-data-model.c:1637
+#: ../libgda/gda-data-model.c:1506 ../libgda/gda-data-model.c:1516
+#: ../libgda/gda-data-model.c:1617
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
 msgstr ""
 "A(z) „%s” paraméternek logikai értéket kell tartalmaznia, figyelmen kívül "
 "hagyva."
 
-#: ../libgda/gda-data-model.c:1516
+#: ../libgda/gda-data-model.c:1496
 #, c-format
 msgid "The '%s' parameter must hold an integer value, ignored."
 msgstr ""
 "A(z) „%s” paraméternek egész értéket kell tartalmaznia, figyelmen kívül "
 "hagyva."
 
-#: ../libgda/gda-data-model.c:1558
+#: ../libgda/gda-data-model.c:1538
 #, c-format
 msgid "Unknown GdaDataModelIOFormat %d value"
 msgstr "Ismeretlen GdaDataModelIOFormat %d érték"
 
-#: ../libgda/gda-data-model.c:1644
+#: ../libgda/gda-data-model.c:1624
 #, c-format
 msgid "File '%s' already exists"
 msgstr "A(z) „%s” fájl már létezik"
 
-#: ../libgda/gda-data-model.c:1821
+#: ../libgda/gda-data-model.c:1801
 msgid "Exported Data"
 msgstr "Exportált adatok"
 
-#: ../libgda/gda-data-model.c:1942
+#: ../libgda/gda-data-model.c:1922
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
 msgstr ""
 "<gda_value> vagy <gda_array_value> tag várt, kapott: <%s>, figyelmen kívül "
 "hagyva"
 
-#: ../libgda/gda-data-model.c:1972
+#: ../libgda/gda-data-model.c:1952
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
 "Nem kérhető le az oszlop adattípusa (a típus ismeretlen vagy nincs megadva)"
 
-#: ../libgda/gda-data-model.c:2058
+#: ../libgda/gda-data-model.c:2038
 #, c-format
 msgid "Expected tag <gda_array_data>, got <%s>"
 msgstr "A <gda_array_data> tag az elvárt, helyette kapott: <%s>"
 
-#: ../libgda/gda-data-model.c:2130
+#: ../libgda/gda-data-model.c:2110
 msgid "Could not get an iterator for source data model"
 msgstr "Nem sikerült az iterátor lekérése a forrás adatmodellhez"
 
-#: ../libgda/gda-data-model.c:2147
+#: ../libgda/gda-data-model.c:2127
 #, c-format
 msgid "Inexistent column in source data model: %d"
 msgstr "Nem létező oszlop a forrás adatmodellben: %d"
 
-#: ../libgda/gda-data-model.c:2161
+#: ../libgda/gda-data-model.c:2141
 #, c-format
 msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
@@ -1110,7 +1109,7 @@ msgid ""
 msgstr ""
 "A(z) %d. céloszlop nem lehet NULL, de nincs párja a forrás adatmodellben"
 
-#: ../libgda/gda-data-model.c:2171
+#: ../libgda/gda-data-model.c:2151
 #, c-format
 msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
@@ -1119,28 +1118,28 @@ msgstr ""
 "A(z) %d. céloszlop GDA típusa (%s) nem kompatibilis a(z) %d. forrásoszloppal "
 "típusával (%s)"
 
-#: ../libgda/gda-data-model.c:2267
+#: ../libgda/gda-data-model.c:2247
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
 msgstr ""
 "Nem lehet átalakítani a(z) „%s” értéket a(z) „%s” GDA típusról a(z) „%s” GDA "
 "típusra"
 
-#: ../libgda/gda-data-model.c:2474
+#: ../libgda/gda-data-model.c:2454
 #, c-format
 msgid "Could not dump data model's attributes: %s"
 msgstr "Nem sikerült az adatmodell attribútumainak listázása: %s"
 
-#: ../libgda/gda-data-model.c:2482
+#: ../libgda/gda-data-model.c:2462
 #, c-format
 msgid "Could not dump data model's contents: %s"
 msgstr "Nem sikerült az adatmodell tartalmának listázása: %s"
 
-#: ../libgda/gda-data-model.c:2703
+#: ../libgda/gda-data-model.c:2683
 msgid "Data model does not support backward cursor move"
 msgstr "Az adatmodell nem támogatja a kurzor hátrafelé mozgatását"
 
-#: ../libgda/gda-data-model.c:3002
+#: ../libgda/gda-data-model.c:2982
 #: ../tools/browser/common/gdaui-entry-import.c:214
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
@@ -1149,7 +1148,7 @@ msgid_plural "%d rows"
 msgstr[0] "%d sor"
 msgstr[1] "%d sor"
 
-#: ../libgda/gda-data-model.c:3004
+#: ../libgda/gda-data-model.c:2984
 #, c-format
 msgid "0 row"
 msgstr "0 sor"
@@ -1336,7 +1335,7 @@ msgstr "Nincs <gda_array_fiels> megadva a <gda_array> tagban"
 
 #: ../libgda/gda-data-model-import.c:1856 ../libgda/gda-data-select.c:3814
 msgid "Data model does not support random access"
-msgstr "Az adatmodell nem támogatja a tetszőleges hozzáférést."
+msgstr "Az adatmodell nem támogatja a véletlen hozzáférést"
 
 #: ../libgda/gda-data-model-import.c:1913
 #, c-format
@@ -1371,69 +1370,69 @@ msgstr ""
 "akkor valószínűleg telepítési probléma van az LDAP szolgáltatóval. Akárhogy "
 "is, a GdaDataModelLdap objektum nem lesz használható."
 
-#: ../libgda/gda-data-pivot.c:494
+#: ../libgda/gda-data-pivot.c:505
 msgid "Pivot model not populated"
 msgstr "A számolómodell nincs feltöltve"
 
-#: ../libgda/gda-data-pivot.c:542 ../libgda/gda-data-pivot.c:554
-#: ../libgda/gda-data-pivot.c:606 ../libgda/gda-data-pivot.c:618
-#: ../libgda/gda-data-pivot.c:672 ../libgda/gda-data-pivot.c:723
-#: ../libgda/gda-data-pivot.c:888 ../libgda/gda-data-pivot.c:900
-#: ../libgda/gda-data-pivot.c:952 ../libgda/gda-data-pivot.c:964
-#: ../libgda/gda-data-pivot.c:1016 ../libgda/gda-data-pivot.c:1028
-#: ../libgda/gda-data-pivot.c:1080 ../libgda/gda-data-pivot.c:1092
-#: ../libgda/gda-data-pivot.c:1150
+#: ../libgda/gda-data-pivot.c:553 ../libgda/gda-data-pivot.c:565
+#: ../libgda/gda-data-pivot.c:617 ../libgda/gda-data-pivot.c:629
+#: ../libgda/gda-data-pivot.c:683 ../libgda/gda-data-pivot.c:734
+#: ../libgda/gda-data-pivot.c:899 ../libgda/gda-data-pivot.c:911
+#: ../libgda/gda-data-pivot.c:963 ../libgda/gda-data-pivot.c:975
+#: ../libgda/gda-data-pivot.c:1027 ../libgda/gda-data-pivot.c:1039
+#: ../libgda/gda-data-pivot.c:1091 ../libgda/gda-data-pivot.c:1103
+#: ../libgda/gda-data-pivot.c:1161
 msgid "Integer overflow"
 msgstr "Egész értékű túlcsordulás"
 
-#: ../libgda/gda-data-pivot.c:772 ../libgda/gda-data-pivot.c:783
+#: ../libgda/gda-data-pivot.c:783 ../libgda/gda-data-pivot.c:794
 msgid "Float value overflow"
 msgstr "Egyszeres pontosságú lebegőpontos túlcsordulás"
 
-#: ../libgda/gda-data-pivot.c:837
+#: ../libgda/gda-data-pivot.c:848
 msgid "Double value overflow"
 msgstr "Kétszeres pontosságú lebegőpontos túlcsordulás"
 
-#: ../libgda/gda-data-pivot.c:1139
+#: ../libgda/gda-data-pivot.c:1150
 msgid "Inconsistent data type"
 msgstr "Inkonzisztens adattípus"
 
-#: ../libgda/gda-data-pivot.c:1185
+#: ../libgda/gda-data-pivot.c:1196
 msgid "Data type does not support requested computation"
 msgstr "Az adattípus nem támogatja a kért számítást"
 
-#: ../libgda/gda-data-pivot.c:1283 ../libgda/gda-data-pivot.c:1313
-#: ../libgda/gda-data-pivot.c:1411 ../libgda/gda-data-pivot.c:1524
+#: ../libgda/gda-data-pivot.c:1294 ../libgda/gda-data-pivot.c:1324
+#: ../libgda/gda-data-pivot.c:1422 ../libgda/gda-data-pivot.c:1535
 #, c-format
 msgid "Wrong field format error: %s"
 msgstr "Hibás mezőformátum hiba: %s"
 
-#: ../libgda/gda-data-pivot.c:1297 ../libgda/gda-data-pivot.c:1398
-#: ../libgda/gda-data-pivot.c:1421 ../libgda/gda-data-pivot.c:1511
-#: ../libgda/gda-data-pivot.c:1534 ../libgda/gda-sql-builder.c:725
+#: ../libgda/gda-data-pivot.c:1308 ../libgda/gda-data-pivot.c:1409
+#: ../libgda/gda-data-pivot.c:1432 ../libgda/gda-data-pivot.c:1522
+#: ../libgda/gda-data-pivot.c:1545 ../libgda/gda-sql-builder.c:725
 #, c-format
 msgid "Wrong field format"
 msgstr "Hibás mezőformátum"
 
-#: ../libgda/gda-data-pivot.c:1580
+#: ../libgda/gda-data-pivot.c:1591
 msgid "No row field defined"
 msgstr "Nincs sormező meghatározva"
 
-#: ../libgda/gda-data-pivot.c:1627 ../libgda/gda-data-pivot.c:1639
-#: ../libgda/gda-data-pivot.c:1655
+#: ../libgda/gda-data-pivot.c:1638 ../libgda/gda-data-pivot.c:1650
+#: ../libgda/gda-data-pivot.c:1666
 msgid "Could not get information from source data model"
 msgstr "Nem sikerült az információ kinyerése a forrás adatmodellből"
 
-#: ../libgda/gda-data-pivot.c:2117 ../libgda/gda-data-proxy.c:3081
+#: ../libgda/gda-data-pivot.c:2127 ../libgda/gda-data-proxy.c:3081
 #: ../tools/gda-sql.c:3159
 msgid "Could not create virtual connection"
 msgstr "Nem sikerült a virtuális kapcsolat létrehozása"
 
-#: ../libgda/gda-data-pivot.c:2133
+#: ../libgda/gda-data-pivot.c:2144
 msgid "No source defined"
 msgstr "Nincs forrás megadva"
 
-#: ../libgda/gda-data-pivot.c:2151
+#: ../libgda/gda-data-pivot.c:2161
 msgid "Invalid source data model (may have incompatible column names)"
 msgstr ""
 "Érvénytelen forrás adatmodell (lehet inkompatibilis oszlop nevei vannak)"
@@ -1701,36 +1700,36 @@ msgstr "Nem sikerült a tartó értékét beállítani: %s"
 msgid "The 'g-type' property cannot be changed"
 msgstr "A „g-type” tulajdonság nem változtatható meg"
 
-#: ../libgda/gda-holder.c:936
+#: ../libgda/gda-holder.c:928
 #, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "Nem lehet átalakítani a karakterláncot a(z) „%s” típusra"
 
-#: ../libgda/gda-holder.c:999
+#: ../libgda/gda-holder.c:991
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
 "Nem használható ez a metódus az érték beállítására, mert már egy statikus "
 "értéke van"
 
-#: ../libgda/gda-holder.c:1018 ../libgda/gda-holder.c:1166
+#: ../libgda/gda-holder.c:1010 ../libgda/gda-holder.c:1158
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
 msgstr "(%s): A tartó nem támogatja a NULL értéket"
 
-#: ../libgda/gda-holder.c:1025
+#: ../libgda/gda-holder.c:1017
 #, c-format
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
 msgstr ""
 "(%s): Hibás tartó típus, elvárt típusa a(z) „%s”, de az érték típusa: „%s”"
 
-#: ../libgda/gda-holder.c:1173
+#: ../libgda/gda-holder.c:1165
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr "(%s): Hibás típus, elvárt típusa a(z) „%s”, de az érték típusa: „%s”"
 
-#: ../libgda/gda-holder.c:1649
+#: ../libgda/gda-holder.c:1641
 #, c-format
 msgid ""
 "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
@@ -1739,7 +1738,7 @@ msgstr ""
 "(%s)"
 
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1736
+#: ../libgda/gda-holder.c:1728
 #, c-format
 msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
@@ -1748,11 +1747,11 @@ msgstr ""
 "A tartók nem köthetőek össze, ha a típusuk nem egyforma, a létező kötés "
 "törése, ahol a(z) „%s” hozzá volt kötve ehhez: „%s”"
 
-#: ../libgda/gda-holder.c:1787
+#: ../libgda/gda-holder.c:1779
 msgid "Cannot bind holders if their type is not the same"
 msgstr "A tartók nem köthetőek össze, ha a típusuk nem egyforma"
 
-#: ../libgda/gda-holder.c:1950
+#: ../libgda/gda-holder.c:1942
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
@@ -1784,7 +1783,7 @@ msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
 "not be performed (some weird errors may occur)"
 msgstr ""
-"Nem dolgozható fel a(z) „%s”: a szerverműveletekért felelős XML fájlok "
+"Nem dolgozható fel a(z) „%s”: a kiszolgálóműveletekért felelős XML-fájlok "
 "ellenőrzése nem lesznek végrehajtva (néhány fura hiba történhet)"
 
 #: ../libgda/gda-meta-store.c:654
@@ -1878,65 +1877,65 @@ msgstr "A leírás nem található a(z) „%s” oszlophoz."
 msgid "Could not get the internal schema's version"
 msgstr "Nem kérhető le a belső séma verziója"
 
-#: ../libgda/gda-meta-store.c:2761 ../libgda/gda-meta-store.c:2883
+#: ../libgda/gda-meta-store.c:2761 ../libgda/gda-meta-store.c:2882
 #: ../tools/gda-sql.c:850
 msgid "More than one SQL statement"
 msgstr "Egynél több SQL utasítás"
 
-#: ../libgda/gda-meta-store.c:2790 ../libgda/gda-meta-store.c:2911
+#: ../libgda/gda-meta-store.c:2790 ../libgda/gda-meta-store.c:2910
 #, c-format
 msgid "Parameter '%s' is not present in statement"
 msgstr "A(z) „%s” paraméter nincs jelen az utasításban"
 
-#: ../libgda/gda-meta-store.c:2807 ../libgda/gda-meta-store.c:2925
+#: ../libgda/gda-meta-store.c:2807 ../libgda/gda-meta-store.c:2924
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "Nincs érték megadva a(z) „%s” paraméternek"
 
-#: ../libgda/gda-meta-store.c:3514
+#: ../libgda/gda-meta-store.c:3512
 msgid "Data models should have the same number of columns"
 msgstr "Az adatmodelleknek ugyanannyi oszlopuknak kell lennie"
 
-#: ../libgda/gda-meta-store.c:3577 ../libgda/gda-meta-store.c:4624
-#: ../libgda/gda-meta-store.c:4727
+#: ../libgda/gda-meta-store.c:3575 ../libgda/gda-meta-store.c:4622
+#: ../libgda/gda-meta-store.c:4725
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Ismeretlen adatbázis objektum: „%s”"
 
-#: ../libgda/gda-meta-store.c:3593
+#: ../libgda/gda-meta-store.c:3591
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "Nem sikerült a paraméter beállítása ehhez: „%s”"
 
-#: ../libgda/gda-meta-store.c:3622
+#: ../libgda/gda-meta-store.c:3620
 msgid "Could not create SELECT statement"
 msgstr "Nem sikerült a SELECT utasítás létrehozása"
 
-#: ../libgda/gda-meta-store.c:3637
+#: ../libgda/gda-meta-store.c:3635
 msgid "Could not create DELETE statement"
 msgstr "Nem sikerült a DELETE utasítás létrehozása"
 
-#: ../libgda/gda-meta-store.c:3687
+#: ../libgda/gda-meta-store.c:3685
 msgid "A transaction has already been started"
 msgstr "A tranzakció már elkezdődött"
 
-#: ../libgda/gda-meta-store.c:4074
+#: ../libgda/gda-meta-store.c:4072
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "A(z) „%s” attribútum nem található"
 
-#: ../libgda/gda-meta-store.c:4077
+#: ../libgda/gda-meta-store.c:4075
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "A(z) „%s” attribútumnak %d értéke van"
 msgstr[1] "A(z) „%s” attribútumnak %d értéke van"
 
-#: ../libgda/gda-meta-store.c:4124
+#: ../libgda/gda-meta-store.c:4122
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr "Az „_”-el kezdődő attribútumnevek belső használatra vannak fenntartva"
 
-#: ../libgda/gda-meta-store.c:4152
+#: ../libgda/gda-meta-store.c:4150
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -1944,17 +1943,17 @@ msgstr ""
 "Nem sikerült a tranzakció elindítása, mert már elkezdődött, ez GdaMetaStore "
 "attribútum problémákhoz vezethet"
 
-#: ../libgda/gda-meta-store.c:4267
+#: ../libgda/gda-meta-store.c:4265
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "Nem sikerült a hozzáadandó saját adatbázis-objektum XML leírásának "
 "értelmezése"
 
-#: ../libgda/gda-meta-store.c:4281
+#: ../libgda/gda-meta-store.c:4279
 msgid "Missing custom database object name"
 msgstr "Hiányzó saját adatbázis-objektum név"
 
-#: ../libgda/gda-meta-store.c:4286
+#: ../libgda/gda-meta-store.c:4284
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
@@ -1962,46 +1961,46 @@ msgstr ""
 "Az „_”-sal kezdődő adatbázis-objektum nevek belső használatra vannak "
 "fenntartva"
 
-#: ../libgda/gda-meta-store.c:4384
+#: ../libgda/gda-meta-store.c:4382
 msgid "Another object with the same name already exists"
 msgstr "Már létezik ilyen nevű objektum"
 
-#: ../libgda/gda-meta-store.c:4486
+#: ../libgda/gda-meta-store.c:4484
 msgid "Missing table name in meta data context"
 msgstr "Hiányzó táblanév a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4513
+#: ../libgda/gda-meta-store.c:4511
 msgid "Missing column name in meta data context"
 msgstr "Hiányzó oszlopnév a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4529
+#: ../libgda/gda-meta-store.c:4527
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Hiányzó feltétel a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4554
+#: ../libgda/gda-meta-store.c:4552
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Hibásan formázott feltétel a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4571
+#: ../libgda/gda-meta-store.c:4569
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Ismeretlen „%s” oszlopnév a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4593
+#: ../libgda/gda-meta-store.c:4591
 msgid "Unknown table in meta data context"
 msgstr "Ismeretlen tábla a metaadat kontextusban"
 
-#: ../libgda/gda-meta-store.c:4866 ../libgda/gda-meta-store.c:4896
-#: ../libgda/gda-meta-store.c:5085 ../libgda/gda-meta-store.c:5114
+#: ../libgda/gda-meta-store.c:4864 ../libgda/gda-meta-store.c:4894
+#: ../libgda/gda-meta-store.c:5083 ../libgda/gda-meta-store.c:5112
 #: ../libgda/gda-meta-struct.c:506 ../libgda/gda-meta-struct.c:521
 #: ../libgda/gda-meta-struct.c:538
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "Nem található a(z) „%s” nevű objektum"
 
-#: ../libgda/gda-meta-store.c:4964 ../libgda/gda-meta-store.c:4983
+#: ../libgda/gda-meta-store.c:4962 ../libgda/gda-meta-store.c:4981
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "Nem található a(z) „%s” nevű oszlop a(z) „%s” táblában"
@@ -2150,7 +2149,7 @@ msgstr ""
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Várt tag: <%s>, kapott: <%s>"
 
-#: ../libgda/gda-server-operation.c:1549 ../libgda/gda-server-operation.c:2268
+#: ../libgda/gda-server-operation.c:1549 ../libgda/gda-server-operation.c:2265
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
@@ -2161,20 +2160,20 @@ msgstr ""
 msgid "Missing attribute named 'path'"
 msgstr "Hiányzó „path” attribútum"
 
-#: ../libgda/gda-server-operation.c:2460
+#: ../libgda/gda-server-operation.c:2457
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "Hiányzó kötelező érték ehhez: „%s”"
 
-#: ../libgda/gda-server-operation.c:2689
+#: ../libgda/gda-server-operation.c:2686
 msgid "Unspecified table name"
 msgstr "Nincs megadva táblanév"
 
-#: ../libgda/gda-server-operation.c:2729
+#: ../libgda/gda-server-operation.c:2726
 msgid "Invalid type"
 msgstr "Érvénytelen típus"
 
-#: ../libgda/gda-server-operation.c:2834
+#: ../libgda/gda-server-operation.c:2831
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "A CREATE TABLE utasítás nem támogatott az adatbázis szerveren"
 
@@ -2199,14 +2198,14 @@ msgid ""
 "implement the %s one, please report this bug to http://bugzilla.gnome.org/ "
 "for the \"libgda\" product."
 msgstr ""
-"A GdaServerProvider objektum valósítja meg a(z) %s virtuális metódust, de nem "
-"valósítja meg a(z) %s metódust, kérjük jelentse ezt a hibát a "
-"http://bugzilla.gnome.org/ oldalon, a „libgda” terméknél."
+"A GdaServerProvider objektum valósítja meg a(z) %s virtuális metódust, de "
+"nem valósítja meg a(z) %s metódust, kérjük jelentse ezt a hibát a http://"
+"bugzilla.gnome.org/ oldalon, a „libgda” terméknél."
 
 #: ../libgda/gda-set.c:1175 ../libgda/gda-set.c:1280
 #, c-format
 msgid "%s() does not handle values of type '%s'."
-msgstr "A(z) %s() nem támogatja a(z) „%s” típusú értékeket"
+msgstr "A(z) %s() nem támogatja a(z) „%s” típusú értékeket."
 
 #: ../libgda/gda-set.c:1230
 #, c-format
@@ -2243,7 +2242,7 @@ msgstr ""
 "Az új adatmodellnek ugyanolyan karakterisztikákkal kell rendelkeznie, mint a "
 "lecserélni kívánt adatmodellnek"
 
-#: ../libgda/gda-sql-builder.c:297 ../libgda/gda-sql-builder.c:1397
+#: ../libgda/gda-sql-builder.c:297 ../libgda/gda-sql-builder.c:1395
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "Ismeretlen rész ID %u"
@@ -2261,11 +2260,11 @@ msgstr "Az SqlBuilder üres"
 #: ../libgda/gda-sql-builder.c:672 ../libgda/gda-sql-builder.c:734
 #: ../libgda/gda-sql-builder.c:794 ../libgda/gda-sql-builder.c:1159
 #: ../libgda/gda-sql-builder.c:1243 ../libgda/gda-sql-builder.c:1288
-#: ../libgda/gda-sql-builder.c:1379 ../libgda/gda-sql-builder.c:1430
-#: ../libgda/gda-sql-builder.c:1472 ../libgda/gda-sql-builder.c:1519
-#: ../libgda/gda-sql-builder.c:1569 ../libgda/gda-sql-builder.c:1605
-#: ../libgda/gda-sql-builder.c:1773 ../libgda/gda-sql-builder.c:1799
-#: ../libgda/gda-sql-builder.c:1834
+#: ../libgda/gda-sql-builder.c:1377 ../libgda/gda-sql-builder.c:1428
+#: ../libgda/gda-sql-builder.c:1470 ../libgda/gda-sql-builder.c:1517
+#: ../libgda/gda-sql-builder.c:1567 ../libgda/gda-sql-builder.c:1603
+#: ../libgda/gda-sql-builder.c:1769 ../libgda/gda-sql-builder.c:1795
+#: ../libgda/gda-sql-builder.c:1830
 msgid "Wrong statement type"
 msgstr "Rossz utasítástípus"
 
@@ -2286,40 +2285,40 @@ msgstr "Ismeretlen bal oldali rész ID %u"
 msgid "Unknown right part target ID %u"
 msgstr "Ismeretlen jobb oldali rész ID %u"
 
-#: ../libgda/gda-statement.c:497
+#: ../libgda/gda-statement.c:495
 #, c-format
 msgid "Could not determine GType for parameter '%s'"
 msgstr "Nem sikerült a GType meghatározása a(z) „%s” paraméterhez"
 
-#: ../libgda/gda-statement.c:498
+#: ../libgda/gda-statement.c:496
 msgid "Unnamed"
 msgstr "Névtelen"
 
-#: ../libgda/gda-statement.c:517
+#: ../libgda/gda-statement.c:515
 #, c-format
 msgid "Can't handle default value of type '%s'"
 msgstr "Nem kezelhető a(z) „%s” típus alapértelmezett értéke"
 
-#: ../libgda/gda-statement.c:774
+#: ../libgda/gda-statement.c:772
 msgid "Missing SQL code"
 msgstr "Hiányzó SQL kód"
 
-#: ../libgda/gda-statement.c:794
+#: ../libgda/gda-statement.c:792
 #, c-format
 msgid "No data handler for type '%s'"
 msgstr "Nincs adatkezelő a(z) „%s” típushoz"
 
-#: ../libgda/gda-statement.c:1378
+#: ../libgda/gda-statement.c:1376
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr "Hibás paramétertípus ehhez: „%s”, vár típus: „%s”, kapott: „%s”"
 
-#: ../libgda/gda-statement.c:1390
+#: ../libgda/gda-statement.c:1388
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "Hiányzó paraméter: „%s”"
 
-#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3112
+#: ../libgda/gda-statement.c:1400 ../libgda/sqlite/gda-sqlite-provider.c:3112
 #: ../providers/jdbc/gda-jdbc-provider.c:1506
 #: ../providers/mysql/gda-mysql-provider.c:2356
 #: ../providers/postgres/gda-postgres-provider.c:2150
@@ -2328,19 +2327,19 @@ msgstr "Hiányzó paraméter: „%s”"
 msgid "Parameter '%s' is invalid"
 msgstr "A(z) „%s” paraméter érvénytelen"
 
-#: ../libgda/gda-statement.c:1448
+#: ../libgda/gda-statement.c:1446
 msgid "Unnamed parameter"
 msgstr "Névtelen paraméter"
 
-#: ../libgda/gda-statement.c:1724
+#: ../libgda/gda-statement.c:1722
 msgid "Malformed table name"
 msgstr "Rosszul formázott táblanév"
 
-#: ../libgda/gda-statement.c:2222
+#: ../libgda/gda-statement.c:2223
 msgid "Join is not in a FROM statement"
 msgstr "Az összekapcsolás nem egy FROM utasításban található"
 
-#: ../libgda/gda-statement.c:2229
+#: ../libgda/gda-statement.c:2230
 msgid "Could not find target the join is for"
 msgstr "Az összekapcsolás célpontja nem található"
 
@@ -2425,59 +2424,59 @@ msgstr "Nem sikerült az iterátor értékének lekérése"
 msgid "Unable to get table name"
 msgstr "Nem sikerült a táblanév lekérése"
 
-#: ../libgda/gda-util.c:702
+#: ../libgda/gda-util.c:701
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "Az %d szám nem található a(z) „%s” forrásban"
 
-#: ../libgda/gda-util.c:887
+#: ../libgda/gda-util.c:886
 msgid "SELECT statement has no FROM part"
 msgstr "A SELECT utasításnak nincs FROM része"
 
-#: ../libgda/gda-util.c:892 ../libgda/gda-util.c:899
+#: ../libgda/gda-util.c:891 ../libgda/gda-util.c:898
 msgid "SELECT statement involves more than one table or expression"
 msgstr "A SELECT utasítás több mint egy táblát vagy kifejezést érint"
 
-#: ../libgda/gda-util.c:909
+#: ../libgda/gda-util.c:908
 msgid "Can only build modification statement for tables"
 msgstr "Módosítási utasításokat csak táblákhoz lehet készíteni"
 
-#: ../libgda/gda-util.c:949
+#: ../libgda/gda-util.c:948
 msgid "Table does not have any primary key"
 msgstr "A táblának nincs elsődleges kulcsa"
 
-#: ../libgda/gda-util.c:978
+#: ../libgda/gda-util.c:977
 msgid "Table's primary key is not part of SELECT"
 msgstr "A tábla elsődleges kulcsa nem része a SELECT-nek"
 
-#: ../libgda/gda-util.c:1029
+#: ../libgda/gda-util.c:1028
 msgid "Table does not have any column"
 msgstr "A táblának nincs egyetlen oszlopa sem"
 
-#: ../libgda/gda-util.c:1055
+#: ../libgda/gda-util.c:1054
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
 msgstr "A tábla „%s” oszlopa nem része a SELECT-nek"
 
-#: ../libgda/gda-util.c:1311
+#: ../libgda/gda-util.c:1310
 msgid "Could not compute any field to insert into"
 msgstr "Nem sikerült mezőt találni a beszúráshoz"
 
-#: ../libgda/gda-util.c:1374
+#: ../libgda/gda-util.c:1373
 msgid "Missing table name in UPDATE statement"
 msgstr "Hiányzó táblanév az UPDATE utasításban"
 
-#: ../libgda/gda-util.c:1729
+#: ../libgda/gda-util.c:1728
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr ""
 "Az UPDATE utasítás nem írható át hogy kezelje az alapértelmezett értékeket"
 
-#: ../libgda/gda-util.c:1737
+#: ../libgda/gda-util.c:1736
 msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "A nem INSERT vagy UPDATE utasítások nem írhatóak át"
 
-#: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
-#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3093
+#: ../libgda/gda-util.c:1780 ../libgda/gda-util.c:1837
+#: ../libgda/gda-util.c:1877 ../libgda/sqlite/gda-sqlite-provider.c:3093
 #: ../providers/jdbc/gda-jdbc-provider.c:1477
 #: ../providers/mysql/gda-mysql-provider.c:2336
 #: ../providers/postgres/gda-postgres-provider.c:2132
@@ -2486,22 +2485,22 @@ msgstr "A nem INSERT vagy UPDATE utasítások nem írhatóak át"
 msgid "Missing parameter '%s' to execute query"
 msgstr "A(z) „%s” paraméter hiányzik a lekérdezés futtatásához"
 
-#: ../libgda/gda-util.c:3065
+#: ../libgda/gda-util.c:3064
 msgid "The 'first', 'second' and 'third' arguments must be different"
 msgstr ""
 "A „first”, „second” és „third” argumentumoknak különbözőeknek kell lenniük"
 
-#: ../libgda/gda-util.c:3070
+#: ../libgda/gda-util.c:3069
 #, c-format
 msgid "Invalid separator '%c'"
 msgstr "Érvénytelen elválasztó „%c”"
 
-#: ../libgda/gda-util.c:3072
+#: ../libgda/gda-util.c:3071
 msgid "Invalid null separator"
 msgstr "Érvénytelen null elválasztó"
 
-#: ../libgda/gda-util.c:3110 ../libgda/gda-util.c:3125
-#: ../libgda/gda-util.c:3140
+#: ../libgda/gda-util.c:3109 ../libgda/gda-util.c:3124
+#: ../libgda/gda-util.c:3139
 #, c-format
 msgid "Unknown GDateDMY value %u"
 msgstr "Ismeretlen GDateDMY érték %u"
@@ -2712,7 +2711,7 @@ msgid "Can't find libsqlite3."
 msgstr "Nem található a libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:740
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:374
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:378
 #: ../libgda/thread-wrapper/gda-thread-provider.c:513
 #: ../providers/bdb/gda-bdb-provider.c:154
 #: ../providers/jdbc/gda-jdbc-provider.c:480
@@ -2883,7 +2882,7 @@ msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Nem azonosítható a feltöltendő blob ROWID-ja"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2957
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:448
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:452
 #: ../providers/jdbc/gda-jdbc-provider.c:1356
 #: ../providers/ldap/gda-ldap-provider.c:801
 #: ../providers/mysql/gda-mysql-provider.c:2189
@@ -2908,7 +2907,7 @@ msgstr "Üres utasítás"
 #: ../providers/web/gda-web-provider.c:1482
 #: ../providers/web/gda-web-provider.c:1485
 msgid "Missing parameter(s) to execute query"
-msgstr "Paraméterek hiányoznak a lekérdezés futtatásához "
+msgstr "Paraméterek hiányoznak a lekérdezés futtatásához"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3131
 #: ../providers/jdbc/gda-jdbc-provider.c:1525
@@ -2943,21 +2942,21 @@ msgstr "Nem sikerült a BLOB létrehozásához tranzakciót indítani"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3731
 #: ../libgda/sqlite/gda-sqlite-provider.c:3754
 msgid "Function requires one argument"
-msgstr "A függvény egy argumentumot vár."
+msgstr "A függvény egy argumentumot vár"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3652
 #: ../libgda/sqlite/gda-sqlite-provider.c:3786
 msgid "Function requires two arguments"
-msgstr "A függvény két argumentumot vár."
+msgstr "A függvény két argumentumot vár"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3691
 msgid "Function requires one or two arguments"
-msgstr "A függvény egy vagy két argumentumot vár."
+msgstr "A függvény egy vagy két argumentumot vár"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3826
 #: ../libgda/sqlite/gda-sqlite-provider.c:3933
 msgid "Function requires two or three arguments"
-msgstr "A függvény kettő vagy három argumentumot vár."
+msgstr "A függvény kettő vagy három argumentumot vár"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3880
 #, c-format
@@ -3068,7 +3067,7 @@ msgstr "A névteret meg kell adni"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:211
 msgid "Connection was not represented in hub"
-msgstr "A kapcsolat nem volt ábrázolva a csomópontban\t"
+msgstr "A kapcsolat nem volt ábrázolva a csomópontban"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:373
 #, c-format
@@ -3098,67 +3097,67 @@ msgid "Internal error: invalid provider handle"
 msgstr "Belső hiba: érvénytelen szolgáltató-kezelő"
 
 #. wrong usage!
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:542
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:546
 msgid "Wrong usage of Libgda's virtual tables"
 msgstr "A libgda virtuális tábláinak hibás használata"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:550
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:554
 msgid "Data model must have at least one column"
 msgstr "Az adatmodellnek legalább egy oszloppal kell rendelkeznie"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:567
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:571
 msgid "Could not compute virtual table's columns"
 msgstr "A virtuális tábla oszlopai nem számíthatóak ki"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:590
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:594
 #, c-format
 msgid "Can't get data model description for column %d"
 msgstr "Nem kérhető le az adatmodell leírása a(z) %d. oszlophoz"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:642
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:646
 #, c-format
 msgid "Can't get data model's column type for column %d"
 msgstr "Nem kérhető le az adatmodell oszloptípusa a(z) %d. oszlophoz"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:703
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:707
 #, c-format
 msgid "Can't declare virtual table (%s)"
 msgstr "A virtuális tábla nem deklarálható (%s)"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:840
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:844
 msgid "Internal SQLite error: no data to iterate on"
 msgstr "Belső SQLite hiba: nincs adat, amelyen iterálni lehetne"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:947
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:951
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
 msgstr "Nem található a kért érték a(z) %d. sor %d. oszlopában"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:969
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:973
 msgid "Column not found"
 msgstr "Az oszlop nem található"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1442
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1454
 msgid "No statement specified to modify the data"
 msgstr "Nincs utasítás megadva az adatok módosításához"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1449
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1461
 msgid "Invalid statement specified to modify the data"
 msgstr "Az adatok módosításához megadott utasítás érvénytelen"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1469
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1506
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1514
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1481
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1518
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1526
 msgid "Invalid parameter in statement to modify the data"
 msgstr ""
 "Az adatok módosításához megadott utasításban érvénytelen paraméter található"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1546
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1558
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "Az adatok módosítása sikertelen: %s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1628
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1640
 msgid "Data model representing the table is read only"
 msgstr "A táblát képviselő adatmodell csak olvasható"
 
@@ -3519,7 +3518,7 @@ msgstr "Az átkapcsológomb aktiválható"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:161
 msgid "Values limited to PK fields"
-msgstr "Értékek a PK mezőkre korlátozva\t"
+msgstr "Értékek a PK mezőkre korlátozva"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:162
 msgid "GList of GValue to render, limited to PK fields"
@@ -3531,7 +3530,7 @@ msgstr "Értékek"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:169
 msgid "GList of GValue to render, not limited to PK fields "
-msgstr "A megjelenítendő GValue-k GList-je, nem a PK mezőkre korlátozva"
+msgstr "A megjelenítendő GValue GList eleme, nem a PK mezőkre korlátozva "
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:160
 msgid "The information and status changer can be activated"
@@ -3720,7 +3719,7 @@ msgstr "Válassza ki a betöltendő képet"
 #. determine writable formats
 #: ../libgda-ui/data-entries/plugins/common-pict.c:468
 msgid "Image format"
-msgstr "Képformátum\t"
+msgstr "Képformátum"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:472
 msgid "Format image as:"
@@ -3927,7 +3926,7 @@ msgstr "Ne tördelje a sorokat"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:6
 msgid "break lines anywhere the cursor can appear"
-msgstr "Sorok törlése bárhol, ahol a kurzor megjelenhet"
+msgstr "sorok tördelése bárhol, ahol a kurzor megjelenhet"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:7
 msgid "Break lines in between words"
@@ -4319,7 +4318,7 @@ msgstr "Adatok mentése egy fájlba"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2161
 msgid "The data will be exported to the selected file."
-msgstr "Az adatok a következő fájlba kerülnek exportálásra"
+msgstr "Az adatok a kijelölt fájlba kerülnek exportálásra."
 
 #: ../libgda-ui/gdaui-raw-grid.c:2171 ../tools/config-info.c:426
 msgid "File name"
@@ -4651,7 +4650,7 @@ msgstr ""
 
 #: ../libgda-ui/internal/utility.c:380
 msgid "please correct it and try again, or discard the modifications."
-msgstr "Kérem javítsa ki és próbálja újra, vagy vesse el a módosításokat."
+msgstr "javítsa ki, és próbálja újra, vagy vesse el a módosításokat."
 
 #: ../libgda-ui/internal/utility.c:387
 msgid "Part of the current modified data was invalid"
@@ -5858,7 +5857,7 @@ msgstr "MySQL logikai ábrázolás"
 
 #: ../providers/mysql/gda-mysql-provider.c:505
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
-msgstr "Nem adható meg UNIX FOGLALAT, ha HOST vagy PORT is meg van adva."
+msgstr "Nem adható meg UNIX FOGLALAT, ha HOST vagy PORT is meg van adva"
 
 #: ../providers/mysql/gda-mysql-provider.c:513
 msgid "Invalid port number"
@@ -5876,7 +5875,7 @@ msgid ""
 "UTF-8 characters"
 msgstr ""
 "A kliens karakterkódolása nem állítható be UTF-8 kódolásra. „%s” használata. "
-"Ez problémákat fog okozni a nem UTF-8 karakterekkel."
+"Ez problémákat fog okozni a nem UTF-8 karakterekkel"
 
 #: ../providers/mysql/gda-mysql-provider.c:649
 msgid "The connection string must contain the DB_NAME values"
@@ -5890,7 +5889,7 @@ msgstr "Nincs leírás"
 
 #: ../providers/mysql/gda-mysql-provider.c:1861
 msgid "Unnamed statement parameter is not allowed in prepared statement."
-msgstr "A névtelen paraméterek nem támogatottak az előkészített utasításokban"
+msgstr "A névtelen paraméterek nem támogatottak az előkészített utasításokban."
 
 #: ../providers/mysql/gda-mysql-provider.c:2083
 #: ../providers/postgres/gda-postgres-provider.c:1880
@@ -6072,7 +6071,7 @@ msgid ""
 msgstr ""
 "Explicit módon megadja a használandó kapcsolódási protokollt. Ez akkor "
 "hasznos, ha a többi kapcsolódási paraméter miatt alapesetben más protokoll "
-"lenne használva, mint amit szeretne."
+"lenne használva, mint amit szeretne"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -6972,7 +6971,7 @@ msgstr "Koreai EUC"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
 msgid "Korean EUC (Hangle base)"
-msgstr "Koreai EUC "
+msgstr "Koreai EUC (Hangul-alapú)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
@@ -7524,7 +7523,6 @@ msgstr "Legalább MySQL 5.0-s verzió szükséges"
 
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
-#: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
 #: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "Nem importálhatóak adatok a webkiszolgálóról"
@@ -7532,6 +7530,11 @@ msgstr "Nem importálhatóak adatok a webkiszolgálóról"
 #: ../providers/reuseable/postgres/gda-postgres-meta.c:2122
 msgid "could not determine the indexed columns for index"
 msgstr "nem sikerült meghatározni az indexelt oszlopokat az indexhez"
+
+#: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
+#| msgid "Can't import data from web server"
+msgid "Can't get version data from server"
+msgstr "Nem lehet lekérni a verzióadatokat a kiszolgálóról"
 
 #: ../providers/sqlcipher/libmain.c:76
 msgid "Provider for SQLCipher"
@@ -8171,7 +8174,7 @@ msgstr "Az erre a táblára hivatkozó táblák hozzáadása a grafikonhoz"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:397
 msgid "Declare foreign key for this table"
-msgstr "Idegen kulcsok deklarálása ehhez a táblához\t"
+msgstr "Idegen kulcsok deklarálása ehhez a táblához"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
 #: ../tools/browser/schema-browser/table-info.c:972
@@ -8702,7 +8705,7 @@ msgstr "Mentés"
 #: ../tools/browser/data-manager/data-console.c:725
 #, c-format
 msgid "source%d"
-msgstr "Forrás%d"
+msgstr "forrás%d"
 
 #: ../tools/browser/data-manager/data-console.c:784
 msgid "Data source from SQL"
@@ -9789,7 +9792,7 @@ msgstr "„%s” idegen kulcs deklarálva ezen: "
 #: ../tools/browser/schema-browser/table-columns.c:272
 #, c-format
 msgid "Foreign key '%s' on "
-msgstr "„%s” idegen kulcs ezen:"
+msgstr "„%s” idegen kulcs ezen: "
 
 #: ../tools/browser/schema-browser/table-columns.c:338
 #, c-format
@@ -10026,15 +10029,15 @@ msgid ""
 "tt> and\n"
 "<tt>binary</tt></small>"
 msgstr ""
-"<small>Ez a terület arra szolgál, hogy értéket\n"
-"adjon az SQL kódban definiált változóknak\n"
-"a következő szintaxis használatával:\n"
+"<small>Ezen a területen adhat értéket az\n"
+"SQL kódban beállított változóknak,\n"
+"a következő szintaktika használatával:\n"
 "<b><tt>##&lt;változónév&gt;::&lt;típus&gt;[::null]</tt></b>\n"
 "Például:\n"
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-"      definiálja az <b>id</b> változót, mint egy nem NULL egész\n"
-"<span foreground=\"#4e9a06\"><b><tt>##kor::string::null</tt></b></span>\n"
-"      definiálja a <b>kor</b> változót, mint egy karakterlánc\n"
+"      az <b>id</b> változót nem NULL egészként adja meg\n"
+"<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
+"      az <b>age</b> változót karakterláncként adja meg\n"
 "\n"
 "Az érvényes típusok: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
 "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
@@ -10306,7 +10309,7 @@ msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
 msgstr ""
 "Meghatározza az LDAP parancsok által, alapértelmezetten lekért LDAP "
-"attribútumokat."
+"attribútumokat"
 
 #: ../tools/gda-sql.c:228
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
@@ -10693,7 +10696,7 @@ msgstr "%s [<NÉV> [<ÉRTEK>]]"
 
 #: ../tools/gda-sql.c:2221
 msgid "Set or show an option, or list all options "
-msgstr "Beállítás megadása vagy megjelenítése, vagy mind listázása"
+msgstr "Beállítás megadása vagy megjelenítése, vagy az összes listázása "
 
 #: ../tools/gda-sql.c:2227 ../tools/gda-sql.c:2235 ../tools/gda-sql.c:2243
 #: ../tools/gda-sql.c:2251 ../tools/gda-sql.c:2259 ../tools/gda-sql.c:2267
@@ -10820,7 +10823,7 @@ msgid ""
 msgstr ""
 "Statisztikai elemzést végez a SELECT-ből származó adatokon, felhasználva a "
 "SOR_MEZŐK és OSZLOP_MEZŐK kritériumokat és választható módon az ADAT_MEZŐK-"
-"et az adatokhoz."
+"et az adatokhoz"
 
 #: ../tools/gda-sql.c:2360 ../tools/gda-sql.c:2369 ../tools/gda-sql.c:2378
 #: ../tools/gda-sql.c:2387 ../tools/gda-sql.c:2396 ../tools/gda-sql.c:2405
@@ -10957,7 +10960,7 @@ msgstr "Hiányzó DSN név"
 #: ../tools/gda-sql.c:2911
 #, c-format
 msgid "Getting database schema information, this may take some time... "
-msgstr "Adatbázisséma információk lekérése, ez eltarthat egy ideig…"
+msgstr "Adatbázisséma információk lekérése, ez eltarthat egy ideig… "
 
 #: ../tools/gda-sql.c:2944 ../tools/gda-sql.c:3129
 #, c-format
@@ -11275,7 +11278,7 @@ msgstr "Konzol"
 
 #: ../tools/tools-favorites.c:185 ../tools/tools-favorites.c:194
 msgid "Can't initialize dictionary to store favorites"
-msgstr "A kedvenceket tároló szótár nem inicializálható"
+msgstr "A kedvenceket tároló szótár nem készíthető elő"
 
 #: ../tools/tool-utils.c:37
 msgid "not enforced"
@@ -11287,7 +11290,7 @@ msgstr "megállítás hibával"
 
 #: ../tools/tool-utils.c:41
 msgid "stop with error, not deferrable"
-msgstr "megállítás hibával, nem elhalasztható"
+msgstr "megállítás hibával, nem halasztható el"
 
 #: ../tools/tool-utils.c:43
 msgid "cascade changes"
@@ -11414,4 +11417,3 @@ msgstr "Objektumok"
 #: ../tools/web-server.c:1889
 msgid "Triggers"
 msgstr "Triggerek"
-
