@@ -23,6 +23,7 @@
 /*
  * BLOB (Binary Large OBject) handling functions specific to each provider.
  */
+#define G_LOG_DOMAIN "GDA-blob-op"
 
 #include "gda-blob-op.h"
 #include "gda-blob-op-impl.h"
