@@ -3,6 +3,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2011 Murray Cumming <murrayc@murrayc.com>
  * Copyright (C) 2013 Daniel Espinosa <esodan@gmail.com>
+ * Copyright (C) 2019 Pavlo Solntsev <p.sun.fun@gmail.com> 
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -570,9 +571,10 @@ gdaui_login_set_mode (GdauiLogin *login, GdauiLoginMode mode)
  *
  * Get the information specified in @login as a pointer to a (read-only) #GdaDsnInfo.
  * If the connection is not specified by a DSN, then the 'name' attribute of the returned
- * #GdaDsnInfo will be %NULL, and otherwise it will contain the name of the selected DSN.
+ * #GdaDsnInfo will be %NULL, and otherwise it will contain the name of the selected DSN or %NULL
+ * if no DSN selected or connection specified but "OK" button pressed.
  *
- * Returns: (transfer none): a pointer to a (read-only) #GdaDsnInfo.
+ * Returns: (transfer none): a pointer to a (read-only) #GdaDsnInfo or %NULL.
  *
  * Since: 4.2
  */
@@ -587,19 +589,18 @@ gdaui_login_get_connection_information (GdauiLogin *login)
 		GdaDsnInfo *info = NULL;
 		gchar *dsn;
 		dsn = _gdaui_dsn_selector_get_dsn (GDAUI_DSN_SELECTOR (priv->dsn_selector));
-		if (dsn && *dsn)
-			info = gda_config_get_dsn_info (dsn);
+    if (!dsn || !*dsn)
+			return NULL;
+		info = gda_config_get_dsn_info (dsn);
 		g_free (dsn);
-		if (info) {
-			priv->dsn_info.name = g_strdup (info->name);
-			if (info->provider)
-				priv->dsn_info.provider = g_strdup (info->provider);
-			if (info->description)
-				priv->dsn_info.description = g_strdup (info->description);
-			if (info->cnc_string)
-				priv->dsn_info.cnc_string = g_strdup (info->cnc_string);
-			priv->dsn_info.is_system = info->is_system;
-		}
+		priv->dsn_info.name = g_strdup (info->name);
+		if (info->provider)
+			priv->dsn_info.provider = g_strdup (info->provider);
+		if (info->description)
+			priv->dsn_info.description = g_strdup (info->description);
+		if (info->cnc_string)
+			priv->dsn_info.cnc_string = g_strdup (info->cnc_string);
+		priv->dsn_info.is_system = info->is_system;
 		priv->dsn_info.auth_string = _gdaui_provider_auth_editor_get_auth (GDAUI_PROVIDER_AUTH_EDITOR (priv->auth_widget));
 	}
 	else {
