@@ -31,5 +31,5 @@ for c in root.iter():
 n=os.path.basename(dargs['source'])
 nfile=n.replace('.xml.in', '.raw.xml')
 ofile=os.path.join(dargs['output'],nfile)
-print ofile
+print (ofile)
 spec.write(ofile)
