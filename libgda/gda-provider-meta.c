@@ -15,6 +15,8 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  */
+#define G_LOG_DOMAIN "GDA-provider-meta"
+
 #include <libgda/gda-provider-meta.h>
 #include <libgda/gda-connection.h>
 #include <glib/gi18n-lib.h>

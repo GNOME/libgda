@@ -34,6 +34,8 @@
 
 #undef GSEAL_ENABLE
 
+#define G_LOG_DOMAIN "GDA-server-provider"
+
 #include <glib.h>
 #include <libgda/gda-server-provider.h>
 #include <libgda/gda-server-provider-extra.h>

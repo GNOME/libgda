@@ -23,6 +23,9 @@
  */
 
 #undef GDA_DISABLE_DEPRECATED
+
+#define G_LOG_DOMAIN "GDA-statement"
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-statement.h>

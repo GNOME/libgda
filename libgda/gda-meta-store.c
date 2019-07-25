@@ -41,6 +41,8 @@
  */
 #define CURRENT_SCHEMA_VERSION "5"
 
+#define G_LOG_DOMAIN "GDA-meta-store"
+
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-meta-store.h>

@@ -16,6 +16,8 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#define G_LOG_DOMAIN "GDA-provider"
+
 #include <libgda/gda-provider.h>
 
 G_DEFINE_INTERFACE(GdaProvider, gda_provider, G_TYPE_OBJECT)

@@ -33,6 +33,9 @@
  */
 
 #undef GDA_DISABLE_DEPRECATED
+
+#define G_LOG_DOMAIN "GDA-util"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
