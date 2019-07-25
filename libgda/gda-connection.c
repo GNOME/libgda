@@ -43,6 +43,8 @@
 #undef GDA_DISABLE_DEPRECATED
 #undef GSEAL_ENABLE
 
+#define G_LOG_DOMAIN "GDA-connection"
+
 #include <stdio.h>
 #include <libgda/gda-config.h>
 #include <libgda/gda-connection.h>
