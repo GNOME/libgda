@@ -59,7 +59,9 @@ assistant_closed_cb (GdauiDsnAssistant *assistant, G_GNUC_UNUSED gpointer user_d
 }
 
 static void
-file_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSED gpointer user_data)
+file_new_cb (G_GNUC_UNUSED GSimpleAction *action,
+             G_GNUC_UNUSED GVariant *parameter,
+             G_GNUC_UNUSED gpointer user_data)
 {
 	GtkWidget *assistant;
 
@@ -72,7 +74,9 @@ file_new_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UN
 }
 
 static void
-file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpointer user_data)
+file_delete_cb (G_GNUC_UNUSED GSimpleAction *action,
+                G_GNUC_UNUSED GVariant *parameter,
+                gpointer user_data)
 {
 	GtkWidget *app_window = GTK_WIDGET (user_data);
 	GtkWidget *stack, *dsn;
@@ -87,7 +91,9 @@ file_delete_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, gpoint
 }
 
 static void
-show_datasources_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *parameter, gpointer user_data)
+show_datasources_cb (G_GNUC_UNUSED GSimpleAction *unused_action,
+                     G_GNUC_UNUSED GVariant *parameter,
+                     gpointer user_data)
 {
 	GtkWidget *app_window;
 	GtkWidget *stack;
@@ -103,7 +109,9 @@ show_datasources_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *param
 }
 
 static void
-show_providers_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *parameter, gpointer user_data)
+show_providers_cb (G_GNUC_UNUSED GSimpleAction *unused_action,
+                   G_GNUC_UNUSED GVariant *parameter,
+                   gpointer user_data)
 {
 	GtkWidget *app_window;
 	GtkWidget *stack;
@@ -119,7 +127,9 @@ show_providers_cb (G_GNUC_UNUSED GSimpleAction *unused_action, GVariant *paramet
 }
 
 static void
-window_closed_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *parameter, G_GNUC_UNUSED gpointer user_data)
+window_closed_cb (G_GNUC_UNUSED GSimpleAction *action,
+                  G_GNUC_UNUSED GVariant *parameter,
+                  G_GNUC_UNUSED gpointer user_data)
 {
 	g_application_quit (G_APPLICATION (app));
 }

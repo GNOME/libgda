@@ -298,7 +298,9 @@ gdaui_dsn_editor_init (GdauiDsnEditor *config, G_GNUC_UNUSED GdauiDsnEditorClass
 }
 
 static void
-dsn_test_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
+dsn_test_cb (G_GNUC_UNUSED GSimpleAction *action,
+             G_GNUC_UNUSED GVariant *state,
+             gpointer data)
 {
 	GdauiDsnEditor *editor;
 	editor = GDAUI_DSN_EDITOR (data);
@@ -362,7 +364,9 @@ dsn_test_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data
 }
 
 static void
-dsn_reset_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
+dsn_reset_cb (G_GNUC_UNUSED GSimpleAction *action,
+              G_GNUC_UNUSED GVariant *state,
+              gpointer data)
 {
 	GdauiDsnEditor *editor;
 	editor = GDAUI_DSN_EDITOR (data);
@@ -386,7 +390,9 @@ copy_dlg_entry_changed_cb (GtkEntry *entry, GtkDialog *dlg)
 }
 
 static void
-dsn_copy_cb (G_GNUC_UNUSED GSimpleAction *action, GVariant *state, gpointer data)
+dsn_copy_cb (G_GNUC_UNUSED GSimpleAction *action,
+             G_GNUC_UNUSED GVariant *state,
+             gpointer data)
 {
 	GdauiDsnEditor *editor;
 	editor = GDAUI_DSN_EDITOR (data);
