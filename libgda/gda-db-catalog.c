@@ -18,7 +18,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#define G_LOG_DOMAIN "gda-db-catalog"
+#define G_LOG_DOMAIN "GDA-db-catalog"
 
 #include "gda-db-catalog.h"
 #include "gda-db-table.h"

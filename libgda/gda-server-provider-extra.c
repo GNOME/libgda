@@ -22,6 +22,7 @@
  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
+#define G_LOG_DOMAIN "GDA-server-provider-extra"
 
 #include <string.h>
 #include <libgda/gda-server-provider.h>
