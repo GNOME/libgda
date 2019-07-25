@@ -107,7 +107,7 @@ main (int argc,char** argv)
 		
 		/* copy the file into the buffer: */
 		n_read = fread (buffer + buffer_index, 1, fsize, file);
-		if (n_read != (uint) fsize) {
+		if (n_read != (unsigned int) fsize) {
 			fprintf (stderr, "Reading error");
 			fclose (file);
 			return 1;
@@ -116,8 +116,8 @@ main (int argc,char** argv)
 		/* alter buffer */
 		int added = 0;
 		int real_added = 0;
-		for (i = buffer_index; (uint) i < buffer_index + n_read + added; i++) {
-			if (buffer_index + n_read + added + 2 >= (uint) maxlen) {
+		for (i = buffer_index; (unsigned int) i < buffer_index + n_read + added; i++) {
+			if (buffer_index + n_read + added + 2 >= (unsigned int) maxlen) {
 				fprintf (stderr, "Max buffer size reached\nIncrease MAXSIZE constant and re-run\n");
 				fclose (file);
 				return 1;
