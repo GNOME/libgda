@@ -353,7 +353,8 @@ dsn_editor_changed_cb (GdauiDsnEditor *editor, GtkWidget *dsn)
 }
 
 static void
-save_cb (GtkButton *button, GtkWidget *dsn)
+save_cb (G_GNUC_UNUSED GtkButton *button,
+         GtkWidget *dsn)
 {
 	DsnConfigPrivate *priv;
 	priv = g_object_get_data (G_OBJECT (dsn), DSN_CONFIG_DATA);

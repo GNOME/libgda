@@ -150,7 +150,7 @@ default_position_func (G_GNUC_UNUSED PopupContainer *container, gint *out_x, gin
 }
 
 static gboolean
-popup_grab_on_window (GtkWidget *widget, guint32 activate_time)
+popup_grab_on_window (GtkWidget *widget, G_GNUC_UNUSED guint32 activate_time)
 {
 	GdkSeat *seat;
 	GdkWindow *window;
