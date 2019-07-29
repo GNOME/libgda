@@ -71,7 +71,7 @@ library_build:
   - cd _build
   - ninja
   - broadwayd &
-  - GDK_BACKEND=broadway meson test
+  - GDK_BACKEND=broadway meson test --num-processes 1
   - ninja install
   artifacts:
     when: on_failure
