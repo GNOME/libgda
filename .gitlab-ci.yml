@@ -21,6 +21,7 @@ variables:
   MYSQL_ROOT_PASSWORD: test1
   MYSQL_USER: root
   MYSQL_HOST: mysql
+  G_MESSAGES_DEBUG: all
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
