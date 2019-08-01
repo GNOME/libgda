@@ -1047,7 +1047,7 @@ gda_connection_new_from_dsn (GdaDsnInfo *dsn,
   g_return_val_if_fail (dsn->cnc_string, NULL);
 
 /* try to find provider */
-  if (!dsn->provider)
+  if (dsn->provider)
    {
       GdaProviderInfo *pinfo = NULL;
       GdaServerProvider *prov = NULL;
