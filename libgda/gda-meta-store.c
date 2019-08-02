@@ -657,6 +657,7 @@ typedef struct {
 					      * the parameters separated by a period,
 					      * value = a TableConditionInfo structure */
 	GHashTable    *provider_specifics; /* key = a ProviderSpecificKey , value = a ProviderSpecificValue */
+  GdaSet        *attributes_set;
 } GdaMetaStorePrivate;
 
 
@@ -899,7 +900,7 @@ gda_meta_store_init (GdaMetaStore *store)
 	priv->prep_stmts[STMT_DEL_DECLARE_FK] =
 		compute_prepared_stmt (priv->parser,
 				       "DELETE FROM __declared_fk WHERE constraint_name = ##fkname::string AND table_catalog = ##tcal::string AND table_schema = ##tschema::string AND table_name = ##tname::string AND ref_table_catalog = ##ref_tcal::string AND ref_table_schema = ##ref_tschema::string AND ref_table_name = ##ref_tname::string");
-
+  priv->attributes_set = NULL;
 /*#define GDA_DEBUG_GRAPH*/
 #ifdef GDA_DEBUG_GRAPH
 #define INFORMATION_SCHEMA_GRAPH_FILE "information_schema.dot"
@@ -1153,6 +1154,10 @@ gda_meta_store_dispose (GObject *object)
 	  g_object_unref (priv->prep_stmts[STMT_DEL_DECLARE_FK]);
     g_free (priv->prep_stmts);
     priv->prep_stmts = NULL;
+  }
+  if (priv->attributes_set != NULL) {
+    g_object_unref (priv->attributes_set);
+    priv->attributes_set = NULL;
   }
 
 	g_rec_mutex_clear (& (priv->mutex));
@@ -4371,8 +4376,6 @@ gboolean
 gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 				    const gchar *att_value, GError **error)
 {
-	static GMutex set_mutex;
-	static GdaSet *set = NULL;
 	gboolean started_transaction = FALSE;
 
 	g_return_val_if_fail (GDA_IS_META_STORE (store), FALSE);
@@ -4387,17 +4390,14 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 	g_rec_mutex_lock (& (priv->mutex));
 
-	g_mutex_lock (&set_mutex);
-	if (!set) {
-		if (!gda_statement_get_parameters (priv->prep_stmts [STMT_SET_ATT_VALUE], &set, error)) {
-			g_mutex_unlock (&set_mutex);
+	if (!priv->attributes_set) {
+		if (!gda_statement_get_parameters (priv->prep_stmts [STMT_SET_ATT_VALUE], &priv->attributes_set, error)) {
 			g_rec_mutex_unlock (& (priv->mutex));
 			return FALSE;
 		}
 	}
-	g_mutex_unlock (&set_mutex);
 
-	if (!gda_set_set_holder_value (set, error, "name", att_name)) {
+	if (!gda_set_set_holder_value (priv->attributes_set, error, "name", att_name)) {
 		g_rec_mutex_unlock (& (priv->mutex));
 		return FALSE;
 	}
@@ -4415,17 +4415,17 @@ gda_meta_store_set_attribute_value (GdaMetaStore *store, const gchar *att_name,
 
 	/* delete existing attribute */
 	if (gda_connection_statement_execute_non_select (priv->cnc,
-							 priv->prep_stmts [STMT_DEL_ATT_VALUE], set,
+							 priv->prep_stmts [STMT_DEL_ATT_VALUE], priv->attributes_set,
 							 NULL, error) == -1)
 		goto onerror;
 
 	if (att_value) {
 		/* set new attribute */
-		if (!gda_set_set_holder_value (set, error, "value", att_value))
+		if (!gda_set_set_holder_value (priv->attributes_set, error, "value", att_value))
 			goto onerror;
 
 		if (gda_connection_statement_execute_non_select (priv->cnc,
-								 priv->prep_stmts [STMT_SET_ATT_VALUE], set,
+								 priv->prep_stmts [STMT_SET_ATT_VALUE], priv->attributes_set,
 								 NULL, error) == -1)
 			goto onerror;
 	}
@@ -5455,3 +5455,4 @@ gda_meta_store_create_struct (GdaMetaStore *store, GdaMetaStructFeature features
 {
   return (GdaMetaStruct*) g_object_new (GDA_TYPE_META_STRUCT, "meta-store", store, "features", features, NULL);
 }
+
