@@ -62,8 +62,19 @@
  */
 static void gda_postgres_provider_class_init (GdaPostgresProviderClass *klass);
 static void gda_postgres_provider_init       (GdaPostgresProvider *provider);
+static void gda_postgres_provider_dispose (GObject *object);
 
-G_DEFINE_TYPE (GdaPostgresProvider, gda_postgres_provider, GDA_TYPE_SERVER_PROVIDER)
+
+typedef struct {
+  /*
+   * Prepared internal statements
+   * TO_ADD: any prepared statement to be used internally by the provider should be
+   *         declared here, as constants and as SQL statements
+   */
+  GdaStatement **internal_stmt;
+} GdaPostgresProviderPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdaPostgresProvider, gda_postgres_provider, GDA_TYPE_SERVER_PROVIDER)
 
 /*
  * GdaServerProvider's virtual methods
@@ -163,14 +174,6 @@ static GList   *gda_postgres_provider_xa_recover  (GdaServerProvider *provider, 
  */
 static void gda_postgres_free_cnc_data (PostgresConnectionData *cdata);
 
-
-/*
- * Prepared internal statements
- * TO_ADD: any prepared statement to be used internally by the provider should be
- *         declared here, as constants and as SQL statements
- */
-static GdaStatement **internal_stmt = NULL;
-
 typedef enum {
 	I_STMT_BEGIN,
 	I_STMT_COMMIT,
@@ -257,26 +260,37 @@ gda_postgres_provider_class_init (GdaPostgresProviderClass *klass)
 	gda_server_provider_set_impl_functions (provider_class,
 						GDA_SERVER_PROVIDER_FUNCTIONS_XA,
 						(gpointer) &postgres_xa_functions);
+  G_OBJECT_CLASS (provider_class)->dispose = gda_postgres_provider_dispose;
 }
 
 static void
 gda_postgres_provider_init (GdaPostgresProvider *postgres_prv)
 {
-	if (!internal_stmt) {
-		InternalStatementItem i;
-		GdaSqlParser *parser;
+	GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (postgres_prv);
+	InternalStatementItem i;
+	GdaSqlParser *parser;
 
-		parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) postgres_prv);
-		internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
-		for (i = I_STMT_BEGIN; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
-			internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
-			if (!internal_stmt[i])
-				g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
-		}
+	parser = gda_server_provider_internal_get_parser ((GdaServerProvider*) postgres_prv);
+	priv->internal_stmt = g_new0 (GdaStatement *, sizeof (internal_sql) / sizeof (gchar*));
+	for (i = I_STMT_BEGIN; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+		priv->internal_stmt[i] = gda_sql_parser_parse_string (parser, internal_sql[i], NULL, NULL);
+		if (!priv->internal_stmt[i])
+			g_error ("Could not parse internal statement: %s\n", internal_sql[i]);
 	}
 
 	/* meta data init */
 	_gda_postgres_provider_meta_init ((GdaServerProvider*) postgres_prv);
+}
+
+
+static void gda_postgres_provider_dispose (GObject *object) {
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (object));
+  if (priv->internal_stmt != NULL) {
+    for (gulong i = I_STMT_BEGIN; i < sizeof (internal_sql) / sizeof (gchar*); i++) {
+		  g_object_unref (priv->internal_stmt[i]);
+	  }
+    priv->internal_stmt = NULL;
+  }
 }
 
 static GdaWorker *
@@ -1049,6 +1063,8 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
+
 	cdata = (PostgresConnectionData*) gda_connection_internal_get_provider_data_error (cnc, error);
 	if (!cdata)
 		return FALSE;
@@ -1106,7 +1122,7 @@ gda_postgres_provider_begin_transaction (GdaServerProvider *provider, GdaConnect
 	}
 
 	/* BEGIN statement */
-	if (gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_BEGIN], NULL, NULL, error) == -1)
+	if (gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_BEGIN], NULL, NULL, error) == -1)
 		return FALSE;
 
 	if (stmt) {
@@ -1129,6 +1145,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
 					  G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	PostgresConnectionData *cdata;
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1138,7 +1155,7 @@ gda_postgres_provider_commit_transaction (GdaServerProvider *provider, GdaConnec
 		return FALSE;
 
 	/* COMMIT statement */
-	if (gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_COMMIT], NULL, NULL, error) == -1)
+	if (gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_COMMIT], NULL, NULL, error) == -1)
 		return FALSE;
 
 	return TRUE;
@@ -1153,6 +1170,7 @@ gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 					    G_GNUC_UNUSED const gchar *name, GError **error)
 {
 	PostgresConnectionData *cdata;
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
@@ -1162,7 +1180,7 @@ gda_postgres_provider_rollback_transaction (GdaServerProvider *provider,
 		return FALSE;
 
 	/* ROLLBACK statement */
-	if (gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_ROLLBACK], NULL, NULL, error) == -1)
+	if (gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_ROLLBACK], NULL, NULL, error) == -1)
 		return FALSE;
 
 	return TRUE;
@@ -2393,8 +2411,9 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
-	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+	if (!gda_statement_get_parameters (priv->internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
 	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
@@ -2405,7 +2424,7 @@ gda_postgres_provider_xa_prepare (GdaServerProvider *provider, GdaConnection *cn
 		return FALSE;
 	}
 	g_free (str);
-	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_PREPARE], params,
+	affected = gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_XA_PREPARE], params,
 								NULL, error);
 	g_object_unref (params);
 	if (affected == -1)
@@ -2429,8 +2448,9 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
-	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+	if (!gda_statement_get_parameters (priv->internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
 	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
@@ -2441,7 +2461,7 @@ gda_postgres_provider_xa_commit (GdaServerProvider *provider, GdaConnection *cnc
 		return FALSE;
 	}
 	g_free (str);
-	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_COMMIT], params,
+	affected = gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_XA_COMMIT], params,
 								NULL, error);
 	g_object_unref (params);
 	if (affected == -1)
@@ -2464,8 +2484,9 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, FALSE);
 	g_return_val_if_fail (xid, FALSE);
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
-	if (!gda_statement_get_parameters (internal_stmt [I_STMT_XA_PREPARE], &params, error))
+	if (!gda_statement_get_parameters (priv->internal_stmt [I_STMT_XA_PREPARE], &params, error))
 		return FALSE;
 	str = gda_xa_transaction_id_to_string (xid);
 	if (!gda_set_set_holder_value (params, NULL, "xid", str)) {
@@ -2476,7 +2497,7 @@ gda_postgres_provider_xa_rollback (GdaServerProvider *provider, GdaConnection *c
 		return FALSE;
 	}
 	g_free (str);
-	affected = gda_connection_statement_execute_non_select (cnc, internal_stmt [I_STMT_XA_ROLLBACK], params,
+	affected = gda_connection_statement_execute_non_select (cnc, priv->internal_stmt [I_STMT_XA_ROLLBACK], params,
 								NULL, error);
 	g_object_unref (params);
 	if (affected == -1)
@@ -2498,8 +2519,9 @@ gda_postgres_provider_xa_recover (GdaServerProvider *provider, GdaConnection *cn
 
 	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), NULL);
 	g_return_val_if_fail (gda_connection_get_provider (cnc) == provider, NULL);
+  GdaPostgresProviderPrivate *priv = gda_postgres_provider_get_instance_private (GDA_POSTGRES_PROVIDER (provider));
 
-	model = gda_connection_statement_execute_select (cnc, internal_stmt [I_STMT_XA_RECOVER], NULL, error);
+	model = gda_connection_statement_execute_select (cnc, priv->internal_stmt [I_STMT_XA_RECOVER], NULL, error);
 	if (!model)
 		return NULL;
 	else {
