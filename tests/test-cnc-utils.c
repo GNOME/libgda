@@ -74,8 +74,8 @@ cnc_quark_foreach_func (gchar *name, gchar *value, Data1 *data)
 	}
 }
 
-static gchar *
-prov_name_upcase (const gchar *prov_name)
+gchar *
+test_prov_name_upcase (const gchar *prov_name)
 {
 	gchar *str, *ptr;
 
@@ -107,7 +107,7 @@ test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **e
 	}
 
 	/* open connection to database */
-	upname = prov_name_upcase (prov_info->id);
+	upname = test_prov_name_upcase (prov_info->id);
 	str = g_strdup_printf ("%s_CNC_PARAMS", upname);
 	cnc_params = getenv (str);
 	g_free (str);
@@ -208,7 +208,7 @@ test_cnc_setup_connection (const gchar *provider, const gchar *dbname, GError **
 	}
 
 	/* create database if requested */
-	upname = prov_name_upcase (prov_info->id);
+	upname = test_prov_name_upcase (prov_info->id);
 	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
 	db_params = getenv (str);
 	g_free (str);
@@ -299,7 +299,7 @@ test_cnc_clean_connection (GdaConnection *cnc, GError **error)
 
 	prov_id = g_strdup (gda_connection_get_provider_name (cnc));
 
-	upname = prov_name_upcase (prov_id);
+	upname = test_prov_name_upcase (prov_id);
 	str = g_strdup_printf ("%s_DONT_REMOVE_DB", upname);
 	if (getenv (str))
 		destroy_db = FALSE;

@@ -30,4 +30,6 @@ gboolean       test_cnc_clean_connection (GdaConnection *cnc, GError **error);
 
 gboolean       test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gchar *full_file, GError **error);
 
+gchar         *test_prov_name_upcase (const gchar *prov_name);
+
 #endif

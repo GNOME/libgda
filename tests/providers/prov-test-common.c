@@ -1437,3 +1437,38 @@ prov_test_common_values (void)
 
 	return number_failed;
 }
+
+/**
+ * Test multiple simultaneous connections to same database
+ */
+int priv_test_common_simultaneos_connections (void)
+{
+	gchar *str, *upname;
+  const gchar *db_params;
+  GError *error = NULL;
+
+	upname = test_prov_name_upcase (pinfo->id);
+	str = g_strdup_printf ("%s_DBCREATE_PARAMS", upname);
+	db_params = getenv (str);
+  GdaConnection * connections[50];
+  if (db_params) {
+    for (gint i = 0; i < 50; i++) {
+      connections[i] = gda_connection_new_from_string (pinfo->id, db_params,
+                                                           NULL, GDA_CONNECTION_OPTIONS_NONE,
+                                                           &error);
+      if (connections[i] == NULL) {
+        for (gint j = 0; j < (i+1); j++) {
+          g_object_unref (connections[j]);
+        }
+        g_warning ("Error creating connection: %s",
+                 error && error->message ? error->message : "No datail");
+        g_clear_error (&error);
+        return 1;
+      }
+    }
+    for (gint i = 0; i < 50; i++) {
+      g_object_unref (connections[i]);
+    }
+  }
+  return 0;
+}

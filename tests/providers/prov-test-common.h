@@ -39,5 +39,6 @@ int prov_test_common_check_date (void);
 int prov_test_common_clean (void);
 int prov_test_common_check_bigint (void);
 int prov_test_common_values (void);
+int priv_test_common_simultaneos_connections (void);
 
 #endif

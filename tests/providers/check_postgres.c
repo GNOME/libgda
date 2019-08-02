@@ -79,6 +79,7 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 		number_failed += prov_test_common_check_data_select ();
     number_failed += prov_test_common_values ();
 		number_failed += prov_test_common_clean ();
+    number_failed += priv_test_common_simultaneos_connections ();
 	}
 
 	g_strfreev (env);
