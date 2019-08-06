@@ -14,7 +14,7 @@
  * Copyright (C) 2010 David King <davidk@openismus.com>
  * Copyright (C) 2010 Jonh Wendell <jwendell@gnome.org>
  * Copyright (C) 2011-2018 Daniel Espinosa <esodan@gmail.com>
- * Copyright (C) 2018 Pavlo Solntsev <p.sun.fun@gmail.com> 
+ * Copyright (C) 2018 - 2019 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2029,7 +2029,7 @@ gda_identifier_equal (const gchar *id1, const gchar *id2)
 
 static char *concat_ident (const gchar *prefix, const gchar *ident);
 
-static gchar *sql_start_words[] = {
+static const gchar *sql_start_words[] = {
 	"ALTER",
 	"SELECT",
 	"INSERT",
@@ -2044,7 +2044,7 @@ static gchar *sql_start_words[] = {
 	"ROLLBACK"
 };
 
-static gchar *sql_middle_words[] = {
+static const gchar *sql_middle_words[] = {
 	"FROM",
 	"INNER",
 	"JOIN",
@@ -2122,7 +2122,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		gsize len;
 		gsize i;
 		len = strlen (text);
-		for (i = 0; i < (sizeof (sql_start_words) / sizeof (gchar*)); i++) {
+		for (i = 0; i < G_N_ELEMENTS (sql_start_words); i++) {
 			gsize clen = strlen (sql_start_words[i]);
 			if (!g_ascii_strncasecmp (sql_start_words[i], text, MIN (clen, len))) {
 				gchar *str;
@@ -2251,7 +2251,7 @@ gda_completion_list_get (GdaConnection *cnc, const gchar *sql, gint start, gint 
 		gsize len;
 		gsize i;
 		len = strlen (text);
-		for (i = 0; i < (sizeof (sql_middle_words) / sizeof (gchar*)); i++) {
+		for (i = 0; i < G_N_ELEMENTS (sql_middle_words); i++) {
 			gsize clen = strlen (sql_middle_words[i]);
 			if (!g_ascii_strncasecmp (sql_middle_words[i], text, MIN (clen, len))) {
 				gchar *str;
@@ -2653,7 +2653,7 @@ _sql_identifier_needs_quotes (const gchar *str)
  *  RFC 1738 defines that these characters should be escaped, as well
  *  any non-US-ASCII character or anything between 0x00 - 0x1F.
  */
-static char rfc1738_unsafe_chars[] =
+static const char rfc1738_unsafe_chars[] =
 {
     (char) 0x3C,               /* < */
     (char) 0x3E,               /* > */
@@ -2673,7 +2673,7 @@ static char rfc1738_unsafe_chars[] =
     (char) 0x20                /* space */
 };
 
-static char rfc1738_reserved_chars[] =
+static const char rfc1738_reserved_chars[] =
 {
     (char) 0x3b,               /* ; */
     (char) 0x2f,               /* / */
@@ -2693,33 +2693,33 @@ static char rfc1738_reserved_chars[] =
  * <constant>&quot;%%ab&quot;</constant> where
  * <constant>ab</constant> is the hexadecimal number corresponding to the character.
  *
- * Returns: (transfer full): a new string
+ * Returns: (transfer full) (nullable): a new string or %NULL
  */
 gchar *
 gda_rfc1738_encode (const gchar *string)
 {
+	g_return_val_if_fail (string, NULL);
+
+	if (!*string)
+		return g_strdup ("");
+
 	gchar *ret, *wptr;
 	const gchar *rptr;
 	gsize i;
-
-	if (!string)
-		return NULL;
-	if (!*string)
-		return g_strdup ("");
 
 	ret = g_new0 (gchar, (strlen (string) * 3) + 1);
 	for (wptr = ret, rptr = string; *rptr; rptr++) {
 		gboolean enc = FALSE;
 
 		/* RFC 1738 defines these chars as unsafe */
-		for (i = 0; i < sizeof (rfc1738_reserved_chars) / sizeof (char); i++) {
+		for (i = 0; i < G_N_ELEMENTS (rfc1738_reserved_chars); i++) {
 			if (*rptr == rfc1738_reserved_chars [i]) {
 				enc = TRUE;
 				break;
 			}
 		}
 		if (!enc) {
-			for (i = 0; i < sizeof (rfc1738_unsafe_chars) / sizeof (char); i++) {
+			for (i = 0; i < G_N_ELEMENTS (rfc1738_unsafe_chars); i++) {
 				if (*rptr == rfc1738_unsafe_chars [i]) {
 					enc = TRUE;
 					break;
