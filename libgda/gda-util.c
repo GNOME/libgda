@@ -75,7 +75,7 @@
  * understand and remember name. For Example the G_TYPE_STRING is converted to "string"
  * whereas g_type_name() converts it to "gchararray".
  *
- * Returns: the GDA's string representing the given #GType or the name
+ * Returns: (transfer none): the GDA's string representing the given #GType or the name
  * returned by #g_type_name.
  */
 const gchar *
@@ -197,17 +197,16 @@ gda_g_type_from_string (const gchar *str)
  * Escapes @string to make it understandable by a DBMS. The escape method is very common and replaces any
  * occurrence of "'" with "''" and "\" with "\\"
  *
- * Returns: a new string
+ * Returns: (transfer full): (nullable): a new string or %NULL
  */
 gchar *
 gda_default_escape_string (const gchar *string)
 {
+	g_return_val_if_fail (string, NULL);
+
 	gchar *ptr, *ret, *retptr;
 	gint size;
 
-	if (!string)
-		return NULL;
-	
 	/* determination of the new string size */
 	ptr = (gchar *) string;
 	size = 1;
@@ -251,18 +250,17 @@ gda_default_escape_string (const gchar *string)
  * Do the reverse of gda_default_escape_string(): transforms any "''" into "'", any
  * "\\" into "\" and any "\'" into "'". 
  *
- * Returns: a new unescaped string, or %NULL in an error was found in @string
+ * Returns: (nullable): (transfer full): a new unescaped string, or %NULL in an error was found in @string
  */
 gchar *
 gda_default_unescape_string (const gchar *string)
 {
+	g_return_val_if_fail (string, NULL);
+
 	glong total;
 	gchar *ptr;
 	gchar *retval;
 	glong offset = 0;
-	
-	if (!string) 
-		return NULL;
 	
 	total = strlen (string);
 	retval = g_memdup (string, total+1);
@@ -308,7 +306,7 @@ gda_default_unescape_string (const gchar *string)
 /**
  * gda_utility_check_data_model_v: (rename-to gda_utility_check_data_model)
  * @model: a #GdaDataModel object
- * @nbcols: the minimum requested number of columns
+ * @nbcols: the minimum requested number of columns. Length of @types.
  * @types: (array length=nbcols): array with @nbcols length of type GType or null (if any data type is accepted)
  *
  * Check the column types of a GdaDataModel.
@@ -569,12 +567,12 @@ gda_utility_data_model_dump_data_to_xml (GdaDataModel *model, xmlNodePtr parent,
  *
  * Finds the description of a field into Metadata from a #GdaDataModel.
  *
- * Returns: The field's description, or NULL if description is not set
+ * Returns: (nullable): (transfer none): The field's description, or NULL if description is not set
  */
 const gchar *
 gda_utility_data_model_find_column_description (GdaDataSelect *model, const gchar *field_name)
 {
-	g_return_val_if_fail (GDA_IS_DATA_SELECT (model), NULL);
+	g_return_val_if_fail (model && GDA_IS_DATA_SELECT (model), NULL);
 	g_return_val_if_fail (field_name, NULL);
 
 	GdaConnection *connection = gda_data_select_get_connection ((GdaDataSelect *) model);
@@ -627,6 +625,10 @@ gda_utility_data_model_find_column_description (GdaDataSelect *model, const gcha
 gboolean
 gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *sources, GError **error)
 {
+	g_return_val_if_fail (holder, FALSE);
+	g_return_val_if_fail (node, FALSE);
+	g_return_val_if_fail (sources, FALSE);
+
 	xmlChar *str;
 	xmlNodePtr vnode;
 	gboolean retval = TRUE;
@@ -786,7 +788,7 @@ gda_utility_holder_load_attributes (GdaHolder *holder, xmlNodePtr node, GSList *
  * alphanumeric character with the string "__gdaXX" where XX is the hex. representation
  * of the non alphanumeric char.
  *
- * Returns: a new string
+ * Returns: (transfer full): a new string
  */
 gchar *
 gda_text_to_alphanum (const gchar *text)
@@ -807,10 +809,8 @@ gda_text_to_alphanum (const gchar *text)
 		else
 			g_string_append_c (string, *ptr);
 	}
-	ret = string->str;
-	g_string_free (string, FALSE);
+	return g_string_free (string, FALSE);
 	/*g_print ("=>#%s#\n", ret);*/
-	return ret;
 }
 
 /**
@@ -819,7 +819,7 @@ gda_text_to_alphanum (const gchar *text)
  *
  * Does the opposite of gda_text_to_alphanum(), in the same string 
  *
- * Returns: @text if conversion succeeded or %NULL if an error occurred
+ * Returns: (nullable):  @text if conversion succeeded or %NULL if an error occurred
  */
 gchar *
 gda_alphanum_to_text (gchar *text)
@@ -918,13 +918,16 @@ dml_statements_check_select_structure (GdaConnection *cnc, GdaSqlStatement *sel_
  * use a primary key of @mtable. If @require_pk is %FALSE, then it will try to use a primary key of @mtable,
  * and if none is available, it will use all the columns of @mtable to compute a condition statement.
  *
- * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
+ * Returns: (nullable): (transfer full): a new #GdaSqlExpr, or %NULL if an error occurred.
  *
  * Since: 4.0.3
  */
 GdaSqlExpr*
-gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlStatementSelect *stsel,
-						 GdaMetaTable *mtable, gboolean require_pk, GError **error)
+gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc,
+																								 GdaSqlStatementSelect *stsel,
+																								 GdaMetaTable *mtable,
+																								 gboolean require_pk,
+																								 GError **error)
 {
 	gint i;
 	GdaSqlExpr *expr;
@@ -1098,10 +1101,13 @@ gda_compute_unique_table_row_condition_with_cnc (GdaConnection *cnc, GdaSqlState
  * Computes a #GdaSqlExpr expression which can be used in the WHERE clause of an UPDATE
  * or DELETE statement when a row from the result of the @stsel statement has to be modified.
  *
- * Returns: a new #GdaSqlExpr, or %NULL if an error occurred.
+ * Returns: (nullable): (transfer full): a new #GdaSqlExpr, or %NULL if an error occurred.
  */
 GdaSqlExpr*
-gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTable *mtable, gboolean require_pk, GError **error)
+gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel,
+																				GdaMetaTable *mtable,
+																				gboolean require_pk,
+																				GError **error)
 {
 	return gda_compute_unique_table_row_condition_with_cnc (NULL, stsel, mtable, require_pk, error);
 }
@@ -1111,9 +1117,9 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  * @cnc: a #GdaConnection
  * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
  * @require_pk: TRUE if the created statement have to use a primary key
- * @insert_stmt: (nullable) (transfer full): a place to store the created INSERT statement, or %NULL
- * @update_stmt: (nullable) (transfer full): a place to store the created UPDATE statement, or %NULL
- * @delete_stmt: (nullable) (transfer full): a place to store the created DELETE statement, or %NULL
+ * @insert_stmt: (nullable): (transfer full): (out): a place to store the created INSERT statement, or %NULL
+ * @update_stmt: (nullable): (transfer full): (out): a place to store the created UPDATE statement, or %NULL
+ * @delete_stmt: (nullable): (transfer full): (out): a place to store the created DELETE statement, or %NULL
  * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
@@ -1123,8 +1129,13 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  * returns: %TRUE if no error occurred
  */
 gboolean
-gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gboolean require_pk, 
-                            GdaStatement **insert_stmt, GdaStatement **update_stmt, GdaStatement **delete_stmt, GError **error)
+gda_compute_dml_statements (GdaConnection *cnc,
+														GdaStatement *select_stmt,
+														gboolean require_pk,
+														GdaStatement **insert_stmt,
+														GdaStatement **update_stmt,
+														GdaStatement **delete_stmt,
+														GError **error)
 {
 	GdaSqlStatement *sel_struct;
 	GdaSqlStatementSelect *stsel;
@@ -1338,7 +1349,7 @@ gda_compute_dml_statements (GdaConnection *cnc, GdaStatement *select_stmt, gbool
  * however that this #GdaSqlStatement does not select anything (ie it would be rendered as "SELECT FROM ... WHERE ...")
  * and before being usable, one needs to add some fields to actually select.
  *
- * Returns: a new #GdaStatement if no error occurred, or %NULL otherwise
+ * Returns: (nullable): (transfer full): a new #GdaStatement if no error occurred, or %NULL otherwise
  */
 GdaSqlStatement *
 gda_compute_select_statement_from_update (GdaStatement *update_stmt, GError **error)
@@ -1510,7 +1521,7 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **e
  * gda_rewrite_sql_statement_for_null_parameters:
  * @sqlst: (transfer full): a #GdaSqlStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
- * @out_modified: (nullable): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
+ * @out_modified: (nullable): (out): a place to store the boolean which tells if @stmt has been modified or not, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Modifies @sqlst to take into account any parameter which might be %NULL: if @sqlst contains the
@@ -1525,13 +1536,15 @@ null_param_unknown_foreach_func (GdaSqlAnyPart *part, NullData *data, GError **e
  * NULL values in statements without having to rewrite statements, as database usually don't
  * consider that "xxx = NULL" is the same as "xxx IS NULL" when using parameters.
  *
- * Returns: (transfer full): the modified @sqlst statement, or %NULL if an error occurred
+ * Returns: (transfer full): (nullable): the modified @sqlst statement, or %NULL if an error occurred
  *
  * Since: 4.2.9
  */
 GdaSqlStatement *
-gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *params,
-					       gboolean *out_modified, GError **error)
+gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst,
+																							 GdaSet *params,
+																							 gboolean *out_modified,
+																							 GError **error)
 {
 	if (out_modified)
 		*out_modified = FALSE;
@@ -1598,7 +1611,7 @@ gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *p
  * gda_rewrite_statement_for_null_parameters:
  * @stmt: (transfer none): a #GdaStatement
  * @params: a #GdaSet to be used as parameters when executing @stmt
- * @out_stmt: (transfer full) (nullable): a place to store the new #GdaStatement, or %NULL
+ * @out_stmt: (transfer full) (nullable): (out): a place to store the new #GdaStatement, or %NULL
  * @error: a place to store errors, or %NULL
  *
  * Modifies @stmt to take into account any parameter which might be %NULL: if @stmt contains the
@@ -1627,8 +1640,10 @@ gda_rewrite_sql_statement_for_null_parameters (GdaSqlStatement *sqlst, GdaSet *p
  * Since: 4.2.9
  */
 gboolean
-gda_rewrite_statement_for_null_parameters (GdaStatement *stmt, GdaSet *params,
-					   GdaStatement **out_stmt, GError **error)
+gda_rewrite_statement_for_null_parameters (GdaStatement *stmt,
+																					 GdaSet *params,
+																					 GdaStatement **out_stmt,
+																					 GError **error)
 {
 	GdaSqlStatement *sqlst;
 	gboolean mod = FALSE;
@@ -1682,7 +1697,7 @@ static gboolean stmt_rewrite_update_default_keyword (GdaSqlStatementUpdate *upd,
  * if @remove is %FALSE and into <programlisting><![CDATA[INSERT INTO mytable (id) VALUES (23)]]></programlisting>
  * if @remove is %TRUE.
  *
- * Returns: a new #GdaSqlStatement, or %NULL if an error occurred
+ * Returns: (transfer full): (nullable): a new #GdaSqlStatement, or %NULL if an error occurred
  *
  * Since: 4.2
  */
@@ -2532,7 +2547,7 @@ static gboolean _sql_identifier_needs_quotes (const gchar *str);
  * For more information, see the <link linkend="gen:sql_identifiers">SQL identifiers and abstraction</link> and
  * <link linkend="information_schema:sql_identifiers">SQL identifiers in meta data</link> sections.
  *
- * Returns: the representation of @id ready to be used in SQL statement, as a new string,
+ * Returns: (transfer full): (nullable): the representation of @id ready to be used in SQL statement, as a new string,
  *          or %NULL if @id is in a wrong format
  *
  * Since: 4.0.3
@@ -2693,7 +2708,7 @@ static const char rfc1738_reserved_chars[] =
  * <constant>&quot;%%ab&quot;</constant> where
  * <constant>ab</constant> is the hexadecimal number corresponding to the character.
  *
- * Returns: (transfer full) (nullable): a new string or %NULL
+ * Returns: (transfer full): (nullable): a new string or %NULL
  */
 gchar *
 gda_rfc1738_encode (const gchar *string)
@@ -2774,10 +2789,10 @@ gda_rfc1738_encode (const gchar *string)
 gboolean
 gda_rfc1738_decode (gchar *string)
 {
-	gchar *wptr, *rptr;
+	g_return_val_if_fail (string, FALSE);
+	g_return_val_if_fail (*string, FALSE);
 
-	if (!string || !*string)
-		return TRUE;
+	gchar *wptr, *rptr;
 
 	for (wptr = rptr = string; *rptr; wptr++, rptr++) {
 		*wptr = *rptr;
@@ -2824,9 +2839,9 @@ gda_rfc1738_decode (gchar *string)
 /**
  * gda_dsn_split:
  * @string: a string in the "[&lt;username&gt;[:&lt;password&gt;]@]&lt;DSN&gt;" form
- * @out_dsn: a place to store the new string containing the &lt;DSN&gt; part
- * @out_username: a place to store the new string containing the &lt;username&gt; part
- * @out_password: a place to store the new string containing the &lt;password&gt; part
+ * @out_dsn: (out caller-allocates): a place to store the new string containing the &lt;DSN&gt; part
+ * @out_username (out caller-allocates): a place to store the new string containing the &lt;username&gt; part
+ * @out_password (out caller-allocates): a place to store the new string containing the &lt;password&gt; part
  *
  * Extract the DSN, username and password from @string. in @string, the various parts are strings
  * which are expected to be encoded using an RFC 1738 compliant encoding. If they are specified, 
@@ -2903,8 +2918,11 @@ out_username: "meme"
 out_password: "pass"]]></programlisting>
  */
 void
-gda_connection_string_split (const gchar *string, gchar **out_cnc_params, gchar **out_provider, 
-			     gchar **out_username, gchar **out_password)
+gda_connection_string_split (const gchar *string,
+														 gchar **out_cnc_params,
+														 gchar **out_provider,
+														 gchar **out_username,
+														 gchar **out_password)
 {
 	const gchar *ptr;
 	const gchar *ap;
@@ -3313,7 +3331,7 @@ gda_parse_formatted_time (const gchar *value, gchar sep)
  *
  * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
  *
- * Returns: a new #GDateTime if @value has been successfully parsed as a valid timestamp (see g_date_valid()). The returned instance should be freed using g_date_time_unref().
+ * Returns: (transfer full): a new #GDateTime if @value has been successfully parsed as a valid timestamp (see g_date_valid()). The returned instance should be freed using g_date_time_unref().
  */
 GDateTime*
 gda_parse_iso8601_timestamp (const gchar *value)
@@ -3335,13 +3353,16 @@ gda_parse_iso8601_timestamp (const gchar *value)
  * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
- * Returns: (nullable): a new #GDateTime if @value has been successfully parsed as a valid date (see g_date_valid()).
+ * Returns: (nullable): (transfer full): a new #GDateTime if @value has been successfully parsed as a valid date (see g_date_valid()).
  * 
  * Since: 5.2
  */
 GDateTime*
 gda_parse_formatted_timestamp (const gchar *value,
-			       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep)
+															 GDateDMY first,
+															 GDateDMY second,
+															 GDateDMY third,
+															 gchar sep)
 {
 	g_return_val_if_fail (value != NULL, NULL);
 
