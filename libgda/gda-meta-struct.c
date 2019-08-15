@@ -392,7 +392,7 @@ prepare_sql_identifier_for_compare (gchar *str)
  * For more information, see the <link linkend="information_schema:sql_identifiers">
  * meta data section about SQL identifiers</link>.
  *
- * Returns: (transfer none): the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
+ * Returns: (transfer none) (nullable): the #GdaMetaDbObject corresponding to the database object if no error occurred, or %NULL
  */
 GdaMetaDbObject *
 gda_meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
@@ -1809,7 +1809,7 @@ _meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const
  * Get a list of all the #GdaMetaDbObject structures representing database objects in @mstruct. Note that
  * no #GdaMetaDbObject structure must not be modified.
  *
- * Returns: (transfer container) (element-type Gda.MetaDbObject): a new #GSList list of pointers to
+ * Returns: (transfer container) (element-type Gda.MetaDbObject) (nullable): a new #GSList list of pointers to
  * #GdaMetaDbObject structures which must be destroyed after usage using g_slist_free(). The individual
  * #GdaMetaDbObject must not be modified.
  */
@@ -1837,7 +1837,7 @@ gda_meta_struct_get_all_db_objects (GdaMetaStruct *mstruct)
  * If one or both of @catalog and @schema are %NULL, and more than one database object matches the name, then
  * the return value is also %NULL.
  *
- * Returns: (transfer none): the #GdaMetaDbObject or %NULL if not found
+ * Returns: (transfer none) (nullable): the #GdaMetaDbObject or %NULL if not found
  */
 GdaMetaDbObject *
 gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, const GValue *schema, const GValue *name)
@@ -1876,7 +1876,7 @@ gda_meta_struct_get_db_object (GdaMetaStruct *mstruct, const GValue *catalog, co
  *
  * Tries to find the #GdaMetaTableColumn representing the column named @col_name in @table.
  *
- * Returns: (transfer none): the #GdaMetaTableColumn or %NULL if not found
+ * Returns: (transfer none) (nullable): the #GdaMetaTableColumn or %NULL if not found
  */
 GdaMetaTableColumn *
 gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, const GValue *col_name)
@@ -1905,7 +1905,7 @@ gda_meta_struct_get_table_column (GdaMetaStruct *mstruct, GdaMetaTable *table, c
  *
  * Creates a new graph (in the GraphViz syntax) representation of @mstruct.
  *
- * Returns: (transfer full): a new string, or %NULL if an error occurred.
+ * Returns: (transfer full) (nullable): a new string, or %NULL if an error occurred.
  */
 gchar *
 gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, G_GNUC_UNUSED GError **error)
@@ -2513,7 +2513,7 @@ copyerror:
  * not be used after calling this function (it may have been destroyed). If you need a pointer to the #GdaMetaDbObject
  * for a database object, use gda_meta_struct_get_db_object().
  *
- * Returns: (transfer none): a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
+ * Returns: (transfer none) (nullable): a pointer to the #GdaMetaDbObject used in @mstruct to represent the added database object (may be @dbo or not)
  */
 GdaMetaDbObject *
 _gda_meta_struct_add_db_object (GdaMetaStruct *mstruct, GdaMetaDbObject *dbo, GError **error)
