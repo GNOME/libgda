@@ -36,6 +36,7 @@
  * Main static functions
  */
 static void gda_meta_struct_dispose (GObject *object);
+static void gda_meta_struct_finalize (GObject *object);
 
 static void gda_meta_struct_set_property (GObject *object,
                                          guint param_id,
@@ -58,6 +59,7 @@ typedef struct {
 	guint         features;
 	gboolean      auto_incement;
 	gchar        *desc;
+	GdaSqlParser *parser;
 } GdaMetaStructPrivate;
 G_DEFINE_TYPE_WITH_PRIVATE (GdaMetaStruct, gda_meta_struct, G_TYPE_OBJECT)
 
@@ -115,6 +117,7 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 
 	/* virtual methods */
 	object_class->dispose = gda_meta_struct_dispose;
+	object_class->finalize = gda_meta_struct_finalize;
 
 }
 
@@ -127,16 +130,16 @@ gda_meta_struct_init (GdaMetaStruct *mstruct) {
 	priv->index = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 	priv->auto_incement = FALSE;
 	priv->desc = NULL;
+	priv->parser = gda_sql_parser_new ();
 }
 
-
-
 static void
-gda_meta_struct_dispose (GObject *object) {
+gda_meta_struct_dispose (GObject *object)
+{
 	GdaMetaStruct *mstruct;
-	
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDA_IS_META_STRUCT (object));
+
+	g_assert_nonnull (object);
+	g_assert_true (GDA_IS_META_STRUCT (object));
 	
 	mstruct = GDA_META_STRUCT (object);
 	GdaMetaStructPrivate *priv = gda_meta_struct_get_instance_private (mstruct);
@@ -156,6 +159,22 @@ gda_meta_struct_dispose (GObject *object) {
 		g_hash_table_destroy (priv->index);
 		priv->index = NULL;
 	}
+
+	/* parent class */
+	G_OBJECT_CLASS (gda_meta_struct_parent_class)->dispose (object);
+}
+
+static void
+gda_meta_struct_finalize (GObject *object)
+{
+	g_assert_nonnull (object);
+	g_assert_true (GDA_IS_META_STRUCT (object));
+
+	GdaMetaStruct *mstruct;
+	mstruct = GDA_META_STRUCT (object);
+	GdaMetaStructPrivate *priv = gda_meta_struct_get_instance_private (mstruct);
+
+	g_object_unref (priv->parser);
 
 	/* parent class */
 	G_OBJECT_CLASS (gda_meta_struct_parent_class)->dispose (object);
@@ -853,12 +872,9 @@ _meta_struct_complement (GdaMetaStruct *mstruct, GdaMetaDbObjectType type,
 		/* view's dependencies, from its definition */
 		if ((priv->features & GDA_META_STRUCT_FEATURE_VIEW_DEPENDENCIES) &&
 		    mv->view_def && *mv->view_def) {
-			static GdaSqlParser *parser = NULL;
 			GdaStatement *stmt;
 			const gchar *remain;
-			if (!parser)
-				parser = gda_sql_parser_new ();
-			stmt = gda_sql_parser_parse_string (parser, mv->view_def, &remain, NULL);
+			stmt = gda_sql_parser_parse_string (priv->parser, mv->view_def, &remain, NULL);
 			if (stmt &&
 			    ((gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_SELECT) ||
 			     (gda_statement_get_statement_type (stmt) == GDA_SQL_STATEMENT_COMPOUND))) {
