@@ -177,7 +177,7 @@ gda_meta_struct_finalize (GObject *object)
 	g_object_unref (priv->parser);
 
 	/* parent class */
-	G_OBJECT_CLASS (gda_meta_struct_parent_class)->dispose (object);
+	G_OBJECT_CLASS (gda_meta_struct_parent_class)->finalize (object);
 }
 
 static void
