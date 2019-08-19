@@ -66,9 +66,18 @@ typedef struct {
 	GdaSqlParser  *parser;
 
 	GHashTable    *jobs_hash; /* key = a job ID, value = a # */
+	GMutex mutex;
 } GdaServerProviderPrivate;
 
-G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE(GdaServerProvider, gda_server_provider, G_TYPE_OBJECT)
+static void
+gda_server_provider_iface_init (GdaLockableInterface *iface);
+
+
+G_DEFINE_ABSTRACT_TYPE_WITH_CODE (GdaServerProvider,
+																	gda_server_provider,
+																	G_TYPE_OBJECT,
+																	G_IMPLEMENT_INTERFACE(GDA_TYPE_LOCKABLE, gda_server_provider_iface_init)
+																	G_ADD_PRIVATE(GdaServerProvider))
 
 #define CLASS(provider) (GDA_SERVER_PROVIDER_CLASS (G_OBJECT_GET_CLASS (provider)))
 #define GDA_DEBUG_VIRTUAL
@@ -163,6 +172,7 @@ gda_server_provider_init (GdaServerProvider *provider)
 							       (GDestroyNotify) gda_server_provider_handler_info_free,
 							       (GDestroyNotify) g_object_unref);
 	priv->jobs_hash = NULL;
+	g_mutex_init (&priv->mutex);
 }
 
 static void
@@ -179,6 +189,7 @@ gda_server_provider_finalize (GObject *object)
 	if (priv->parser)
 		g_object_unref (priv->parser);
 
+	g_mutex_clear (&priv->mutex);
 
 	/* chain to parent class */
 	G_OBJECT_CLASS (gda_server_provider_parent_class)->finalize (object);
@@ -320,6 +331,41 @@ gda_server_provider_get_property (GObject *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
     break;
   }
+}
+
+static void
+gda_server_provider_lock (GdaLockable *iface)
+{
+	GdaServerProvider *provider = GDA_SERVER_PROVIDER(iface);
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
+
+	g_mutex_lock (&priv->mutex);
+}
+
+static void
+gda_server_provider_unlock (GdaLockable *iface)
+{
+	GdaServerProvider *provider = GDA_SERVER_PROVIDER(iface);
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
+
+	g_mutex_unlock (&priv->mutex);
+}
+
+static gboolean
+gda_server_provider_trylock (GdaLockable *iface)
+{
+	GdaServerProvider *provider = GDA_SERVER_PROVIDER(iface);
+	GdaServerProviderPrivate *priv = gda_server_provider_get_instance_private (provider);
+
+	return g_mutex_trylock (&priv->mutex);
+}
+
+static void
+gda_server_provider_iface_init (GdaLockableInterface *iface)
+{
+	iface->lock = gda_server_provider_lock;
+	iface->unlock = gda_server_provider_unlock;
+	iface->trylock = gda_server_provider_trylock;
 }
 
 /**
