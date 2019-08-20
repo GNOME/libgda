@@ -36,7 +36,6 @@
  * Main static functions
  */
 static void gda_meta_struct_dispose (GObject *object);
-static void gda_meta_struct_finalize (GObject *object);
 
 static void gda_meta_struct_set_property (GObject *object,
                                          guint param_id,
@@ -117,7 +116,6 @@ gda_meta_struct_class_init (GdaMetaStructClass *klass) {
 
 	/* virtual methods */
 	object_class->dispose = gda_meta_struct_dispose;
-	object_class->finalize = gda_meta_struct_finalize;
 
 }
 
@@ -160,24 +158,11 @@ gda_meta_struct_dispose (GObject *object)
 		priv->index = NULL;
 	}
 
+	if (priv->parser)
+		g_clear_object (&priv->parser);
+
 	/* parent class */
 	G_OBJECT_CLASS (gda_meta_struct_parent_class)->dispose (object);
-}
-
-static void
-gda_meta_struct_finalize (GObject *object)
-{
-	g_assert_nonnull (object);
-	g_assert_true (GDA_IS_META_STRUCT (object));
-
-	GdaMetaStruct *mstruct;
-	mstruct = GDA_META_STRUCT (object);
-	GdaMetaStructPrivate *priv = gda_meta_struct_get_instance_private (mstruct);
-
-	g_object_unref (priv->parser);
-
-	/* parent class */
-	G_OBJECT_CLASS (gda_meta_struct_parent_class)->finalize (object);
 }
 
 static void
