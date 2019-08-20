@@ -75,7 +75,7 @@
  * understand and remember name. For Example the G_TYPE_STRING is converted to "string"
  * whereas g_type_name() converts it to "gchararray".
  *
- * Returns: (transfer none) the GDA's string representing the given #GType or the name
+ * Returns: (transfer none): the GDA's string representing the given #GType or the name
  * returned by #g_type_name.
  */
 const gchar *
@@ -1108,9 +1108,9 @@ gda_compute_unique_table_row_condition (GdaSqlStatementSelect *stsel, GdaMetaTab
  * @cnc: a #GdaConnection
  * @select_stmt: a SELECT #GdaStatement (compound statements not handled)
  * @require_pk: TRUE if the created statement have to use a primary key
- * @insert_stmt: (nullable) (transfer full) (out): a place to store the created INSERT statement, or %NULL
- * @update_stmt: (nullable) (transfer full) (out): a place to store the created UPDATE statement, or %NULL
- * @delete_stmt: (nullable) (transfer full) (out): a place to store the created DELETE statement, or %NULL
+ * @insert_stmt: (nullable) (out callee-allocates): a place to store the created INSERT statement, or %NULL
+ * @update_stmt: (nullable) (out callee-allocates): a place to store the created UPDATE statement, or %NULL
+ * @delete_stmt: (nullable) (out callee-allocates): a place to store the created DELETE statement, or %NULL
  * @error: (nullable): a place to store errors, or %NULL
  *
  * Creates an INSERT, an UPDATE and a DELETE statement from a SELECT statement
@@ -2695,7 +2695,8 @@ static const char rfc1738_reserved_chars[] =
 gchar *
 gda_rfc1738_encode (const gchar *string)
 {
-	g_return_val_if_fail (string, NULL);
+	if (!string)
+		return NULL;
 
 	if (!*string)
 		return g_strdup ("");
