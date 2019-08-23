@@ -306,7 +306,7 @@ gda_vconnection_data_model_add (GdaVconnectionDataModel *cnc, GdaVconnectionData
 	if (rc != SQLITE_OK) {
 		g_set_error (error, GDA_SERVER_PROVIDER_ERROR,
 			     GDA_SERVER_PROVIDER_INTERNAL_ERROR,
-			     _("Internal Error: when trying to add data model spec for virtual connetion: %s"), zErrMsg);
+			     _("Internal Error: when trying to add data model spec for virtual connection: %s"), zErrMsg);
 		SQLITE3_CALL (sprov, sqlite3_free) (zErrMsg);
 		_gda_vconnection_data_model_table_data_free (td);
 		priv->table_data_list = g_slist_remove (priv->table_data_list, td);
