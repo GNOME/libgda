@@ -61,7 +61,7 @@ variables:
   
 before_script:
   - export DEBIAN_FRONTEND=noninteractive
-  - apt update && apt -y install $DEPENDENCIES
+  - apt update && apt -y upgrade && apt -y install $DEPENDENCIES
 
 library_build:
   stage: build
