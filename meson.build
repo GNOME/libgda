@@ -220,7 +220,8 @@ c_args = ['-Wall',
 	'-Wno-unused-parameter',
 	'-Wno-pointer-sign',
 	'-Wno-missing-field-initializers',
-	'-DGSEAL_ENABLE'
+	'-DGSEAL_ENABLE',
+	'-DG_LOG_USE_STRUCTURED'
 	]
 
 c_args += general_cargs
