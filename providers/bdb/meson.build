@@ -86,7 +86,7 @@ libgda_bdb_provider = library ('gda-bdb-'+project_api_version,
 		lbdb_cargs
 		],
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: libgda,
 	install: true,

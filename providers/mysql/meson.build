@@ -144,7 +144,7 @@ libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 		],
 	c_args: mysql_args,
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: libgda,
 	install: true,
