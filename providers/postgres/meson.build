@@ -116,7 +116,7 @@ libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 		],
 	c_args: libgda_postgres_cargs,
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: libgda,
 	install: true,

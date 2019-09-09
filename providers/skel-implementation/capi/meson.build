@@ -159,7 +159,7 @@ libgda_capi_provider = library ('gda-capi',
 		],
 	c_args: libgda_capi_provider_cargs,
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: libgda,
 	install: false,
