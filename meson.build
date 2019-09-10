@@ -124,8 +124,6 @@ if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
 								dependencies: sqlcipher_dep)
 endif
 
-ldl = compiler.find_library('dl', required: false)
-
 sed = find_program('sed')
 compile_resources = find_program('glib-compile-resources')
 

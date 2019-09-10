@@ -120,7 +120,7 @@ libldap_provider = library ('gda-ldap-'+project_api_version,
 		],
 	c_args: libgda_ldap_provider_cargs,
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: libgda,
 	install: true,

@@ -102,7 +102,7 @@ libgda_web_provider = library ('gda-web-'+project_api_version,
 		join_paths(gda_top_build, 'config.h'),
 		],
 	link_args: [
-		'-export-dynamic',
+		'-Wl,--export-dynamic',
 		],
 	link_with: [
 		libgda,
