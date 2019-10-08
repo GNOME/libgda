@@ -4,11 +4,23 @@
 # see https://hub.docker.com/_/gcc/
 image: ubuntu:devel
 
+services:
+  - postgres:latest
+  - mysql:5.7
+
 stages:
      - build
-     - dist
 
 variables:
+  POSTGRES_DB: test
+  POSTGRES_USER: test
+  POSTGRES_PASSWORD: test1
+  POSTGRES_HOST: postgres
+  MYSQL_DATABASE: test
+  MYSQL_ROOT_PASSWORD: test1
+  MYSQL_USER: root
+  MYSQL_HOST: mysql
+  G_MESSAGES_DEBUG: all
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
@@ -32,6 +44,9 @@ variables:
                 libgee-0.8-dev
                 valadoc
                 libgladeui-dev
+                postgresql-client
+                postgresql-client-common
+                libsqlcipher-dev
 
   GIT_SUBMODULE_STRATEGY: normal
 
@@ -46,24 +61,6 @@ autotools_build:
   - make
   - broadwayd &
   - GDK_BACKEND=broadway make check
-  artifacts:
-    when: on_failure
-    paths:
-    - tests/test-suite.log
-    - libgda/test-suite.log
-    - tests/data-models/test-suite.log
-    - tests/meta-store/test-suite.log
-    - tests/value-holders/test-suite.log
-    - tests/parser/test-suite.log
-    - tests/providers/test-suite.log
-    expire_in: 1 week
-
-autotools_dist:
-  stage: dist
-  script:
-  - ./autogen.sh
-  - make
-  - broadwayd &
   - GDK_BACKEND=broadway make distcheck
   artifacts:
     when: on_failure
@@ -76,3 +73,4 @@ autotools_dist:
     - tests/parser/test-suite.log
     - tests/providers/test-suite.log
     expire_in: 1 week
+
