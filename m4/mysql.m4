@@ -103,6 +103,7 @@ m4_define([_MYSQL_CHECK_INTERNAL],
 	    pkgmysql=yes
 	    MYSQL_CFLAGS=`$MYSQL_CONFIG --cflags`
 	    MYSQL_LIBS=`$MYSQL_CONFIG --libs`
+	    mysql_version=`$MYSQL_CONFIG --version`
 	else
 	    mysql_test_dir="/usr /usr/local /opt/gnome"
 	fi
@@ -204,6 +205,26 @@ int main() {
     AM_CONDITIONAL(MYSQL,[test "$mysql_found" = "yes"])
     AC_SUBST(MYSQL_LIBS)
     AC_SUBST(MYSQL_CFLAGS)
+dnl Try detect API version
+    AC_MSG_CHECKING([checking for Mysql API version])
+    AX_COMPARE_VERSION($mysql_version, [lt], [8.0.0],
+    	[
+    		mysql5=yes
+    		AC_MSG_RESULT([Using MySQL 5 API])
+    	],[
+    		mysql5=no
+    		AC_MSG_RESULT([Using MySQL API for version $mysql_version])
+    		AC_MSG_CHECKING([checking for Mysql 8 API version])
+	    	AX_COMPARE_VERSION($mysql_version, [ge], [8.0.0],
+		    	[
+		    		mysql8=yes
+		    	],[
+		    		mysql8=no
+		    	])
+    		AC_MSG_RESULT([$mysql8])
+    	])
+    AM_CONDITIONAL(MYSQL5,[test "x$mysql5" = "xyes"])
+    AM_CONDITIONAL(MYSQL8,[test "x$mysql8" = "xyes"])
 ])
 
 

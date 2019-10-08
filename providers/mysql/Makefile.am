@@ -11,6 +11,11 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/providers/reuseable/mysql \
 	$(COREDEPS_CFLAGS) $(COREDEPS_WFLAGS) $(MYSQL_CFLAGS) -DCLASS_PREFIX=\""GdaMySQL"\"
 
+if MYSQL8
+AM_CPPFLAGS += \
+	-DMYSQL8
+endif
+
 gda-mysql-handler-bin.c: $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.c
 	cat $(top_srcdir)/libgda/sqlite/gda-sqlite-handler-bin.c | sed -e 's/SQLITE/MYSQL/g' -e 's/sqlite/mysql/g' -e 's/Sqlite/Mysql/g' -e 's/SQLite/MySQL/g' > gda-mysql-handler-bin.c
 

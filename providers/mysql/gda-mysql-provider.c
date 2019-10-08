@@ -61,6 +61,9 @@
 
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
+#ifdef MYSQL8
+typedef bool my_bool;
+#endif
 /*
  * GObject methods
  */
