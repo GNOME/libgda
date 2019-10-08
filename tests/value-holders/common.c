@@ -20,8 +20,6 @@
 #include <json-glib/json-glib.h>
 #endif
 
-static gchar *_json_quote_string (const gchar *str);
-
 void
 tests_common_display_value (const gchar *prefix, const GValue *value)
 {
@@ -224,72 +222,6 @@ tests_common_set_serialize (GdaSet *set)
 	str = string->str;
 	g_string_free (string, FALSE);
 	return str;
-}
-
-gchar *
-_json_quote_string (const gchar *str)
-{
-	gchar *retval, *rptr;
-	const gchar *sptr;
-	gint len;
-
-	if (!str)
-		return g_strdup ("null");
-
-	len = strlen (str);
-	retval = g_new (gchar, 2*len + 3);
-	*retval = '"';
-	for (rptr = retval+1, sptr = str; *sptr; sptr++, rptr++) {
-		switch (*sptr) {
-		case '"':
-			*rptr = '\\';
-			rptr++;
-			*rptr = *sptr;
-			break;
-		case '\\':
-			*rptr = '\\';
-			rptr++;
-			*rptr = *sptr;
-			break;
-		case '/':
-			*rptr = '\\';
-			rptr++;
-			*rptr = *sptr;
-			break;
-		case '\b':
-			*rptr = '\\';
-			rptr++;
-			*rptr = 'b';
-			break;
-		case '\f':
-			*rptr = '\\';
-			rptr++;
-			*rptr = 'f';
-			break;
-		case '\n':
-			*rptr = '\\';
-			rptr++;
-			*rptr = 'n';
-			break;
-		case '\r':
-			*rptr = '\\';
-			rptr++;
-			*rptr = 'r';
-			break;
-		case '\t':
-			*rptr = '\\';
-			rptr++;
-			*rptr = 't';
-			break;
-		default:
-			*rptr = *sptr;
-			break;
-		}
-	}
-	*rptr = '"';
-	rptr++;
-	*rptr = 0;
-	return retval;
 }
 
 /*

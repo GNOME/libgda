@@ -85,6 +85,8 @@
 #include <libgda/gda-tree-mgr-tables.h> 
 #include <libgda/gda-tree-node.h>
 
+#include <libgda/sql-parser/gda-sql-parser.h>
+
 #include <libgda/gda-sql-builder.h>
 
 #include <libgda/gda-meta-store.h>
