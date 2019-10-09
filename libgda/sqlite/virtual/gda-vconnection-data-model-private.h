@@ -40,7 +40,7 @@ typedef struct VirtualFilteredData VirtualFilteredData;
 
 struct VContext{
 	GWeakRef                 context_object;
-	GPtrArray                  *context_data;
+	GPtrArray               *context_data;
 	GdaVConnectionTableData *vtable;
 };
 
