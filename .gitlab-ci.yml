@@ -6,7 +6,7 @@ image: ubuntu:devel
 
 services:
   - postgres:latest
-  - mysql:5.7
+  - mysql:latest
 
 stages:
      - build
