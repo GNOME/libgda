@@ -60,6 +60,10 @@
 #include "gda-mysql-handler-bin.h"
 #include <libgda/gda-debug-macros.h>
 
+#ifdef MYSQL8
+typedef bool my_bool;
+#endif
+
 #define _GDA_PSTMT(x) ((GdaPStmt*)(x))
 
 /*

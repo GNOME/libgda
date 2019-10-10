@@ -6,7 +6,7 @@ image: ubuntu:devel
 
 services:
   - postgres:11
-  - mysql:5.7
+  - mysql:8
 
 stages:
   - build
