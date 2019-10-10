@@ -86,6 +86,8 @@
 
 #include <libgda/gda-db-catalog.h>
 
+#include <libgda/sql-parser/gda-sql-parser.h>
+
 G_BEGIN_DECLS
 
 /**
