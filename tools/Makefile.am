@@ -6,7 +6,11 @@ if LDAP
 ldap_flags=-DHAVE_LDAP
 endif
 
-SUBDIRS = cmdtool $(BROWSER_DIR) help
+SUBDIRS = cmdtool $(BROWSER_DIR)
+
+if HAVE_GDU
+SUBDIRS += help
+endif
 
 bin_PROGRAMS = \
 	gda-list-config-5.0 \

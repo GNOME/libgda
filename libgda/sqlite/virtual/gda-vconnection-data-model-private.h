@@ -46,7 +46,7 @@ struct VContext{
 
 struct ExecContext {
 	VContext   *current_vcontext;
-	GMutex     *mutex;
+	GRecMutex  *mutex;
 	GHashTable *hash; /* key = a GObject, value = a VContext where @context_object == key */
 };
 
