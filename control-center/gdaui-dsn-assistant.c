@@ -385,13 +385,15 @@ forward_page_function (gint current_page, GdauiDsnAssistant *assistant)
 		GdaProviderInfo *pinfo;
 		const gchar *provider;
 		provider = gdaui_provider_selector_get_provider (GDAUI_PROVIDER_SELECTOR (assistant->priv->general_provider));
-		g_assert (provider);
+		if (provider != NULL) {
 		pinfo = gda_config_get_provider_info (provider);
-		g_assert (pinfo);
-		if (pinfo->auth_params && pinfo->auth_params->holders) 
-			return PAGE_AUTH_INFO;
-		else
-			return PAGE_LAST;
+			if (pinfo != NULL) {
+				if (pinfo->auth_params && pinfo->auth_params->holders)
+					return PAGE_AUTH_INFO;
+				else
+					return PAGE_LAST;
+			}
+		}
 	}
 	case PAGE_AUTH_INFO:
 		return PAGE_LAST;
