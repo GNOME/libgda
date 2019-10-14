@@ -196,6 +196,13 @@
       <gda_value isnull="t"/>
     </gda_array_row>
     <gda_array_row>
+      <gda_value>json</gda_value>
+      <gda_value/>
+      <gda_value>JSON data type defined at RFC 7159</gda_value>
+      <gda_value>139894960</gda_value>
+      <gda_value isnull="t"/>
+    </gda_array_row>
+    <gda_array_row>
       <gda_value>tinyint</gda_value>
       <gda_value/>
       <gda_value>Tiny integer, range is -128 to 127</gda_value>

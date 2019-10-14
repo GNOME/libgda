@@ -256,6 +256,9 @@ mysql_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 		return GDA_TYPE_BLOB;
 	else if (!strcmp (name, "bytea"))
 		return GDA_TYPE_BINARY;
+	else if (!strcmp (name, "json"))
+		return G_TYPE_STRING;
+
 
 	/* other data types, using the conversion function name as a hint */
 	if (!conv_func_name)
