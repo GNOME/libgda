@@ -2553,7 +2553,7 @@ void Parse(struct lemon *gp)
     gp->errorcnt++;
     return;
   }
-  if( fread(filebuf,1,filesize,fp)!= (uint) filesize ){
+  if( fread(filebuf,1,filesize,fp)!= (unsigned int) filesize ){
     ErrorMsg(ps.filename,0,"Can't read in all %d bytes of this file.",
       filesize);
     free(filebuf);
@@ -3346,7 +3346,7 @@ PRIVATE char *append_str(const char *zText, int n, int p1, int p2){
     }
     n = lemonStrlen(zText);
   }
-  if( n+sizeof(zInt)*2+used >= (uint) alloced ){
+  if( n+sizeof(zInt)*2+used >= (unsigned int) alloced ){
     alloced = n + sizeof(zInt)*2 + used + 200;
     z = (char *) realloc(z,  alloced);
   }
