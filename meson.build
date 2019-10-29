@@ -145,23 +145,23 @@ libgda_dep += libgda_external_dep
 # LDAP
 ldap_found = false
 ldap_deps = []
-#ldap_lib_dep = compiler.find_library('ldap', required: true)
-#if ldap_lib_dep.found()
-#	ldapber_dep = compiler.find_library('lber')
-#	if compiler.has_header('ldap.h')
-#		ldap_found = true
-#		LIBGDA_LDAP_INC='#include <libgda/gda-data-model-ldap.h>'
-#		LIBGDA_LDAP_INC2='#include <libgda/gda-tree-mgr-ldap.h>'
-#		LIBGDA_LDAP_VINC='#include <virtual/gda-ldap-connection.h>'
-#		LIBGDA_LDAP_TYPE='gda_data_model_ldap_get_type'
-#		LIBGDA_LDAP_TYPE2='gda_ldap_connection_get_type'
-#		LIBGDA_LDAP_TYPE3='gda_tree_mgr_ldap_get_type'
-#		ldap_deps += [
-#			ldap_lib_dep,
-#			ldapber_dep
-#			]
-#	endif
-#endif
+ldap_lib_dep = compiler.find_library('ldap', required: false)
+if ldap_lib_dep.found()
+	ldapber_dep = compiler.find_library('lber')
+	if compiler.has_header('ldap.h')
+		ldap_found = true
+		LIBGDA_LDAP_INC='#include <libgda/gda-data-model-ldap.h>'
+		LIBGDA_LDAP_INC2='#include <libgda/gda-tree-mgr-ldap.h>'
+		LIBGDA_LDAP_VINC='#include <virtual/gda-ldap-connection.h>'
+		LIBGDA_LDAP_TYPE='gda_data_model_ldap_get_type'
+		LIBGDA_LDAP_TYPE2='gda_ldap_connection_get_type'
+		LIBGDA_LDAP_TYPE3='gda_tree_mgr_ldap_get_type'
+		ldap_deps += [
+			ldap_lib_dep,
+			ldapber_dep
+			]
+	endif
+endif
 
 tconf = configuration_data() # Empty configuration
 
