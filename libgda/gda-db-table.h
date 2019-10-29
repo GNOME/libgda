@@ -104,6 +104,9 @@ gboolean        gda_db_table_add_index  (GdaDbTable *self,
                                          GdaConnection *cnc,
                                          gboolean ifnotexists,
                                          GError **error);
+void            gda_db_table_append_constraint (GdaDbTable *self,
+                                                const gchar *constraint);
+
 G_END_DECLS
 
 #endif /* end of include guard: GDA-DB-TABLE_H */
