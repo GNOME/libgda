@@ -322,13 +322,34 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
 				g_string_append_printf (string, " ON DELETE %s", g_value_get_string (value));
 		}
-	}
+  }
 
-	g_free (conflict_algo);
-	g_string_append (string, ")");
+  /* CONSTRAINT can be inserted without specifying the keyword CONSTRAINT for sqlite.
+   * Here, we just insert what we have saved in the GdaServerOperation object. Since
+   * we are moving towards new implementation of how DDL operations should be handled,
+   * we don't need to put more effort here. This is just a temporary working solution
+   */
+  node = gda_server_operation_get_node_info (op, "/TABLE_CONSTRAINTS_S");
 
-	if (!hasfields) {
-		allok = FALSE;
+  if (node)
+    {
+      nrows = gda_server_operation_get_sequence_size (op, "/TABLE_CONSTRAINTS_S");
+
+      for (i = 0; i < nrows; i++)
+        {
+          g_string_append (string, ", ");
+
+          const GValue *tval = gda_server_operation_get_value_at (op, "/TABLE_CONSTRAINTS_S/%d/CONSTRAINT_STRING", i);
+
+          g_string_append (string, g_value_get_string (tval));
+        }
+    }
+
+  g_free (conflict_algo);
+  g_string_append (string, ")");
+
+  if (!hasfields) {
+    allok = FALSE;
 		g_set_error (error, GDA_SERVER_OPERATION_ERROR,
 			     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
 			     "%s", _("Table to create must have at least one field"));

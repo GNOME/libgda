@@ -38,6 +38,7 @@ typedef struct
   gboolean m_istemp;
   GList *mp_columns; /* Type GdaDbColumn*/
   GList *mp_fkeys; /* List of all fkeys, GdaDbFkey */
+  GSList *mp_constraint; /* A list of constraints for the table as strings, a la gchar* */
 } GdaDbTablePrivate;
 
 /**
@@ -77,6 +78,7 @@ enum {
     GDA_DB_TABLE_TEMP,
     GDA_DB_TABLE_SPACE,
     GDA_DB_TABLE_COMMENT,
+    GDA_DB_TABLE_CONSTRAINT,
 
     GDA_DB_TABLE_N_NODES
 };
@@ -86,7 +88,8 @@ static const gchar *gdadbtablenodes[GDA_DB_TABLE_N_NODES] = {
     "name",
     "temptable",
     "space",
-    "comment"
+    "comment",
+    "constraint"
 };
 
 /**
@@ -123,6 +126,8 @@ gda_db_table_dispose (GObject *object)
     g_list_free_full (priv->mp_fkeys, (GDestroyNotify) g_object_unref);
   if (priv->mp_columns)
     g_list_free_full (priv->mp_columns, (GDestroyNotify)g_object_unref);
+  if (priv->mp_constraint)
+    g_slist_free_full (priv->mp_constraint, (GDestroyNotify)g_free);
 
   G_OBJECT_CLASS (gda_db_table_parent_class)->dispose (object);
 }
@@ -203,6 +208,7 @@ gda_db_table_init (GdaDbTable *self)
   priv->m_istemp = FALSE;
   priv->mp_comment = NULL;
   priv->mp_fkeys = NULL;
+  priv->mp_constraint = NULL;
 }
 
 /**
@@ -533,6 +539,18 @@ gda_db_table_prepare_create (GdaDbTable *self,
                                           "/TABLE_DEF_P/TABLE_IFNOTEXISTS"))
     return FALSE;
 
+  GSList *jt = NULL;
+  int indexsec = 0; /* Index for sequence */
+
+  for (jt = priv->mp_constraint; jt != NULL; jt = jt->next, indexsec++)
+    {
+      if (!gda_server_operation_set_value_at (op,
+                                              (const gchar *)jt->data,
+                                              error,
+                                              "/TABLE_CONSTRAINTS_S/%d/CONSTRAINT_STRING", indexsec))
+        return FALSE;
+    }
+
   GList *it = NULL;
   gint i = 0; /* column order counter */
 
@@ -765,3 +783,19 @@ gda_db_table_append_fkey (GdaDbTable *self,
   priv->mp_fkeys = g_list_append (priv->mp_fkeys, g_object_ref (fkey));
 }
 
+/**
+ * gda_db_table_append_constraint:
+ * @self: a #GdaDbTable instance
+ * @constr a constraint string to append
+ *
+ * Since: 6.0
+ *
+ */
+void
+gda_db_table_append_constraint (GdaDbTable *self,
+                                const gchar *constr)
+{
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
+
+  priv->mp_constraint = g_slist_append (priv->mp_constraint, g_strdup (constr));
+}
