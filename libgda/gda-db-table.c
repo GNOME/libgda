@@ -1164,3 +1164,20 @@ on_error:
   return FALSE;
 }
 
+/**
+ * gda_db_table_append_constraint:
+ * @self: a #GdaDbTable instance
+ * @constr a constraint string to append
+ *
+ * Since: 6.0
+ *
+ */
+void
+gda_db_table_append_constraint (GdaDbTable *self,
+                                const gchar *constr)
+{
+  GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
+
+  priv->mp_constraint = g_slist_append (priv->mp_constraint, g_strdup (constr));
+}
+>>>>>>> 0bbb2b518... Merge branch 'wip/ddl-check' into 'master'
