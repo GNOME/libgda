@@ -7,7 +7,7 @@
 <!ELEMENT schema (table+, view*)>
 <!ATTLIST schema name           CDATA   #IMPLIED>
 
-<!ELEMENT table (comment?,column+, fkey*)>
+<!ELEMENT table (comment?,column+, fkey*, constraint*)>
 <!ATTLIST table temptable       (TRUE|FALSE)    "FALSE">
 <!ATTLIST table name            CDATA           #REQUIRED>
 <!ATTLIST table space           CDATA           #IMPLIED>
@@ -26,6 +26,8 @@
 <!ATTLIST value scale           CDATA          #IMPLIED>
 
 <!ELEMENT check         (#PCDATA)>
+
+<!ELEMENT constraint    (#PCDATA)>
 
 <!ELEMENT fkey (fk_field+)>
 <!ATTLIST fkey reftable CDATA #IMPLIED>
