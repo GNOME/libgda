@@ -284,6 +284,17 @@ gda_db_table_parse_node (GdaDbBuildable *buildable,
             }
           else
             priv->mp_fkeys = g_list_append (priv->mp_fkeys, fkey);
+        }
+      else if (!g_strcmp0((gchar*)it->name, gdadbtablenodes[GDA_DB_TABLE_CONSTRAINT]))
+        {
+          xmlChar *constraint = xmlNodeGetContent (it);
+
+          if (constraint)
+            {
+              gda_db_table_append_constraint(self, (gchar*)constraint);
+              xmlFree (comment);
+            }
+
         } /* end of else if */
     } /* End of for loop */
   return TRUE;
