@@ -56,6 +56,14 @@ typedef struct {
     GdaDbTable *table;
 } DbCatalogCnc;
 
+typedef struct {
+  GdaDbCatalog *catalog;
+  GdaConnection *cnc;
+  GdaDbColumn *column_a;
+  GdaDbColumn *column_b;
+  GdaDbTable *table;
+} DbCheckCatallog;
+
 static void
 test_db_catalog_start (CheckDbObject *self,
                      G_GNUC_UNUSED gconstpointer user_data)
@@ -403,6 +411,111 @@ test_db_catalog_parse_cnc (DbCatalogCnc *self,
   g_object_unref (model);
 }
 
+static void
+test_db_catalog_constraint_start (DbCheckCatallog *self,
+                                  G_GNUC_UNUSED gconstpointer user_data)
+{
+  self->catalog = NULL;
+  self->cnc = NULL;
+  self->column_a = NULL;
+  self->column_b = NULL;
+  self->table = NULL;
+
+  gda_init();
+
+  self->cnc = gda_connection_new_from_string ("SQLite",
+                                              "DB_DIR=.;DB_NAME=db_constraint",
+                                              NULL,
+                                              GDA_CONNECTION_OPTIONS_NONE,
+                                              NULL);
+  g_assert_nonnull (self->cnc);
+
+  gboolean open_res = gda_connection_open (self->cnc, NULL);
+
+  g_assert_true (open_res);
+
+  self->catalog = gda_connection_create_db_catalog (self->cnc);
+
+  g_assert_nonnull (self->catalog);
+
+  self->table = gda_db_table_new ();
+  gda_db_base_set_name (GDA_DB_BASE(self->table),"tconstraint");
+
+  self->column_a = gda_db_column_new ();
+  gda_db_column_set_name (self->column_a,"columna");
+  gda_db_column_set_type (self->column_a, G_TYPE_INT);
+  gda_db_column_set_autoinc (self->column_a, FALSE);
+  gda_db_column_set_pkey (self->column_a, TRUE);
+
+  gda_db_table_append_column (self->table,self->column_a);
+
+  self->column_b = gda_db_column_new ();
+  gda_db_column_set_name (self->column_b, "columnb");
+  gda_db_column_set_type (self->column_b, G_TYPE_INT);
+  gda_db_column_set_autoinc (self->column_b, FALSE);
+  gda_db_column_set_pkey (self->column_b, FALSE);
+
+  gda_db_table_append_column (self->table, self->column_b);
+
+  gda_db_table_append_constraint (self->table, "CHECK (columna = columnb)");
+
+  gda_db_catalog_append_table (self->catalog, self->table);
+
+  open_res = gda_db_catalog_perform_operation (self->catalog,NULL);
+
+  g_assert_true (open_res);
+}
+
+static void
+test_db_catalog_constraint_run (DbCheckCatallog *self,
+                                G_GNUC_UNUSED gconstpointer user_data)
+{
+  GValue *val_columna = NULL;
+  GValue *val_columnb = NULL;
+  gboolean res;
+
+  val_columna = gda_value_new (G_TYPE_INT);
+  val_columnb = gda_value_new (G_TYPE_INT);
+
+  g_assert_nonnull (val_columna);
+  g_assert_nonnull (val_columnb);
+
+  g_value_set_int (val_columna, 1);
+  g_value_set_int (val_columnb, 1);
+
+  res = gda_connection_insert_row_into_table (self->cnc, "tconstraint", NULL,
+                                              "columna", val_columna,
+                                              "columnb", val_columnb,
+                                              NULL);
+
+  /* Two column must have the same values as we restricted. res is true. */
+  g_assert_true (res);
+
+  g_value_set_int (val_columna, 1);
+  g_value_set_int (val_columnb, 2);
+
+  res = gda_connection_insert_row_into_table (self->cnc, "tconstraint", NULL,
+                                              "columna", val_columna,
+                                              "columnb", val_columnb,
+                                              NULL);
+
+  /* Two column must have the same values as we restricted. res should be false, since
+   * we are inserting different numbers.
+   */
+  g_assert_false (res);
+
+  gda_value_free (val_columna);
+  gda_value_free (val_columnb);
+}
+
+static void
+test_db_catalog_constraint_finish (DbCheckCatallog *self,
+                                   G_GNUC_UNUSED gconstpointer user_data)
+{
+  g_object_unref (self->catalog);
+  gda_connection_close (self->cnc, NULL);
+}
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -444,6 +557,13 @@ main (gint   argc,
               test_db_catalog_start_db,
               test_db_catalog_parse_cnc,
               test_db_catalog_finish_db);
+
+  g_test_add ("/test-db/catalog-constraint",
+              DbCheckCatallog,
+              NULL,
+              test_db_catalog_constraint_start,
+              test_db_catalog_constraint_run,
+              test_db_catalog_constraint_finish);
 
   return g_test_run();
 }
