@@ -75,9 +75,11 @@ endif
 endif
 
 # Platform data
+socket_dep = []
 windows = build_machine.system().contains('windows')
 if windows
 win = import('windows')
+socket_dep = meson.get_compiler('c').find_library('ws2_32')
 endif
 
 lbdb_found = false
@@ -132,7 +134,8 @@ libgda_external_dep = [
 	gobject_dep,
 	gio_dep,
 	libxml_dep,
-	inc_rooth_dep
+	inc_rooth_dep,
+        socket_dep
 	]
 libgda_dep = [
 	gmodule_no_export_dep,
