@@ -51,7 +51,7 @@ typedef struct
 
 static void
 test_server_operation_start (TestObjectFixture *fixture,
-                             gconstpointer user_data)
+                             G_GNUC_UNUSED gconstpointer user_data)
 {
   fixture->cnc = NULL;
   fixture->provider = NULL;
@@ -75,7 +75,7 @@ test_server_operation_start (TestObjectFixture *fixture,
 
 static void
 test_server_operation_finish (TestObjectFixture *fixture,
-                              gconstpointer user_data)
+                              G_GNUC_UNUSED gconstpointer user_data)
 {
   gboolean res = gda_connection_close (fixture->cnc, NULL);
 
@@ -84,7 +84,7 @@ test_server_operation_finish (TestObjectFixture *fixture,
 
 static void
 test_server_operation_operations (TestObjectFixture *fixture,
-                                  gconstpointer user_data)
+                                  G_GNUC_UNUSED gconstpointer user_data)
 {
   GdaServerOperation *op = NULL;
 
@@ -807,7 +807,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
 static void
 test_server_operation_operations_db (TestObjectFixture *fixture,
-                                     gconstpointer user_data)
+                                     G_GNUC_UNUSED gconstpointer user_data)
 {
 
 /* Define table Project */
