@@ -1052,6 +1052,7 @@ on_error:
 
   return FALSE;
 }
+
 /**
  * gda_db_table_add_index:
  * @self: object to use
@@ -1180,4 +1181,3 @@ gda_db_table_append_constraint (GdaDbTable *self,
 
   priv->mp_constraint = g_slist_append (priv->mp_constraint, g_strdup (constr));
 }
->>>>>>> 0bbb2b518... Merge branch 'wip/ddl-check' into 'master'

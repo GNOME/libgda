@@ -193,7 +193,7 @@ gda_db_index_remove_field (GdaDbIndex *self,
  *
  * This function is thread safe, that is, @cnc will be locked.
  *
- * Returns: (transfer none): A list of #GdaDbIndexField
+ * Returns: (transfer none) (nullable) (element-type Gda.DbIndexField): A list of #GdaDbIndexField
  */
 GSList *
 gda_db_index_get_fields (GdaDbIndex *self)
