@@ -459,7 +459,7 @@ gda_db_view_set_replace (GdaDbView *self,
  * gda_db_view_create:
  * @self: a #GdaDbView instance
  * @cnc: open connection for the operation
- * @ifnoexists: if set to %TRUE, the view will be created using IF NOT EXISTS flag
+ * @ifnotexists: if set to %TRUE, the view will be created using IF NOT EXISTS flag
  * @error: error container
  *
  * This method performs CREATE_VIEW operation over @cnc using data stored in @self
