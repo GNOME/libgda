@@ -334,7 +334,8 @@ libgda = library(
 	dependencies : libgda_deps,
 	c_args : [
 		libgda_cargs,
-		lbdb_cargs
+		lbdb_cargs,
+    '-Werror'
 		],
 	install : true
 	)
