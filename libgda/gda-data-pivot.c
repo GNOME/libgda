@@ -140,8 +140,6 @@ gda_data_pivot_class_init (GdaDataPivotClass *klass)
 	object_class->dispose = gda_data_pivot_dispose;
 }
 
-#define gda_data_pivot_get_instance_private(obj) G_TYPE_INSTANCE_GET_PRIVATE(obj, GDA_TYPE_DATA_PIVOT, GdaDataPivotPrivate)
-
 static void
 gda_data_pivot_data_model_init (GdaDataModelInterface *iface)
 {
@@ -170,7 +168,6 @@ gda_data_pivot_data_model_init (GdaDataModelInterface *iface)
 static void
 gda_data_pivot_init (GdaDataPivot *model)
 {
-	g_return_if_fail (GDA_IS_DATA_PIVOT (model));
 	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (model);
 	priv->model = NULL;
 }
