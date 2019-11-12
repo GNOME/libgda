@@ -490,9 +490,6 @@ static void gda_meta_store_get_property (GObject *object,
 					 GParamSpec *pspec);
 
 static gboolean initialize_cnc_struct (GdaMetaStore *store, GError **error);
-static GRecMutex init_rmutex;
-#define MUTEX_LOCK() g_rec_mutex_lock(&init_rmutex)
-#define MUTEX_UNLOCK() g_rec_mutex_unlock(&init_rmutex)
 
 /* simple predefined statements */
 enum {
@@ -954,7 +951,8 @@ gda_meta_store_constructor (GType type,
 	GdaMetaStore *store;
 	gboolean been_specified = FALSE;
 
-	MUTEX_LOCK();
+	static GRecMutex init_rmutex;
+	g_rec_mutex_lock (&init_rmutex);
 	object = G_OBJECT_CLASS (G_OBJECT_CLASS (gda_meta_store_parent_class))->constructor (type,
 		n_construct_properties,
 		construct_properties);
@@ -1007,8 +1005,7 @@ gda_meta_store_constructor (GType type,
 		else
 			create_db_objects (priv, store);
 	}
-	MUTEX_UNLOCK();
-
+	g_rec_mutex_unlock (&init_rmutex);
 	return object;
 }
 
@@ -1059,12 +1056,13 @@ gda_meta_store_new (const gchar *cnc_string)
 	GTimer *timer;
 	timer = g_timer_new ();
 #endif
-	MUTEX_LOCK();
+	static GRecMutex init_rmutex;
+	g_rec_mutex_lock (&init_rmutex);
 	if (cnc_string)
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", cnc_string, NULL);
 	else
 		obj = g_object_new (GDA_TYPE_META_STORE, "cnc-string", "SQLite://DB_NAME=__gda_tmp", NULL);
-	MUTEX_UNLOCK();
+	g_rec_mutex_unlock (&init_rmutex);
 #ifdef GDA_DEBUG_NO
 	g_timer_stop (timer);
 	g_print ("GdaMetaStore took %.03f sec. to create.\n", g_timer_elapsed (timer, NULL));
