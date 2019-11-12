@@ -292,7 +292,7 @@ gda_db_table_parse_node (GdaDbBuildable *buildable,
           if (constraint)
             {
               gda_db_table_append_constraint(self, (gchar*)constraint);
-              xmlFree (comment);
+              xmlFree (constraint);
             }
 
         } /* end of else if */
