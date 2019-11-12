@@ -98,10 +98,6 @@ static GdaColumn           *gda_data_pivot_describe_column (GdaDataModel *model,
 static GdaDataModelAccessFlags gda_data_pivot_get_access_flags(GdaDataModel *model);
 static const GValue        *gda_data_pivot_get_value_at    (GdaDataModel *model, gint col, gint row, GError **error);
 
-static GMutex provider_mutex;
-static GdaVirtualProvider *virtual_provider = NULL;
-
-
 typedef struct {
 	GdaDataModel  *model; /* data to analyse */
 
@@ -2049,13 +2045,15 @@ create_vcnc (GdaDataPivot *pivot, GError **error)
 {
 	GdaConnection *vcnc;
 	GError *lerror = NULL;
-	GdaDataPivotPrivate *priv = gda_data_pivot_get_instance_private (pivot);
-	if (priv->vcnc)
-		return TRUE;
+  static GMutex provider_mutex;
+  static GdaVirtualProvider *virtual_provider;
+  GdaDataPivotPrivate *      priv             = gda_data_pivot_get_instance_private (pivot);
+  if (priv->vcnc)
+    return TRUE;
 
-	g_mutex_lock (&provider_mutex);
-	if (!virtual_provider)
-		virtual_provider = gda_vprovider_data_model_new ();
+  g_mutex_lock (&provider_mutex);
+  if (!virtual_provider)
+    virtual_provider = gda_vprovider_data_model_new ();
 	g_mutex_unlock (&provider_mutex);
 
 	vcnc = gda_virtual_connection_open (virtual_provider, GDA_CONNECTION_OPTIONS_NONE, &lerror);
