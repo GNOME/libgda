@@ -155,8 +155,8 @@ _gda_xslt_bk_section (GdaXsltExCont * exec, GdaXsltIntCont * pdata,
 		     cur_node = cur_node->next) {
 			if (IS_XSLT_ELEM (cur_node)) {
 				if (IS_XSLT_NAME (cur_node, "call-template")) {
-					xsltStylePreCompPtr info =
-						(xsltStylePreCompPtr)
+					xsltElemPreCompPtr info =
+						(xsltElemPreCompPtr)
 						cur_node->psvi;
 					if (info != NULL) {
 						xsltCallTemplate
