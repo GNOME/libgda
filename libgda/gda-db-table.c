@@ -797,10 +797,14 @@ gda_db_table_append_fkey (GdaDbTable *self,
 /**
  * gda_db_table_append_constraint:
  * @self: a #GdaDbTable instance
- * @constr a constraint string to append
+ * @constr: a constraint string to append
+ *
+ * Append constraint expresion @constr to the table. This expresion will be used to create the table
+ * in the format:
+ *
+ * CREATE_TABLE &lt;table name&gt; (&lt;column description&gt;, CONSTRAINT @constr);
  *
  * Since: 6.0
- *
  */
 void
 gda_db_table_append_constraint (GdaDbTable *self,
