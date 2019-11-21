@@ -124,6 +124,7 @@ gda_db_table_is_temp
 gda_db_table_set_temp
 gda_db_table_prepare_create
 gda_db_table_update
+gda_db_table_append_constraint
 </SECTION>
 
 <SECTION>

@@ -82,7 +82,7 @@ void            gda_db_table_append_fkey (GdaDbTable *self,
                                           GdaDbFkey *fkey);
 
 void            gda_db_table_append_constraint (GdaDbTable *self,
-                                                const gchar *constraint);
+                                                const gchar *constr);
 
 G_END_DECLS
 
