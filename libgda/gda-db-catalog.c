@@ -380,7 +380,7 @@ on_error:
  * <!ELEMENT schema (table+, view*)>
  * <!ATTLIST schema name           CDATA   #IMPLIED>
  *
- * <!ELEMENT table (comment?,column+, fkey*)>
+ * <!ELEMENT table (comment?,column+, fkey*, constraint*)>
  * <!ATTLIST table temptable       (TRUE|FALSE)    "FALSE">
  * <!ATTLIST table name            CDATA           #REQUIRED>
  * <!ATTLIST table space           CDATA           #IMPLIED>
@@ -399,6 +399,8 @@ on_error:
  * <!ATTLIST value scale           CDATA          #IMPLIED>
  *
  * <!ELEMENT check         (#PCDATA)>
+ *
+ * <!ELEMENT constraint    (#PCDATA)>
  *
  * <!ELEMENT fkey (fk_field?)>
  * <!ATTLIST fkey reftable CDATA #IMPLIED>
@@ -419,8 +421,7 @@ on_error:
  * ]|
  *
  * Up to day description of the xml file schema can be found in DTD file
- * [libgda-db-catalog.dtd]
- * (https://gitlab.gnome.org/GNOME/libgda/blob/master/libgda/libgda-db-catalog.dtd)
+ * [libgda-db-catalog.dtd](https://gitlab.gnome.org/GNOME/libgda/blob/master/libgda/libgda-db-catalog.dtd)
  *
  * The given @xmlfile will be checked before parsing and %FALSE will be
  * returned if fails. The @xmlfile will be validated internally using
