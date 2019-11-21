@@ -103,7 +103,6 @@ libgda_headers = files([
 	'gda-server-provider-private.h',
 	'gda-server-provider-impl.h',
 	'gda-statement.h',
-	'gda-statement-extra.h',
 	'gda-sql-builder.h',
 	'gda-transaction-status.h',
 	'gda-transaction-status-private.h',
@@ -120,9 +119,15 @@ libgda_headers = files([
 	'gda-xa-transaction.h',
 	'gda-data-pivot.h'
 ])
+
+libgda_headers_private = files([
+	'gda-statement-extra.h',
+])
+
 libgda_headers_all = []
 libgda_headers_all += [
 	libgda_headers,
+	libgda_headers_private,
 	gda_enum_headers
 	]
 

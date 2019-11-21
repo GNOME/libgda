@@ -64,6 +64,14 @@
 #include <libgda/sqlite/keywords_hash.h>
 #include "keywords_hash.code" /* this one is dynamically generated */
 
+/*
+ * Win32 adaptations
+ */
+#ifdef G_OS_WIN32
+#define strtok_r(s,d,p) strtok(s,d)
+#endif
+
+
 /**
  * gda_g_type_to_string:
  * @type: Type to convert from.

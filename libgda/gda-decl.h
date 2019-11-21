@@ -72,12 +72,5 @@ typedef gboolean (*GdaSqlReservedKeywordsFunc) (const gchar *word);
 typedef struct _GdaTreeNode GdaTreeNode;
 typedef struct _GdaTreeNodeClass GdaTreeNodeClass;
 
-/*
- * Win32 adaptations
- */
-#ifdef G_OS_WIN32
-#define strtok_r(s,d,p) strtok(s,d)
-#endif 
-
 #endif
 
