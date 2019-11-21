@@ -259,7 +259,7 @@ gda_data_handler_get_descr (GdaDataHandler *dh)
 GdaDataHandler *
 gda_data_handler_get_default (GType for_type)
 {
-	GdaDataHandler *dh;
+	GdaDataHandler *dh = NULL;
 
   if (for_type == G_TYPE_INT64) {
     dh = gda_handler_numerical_new ();
