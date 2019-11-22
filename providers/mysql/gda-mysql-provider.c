@@ -1951,7 +1951,7 @@ make_last_inserted_set (GdaConnection *cnc, GdaStatement *stmt, my_ulonglong las
 	expr->value = value;
 	cond->operands = g_slist_append (NULL, expr);
 	gchar *str;
-	str = g_strdup_printf ("%llu", last_id);
+	str = g_strdup_printf ("%lu", last_id);
 	expr = gda_sql_expr_new (GDA_SQL_ANY_PART (cond));
 	g_value_take_string ((value = gda_value_new (G_TYPE_STRING)), str);
 	expr->value = value;
@@ -2132,7 +2132,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 					else {
 						gchar *str;
 						event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
-						str = g_strdup_printf ("%llu", affected_rows);
+						str = g_strdup_printf ("%lu", affected_rows);
 						gda_connection_event_set_description (event, str);
 						g_free (str);
 						
@@ -2681,7 +2681,7 @@ gda_mysql_provider_statement_execute (GdaServerProvider               *provider,
 			GdaConnectionEvent *event;
 			gchar *str;
 			event = gda_connection_point_available_event (cnc, GDA_CONNECTION_EVENT_NOTICE);
-			str = g_strdup_printf ("%llu", affected_rows);
+			str = g_strdup_printf ("%lu", affected_rows);
 			gda_connection_event_set_description (event, str);
 			g_free (str);
 			
