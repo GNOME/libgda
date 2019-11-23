@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 # -*- coding: utf-8 -*-
 
 # trml2pdf - An RML to PDF converter

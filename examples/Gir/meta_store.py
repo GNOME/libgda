@@ -1,4 +1,4 @@
-#! python
+#!/usr/bin/env python3
 from gi.repository import GLib
 from gi.repository import Gda
 print Gda
