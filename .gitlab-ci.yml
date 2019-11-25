@@ -2,7 +2,6 @@
 # use the official gcc image, based on debian
 # can use verions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: ubuntu:devel
 
 services:
   - postgres:11
@@ -22,34 +21,6 @@ variables:
   MYSQL_USER: root
   MYSQL_HOST: mysql
   G_MESSAGES_DEBUG: all
-  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
-                meson ninja-build
-                libgtk-3-dev libxml2-dev gnome-common
-                libsqlite3-dev
-                gobject-introspection libssl-dev libmysqlclient-dev
-                libldap2-dev libpq-dev
-                libgtksourceview-3.0-dev
-                libgdk-pixbuf2.0-dev
-                libgraphviz-dev
-                libisocodes-dev
-                libsoup2.4-dev
-                libxslt1-dev
-                libjson-glib-dev
-                libgcrypt20-dev
-                libssl-dev
-                libldap2-dev
-                libgoocanvas-2.0-dev
-                libhsqldb1.8.0-java
-                yelp-tools
-                iso-codes
-                libgirepository1.0-dev
-                libgee-0.8-dev
-                valadoc
-                libgladeui-dev
-                postgresql-client
-                postgresql-client-common
-                libsqlcipher-dev
-
   GIT_SUBMODULE_STRATEGY: normal
   SQLITE_DBCREATE_PARAMS: "DB_DIR=."
   SQLITE_CNC_PARAMS: "DB_DIR=."
@@ -60,11 +31,9 @@ variables:
   MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_ROOT_PASSWORD"
   SQLITE_SO_DDL: "DB_DIR=.;DB_NAME=ci_test_db.db"
 
-before_script:
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt update && apt -y upgrade && apt -y install $DEPENDENCIES
 
 library_build:
+  image: registry.gitlab.gnome.org/pavlosun/libgda/ubuntu-devel:v1
   stage: build
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
@@ -87,6 +56,7 @@ library_build:
     expire_in: 1 week
 
 pages:
+  image: registry.gitlab.gnome.org/pavlosun/libgda/ubuntu-devel:v1
   stage: deploy_doc
   script:
   - meson _build --prefix=/usr -Dgtk_doc=true -Dexperimental=true -Denable-tools=true -Denable-ldap=true
