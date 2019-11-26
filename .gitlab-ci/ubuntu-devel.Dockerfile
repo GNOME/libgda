@@ -9,6 +9,7 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -qq -y \
 	    meson \
 	    ninja-build \
 	    libgtk-3-dev \
+	    libgtk-3-bin \
 	    libxml2-dev \
 	    gnome-common \
 	    libsqlite3-dev \
