@@ -2,6 +2,19 @@ libgda-6.0.0
  - PostgreSQL now support GdaText values, so take care because some SELECT operations
    concatenating strings return GdaText values instead of strings.
  - Lot of memory leaks fixed
+ - Added a new module named GdaDB... to simplify DDL operations
+ - Added database generation from an XML file (GdaDBCatalog)
+ - Updated internal SQLite3 version
+ - Added "exxamples" directory as a target to be built (work in progress)
+ - Numerous improvements in CI organisation.
+ - Documentation reorganisation and porting to the new format (in progress)
+ - Code modernized for multiple objects
+ - Added new API for GdaConnection object
+ - Added uniform LOG_DOMAIN usage between translation units
+ - Added Uniform debug code generation
+ - Eliminated multiple static global variable
+ - Improved code quality for libgda to use -Werror
+ - Multiple code improvements, formation, and corrections
 
 ================================================================================
 
