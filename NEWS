@@ -1,3 +1,10 @@
+libgda 5.2.10
+ - MySQL: initial support for JSON type
+ - MySQL: test against 8.0
+ - GdaParser: remove spaces and enters before next statement, fix 203
+ - GdauiSet: fix gdaui_set_source_get_ref_columns() return value, fix #123
+ - SqlParser: fix Vala bindings
+
 libgda 5.2.9
  - Fix Sun JRE 1.8 detection
  - Fix JDK 11.0 detection
