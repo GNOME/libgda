@@ -1,4 +1,5 @@
 libgda-6.0.0
+ - MySQL: now supports version 8.0
  - PostgreSQL now support GdaText values, so take care because some SELECT operations
    concatenating strings return GdaText values instead of strings.
  - Lot of memory leaks fixed
@@ -15,6 +16,13 @@ libgda-6.0.0
  - Eliminated multiple static global variable
  - Improved code quality for libgda to use -Werror
  - Multiple code improvements, formation, and corrections
+ - Batch parsing, should remove spacesa and enters before return next statement,
+   fix #203
+ - Updated translations:
+        - pt_BR    Rafael Fontenelle <rafaelff@gnome.org>
+        - es       Daniel Mustieles <daniel.mustieles@gmail.com>
+        - cs       Marek Černocký <marek.cernocky@advantech.com>
+        - hu       Balázs Úr <balazs@urbalazs.hu>
 
 ================================================================================
 
