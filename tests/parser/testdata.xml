@@ -150,7 +150,7 @@
 
   <test id="25">
     <sql>aa bb;  ; c</sql>
-    <expected>{"statements":[{"statement":{"sql":"aa bb;","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":"bb"}]}},{"statement":{"sql":" c","stmt_type":"UNKNOWN","contents":[{"value":" "},{"value":"c"}]}}]}</expected>
+    <expected>{"statements":[{"statement":{"sql":"aa bb;","stmt_type":"UNKNOWN","contents":[{"value":"aa"},{"value":" "},{"value":"bb"}]}},{"statement":{"sql":"c","stmt_type":"UNKNOWN","contents":[{"value":"c"}]}}]}</expected>
   </test>
 
   <test id="26">
@@ -1047,5 +1047,16 @@
   <test id="bug761560">
     <sql>UPDATE coupons SET limit = 1 WHERE coupons.id = 1</sql>
     <expected>{"statements":[{"statement":{"sql":"UPDATE coupons SET limit = 1 WHERE coupons.id = 1","stmt_type":"UPDATE","contents":{"table":"coupons","fields":["limit"],"expressions":[{"value":"1"}],"condition":{"operation":{"operator":"=","operand0":{"value":"coupons.id"},"operand1":{"value":"1"}}}}}}]}</expected>
+  </test>
+
+  <test id="issue#203">
+    <sql>SELECT * FROM test; SELECT * FROM test2;</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM test;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"test"},"table_name":"test"}]}}}},{"statement":{"sql":"SELECT * FROM test2;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"test2"},"table_name":"test2"}]}}}}]}</expected>
+  </test>
+
+  <test id="issue#203-2">
+    <sql>SELECT * FROM test;
+SELECT * FROM test2;</sql>
+    <expected>{"statements":[{"statement":{"sql":"SELECT * FROM test;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"test"},"table_name":"test"}]}}}},{"statement":{"sql":"SELECT * FROM test2;","stmt_type":"SELECT","contents":{"distinct":"false","fields":[{"expr":{"value":"*"}}],"from":{"targets":[{"expr":{"value":"test2"},"table_name":"test2"}]}}}}]}</expected>
   </test>
 </testdata>

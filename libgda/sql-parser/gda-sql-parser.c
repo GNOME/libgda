@@ -619,6 +619,9 @@ gda_sql_parser_parse_string (GdaSqlParser *parser, const gchar *sql, const gchar
 		if (* parser->priv->context->next_token_start) {
 			gint i = parser->priv->context->next_token_start - parser->priv->sql;
 			*remain = sql + i;
+			while (**remain == ' ' || **remain == '\n') {
+				*remain = sql + (++i);
+			}
 		}
 	}
 
