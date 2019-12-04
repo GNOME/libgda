@@ -834,6 +834,7 @@ gchar *
 gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
 {
 	const GValue *current_val;
+	GdaDataHandler *dhl = NULL;
 
 	g_return_val_if_fail (GDA_IS_HOLDER (holder), NULL);
 	GdaHolderPrivate *priv = gda_holder_get_instance_private (holder);
@@ -847,9 +848,13 @@ gda_holder_get_value_str (GdaHolder *holder, GdaDataHandler *dh)
         else {
 		gchar *retval = NULL;
                 if (!dh)
-			dh = gda_data_handler_get_default (priv->g_type);
-		if (dh)
-                        retval = gda_data_handler_get_str_from_value (dh, current_val);
+			dhl = gda_data_handler_get_default (priv->g_type);
+		else
+			dhl = g_object_ref (dh);
+		if (dhl) {
+                        retval = gda_data_handler_get_str_from_value (dhl, current_val);
+			g_object_unref (dhl);
+		}
 		gda_holder_unlock ((GdaLockable*) holder);
 		return retval;
         }
@@ -920,14 +925,18 @@ gda_holder_set_value_str (GdaHolder *holder, GdaDataHandler *dh, const gchar *va
 	else {
 		GValue *gdaval = NULL;
 		gboolean retval = FALSE;
+		GdaDataHandler *ldh = NULL;
 
 		gda_holder_lock ((GdaLockable*) holder);
 		if (!dh)
-			dh = gda_data_handler_get_default (priv->g_type);
-		if (dh) {
-			gdaval = gda_data_handler_get_value_from_str (dh, value, priv->g_type);
-      g_object_unref (dh);
-    }
+			ldh = gda_data_handler_get_default (priv->g_type);
+		else
+			ldh = g_object_ref (dh);
+
+		if (ldh) {
+			gdaval = gda_data_handler_get_value_from_str (ldh, value, priv->g_type);
+			g_object_unref (ldh);
+		}
 		
 		if (gdaval)
 			retval = real_gda_holder_set_value (holder, gdaval, FALSE, error);

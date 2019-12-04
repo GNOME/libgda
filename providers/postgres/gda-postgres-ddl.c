@@ -898,8 +898,13 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_STRING);
 		if (!dh)
 			dh = gda_data_handler_get_default (G_TYPE_STRING);
+		else
+			g_object_ref (dh);
+
+		g_assert (dh); // If fails, the type in dh is not implemented. It is a bug.
 
 		tmp = gda_data_handler_get_sql_from_value (dh, value);
+		g_object_unref (dh);
 		g_string_append (string, tmp);
 		g_free (tmp);
 	}
@@ -1058,9 +1063,13 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			dh = gda_server_provider_get_data_handler_g_type (provider, cnc, G_TYPE_DATE_TIME);
 			if (!dh)
 				dh = gda_data_handler_get_default (G_TYPE_DATE_TIME);
-			
+			else
+				g_object_ref (dh);
+		
+			g_assert (dh); // If fails, the type in dh is not implemented. It is a bug.
 			g_string_append (string, " VALID UNTIL ");
 			tmp = gda_data_handler_get_sql_from_value (dh, value);
+			g_object_unref (dh);
 			g_string_append (string, tmp);
 			g_free (tmp);
 		}

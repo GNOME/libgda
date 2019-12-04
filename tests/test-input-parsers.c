@@ -325,6 +325,7 @@ test_time_handler (void)
 		g_print ("Time to parse: [%s]. Is Valid? %s\n", td.in_string, td.exp_retval ? "TRUE" : "FALSE");
 
 		value = gda_data_handler_get_value_from_str (dh, td.in_string, GDA_TYPE_TIME);
+		g_object_unref (dh);
 		if (value != NULL)
 			g_print ("Returned Value: %s\n", gda_value_stringify (value));
 		g_assert ((value != NULL && td.exp_retval) || (value == NULL && !td.exp_retval));
