@@ -468,7 +468,9 @@ build10 (void)
 	{
 		GdaStatement *st;
 		st = gda_sql_builder_get_statement (b, FALSE);
-		g_print ("[%s]\n", gda_statement_to_sql (st, NULL, NULL));
+		gchar *sttosql = gda_statement_to_sql (st, NULL, NULL);
+		g_print ("[%s]\n", sttosql);
+		g_free (sttosql);
 		g_object_unref (st);
 	}
 
