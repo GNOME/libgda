@@ -37,6 +37,7 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char** argv)
 	g_free (file);
 	bin = gda_binary_new ();
 	gda_binary_set_data (bin, (guchar*) bin_data, bin_length);
+	g_free (bin_data);
 
 	/* convert to string */
 	gchar *conv1;
