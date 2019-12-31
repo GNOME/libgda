@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2013-09-16 19:44+0000\n"
+"POT-Creation-Date: 2019-09-26 14:21+0000\n"
 "PO-Revision-Date: 2013-09-17 11:09+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
@@ -21,142 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
-#| msgid "translator-credits"
 msgctxt "_"
 msgid "translator-credits"
 msgstr ""
 "Daniel Mustieles <daniel.mustieles@gmail.com>, 2010 - 2013\n"
 "Jorge González <jorgegonz@svn.gnome.org>, 2010"
-
-#. (itstool) path: credit/name
-#: C/index.page:6
-msgid "Vivien Malerba"
-msgstr "Vivien Malerba"
-
-#. (itstool) path: page/title
-#: C/index.page:11
-msgid "Gda Browser Help"
-msgstr "Visor de ayuda de Gda"
-
-#. (itstool) path: page/p
-#: C/index.page:12
-msgid ""
-"<app>gda-browser</app> is a tool for database administrators: they can "
-"analyse database's schemas to understand how data is organized, run SQL "
-"commands interactively, and in a broader way manage the data contained in "
-"the databases."
-msgstr ""
-"<app>gda-browser</app> es una herramienta para administradores de bases de "
-"datos: pueden analizar esquemas de bases de datos para entender cómo se "
-"organizan los datos, ejecutar comandos SQL interactivamente y, de manera más "
-"amplia, administrar los datos contenidos en las bases de datos."
-
-#. (itstool) path: page/p
-#: C/index.page:16
-msgid ""
-"Several connections to databases can be opened at once, allowing the user to "
-"work on multiple databases at once (it is also possible to execute commands "
-"on several connections at the same time)."
-msgstr ""
-"Se pueden abrir varias conexiones a bases de datos a la vez, permitiendo al "
-"usuario trabajar con varias bases de datos al mismo tiempo (también es "
-"posible ejecutar comandos en varias conexiones al mismo tiempo)."
-
-#. (itstool) path: page/p
-#: C/index.page:19
-msgid ""
-"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
-"connections to databases for which a database driver (provider) exists in "
-"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
-"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
-"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
-"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
-"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
-"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
-"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
-"moment)."
-msgstr ""
-"Ya que <app>gda-browser</app> usa la biblioteca <app>libgda</app> puede "
-"abrir conexiones a bases de datos cuyo controlador (proveedor) exista en "
-"<app>libgda</app> (por el momento están soportadas, <link href=\"http://www."
-"oracle.com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</"
-"link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link "
-"href=\"http://www.sqlite.org\">SQLite</link>, MS Access (a traés de la "
-"bilbioteca <link href=\"http://sourceforge.net/projects/mdbtools/"
-"\">MDBTools</link>), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</"
-"link> and <link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index."
-"html\">JDBC</link>)."
-
-#. (itstool) path: section/title
-#: C/index.page:29
-msgid "Presentation"
-msgstr "Presentación"
-
-#. (itstool) path: section/title
-#: C/index.page:32
-msgid "Perspectives"
-msgstr "Perspectivas"
-
-#. (itstool) path: section/title
-#: C/index.page:36
-msgid "Connections management"
-msgstr "Administración de conexiones"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/actions.page:33
-#| msgid ""
-#| "@@image: 'figures/action-4.png'; md5=100071a6077a81f6282c19fe5160629a"
-msgctxt "_"
-msgid ""
-"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
-msgstr ""
-"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/actions.page:40
-#| msgid ""
-#| "@@image: 'figures/action-1.png'; md5=bb889796dfd0467d6d0b0b338f3674f8"
-msgctxt "_"
-msgid ""
-"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
-msgstr ""
-"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/actions.page:48
-#| msgid ""
-#| "@@image: 'figures/action-2.png'; md5=8ea0610cb4be792c57a62882050aad6e"
-msgctxt "_"
-msgid ""
-"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
-msgstr ""
-"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/actions.page:56
-#| msgid ""
-#| "@@image: 'figures/action-3.png'; md5=321f1284164e0f1bb1d1f0fc49050a77"
-msgctxt "_"
-msgid ""
-"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
-msgstr ""
-"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
 
 #. (itstool) path: info/title
 #: C/actions.page:5 C/data-manager-perspective.page:5
@@ -166,7 +35,6 @@ msgstr ""
 #: C/transactions.page:5 C/table-insert-data.page:5 C/variables.page:5
 #: C/virtual-connections.page:5 C/ldap-browser-perspective.page:5
 #: C/ldap-connections.page:5
-#| msgid "1"
 msgctxt "sort"
 msgid "1"
 msgstr "1"
@@ -194,10 +62,10 @@ msgid ""
 "on a product (presumably the \"comments\" table will have a foreign key on "
 "the \"products\" table to reference it)."
 msgstr ""
-"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos y "
-"una tabla «comentarios» que lista todos los comentarios de los usuarios sobre "
-"un producto (presumiblemente, la tabla «comentarios» tendrá una clave ajena "
-"en la tabla «productos» para referenciarla)."
+"Por ejemplo, si hay una tabla «productos» que lista algún tipo de productos "
+"y una tabla «comentarios» que lista todos los comentarios de los usuarios "
+"sobre un producto (presumiblemente, la tabla «comentarios» tendrá una clave "
+"ajena en la tabla «productos» para referenciarla)."
 
 #. (itstool) path: page/p
 #: C/actions.page:19
@@ -242,6 +110,18 @@ msgstr ""
 "Define la acción para listar los comentarios de un producto, desde la "
 "perspectiva de ejecución de la consulta"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:33
+msgctxt "_"
+msgid ""
+"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
+msgstr ""
+"external ref='figures/action-4.png' md5='100071a6077a81f6282c19fe5160629a'"
+
 #. (itstool) path: figure/title
 #: C/actions.page:36
 msgid "Action - display a list of products"
@@ -255,8 +135,20 @@ msgid ""
 "\"List comments for product\""
 msgstr ""
 "En la perspectiva de ejecución de la consulta, seleccione todos los "
-"productos. Tenga en cuenta que hay dos acciones definidas: «añadir comentario "
-"sobre el producto» y «listar comentarios para el producto»"
+"productos. Tenga en cuenta que hay dos acciones definidas: «añadir "
+"comentario sobre el producto» y «listar comentarios para el producto»"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:40
+msgctxt "_"
+msgid ""
+"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
+msgstr ""
+"external ref='figures/action-1.png' md5='bb889796dfd0467d6d0b0b338f3674f8'"
 
 #. (itstool) path: page/p
 #: C/actions.page:42
@@ -277,6 +169,18 @@ msgstr ""
 "Abrir el menú contextual y seleccionar <guiseq><gui>Ejecutar acción</"
 "gui><gui>Listar comentarios para el producto</gui></guiseq>"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/actions.page:48
+msgctxt "_"
+msgid ""
+"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
+msgstr ""
+"external ref='figures/action-2.png' md5='8ea0610cb4be792c57a62882050aad6e'"
+
 #. (itstool) path: page/p
 #: C/actions.page:50
 msgid ""
@@ -296,72 +200,17 @@ msgstr "Acción: ejecutada"
 msgid "The action is now executed"
 msgstr "La acción ahora está ejecutada"
 
-#. (itstool) path: media
+#. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/data-manager-perspective.page:27
-#| msgid ""
-#| "@@image: 'figures/data-man-persp.png'; "
-#| "md5=b4e0678527c03093031dcb3805bb2841"
+#: C/actions.page:56
 msgctxt "_"
 msgid ""
-"external ref='figures/data-man-persp.png' "
-"md5='b4e0678527c03093031dcb3805bb2841'"
+"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
 msgstr ""
-"external ref='figures/data-man-persp.png' "
-"md5='b4e0678527c03093031dcb3805bb2841'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/data-manager-perspective.page:53 C/data-manager-perspective.page:93
-#| msgid ""
-#| "@@image: 'figures/data-man-mode.png'; md5=fa36a6e1e640c7a082fc7c3d16e095d6"
-msgctxt "_"
-msgid ""
-"external ref='figures/data-man-mode.png' "
-"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
-msgstr ""
-"external ref='figures/data-man-mode.png' "
-"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/data-manager-perspective.page:62
-#| msgid ""
-#| "@@image: 'figures/data-man-xmlcompose.png'; "
-#| "md5=fd3ae97c42d58ddbd87404c92b95ee9c"
-msgctxt "_"
-msgid ""
-"external ref='figures/data-man-xmlcompose.png' "
-"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
-msgstr ""
-"external ref='figures/data-man-xmlcompose.png' "
-"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/data-manager-perspective.page:69
-#| msgid ""
-#| "@@image: 'figures/data-man-uicompose.png'; "
-#| "md5=33b1cf9354761dac4ee3f14a9534357a"
-msgctxt "_"
-msgid ""
-"external ref='figures/data-man-uicompose.png' "
-"md5='33b1cf9354761dac4ee3f14a9534357a'"
-msgstr ""
-"external ref='figures/data-man-uicompose.png' "
-"md5='33b1cf9354761dac4ee3f14a9534357a'"
+"external ref='figures/action-3.png' md5='321f1284164e0f1bb1d1f0fc49050a77'"
 
 #. (itstool) path: page/title
 #: C/data-manager-perspective.page:8
@@ -416,6 +265,20 @@ msgstr "Perspectiva del administrador de datos"
 msgid "The data manager perspective, with two data sources"
 msgstr "La perspectiva del administrador de datos, con dos orígenes de datos"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:27
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-persp.png' "
+"md5='b4e0678527c03093031dcb3805bb2841'"
+msgstr ""
+"external ref='figures/data-man-persp.png' "
+"md5='b4e0678527c03093031dcb3805bb2841'"
+
 #. (itstool) path: page/p
 #: C/data-manager-perspective.page:29
 msgid ""
@@ -465,6 +328,20 @@ msgstr ""
 "alguien ejecutara la sentencia <code>SELECT * FROM mitabla</code> en la "
 "<link xref=\"query-execution-perspective\"/>."
 
+#. (itstool) path: p/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:53 C/data-manager-perspective.page:93
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-mode.png' "
+"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
+msgstr ""
+"external ref='figures/data-man-mode.png' "
+"md5='fa36a6e1e640c7a082fc7c3d16e095d6'"
+
 #. (itstool) path: section/p
 #: C/data-manager-perspective.page:51
 msgid ""
@@ -500,6 +377,20 @@ msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, desde la "
 "sintaxis XML"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:62
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-xmlcompose.png' "
+"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
+msgstr ""
+"external ref='figures/data-man-xmlcompose.png' "
+"md5='fd3ae97c42d58ddbd87404c92b95ee9c'"
+
 #. (itstool) path: figure/desc
 #: C/data-manager-perspective.page:66
 msgid ""
@@ -510,8 +401,22 @@ msgid ""
 msgstr ""
 "Editar fuentes de datos en la perspectiva del gestor de datos, usando la "
 "interfaz predeterminada: se definen dos fuentes de datos que listan los "
-"contenidos de las tablas «clientes» y «pedidos». La configuración es la misma "
-"que la de la figura anterior que muestra la sintaxis XML"
+"contenidos de las tablas «clientes» y «pedidos». La configuración es la "
+"misma que la de la figura anterior que muestra la sintaxis XML"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/data-manager-perspective.page:69
+msgctxt "_"
+msgid ""
+"external ref='figures/data-man-uicompose.png' "
+"md5='33b1cf9354761dac4ee3f14a9534357a'"
+msgstr ""
+"external ref='figures/data-man-uicompose.png' "
+"md5='33b1cf9354761dac4ee3f14a9534357a'"
 
 #. (itstool) path: section/p
 #: C/data-manager-perspective.page:72 C/query-execution-perspective.page:71
@@ -633,8 +538,8 @@ msgid ""
 "\"id\" to specify a data source string ID, used when linking data sources "
 "one to another;"
 msgstr ""
-"«id» para especificar el ID de cadena de una fuente de datos, usado cuando se "
-"enlazan unas fuentes de datos con otras;"
+"«id» para especificar el ID de cadena de una fuente de datos, usado cuando "
+"se enlazan unas fuentes de datos con otras;"
 
 #. (itstool) path: item/p
 #: C/data-manager-xml-syntax.page:16
@@ -793,9 +698,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/data-manager-xml-syntax.page:81
-#| msgid ""
-#| "&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is a "
-#| "table column"
 msgid ""
 "<code>&lt;data source ID&gt;@&lt;column name&gt; if the data set's column is "
 "a table column</code>"
@@ -980,7 +882,6 @@ msgstr ""
 
 #. (itstool) path: item/p
 #: C/data-manager-xml-syntax.page:160
-#| msgid "&lt;data source ID&gt;@&lt;column name&gt;"
 msgid "<code>&lt;data source ID&gt;@&lt;column name&gt;</code>"
 msgstr "<code>&lt;data source ID&gt;@&lt;column name&gt;</code>"
 
@@ -993,37 +894,6 @@ msgstr "El editor de fuentes del administrador de datos"
 #: C/data-manager-source-editor.page:8
 msgid "To be done."
 msgstr "Para hacer."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/declaredfk.page:25
-#| msgid ""
-#| "@@image: 'figures/declaredfk.png'; md5=b5d15e99a2724bdda33147dc007770bc"
-msgctxt "_"
-msgid ""
-"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
-msgstr ""
-"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/declaredfk.page:65
-#| msgid ""
-#| "@@image: 'figures/declaredfk-dialog.png'; "
-#| "md5=56aba297f8b88248fabc23c54b361a8f"
-msgctxt "_"
-msgid ""
-"external ref='figures/declaredfk-dialog.png' "
-"md5='56aba297f8b88248fabc23c54b361a8f'"
-msgstr ""
-"external ref='figures/declaredfk-dialog.png' "
-"md5='56aba297f8b88248fabc23c54b361a8f'"
 
 #. (itstool) path: page/title
 #: C/declaredfk.page:8
@@ -1074,6 +944,18 @@ msgstr ""
 "Cuando se muestran en diagramas, las claves externas declaradas se "
 "representan usando una línea discontinua en lugar de una línea continua para "
 "las claves externas actuales."
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:25
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
+msgstr ""
+"external ref='figures/declaredfk.png' md5='b5d15e99a2724bdda33147dc007770bc'"
 
 #. (itstool) path: page/p
 #: C/declaredfk.page:27 C/variables.page:21
@@ -1186,6 +1068,20 @@ msgstr ""
 "tabla referencia es «almacenes», y las columnas involucradas son «país» y "
 "«ciudad»."
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/declaredfk.page:65
+msgctxt "_"
+msgid ""
+"external ref='figures/declaredfk-dialog.png' "
+"md5='56aba297f8b88248fabc23c54b361a8f'"
+msgstr ""
+"external ref='figures/declaredfk-dialog.png' "
+"md5='56aba297f8b88248fabc23c54b361a8f'"
+
 #. (itstool) path: section/title
 #: C/declaredfk.page:70
 msgid "Remove a declared foreign key"
@@ -1194,15 +1090,16 @@ msgstr "Quitar una clave externa declarada"
 #. (itstool) path: section/p
 #: C/declaredfk.page:71
 msgid ""
-"A declared foreign key can be removed by clicking on the <guiseq><gui>"
-"(Remove)</gui></guiseq> link displayed below each declared foreign key "
-"properties in the table's properties (in the <link xref=\"schema-browser-"
-"perspective\">Schema Browser perspective</link>)."
+"A declared foreign key can be removed by clicking on the "
+"<guiseq><gui>(Remove)</gui></guiseq> link displayed below each declared "
+"foreign key properties in the table's properties (in the <link xref=\"schema-"
+"browser-perspective\">Schema Browser perspective</link>)."
 msgstr ""
-"Se puede quitar una clave externa declara pulsando en el enlace <guiseq><gui>"
-"(Quitar)</gui></guiseq> mostrado junto a las propiedades de cada clave "
-"externa declarada en las propiedades de la tabla (en la <link xref=\"schema-"
-"browser-perspective\">perspectiva del visor de esquemas</link>)."
+"Se puede quitar una clave externa declara pulsando en el enlace "
+"<guiseq><gui>(Quitar)</gui></guiseq> mostrado junto a las propiedades de "
+"cada clave externa declarada en las propiedades de la tabla (en la <link "
+"xref=\"schema-browser-perspective\">perspectiva del visor de esquemas</"
+"link>)."
 
 #. (itstool) path: section/p
 #: C/declaredfk.page:76
@@ -1217,19 +1114,6 @@ msgstr ""
 "la línea discontinua que representa la clave externa declarada, "
 "seleccionando la opción <guiseq><gui>Quitar esta clave externa declarada</"
 "gui></guiseq>."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/diagram.page:16
-#| msgid "@@image: 'figures/diagram.png'; md5=0ad77cfbbead0832d8ce7fa22d3ce01d"
-msgctxt "_"
-msgid ""
-"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
-msgstr ""
-"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
 
 #. (itstool) path: page/title
 #: C/diagram.page:7
@@ -1261,6 +1145,18 @@ msgstr ""
 "Diagrama que muestra algunas tablas y sus relaciones representadas por "
 "restricciones de clave externa (vea también la <link xref=\"declared-fk"
 "\">las claves externas declaradas</link>)"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/diagram.page:16
+msgctxt "_"
+msgid ""
+"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
+msgstr ""
+"external ref='figures/diagram.png' md5='0ad77cfbbead0832d8ce7fa22d3ce01d'"
 
 #. (itstool) path: page/p
 #: C/diagram.page:18
@@ -1407,7 +1303,7 @@ msgid ""
 "execute SQL commands, see the <link xref=\"query-execution-perspective"
 "\">Query execution perspective</link>"
 msgstr ""
-"ejecutar comandos SQL, consulte la <link xref=\"query-execution-perspective"
+"ejecutar comandos SQL, consulte la sección <link xref=\"query-execution-perspective"
 "\">perspectiva de ejecución de una consulta</link>"
 
 #. (itstool) path: item/p
@@ -1416,7 +1312,7 @@ msgid ""
 "analyse the table's contents, see the <link xref=\"data-manager-perspective"
 "\">Data manager perspective</link>"
 msgstr ""
-"analizar los contenidos de la tabla, consulte la <link xref=\"data-manager-"
+"analizar los contenidos de la tabla, consulte la sección <link xref=\"data-manager-"
 "perspective\">perspectiva del gestor de datos</link>"
 
 #. (itstool) path: item/p
@@ -1427,7 +1323,7 @@ msgid ""
 "perspective\">LDAP browser perspective</link>"
 msgstr ""
 "para las <link xref=\"ldap-connection\">conexiones LDAP</link>, manejar los "
-"datos jerárquicos en el árbol LDAP, consulte la <link xref=\"ldap-browser-"
+"datos jerárquicos en el árbol LDAP, consulte la sección <link xref=\"ldap-browser-"
 "perspective\">perspectiva del visor LDAP</link>"
 
 #. (itstool) path: section/p
@@ -1462,24 +1358,6 @@ msgstr ""
 "características integradas; específicamente, cualquier puede desarrollar "
 "<link type=\"topic\" xref=\"general-ui\">perspectives</link> nuevas"
 
-#. (itstool) path: section/list
-#: C/features.page:51
-msgid "<_:item-1/> x <_:item-2/>"
-msgstr "<_:item-1/> x <_:item-2/>"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/general-ui.page:18 C/schema-browser-perspective.page:21
-#| msgid "@@image: 'figures/mainwin.png'; md5=8e0eab3f4b2b5573529a98daf3c5aa48"
-msgctxt "_"
-msgid ""
-"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
-msgstr ""
-"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
-
 #. (itstool) path: page/title
 #: C/general-ui.page:8
 msgid "General interface organization"
@@ -1510,7 +1388,20 @@ msgstr "Una ventana de conexión"
 msgid ""
 "Window opened for the 'c1' connection (and the Schema browser perspective)"
 msgstr ""
-"Ventana abierta para la conexión «c1» (y la perspectiva del visor de esquemas)"
+"Ventana abierta para la conexión «c1» (y la perspectiva del visor de "
+"esquemas)"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/general-ui.page:18 C/schema-browser-perspective.page:21
+msgctxt "_"
+msgid ""
+"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
+msgstr ""
+"external ref='figures/mainwin.png' md5='8e0eab3f4b2b5573529a98daf3c5aa48'"
 
 #. (itstool) path: page/p
 #: C/general-ui.page:21
@@ -1565,6 +1456,80 @@ msgstr ""
 "la misma perspectiva (simplemente arrastre y suelte una pestaña desde una "
 "ventana a la otra usando la etiqueta de la pestaña como un tirador)."
 
+#. (itstool) path: credit/name
+#: C/index.page:6
+msgid "Vivien Malerba"
+msgstr "Vivien Malerba"
+
+#. (itstool) path: page/title
+#: C/index.page:11
+msgid "Gda Browser Help"
+msgstr "Visor de ayuda de Gda"
+
+#. (itstool) path: page/p
+#: C/index.page:12
+msgid ""
+"<app>gda-browser</app> is a tool for database administrators: they can "
+"analyse database's schemas to understand how data is organized, run SQL "
+"commands interactively, and in a broader way manage the data contained in "
+"the databases."
+msgstr ""
+"<app>gda-browser</app> es una herramienta para administradores de bases de "
+"datos: pueden analizar esquemas de bases de datos para entender cómo se "
+"organizan los datos, ejecutar comandos SQL interactivamente y, de manera más "
+"amplia, administrar los datos contenidos en las bases de datos."
+
+#. (itstool) path: page/p
+#: C/index.page:16
+msgid ""
+"Several connections to databases can be opened at once, allowing the user to "
+"work on multiple databases at once (it is also possible to execute commands "
+"on several connections at the same time)."
+msgstr ""
+"Se pueden abrir varias conexiones a bases de datos a la vez, permitiendo al "
+"usuario trabajar con varias bases de datos al mismo tiempo (también es "
+"posible ejecutar comandos en varias conexiones al mismo tiempo)."
+
+#. (itstool) path: page/p
+#: C/index.page:19
+msgid ""
+"As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
+"connections to databases for which a database driver (provider) exists in "
+"<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
+"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
+"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
+"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
+"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
+"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
+"moment)."
+msgstr ""
+"Ya que <app>gda-browser</app> usa la biblioteca <app>libgda</app> puede "
+"abrir conexiones a bases de datos cuyo controlador (proveedor) exista en "
+"<app>libgda</app> (por el momento están soportadas, <link href=\"http://www."
+"oracle.com\">Oracle</link>, <link href=\"http://www.mysql.org\">MySQL</"
+"link>, <link href=\"http://www.postgresql.org/\">PostgreSQL</link>, <link "
+"href=\"http://www.sqlite.org\">SQLite</link>, MS Access (a traés de la "
+"bilbioteca <link href=\"http://sourceforge.net/projects/mdbtools/"
+"\">MDBTools</link>), <link href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</"
+"link> and <link href=\"http://java.sun.com/docs/books/tutorial/jdbc/index."
+"html\">JDBC</link>)."
+
+#. (itstool) path: section/title
+#: C/index.page:29
+msgid "Presentation"
+msgstr "Presentación"
+
+#. (itstool) path: section/title
+#: C/index.page:32
+msgid "Perspectives"
+msgstr "Perspectivas"
+
+#. (itstool) path: section/title
+#: C/index.page:36
+msgid "Connections management"
+msgstr "Administración de conexiones"
+
 #. (itstool) path: p/link
 #: C/legal.xml:4
 msgid "Creative Commons Attribution-Share Alike 3.0 Unported License"
@@ -1586,23 +1551,6 @@ msgstr ""
 "permiso para copiar, modificar y distribuir el ejemplo de código contenido "
 "en este documento bajo los términos que usted elija, sin restricción."
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/query-execution-perspective.page:17
-#| msgid ""
-#| "@@image: 'figures/query-exec-persp.png'; "
-#| "md5=c52ce85c0f89d26775c8b9dad282910a"
-msgctxt "_"
-msgid ""
-"external ref='figures/query-exec-persp.png' "
-"md5='c52ce85c0f89d26775c8b9dad282910a'"
-msgstr ""
-"external ref='figures/query-exec-persp.png' "
-"md5='c52ce85c0f89d26775c8b9dad282910a'"
-
 #. (itstool) path: page/title
 #: C/query-execution-perspective.page:8
 msgid "The query execution perspective"
@@ -1612,9 +1560,9 @@ msgstr "La perspectiva de ejecución de la consulta"
 #: C/query-execution-perspective.page:9
 msgid ""
 "Use the query perspective to execute SQL statements. To switch to this "
-"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution (SQL)"
-"</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></keyseq> "
-"shortcut."
+"perspective, use the <guiseq><gui>Perspective</gui><gui>Query execution "
+"(SQL)</gui></guiseq> menu, or the <keyseq><key>Ctrl</key><key>S</key></"
+"keyseq> shortcut."
 msgstr ""
 "Use la perspectiva de consulta para ejecutar sentencias SQL. Para cambiar a "
 "esta perspectiva, use el menú <guiseq><gui>Perspectiva</gui><gui>Ejecución "
@@ -1631,6 +1579,20 @@ msgstr "Perspectiva de ejecución de la consulta"
 msgid "The query exec perspective with one SELECT statement executed"
 msgstr ""
 "La perspectiva de ejecución de la consulta con una sentencia SELECT ejecutada"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/query-execution-perspective.page:17
+msgctxt "_"
+msgid ""
+"external ref='figures/query-exec-persp.png' "
+"md5='c52ce85c0f89d26775c8b9dad282910a'"
+msgstr ""
+"external ref='figures/query-exec-persp.png' "
+"md5='c52ce85c0f89d26775c8b9dad282910a'"
 
 #. (itstool) path: page/p
 #: C/query-execution-perspective.page:20
@@ -1869,23 +1831,6 @@ msgstr ""
 "tabla para la sentencia SELECT, dando información para otros tipos de "
 "sentencias, o dando un error de ejecución si ésta falló."
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/schema-browser-perspective.page:47
-#| msgid ""
-#| "@@image: 'figures/schema-browser-persp.png'; "
-#| "md5=991ae01b9fb6b17c0b93ee4873b9b985"
-msgctxt "_"
-msgid ""
-"external ref='figures/schema-browser-persp.png' "
-"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
-msgstr ""
-"external ref='figures/schema-browser-persp.png' "
-"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
-
 #. (itstool) path: page/title
 #: C/schema-browser-perspective.page:8
 msgid "The schema browser perspective"
@@ -1992,52 +1937,19 @@ msgstr ""
 "diferencia entre las claves externas implementadas en la base de datos y las "
 "<link xref=\"declared-fk\">claves externas declaradas</link>"
 
-#. (itstool) path: media
+#. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
 #. the file changes, the md5 hash will change to let you know you need to
 #. update your localized copy. The msgstr is not used at all. Set it to
 #. whatever you like once you have updated your copy of the file.
-#: C/transactions.page:14
-#| msgid ""
-#| "@@image: 'figures/trans-begin.png'; md5=0382a22aeb54be0d7fe0ffa29dddf423"
+#: C/schema-browser-perspective.page:47
 msgctxt "_"
 msgid ""
-"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+"external ref='figures/schema-browser-persp.png' "
+"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
 msgstr ""
-"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/transactions.page:16
-#| msgid ""
-#| "@@image: 'figures/trans-commit.png'; md5=27f45d32501cc05bd6f6b16263283e9a"
-msgctxt "_"
-msgid ""
-"external ref='figures/trans-commit.png' "
-"md5='27f45d32501cc05bd6f6b16263283e9a'"
-msgstr ""
-"external ref='figures/trans-commit.png' "
-"md5='27f45d32501cc05bd6f6b16263283e9a'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/transactions.page:18
-#| msgid ""
-#| "@@image: 'figures/trans-rollback.png'; "
-#| "md5=470522738b1d6bf91b9787baac1c0191"
-msgctxt "_"
-msgid ""
-"external ref='figures/trans-rollback.png' "
-"md5='470522738b1d6bf91b9787baac1c0191'"
-msgstr ""
-"external ref='figures/trans-rollback.png' "
-"md5='470522738b1d6bf91b9787baac1c0191'"
+"external ref='figures/schema-browser-persp.png' "
+"md5='991ae01b9fb6b17c0b93ee4873b9b985'"
 
 #. (itstool) path: page/title
 #: C/transactions.page:9
@@ -2053,6 +1965,18 @@ msgstr ""
 "Las transacciones se pueden iniciar, efectuar o revertir basándose en una "
 "conexión:"
 
+#. (itstool) path: p/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:14
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+msgstr ""
+"external ref='figures/trans-begin.png' md5='0382a22aeb54be0d7fe0ffa29dddf423'"
+
 #. (itstool) path: item/p
 #: C/transactions.page:14
 msgid ""
@@ -2061,6 +1985,20 @@ msgid ""
 msgstr ""
 "use el botón <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
 "begin.png\"/> de la barra de herramientas para iniciar una transacción"
+
+#. (itstool) path: p/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:16
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-commit.png' "
+"md5='27f45d32501cc05bd6f6b16263283e9a'"
+msgstr ""
+"external ref='figures/trans-commit.png' "
+"md5='27f45d32501cc05bd6f6b16263283e9a'"
 
 #. (itstool) path: item/p
 #: C/transactions.page:16
@@ -2072,6 +2010,20 @@ msgstr ""
 "use el botón <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
 "commit.png\"/> de la barra de herramientas para efectuar la transacción "
 "actual (aplicar todos los cambios)"
+
+#. (itstool) path: p/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/transactions.page:18
+msgctxt "_"
+msgid ""
+"external ref='figures/trans-rollback.png' "
+"md5='470522738b1d6bf91b9787baac1c0191'"
+msgstr ""
+"external ref='figures/trans-rollback.png' "
+"md5='470522738b1d6bf91b9787baac1c0191'"
 
 #. (itstool) path: item/p
 #: C/transactions.page:18
@@ -2099,23 +2051,6 @@ msgstr ""
 "memoria (para deshacerse de un conjunto de datos en una <link xref=\"query-"
 "execution-perspective\">perspectiva de ejecución de la consulta</link>, "
 "limpie el elemento del histórico relativo al conjunto de datos)."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/table-insert-data.page:20
-#| msgid ""
-#| "@@image: 'figures/table-insert-data.png'; "
-#| "md5=308807b8443d5ab26c8704a6e01aa1ab"
-msgctxt "_"
-msgid ""
-"external ref='figures/table-insert-data.png' "
-"md5='308807b8443d5ab26c8704a6e01aa1ab'"
-msgstr ""
-"external ref='figures/table-insert-data.png' "
-"md5='308807b8443d5ab26c8704a6e01aa1ab'"
 
 #. (itstool) path: page/title
 #: C/table-insert-data.page:8
@@ -2151,6 +2086,20 @@ msgstr "Ventana emergente para insertar datos en una tabla"
 #: C/table-insert-data.page:19
 msgid "A popup to insert data in a table"
 msgstr "Una ventana emergente para insertar datos en una tabla"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/table-insert-data.page:20
+msgctxt "_"
+msgid ""
+"external ref='figures/table-insert-data.png' "
+"md5='308807b8443d5ab26c8704a6e01aa1ab'"
+msgstr ""
+"external ref='figures/table-insert-data.png' "
+"md5='308807b8443d5ab26c8704a6e01aa1ab'"
 
 #. (itstool) path: page/p
 #: C/table-insert-data.page:22
@@ -2317,84 +2266,6 @@ msgstr ""
 "##sales@3::date::NULL\n"
 "##customers@id::int"
 
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/virtual-connections.page:29
-#| msgid ""
-#| "@@image: 'figures/virtual-cnc.png'; md5=0a3b008f3696c6239331bf697e2b4847"
-msgctxt "_"
-msgid ""
-"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
-msgstr ""
-"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/virtual-connections.page:94
-#| msgid ""
-#| "@@image: 'figures/virtual-cnc-4.png'; md5=9c19e575c63411872a3742efd02473c1"
-msgctxt "_"
-msgid ""
-"external ref='figures/virtual-cnc-4.png' "
-"md5='9c19e575c63411872a3742efd02473c1'"
-msgstr ""
-"external ref='figures/virtual-cnc-4.png' "
-"md5='9c19e575c63411872a3742efd02473c1'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/virtual-connections.page:108
-#| msgid ""
-#| "@@image: 'figures/virtual-cnc-5.png'; md5=aec9ae2fc4bfac2ac3460720f5f31bb9"
-msgctxt "_"
-msgid ""
-"external ref='figures/virtual-cnc-5.png' "
-"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
-msgstr ""
-"external ref='figures/virtual-cnc-5.png' "
-"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/virtual-connections.page:117
-#| msgid ""
-#| "@@image: 'figures/virtual-cnc-2.png'; md5=275c8e47da75738596b0b4c47b06a70a"
-msgctxt "_"
-msgid ""
-"external ref='figures/virtual-cnc-2.png' "
-"md5='275c8e47da75738596b0b4c47b06a70a'"
-msgstr ""
-"external ref='figures/virtual-cnc-2.png' "
-"md5='275c8e47da75738596b0b4c47b06a70a'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/virtual-connections.page:124
-#| msgid ""
-#| "@@image: 'figures/virtual-cnc-3.png'; md5=a47d581b293767deb95f77e555f07e8c"
-msgctxt "_"
-msgid ""
-"external ref='figures/virtual-cnc-3.png' "
-"md5='a47d581b293767deb95f77e555f07e8c'"
-msgstr ""
-"external ref='figures/virtual-cnc-3.png' "
-"md5='a47d581b293767deb95f77e555f07e8c'"
-
 #. (itstool) path: page/title
 #: C/virtual-connections.page:9
 msgid "Connections binding (i.e. virtual connections)"
@@ -2450,6 +2321,18 @@ msgstr "Diálogo para crear una conexión virtual nueva"
 #: C/virtual-connections.page:28
 msgid "Here the current connection (c1) will be bound in the \"c1\" schema"
 msgstr "Aquí se ligará la conexión actual (c1) con el esquema «c1»"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:29
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
+msgstr ""
+"external ref='figures/virtual-cnc.png' md5='0a3b008f3696c6239331bf697e2b4847'"
 
 #. (itstool) path: page/p
 #: C/virtual-connections.page:31
@@ -2629,6 +2512,20 @@ msgstr ""
 msgid "Expected results from virtual connection"
 msgstr "Resultados esperados desde una conexión virtual"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:94
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-4.png' "
+"md5='9c19e575c63411872a3742efd02473c1'"
+msgstr ""
+"external ref='figures/virtual-cnc-4.png' "
+"md5='9c19e575c63411872a3742efd02473c1'"
+
 #. (itstool) path: section/title
 #: C/virtual-connections.page:100
 msgid "Importing a data set into a virtual connection"
@@ -2652,6 +2549,20 @@ msgstr ""
 msgid "Import a data set into a virtual connection - 1"
 msgstr "Importar un conjunto de datos en una conexión virtual - 1"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:108
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-5.png' "
+"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
+msgstr ""
+"external ref='figures/virtual-cnc-5.png' "
+"md5='aec9ae2fc4bfac2ac3460720f5f31bb9'"
+
 #. (itstool) path: section/p
 #: C/virtual-connections.page:110
 msgid ""
@@ -2670,6 +2581,20 @@ msgstr ""
 msgid "Import a data set into a virtual connection - 2"
 msgstr "Importar un conjunto de datos en una conexión virtual - 2"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:117
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-2.png' "
+"md5='275c8e47da75738596b0b4c47b06a70a'"
+msgstr ""
+"external ref='figures/virtual-cnc-2.png' "
+"md5='275c8e47da75738596b0b4c47b06a70a'"
+
 #. (itstool) path: section/p
 #: C/virtual-connections.page:119
 msgid ""
@@ -2683,6 +2608,20 @@ msgstr ""
 #: C/virtual-connections.page:123
 msgid "New opened virtual connection"
 msgstr "Nueva conexión virtual abierta"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/virtual-connections.page:124
+msgctxt "_"
+msgid ""
+"external ref='figures/virtual-cnc-3.png' "
+"md5='a47d581b293767deb95f77e555f07e8c'"
+msgstr ""
+"external ref='figures/virtual-cnc-3.png' "
+"md5='a47d581b293767deb95f77e555f07e8c'"
 
 #. (itstool) path: section/title
 #: C/virtual-connections.page:129
@@ -2711,53 +2650,6 @@ msgid ""
 msgstr ""
 "Para obtener más información, consulte la sección <link xref=\"sql-sqlite"
 "\">SQL que entienden las conexiones LDAP y las conexiones virtuales</link>."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/ldap-browser-perspective.page:22
-#| msgid ""
-#| "@@image: 'figures/ldap-browser-persp.png'; "
-#| "md5=e2c1bbcb2f65ffe16b632141908f7027"
-msgctxt "_"
-msgid ""
-"external ref='figures/ldap-browser-persp.png' "
-"md5='e2c1bbcb2f65ffe16b632141908f7027'"
-msgstr ""
-"external ref='figures/ldap-browser-persp.png' "
-"md5='e2c1bbcb2f65ffe16b632141908f7027'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/ldap-browser-perspective.page:47
-#| msgid ""
-#| "@@image: 'figures/ldap-classes.png'; md5=1ef8ffca04b9ba762a3cf2e884c98d03"
-msgctxt "_"
-msgid ""
-"external ref='figures/ldap-classes.png' "
-"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
-msgstr ""
-"external ref='figures/ldap-classes.png' "
-"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/ldap-browser-perspective.page:52
-#| msgid ""
-#| "@@image: 'figures/ldap-search.png'; md5=81aa2f8a2770590d96fd9c980c578d62"
-msgctxt "_"
-msgid ""
-"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
-msgstr ""
-"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
 
 #. (itstool) path: page/title
 #: C/ldap-browser-perspective.page:8
@@ -2802,6 +2694,20 @@ msgstr "Pestaña de entradas del visor LDAP"
 #: C/ldap-browser-perspective.page:21
 msgid "LDAP entries tab"
 msgstr "Pestaña de entradas LDAP"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:22
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-browser-persp.png' "
+"md5='e2c1bbcb2f65ffe16b632141908f7027'"
+msgstr ""
+"external ref='figures/ldap-browser-persp.png' "
+"md5='e2c1bbcb2f65ffe16b632141908f7027'"
 
 #. (itstool) path: page/p
 #: C/ldap-browser-perspective.page:25
@@ -2867,6 +2773,20 @@ msgstr "pestaña de clases del visor LDAP"
 msgid "LDAP classes tab"
 msgstr "pestaña de clases LDAP"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:47
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-classes.png' "
+"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
+msgstr ""
+"external ref='figures/ldap-classes.png' "
+"md5='1ef8ffca04b9ba762a3cf2e884c98d03'"
+
 #. (itstool) path: figure/title
 #: C/ldap-browser-perspective.page:50
 msgid "LDAP browser's search tab"
@@ -2876,6 +2796,18 @@ msgstr "pestaña de búsqueda del visor LDAP"
 #: C/ldap-browser-perspective.page:51
 msgid "LDAP search tab"
 msgstr "pestaña de búsqueda LDAP"
+
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-browser-perspective.page:52
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
+msgstr ""
+"external ref='figures/ldap-search.png' md5='81aa2f8a2770590d96fd9c980c578d62'"
 
 #. (itstool) path: page/p
 #: C/ldap-browser-perspective.page:54
@@ -2890,25 +2822,8 @@ msgstr ""
 "subrayado) abren una nueva pestaña, o utilizan la primera pestaña junto a la "
 "pestaña actual para mostrar la información del enlace seleccionado. Por "
 "ejemplo, en la figura anterior en la que se ilustra una pestaña de entradas "
-"LDAP, al pulsar en «inetOrgPerson» se abrirá una pestaña de «clases LDAP» y se "
-"mostrará la información sobre esa clase."
-
-#. (itstool) path: media
-#. This is a reference to an external file such as an image or video. When
-#. the file changes, the md5 hash will change to let you know you need to
-#. update your localized copy. The msgstr is not used at all. Set it to
-#. whatever you like once you have updated your copy of the file.
-#: C/ldap-connections.page:52
-#| msgid ""
-#| "@@image: 'figures/ldap-table-mapping.png'; "
-#| "md5=39f204f664cf1202deb716bb19b8993b"
-msgctxt "_"
-msgid ""
-"external ref='figures/ldap-table-mapping.png' "
-"md5='39f204f664cf1202deb716bb19b8993b'"
-msgstr ""
-"external ref='figures/ldap-table-mapping.png' "
-"md5='39f204f664cf1202deb716bb19b8993b'"
+"LDAP, al pulsar en «inetOrgPerson» se abrirá una pestaña de «clases LDAP» y "
+"se mostrará la información sobre esa clase."
 
 #. (itstool) path: page/title
 #: C/ldap-connections.page:9
@@ -2925,9 +2840,9 @@ msgid ""
 msgstr ""
 "Las conexiones LDAP son diferentes a las otras conexiones de tal modo que "
 "una base de datos LDAP almacena datos de manera jerárquica, en el DIT "
-"(«Directory Information Tree», Árbol de Información del Directorio), mientras "
-"que las otras bases de datos accesibles que usan la aplicación <app>gda-"
-"browser</app> son bases de datos relacionales."
+"(«Directory Information Tree», Árbol de Información del Directorio), "
+"mientras que las otras bases de datos accesibles que usan la aplicación "
+"<app>gda-browser</app> son bases de datos relacionales."
 
 #. (itstool) path: page/p
 #: C/ldap-connections.page:15
@@ -3033,6 +2948,20 @@ msgstr ""
 msgid "LDAP table's properties"
 msgstr "Propiedades de la tabla LDAP"
 
+#. (itstool) path: figure/media
+#. This is a reference to an external file such as an image or video. When
+#. the file changes, the md5 hash will change to let you know you need to
+#. update your localized copy. The msgstr is not used at all. Set it to
+#. whatever you like once you have updated your copy of the file.
+#: C/ldap-connections.page:52
+msgctxt "_"
+msgid ""
+"external ref='figures/ldap-table-mapping.png' "
+"md5='39f204f664cf1202deb716bb19b8993b'"
+msgstr ""
+"external ref='figures/ldap-table-mapping.png' "
+"md5='39f204f664cf1202deb716bb19b8993b'"
+
 #. (itstool) path: section/p
 #: C/ldap-connections.page:54
 msgid ""
@@ -3040,9 +2969,9 @@ msgid ""
 "the LDAP entries from the top level LDAP entry of the connection, and have 3 "
 "columns: the DN, the \"cn\" and the \"jpegPhoto\"."
 msgstr ""
-"Por ejemplo, en la figura anterior, la tabla «usuarios» «contendrá» todas las "
-"entradas LDAP de la entrada LDAP de nivel superior de la conexión, y tiene 3 "
-"columnas: la DN, la «cn» y la «jpegPhoto»."
+"Por ejemplo, en la figura anterior, la tabla «usuarios» «contendrá» todas "
+"las entradas LDAP de la entrada LDAP de nivel superior de la conexión, y "
+"tiene 3 columnas: la DN, la «cn» y la «jpegPhoto»."
 
 #. (itstool) path: section/title
 #: C/ldap-connections.page:61
@@ -3073,8 +3002,8 @@ msgstr ""
 "Además, debido a que algunos atributos pueden terner varios valores, la "
 "construcción de la tabla manipula los atributos con varios valores de "
 "diferentes maneras, dependiendo de las opciones de cada atributo. Una opción "
-"se puede especificar añadiendo «::&lt;option&gt;» al nombre del atributo. Las "
-"opciones válidas son:"
+"se puede especificar añadiendo «::&lt;option&gt;» al nombre del atributo. "
+"Las opciones válidas son:"
 
 #. (itstool) path: item/p
 #: C/ldap-connections.page:74
@@ -3114,8 +3043,8 @@ msgid ""
 "\"CONCAT\": the attributes' values are concatenated (with a newline char "
 "between each value)"
 msgstr ""
-"«CONCAT»: los valores de los atributos están concatenados (con un carácter de "
-"nueva línea entre cada valor)."
+"«CONCAT»: los valores de los atributos están concatenados (con un carácter "
+"de nueva línea entre cada valor)."
 
 #. (itstool) path: item/p
 #: C/ldap-connections.page:82
@@ -3247,8 +3176,11 @@ msgid ""
 "string."
 msgstr ""
 "debería mostrar dos veces los mismos resultados, los cuales listan todas las "
-"entradas de la clase «inetOrgPerson» con un Nombre Común (cn) que contiene la "
-"cadena «juan»."
+"entradas de la clase «inetOrgPerson» con un Nombre Común (cn) que contiene "
+"la cadena «juan»."
+
+#~ msgid "<_:item-1/> x <_:item-2/>"
+#~ msgstr "<_:item-1/> x <_:item-2/>"
 
 #~ msgid ""
 #~ "This work is licensed under a <link href=\"http://creativecommons.org/"
