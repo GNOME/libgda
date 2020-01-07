@@ -4,6 +4,7 @@ libgda 5.2.10
  - GdaParser: remove spaces and enters before next statement, fix 203
  - GdauiSet: fix gdaui_set_source_get_ref_columns() return value, fix #123
  - SqlParser: fix Vala bindings
+ - Removing Python 2 support to use Python 3 by default
 
 libgda 5.2.9
  - Fix Sun JRE 1.8 detection
