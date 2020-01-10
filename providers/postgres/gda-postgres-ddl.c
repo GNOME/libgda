@@ -849,7 +849,7 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 
 gchar *
 gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc, 
-				 GdaServerOperation *op, G_GNUC_UNUSED GError **error)
+				 GdaServerOperation *op, GError **error)
 {
 	GString *string;
 	const GValue *value;
@@ -901,7 +901,15 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		else
 			g_object_ref (dh);
 
-		g_assert (dh); // If fails, the type in dh is not implemented. It is a bug.
+		if (!dh) {
+		    g_set_error (error,
+				 GDA_SERVER_OPERATION_ERROR,
+				 GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+				 "%s: %s",
+				 G_STRLOC,
+				 _ ("Dataholder type is unknown."));
+		    return NULL;
+		}
 
 		tmp = gda_data_handler_get_sql_from_value (dh, value);
 		g_object_unref (dh);
