@@ -151,9 +151,9 @@ void             gda_sql_expr_take_select    (GdaSqlExpr *expr, GdaSqlStatement 
  */
 /**
  * GdaSqlField:
- * any: 
- * @field_name: 
- * @validity_meta_table_column: 
+ * @any:
+ * @field_name:
+ * @validity_meta_table_column: validity check with a connection
  *
  * This structure represents the name of a table's field.
  */
@@ -330,7 +330,7 @@ typedef enum {
 /**
  * GdaSqlOperation:
  * @any: inheritance structure
- * @operator_type: 
+ * @operator_type: operator type to be used. See #GdaSqlOperatorType
  * @operands: (element-type Gda.SqlExpr)
  * : list of #GdaSqlExpr operands
  *

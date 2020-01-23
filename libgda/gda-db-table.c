@@ -983,10 +983,10 @@ on_error:
 
 /**
  * gda_db_table_drop:
- * @self:
- * @cnc:
- * @ifexists:
- * @error:
+ * @self: An instance of GdaDbTable
+ * @cnc: Open connection to use for the operation
+ * @ifexists: Set to %TRUE if the flag "IF EXISTS" should be added.
+ * @error: A place to store the error
  *
  * Drop table from the database. This mehod will call "DROP TABLE ..." SQL command.
  *
