@@ -1,7 +1,7 @@
 project('libgda', 'vala', 'c',
         license: 'LGPL2+',
         version : '5.91.0',
-        meson_version: '>= 0.48',
+        meson_version: '>= 0.49',
         default_options: [
                         'c_std=gnu11',
                         'warning_level=2',
