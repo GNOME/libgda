@@ -22,80 +22,175 @@
   <sect1 id="installation-installing">
     <title>Installing from the sources</title>
     <para>
-      If you downloaded the source code (in a tarball), you must
-      compile the software. To do so, once you have unpacked
-      the source tree, you must:
+      Starting from version 6.0, &LIBGDA; uses <ulink url="https://mesonbuild.com">Meson</ulink>
+      build system. The following commands should work for most platforms:
       <programlisting>
-<prompt>$ </prompt>./configure
-<prompt>$ </prompt>make
-<prompt>$ </prompt>make install
+<prompt>$ </prompt>git clone https://gitlab.gnome.org/GNOME/libgda.git
+<prompt>$ </prompt>cd libgda
+<prompt>$ </prompt>meson build
+<prompt>$ </prompt>ninja -C build
+<prompt>$ </prompt>ninja -C build install
       </programlisting>
     </para>
     <para>
-      This will generate the makefiles for your specific platform,
-      compile all the source tree, and install the binaries and
-      documentation in your system. This method works in the following environments:
-      <itemizedlist mark="bullet">
-	<listitem><para>On Linux (or other Unix systems, including MacOSX)</para></listitem>
-	<listitem><para>On linux using the MinGW compiler in a cross compilation environment to generate Windows binaries</para></listitem>
-	<listitem><para>On Windows using the MinGW compiler</para></listitem>
-      </itemizedlist>
+      This will compile all the source tree, and install the binaries and
+      documentation in your system. This method should work on all platforms where meson and ninja
+      as well as all dependencies are available.
     </para>
     <para>
-      If you don't find a file named <filename>configure</filename>, usually because you use
-      non packaged sources which come from a Git repository, then
-      execute the <filename>autogen.sh</filename> script which will create and run the
-      generated <filename>configure</filename> file (please not that for this script to work,
-      you'll need to have the autotools components installed on your system).
+      You can specify several arguments to <command>meson</command>. Some arguments are related
+      to the meson system itself, while others are project specific. To get a full list of all 
+      meson specific options a one can type:
+      <programlisting>
+<prompt>$ </prompt>meson help setup
+      </programlisting>
+      All project specific options can be found in <filename>meson_options.txt</filename> file.
+      In meson all parameters should be provided in the forms: <emphasis>-Dparameter=value</emphasis>
     </para>
     <para>
-      You can specify several arguments to <filename>configure</filename> (or
-      <filename>autogen.sh</filename>). You can
-      check all the available arguments by running
-      <command>configure --help</command>, but the most significant ones are:
+	<table frame="all">
+	  <tgroup cols="4" colsep="1" rowsep="1" align="justify">
+	    <thead>
+	      <row>
+		<entry>Option</entry>
+		<entry>Type</entry>
+		<entry>Default value</entry>
+		<entry>Description</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>with-help</entry>
+		<entry>boolean</entry>
+		<entry>true</entry>
+		<entry>Enable building help (GdaBrowser))</entry>
+	      </row>
+	      <row>
+		<entry>with-goocanvas</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable GooCanvas</entry>
+	      </row>
+	      <row>
+		<entry>with-graphviz</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable using Graphviz</entry>
+	      </row>
+	      <row>
+		<entry>with-json</entry>
+		<entry>boolean</entry>
+		<entry>true</entry>
+		<entry>Enable support for JSON</entry>
+	      </row>
+	      <row>
+		<entry>enable-gda-gi</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable GObject Introspection for libgda</entry>
+	      </row>
+	      <row>
+		<entry>disable-sqlcipher</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Disable SQLCipher database provider</entry>
+	      </row>
+	      <row>
+		<entry>with-libsoup</entry>
+		<entry>boolean</entry>
+		<entry>true</entry>
+		<entry>Enable libsoup support</entry>
+	      </row>
+	      <row>
+		<entry>with-libsecret</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable libsecret support</entry>
+	      </row>
+	      <row>
+		<entry>with-gnome-keyring</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable gnome-keyring support</entry>
+	      </row>
+	      <row>
+		<entry>enable-debug</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable debug mode</entry>
+	      </row>
+	      <row>
+		<entry>with-examples</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Compile examples</entry>
+	      </row>
+	      <row>
+		<entry>enable-tools</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable build experimental GUI Tools</entry>
+	      </row>
+	      <row>
+		<entry>glade-catalog-dir</entry>
+		<entry>string</entry>
+		<entry>''</entry>
+		<entry>Use the given directory to install glade catalog files. If glade is not 
+		    available this option is ignored. If it is not given the valaue from pkg-config 
+		    will be used</entry>
+	      </row>
+	      <row>
+		<entry>glade-pixmap-dir</entry>
+		<entry>string</entry>
+		<entry>''</entry>
+		<entry>Use the given directory to install glade pixmap files. If glade is not 
+		  available this option is ignored. If it is not given the valaue from pkg-config 
+		  will be used</entry>
+	      </row>
+	      <row>
+		<entry>gtk_doc</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable documentation generation</entry>
+	      </row>
+	      <row>
+		<entry>experimental</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable experimental features</entry>
+	      </row>
+	      <row>
+		<entry>enable-ldap</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable experimental LDAP provider</entry>
+	      </row>
+	      <row>
+		<entry>enable-web</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable experimental WEB provider</entry>
+	      </row>
+	      <row>
+		<entry>enable-test-flatpak</entry>
+		<entry>boolean</entry>
+		<entry>false</entry>
+		<entry>Enable Terminal Test Application</entry>
+	      </row>
+	    </tbody>
+	   </tgroup>
+	</table>
     </para>
-    <itemizedlist mark="bullet">
-      <listitem>
-        <para>
-          <userinput>--prefix=&lt;directory&gt;</userinput>: Prefix where
-          package will be installed
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--enable-gtk-doc</userinput>: Specify that the library's documentation
-	  must be built (using the gtk-doc program)
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--enable-warnings</userinput>: Specify compilation warnings, to choose from:
-	  min, max, fatal or no.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-&lt;provider name&gt;=[yes/no/&lt;directory&gt;]</userinput>: Specify, for
-	  each supported database type (bdb, mysql, postgres, oracle, java, mdb) if the corresponding
-	  provider is resquired ("yes"), should not be built ("no"), or can be built if its development
-	  files can be detected by the configure script (you can specify a directory to look into if these
-	  files are installed in a non standard location, for example
-	  <userinput>--with-oracle=/local/BASES/OCI32</userinput>).
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--enable-system-sqlite</userinput>: Specify that the SQLite installed with the
-	  system must be used instead of the embedded version.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <userinput>--with-ui</userinput>: Require that the UI extension (using GTK+) be built. This
-	  also enables building the graphical tools such as the control center and GdaBrowser.
-        </para>
-      </listitem>
-    </itemizedlist>
+    <para>
+      The custom prefix for the installation can be provided during the configuration step:
+      <programlisting>
+<prompt>$ </prompt>meson --prefix=/opt/GNOME/progs -Dgtk_doc=true
+      </programlisting>
+      Please review all available options by running:
+      <programlisting>
+<prompt>$</prompt>meson help setup
+      </programlisting>
+    </para>
     <para>
       Libraries needed by providers are searched by default, so, if found, providers are
       compiled by default. Those libraries are searched in hard-coded directories, so
