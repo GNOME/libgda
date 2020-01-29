@@ -2565,8 +2565,13 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 									}
 									if (!dh)
 										dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
-									if (dh)
+									else
+										g_object_ref (dh);
+
+									if (dh) {
 										str = gda_data_handler_get_str_from_value (dh, value);
+										g_object_unref (dh);
+									}
 									else
 										str = gda_value_stringify ((GValue*)value);
 								}
@@ -2711,8 +2716,13 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 									}
 									if (!dh)
 										dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
-									if (dh)
+									else
+										g_object_ref (dh);
+
+									if (dh) {
 										str = gda_data_handler_get_str_from_value (dh, value);
+										g_object_unref (dh);
+									}
 									else
 										str = gda_value_stringify ((GValue*)value);
 								}
