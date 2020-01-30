@@ -2638,13 +2638,18 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean 
 				prov = gda_connection_get_provider (context->cnc);
 				dh = gda_server_provider_get_data_handler_g_type (prov, context->cnc,
 										  G_VALUE_TYPE (expr->value));
-				if (!dh) goto err;
+				if (!dh)
+				  goto err;
+				else
+				  g_object_ref (dh);
 			}
 			else
 				dh = gda_data_handler_get_default (G_VALUE_TYPE (expr->value));
 
-			if (dh)
+			if (dh) {
 				str = gda_data_handler_get_sql_from_value (dh, expr->value);
+				g_object_unref (dh);
+			}
 			else
 				str = gda_value_stringify (expr->value);
 			if (!str) goto err;
@@ -3967,6 +3972,7 @@ scalar_gda_hex_print_func (sqlite3_context *context, int argc, sqlite3_value **a
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
 	dh = gda_data_handler_get_default (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
+	g_object_unref (dh);
 
 	gda_value_free (value);
 	(s3r->sqlite3_result_text) (context, str, -1, g_free);
@@ -3998,6 +4004,7 @@ scalar_gda_hex_print_func2 (sqlite3_context *context, int argc, sqlite3_value **
 	gda_value_take_binary ((value = gda_value_new (GDA_TYPE_BINARY)), bin);
 	dh = gda_data_handler_get_default (GDA_TYPE_BINARY);
 	str = gda_data_handler_get_str_from_value (dh, value);
+	g_object_unref (dh);
 
 	gda_value_free (value);
 

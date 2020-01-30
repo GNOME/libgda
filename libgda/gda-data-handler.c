@@ -252,7 +252,7 @@ gda_data_handler_get_descr (GdaDataHandler *dh)
  *
  * The returned pointer is %NULL if there is no default data handler available for the @for_type data type
  *
- * Returns: (transfer full): a #GdaDataHandler which must not be modified or destroyed.
+ * Returns: (transfer full): a #GdaDataHandler which must be destroyed using g_object_unref()
  *
  * Since: 4.2.3
  */
