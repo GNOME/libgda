@@ -635,6 +635,7 @@ build13 (void)
 	gda_sql_builder_add_field_value_id (b,
 					    gda_sql_builder_add_expr (b, NULL, GDA_TYPE_BINARY, bin), 0);
 
+	gda_binary_free (bin);
 
 #ifdef DEBUG
 	{

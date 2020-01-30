@@ -812,6 +812,7 @@ gda_sql_builder_add_expr_value (GdaSqlBuilder *builder, const GValue *value)
           ldh = gda_data_handler_get_default (G_TYPE_STRING);
           expr->value = gda_value_new (G_TYPE_STRING);
           g_value_take_string (expr->value, gda_data_handler_get_sql_from_value (ldh, value));
+	  g_object_unref (ldh);
         }
       else
         expr->value = gda_value_copy (value);

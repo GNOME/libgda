@@ -478,6 +478,8 @@ get_params_foreach_func (GdaSqlAnyPart *node, GdaSet **params, GError **error)
 				value = gda_data_handler_get_value_from_sql (dh,
 									     g_value_get_string (evalue),
 									     pspec->g_type);
+				g_object_unref (dh);
+
 				if (!value)
 					value = gda_value_new_default (g_value_get_string (evalue));
 				gda_holder_set_default_value (h, value);
@@ -739,8 +741,10 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 {
 	if (value && !gda_value_is_null (value)) {
 		GdaDataHandler *dh;
-		if (context->provider)
+		if (context->provider) {
 			dh = gda_server_provider_get_data_handler_g_type (context->provider, context->cnc, G_VALUE_TYPE (value));
+			g_object_ref (dh); // dh here is not a full transfer.
+		}
 		else  			
 			dh = gda_data_handler_get_default (G_VALUE_TYPE (value));
 
@@ -789,7 +793,12 @@ default_render_value (const GValue *value, GdaSqlRenderingContext *context, GErr
 			}
 		}
 
-		return gda_data_handler_get_sql_from_value (dh, value);
+		gchar *res;
+
+		res = gda_data_handler_get_sql_from_value (dh, value);
+		g_object_unref (dh);
+
+		return res;
 	}
 	else
 		return g_strdup ("NULL");
@@ -1550,13 +1559,18 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 				prov = gda_connection_get_provider (context->cnc);
 				dh = gda_server_provider_get_data_handler_g_type (prov, context->cnc,
 										  G_VALUE_TYPE (expr->value));
-				if (!dh) goto err;
+				if (!dh)
+				  goto err;
+				else
+				  g_object_ref (dh); // We need this, since dh is not a full transfer
 			}
 			else
 				dh = gda_data_handler_get_default (G_VALUE_TYPE (expr->value));
 
-			if (dh)
+			if (dh) {
 				str = gda_data_handler_get_sql_from_value (dh, expr->value);
+				g_object_unref (dh);
+			}
 			else
 				str = gda_value_stringify (expr->value);
 			if (!str) goto err;
