@@ -6,7 +6,6 @@ GDA_TYPE_DB_FKEY
 GdaDbFkeyReferenceAction
 gda_db_fkey_new
 gda_db_fkey_new_from_meta
-gda_db_fkey_free
 gda_db_fkey_get_field_name
 gda_db_fkey_get_ref_field
 gda_db_fkey_set_field
@@ -22,14 +21,48 @@ gda_db_fkey_prepare_create
 </SECTION>
 
 <SECTION>
+<FILE>gda-db-index</FILE>
+<TITLE>GdaDbIndex</TITLE>
+GdaDbIndex
+GDA_TYPE_DB_INDEX
+GDA_DB_INDEX_ERROR
+gda_db_index_error_quark
+gda_db_index_new
+gda_db_index_set_unique
+gda_db_index_get_unique
+gda_db_index_append_field
+gda_db_index_remove_field
+gda_db_index_get_fields
+gda_db_index_drop
+</SECTION>
+
+<SECTION>
+<FILE>gda-db-index-field</FILE>
+<TITLE>GdaDbIndexField</TITLE>
+GDA_TYPE_DB_INDEX_FIELD
+GdaDbIndexSortOrder
+GdaDbIndexCollate
+gda_db_index_field_new
+gda_db_index_field_set_column
+gda_db_index_field_get_column
+gda_db_index_field_set_collate
+gda_db_index_field_get_collate
+gda_db_index_field_set_sort_order
+gda_db_index_field_get_sort_order
+gda_db_index_field_get_collate_str
+gda_db_index_field_get_sort_order_str
+</SECTION>
+
+<SECTION>
 <FILE>gda-db-column</FILE>
 <TITLE>GdaDbColumn</TITLE>
 GdaDbColumn
 GdaDbColumnError
 GDA_TYPE_DB_COLUMN
+GDA_DB_COLUMN_ERROR
+gda_db_column_error_quark
 gda_db_column_new
 gda_db_column_new_from_meta
-gda_db_column_free
 gda_db_column_get_autoinc
 gda_db_column_set_autoinc
 gda_db_column_get_check
@@ -63,7 +96,6 @@ gda_db_column_prepare_create
 GdaDbBase
 GDA_TYPE_DB_BASE
 gda_db_base_compare
-gda_db_base_free
 gda_db_base_get_catalog
 gda_db_base_get_full_name
 gda_db_base_get_name
@@ -89,10 +121,9 @@ gda_db_buildable_write_node
 <TITLE>GdaDbCatalog</TITLE>
 GdaDbCatalog
 GdaDbCatalogError
-GDA_TYPE_DB_CREATOR
-gda_db_catalog_get_type
+GDA_TYPE_DB_CATALOG
+GDA_DB_CATALOG_ERROR
 gda_db_catalog_new
-gda_db_catalog_free
 gda_db_catalog_get_tables
 gda_db_catalog_get_views
 gda_db_catalog_append_table
@@ -103,6 +134,8 @@ gda_db_catalog_parse_file_from_path
 gda_db_catalog_perform_operation
 gda_db_catalog_write_to_file
 gda_db_catalog_write_to_path
+gda_db_catalog_error_quark
+gda_db_catalog_validate_file_from_path
 </SECTION>
 
 <SECTION>
@@ -111,30 +144,33 @@ gda_db_catalog_write_to_path
 GdaDbTable
 GdaDbTableError
 GDA_TYPE_DB_TABLE
+GDA_DB_TABLE_ERROR
 gda_db_table_new
-gda_db_table_new_from_meta
-gda_db_table_free
 gda_db_table_is_valid
 gda_db_table_append_column
 gda_db_table_get_columns
 gda_db_table_append_fkey
 gda_db_table_get_fkeys
 gda_db_table_create
-gda_db_table_is_temp
-gda_db_table_set_temp
 gda_db_table_prepare_create
 gda_db_table_update
 gda_db_table_append_constraint
+gda_db_table_add_column
+gda_db_table_add_index
+gda_db_table_drop
+gda_db_table_error_quark
+gda_db_table_get_is_temp
+gda_db_table_rename
+gda_db_table_set_is_temp
 </SECTION>
 
 <SECTION>
 <FILE>gda-db-view</FILE>
 <TITLE>GdaDbView</TITLE>
 GdaDbView
+GdaDbViewRefAction
 GDA_TYPE_DB_VIEW
 gda_db_view_new
-gda_db_view_new_from_meta
-gda_db_view_free
 gda_db_view_get_defstring
 gda_db_view_set_defstring
 gda_db_view_get_ifnoexist
@@ -145,6 +181,7 @@ gda_db_view_get_replace
 gda_db_view_set_replace
 gda_db_view_prepare_create
 gda_db_view_create
+gda_db_view_drop
 </SECTION>
 
 <SECTION>
@@ -188,18 +225,6 @@ GDA_ATTRIBUTE_NUMERIC_PRECISION
 GDA_ATTRIBUTE_NUMERIC_SCALE
 GDA_ATTRIBUTE_IS_DEFAULT
 GDA_ATTRIBUTE_TREE_NODE_UNKNOWN_CHILDREN
-<SUBSECTION>
-GdaAttributesManager
-GdaAttributesManagerSignal
-GdaAttributesManagerFunc
-gda_attributes_manager_new
-gda_attributes_manager_free
-gda_attributes_manager_set
-gda_attributes_manager_set_full
-gda_attributes_manager_get
-gda_attributes_manager_copy
-gda_attributes_manager_clear
-gda_attributes_manager_foreach
 </SECTION>
 
 <SECTION>
@@ -208,6 +233,9 @@ gda_attributes_manager_foreach
 GdaConfig
 <SUBSECTION>
 GdaDsnInfo
+GDA_TYPE_DSN_INFO
+GdaConfigClass
+GdaConfigError
 gda_config_get_dsn_info
 gda_config_define_dsn
 gda_config_remove_dsn
@@ -269,9 +297,11 @@ GdaConnectionOptions
 GdaConnectionError
 GDA_CONNECTION_ERROR
 gda_connection_new_from_dsn
+gda_connection_new_from_dsn_name
 gda_connection_new_from_string
 gda_connection_open
 gda_connection_open_from_dsn
+gda_connection_open_from_dsn_name
 gda_connection_open_from_string
 GdaConnectionOpenFunc
 gda_connection_open_async
@@ -334,6 +364,14 @@ gda_connection_insert_row_into_table_v
 gda_connection_update_row_in_table
 gda_connection_update_row_in_table_v
 gda_connection_delete_row_from_table
+<SUBSECTION>
+gda_connection_prepare_operation_create_table
+gda_connection_prepare_operation_create_table_v
+gda_connection_prepare_operation_drop_table
+gda_connection_operation_get_sql_identifier_at
+gda_connection_operation_get_sql_identifier_at_path
+<SUBSECTION>
+gda_connection_create_db_catalog
 <SUBSECTION Standard>
 GDA_CONNECTION
 GDA_CONNECTION_CLASS
@@ -370,7 +408,6 @@ gda_data_model_array_get_type
 <TITLE>GdaDataModelDir</TITLE>
 GdaDataModelDir
 GdaDataModelDirClass
-GdaDataModelDirPrivate
 gda_data_model_dir_new
 gda_data_model_dir_get_errors
 gda_data_model_dir_clean_errors
@@ -388,7 +425,6 @@ gda_data_model_dir_get_type
 <TITLE>GdaDataModelImport</TITLE>
 GdaDataModelImport
 GdaDataModelImportClass
-GdaDataModelImportPrivate
 gda_data_model_import_new_file
 gda_data_model_import_new_mem
 gda_data_model_import_new_xml_node
@@ -424,7 +460,6 @@ gda_data_access_wrapper_get_type
 <TITLE>GdaDataPivot</TITLE>
 GdaDataPivot
 GdaDataPivotClass
-GdaDataPivotPrivate
 GdaDataPivotError
 gda_data_pivot_new
 GdaDataPivotFieldType
@@ -446,6 +481,7 @@ gda_data_pivot_get_type
 <TITLE>GdaDataModel</TITLE>
 GdaDataModel
 GdaDataModelError
+GDA_DATA_MODEL_ERROR
 gda_data_model_get_n_rows
 gda_data_model_get_n_columns
 gda_data_model_get_exceptions
@@ -500,7 +536,6 @@ gda_data_model_get_type
 <TITLE>GdaDataProxy</TITLE>
 GdaDataProxy
 GdaDataProxyClass
-GdaDataProxyPrivate
 gda_data_proxy_new
 gda_data_proxy_get_proxied_model
 gda_data_proxy_get_proxied_model_n_cols
@@ -569,8 +604,6 @@ gda_data_model_iter_get_type
 <TITLE>Libgda Initialization</TITLE>
 gda_init
 gda_locale_changed
-gda_get_application_exec_path
-<SUBSECTION Standard>
 </SECTION>
 
 <SECTION>
@@ -732,8 +765,6 @@ GdaServerProviderClass
 GdaServerProviderError
 GDA_SERVER_PROVIDER_ERROR
 GdaServerProviderMeta
-GdaServerProviderAsyncCallback
-GdaServerProviderExecCallback
 gda_server_provider_get_name
 gda_server_provider_get_version
 gda_server_provider_get_server_version
@@ -979,6 +1010,7 @@ gda_value_set_null
 gda_value_new_default
 gda_value_copy
 gda_value_free
+GDA_VALUE_HOLDS_TEXT
 gda_value_new_from_string
 gda_value_set_from_string
 gda_value_set_from_value
@@ -1037,7 +1069,6 @@ gda_value_set_geometric_point
 GdaNumeric
 gda_numeric_new
 gda_numeric_copy
-gda_numeric_copy
 gda_numeric_free
 gda_numeric_get_string
 gda_numeric_get_double
@@ -1054,7 +1085,6 @@ GdaTime
 gda_time_copy
 gda_time_free
 gda_time_valid
-gda_time_change_timezone
 gda_value_get_time
 gda_value_set_time
 gda_value_new_time_from_timet
@@ -1066,7 +1096,6 @@ gda_value_set_short
 gda_value_get_ushort
 gda_value_set_ushort
 <SUBSECTION Standard>
-gda_binary_get_type
 gda_geometric_point_get_type
 gda_numeric_get_type
 gda_time_get_type
@@ -1096,8 +1125,6 @@ gda_data_handler_get_type
 <FILE>gda-handler-string</FILE>
 <TITLE>GdaHandlerString</TITLE>
 GdaHandlerString
-GdaHandlerStringClass
-GdaHandlerStringPriv
 gda_handler_string_new
 gda_handler_string_new_with_provider
 <SUBSECTION Standard>
@@ -1111,8 +1138,6 @@ gda_handler_string_get_type
 <FILE>gda-handler-numerical</FILE>
 <TITLE>GdaHandlerNumerical</TITLE>
 GdaHandlerNumerical
-GdaHandlerNumericalClass
-GdaHandlerNumericalPriv
 gda_handler_numerical_new
 <SUBSECTION Standard>
 GDA_HANDLER_NUMERICAL
@@ -1125,8 +1150,6 @@ gda_handler_numerical_get_type
 <FILE>gda-handler-time</FILE>
 <TITLE>GdaHandlerTime</TITLE>
 GdaHandlerTime
-GdaHandlerTimeClass
-GdaHandlerTimePriv
 gda_handler_time_new
 gda_handler_time_new_no_locale
 gda_handler_time_set_sql_spec
@@ -1143,8 +1166,6 @@ gda_handler_time_get_type
 <FILE>gda-handler-boolean</FILE>
 <TITLE>GdaHandlerBoolean</TITLE>
 GdaHandlerBoolean
-GdaHandlerBooleanClass
-GdaHandlerBooleanPriv
 gda_handler_boolean_new
 <SUBSECTION Standard>
 GDA_HANDLER_BOOLEAN
@@ -1157,8 +1178,6 @@ gda_handler_boolean_get_type
 <FILE>gda-handler-bin</FILE>
 <TITLE>GdaHandlerBin</TITLE>
 GdaHandlerBin
-GdaHandlerBinClass
-GdaHandlerBinPriv
 gda_handler_bin_new
 <SUBSECTION Standard>
 GDA_HANDLER_BIN
@@ -1171,8 +1190,6 @@ gda_handler_bin_get_type
 <FILE>gda-handler-type</FILE>
 <TITLE>GdaHandlerType</TITLE>
 GdaHandlerType
-GdaHandlerTypeClass
-GdaHandlerTypePriv
 gda_handler_type_new
 <SUBSECTION Standard>
 GDA_HANDLER_TYPE
@@ -1185,14 +1202,6 @@ gda_handler_type_get_type
 <FILE>gda-report-engine</FILE>
 <TITLE>GdaReportEngine</TITLE>
 <INCLUDE>libgda-report/gda-report-engine.h</INCLUDE>
-GdaReportEngine
-gda_report_engine_new
-gda_report_engine_new_from_string
-gda_report_engine_new_from_file
-gda_report_engine_declare_object
-gda_report_engine_find_declared_object
-gda_report_engine_run_as_node
-gda_report_engine_run_as_doc
 <SUBSECTION Standard>
 GDA_IS_REPORT_ENGINE
 GDA_REPORT_ENGINE
@@ -1204,10 +1213,6 @@ gda_report_engine_get_type
 <SECTION>
 <FILE>gda-report-document</FILE>
 <TITLE>GdaReportDocument</TITLE>
-GdaReportDocument
-gda_report_document_set_template
-gda_report_document_run_as_html
-gda_report_document_run_as_pdf
 <SUBSECTION Standard>
 GDA_IS_REPORT_DOCUMENT
 GDA_REPORT_DOCUMENT
@@ -1219,8 +1224,6 @@ gda_report_document_get_type
 <SECTION>
 <FILE>gda-report-rml-document</FILE>
 <TITLE>GdaReportRmlDocument</TITLE>
-GdaReportRmlDocument
-gda_report_rml_document_new
 <SUBSECTION Standard>
 GDA_IS_REPORT_RML_DOCUMENT
 GDA_REPORT_RML_DOCUMENT
@@ -1232,8 +1235,6 @@ gda_report_rml_document_get_type
 <SECTION>
 <FILE>gda-report-docbook-document</FILE>
 <TITLE>GdaReportDocbookDocument</TITLE>
-GdaReportDocbookDocument
-gda_report_docbook_document_new
 <SUBSECTION Standard>
 GDA_IS_REPORT_DOCBOOK_DOCUMENT
 GDA_REPORT_DOCBOOK_DOCUMENT
@@ -1246,6 +1247,7 @@ gda_report_docbook_document_get_type
 <FILE>gda-holder</FILE>
 <TITLE>GdaHolder</TITLE>
 GdaHolder
+GdaHolderError
 gda_holder_new
 gda_holder_new_string
 gda_holder_new_boolean
@@ -1310,6 +1312,7 @@ GdaSetSource
 gda_set_get_source_for_model
 gda_set_get_source
 GdaSetGroup
+GDA_SET_GROUP
 gda_set_get_group
 <SUBSECTION Standard>
 GDA_IS_SET
@@ -1632,7 +1635,6 @@ GDA_META_TABLE_FOREIGN_KEY_ON_UPDATE_POLICY
 GDA_META_TABLE_FOREIGN_KEY_ON_DELETE_POLICY
 GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED
 GDA_META_STRUCT_ERROR
-gda_meta_struct_new
 gda_meta_struct_complement
 gda_meta_struct_complement_schema
 gda_meta_struct_complement_default
@@ -1664,7 +1666,6 @@ gda_data_select_compute_modification_statements
 GdaDataSelectConditionType
 gda_data_select_compute_modification_statements_ext
 gda_data_select_compute_columns_attributes
-gda_data_select_rerun
 gda_data_select_add_exception
 gda_data_select_prepare_for_offline
 <SUBSECTION Private>
@@ -1707,9 +1708,6 @@ gda_server_provider_perform_operation_default
 gda_server_provider_handler_use_default
 gda_server_provider_handler_find
 gda_server_provider_handler_declare
-<SUBSECTION>
-gda_server_provider_find_file
-gda_server_provider_load_file_contents
 <SUBSECTION>
 gda_connection_internal_set_provider_data
 gda_connection_internal_get_provider_data_error
@@ -2078,17 +2076,12 @@ gda_provider_meta_schemata
 gda_provider_meta_schematas
 gda_provider_meta_table_column
 gda_provider_meta_table_columns
-gda_provider_meta_table_view
-gda_provider_meta_tables_views
 gda_provider_meta_trigger
 gda_provider_meta_triggers
 gda_provider_meta_udt
 gda_provider_meta_udt_col
 gda_provider_meta_udt_cols
 gda_provider_meta_udts
-gda_provider_meta_view_col
-gda_provider_meta_view_cols
-gda_provider_meta_views_cols
 gda_provider_open_connection
 gda_provider_perform_operation
 gda_provider_prepare_connection
