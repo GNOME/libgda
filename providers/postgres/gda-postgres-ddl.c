@@ -1074,7 +1074,15 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 			else
 				g_object_ref (dh);
 		
-			g_assert (dh); // If fails, the type in dh is not implemented. It is a bug.
+			if (!dh) {
+				g_set_error (error,
+					     GDA_SERVER_OPERATION_ERROR,
+					     GDA_SERVER_OPERATION_INCORRECT_VALUE_ERROR,
+					     "%s: %s",
+					     G_STRLOC,
+					     _ ("Dataholder type is unknown. Report this as a bug."));
+				return NULL;
+			}
 			g_string_append (string, " VALID UNTIL ");
 			tmp = gda_data_handler_get_sql_from_value (dh, value);
 			g_object_unref (dh);
