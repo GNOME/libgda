@@ -83,7 +83,7 @@ gnome_module.gtkdoc(
         main_xml: project_package+'-docs.xml',
         namespace: 'gda',
         mode: 'none',
-        src_dir: join_paths(meson.source_root(),'libgda'),
+        src_dir: [meson.source_root()/'libgda', meson.build_root()/'libgda'],
         dependencies: [libgda_doc_dep, libgda_dep],
         scan_args: [
                 '--deprecated-guards="GDA_DISABLE_DEPRECATED"',

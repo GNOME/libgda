@@ -115,6 +115,7 @@ void                              gda_time_set_fraction (GdaTime* time, gulong f
 GTimeZone*                        gda_time_get_tz (const GdaTime *time);
 glong                             gda_time_get_timezone (const GdaTime *time);
 
+G_DEPRECATED
 gboolean                          gda_time_valid (const GdaTime *time);
 GdaTime                          *gda_time_to_timezone (GdaTime *time, GTimeZone *ntz);
 GdaTime                          *gda_time_to_utc (GdaTime *time);
