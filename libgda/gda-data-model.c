@@ -1534,7 +1534,7 @@ export_to_text_separated (GdaDataModel *model, const gint *cols, gint nb_cols,
 				}
 				else if (g_type_is_a (G_VALUE_TYPE (value), GDA_TYPE_TIME)) {
 					const GdaTime *tim = gda_value_get_time (value);
-					if (! gda_time_valid (tim))
+					if (!tim)
 						value = NULL;					
 				}
 				else if (g_type_is_a (G_VALUE_TYPE (value), G_TYPE_DATE_TIME)) {
