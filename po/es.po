@@ -4,14 +4,14 @@
 #
 # Jorge González <jorgegonz@svn.gnome.org>, 200, 2010, 2011, 2011.
 # Rodrigo Lledó <rodhos92@gmail.com>, 2019.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2019.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2010-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2019-11-25 18:22+0000\n"
-"PO-Revision-Date: 2019-11-27 09:29+0100\n"
+"POT-Creation-Date: 2020-01-30 23:54+0000\n"
+"PO-Revision-Date: 2020-01-31 08:57+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -86,7 +86,7 @@ msgstr "No se pudo guardar la definición del DSN: %s"
 #: ../libgda/gda-data-pivot.c:1350 ../libgda/gda-data-pivot.c:1464
 #: ../libgda/gda-data-proxy.c:3099 ../libgda/gda-data-select.c:2384
 #: ../libgda/gda-data-select.c:2394 ../libgda/gda-data-select.c:3777
-#: ../libgda/gda-holder.c:504 ../libgda/gda-holder.c:1966
+#: ../libgda/gda-holder.c:504 ../libgda/gda-holder.c:1975
 #: ../libgda/gda-meta-store.c:1209 ../libgda/gda-meta-store.c:1215
 #: ../libgda/gda-server-operation.c:656 ../libgda/gda-server-operation.c:1111
 #: ../libgda/gda-set.c:1158 ../libgda/gda-tree-mgr-select.c:142
@@ -94,12 +94,12 @@ msgstr "No se pudo guardar la definición del DSN: %s"
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3060
-#: ../libgda/sqlite/gda-sqlite-provider.c:3072
-#: ../libgda/sqlite/gda-sqlite-provider.c:3283
-#: ../libgda/sqlite/gda-sqlite-provider.c:3621
-#: ../libgda/sqlite/gda-sqlite-provider.c:3633
-#: ../libgda/sqlite/gda-sqlite-provider.c:3735
+#: ../libgda/sqlite/gda-sqlite-provider.c:3065
+#: ../libgda/sqlite/gda-sqlite-provider.c:3077
+#: ../libgda/sqlite/gda-sqlite-provider.c:3288
+#: ../libgda/sqlite/gda-sqlite-provider.c:3626
+#: ../libgda/sqlite/gda-sqlite-provider.c:3638
+#: ../libgda/sqlite/gda-sqlite-provider.c:3740
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -1174,7 +1174,7 @@ msgstr "No se pudo volcar el contenido del modelo de datos: %s"
 msgid "Data model does not support backward cursor move"
 msgstr "El modelo de datos no soporta mover el cursor hacia atrás"
 
-#: ../libgda/gda-data-model.c:2822 ../tools/browser/gdaui-entry-import.c:212
+#: ../libgda/gda-data-model.c:2832 ../tools/browser/gdaui-entry-import.c:212
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
 msgid "%d row"
@@ -1182,7 +1182,7 @@ msgid_plural "%d rows"
 msgstr[0] "%d fila"
 msgstr[1] "%d filas"
 
-#: ../libgda/gda-data-model.c:2824
+#: ../libgda/gda-data-model.c:2834
 #, c-format
 msgid "0 row"
 msgstr "fila 0"
@@ -1871,7 +1871,6 @@ msgstr "Lista de columnas vacía"
 
 #: ../libgda/gda-db-table.c:921 ../libgda/gda-db-table.c:1103
 #, c-format
-#| msgid "Gda server operations list"
 msgid "ServerOperation is NULL"
 msgstr "ServerOperation es NULL"
 
@@ -1884,12 +1883,12 @@ msgstr "No se pudo establecer el valor del mantenedor: %s"
 msgid "The 'g-type' property cannot be changed"
 msgstr "No se puede modificar la propiedad «g-type»"
 
-#: ../libgda/gda-holder.c:936
+#: ../libgda/gda-holder.c:945
 #, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "No se puede convertir la cadena al tipo «%s»"
 
-#: ../libgda/gda-holder.c:1004
+#: ../libgda/gda-holder.c:1013
 #, c-format
 msgid ""
 "Can't use this method to set value because there is already a static value"
@@ -1897,12 +1896,12 @@ msgstr ""
 "No se puede usar este método para modificar el valor porque ya existe un "
 "valor estático"
 
-#: ../libgda/gda-holder.c:1035 ../libgda/gda-holder.c:1181
+#: ../libgda/gda-holder.c:1044 ../libgda/gda-holder.c:1190
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
 msgstr "(%s): El mantenedor no permite valores nulos (NULL)"
 
-#: ../libgda/gda-holder.c:1042
+#: ../libgda/gda-holder.c:1051
 #, c-format
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
@@ -1910,13 +1909,13 @@ msgstr ""
 "(%s): Tipo de valor del mantenedor erróneo, se esperaba el tipo «%s» cuando "
 "el tipo de valor es «%s»"
 
-#: ../libgda/gda-holder.c:1188
+#: ../libgda/gda-holder.c:1197
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr ""
 "(%s): Tipo de parámetro erróneo: se esperaba el tipo «%s» y se obtuvo «%s»"
 
-#: ../libgda/gda-holder.c:1656
+#: ../libgda/gda-holder.c:1665
 #, c-format
 msgid ""
 "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
@@ -1925,7 +1924,7 @@ msgstr ""
 "de origen %d (tipo %s)"
 
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1746
+#: ../libgda/gda-holder.c:1755
 #, c-format
 msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
@@ -1934,11 +1933,11 @@ msgstr ""
 "No se pueden vincular los mantenedores si su tipo no es el mismo, rompiendo "
 "el vínculo existente donde «%s» estaba vinculado a «%s»"
 
-#: ../libgda/gda-holder.c:1799
+#: ../libgda/gda-holder.c:1808
 msgid "Cannot bind holders if their type is not the same"
 msgstr "No se pueden vincular los mantenedores si su tipo no es el mismo"
 
-#: ../libgda/gda-holder.c:1965
+#: ../libgda/gda-holder.c:1974
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
@@ -2629,7 +2628,7 @@ msgstr ""
 "Reemplazar el modelo de datos debe tener las mismas características que el "
 "modelo de datos al que reemplaza"
 
-#: ../libgda/gda-sql-builder.c:241 ../libgda/gda-sql-builder.c:1400
+#: ../libgda/gda-sql-builder.c:241 ../libgda/gda-sql-builder.c:1401
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "La parte con ID %u es desconocida"
@@ -2645,13 +2644,13 @@ msgstr "El constructor SQL (SqlBuilder) está vacío"
 #: ../libgda/gda-sql-builder.c:377 ../libgda/gda-sql-builder.c:440
 #: ../libgda/gda-sql-builder.c:471 ../libgda/gda-sql-builder.c:598
 #: ../libgda/gda-sql-builder.c:641 ../libgda/gda-sql-builder.c:705
-#: ../libgda/gda-sql-builder.c:776 ../libgda/gda-sql-builder.c:1156
-#: ../libgda/gda-sql-builder.c:1245 ../libgda/gda-sql-builder.c:1292
-#: ../libgda/gda-sql-builder.c:1382 ../libgda/gda-sql-builder.c:1434
-#: ../libgda/gda-sql-builder.c:1477 ../libgda/gda-sql-builder.c:1528
-#: ../libgda/gda-sql-builder.c:1583 ../libgda/gda-sql-builder.c:1620
-#: ../libgda/gda-sql-builder.c:1798 ../libgda/gda-sql-builder.c:1825
-#: ../libgda/gda-sql-builder.c:1861
+#: ../libgda/gda-sql-builder.c:776 ../libgda/gda-sql-builder.c:1157
+#: ../libgda/gda-sql-builder.c:1246 ../libgda/gda-sql-builder.c:1293
+#: ../libgda/gda-sql-builder.c:1383 ../libgda/gda-sql-builder.c:1435
+#: ../libgda/gda-sql-builder.c:1478 ../libgda/gda-sql-builder.c:1529
+#: ../libgda/gda-sql-builder.c:1584 ../libgda/gda-sql-builder.c:1621
+#: ../libgda/gda-sql-builder.c:1799 ../libgda/gda-sql-builder.c:1826
+#: ../libgda/gda-sql-builder.c:1862
 msgid "Wrong statement type"
 msgstr "Tipo de declaración erróneo"
 
@@ -2660,12 +2659,12 @@ msgstr "Tipo de declaración erróneo"
 msgid "Could not convert value to type '%s', value not defined"
 msgstr "No se pudo convertir el valor al tipo «%s», el valor no está definido"
 
-#: ../libgda/gda-sql-builder.c:1313
+#: ../libgda/gda-sql-builder.c:1314
 #, c-format
 msgid "Unknown left part target ID %u"
 msgstr "Se desconoce el ID de destino de la parte izquierda %u"
 
-#: ../libgda/gda-sql-builder.c:1318
+#: ../libgda/gda-sql-builder.c:1319
 #, c-format
 msgid "Unknown right part target ID %u"
 msgstr "Se desconoce el ID de destino de la parte derecha %u"
@@ -2684,28 +2683,28 @@ msgstr "Sin nombre"
 msgid "Can't handle default value of type '%s'"
 msgstr "No se puede manejar el valor predeterminado de tipo «%s»"
 
-#: ../libgda/gda-statement.c:732
+#: ../libgda/gda-statement.c:734
 msgid "Missing SQL code"
 msgstr "Falta código SQL"
 
-#: ../libgda/gda-statement.c:752
+#: ../libgda/gda-statement.c:756
 #, c-format
 msgid "No data handler for type '%s'"
 msgstr "No existe un gestor de datos para el tipo «%s»"
 
-#: ../libgda/gda-statement.c:1330
+#: ../libgda/gda-statement.c:1339
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
 "Tipo de parámetro erróneo para «%s»: se esperaba el tipo «%s» y se obtuvo "
 "«%s»"
 
-#: ../libgda/gda-statement.c:1342
+#: ../libgda/gda-statement.c:1351
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "Falta el parámetro «%s»"
 
-#: ../libgda/gda-statement.c:1354 ../libgda/sqlite/gda-sqlite-provider.c:3463
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3468
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2239
 #: ../providers/postgres/gda-postgres-provider.c:2059
@@ -2714,19 +2713,19 @@ msgstr "Falta el parámetro «%s»"
 msgid "Parameter '%s' is invalid"
 msgstr "El parámetro «%s» no es válido"
 
-#: ../libgda/gda-statement.c:1400
+#: ../libgda/gda-statement.c:1409
 msgid "Unnamed parameter"
 msgstr "Parámetro sin nombre"
 
-#: ../libgda/gda-statement.c:1676
+#: ../libgda/gda-statement.c:1690
 msgid "Malformed table name"
 msgstr "El nombre de la tabla está mal formado"
 
-#: ../libgda/gda-statement.c:2174
+#: ../libgda/gda-statement.c:2188
 msgid "Join is not in a FROM statement"
 msgstr "La parte «JOIN» no está en una declaración «FROM»"
 
-#: ../libgda/gda-statement.c:2181
+#: ../libgda/gda-statement.c:2195
 msgid "Could not find target the join is for"
 msgstr "No se pudo encontrar el destino para la unión («JOIN»)"
 
@@ -2861,7 +2860,7 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "No se puede reescribir una sentencia que no sea INSERT o UPDATE"
 
 #: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
-#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3444
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3449
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2219
 #: ../providers/postgres/gda-postgres-provider.c:2041
@@ -3225,15 +3224,15 @@ msgstr "Operación SIMILAR no soportada"
 msgid "Operator type not supported"
 msgstr "Tipo de operador no soportado"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2942
+#: ../libgda/sqlite/gda-sqlite-provider.c:2947
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1638
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "No se permite un parámetro si nombre en las declaraciones preparadas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3059
-#: ../libgda/sqlite/gda-sqlite-provider.c:3071
+#: ../libgda/sqlite/gda-sqlite-provider.c:3064
+#: ../libgda/sqlite/gda-sqlite-provider.c:3076
 #: ../providers/mysql/gda-mysql-provider.c:1963
 #: ../providers/postgres/gda-postgres-provider.c:1785
 #, c-format
@@ -3242,7 +3241,7 @@ msgstr ""
 "No se puede construir una declaración SELECT para obtener la última fila "
 "insertada: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3105
+#: ../libgda/sqlite/gda-sqlite-provider.c:3110
 #: ../providers/mysql/gda-mysql-provider.c:1991
 #: ../providers/postgres/gda-postgres-provider.c:1813
 msgid "SELECT statement to get last inserted row did not return any row"
@@ -3250,7 +3249,7 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada no devolvió "
 "ningún valor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3109
+#: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1995
 #: ../providers/postgres/gda-postgres-provider.c:1817
 #, c-format
@@ -3259,21 +3258,21 @@ msgstr ""
 "La declaración SELECT para obtener la última fila insertada devolvió "
 "demasiadas (%d) filas"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3173
+#: ../libgda/sqlite/gda-sqlite-provider.c:3178
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "La declaración preparada no tiene una GdaStatement asociada"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3214
-#: ../libgda/sqlite/gda-sqlite-provider.c:3251
+#: ../libgda/sqlite/gda-sqlite-provider.c:3219
+#: ../libgda/sqlite/gda-sqlite-provider.c:3256
 msgid "Can't create SQLite BLOB handle"
 msgstr "No se puede crear el gestor BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3218
-#: ../libgda/sqlite/gda-sqlite-provider.c:3256
+#: ../libgda/sqlite/gda-sqlite-provider.c:3223
+#: ../libgda/sqlite/gda-sqlite-provider.c:3261
 msgid "Can't write to SQLite's BLOB"
 msgstr "No se puede escribir en el BLOB de SQLite"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3241
+#: ../libgda/sqlite/gda-sqlite-provider.c:3246
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -3282,17 +3281,17 @@ msgstr ""
 "No se puede obtener el gestor de SQLite BLOB (el tipo informado es «%s»), "
 "informe del error en http://gitlab.gnome.org/GNOME/libgda/issues"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3266
+#: ../libgda/sqlite/gda-sqlite-provider.c:3271
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "No se puede identificar el id de fila (ROWID) del BLOB que rellenar"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3377
+#: ../libgda/sqlite/gda-sqlite-provider.c:3382
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Declaración vacía"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3419
-#: ../libgda/sqlite/gda-sqlite-provider.c:3422
+#: ../libgda/sqlite/gda-sqlite-provider.c:3424
+#: ../libgda/sqlite/gda-sqlite-provider.c:3427
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2194
@@ -3304,7 +3303,7 @@ msgstr "Declaración vacía"
 msgid "Missing parameter(s) to execute query"
 msgstr "Falta(n) parámetro(s) para ejecutar la consulta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3482
+#: ../libgda/sqlite/gda-sqlite-provider.c:3487
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2258
 #: ../providers/postgres/gda-postgres-provider.c:2078
@@ -3314,53 +3313,53 @@ msgstr ""
 "No se puede reescribir la declaración para gestionar los valores "
 "predeterminados"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3603
+#: ../libgda/sqlite/gda-sqlite-provider.c:3608
 #: ../providers/mysql/gda-mysql-provider.c:2514
 msgid "Can't get BLOB's length"
 msgstr "No se puede obtener la longitud del BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3605
+#: ../libgda/sqlite/gda-sqlite-provider.c:3610
 #: ../providers/mysql/gda-mysql-provider.c:2516
 msgid "BLOB is too big"
 msgstr "El BLOB es demasiado grande"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3690
+#: ../libgda/sqlite/gda-sqlite-provider.c:3695
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "No existe un gestor del tipo de datos «%s»"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3757
+#: ../libgda/sqlite/gda-sqlite-provider.c:3762
 msgid "Could not start transaction to create BLOB"
 msgstr "No se pudo establecer la el parámetro ID de la transacción XA"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3932
-#: ../libgda/sqlite/gda-sqlite-provider.c:3953
-#: ../libgda/sqlite/gda-sqlite-provider.c:4043
-#: ../libgda/sqlite/gda-sqlite-provider.c:4063
-#: ../libgda/sqlite/gda-sqlite-provider.c:4086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3937
+#: ../libgda/sqlite/gda-sqlite-provider.c:3958
+#: ../libgda/sqlite/gda-sqlite-provider.c:4050
+#: ../libgda/sqlite/gda-sqlite-provider.c:4070
+#: ../libgda/sqlite/gda-sqlite-provider.c:4093
 msgid "Function requires one argument"
 msgstr "La función requiere un argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3985
-#: ../libgda/sqlite/gda-sqlite-provider.c:4118
+#: ../libgda/sqlite/gda-sqlite-provider.c:3991
+#: ../libgda/sqlite/gda-sqlite-provider.c:4125
 msgid "Function requires two arguments"
 msgstr "La función requiere dos argumento"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4023
+#: ../libgda/sqlite/gda-sqlite-provider.c:4030
 msgid "Function requires one or two arguments"
 msgstr "La función requiere uno o dos argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4158
-#: ../libgda/sqlite/gda-sqlite-provider.c:4265
+#: ../libgda/sqlite/gda-sqlite-provider.c:4165
+#: ../libgda/sqlite/gda-sqlite-provider.c:4272
 msgid "Function requires two or three arguments"
 msgstr "La función requiere dos o tres argumentos"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4212
+#: ../libgda/sqlite/gda-sqlite-provider.c:4219
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Error en la expresión regular «%s» de SQLite:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4213
+#: ../libgda/sqlite/gda-sqlite-provider.c:4220
 msgid "Invalid regular expression"
 msgstr "Expresión regular no válida"
 
@@ -3561,17 +3560,17 @@ msgstr "El modelo de datos que representa la tabla es de sólo lectura"
 msgid "Internal GdaVproviderHub error"
 msgstr "Error interno de GdaVproviderHub"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:614
-#: ../libgda/sql-parser/gda-sql-parser.c:705
+#: ../libgda/sql-parser/gda-sql-parser.c:617
+#: ../libgda/sql-parser/gda-sql-parser.c:708
 msgid "SQL code does not contain any statement"
 msgstr "El código SQL no contiene ninguna declaración"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:789
+#: ../libgda/sql-parser/gda-sql-parser.c:792
 #, c-format
 msgid "Syntax error at line %d, column %d"
 msgstr "Error de sintaxis en la línea %d, columna %d"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:803
+#: ../libgda/sql-parser/gda-sql-parser.c:806
 #, c-format
 msgid "Overflow error at line %d, column %d"
 msgstr "Error de sobrecarga en la línea %d, columna %d"
@@ -7338,6 +7337,10 @@ msgstr "No se pudo reservar el localizador Lob"
 #: ../providers/oracle/gda-oracle-util.c:640
 msgid "Could not copy Lob locator"
 msgstr "No se pudo copiar el localizador Lob"
+
+#: ../providers/postgres/gda-postgres-ddl.c:910
+msgid "Dataholder type is unknown."
+msgstr "No se conoce el tipo del contenedor de datos"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
