@@ -1673,11 +1673,11 @@ void
 gda_time_set_hour (GdaTime* time, gushort hour)
 {
 	g_return_if_fail (time != NULL);
-	gda_time_new_from_values (hour,
-	                          gda_time_get_minute (time),
-	                          gda_time_get_second (time),
-	                          gda_time_get_fraction (time),
-	                          gda_time_get_timezone (time));
+	time = gda_time_new_from_values (hour,
+			                  gda_time_get_minute (time),
+			                  gda_time_get_second (time),
+			                  gda_time_get_fraction (time),
+			                  gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_minute:
@@ -1702,11 +1702,11 @@ void
 gda_time_set_minute (GdaTime* time, gushort minute)
 {
 	g_return_if_fail (time != NULL);
-	gda_time_new_from_values (gda_time_get_hour (time),
-	                          minute,
-	                          gda_time_get_second (time),
-	                          gda_time_get_fraction (time),
-	                          gda_time_get_timezone (time));
+	time = gda_time_new_from_values (gda_time_get_hour (time),
+			                  minute,
+			                  gda_time_get_second (time),
+			                  gda_time_get_fraction (time),
+			                  gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_second:
@@ -1731,11 +1731,11 @@ void
 gda_time_set_second (GdaTime* time, gushort second)
 {
 	g_return_if_fail (time != NULL);
-	gda_time_new_from_values (gda_time_get_hour (time),
-	                          gda_time_get_minute (time),
-	                          second,
-	                          gda_time_get_fraction (time),
-	                          gda_time_get_timezone (time));
+	time = gda_time_new_from_values (gda_time_get_hour (time),
+			                  gda_time_get_minute (time),
+			                  second,
+			                  gda_time_get_fraction (time),
+			                  gda_time_get_timezone (time));
 }
 /**
  * gda_time_get_fraction:
@@ -1767,7 +1767,7 @@ void
 gda_time_set_fraction (GdaTime* time, gulong fraction)
 {
 	g_return_if_fail (time != NULL);
-	gda_time_new_from_values (gda_time_get_hour (time),
+	time = gda_time_new_from_values (gda_time_get_hour (time),
 	                          gda_time_get_minute (time),
 	                          gda_time_get_second (time),
 	                          fraction,
@@ -1815,7 +1815,7 @@ void
 gda_time_set_timezone (GdaTime* time, glong timezone)
 {
 	g_return_if_fail (time != NULL);
-	gda_time_new_from_values (gda_time_get_hour (time),
+	time = gda_time_new_from_values (gda_time_get_hour (time),
 	                          gda_time_get_minute (time),
 	                          gda_time_get_second (time),
 	                          gda_time_get_fraction (time),
@@ -1825,6 +1825,8 @@ gda_time_set_timezone (GdaTime* time, glong timezone)
 /**
  * gda_time_valid:
  * @time: a #GdaTime value to check if it is valid
+ *
+ * A time is always valid, so this method has been deprecated.
  *
  * Returns: #TRUE if #GdaTime is valid; %FALSE otherwise.
  *
