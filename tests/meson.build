@@ -207,6 +207,29 @@ test('SqlRenderer', tsqlr,
 		]
 	)
 
+tsop = executable('test-server-operation-postgresql',
+	['test-server-operation-postgresql.c'] ,
+	c_args: [
+		'-include',
+		meson.build_root() + '/config.h',
+		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		],
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('ServerOperationPostgreSQL', tsop,
+	env: [
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
+		]
+	)
+
 tso = executable('test-server-operation-sqlite',
 	['test-server-operation-sqlite.c'] ,
 	c_args: [
@@ -229,7 +252,6 @@ test('ServerOperationSQLite', tso,
 		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
-
 tmp = executable('test-provider-meta',
 	['test-provider-meta.c'] ,
 	c_args: test_cargs,
