@@ -71,7 +71,7 @@ library_build:
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson _build --prefix=/usr -Denable-debug=true -Dgtk_doc=true -Dc_args="-Werror"
+  - meson --prefix=/usr --buildtype=debug -Dgtk_doc=true --werror _build
   - cd _build
   - ninja
   - broadwayd &
