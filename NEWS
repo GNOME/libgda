@@ -7,7 +7,7 @@ libgda-6.0.0
  - Added database generation from an XML file (GdaDBCatalog)
  - Updated internal SQLite3 version
  - Added "exxamples" directory as a target to be built (work in progress)
- - Numerous improvements in CI organisation.
+ - Numerous improvements in CI organization.
  - Documentation reorganisation and porting to the new format (in progress)
  - Code modernized for multiple objects
  - Added new API for GdaConnection object
@@ -23,6 +23,8 @@ libgda-6.0.0
         - es       Daniel Mustieles <daniel.mustieles@gmail.com>
         - cs       Marek Černocký <marek.cernocky@advantech.com>
         - hu       Balázs Úr <balazs@urbalazs.hu>
+        - id       Andika Triwidada <atriwidada@gnome.org>
+        - sv       Josef Andersson <l10nl18nsweja@gmail.com>
 
 ================================================================================
 
