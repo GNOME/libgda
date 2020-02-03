@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda.master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-01-30 23:54+0000\n"
-"PO-Revision-Date: 2020-01-31 08:57+0100\n"
+"POT-Creation-Date: 2020-01-31 16:40+0000\n"
+"PO-Revision-Date: 2020-02-03 12:10+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Spanish - Spain <gnome-es-list@gnome.org>\n"
 "Language: es_ES\n"
@@ -7341,6 +7341,12 @@ msgstr "No se pudo copiar el localizador Lob"
 #: ../providers/postgres/gda-postgres-ddl.c:910
 msgid "Dataholder type is unknown."
 msgstr "No se conoce el tipo del contenedor de datos"
+
+#: ../providers/postgres/gda-postgres-ddl.c:1083
+#| msgid "Dataholder type is unknown."
+msgid "Dataholder type is unknown. Report this as a bug."
+msgstr ""
+"No se conoce el tipo del contenedor de datos. Informe de esto como un error."
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
