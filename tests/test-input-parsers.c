@@ -292,7 +292,7 @@ test_date_handler (void)
 TestTime timedata2[] = {
 	{"112256Z",TRUE, 11, 22, 56, 0, 0},
 	{"012256Z",TRUE, 1, 22, 56, 0, 0},
-	{"012260Z",FALSE, 1, 22, 0, 0, 0},
+	{"012260Z",TRUE, 1, 22, 59, 0, 0},
 	{"016045Z",FALSE, 1, 0, 0, 0, 0},
 	{"242345Z",FALSE, 0, 0, 0, 0, 0},
 	{"235959Z",TRUE, 23, 59, 59, 0, 0},
@@ -428,12 +428,14 @@ test_timestamp_handler (void)
 				gda_value_free (value);
 
 				g_print ("test_timestamp_handler: Result for gda_data_handler_get_value_from_str ():\n"
-						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\\n"
-						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld (SF=%f) TZ=%ld\\n",
+						 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
+						 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld (SF=%f) TZ=%ld\n",
 						 td.exp_day, td.exp_month, td.exp_year,
 						 tt.hour, tt.minute, tt.second, tt.fraction, tt.timezone,
-						 g_date_time_get_year (timestamp), g_date_time_get_month (timestamp),
-					 g_date_time_get_day_of_month (timestamp), g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
+						 g_date_time_get_day_of_month (timestamp),
+						 g_date_time_get_month (timestamp),
+						 g_date_time_get_year (timestamp),
+					 g_date_time_get_hour (timestamp), g_date_time_get_minute (timestamp),
 					 g_date_time_get_second (timestamp),
 					 (glong) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0),
 					 g_date_time_get_seconds (timestamp),
