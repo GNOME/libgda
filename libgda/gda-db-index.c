@@ -151,8 +151,8 @@ gda_db_index_append_field  (GdaDbIndex *self,
             priv->mFieldList = g_slist_append (priv->mFieldList, g_object_ref (field));
           else
             {
-              gda_db_index_field_set_collate (GDA_DB_INDEX_FIELD (it->data),
-                                              gda_db_index_field_get_collate (field));
+	      gda_db_index_field_set_collate (GDA_DB_INDEX_FIELD (it->data),
+					      gda_db_index_field_get_collate (field));
               gda_db_index_field_set_sort_order(GDA_DB_INDEX_FIELD (it->data),
                                                 gda_db_index_field_get_sort_order (field));
             }

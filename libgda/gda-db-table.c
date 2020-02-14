@@ -1081,7 +1081,6 @@ gda_db_table_add_index  (GdaDbTable *self,
   g_return_val_if_fail(GDA_IS_DB_TABLE (self), FALSE);
   g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
   g_return_val_if_fail(GDA_IS_DB_INDEX(index), FALSE);
-  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
   if (!gda_connection_is_opened (cnc))
     {
@@ -1120,7 +1119,7 @@ gda_db_table_add_index  (GdaDbTable *self,
     goto on_error;
 
   if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifnotexists),
-                                          error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
+					  error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
     goto on_error;
 
   GSList *it = gda_db_index_get_fields (index);
@@ -1138,7 +1137,7 @@ gda_db_table_add_index  (GdaDbTable *self,
         goto on_error;
 
       if (!gda_server_operation_set_value_at (op,
-                                              gda_db_index_field_get_collate_str (it->data),
+                                              gda_db_index_field_get_collate (it->data),
                                               error,
                                               "/INDEX_FIELDS_S/%d/INDEX_COLLATE",
                                               i))
