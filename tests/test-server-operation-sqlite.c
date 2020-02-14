@@ -954,7 +954,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_column_set_name (fcol, "name");
 
   gda_db_index_field_set_column (field, fcol);
-  gda_db_index_field_set_collate (field, GDA_DB_INDEX_COLLATE_BINARY);
+  gda_db_index_field_set_collate (field, "BINARY");
   gda_db_index_field_set_sort_order (field, GDA_DB_INDEX_SORT_ORDER_ASC);
 
   gda_db_index_append_field (index, field);

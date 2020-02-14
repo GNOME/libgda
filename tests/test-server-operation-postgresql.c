@@ -41,6 +41,8 @@
 
 #define PROVIDER_NAME "PostgreSQL"
 
+#define GDA_PGSQL_ERROR_HANDLE(e) (g_print("Error: %s: %s\n", G_STRLOC, e && e->message ? e->message : "No default"));
+
 typedef struct
 {
   GdaConnection *cnc;
@@ -58,17 +60,22 @@ test_server_operation_start (TestObjectFixture *fixture,
 
   if (!db_string)
     {
-      g_print ("Please set POSTGRESQL_DBCREATE_PARAMS variable"
-               "with host,user and port (usually 5432)");
+      g_print ("Please set POSTGRESQL_CNC_PARAMS variable"
+               "with dbname, host, user and port (usually 5432)\n");
       g_print ("Test will not be performed\n");
       return;
     }
+
+  GError *error = NULL;
 
   fixture->cnc = gda_connection_open_from_string (PROVIDER_NAME,
                                                   db_string,
                                                   NULL,
                                                   GDA_CONNECTION_OPTIONS_NONE,
-                                                  NULL);
+                                                  &error);
+
+  if (!fixture->cnc)
+    GDA_PGSQL_ERROR_HANDLE(error);
 
   g_assert_nonnull (fixture->cnc);
 
@@ -91,6 +98,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                   G_GNUC_UNUSED gconstpointer user_data)
 {
   GdaServerOperation *op = NULL;
+  GError *error = NULL;
 
 /* CREATE_TABLE operation */
   op = gda_server_provider_create_operation (fixture->provider,
@@ -248,7 +256,10 @@ test_server_operation_operations (TestObjectFixture *fixture,
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE(error);
 
   g_assert_true (res);
 
@@ -958,7 +969,6 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_column_set_name (fcol, "name");
 
   gda_db_index_field_set_column (field, fcol);
-  gda_db_index_field_set_collate (field, GDA_DB_INDEX_COLLATE_BINARY);
   gda_db_index_field_set_sort_order (field, GDA_DB_INDEX_SORT_ORDER_ASC);
 
   gda_db_index_append_field (index, field);

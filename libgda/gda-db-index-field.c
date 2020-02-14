@@ -23,7 +23,7 @@
 typedef struct
 {
   GdaDbColumn *mColumn;
-  GdaDbIndexCollate mCollate;
+  gchar *mCollate;
   GdaDbIndexSortOrder mSortOrder;
 } GdaDbIndexFieldPrivate;
 
@@ -64,6 +64,9 @@ gda_db_index_field_dispose (GObject *object)
 
   g_object_unref (priv->mColumn);
 
+  if (priv->mCollate)
+    g_free (priv->mCollate);
+
   G_OBJECT_CLASS (gda_db_index_field_parent_class)->dispose (object);
 }
 
@@ -81,7 +84,7 @@ gda_db_index_field_init (GdaDbIndexField *self)
   GdaDbIndexFieldPrivate *priv = gda_db_index_field_get_instance_private (self);
 
   priv->mColumn = NULL;
-  priv->mCollate = GDA_DB_INDEX_COLLATE_BINARY;
+  priv->mCollate = NULL;
   priv->mSortOrder = GDA_DB_INDEX_SORT_ORDER_ASC;
 }
 
@@ -128,14 +131,23 @@ gda_db_index_field_get_column (GdaDbIndexField *self)
  * @self: instance of #GdaDbIndexField
  * @collate: collate to set
  *
+ * Unfortunately, collate can vary from provider to provider. This method accepts collate name as a
+ * string but user should provide valid values. For instance, SQLite3 accepts only "BINARY",
+ * "NOCASE", and "RTRIM" values. PostgreSQL, on the other hand expects a name of a callable object,
+ * e.g. function.
+ *
  * Since: 6.0
  */
 void
 gda_db_index_field_set_collate (GdaDbIndexField *self,
-                                GdaDbIndexCollate collate)
+                                const gchar *collate)
 {
   GdaDbIndexFieldPrivate *priv = gda_db_index_field_get_instance_private (self);
-  priv->mCollate = collate;
+
+  if (priv->mCollate)
+    g_free (priv->mCollate);
+
+  priv->mCollate = g_strdup (collate);
 }
 
 /**
@@ -146,7 +158,7 @@ gda_db_index_field_set_collate (GdaDbIndexField *self,
  *
  * Since: 6.0
  */
-GdaDbIndexCollate
+const gchar *
 gda_db_index_field_get_collate (GdaDbIndexField *self)
 {
   GdaDbIndexFieldPrivate *priv = gda_db_index_field_get_instance_private (self);
@@ -181,21 +193,6 @@ gda_db_index_field_get_sort_order (GdaDbIndexField *self)
 {
   GdaDbIndexFieldPrivate *priv = gda_db_index_field_get_instance_private (self);
   return priv->mSortOrder;
-}
-
-const gchar *
-gda_db_index_field_get_collate_str (GdaDbIndexField *field)
-{
-  g_return_val_if_fail (GDA_IS_DB_INDEX_FIELD(field), NULL);
-
-  GdaDbIndexCollate collate = gda_db_index_field_get_collate(field);
-
-  if (collate == GDA_DB_INDEX_COLLATE_BINARY)
-    return "BINARY";
-  else if (collate == GDA_DB_INDEX_COLLATE_NOCASE)
-    return "NOCASE";
-  else
-    return NULL;
 }
 
 const gchar *
