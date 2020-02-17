@@ -405,12 +405,37 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	}
 
 	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_WITH_OIDS");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-		g_string_append (string, " WITH OIDS");
+    if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value)) {
+        const gchar *server_version = gda_server_provider_get_server_version (provider, cnc);
+
+        if (server_version) {
+
+            gchar **setstring = g_strsplit(server_version, " ", -1);
+
+            if (setstring) {
+                const gchar *t_version = setstring[1]; // We need a second element from the array
+
+                if (t_version) {
+                    if (!g_strcmp0(t_version, "9.4.26") ||
+                        !g_strcmp0(t_version, "9.5.21") ||
+                        !g_strcmp0(t_version, "9.6.17") ||
+                        !g_strcmp0(t_version, "10.12") ||
+                        !g_strcmp0(t_version, "11.7")) {
+                        g_string_append (string, " WITH OIDS");
+                    }
+                }
+
+                g_strfreev(setstring);
+            }
+        }
+    }
 
 	sql = string->str;
 	g_string_free (string, FALSE);
 
+#ifdef GDA_DEBUG
+	g_print ("Renderer SQL for PostgreSQL: %s\n", sql);
+#endif
 	return sql;
 }
 
