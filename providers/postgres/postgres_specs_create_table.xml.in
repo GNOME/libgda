@@ -5,9 +5,6 @@
       <gda_value>table_name</gda_value>
     </parameter>
     <parameter id="TABLE_TABLESPACE" _name="Tablespace" gdatype="gchararray" nullok="TRUE"/>
-    <parameter id="TABLE_WITH_OIDS" _name="With OIDs" gdatype="gboolean" nullok="TRUE">
-      <gda_value>TRUE</gda_value>
-    </parameter>
     <parameter id="TABLE_TEMP" _name="Temporary table" gdatype="gboolean" nullok="TRUE">
       <gda_value>FALSE</gda_value>
     </parameter>
