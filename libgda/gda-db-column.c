@@ -1104,6 +1104,9 @@ gda_db_column_prepare_add (GdaDbColumn *self,
   g_return_val_if_fail(GDA_IS_SERVER_OPERATION(op), FALSE);
   g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
+  GdaConnection *cnc;
+  const gchar *strtype;
+
   GdaServerOperationType sotype = gda_server_operation_get_op_type(op);
 
   if (sotype != GDA_SERVER_OPERATION_ADD_COLUMN)
@@ -1113,13 +1116,25 @@ gda_db_column_prepare_add (GdaDbColumn *self,
       return FALSE;
     }
 
+  cnc = (GdaConnection*) g_object_get_data (G_OBJECT (op), "connection");
+
+  if (!cnc)
+    {
+      g_set_error (error, GDA_DB_COLUMN_ERROR, GDA_DB_COLUMN_ERROR_TYPE,
+                   _("Internal error: Operation should be prepared, setting a connection data"));
+      return FALSE;
+    }
+
   GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
   if (!gda_server_operation_set_value_at (op, priv->mp_name, error,
                                           "/COLUMN_DEF_P/COLUMN_NAME"))
     return FALSE;
 
-  if (!gda_server_operation_set_value_at (op,priv->mp_type, error,
+  strtype = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (cnc),
+                                                       cnc, priv->m_gtype);
+
+  if (!gda_server_operation_set_value_at (op, strtype, error,
                                           "/COLUMN_DEF_P/COLUMN_TYPE"))
     return FALSE;
 
