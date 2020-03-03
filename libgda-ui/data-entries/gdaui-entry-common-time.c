@@ -504,13 +504,15 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 				GdaTime* copy;
 				GTimeZone *tz;
 
-        gtim = gda_value_get_time (value);
+                gtim = gda_value_get_time (value);
 				priv->value_tz = gda_time_get_timezone (gtim);
 				priv->value_fraction = gda_time_get_fraction (gtim);
 
-        tz = g_time_zone_new_offset (priv->displayed_tz);
+                tz = g_time_zone_new_offset (priv->displayed_tz);
 
-				copy = gda_time_to_timezone (gtim, tz);
+                GdaTime *gtime_copy = gda_time_copy (gtim);
+				copy = gda_time_to_timezone (gtime_copy, tz);
+                gda_time_free (gtime_copy);
 
 				GValue *copy_value;
 				copy_value = g_new0 (GValue, 1);
@@ -604,17 +606,24 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 			g_free (str2);
 		}
 
-		if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
-			const GdaTime *gdatime;
-			GTimeZone *tz;
-      gdatime = gda_value_get_time (value);
-      tz = g_time_zone_new_offset (priv->displayed_tz);
-			GdaTime *time_copy = gda_time_to_timezone (gdatime, priv->displayed_tz);
-      GdaTime *tnz = gda_time_to_timezone (time_copy, priv->value_tz);
-			gda_value_set_time (value, tnz);
-			gda_time_free (time_copy);
-			gda_time_free (tnz);
-		}
+        if (value && (G_VALUE_TYPE (value) != GDA_TYPE_NULL)) {
+            const GdaTime *gdatime;
+            GTimeZone *tz;
+            gdatime = gda_value_get_time (value);
+            tz = g_time_zone_new_offset (priv->displayed_tz);
+
+            GdaTime *gdatime_copy = gda_time_copy (gdatime);
+            GdaTime *time_copy = gda_time_to_timezone (gdatime_copy, tz);
+            gda_time_free (gdatime_copy);
+            g_time_zone_unref (tz);
+
+            tz = g_time_zone_new_offset (priv->value_tz);
+            GdaTime *tnz = gda_time_to_timezone (time_copy, tz);
+            g_time_zone_unref (tz);
+            gda_value_set_time (value, tnz);
+            gda_time_free (time_copy);
+            gda_time_free (tnz);
+        }
 	}
 	else if (type == G_TYPE_DATE_TIME) {
 		gchar *tmpstr;

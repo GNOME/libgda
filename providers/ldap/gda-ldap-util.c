@@ -1014,65 +1014,25 @@ gda_ldap_attr_value_to_g_value (LdapConnectionData *cdata, GType type, BerValue 
 		/* see ftp://ftp.rfc-editor.org/in-notes/rfc4517.txt,
 		 * section 3.3.13: Generalized Time
 		 */
-		GTimeVal tv;
 		gboolean conv;
-		if (! (conv = g_time_val_from_iso8601 (bv->bv_val,
-						       &tv))) {
-			/* Add the 'T' char */
-			gchar *tmp, *str;
-			gint i, len;
-			str = bv->bv_val;
-			len = strlen (str);
-			if (len > 8) {
-				tmp = g_new (gchar, len + 2);
-				for (i = 0; i < 8; i++)
-					tmp[i] = str[i];
-				tmp [8] = 'T';
-				for (i = 9; str[i]; i++)
-					tmp[i] = str[i-1];
-				tmp[i] = 0;
-				conv = g_time_val_from_iso8601 (tmp, &tv);
-				g_free (tmp);
-			}
-		}
-		if (conv) {
-			struct tm *ptm;
-#ifdef HAVE_LOCALTIME_R
-			struct tm tmpstm;
-			ptm = localtime_r (&(tv.tv_sec), &tmpstm);
-#elif HAVE_LOCALTIME_S
-			struct tm tmpstm;
-			if (localtime_s (&tmpstm, &(tv.tv_sec)) == 0)
-				ptm = &tmpstm;
-			else
-				ptm = NULL;
-#else
-			ptm = localtime (&(tv.tv_sec));
-#endif
+		GDateTime *dt;
 
-			if (!ptm)
-				return NULL;
+		dt = g_date_time_new_from_iso8601 (bv->bv_val, NULL);
 
-			if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-				GTimeZone *tz = g_time_zone_new ("Z"); // UTC
-				GDateTime *ts = g_date_time_new (tz,
-																				 ptm->tm_year + 1900,
-																				 ptm->tm_mon + 1,
-																				 ptm->tm_mday,
-																				 ptm->tm_hour,
-																				 ptm->tm_min,
-																				 ptm->tm_sec);
-				value = gda_value_new (G_TYPE_DATE_TIME);
-				g_value_set_boxed (value, ts);
-				g_date_time_unref (ts);
-			}
-			else {
-				GDate *date;
-				date = g_date_new ();
-				g_date_set_time_val (date, &tv);
-				value = gda_value_new (type);
-				g_value_take_boxed (value, date);
-			}
+		if (dt) {
+		    if (g_type_is_a (type, G_TYPE_DATE)) {
+			GDate *date;
+			date = g_date_new_dmy (g_date_time_get_day_of_month (dt),
+					       g_date_time_get_month (dt),
+					       g_date_time_get_year (dt));
+			value = gda_value_new (type);
+			g_value_take_boxed (value, date);
+		    }
+
+		    if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
+			value = gda_value_new (G_TYPE_DATE_TIME);
+			g_value_set_boxed (value, dt);
+		    }
 		}
 	}
 	else if (type == GDA_TYPE_BINARY) {

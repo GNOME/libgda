@@ -58,7 +58,7 @@ struct _TContextPrivate {
 	FILE *output_stream;
 	gboolean output_is_pipe;
 
-	GTimeVal last_time_used;
+	GDateTime *last_time_used;
 	ToolCommandGroup *command_group;
 
 	gulong sigid;
@@ -154,6 +154,8 @@ t_context_dispose (GObject *object)
 		g_free (console->priv);
 		console->priv = NULL;
 	}
+
+    g_date_time_unref (console->priv->last_time_used);
 
 	/* parent class */
         parent_class->dispose (object);
@@ -663,9 +665,9 @@ t_context_set_connection (TContext *console, TConnection *tcnc)
  *
  * Returns: (transfer none): a #GTimeVal pointer
  */
-GTimeVal *
+GDateTime*
 t_context_get_last_time_used (TContext *console)
 {
 	g_return_val_if_fail (T_IS_CONTEXT (console), NULL);
-	return & (console->priv->last_time_used);
+	return console->priv->last_time_used;
 }
