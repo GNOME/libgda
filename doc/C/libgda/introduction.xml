@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd"[
+<!ENTITY LIBGDA          "<application>Libgda</application>">
+<!ENTITY GNOMEDB         "<acronym>Gnome-Db</acronym>">
+<!ENTITY RPM             "<acronym>RPM</acronym>">
+<!ENTITY ODBC            "<acronym>ODBC</acronym>">
+<!ENTITY SQL             "<acronym>SQL</acronym>">
+<!ENTITY LDAP            "<acronym>LDAP</acronym>">
+<!ENTITY JDBC            "<acronym>JDBC</acronym>">
+<!ENTITY GDA             "<acronym>GDA</acronym>">
+<!ENTITY RDBMS           "<acronym>RDBMS</acronym>">
+<!ENTITY API             "<acronym>API</acronym>">
+]>
+
+<chapter id="introduction">
+  <title>Introduction</title>
+  <sect1 id="introduction-overview">
+    <title>Overview</title>
+    <para>
+        &ODBC; and &SQL; are established standards. However &ODBC; is mostly limited to
+      the Microsoft Windows environment (even though the UnixODBC project exists and links
+      to some drivers), and the API is quite old and not well integrated into the GNOME ecosystem.
+    </para>
+    <para>
+        &SQL; itself is standardized but up to some point only, so that &SQL; source
+      compatibility can not be assured for all database servers. And for some
+      sort of servers, &SQL; is not even feasible (think about &LDAP;).
+    </para>
+    <para>
+        &JDBC; is a more recent standard which replaces &ODBC; in the Java world, but it's limited
+      to the Java programming world, and is difficult to integrate in C (or other languages
+      different from Java). There are however a lot of JDBC drivers out there for many database
+      engines.
+    </para>
+    <para>
+        &GDA; (GNOME Data Access) tries to tackle the &ODBC; and &JDBC; "limitations" and help you with the &SQL;
+      problem. It's a sort of middleware to access different data sources. It offers a high level view of
+      data sources and has some places where you can plug in low level access
+      to the database for special tasks.
+    </para>
+    <para>
+      It offers a wrapper around the database internals, thus making it easier
+      for programmers to make use of all the power provided by many RDBMS without
+      knowing much about it. It comes as a set of libraries, a core one and some extensions (the GTK+ UI
+      extension for example) and some drivers for the most common OpenSource or proprietary database engines.
+    </para>
+    <para>
+      Some of these drivers are a bit special: the LDAP provider allows one to adress an LDAP directory as
+      if it were composed of tables (provided some configuration), and the &JDBC; provider "wraps" any &JDBC; driver.
+    </para>
+    <para>
+      Along with these libraries (and associated header files and language 
+      bindings for development), &LIBGDA; includes several tools and utilities
+        to help you with the task of developing applications based on &LIBGDA;,
+      as well as for automating some database-related tasks.
+    </para>
+    <para>
+        &LIBGDA; is implemented for
+      <systemitem class="osname">UNIX</systemitem>
+        -like operating systems
+        (including
+      <systemitem class="osname">Linux</systemitem>
+        ), and
+      <systemitem class="osname">Windows</systemitem>
+        .
+    </para>
+  </sect1>
+
+  <sect1 id="features">
+    <title>Features</title>
+    <para>
+      This section presents the main features of the 5.2 version of Libgda.
+    </para>
+    <para>
+      Libgda is a low-level database abstraction layer built on top of each database C API. In terms of abstraction,
+      Libgda offers the following top features:
+      <itemizedlist>
+        <listitem>
+          <para>
+            Open a connection to any database which type is supported using either a defined data source (defined per
+            user or system wide) or directly providing connection parameters. Several connections can be opened at the
+            same time.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Run any SQL query against an opened connection; furthermore any SQL query can be extended to define query parameters
+            using an easy to understand notation. If the SQL query was a SELECT statement, then an array of data is
+            returned (as a <classname>GdaDataModel</classname> object), and otherwise the number of rows affected
+              by the query is returned. For very large data sets, it is possible to specify that the returned array
+              of data should be based on a cursor to avoid loading it into memory.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Perform most of the data definition queries (including database creation) for the database types which support
+            it using a key/value mechanism.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Create, maintain and extend a view of the database's structure and meta data including the definitions of
+            the tables, constraints, data types, .... It is defined as closely as possible to the information schema SQL
+            standard (ISO/IEC 9075); see the <link linkend="gda-dict">Dictionary - metadata</link> section 
+              for more information.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Easy to extend data models for custom requirements
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+              Support for binary data and for BLOBs in a transparent way, see the <link linkend="libgda-Gda-Value">Gda value section</link>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Support for detailed parameters in SQL queries, see the <link linkend="GdaSqlParser">GdaSqlParser</link> object
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+              Support for virtual connections, see the <link linkend="virtual_connection">Virtual connections chapter</link>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Partially thread-safe, see <link linkend="threads">the threads limitation</link> for
+              more details
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The database types which can be accessed at the time of writing are the following ones:
+      <itemizedlist>
+        <listitem>
+          <para>
+            MySQL: fully functional;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            PostgreSQL: fully functional;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            SQLite: fully functional;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            SQLCipher: fully functional;
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+  <sect1 id="architecture">
+    <title>Architecture</title>
+    <para>
+      A &LIBGDA; application is composed of three layers. The lower level layer are
+      the &GDA; providers: plug-ins whose task is to map the &RDBMS;-specific &API;
+      to the &GDA; model.
+    </para>
+    <para>
+      Then, in a middle layer, are the libraries provided by &LIBGDA; and used by
+      the programmer: an easy-to-use and
+      full featured set of libraries.
+    </para>
+    <para>
+      Finally, at the upper layer is the application part itself, as writen by the
+      developer.
+    </para>
+    <mediaobject>
+      <imageobject role="html">
+        <imagedata fileref="architecture.png" format="PNG"/>
+      </imageobject>
+      <textobject>
+        <phrase>Typical &LIBGDA; application's architecture</phrase>
+      </textobject>
+      <caption>
+        <para>
+          Architecture of an application connected to 4 databases of 3 different types.
+        </para>
+      </caption>
+    </mediaobject>
+    <para>
+        &LIBGDA; also includes:
+      <itemizedlist>
+        <listitem>
+          <para>
+            some example code which can be "cloned" to create new database providers for
+              database engines not yet supported by &LIBGDA;
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            a graphical configuration manager
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            an <link linkend="libgda-sql">SQL console</link> to connect to dabatase serveurs and perform some
+              &LIBGDA; related administrative tasks
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+              some other more <link linkend="part_tools">specific tools</link>
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </sect1>
+  <sect1 id="data-source">
+    <title>Data sources</title>
+    <para>
+      To open a connection, the programmer needs to specify the database provider to use, and some
+      connection parameters, some of them specific to the database engine to be used, some of them
+      more generic (such as the "DB_NAME" parameter to specify a database name).
+    </para>
+    <para>
+      All the parameters are combined together to give &LIBGDA; enough information to open a connection; refer
+      to <link linkend="gda-connection-new-from-string">gda_connection_new_from_string()</link> for more
+        information.
+    </para>
+    <para>
+      However, remembering the complete string to open a connection can be tedious, and so &LIBGDA; supports
+      named data sources (DSN) whereby a connection is specified and named once and opened refering to
+      its name rather than to the actual parameters used. Refer to
+      the <link linkend="defining_dsn">Define a data source (DSN)</link> section, and the
+      <link linkend="gda-config-define-dsn">gda_config_define_dsn()</link> and
+      <link linkend="gda-connection-new-from-dsn">gda_connection_new_from_dsn()</link> functions.
+    </para>
+    <para>
+      DSN can have a scope limited to the user, or be system wide. User scope DSN definitions are stored
+      in $XDG_DIR/libgda where $XDG_DIR is determined by the XDG Base Directory Specification (using
+      <link linkend="g-get-user-data-dir">g_get_user_data_dir()</link>). System wide definitions are stored
+        in $ETC/$VERSION where $ETC is the configuration directory where &LIBGDA; is installed and $VERSION
+        is &LIBGDA;'s major version.
+    </para>
+    <para>
+      Note that these locations can be changes using some properties of the global
+      <link linkend="GdaConfig">GdaConfig</link> object.
+    </para>
+  </sect1>
+  <sect1>
+    <title>Authentication information management</title>
+    <para>
+      When named data sources are used, &LIBGDA; can also store authentication information (username and
+      password). This is accomplished using
+      <ulink url="https://wiki.gnome.org/Projects/Libsecret">libsecret</ulink>, or
+      <ulink url="https://wiki.gnome.org/Projects/GnomeKeyring">libgnome-keyring</ulink> if available,
+        or stored in an insecure way (along the DSN definition) if none of these libraries are available.
+    </para>
+  </sect1>
+</chapter>

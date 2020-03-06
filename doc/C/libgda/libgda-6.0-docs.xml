@@ -6,21 +6,57 @@
   <!ENTITY % gtkdocentities SYSTEM "xml/gtkdocentities.ent">
   %gtkdocentities;
   <!ENTITY LIBGDA "libgda-6.0">
+  <!ENTITY GDA             "<acronym>GDA</acronym>">
 ]>
 <book id="index">
   <bookinfo>
     <title>&package_name; Reference Manual</title>
     <releaseinfo>
-      for &package_string;.
-      The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="https://gitlab.gnome.org/GNOME/libgda/pipelines">https://gitlab.gnome.org/GNOME/libgda/pipelines</ulink>,
-      from latest successful pipeline build.
+      The latest version of this documentation can be found on-line at the home
+      <ulink role="online-location" url="https://gnome.pages.gitlab.gnome.org/libgda/C/libgda/">wiki</ulink> page.
     </releaseinfo>
     <xi:include href="author-list.xml"/>
+    <date>&builddate;</date>
+    <copyright>
+      <year>1999 - 2020</year>
+      <holder>&copy;</holder>
+    </copyright>
+    <abstract>
+      <para>
+        GNOME Data Access (&GDA;) is an architecture whose
+        purpose is to provide universal access to many different kinds and
+        types of data sources. This goes from traditional relational database
+        systems, to any imaginable kind of data source such as a mail server,
+        a &LDAP; directory...
+      </para>
+      <para>
+        This universality is obtained through the use of
+        an easily extensible plug-in system as the mechanism for
+	communication between the different components in the architecture.
+      </para>
+    </abstract>
+    <legalnotice id="legalnotice">
+      <para>
+        Permission is granted to copy, distribute and/or modify this document
+        under the terms of the <link linkend="fdl"><citetitle>GNU
+        Free Documentation License</citetitle></link>, Version 1.1 or any later
+        version published by the Free Software Foundation with no Invariant
+        Sections, no Front-Cover Texts, and no Back-Cover Texts.  A copy of the
+        license can be found in <link linkend="fdl">the appendix</link>.
+      </para>
+      <para>
+        Many of the names used by companies to distinguish their products and
+        services are claimed as trademarks. Where those names appear in any
+        GNOME documentation, and those trademarks are made aware to the members
+        of the GNOME Documentation Project, the names have been printed in caps
+        or initial caps.
+      </para>
+    </legalnotice>
   </bookinfo>
 
   <part id="Getting Started">
     <title>Getting Started</title>
+    <xi:include href="introduction.xml"/>
     <xi:include href="xml/libgda.xml"/>
     <xi:include href="installation.xml"/>
   </part>
