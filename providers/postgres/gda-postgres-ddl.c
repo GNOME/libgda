@@ -404,13 +404,12 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		return NULL;
 	}
 
-	value = gda_server_operation_get_value_at (op, "/TABLE_DEF_P/TABLE_WITH_OIDS");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-		g_string_append (string, " WITH OIDS");
-
 	sql = string->str;
 	g_string_free (string, FALSE);
 
+#ifdef GDA_DEBUG
+	g_print ("Renderer SQL for PostgreSQL: %s\n", sql);
+#endif
 	return sql;
 }
 
