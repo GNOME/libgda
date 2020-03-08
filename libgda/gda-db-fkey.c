@@ -48,7 +48,18 @@ typedef struct
  * For generating database from xml file or for mapping
  * database to an xml file #GdaDbFkey holds information about
  * foregn keys with a convenient set of methods to manipulate them.
- * #GdaDbFkey implements #GdaDbBuildable interface for parsing xml file.
+ * #GdaDbFkey implements #GdaDbBuildable interface for parsing xml file. This is an example how
+ * #GdaDGdaDbFkey can be used:
+ *
+ * |[<!-- language="C" -->
+ * GdaDbFkey *fkey = gda_db_fkey_new ();
+ * gda_db_fkey_set_ref_table (fkey, "Project");
+ * gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_RESTRICT);
+ * gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_RESTRICT);
+ * gda_db_fkey_set_field (fkey, "project_id", "id");
+ *
+ * gda_db_table_append_fkey (temployee, fkey);
+ * ]|
  */
 
 static void gda_db_fkey_buildable_interface_init (GdaDbBuildableInterface *iface);
@@ -93,6 +104,7 @@ static const gchar *gdadbfkeynodes[GDA_DB_FKEY_N_NODES] = {
  *
  * Create a new #GdaDbFkey object.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbFkey *
@@ -106,8 +118,11 @@ gda_db_fkey_new (void)
  * @metafkey: a #GdaMetaTableForeignKey instance
  *
  * Create a new instance from the corresponding meta object. If @metafkey is %NULL,
- * this function is identical to gda_db_fkey_new()
+ * this function is identical to gda_db_fkey_new(). This method is for internal use only and will be
+ * obsolete in the future.
  *
+ * Stability: Stable
+ * Since: 6.0
  */
 GdaDbFkey*
 gda_db_fkey_new_from_meta (GdaMetaTableForeignKey *metafkey)
@@ -390,6 +405,7 @@ gda_db_fkey_buildable_interface_init (GdaDbBuildableInterface *iface)
  * Return: ON DELETE action as a string. If the action is not set then the string corresponding to
  * NO_ACTION is returned.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar *
@@ -410,6 +426,7 @@ gda_db_fkey_get_ondelete (GdaDbFkey *self)
  *
  * Return: ON DELETE action as a #GdaDbFkeyReferenceAction.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbFkeyReferenceAction
@@ -429,6 +446,7 @@ gda_db_fkey_get_ondelete_id (GdaDbFkey *self)
  *
  * Set action for ON_UPDATE
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -449,6 +467,7 @@ gda_db_fkey_set_onupdate (GdaDbFkey *self,
  *
  * Set action for ON_DELETE
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -468,6 +487,7 @@ gda_db_fkey_set_ondelete (GdaDbFkey *self,
  *
  * Returns: ON_UPDATE action as a string. Never %NULL
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar *
@@ -486,6 +506,7 @@ gda_db_fkey_get_onupdate (GdaDbFkey *self)
  *
  * Return: ON_UPDATE action as a #GdaDbFkeyReferenceAction
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbFkeyReferenceAction
@@ -503,6 +524,7 @@ gda_db_fkey_get_onupdate_id (GdaDbFkey *self)
  * Return: Returns reference table name as a string or %NULL if table name
  * hasn't been set.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar *
@@ -522,6 +544,7 @@ gda_db_fkey_get_ref_table (GdaDbFkey *self)
  *
  * Set reference table
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -543,6 +566,7 @@ gda_db_fkey_set_ref_table (GdaDbFkey *self,
  * Returns: (element-type utf8) (transfer none): A const #GList of strings where each string
  * corresponds to a foreign key field or %NULL.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const GList*
@@ -562,6 +586,7 @@ gda_db_fkey_get_field_name (GdaDbFkey *self)
  * Returns: (element-type utf8) (transfer none): A #GList of strings where each string corresponds
  * to a foreign key reference field or %NULL.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const GList *
@@ -582,6 +607,7 @@ gda_db_fkey_get_ref_field (GdaDbFkey *self)
  *
  * All arguments should be valid strings.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -609,6 +635,7 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
  *
  * Returns: %TRUE if no error or %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean

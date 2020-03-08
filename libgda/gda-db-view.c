@@ -43,7 +43,21 @@ typedef struct
  *
  * This object represents a view of a database. The view can be constracted manually
  * using API or generated from xml file together with other databse objects. See #GdaDbCatalog.
- * #GdaDbView implements #GdaDbBuildable interface for parsing xml file.
+ * #GdaDbView implements #GdaDbBuildable interface for parsing xml file. This is typical example
+ * how #GdaDbView can be used
+ *
+ * |[<!-- language="C" -->
+ *
+ *  GdaDbView *myview = gda_db_view_new ();
+ *  gda_db_base_set_name (GDA_DB_BASE (myview), "MyView");
+ *  gda_db_view_set_istemp (myview, FALSE);
+ *  gda_db_view_set_defstring (myview, "SELECT name, project_id FROM NewEmployee");
+ *
+ *  res = gda_db_view_create (myview, fixture->cnc, TRUE, &error);
+ *
+ *  if (!res)
+ *    GDA_PGSQL_ERROR_HANDLE (error);
+ *  ]|
  */
 
 static void gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface);
@@ -87,8 +101,9 @@ static GParamSpec *properties [N_PROPS] = {NULL};
 /**
  * gda_db_view_new:
  *
- * Returns: A new instance of #GdaDbView.
+ * Returns: (transfer full): A new instance of #GdaDbView.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbView*
@@ -330,6 +345,8 @@ gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface)
  * @self: a #GdaDbView object
  *
  * Returns: %TRUE if the view is temporary, %FALSE otherwise
+ *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -345,6 +362,7 @@ gda_db_view_get_istemp (GdaDbView *self)
  * @self: a #GdaDbView object
  * @temp: value to set
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -362,6 +380,8 @@ gda_db_view_set_istemp (GdaDbView *self,
  *
  * Returns: %TRUE if th view should be created with "IF NOT EXISTS" key, %FALSE
  * otherwise
+ *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -377,6 +397,7 @@ gda_db_view_get_ifnoexist (GdaDbView *self)
  * @self: a #GdaDbView object
  * @noexist: a value to set
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -393,6 +414,8 @@ gda_db_view_set_ifnoexist (GdaDbView *self,
  * @self: a #GdaDbView object
  *
  * Returns: view definition string
+ *
+ * Stability: Stable
  * Sinc: 6.0
  */
 const gchar*
@@ -408,6 +431,7 @@ gda_db_view_get_defstring (GdaDbView *self)
  * @self: a #GdaDbView object
  * @str: view definition string to set. Should be valid SQL string
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -427,6 +451,7 @@ gda_db_view_set_defstring (GdaDbView *self,
  * Returns: %TRUE if the current view should replace the existing one in the
  * database, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -443,11 +468,12 @@ gda_db_view_get_replace (GdaDbView *self)
  * @self: a #GdaDbView object
  * @replace: a value to set
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
 gda_db_view_set_replace (GdaDbView *self,
-                          gboolean replace)
+			 gboolean replace)
 {
   g_return_if_fail (self);
   GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
@@ -471,6 +497,7 @@ gda_db_view_set_replace (GdaDbView *self,
  *
  * Returns: %TRUE if no error, %FASLE otherwise
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -542,8 +569,10 @@ on_error:
  * @op: #GdaServerOperation instance to populate
  * @error: error container
  *
- * Populate @op with information needed to perform CREATE_VIEW operation.
+ * Populate @op with information needed to perform CREATE_VIEW operation. This method was desgned
+ * for internal use and will be obsolete in the future. Do not use it for the new code.
  *
+ * Stability: Stable
  * Returns: %TRUE if succeeded and %FALSE otherwise.
  */
 gboolean
@@ -596,6 +625,8 @@ gda_db_view_prepare_create (GdaDbView *self,
  * This method call DDL comands to drop the view. 
  *
  * Returns: %TRUE if everything is ok and %FALSE otherwise.
+ *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
