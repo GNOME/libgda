@@ -1,6 +1,6 @@
 /* gda-db-index.c
  *
- * Copyright (C) 2019 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2019-2020 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,6 +40,33 @@ typedef struct
  * @stability: Stable
  * @include: libgda/libgda.h
  *
+ * The object #GdaDBIndex holds information about index in a table. Just populate the information
+ * using index API and append to the #GdaDbTable  instance using gda_db_table_add_index(). This
+ * method executes all needed DB manopulations to add the atrget index to the DB. This can be
+ * illustarted by the following example:
+ *
+ * |[<!-- language="C" -->
+ * GdaDbIndex      *index = gda_db_index_new ();
+ * GdaDbIndexField *field = gda_db_index_field_new ();
+ * GdaDbColumn     *fcol  = gda_db_column_new ();
+ *
+ * gda_db_index_set_unique (index, TRUE);
+ * gda_db_base_set_name (GDA_DB_BASE (index), "MyIndex");
+ *
+ * gda_db_column_set_name (fcol, "name");
+ *
+ * gda_db_index_field_set_column (field, fcol);
+ * gda_db_index_field_set_sort_order (field, GDA_DB_INDEX_SORT_ORDER_ASC);
+ * gda_db_index_append_field (index, field);
+
+ * g_object_unref (fcol);
+ * g_object_unref (field);
+ *
+ * res = gda_db_table_add_index (new_table, index, fixture->cnc, TRUE, &error);
+ *
+ * if (!res)
+ *   g_print("Error during index addition\n");
+ * ]|
  */
 
 G_DEFINE_TYPE_WITH_PRIVATE (GdaDbIndex, gda_db_index, GDA_TYPE_DB_BASE)
@@ -86,6 +113,7 @@ gda_db_index_class_init (GdaDbIndexClass *klass)
  * If @val is %TRUE a "UNIQUE" will be added to the INDEX CREATE command, e.g.
  * CREATE UNIQUE INDEX ...
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -105,6 +133,7 @@ gda_db_index_set_unique (GdaDbIndex *self,
  *
  * Returns: state for UNIQUE. This method will abort if @self is %NULL
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -121,9 +150,10 @@ gda_db_index_get_unique (GdaDbIndex *self)
  * @field: a field to set
  *
  * Append to index filed to the current index instance, The @self object will recieve full
- * ownership of the field. After this call, the reference to the @field from the caller can be
- * destoyed by calling g_object_unref()
+ * ownership of the field. After this call, the reference count for @field will be increased and
+ * the instance of @fiels must be destroyed by calling g_object_unref()
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -165,6 +195,7 @@ gda_db_index_append_field  (GdaDbIndex *self,
  * @self: instance of #GdaDbIndex
  * @name: Name of the column where field should be removed.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -194,6 +225,9 @@ gda_db_index_remove_field (GdaDbIndex *self,
  * This function is thread safe, that is, @cnc will be locked.
  *
  * Returns: (transfer none) (nullable) (element-type Gda.DbIndexField): A list of #GdaDbIndexField
+ *
+ * Stability: Stable
+ * Since: 6.0
  */
 GSList *
 gda_db_index_get_fields (GdaDbIndex *self)
@@ -204,6 +238,18 @@ gda_db_index_get_fields (GdaDbIndex *self)
   return priv->mFieldList;
 }
 
+/**
+ * gda_db_index_drop:
+ * @self: an instance of #GdaDbIndex to work to drop
+ * @cnc: opened connection as the #GdaConnection
+ * @ifexists: flag for IF EXSISTS
+ * @error: an error storage
+ *
+ * Drop the index from the DB.
+ *
+ * Stability: Stable
+ * Since: 6.0
+ */
 gboolean
 gda_db_index_drop (GdaDbIndex *self,
                    GdaConnection *cnc,

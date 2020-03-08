@@ -36,7 +36,8 @@ typedef struct
  * @include: libgda/libgda.h
  *
  * This object is a container for information needed to create an index for a table. After
- * population with information, it should be passed to the #GdaDbIndex instance.
+ * population with information, it should be passed to the #GdaDbIndex instance. See #GdaDbIndex
+ * section for the example.
  *
  */
 
@@ -49,6 +50,7 @@ G_DEFINE_TYPE_WITH_PRIVATE(GdaDbIndexField, gda_db_index_field, G_TYPE_OBJECT)
  *
  * Returns: (transfer full): A new instance of #GdaDbIndexField
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbIndexField *
@@ -93,8 +95,11 @@ gda_db_index_field_init (GdaDbIndexField *self)
  * @self: an instance of #GdaDbIndexField
  * @column: column to add index to
  *
- * Only full name will be extracted from @column.
+ * Only full name will be extracted from @column. The @column instance should be freed using
+ * g_object_unref(). The instance @self take a copy of the @column object by increasing its
+ * referecne count.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -117,6 +122,7 @@ gda_db_index_field_set_column (GdaDbIndexField *self,
  *
  * Returns: (transfer none): A #GdaDbColumn where index should be added
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbColumn *
@@ -136,6 +142,7 @@ gda_db_index_field_get_column (GdaDbIndexField *self)
  * "NOCASE", and "RTRIM" values. PostgreSQL, on the other hand expects a name of a callable object,
  * e.g. function.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -156,6 +163,7 @@ gda_db_index_field_set_collate (GdaDbIndexField *self,
  *
  * Returns: Collate value
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar *
@@ -170,6 +178,7 @@ gda_db_index_field_get_collate (GdaDbIndexField *self)
  * @self: object to use
  * @sorder: sort order to set
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -186,6 +195,7 @@ gda_db_index_field_set_sort_order (GdaDbIndexField *self,
  *
  * Returns: sort order as a #GdaDbIndexSortOrder object
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbIndexSortOrder
@@ -195,6 +205,15 @@ gda_db_index_field_get_sort_order (GdaDbIndexField *self)
   return priv->mSortOrder;
 }
 
+/**
+ * gda_db_index_field_get_sort_order_str:
+ * @self: an instance of #GdaDbIndexField
+ *
+ * Returns: SORT ORDER string or %NULL
+ *
+ * Stability: Stable
+ * Since: 6.0
+ */
 const gchar *
 gda_db_index_field_get_sort_order_str (GdaDbIndexField *field)
 {
