@@ -50,8 +50,19 @@ prov_test_common_setup (void)
 #ifdef CHECK_EXTRA_INFO
 	g_print ("\n============= %s() =============\n", __FUNCTION__);
 #endif
+	/* We will use a unique name for database for every test.
+	 * The format of the database name is:
+	 * testXXXXX where XXXXX is a string generated from the random int32 numbers
+	 * that correspond to ASCII codes for characters a-z
+	 */
+	GString *buffer = g_string_new ("test");
 
-	cnc = test_cnc_setup_connection (pinfo->id, "testcheckdb", &error);
+	for (int i = 0; i < 5; ++i) {
+	    gint32 character = g_random_int_range (97, 123);
+	    buffer = g_string_append_c (buffer, character);
+	}
+	cnc = test_cnc_setup_connection (pinfo->id, buffer->str, &error);
+	g_string_free (buffer, TRUE);
 	if (!cnc) {
 		if (error) {
 			if (error->domain != TEST_ERROR) {
