@@ -1818,14 +1818,13 @@ static gboolean
 delete_consoles (WebServer *server)
 {
 	GSList *list;
-	GTimeVal tv;
+	GDateTime *dt = g_date_time_new_now_local();
 
-	g_get_current_time (&tv);
 	for (list = server->priv->terminals_list; list; ) {
 		TContext *console = (TContext *) list->data;
-		GTimeVal *lastused;
+		GDateTime *lastused;
 		lastused = t_context_get_last_time_used (console);
-		if (lastused->tv_sec + 600 < tv.tv_sec) {
+		if (g_date_time_get_second (lastused) + 600 < g_date_time_get_second (dt)) {
 			GSList *n = list->next;
 			server->priv->terminals_list = g_slist_delete_link (server->priv->terminals_list, list);
 			list = n;
@@ -1834,6 +1833,9 @@ delete_consoles (WebServer *server)
 		else
 			list = list->next;
 	}
+
+	g_date_time_unref (dt);
+
 	if (! server->priv->terminals_list) {
 		server->priv->term_timer = 0;
 		return FALSE;
