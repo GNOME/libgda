@@ -69,6 +69,6 @@ FILE              *t_context_get_output_stream (TContext *console, gboolean *out
 void               t_context_set_connection (TContext *console, TConnection *tcnc);
 TConnection       *t_context_get_connection (TContext *console);
 
-GTimeVal          *t_context_get_last_time_used (TContext *console);
+GDateTime         *t_context_get_last_time_used (TContext *console);
 
 #endif
