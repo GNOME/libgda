@@ -129,8 +129,7 @@ test_cnc_open_connection (const gchar *provider, const gchar *dbname, GError **e
 
 		if (*(data.string->str) != 0)
 			g_string_append_c (data.string, ';');
-		g_string_append_printf (data.string, "DB_NAME=%s", 
-					data.requested_db_name ? data.requested_db_name : dbname);
+		g_string_append_printf (data.string, "DB_NAME=%s", dbname);
 		g_print ("Open connection string: %s\n", data.string->str);
 
 		GString *auth_string = g_string_new ("");
