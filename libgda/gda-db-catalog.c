@@ -24,6 +24,8 @@
 #include "gda-db-table.h"
 #include "gda-db-view.h"
 #include "gda-db-fkey.h"
+#include "gda-db-column-private.h"
+#include "gda-db-fkey-private.h"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <glib.h>

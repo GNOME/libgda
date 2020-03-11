@@ -25,6 +25,7 @@
 #include "gda-util.h"
 #include "gda-db-buildable.h"
 #include "gda-server-provider.h"
+#include "gda-db-column-private.h"
 
 G_DEFINE_QUARK (gda-db-column-error, gda_db_column_error)
 
@@ -1235,8 +1236,7 @@ gda_db_column_prepare_add (GdaDbColumn *self,
  *
  * Create new #GdaDbColumn instance from the corresponding #GdaMetaTableColumn
  * object. If %NULL is passed this function works exactly as
- * gda_db_column_new(). Thie method is designed for internal use only and will be obsolete in the
- * future.
+ * gda_db_column_new().
  *
  * Returns: New object that should be freed with gda_db_column_free()
  */

@@ -22,7 +22,7 @@
 #include "gda-db-fkey.h"
 #include <glib/gi18n-lib.h>
 #include "gda-db-buildable.h"
-#include "gda-meta-struct.h"
+#include "gda-db-fkey-private.h"
 
 typedef struct
 {
@@ -118,8 +118,7 @@ gda_db_fkey_new (void)
  * @metafkey: a #GdaMetaTableForeignKey instance
  *
  * Create a new instance from the corresponding meta object. If @metafkey is %NULL,
- * this function is identical to gda_db_fkey_new(). This method is for internal use only and will be
- * obsolete in the future.
+ * this function is identical to gda_db_fkey_new().
  *
  * Stability: Stable
  * Since: 6.0
