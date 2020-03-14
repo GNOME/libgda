@@ -266,7 +266,9 @@ if libsecret_dep.found() and get_option('with-libsecret')
   c_args += '-DHAVE_LIBSECRET'
 endif
 
-if get_option('enable-debug')
+build_type = get_option('buildtype')
+
+if get_option('debug') or ('debug' == build_type) or ('debugoptimized' == build_type)
   c_args += '-DGDA_DEBUG'
 endif
 
