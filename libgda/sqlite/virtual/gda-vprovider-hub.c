@@ -129,11 +129,7 @@ static gboolean
 gda_vprovider_hub_close_connection (GdaServerProvider *provider, GdaConnection *cnc)
 {
 	g_return_val_if_fail (GDA_IS_VPROVIDER_HUB (provider), FALSE);
-	g_return_val_if_fail (GDA_IS_VCONNECTION_HUB (cnc), FALSE);
-
-	if (! gda_vconnection_hub_remove (GDA_VCONNECTION_HUB (provider), cnc, NULL)) {
-		g_warning (_("Internal GdaVproviderHub error"));
-	}
+	g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
 
 	GdaServerProviderBase *parent_functions;
 	parent_functions = gda_server_provider_get_impl_functions_for_class (gda_vprovider_hub_parent_class, GDA_SERVER_PROVIDER_FUNCTIONS_BASE);
