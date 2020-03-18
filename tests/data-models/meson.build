@@ -167,7 +167,7 @@ test('VirtualConnection', tchkvcnc,
 	)
 
 tchkpivot_cargs = [
-	'-DROOT_DIR="'+meson.source_root()+'"'
+	'-DROOT_DIR="'+gda_top_src+'"'
 	]
 tchkpivot_cargs += test_cargs
 
