@@ -86,11 +86,14 @@ test_db_catalog_start (CheckDbObject *self,
 
   g_assert_nonnull (self->xmlfile);
 
+  gchar* dbname = g_strdup_printf ("DB_DIR=.;DB_NAME=db_test_%d", g_random_int ());
+
   self->cnc = gda_connection_new_from_string("SQLite",
-                                             "DB_DIR=.;DB_NAME=db_test",
+                                             dbname,
                                              NULL,
                                              GDA_CONNECTION_OPTIONS_NONE,
                                              NULL);
+  g_free (dbname);
 
   g_assert_nonnull (self->cnc);
 
@@ -114,11 +117,15 @@ test_db_catalog_start_db (DbCatalogCnc *self,
   self->cnc = NULL;
   self->catalog = NULL;
 
+  gchar* dbname = g_strdup_printf ("DB_DIR=.;DB_NAME=db_types_%d", g_random_int ());
+
   self->cnc = gda_connection_new_from_string ("SQLite",
-                                              "DB_DIR=.;DB_NAME=db_types",
+                                              dbname,
                                               NULL,
                                               GDA_CONNECTION_OPTIONS_NONE,
                                               NULL);
+  g_free (dbname);
+
   g_assert_nonnull (self->cnc);
 
   gboolean open_res = gda_connection_open (self->cnc, NULL);
@@ -473,6 +480,7 @@ test_db_catalog_constraint_run (DbCheckCatallog *self,
   GValue *val_columna = NULL;
   GValue *val_columnb = NULL;
   gboolean res;
+  GError *error = NULL;
 
   val_columna = gda_value_new (G_TYPE_INT);
   val_columnb = gda_value_new (G_TYPE_INT);
@@ -480,13 +488,20 @@ test_db_catalog_constraint_run (DbCheckCatallog *self,
   g_assert_nonnull (val_columna);
   g_assert_nonnull (val_columnb);
 
-  g_value_set_int (val_columna, 1);
-  g_value_set_int (val_columnb, 1);
+  guint32 v = g_random_int ();
 
-  res = gda_connection_insert_row_into_table (self->cnc, "tconstraint", NULL,
+  g_value_set_int (val_columna, v);
+  g_value_set_int (val_columnb, v);
+
+  res = gda_connection_insert_row_into_table (self->cnc, "tconstraint", &error,
                                               "columna", val_columna,
                                               "columnb", val_columnb,
                                               NULL);
+  if (error != NULL) {
+    g_print ("Error: %s",
+              error->message != NULL ? error->message : "No detail");
+    g_clear_error (&error);
+  }
 
   /* Two column must have the same values as we restricted. res is true. */
   g_assert_true (res);
