@@ -3281,14 +3281,10 @@ gda_parse_iso8601_time (const gchar *value)
 {
 	g_return_val_if_fail (value != NULL, FALSE);
   gchar *str = g_strdup_printf ("1970-01-01T%s", value);
-  g_message ("Time ISO to parse: %s", str);
   GDateTime *dt;
   GTimeZone *tz = g_time_zone_new_utc ();
   dt = g_date_time_new_from_iso8601 (str, tz);
   g_time_zone_unref (tz);
-  g_free (str);
-  str = g_date_time_format (dt, "%FT%T%:z");
-  g_message ("Parsed time: %s", str);
   g_free (str);
   return (GdaTime*) dt;
 }
