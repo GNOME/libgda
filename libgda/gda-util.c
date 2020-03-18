@@ -3257,12 +3257,16 @@ _parse_iso8601_time (const gchar *value, gchar sep, glong timezone, const char *
 		}
 		for (; *endptr; endptr++);
 	}
-	GdaTime *dt = (GdaTime*) g_date_time_new (tz, 1978, 1, 1, h, m, seconds);
+	GDateTime *dt = g_date_time_new (tz, 1978, 1, 1, h, m, seconds);
 
 	g_time_zone_unref (tz);
 
 	*out_endptr = endptr;
-	return dt;
+  if (dt != NULL) {
+    return (GdaTime*)  dt;
+  }
+
+	return NULL;
 }
 
 /**
@@ -3286,7 +3290,10 @@ gda_parse_iso8601_time (const gchar *value)
   dt = g_date_time_new_from_iso8601 (str, tz);
   g_time_zone_unref (tz);
   g_free (str);
-  return (GdaTime*) dt;
+  if (dt != NULL) {
+    return (GdaTime*) dt;
+  }
+  return NULL;
 }
 
 /**

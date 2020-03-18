@@ -792,7 +792,7 @@ gda_handler_time_get_value_from_locale (GdaDataHandler *iface, const gchar *sql,
 		}
 	}
 	else
-		g_assert_not_reached ();
+		return NULL;
 
 	return value;
 }
