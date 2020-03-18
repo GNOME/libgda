@@ -2130,7 +2130,7 @@ gda_sqlite_provider_get_default_dbms_type (G_GNUC_UNUSED GdaServerProvider *prov
 	    (type == G_TYPE_STRING) ||
 	    (type == GDA_TYPE_TEXT) ||
 	    (type == G_TYPE_INVALID))
-		return "string";
+		return "text";
 
 	if ((type == G_TYPE_DOUBLE) ||
 	    (type == GDA_TYPE_NUMERIC) ||

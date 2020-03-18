@@ -41,7 +41,6 @@
 
 #define PROVIDER_NAME "SQLite"
 #define DB_TEST_BASE "sqlite_ddl_so_test"
-static int db_increment = 1;
 
 typedef struct
 {
@@ -56,7 +55,7 @@ test_server_operation_start (TestObjectFixture *fixture,
   fixture->cnc = NULL;
   fixture->provider = NULL;
 
-  gchar *dbname = g_strdup_printf("DB_DIR=.;DB_NAME=%s_%d", DB_TEST_BASE, db_increment++);
+  gchar *dbname = g_strdup_printf("DB_DIR=.;DB_NAME=%s_%d", DB_TEST_BASE, g_random_int ());
 
   fixture->cnc = gda_connection_open_from_string (PROVIDER_NAME,
                                                   dbname,
@@ -87,6 +86,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                   G_GNUC_UNUSED gconstpointer user_data)
 {
   GdaServerOperation *op = NULL;
+  GError *error = NULL;
 
 /* CREATE_TABLE operation */
   op = gda_server_provider_create_operation (fixture->provider,
@@ -137,7 +137,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gint",
+                                           g_type_name (G_TYPE_INT),
                                            NULL,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
@@ -187,7 +187,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gchararray",
+                                           "varchar",
                                            NULL,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
@@ -244,7 +244,12 @@ test_server_operation_operations (TestObjectFixture *fixture,
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+  if (error != NULL) {
+    g_print ("Error: %s",
+              error->message != NULL ? error->message : "No detail");
+    g_clear_error (&error);
+  }
 
   g_assert_true (res);
 
@@ -296,7 +301,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gint",
+                                           g_type_name (G_TYPE_INT),
                                            NULL,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
@@ -346,7 +351,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gchararray",
+                                           "varchar",
                                            NULL,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
@@ -411,7 +416,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gint",
+                                           g_type_name (G_TYPE_INT),
                                            NULL,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
@@ -493,7 +498,12 @@ test_server_operation_operations (TestObjectFixture *fixture,
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+  if (error != NULL) {
+    g_print ("Error: %s",
+              error->message != NULL ? error->message : "No detail");
+    g_clear_error (&error);
+  }
 
   g_assert_true (res);
   /* END of CREATE_TABLE operation */
@@ -523,7 +533,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
-                                           "gfloat",
+                                           "decimal",
                                            NULL,
                                            "/COLUMN_DEF_P/COLUMN_TYPE");
 
@@ -553,7 +563,12 @@ test_server_operation_operations (TestObjectFixture *fixture,
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+  if (error != NULL) {
+    g_print ("Error: %s",
+              error->message != NULL ? error->message : "No detail");
+    g_clear_error (&error);
+  }
 
   g_assert_true (res);
 

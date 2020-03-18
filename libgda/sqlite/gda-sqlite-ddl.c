@@ -139,8 +139,15 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 
 			if (!pkautoinc) {
 				value1 = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_TYPE/%d", i);
-				g_string_append (string, g_value_get_string (value1));
-				
+				GType gtype = g_type_from_name (g_value_get_string (value1));
+        if (gtype == G_TYPE_INVALID) {
+          g_string_append (string, g_value_get_string (value1));
+        } else {
+          g_string_append (string,
+                           gda_server_provider_get_default_dbms_type (provider,
+                                                                      cnc, gtype));
+        }
+
 				value = gda_server_operation_get_value_at (op, "/FIELDS_A/@COLUMN_SIZE/%d", i);
 				if (value && G_VALUE_HOLDS (value, G_TYPE_UINT)) {
 					g_string_append_printf (string, "(%d", g_value_get_uint (value));
