@@ -292,7 +292,11 @@ test_date_handler (void)
 TestTime timedata2[] = {
 	{"112256Z",TRUE, 11, 22, 56, 0, 0},
 	{"012256Z",TRUE, 1, 22, 56, 0, 0},
+#ifdef GLIB_VERSION_2_62
 	{"012260Z",FALSE, 1, 22, 59, 0, 0},
+#else
+	{"012260Z",TRUE, 1, 22, 59, 0, 0},
+#endif
 	{"016045Z",FALSE, 1, 0, 0, 0, 0},
 	{"242345Z",FALSE, 0, 0, 0, 0, 0},
 	{"235959Z",TRUE, 23, 59, 59, 0, 0},
