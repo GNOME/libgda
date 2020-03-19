@@ -9,6 +9,9 @@
     <parameter id="INDEX_METHOD" _name="Method" gdatype="gchararray" nullok="TRUE" source="method:0"/>
     <parameter id="INDEX_TABLESPACE" _name="Tablespace" gdatype="gchararray" nullok="TRUE"/>
     <parameter id="INDEX_PREDICATE" _name="Predicate" _descr="Constraint expression for a partial index" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="INDEX_IFNOTEXISTS" _name="Only if it does not yet exist" _descr="Create index only if it does not yet exist" gdatype="gboolean" nullok="TRUE">
+      <gda_value>FALSE</gda_value>
+    </parameter>
   </parameters>
 
   <!-- Index fields -->
@@ -16,6 +19,8 @@
     <parameter id="INDEX_FIELD" _name="Indexed field or expression" gdatype="gchararray" nullok="FALSE" source="_INDEX_ON_TABLE/DICT_FIELDS_">
       <gda_value>indexed_field</gda_value>
     </parameter>
+    <parameter id="INDEX_COLLATE" _name="Compare method" _descr="Collation name" gdatype="gchararray" nullok="TRUE"/>
+    <parameter id="INDEX_SORT_ORDER" _name="Sort type" gdatype="gchararray" nullok="TRUE" source="sort:0"/>
   </sequence>
 
   <!-- Sources -->
@@ -55,6 +60,20 @@
           <gda_value>gist</gda_value>
           <gda_value>Gist</gda_value>
 	</gda_array_row>
+      </gda_array_data>
+    </gda_array>
+    <gda_array name="sort">
+      <gda_array_field name="id" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_field name="text" gdatype="gchararray" nullok="FALSE"/>
+      <gda_array_data>
+        <gda_array_row>
+          <gda_value>ASC</gda_value>
+          <gda_value>Ascending</gda_value>
+        </gda_array_row>
+        <gda_array_row>
+          <gda_value>DESC</gda_value>
+          <gda_value>Descending</gda_value>
+        </gda_array_row>
       </gda_array_data>
     </gda_array>
   </sources>

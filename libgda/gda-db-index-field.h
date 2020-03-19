@@ -37,19 +37,6 @@ struct _GdaDbIndexFieldClass
 };
 
 /**
- * GdaDbIndexCollate:
- * @GDA_DB_INDEX_COLLATE_BINARY: BINARY collate
- * @GDA_DB_INDEX_COLLATE_NOCASE: NOCASE collate
- *
- * Enum values to specify the collate value for the column
- */
-typedef enum
-{
-  GDA_DB_INDEX_COLLATE_BINARY = 0,
-  GDA_DB_INDEX_COLLATE_NOCASE
-} GdaDbIndexCollate;
-
-/**
  * GdaDbIndexSortOrder:
  * @GDA_DB_INDEX_SORT_ORDER_ASC: ascending sorting
  * @GDA_DB_INDEX_SORT_ORDER_DESC: descending sorting
@@ -70,16 +57,15 @@ void                 gda_db_index_field_set_column     (GdaDbIndexField *self,
 GdaDbColumn         *gda_db_index_field_get_column     (GdaDbIndexField *self);
 
 void                 gda_db_index_field_set_collate    (GdaDbIndexField *self,
-                                                        GdaDbIndexCollate collate);
+                                                        const gchar *collate);
 
-GdaDbIndexCollate    gda_db_index_field_get_collate    (GdaDbIndexField *self);
+const gchar *        gda_db_index_field_get_collate    (GdaDbIndexField *self);
 
 void                 gda_db_index_field_set_sort_order (GdaDbIndexField *self,
                                                         GdaDbIndexSortOrder sorder);
 
 GdaDbIndexSortOrder  gda_db_index_field_get_sort_order (GdaDbIndexField *self);
 
-const gchar *        gda_db_index_field_get_collate_str (GdaDbIndexField *field);
 const gchar *        gda_db_index_field_get_sort_order_str (GdaDbIndexField *field);
 
 G_END_DECLS

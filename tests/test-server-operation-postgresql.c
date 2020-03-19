@@ -1,6 +1,6 @@
-/* check-server-operation.c
+/* check-server-operation-postgresql.c
  *
- * Copyright (C) 2018-2019 Pavlo Solntsev <p.sun.fun@gmail.com>
+ * Copyright (C) 2020 Pavlo Solntsev <p.sun.fun@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,8 +39,9 @@
 #include <locale.h>
 #include <libgda/libgda.h>
 
-#define PROVIDER_NAME "SQLite"
-#define DB_TEST_BASE "sqlite_ddl_so_test"
+#define PROVIDER_NAME "PostgreSQL"
+
+#define GDA_PGSQL_ERROR_HANDLE(e) (g_print("Error: %s: %s\n", G_STRLOC, e && e->message ? e->message : "No default"));
 
 typedef struct
 {
@@ -55,17 +56,28 @@ test_server_operation_start (TestObjectFixture *fixture,
   fixture->cnc = NULL;
   fixture->provider = NULL;
 
-  gchar *dbname = g_strdup_printf("DB_DIR=.;DB_NAME=%s_%d", DB_TEST_BASE, g_random_int ());
+  const gchar *db_string = g_getenv("POSTGRESQL_CNC_PARAMS");
+
+  if (!db_string)
+    {
+      g_print ("Please set POSTGRESQL_CNC_PARAMS variable"
+               "with dbname, host, user and port (usually 5432)\n");
+      g_print ("Test will not be performed\n");
+      return;
+    }
+
+  GError *error = NULL;
 
   fixture->cnc = gda_connection_open_from_string (PROVIDER_NAME,
-                                                  dbname,
+                                                  db_string,
                                                   NULL,
                                                   GDA_CONNECTION_OPTIONS_NONE,
-                                                  NULL);
+                                                  &error);
+
+  if (!fixture->cnc)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (fixture->cnc);
-
-  g_free (dbname);
 
   fixture->provider = gda_connection_get_provider (fixture->cnc);
 
@@ -93,7 +105,9 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_TABLE,
                                              NULL,
-                                             NULL);
+                                             &error);
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
@@ -106,73 +120,104 @@ test_server_operation_operations (TestObjectFixture *fixture,
   /* Define table name */
   res = gda_server_operation_set_value_at (op,
                                            "Project",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   /* Table will not be temporary */
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_TEMP");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   /* Create table if table doesn't exist yet */
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_IFNOTEXISTS");
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   /* Define column id*/
   gint column_order = 0;
   res = gda_server_operation_set_value_at (op,
                                            "id",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NAME/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *id_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									 fixture->cnc,
+									 G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
-                                           g_type_name (G_TYPE_INT),
-                                           NULL,
+                                           id_dbms_type,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NNUL/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_AUTOINC/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_UNIQUE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_PKEY/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -180,64 +225,94 @@ test_server_operation_operations (TestObjectFixture *fixture,
   column_order++;
   res = gda_server_operation_set_value_at (op,
                                            "name",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NAME/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *name_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									   fixture->cnc,
+									   G_TYPE_STRING);
+
   res = gda_server_operation_set_value_at (op,
-                                           "varchar",
-                                           NULL,
+                                           name_dbms_type,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "50",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_SIZE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
+
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NNUL/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_AUTOINC/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_UNIQUE/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_PKEY/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "Default_name",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_DEFAULT/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -245,11 +320,9 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                                fixture->cnc,
                                                op,
                                                &error);
-  if (error != NULL) {
-    g_print ("Error: %s",
-              error->message != NULL ? error->message : "No detail");
-    g_clear_error (&error);
-  }
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -259,84 +332,118 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_TABLE,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
 /* We will create two tables: Employee and Project. One table will contain foreigh key that points
- * to the column from the second one.
+ *iiiiiii to the column from the second one.
  *
  */
   /* Define table name */
   res = gda_server_operation_set_value_at (op,
                                            "Employee",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   /* Table will not be temporary */
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_TEMP");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   /* Create table if table doesn't exist yet */
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DEF_P/TABLE_IFNOTEXISTS");
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   /* Define column id */
   column_order = 0;
   res = gda_server_operation_set_value_at (op,
                                            "id",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NAME/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *id2_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									  fixture->cnc,
+									  G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
-                                           g_type_name (G_TYPE_INT),
-                                           NULL,
+                                           id2_dbms_type,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NNUL/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_AUTOINC/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_UNIQUE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_PKEY/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -344,64 +451,92 @@ test_server_operation_operations (TestObjectFixture *fixture,
   column_order++;
   res = gda_server_operation_set_value_at (op,
                                            "name",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NAME/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *name2_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									   fixture->cnc,
+									   G_TYPE_STRING);
   res = gda_server_operation_set_value_at (op,
-                                           "varchar",
-                                           NULL,
+                                           name2_dbms_type,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "50",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_SIZE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NNUL/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_AUTOINC/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_UNIQUE/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_PKEY/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "Default_name",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_DEFAULT/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -409,89 +544,126 @@ test_server_operation_operations (TestObjectFixture *fixture,
   column_order++;
   res = gda_server_operation_set_value_at (op,
                                            "project_id",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NAME/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *id3_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									  fixture->cnc,
+									  G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
-                                           g_type_name (G_TYPE_INT),
-                                           NULL,
+                                           id3_dbms_type,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_TYPE/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_NNUL/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_AUTOINC/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_UNIQUE/%d",
                                            column_order);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/FIELDS_A/@COLUMN_PKEY/%d",
                                            column_order);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "Project",
-                                           NULL,
+                                           &error,
                                            "/FKEY_S/%d/FKEY_REF_TABLE",
                                            0);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "RESTRICT",
-                                           NULL,
+                                           &error,
                                            "/FKEY_S/%d/FKEY_ONDELETE",
                                            0);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "RESTRICT",
-                                           NULL,
+                                           &error,
                                            "/FKEY_S/%d/FKEY_ONUPDATE",
                                            0);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "project_id",
-                                           NULL,
+                                           &error,
                                            "/FKEY_S/%d/FKEY_FIELDS_A/@FK_FIELD/%d",
                                            0,0);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "id",
-                                           NULL,
+                                           &error,
                                            "/FKEY_S/%d/FKEY_FIELDS_A/@FK_REF_PK_FIELD/%d",
                                            0,0);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -499,11 +671,9 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                                fixture->cnc,
                                                op,
                                                &error);
-  if (error != NULL) {
-    g_print ("Error: %s",
-              error->message != NULL ? error->message : "No detail");
-    g_clear_error (&error);
-  }
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END of CREATE_TABLE operation */
@@ -514,49 +684,74 @@ test_server_operation_operations (TestObjectFixture *fixture,
   op = gda_server_provider_create_operation (fixture->provider, fixture->cnc,
                                              GDA_SERVER_OPERATION_ADD_COLUMN,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "Project",
-                                           NULL,
+                                           &error,
                                            "/COLUMN_DEF_P/TABLE_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "cost",
-                                           NULL,
+                                           &error,
                                            "/COLUMN_DEF_P/COLUMN_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
+/* We need to pass DBMS specific string reprisentation of the column type */
+  const gchar *cost_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+									   fixture->cnc,
+									   GDA_TYPE_NUMERIC);
   res = gda_server_operation_set_value_at (op,
-                                           "decimal",
-                                           NULL,
+                                           cost_dbms_type,
+                                           &error,
                                            "/COLUMN_DEF_P/COLUMN_TYPE");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "5",
-                                           NULL,
+                                           &error,
                                            "/COLUMN_DEF_P/COLUMN_SIZE");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "2",
-                                           NULL,
+                                           &error,
                                            "/COLUMN_DEF_P/COLUMN_SCALE");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/COLUMN_DEF_P/COLUMN_NNUL");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -564,11 +759,9 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                                fixture->cnc,
                                                op,
                                                &error);
-  if (error != NULL) {
-    g_print ("Error: %s",
-              error->message != NULL ? error->message : "No detail");
-    g_clear_error (&error);
-  }
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE  (error);
 
   g_assert_true (res);
 
@@ -578,28 +771,40 @@ test_server_operation_operations (TestObjectFixture *fixture,
   op = gda_server_provider_create_operation (fixture->provider, fixture->cnc,
                                              GDA_SERVER_OPERATION_RENAME_TABLE,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "Employee",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DESC_P/TABLE_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "NewEmployee",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DESC_P/TABLE_NEW_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -611,42 +816,60 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_VIEW,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "MyView",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DEF_P/VIEW_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "FALSE",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DEF_P/VIEW_TEMP");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DEF_P/VIEW_IFNOTEXISTS");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "SELECT name, project_id FROM NewEmployee",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DEF_P/VIEW_DEF");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END CREATE_VIEEW OPERATION */
@@ -658,28 +881,40 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_VIEW,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "MyView",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DESC_P/VIEW_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/VIEW_DESC_P/VIEW_IFNOTEXISTS");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END DROP VIEW OPERATION */
@@ -691,63 +926,90 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_INDEX,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "UNIQUE",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DEF_P/INDEX_TYPE");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "MyIndex",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DEF_P/INDEX_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "NewEmployee",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DEF_P/INDEX_ON_TABLE");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DEF_P/INDEX_IFNOTEXISTS");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "name",
-                                           NULL,
+                                           &error,
                                            "/INDEX_FIELDS_S/%d/INDEX_FIELD",
                                            0);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "BINARY",
-                                           NULL,
+                                           &error,
                                            "/INDEX_FIELD_S/%d/INDEX_COLLATE",
                                            0);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "ASC",
-                                           NULL,
+                                           &error,
                                            "/INDEX_FIELD_S/%d/INDEX_SORT_ORDER",
                                            0);
 
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
+
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider, fixture->cnc, op, NULL);
+  res = gda_server_provider_perform_operation (fixture->provider, fixture->cnc, op, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END CREATE_INDEX OPERATION */
@@ -758,28 +1020,40 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_INDEX,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "MyIndex",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DESC_P/INDEX_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/INDEX_DESC_P/INDEX_IFEXISTS");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END DROP_INDEX OPERATION */
@@ -791,28 +1065,40 @@ test_server_operation_operations (TestObjectFixture *fixture,
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_TABLE,
                                              NULL,
-                                             NULL);
+                                             &error);
+
+  if (!op)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_nonnull (op);
 
   res = gda_server_operation_set_value_at (op,
                                            "NewEmployee",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DESC_P/TABLE_NAME");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_operation_set_value_at (op,
                                            "TRUE",
-                                           NULL,
+                                           &error,
                                            "/TABLE_DESC_P/TABLE_IFEXISTS");
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   res = gda_server_provider_perform_operation (fixture->provider,
                                                fixture->cnc,
                                                op,
-                                               NULL);
+                                               &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
   /* END DROP_TABLE OPERATION */
@@ -824,7 +1110,7 @@ static void
 test_server_operation_operations_db (TestObjectFixture *fixture,
                                      G_GNUC_UNUSED gconstpointer user_data)
 {
-
+  GError *error = NULL;
 /* Define table Project */
   GdaDbTable *tproject = gda_db_table_new ();
   gda_db_base_set_name (GDA_DB_BASE (tproject), "Project");
@@ -859,7 +1145,10 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   g_object_unref (pname);
 
 /* Create table */
-  gboolean res = gda_db_table_create (tproject, fixture->cnc, TRUE, NULL);
+  gboolean res = gda_db_table_create (tproject, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -918,19 +1207,25 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
 
   g_object_unref (fkey);
 
-  res = gda_db_table_create (temployee, fixture->cnc, TRUE, NULL);
+  res = gda_db_table_create (temployee, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
   /* Start of ADD_COLUMN operation */
   GdaDbColumn *cost = gda_db_column_new ();
-  gda_db_column_set_name (cost, "cost");
-  gda_db_column_set_type (cost, G_TYPE_FLOAT);
+  gda_db_column_set_name (cost, "costa");
+  gda_db_column_set_type (cost, GDA_TYPE_NUMERIC);
   gda_db_column_set_size (cost, 5);
   gda_db_column_set_scale (cost, 2);
   gda_db_column_set_nnul (cost, FALSE);
 
-  res = gda_db_table_add_column (tproject, cost, fixture->cnc, NULL);
+  res = gda_db_table_add_column (tproject, cost, fixture->cnc, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -941,7 +1236,10 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   GdaDbTable *new_table = gda_db_table_new ();
   gda_db_base_set_name (GDA_DB_BASE (new_table), "NewEmployee");
 
-  res = gda_db_table_rename (temployee, new_table, fixture->cnc, NULL);
+  res = gda_db_table_rename (temployee, new_table, fixture->cnc, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -950,10 +1248,16 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_view_set_istemp (myview, FALSE);
   gda_db_view_set_defstring (myview, "SELECT name, project_id FROM NewEmployee");
 
-  res = gda_db_view_create (myview, fixture->cnc, TRUE, NULL);
+  res = gda_db_view_create (myview, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   /* DROP_VIEW operation. We will reuse the  view */
-  res = gda_db_view_drop (myview, fixture->cnc, TRUE, GDA_DB_VIEW_RESTRICT, NULL);
+  res = gda_db_view_drop (myview, fixture->cnc, TRUE, GDA_DB_VIEW_RESTRICT, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
@@ -969,22 +1273,30 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_column_set_name (fcol, "name");
 
   gda_db_index_field_set_column (field, fcol);
-  gda_db_index_field_set_collate (field, "BINARY");
   gda_db_index_field_set_sort_order (field, GDA_DB_INDEX_SORT_ORDER_ASC);
 
   gda_db_index_append_field (index, field);
   g_object_unref (fcol);
   g_object_unref (field);
 
-  res = gda_db_table_add_index (new_table, index, fixture->cnc, TRUE, NULL);
+  res = gda_db_table_add_index (new_table, index, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
-  res = gda_db_index_drop (index, fixture->cnc, TRUE, NULL);
+  res = gda_db_index_drop (index, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
-  res = gda_db_table_drop (new_table, fixture->cnc, TRUE, NULL);
+  res = gda_db_table_drop (new_table, fixture->cnc, TRUE, &error);
+
+  if (!res)
+    GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 }
@@ -997,18 +1309,18 @@ main(gint argc, gchar *argv[])
   g_test_init (&argc,&argv,NULL);
 
   g_test_add ("/test-server-operation-sqlite/old-so-module",
-              TestObjectFixture,
-              NULL,
-              test_server_operation_start,
-              test_server_operation_operations,
-              test_server_operation_finish);
+	      TestObjectFixture,
+	      NULL,
+	      test_server_operation_start,
+	      test_server_operation_operations,
+	      test_server_operation_finish);
 
   g_test_add ("/test-server-operation-sqlite/gda-db-module",
-              TestObjectFixture,
-              NULL,
-              test_server_operation_start,
-              test_server_operation_operations_db,
-              test_server_operation_finish);
+	      TestObjectFixture,
+	      NULL,
+	      test_server_operation_start,
+	      test_server_operation_operations_db,
+	      test_server_operation_finish);
 
   return g_test_run();
 }
