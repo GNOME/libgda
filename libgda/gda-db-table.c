@@ -52,6 +52,13 @@ typedef struct
  * This object represents a table of a database. The table view can be constracted manually
  * using API or generated from xml file together with other databse objects. See #GdaDbCatalog.
  * #GdaDbTable implements #GdaDbBuildable interface for parsing xml file.
+ *
+ * #GdaDbTable can be used as a container to hold other objects, e.g. #GdaDbColumn, #GdaDbFkey and
+ * as soon as populated with al needed objects, a series of methods ccan be called:
+ * gda_db_table_create(), gda_db_table_add_column(), gda_db_table_add_index().
+ *
+ * To create table a method gda_db_table_create() can be called and to drop the table the
+ * gda_db_table_drop() can be called.
  */
 
 static void gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface);
@@ -97,6 +104,7 @@ static const gchar *gdadbtablenodes[GDA_DB_TABLE_N_NODES] = {
  *
  * Returns: New instance of #GdaDbTable.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GdaDbTable *
@@ -351,6 +359,7 @@ gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface)
  * If @tablecomment is %NULL nothing is happened. @tablecomment will not be set
  * to %NULL.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -375,6 +384,7 @@ gda_db_table_set_comment (GdaDbTable *self,
  *
  * Set if the table should be temporary or not.  %FALSE is set by default.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -393,6 +403,7 @@ gda_db_table_set_is_temp (GdaDbTable *self,
  *
  * Returns: A comment string or %NULL if comment wasn't set.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const char*
@@ -412,6 +423,7 @@ gda_db_table_get_comment (GdaDbTable *self)
  * If @self is %NULL, this function aborts. So check @self before calling this
  * method.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -433,6 +445,7 @@ gda_db_table_get_temp (GdaDbTable *self)
  *
  * Returns: %TRUE or %FALSE
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -462,6 +475,7 @@ gda_db_table_is_valid (GdaDbTable *self)
  * Returns: (element-type Gda.DbColumn) (transfer none): A list of #GdaDbColumn objects or %NULL
  * if the internal list is not set or if %NULL is passed.
  *
+ * Stability: Stable
  * Since: 6.0
  *
  */
@@ -485,6 +499,7 @@ gda_db_table_get_columns (GdaDbTable *self)
  * Returns: (transfer none) (element-type Gda.DbFkey): A list of #GdaDbFkey objects or %NULL if
  * the internal list is not set or %NULL is passed
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GList*
@@ -505,6 +520,7 @@ gda_db_table_get_fkeys (GdaDbTable *self)
  *
  * Returns: %TRUE if table is temporary, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -528,6 +544,7 @@ gda_db_table_get_is_temp (GdaDbTable *self)
  *
  * Returns: %TRUE if no error occured and %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -620,7 +637,8 @@ _gda_db_compare_column_meta (GdaMetaTableColumn *a,
  * @error: error container
  *
  * With this method object @obj in the database available through @cnc will be updated using
- * ADD_COLUMN operation with information stored in @self.
+ * ADD_COLUMN operation with information stored in @self. This method is designed for internal use
+ * only and should not be used for the new code. It will be obsolete.
  *
  * Returns: %TRUE if no error and %FALSE otherwise
  */
@@ -721,6 +739,7 @@ on_error:
  *
  * Returns: %TRUE if successful, %FALSE otherwise
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -773,6 +792,7 @@ gda_db_table_create (GdaDbTable *self,
  *
  * Append @column to the internal list of columns
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -794,6 +814,7 @@ gda_db_table_append_column (GdaDbTable *self,
  *
  * Append @fkey to the internal list of columns
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -815,6 +836,9 @@ gda_db_table_append_fkey (GdaDbTable *self,
  * @error: An error holder
  *
  * This method performs rename operation on the table
+ *
+ * Stability: Stable
+ * Since: 6.0
  */
 gboolean
 gda_db_table_rename (GdaDbTable *old_name,
@@ -883,6 +907,7 @@ on_error:
  *
  * Returns: %TRUE if no error occures and %FALSE otherwise
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -900,6 +925,8 @@ gda_db_table_add_column (GdaDbTable *self,
   g_return_val_if_fail(GDA_IS_DB_COLUMN (col), FALSE);
   g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
   g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+
+  const gchar *strtype;
 
   if (!gda_connection_is_opened (cnc))
     {
@@ -930,7 +957,10 @@ gda_db_table_add_column (GdaDbTable *self,
                                           error, "/COLUMN_DEF_P/COLUMN_NAME"))
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, gda_db_column_get_ctype(col),
+  strtype = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (cnc),
+                                                       cnc, gda_db_column_get_gtype(col));
+
+  if (!gda_server_operation_set_value_at (op, strtype,
                                           error, "/COLUMN_DEF_P/COLUMN_TYPE"))
     goto on_error;
 
@@ -992,6 +1022,7 @@ on_error:
  *
  * Returns: %TRUE if no error and %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -1065,6 +1096,7 @@ on_error:
  *
  * Returns: %TRUE if no error and %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -1081,7 +1113,6 @@ gda_db_table_add_index  (GdaDbTable *self,
   g_return_val_if_fail(GDA_IS_DB_TABLE (self), FALSE);
   g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
   g_return_val_if_fail(GDA_IS_DB_INDEX(index), FALSE);
-  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
   if (!gda_connection_is_opened (cnc))
     {
@@ -1120,7 +1151,7 @@ gda_db_table_add_index  (GdaDbTable *self,
     goto on_error;
 
   if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifnotexists),
-                                          error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
+					  error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
     goto on_error;
 
   GSList *it = gda_db_index_get_fields (index);
@@ -1138,7 +1169,7 @@ gda_db_table_add_index  (GdaDbTable *self,
         goto on_error;
 
       if (!gda_server_operation_set_value_at (op,
-                                              gda_db_index_field_get_collate_str (it->data),
+                                              gda_db_index_field_get_collate (it->data),
                                               error,
                                               "/INDEX_FIELDS_S/%d/INDEX_COLLATE",
                                               i))
@@ -1170,8 +1201,12 @@ on_error:
  * @self: a #GdaDbTable instance
  * @constr a constraint string to append
  *
- * Since: 6.0
+ * Adds globat table constraint. It will be added to the sql string by the provider implementation
+ * if it supports it. Usually, table constraint is very complex and the current method just append
+ * a list of constraints to the sql string.
  *
+ * Stability: Stable
+ * Since: 6.0
  */
 void
 gda_db_table_append_constraint (GdaDbTable *self,

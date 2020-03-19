@@ -54,7 +54,6 @@ typedef  enum
 GQuark gda_db_column_error_quark (void);
 
 GdaDbColumn*    gda_db_column_new              (void);
-GdaDbColumn*    gda_db_column_new_from_meta    (GdaMetaTableColumn *column);
 
 const gchar*    gda_db_column_get_name         (GdaDbColumn *self);
 void            gda_db_column_set_name         (GdaDbColumn *self, const gchar *name);

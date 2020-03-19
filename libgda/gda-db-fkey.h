@@ -27,7 +27,6 @@
 #include <libxml/xmlwriter.h>
 #include "gda-db-buildable.h"
 #include "gda-server-operation.h"
-#include "gda-meta-struct.h"
 
 G_BEGIN_DECLS
 
@@ -91,7 +90,6 @@ gboolean          gda_db_fkey_prepare_create  (GdaDbFkey *self,
                                                GdaServerOperation *op,
                                                gint i,
                                                GError **error);
-GdaDbFkey       *gda_db_fkey_new_from_meta    (GdaMetaTableForeignKey *metafkey);
 
 G_END_DECLS
 

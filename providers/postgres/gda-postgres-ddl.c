@@ -207,7 +207,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 				g_string_append (string, " DEFAULT ");
         const gchar* valtmp = g_value_get_string (value1);
         if (!g_ascii_strcasecmp (valtmp,"string") ||
-            !g_ascii_strcasecmp (valtmp,"gchararray")) {
+            !g_ascii_strcasecmp (valtmp,"varchar")) {
           g_string_append_c (string,'\'');
           g_string_append (string, str);
           g_string_append_c (string,'\'');
@@ -678,6 +678,24 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 				g_string_append (string, ", ");
 			g_string_append (string, tmp);
 			g_free (tmp);
+
+			value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_COLLATE", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+				const gchar *str = g_value_get_string (value);
+				if (str && *str) {
+					g_string_append (string, " COLLATE ");
+					g_string_append (string, str);
+				}
+			}
+
+			value = gda_server_operation_get_value_at (op, "/INDEX_FIELDS_S/%d/INDEX_SORT_ORDER", i);
+			if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+				const gchar *str = g_value_get_string (value);
+				if (str && *str) {
+					g_string_append_c (string, ' ');
+					g_string_append (string, str);
+				}
+			}
 		}
 		else {
 			g_string_free (string, TRUE);

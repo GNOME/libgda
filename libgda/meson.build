@@ -124,6 +124,8 @@ libgda_headers = files([
 
 libgda_headers_private = files([
 	'gda-statement-extra.h',
+    'gda-db-column-private.h',
+    'gda-db-fkey-private.h',
 ])
 
 libgda_headers_all = []

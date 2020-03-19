@@ -25,6 +25,7 @@
 #include "gda-util.h"
 #include "gda-db-buildable.h"
 #include "gda-server-provider.h"
+#include "gda-db-column-private.h"
 
 G_DEFINE_QUARK (gda-db-column-error, gda_db_column_error)
 
@@ -56,7 +57,25 @@ typedef struct
  *
  * This object represents a column of a table or a view. The column can be constracted manually
  * using API or generated from xml file together with other databse objects. See #GdaDbCatalog.
- * #GdaDbColumn implements #GdaDbBuildable interface for parsing xml file.
+ * #GdaDbColumn implements #GdaDbBuildable interface for parsing xml file. This is a typical example
+ * how the #GdaDbColumn API can be used.
+ *
+ * |[<!-- language="C" -->
+ * GdaDbTable *tproject = gda_db_table_new ();
+ * gda_db_base_set_name (GDA_DB_BASE (tproject), "Project");
+ *
+ * GdaDbColumn *pid = gda_db_column_new ();
+ * gda_db_column_set_name (pid, "id");
+ * gda_db_column_set_type (pid, G_TYPE_INT);
+ * gda_db_column_set_nnul (pid, TRUE);
+ * gda_db_column_set_autoinc (pid, TRUE);
+ * gda_db_column_set_unique (pid, TRUE);
+ * gda_db_column_set_pkey (pid, TRUE);
+ *
+ * gda_db_table_append_column (tproject, pid);
+ *
+ * g_object_unref (pid);
+ * ]|
  */
 
 /* All nodes in xml should be accessed using enum below */
@@ -124,6 +143,7 @@ static GParamSpec *properties [N_PROPS] = {NULL};
  *
  * Returns: New instance of #GdaDbColumn
  *
+ * Stability: Stable
  * Since: 6.0
  *
  */
@@ -567,6 +587,7 @@ _gda_db_column_set_type (GdaDbColumn *self,
  *
  * Returns: Column name as a string or %NULL.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar*
@@ -585,6 +606,7 @@ gda_db_column_get_name (GdaDbColumn *self)
  *
  * Set column name.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -604,6 +626,7 @@ gda_db_column_set_name (GdaDbColumn *self,
  *
  * Return of column type as #GType
  *
+ * Stability: Stable
  * Since: 6.0
  */
 GType
@@ -623,6 +646,7 @@ gda_db_column_get_gtype (GdaDbColumn *self)
  *
  * Returns: column type as a string or %NULL
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar*
@@ -638,8 +662,11 @@ gda_db_column_get_ctype (GdaDbColumn *self)
  * @self: a #GdaDbColumn instance
  * @type: #GType for column
  *
- * Set type of the column as a #GType
+ * Set type of the column as a #GType. For numeric type, #GDA_TYPE_NUMERIC should be used. Other
+ * types, e.g. %G_TYPE_FLOAT or %G_TYPE_DOUBLE can also be used but precision and scale should not be
+ * set. In this case appropriate types for DB implementation will be used, e.g. float4.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -661,6 +688,8 @@ gda_db_column_set_type (GdaDbColumn *self,
  * This value is ignore for column types except float or double.
  *
  * Returns: Current scale value
+ *
+ * Stability: Stable
  * Since: 6.0
  */
 guint
@@ -679,6 +708,7 @@ gda_db_column_get_scale (GdaDbColumn *self)
  * Scale is used for float number representation to specify a number of decimal digits.
  * This value is ignore for column types except float or double.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -698,6 +728,7 @@ gda_db_column_set_scale (GdaDbColumn *self,
  *
  * Returns: %TRUE if the column is primary key, %FALSE otherwise
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -713,6 +744,9 @@ gda_db_column_get_pkey (GdaDbColumn *self)
  * @self: a #GdaDbColumn object
  * @pkey: value to set
  *
+ * If @pkey is %TRUE, the given column will be marked with PRIMERY KEY flag
+ *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -732,6 +766,7 @@ gda_db_column_set_pkey (GdaDbColumn *self,
  *
  * Returns: %TRUE if value can be %NULL, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -746,7 +781,8 @@ gda_db_column_get_nnul (GdaDbColumn *self)
  * gda_db_column_set_nnul:
  * @self: a GdaDbColumn object
  * @nnul: value to set for nnul
- *
+ * If @nnul is %TRUE the column will be marked with NON NULL flag
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -766,6 +802,7 @@ gda_db_column_set_nnul (GdaDbColumn *self,
  *
  * Returns: %TRUE if column should be auto-incremented, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -783,6 +820,7 @@ gda_db_column_get_autoinc (GdaDbColumn *self)
  *
  * Set value for auto-incremented key.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -802,6 +840,7 @@ gda_db_column_set_autoinc (GdaDbColumn *self,
  *
  * Returns: %TRUE if column should have a unique value, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -819,6 +858,7 @@ gda_db_column_get_unique (GdaDbColumn *self)
  *
  * Set value for unique key.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -839,6 +879,7 @@ gda_db_column_set_unique (GdaDbColumn *self,
  * Returns: Column comment as a string.
  * %NULL is returned if comment is not set.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar*
@@ -857,6 +898,7 @@ gda_db_column_get_comment (GdaDbColumn *self)
  *
  * Set value for column comment.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -875,6 +917,7 @@ gda_db_column_set_comment (GdaDbColumn *self,
  *
  * Returns: Current value for column size.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 guint
@@ -892,6 +935,7 @@ gda_db_column_get_size (GdaDbColumn *self)
  *
  * Set value for column size. This is relevant only for string column type.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -911,6 +955,7 @@ gda_db_column_set_size (GdaDbColumn *self,
  *
  * Returns: Default value for the column as a string.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar*
@@ -926,6 +971,7 @@ gda_db_column_get_default (GdaDbColumn *self)
  * @self: a #GdaDbColumn instance
  * @value: default value to set for column as a string
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -946,6 +992,7 @@ gda_db_column_set_default (GdaDbColumn *self,
  *
  * Returns: Column check string
  *
+ * Stability: Stable
  * Since: 6.0
  */
 const gchar*
@@ -963,6 +1010,7 @@ gda_db_column_get_check (GdaDbColumn *self)
  *
  * Sets check string to the column.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 void
@@ -985,6 +1033,7 @@ gda_db_column_set_check (GdaDbColumn *self,
  *
  * Returns: %TRUE if successful, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -1093,6 +1142,7 @@ gda_db_column_prepare_create  (GdaDbColumn *self,
  *
  * Returns: %TRUE if success, %FALSE otherwise.
  *
+ * Stability: Stable
  * Since: 6.0
  */
 gboolean
@@ -1186,7 +1236,7 @@ gda_db_column_prepare_add (GdaDbColumn *self,
  *
  * Create new #GdaDbColumn instance from the corresponding #GdaMetaTableColumn
  * object. If %NULL is passed this function works exactly as
- * gda_db_column_new()
+ * gda_db_column_new().
  *
  * Returns: New object that should be freed with gda_db_column_free()
  */
