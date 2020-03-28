@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-01-31 16:40+0000\n"
-"PO-Revision-Date: 2020-02-20 19:57-0300\n"
+"POT-Creation-Date: 2020-03-26 14:53+0000\n"
+"PO-Revision-Date: 2020-03-28 08:51-0300\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"X-Generator: Gtranslator 3.32.0\n"
+"X-Generator: Gtranslator 3.36.0\n"
 "X-Project-Style: gnome\n"
 
 #: ../control-center/dsn-config.c:79
@@ -184,7 +184,7 @@ msgstr "Não foi possível salvar a definição de DSN: %s"
 #: ../tools/browser/ui-formgrid.c:725 ../tools/common/t-app.c:2838
 #: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
 #: ../tools/common/t-connection.c:1210 ../tools/common/t-connection.c:1212
-#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1979
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1981
 #: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
@@ -1787,18 +1787,18 @@ msgstr "O modelo de dados contém BLOBs"
 msgid "Can't get the number of rows of data model"
 msgstr "Não foi possível obter a quantidade de linhas do modelo de dados"
 
-#: ../libgda/gda-db-column.c:557
+#: ../libgda/gda-db-column.c:577
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
 msgstr "Tipo de coluna inválida %s. Veja API para gda_g_type_from_string ().\n"
 
-#: ../libgda/gda-db-column.c:1012
+#: ../libgda/gda-db-column.c:1061 ../libgda/gda-db-column.c:1174
 #, c-format
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Erro interno: a operação deve ser preparada, definindo os dados da conexão"
 
-#: ../libgda/gda-db-catalog.c:232
+#: ../libgda/gda-db-catalog.c:234
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
@@ -1807,75 +1807,75 @@ msgstr ""
 "Não foi possível analisar “%s”: a validação dos arquivos XML para "
 "GdaDdCreator não será realizada (alguns erros estranhos podem ocorrer)"
 
-#: ../libgda/gda-db-catalog.c:256
+#: ../libgda/gda-db-catalog.c:258
 #, c-format
 msgid "Context to validate xml file can't be created."
 msgstr "Contexto para validar arquivo xml não pôde ser criado."
 
-#: ../libgda/gda-db-catalog.c:274
+#: ../libgda/gda-db-catalog.c:276
 #, c-format
 msgid "xml file is invalid"
 msgstr "o arquivo xml é inválido"
 
-#: ../libgda/gda-db-catalog.c:315
+#: ../libgda/gda-db-catalog.c:317
 #, c-format
 msgid "Root node should be <schema>."
 msgstr "O nó raiz deve ser <schema>."
 
-#: ../libgda/gda-db-catalog.c:448 ../libgda/gda-db-catalog.c:499
+#: ../libgda/gda-db-catalog.c:450 ../libgda/gda-db-catalog.c:501
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
 msgstr "O objeto xmlDoc não pode ser criado do arquivo xml de nome “%s”"
 
-#: ../libgda/gda-db-catalog.c:457
+#: ../libgda/gda-db-catalog.c:459
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "o arquivo xml “%s” não é válido\n"
 
-#: ../libgda/gda-db-catalog.c:856 ../libgda/gda-db-table.c:641
-#: ../libgda/gda-db-table.c:907 ../libgda/gda-db-table.c:1014
-#: ../libgda/gda-db-table.c:1089 ../libgda/gda-db-index.c:221
-#: ../libgda/gda-db-index.c:240
+#: ../libgda/gda-db-catalog.c:858 ../libgda/gda-db-table.c:659
+#: ../libgda/gda-db-table.c:934 ../libgda/gda-db-table.c:1045
+#: ../libgda/gda-db-table.c:1120 ../libgda/gda-db-index.c:267
+#: ../libgda/gda-db-index.c:286
 #, c-format
 msgid "Connection is not opened"
 msgstr "A conexão não está aberta"
 
-#: ../libgda/gda-db-catalog.c:1045
+#: ../libgda/gda-db-catalog.c:1047
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Não foi possível abrir o fluxo para leitura do arquivo “%s”"
 
-#: ../libgda/gda-db-catalog.c:1061
+#: ../libgda/gda-db-catalog.c:1063
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Não foi possível analisar o contexto para “%s”"
 
-#: ../libgda/gda-db-catalog.c:1077
+#: ../libgda/gda-db-catalog.c:1079
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Erro durante a análise com erro “%d”"
 
-#: ../libgda/gda-db-catalog.c:1094
+#: ../libgda/gda-db-catalog.c:1096
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Falha ao analisar o arquivo: “%s”"
 
-#: ../libgda/gda-db-catalog.c:1105
+#: ../libgda/gda-db-catalog.c:1107
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "O documento XML não pôde ser criado do arquivo: “%s”"
 
-#: ../libgda/gda-db-catalog.c:1115
+#: ../libgda/gda-db-catalog.c:1117
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "O arquivo XML não é válido\n"
 
-#: ../libgda/gda-db-table.c:649
+#: ../libgda/gda-db-table.c:667
 #, c-format
 msgid "Empty column list"
 msgstr "Lista de colunas vazia"
 
-#: ../libgda/gda-db-table.c:921 ../libgda/gda-db-table.c:1103
+#: ../libgda/gda-db-table.c:948 ../libgda/gda-db-table.c:1134
 #, c-format
 msgid "ServerOperation is NULL"
 msgstr "ServerOperation é NULO"
@@ -2115,7 +2115,7 @@ msgid "Could not get the internal schema's version"
 msgstr "Não foi possível obter a versão do esquema interno"
 
 #: ../libgda/gda-meta-store.c:3029 ../libgda/gda-meta-store.c:3153
-#: ../tools/common/t-context.c:287
+#: ../tools/common/t-context.c:289
 msgid "More than one SQL statement"
 msgstr "Mais de uma instrução SQL"
 
@@ -2778,8 +2778,8 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:619 ../tools/common/t-app.c:2976
 #: ../tools/common/t-app.c:4669 ../tools/common/t-app.c:5186
 #: ../tools/common/t-app.c:5287 ../tools/common/t-app.c:5384
-#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:419
+#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:269
+#: ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Nenhuma conexão foi especificada"
@@ -3078,12 +3078,12 @@ msgstr "Erro interno, criando tabela no provedor SQLite"
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr "Não foi definido nenhum campo para a opção CREATE TABLE"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:266 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:273 ../providers/mysql/gda-mysql-ddl.c:295
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr "Nenhum campo foi especificado na definição de chave estrangeira"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:355
+#: ../libgda/sqlite/gda-sqlite-ddl.c:362
 msgid "Table to create must have at least one field"
 msgstr "A tabela a ser criada deve ter pelo menos um campo"
 
@@ -3546,10 +3546,6 @@ msgstr "Falha ao modificar dados: %s"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1658
 msgid "Data model representing the table is read only"
 msgstr "O modelo de dados representando a tabela é para apenas leitura"
-
-#: ../libgda/sqlite/virtual/gda-vprovider-hub.c:135
-msgid "Internal GdaVproviderHub error"
-msgstr "Erro interno de GdaVproviderHub"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:617
 #: ../libgda/sql-parser/gda-sql-parser.c:708
@@ -4016,13 +4012,13 @@ msgstr ""
 "Formato esperado é %s\n"
 "Tempo é relativo para o tempo local (%s)"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:572
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Não foi possível definir valor para a entrada: Tipo de dados inválido para  "
 "Entry Wrapper Time"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:661
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Não foi possível obter valor da entrada: Tipo de dados inválido para  Entry "
@@ -4069,7 +4065,7 @@ msgstr "Não especificado"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:17
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
@@ -4714,7 +4710,7 @@ msgstr ""
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/xml-spec-editor.c:225
 #: ../tools/browser/query-exec/query-result.c:284
-#: ../tools/common/web-server.c:1978
+#: ../tools/common/web-server.c:1980
 #, c-format
 msgid "Error: %s"
 msgstr "Erro: %s"
@@ -5327,7 +5323,7 @@ msgstr "Nome da tabela"
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:10
@@ -5343,7 +5339,7 @@ msgstr "Nome do campo"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:20
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
@@ -5357,7 +5353,7 @@ msgstr "Tipo de dados"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:22
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
@@ -5371,7 +5367,7 @@ msgstr "Tamanho"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:24
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:16
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
@@ -5386,7 +5382,7 @@ msgstr "Escala"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:11
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:18
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
@@ -5407,7 +5403,7 @@ msgstr "O valor padrão, obrigatório se a coluna é não nula"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:19
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:30
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
@@ -5422,7 +5418,7 @@ msgstr "Conferir"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:20
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:12
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:32
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
@@ -5543,7 +5539,8 @@ msgstr "Na tabela"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:5
@@ -5554,6 +5551,7 @@ msgid "Only if it does not yet exist"
 msgstr "Somente se ainda não existir"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
@@ -5562,7 +5560,7 @@ msgstr "Cria um índice somente se ainda não existir um"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field(s)"
@@ -5571,15 +5569,18 @@ msgstr "Campo(s) indexado(s)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field or expression"
 msgstr "Campo ou expressão indexado"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare values
+#. Index fields
+#. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:13
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:34
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
@@ -5600,6 +5601,7 @@ msgstr "Nome da colação (BINARY|NOCASE)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:21
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 msgid "Sort type"
@@ -5618,7 +5620,7 @@ msgstr "Descrição da tabela"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Temporary table"
@@ -5626,7 +5628,7 @@ msgstr "Tabela temporária"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Create table only if it does not yet exist"
@@ -5636,7 +5638,7 @@ msgstr "Cria uma tabela somente se ainda não existir uma"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Table's columns"
@@ -5646,7 +5648,7 @@ msgstr "Colunas da tabela"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:20
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
 #: ../tools/common/t-app.c:1864 ../tools/common/web-server.c:867
@@ -5660,7 +5662,7 @@ msgstr "Incremento automático"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:13
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
 #: ../tools/common/t-app.c:1991
@@ -5673,7 +5675,7 @@ msgstr "Único"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:24
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
@@ -5689,7 +5691,7 @@ msgstr "Chave primária"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:18
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:36
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:28
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 #: ../tools/browser/schema-browser/table-columns.c:661
@@ -5713,7 +5715,7 @@ msgstr "Método de resolução de conflito (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:41
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:41
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
@@ -5725,7 +5727,7 @@ msgstr "Chave estrangeira"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 msgid "Referenced table"
@@ -5734,7 +5736,7 @@ msgstr "Tabela referenciada"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:43
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:41
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:43
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:43
 msgid "Fields"
@@ -5743,7 +5745,7 @@ msgstr "Campos"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:43
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:44
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:44
 msgid "Fields in the foreign key"
@@ -5752,7 +5754,7 @@ msgstr "Campos na chave estrangeira"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:45
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:45
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:45
 msgid "Field"
@@ -5761,7 +5763,7 @@ msgstr "Campo"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:47
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:46
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:46
 msgid "Referenced field"
@@ -5770,7 +5772,7 @@ msgstr "Campo referenciado"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:47
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:49
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:47
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:47
 msgid "Match type"
@@ -5779,7 +5781,7 @@ msgstr "Tipo de coincidência"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:48
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
@@ -5788,7 +5790,7 @@ msgstr "Método de coincidência se mais de um campo estiver envolvido"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:49
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:49
 msgid "On update action"
@@ -5797,7 +5799,7 @@ msgstr "Ação ao atualizar"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:50
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:50
 msgid "On delete action"
@@ -5807,7 +5809,7 @@ msgstr "Ação ao excluir"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:52
 msgid "Global constraints"
@@ -6244,17 +6246,17 @@ msgstr "Parâmetro"
 msgid "near \"%s\": syntax error"
 msgstr "próximo a “%s”: erro de sintaxe"
 
-#: ../providers/ldap/gda-ldap-util.c:1421
+#: ../providers/ldap/gda-ldap-util.c:1381
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "Servidor LDAP retornou mais de uma entrada com DN “%s”"
 
-#: ../providers/ldap/gda-ldap-util.c:1608
+#: ../providers/ldap/gda-ldap-util.c:1568
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr ""
 "Não foi possível analisar nome diferenciado retornado pelo servidor LDAP"
 
-#: ../providers/ldap/gda-ldap-util.c:1902
+#: ../providers/ldap/gda-ldap-util.c:1862
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Tipo de dados inesperado “%s” para atributo objectClass!"
@@ -7092,7 +7094,7 @@ msgid "Index directory"
 msgstr "Diretório de índice"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match simple"
 msgstr "Coincidência simples"
 
@@ -7101,28 +7103,28 @@ msgid "Match partial"
 msgstr "Coincidência parcial"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
 msgid "Match full"
 msgstr "Coincidência completa"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 msgid "No action"
 msgstr "Nenhuma ação"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 msgid "Restrict"
 msgstr "Restrito"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 msgid "Cascade"
 msgstr "Cascata"
 
 #. To translators: Action of setting a value to NULL
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:72
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "Set to NULL"
 msgstr "Definir como nulo"
 
@@ -7309,11 +7311,11 @@ msgstr "Não foi possível alocar o localizador de Lob"
 msgid "Could not copy Lob locator"
 msgstr "Não foi possível copiar o localizador de Lob"
 
-#: ../providers/postgres/gda-postgres-ddl.c:910
+#: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
 msgstr "O tipo de dataholder é desconhecido."
 
-#: ../providers/postgres/gda-postgres-ddl.c:1083
+#: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
 msgstr "O tipo de dataholder é desconhecido. Relate isso como um erro."
 
@@ -7684,6 +7686,12 @@ msgstr "Oração"
 msgid "Constraint expression for a partial index"
 msgstr "Expressão de restrição para uma indexação parcial"
 
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
+#| msgid "Collation"
+msgid "Collation name"
+msgstr "Nome da colação"
+
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7912,57 +7920,53 @@ msgstr ""
 "Lista um ou mais cargos existentes que são automaticamente adicionados como "
 "membros do novo cargo, dando-lhes permissão de inscrever outros a este cargo"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-msgid "With OIDs"
-msgstr "Com OIDs"
-
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Parent table(s)"
 msgstr "Tabela(s) pai"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Inheritance"
 msgstr "Herança"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Parent table"
 msgstr "Tabela pai"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Keep coupled"
 msgstr "Manter acoplado"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
 msgstr "Usa INHERIT (herdar) em vez de LIKE (parecida/como)"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
 msgstr "Copiar padrões"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
 msgid "Copy default expressions"
 msgstr "Copia as expressões padrões"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Deferrable"
 msgstr "Adiável"
 
 #. To translators: Action of setting a value to its default value
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 msgid "Set to default"
 msgstr "Restaurar"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Not deferrable"
 msgstr "Não adiável"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "Deferrable initially immediate"
 msgstr "Adiável inicialmente imediato"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:77
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
 msgid "Deferrable initially deferred"
 msgstr "Adiável inicialmente adiado"
 
@@ -11488,26 +11492,26 @@ msgstr "Não é possível enviar transação para acessar favoritos"
 msgid "Could not execute LDAP search"
 msgstr "Não foi possível executar a pesquisa LDAP"
 
-#: ../tools/common/t-context.c:325
+#: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "Não foi possível interpretar o valor do parâmetro “%s”"
 
-#: ../tools/common/t-context.c:341
+#: ../tools/common/t-context.c:343
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr "Nenhum parâmetro interno chamado “%s” exigido pela consulta"
 
-#: ../tools/common/t-context.c:424
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "A conexão está fechada"
 
-#: ../tools/common/t-context.c:555
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Não foi possível abrir o arquivo “%s” para escrita: %s\n"
 
-#: ../tools/common/t-context.c:569 ../tools/common/t-context.c:578
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Não foi possível abrir o pipe para “%s”: %s"
@@ -11677,7 +11681,7 @@ msgstr "Objetos"
 msgid "Triggers"
 msgstr "Disparadores"
 
-#: ../tools/common/web-server.c:1871
+#: ../tools/common/web-server.c:1873
 msgid "Command is incomplete"
 msgstr "O comando está incompleto"
 
@@ -11724,6 +11728,12 @@ msgstr "Erro: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Não foi possível analisar o arquivo “%s”; ignorando-o"
+
+#~ msgid "Internal GdaVproviderHub error"
+#~ msgstr "Erro interno de GdaVproviderHub"
+
+#~ msgid "With OIDs"
+#~ msgstr "Com OIDs"
 
 #~ msgid "Invalid values from statement to create a timestamp"
 #~ msgstr "Parâmetro inválido na instrução para criar um registro de data/hora"
