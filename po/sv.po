@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-01-31 16:40+0000\n"
-"PO-Revision-Date: 2020-03-05 01:25+0100\n"
+"POT-Creation-Date: 2020-03-26 14:53+0000\n"
+"PO-Revision-Date: 2020-04-04 11:13+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -179,7 +179,7 @@ msgstr "Kunde inte spara DSN-definition: %s"
 #: ../tools/browser/ui-formgrid.c:725 ../tools/common/t-app.c:2838
 #: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
 #: ../tools/common/t-connection.c:1210 ../tools/common/t-connection.c:1212
-#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1979
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1981
 #: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
@@ -1742,19 +1742,19 @@ msgstr "Datamodell innehåller BLOB-objekt"
 msgid "Can't get the number of rows of data model"
 msgstr "Det går inte att hämta antalet rader i datamodellen"
 
-#: ../libgda/gda-db-column.c:557
+#: ../libgda/gda-db-column.c:577
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
 msgstr "Ogiltig kolumntyp %s. Se API för gda_g_type from_string().\n"
 
 # Wording not entirely clear in original, but looks like this is the intended meaning
-#: ../libgda/gda-db-column.c:1012
+#: ../libgda/gda-db-column.c:1061 ../libgda/gda-db-column.c:1174
 #, c-format
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Internt fel: Åtgärd ska vara förberedd vid inställning av anslutningsdata"
 
-#: ../libgda/gda-db-catalog.c:232
+#: ../libgda/gda-db-catalog.c:234
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
@@ -1763,76 +1763,76 @@ msgstr ""
 "Det gick inte att tolka ”%s”: Validering för XML-filer för GdaDbCreator "
 "kommer inte utföras (märkliga fel kan uppstå)"
 
-#: ../libgda/gda-db-catalog.c:256
+#: ../libgda/gda-db-catalog.c:258
 #, c-format
 msgid "Context to validate xml file can't be created."
 msgstr "Det går inte att skapa kontextet för validering av xmlfilen."
 
-#: ../libgda/gda-db-catalog.c:274
+#: ../libgda/gda-db-catalog.c:276
 #, c-format
 msgid "xml file is invalid"
 msgstr "xmlfilen är ogiltig"
 
-#: ../libgda/gda-db-catalog.c:315
+#: ../libgda/gda-db-catalog.c:317
 #, c-format
 msgid "Root node should be <schema>."
 msgstr "Rotnod ska vara <schema>."
 
 # TODO: xmlfile name?
-#: ../libgda/gda-db-catalog.c:448 ../libgda/gda-db-catalog.c:499
+#: ../libgda/gda-db-catalog.c:450 ../libgda/gda-db-catalog.c:501
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
 msgstr "Det går inte att skapa xmlDoc-objektet från xmlfil-namnet ”%s”"
 
-#: ../libgda/gda-db-catalog.c:457
+#: ../libgda/gda-db-catalog.c:459
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "xmlfilen ”%s” är ogiltig\n"
 
-#: ../libgda/gda-db-catalog.c:856 ../libgda/gda-db-table.c:641
-#: ../libgda/gda-db-table.c:907 ../libgda/gda-db-table.c:1014
-#: ../libgda/gda-db-table.c:1089 ../libgda/gda-db-index.c:221
-#: ../libgda/gda-db-index.c:240
+#: ../libgda/gda-db-catalog.c:858 ../libgda/gda-db-table.c:659
+#: ../libgda/gda-db-table.c:934 ../libgda/gda-db-table.c:1045
+#: ../libgda/gda-db-table.c:1120 ../libgda/gda-db-index.c:267
+#: ../libgda/gda-db-index.c:286
 #, c-format
 msgid "Connection is not opened"
 msgstr "Anslutning inte öppnad"
 
-#: ../libgda/gda-db-catalog.c:1045
+#: ../libgda/gda-db-catalog.c:1047
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Det går inte att öppna strömmen för läsning av filen ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1061
+#: ../libgda/gda-db-catalog.c:1063
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Det går inte att skapa tolkningskontext för ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1077
+#: ../libgda/gda-db-catalog.c:1079
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Fel under tolkning med fel ”%d”"
 
-#: ../libgda/gda-db-catalog.c:1094
+#: ../libgda/gda-db-catalog.c:1096
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Misslyckades med att tolka fil: ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1105
+#: ../libgda/gda-db-catalog.c:1107
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "Det går inte att skapa XML-dokument från fil: ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1115
+#: ../libgda/gda-db-catalog.c:1117
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "XML-filen är inte giltig\n"
 
-#: ../libgda/gda-db-table.c:649
+#: ../libgda/gda-db-table.c:667
 #, c-format
 msgid "Empty column list"
 msgstr "Tom kolumnlista"
 
-#: ../libgda/gda-db-table.c:921 ../libgda/gda-db-table.c:1103
+#: ../libgda/gda-db-table.c:948 ../libgda/gda-db-table.c:1134
 #, c-format
 msgid "ServerOperation is NULL"
 msgstr "ServerOperation är NULL"
@@ -2067,7 +2067,7 @@ msgid "Could not get the internal schema's version"
 msgstr "Kunde inte hämta det interna schemats version"
 
 #: ../libgda/gda-meta-store.c:3029 ../libgda/gda-meta-store.c:3153
-#: ../tools/common/t-context.c:287
+#: ../tools/common/t-context.c:289
 msgid "More than one SQL statement"
 msgstr "Mer än en SQL-sats"
 
@@ -2719,8 +2719,8 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:619 ../tools/common/t-app.c:2976
 #: ../tools/common/t-app.c:4669 ../tools/common/t-app.c:5186
 #: ../tools/common/t-app.c:5287 ../tools/common/t-app.c:5384
-#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:419
+#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:269
+#: ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Ingen anslutning angiven"
@@ -3017,12 +3017,12 @@ msgstr "Internt fel vid skapande av tabell i SQLite-leverantör"
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr "Inga fält är definierade för åtgärden CREATE TABLE"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:266 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:273 ../providers/mysql/gda-mysql-ddl.c:295
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr "Inget fält angivet i begränsning för främmande nyckel"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:355
+#: ../libgda/sqlite/gda-sqlite-ddl.c:362
 msgid "Table to create must have at least one field"
 msgstr "Tabellen att skapa måste ha minst ett fält"
 
@@ -3474,10 +3474,6 @@ msgstr "Misslyckades med att ändra data: %s"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1658
 msgid "Data model representing the table is read only"
 msgstr "Datamodellen som representerar tabellen är skrivskyddad"
-
-#: ../libgda/sqlite/virtual/gda-vprovider-hub.c:135
-msgid "Internal GdaVproviderHub error"
-msgstr "Internt GdaVproviderHub-fel"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:617
 #: ../libgda/sql-parser/gda-sql-parser.c:708
@@ -3938,13 +3934,13 @@ msgstr ""
 "Förväntat format är %s\n"
 "Tid är relativ till lokal tid (%s)"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:572
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Det går inte att ställa in värde till post: Ogiltig datatyp för "
 "tidsinkapsling för post"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:661
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Det går inte att hämta värde från post: Ogiltig datatyp för tidsinkapsling "
@@ -3991,7 +3987,7 @@ msgstr "Inte angiven"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:17
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
@@ -4625,7 +4621,7 @@ msgstr "Kunde inte öppna insticksmodulkatalog, ingen insticksmodul inläst."
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/xml-spec-editor.c:225
 #: ../tools/browser/query-exec/query-result.c:284
-#: ../tools/common/web-server.c:1978
+#: ../tools/common/web-server.c:1980
 #, c-format
 msgid "Error: %s"
 msgstr "Fel: %s"
@@ -5238,7 +5234,7 @@ msgstr "Tabellnamn"
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:10
@@ -5254,7 +5250,7 @@ msgstr "Fältnamn"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:20
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
@@ -5268,7 +5264,7 @@ msgstr "Datatyp"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:22
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
@@ -5282,7 +5278,7 @@ msgstr "Storlek"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:24
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:16
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
@@ -5297,7 +5293,7 @@ msgstr "Skala"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:11
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:18
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
@@ -5318,7 +5314,7 @@ msgstr "Standardvärde, obligatorisk om kolumnen är NOT NULL"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:19
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:30
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
@@ -5333,7 +5329,7 @@ msgstr "Kontroll"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:20
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:12
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:32
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
@@ -5454,7 +5450,8 @@ msgstr "På tabell"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:5
@@ -5465,6 +5462,7 @@ msgid "Only if it does not yet exist"
 msgstr "Endast om den inte redan finns"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
@@ -5473,7 +5471,7 @@ msgstr "Skapa index endast om det inte redan finns"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field(s)"
@@ -5482,15 +5480,18 @@ msgstr "Indexerade fält"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field or expression"
 msgstr "Indexerat fält eller uttryck"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare values
+#. Index fields
+#. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:13
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:34
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
@@ -5511,6 +5512,7 @@ msgstr "Sorteringsnamn (BINARY|NOCASE)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:21
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 msgid "Sort type"
@@ -5529,7 +5531,7 @@ msgstr "Tabellens beskrivning"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Temporary table"
@@ -5537,7 +5539,7 @@ msgstr "Temporärtabell"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Create table only if it does not yet exist"
@@ -5547,7 +5549,7 @@ msgstr "Skapa tabell endast om den inte redan finns"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Table's columns"
@@ -5557,7 +5559,7 @@ msgstr "Tabellens kolumner"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:20
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
 #: ../tools/common/t-app.c:1864 ../tools/common/web-server.c:867
@@ -5571,7 +5573,7 @@ msgstr "Automatisk ökning"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:13
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
 #: ../tools/common/t-app.c:1991
@@ -5584,7 +5586,7 @@ msgstr "Unik"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:24
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
@@ -5600,7 +5602,7 @@ msgstr "Primärnyckel"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:18
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:36
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:28
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 #: ../tools/browser/schema-browser/table-columns.c:661
@@ -5624,7 +5626,7 @@ msgstr "Konfliktlösningsmetod (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:41
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:41
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
@@ -5636,7 +5638,7 @@ msgstr "Främmande nyckel"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 msgid "Referenced table"
@@ -5645,7 +5647,7 @@ msgstr "Tabellreferens"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:43
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:41
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:43
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:43
 msgid "Fields"
@@ -5654,7 +5656,7 @@ msgstr "Fält"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:43
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:44
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:44
 msgid "Fields in the foreign key"
@@ -5663,7 +5665,7 @@ msgstr "Fält i den främmande nyckeln"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:45
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:45
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:45
 msgid "Field"
@@ -5672,7 +5674,7 @@ msgstr "Fält"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:47
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:46
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:46
 msgid "Referenced field"
@@ -5681,7 +5683,7 @@ msgstr "Fältreferens"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:47
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:49
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:47
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:47
 msgid "Match type"
@@ -5690,7 +5692,7 @@ msgstr "Matchningstyp"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:48
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
@@ -5699,7 +5701,7 @@ msgstr "Matchningsmetod om mer än ett fält är inblandat"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:49
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:49
 msgid "On update action"
@@ -5708,7 +5710,7 @@ msgstr "Vid uppdateringsåtgärd"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:50
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:50
 msgid "On delete action"
@@ -5718,7 +5720,7 @@ msgstr "Vid borttagningsåtgärd"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:52
 msgid "Global constraints"
@@ -6155,16 +6157,16 @@ msgstr "Parameter"
 msgid "near \"%s\": syntax error"
 msgstr "nära ”%s”: syntaxfel"
 
-#: ../providers/ldap/gda-ldap-util.c:1421
+#: ../providers/ldap/gda-ldap-util.c:1381
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "LDAP-servern returnerade mer än en post med DN ”%s”"
 
-#: ../providers/ldap/gda-ldap-util.c:1608
+#: ../providers/ldap/gda-ldap-util.c:1568
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr "Kunde inte tolka unikt namn returnerat av LDAP-server"
 
-#: ../providers/ldap/gda-ldap-util.c:1902
+#: ../providers/ldap/gda-ldap-util.c:1862
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Oväntad datatyp ”%s” för objectClass-attribut!"
@@ -6993,7 +6995,7 @@ msgid "Index directory"
 msgstr "Indexkatalog"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match simple"
 msgstr "Enkel matchning"
 
@@ -7002,28 +7004,28 @@ msgid "Match partial"
 msgstr "Partiell matchning"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
 msgid "Match full"
 msgstr "Fullständig matchning"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 msgid "No action"
 msgstr "Ingen åtgärd"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 msgid "Restrict"
 msgstr "Begränsa"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 msgid "Cascade"
 msgstr "Skicka vidare"
 
 #. To translators: Action of setting a value to NULL
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:72
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "Set to NULL"
 msgstr "Ställ in till NULL"
 
@@ -7210,11 +7212,11 @@ msgstr "Kunde inte allokera Lob-lokalisator"
 msgid "Could not copy Lob locator"
 msgstr "Kunde inte kopiera Lob-lokalisator"
 
-#: ../providers/postgres/gda-postgres-ddl.c:910
+#: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
 msgstr "Okänd datahållartyp."
 
-#: ../providers/postgres/gda-postgres-ddl.c:1083
+#: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
 msgstr "Okänd datahållartyp. Rapportera detta som ett fel."
 
@@ -7580,6 +7582,11 @@ msgstr "Predikat"
 msgid "Constraint expression for a partial index"
 msgstr "Begränsningsuttryck för ett partiellt index"
 
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
+msgid "Collation name"
+msgstr "Sorteringsnamn"
+
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7806,57 +7813,53 @@ msgstr ""
 "medlemmar av den nya rollen, och ger dem rätten att tilldela medlemskap i "
 "denna roll till andra"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-msgid "With OIDs"
-msgstr "Med OID:n"
-
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Parent table(s)"
 msgstr "Föräldratabell(er)"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Inheritance"
 msgstr "Arv"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Parent table"
 msgstr "Föräldratabell"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Keep coupled"
 msgstr "Behåll ihopparad"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
 msgstr "Använd INHERIT istället för LIKE"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
 msgstr "Kopiera standard"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
 msgid "Copy default expressions"
 msgstr "Kopiera standarduttryck"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Deferrable"
 msgstr "Går att skjuta upp"
 
 #. To translators: Action of setting a value to its default value
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 msgid "Set to default"
 msgstr "Ställ in till standard"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Not deferrable"
 msgstr "Går inte att skjuta upp"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "Deferrable initially immediate"
 msgstr "Går att skjuta upp, initialt omedelbar"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:77
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
 msgid "Deferrable initially deferred"
 msgstr "Går att skjuta upp, initialt uppskjuten"
 
@@ -11362,26 +11365,26 @@ msgstr "Det går inte att checka in transaktion för att komma åt favoriter"
 msgid "Could not execute LDAP search"
 msgstr "Kunde inte köra LDAP-sökning"
 
-#: ../tools/common/t-context.c:325
+#: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "Kunde inte tolka ”%s”-parameterns värde"
 
-#: ../tools/common/t-context.c:341
+#: ../tools/common/t-context.c:343
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr "Ingen intern parameter med namnet ”%s” krävs av fråga"
 
-#: ../tools/common/t-context.c:424
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Anslutningen stängdes"
 
-#: ../tools/common/t-context.c:555
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Det går inte att öppna filen ”%s” för skrivning: %s\n"
 
-#: ../tools/common/t-context.c:569 ../tools/common/t-context.c:578
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Det går inte att öppna rör ”%s”: %s"
@@ -11551,7 +11554,7 @@ msgstr "Objekt"
 msgid "Triggers"
 msgstr "Utlösare"
 
-#: ../tools/common/web-server.c:1871
+#: ../tools/common/web-server.c:1873
 msgid "Command is incomplete"
 msgstr "Kommando är ofullständigt"
 
@@ -11598,6 +11601,12 @@ msgstr "Fel: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Det går inte att tolka filen ”%s”, ignorerar den"
+
+#~ msgid "Internal GdaVproviderHub error"
+#~ msgstr "Internt GdaVproviderHub-fel"
+
+#~ msgid "With OIDs"
+#~ msgstr "Med OID:n"
 
 #~ msgid "Invalid values from statement to create a timestamp"
 #~ msgstr "Ogiltiga värden från sats för att skapa tidsstämpel"
