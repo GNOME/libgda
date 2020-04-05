@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the libgda package.
 # Andika Triwidada <andika@gmail.com>, 2010, 2012-2015, 2017, 2018, 2020.
 # Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2020.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-01-31 16:40+0000\n"
-"PO-Revision-Date: 2020-02-04 14:43+0700\n"
+"POT-Creation-Date: 2020-04-05 09:18+0000\n"
+"PO-Revision-Date: 2020-04-05 19:48+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "Language: id\n"
@@ -177,7 +177,7 @@ msgstr "Tak bisa menyimpan definisi DSN: %s"
 #: ../tools/browser/ui-formgrid.c:725 ../tools/common/t-app.c:2838
 #: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
 #: ../tools/common/t-connection.c:1210 ../tools/common/t-connection.c:1212
-#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1979
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1981
 #: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
@@ -1743,18 +1743,18 @@ msgstr "Model data mengandung BLOB"
 msgid "Can't get the number of rows of data model"
 msgstr "Tak bisa mendapat cacah baris dari model data"
 
-#: ../libgda/gda-db-column.c:557
+#: ../libgda/gda-db-column.c:577
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
 msgstr ""
 "Tipe kolom %s tidak valid. Lihat API untuk gda_g_type_from_string ().\n"
 
-#: ../libgda/gda-db-column.c:1012
+#: ../libgda/gda-db-column.c:1061 ../libgda/gda-db-column.c:1174
 #, c-format
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr "Galat internal: Operasi harus disiapkan, menyiapkan suatu koneksi data"
 
-#: ../libgda/gda-db-catalog.c:232
+#: ../libgda/gda-db-catalog.c:234
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
@@ -1763,75 +1763,75 @@ msgstr ""
 "Tidak bisa mengurai '%s': Validasi atas berkas XML bagi GdaDbCreator tidak "
 "akan dilaksanakan (mungkin terjadi beberapa galat aneh)"
 
-#: ../libgda/gda-db-catalog.c:256
+#: ../libgda/gda-db-catalog.c:258
 #, c-format
 msgid "Context to validate xml file can't be created."
 msgstr "Konteks untuk memvalidasi berkas XML tak dapat dibuat."
 
-#: ../libgda/gda-db-catalog.c:274
+#: ../libgda/gda-db-catalog.c:276
 #, c-format
 msgid "xml file is invalid"
 msgstr "berkas xml tidak valid"
 
-#: ../libgda/gda-db-catalog.c:315
+#: ../libgda/gda-db-catalog.c:317
 #, c-format
 msgid "Root node should be <schema>."
 msgstr "Simpul akar mesti berupa <schema>."
 
-#: ../libgda/gda-db-catalog.c:448 ../libgda/gda-db-catalog.c:499
+#: ../libgda/gda-db-catalog.c:450 ../libgda/gda-db-catalog.c:501
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
 msgstr "objek xmlDoc tak dapat dibuat dari nama xmfile '%s'"
 
-#: ../libgda/gda-db-catalog.c:457
+#: ../libgda/gda-db-catalog.c:459
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "berkas xml '%s' tidak valid\n"
 
-#: ../libgda/gda-db-catalog.c:856 ../libgda/gda-db-table.c:641
-#: ../libgda/gda-db-table.c:907 ../libgda/gda-db-table.c:1014
-#: ../libgda/gda-db-table.c:1089 ../libgda/gda-db-index.c:221
-#: ../libgda/gda-db-index.c:240
+#: ../libgda/gda-db-catalog.c:858 ../libgda/gda-db-table.c:659
+#: ../libgda/gda-db-table.c:934 ../libgda/gda-db-table.c:1045
+#: ../libgda/gda-db-table.c:1120 ../libgda/gda-db-index.c:267
+#: ../libgda/gda-db-index.c:286
 #, c-format
 msgid "Connection is not opened"
 msgstr "Koneksi tak dibuka"
 
-#: ../libgda/gda-db-catalog.c:1045
+#: ../libgda/gda-db-catalog.c:1047
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Tak bisa membuka stream untuk membaca berkas ‘%s’"
 
-#: ../libgda/gda-db-catalog.c:1061
+#: ../libgda/gda-db-catalog.c:1063
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Tak bisa mecipta konteks urai untuk ‘%s’"
 
-#: ../libgda/gda-db-catalog.c:1077
+#: ../libgda/gda-db-catalog.c:1079
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Galat selama penguraian dengan galat '%d'"
 
-#: ../libgda/gda-db-catalog.c:1094
+#: ../libgda/gda-db-catalog.c:1096
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Gagal mengurai berkas: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1105
+#: ../libgda/gda-db-catalog.c:1107
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "Dokumen XML tak dapat dibuat dari berkas: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1115
+#: ../libgda/gda-db-catalog.c:1117
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "Berkas XML tidak valid\n"
 
-#: ../libgda/gda-db-table.c:649
+#: ../libgda/gda-db-table.c:667
 #, c-format
 msgid "Empty column list"
 msgstr "Daftar kolom kosong"
 
-#: ../libgda/gda-db-table.c:921 ../libgda/gda-db-table.c:1103
+#: ../libgda/gda-db-table.c:948 ../libgda/gda-db-table.c:1134
 #, c-format
 msgid "ServerOperation is NULL"
 msgstr "ServerOperation adalah NULL"
@@ -2063,7 +2063,7 @@ msgid "Could not get the internal schema's version"
 msgstr "Tak bisa mendapat versi skema internal"
 
 #: ../libgda/gda-meta-store.c:3029 ../libgda/gda-meta-store.c:3153
-#: ../tools/common/t-context.c:287
+#: ../tools/common/t-context.c:289
 msgid "More than one SQL statement"
 msgstr "Lebih dari satu statement SQL"
 
@@ -2720,8 +2720,8 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:619 ../tools/common/t-app.c:2976
 #: ../tools/common/t-app.c:4669 ../tools/common/t-app.c:5186
 #: ../tools/common/t-app.c:5287 ../tools/common/t-app.c:5384
-#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:419
+#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:269
+#: ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Sambungan tak dinyatakan"
@@ -3016,12 +3016,12 @@ msgstr "Kesalahan internal, membuat tabel di penyedia SQLite"
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr "Tidak ada ruas yang didefinisikan untuk operasi CREATE TABLE"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:266 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:273 ../providers/mysql/gda-mysql-ddl.c:295
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr "Tak ada ruas yang dinyatakan dalam konstrain foreign key"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:355
+#: ../libgda/sqlite/gda-sqlite-ddl.c:362
 msgid "Table to create must have at least one field"
 msgstr "Tabel yang akan dibuat mesti memiliki paling tidak satu ruas"
 
@@ -3479,10 +3479,6 @@ msgstr "Gagal mengubah data: %s"
 msgid "Data model representing the table is read only"
 msgstr "Model data yang mewakili tabel hanya-baca"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-hub.c:135
-msgid "Internal GdaVproviderHub error"
-msgstr "Galat GdaVproviderHub internal"
-
 #: ../libgda/sql-parser/gda-sql-parser.c:617
 #: ../libgda/sql-parser/gda-sql-parser.c:708
 msgid "SQL code does not contain any statement"
@@ -3802,7 +3798,7 @@ msgstr "Bersihkan data"
 
 #: ../libgda-ui/data-entries/common-bin.c:256
 msgid "Open with..."
-msgstr "Buka dengan…"
+msgstr "Buka dengan..."
 
 #: ../libgda-ui/data-entries/common-bin.c:270
 #, c-format
@@ -3945,13 +3941,13 @@ msgstr ""
 "Format yang diharapkan adalah %s\n"
 "Waktu relatif terhadap waktu lokal (%s)"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:572
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Tak bisa menata nilai ke entri: Tipe Data Tidak Valid untuk Waktu Pembungkus "
 "Entri"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:661
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Tak bisa memperoleh nilai dari entri: Tipe Data Tidak Valid untuk Waktu "
@@ -3998,7 +3994,7 @@ msgstr "Tidak dinyatakan"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:17
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
@@ -4637,7 +4633,7 @@ msgstr "Tak bisa membuka direktori plugin, tak ada plugin yang dimuat."
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/xml-spec-editor.c:225
 #: ../tools/browser/query-exec/query-result.c:284
-#: ../tools/common/web-server.c:1978
+#: ../tools/common/web-server.c:1980
 #, c-format
 msgid "Error: %s"
 msgstr "Galat: %s"
@@ -5250,7 +5246,7 @@ msgstr "Nama tabel"
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:10
@@ -5266,7 +5262,7 @@ msgstr "Nama ruas"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:20
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
@@ -5280,7 +5276,7 @@ msgstr "Jenis data"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:22
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
@@ -5294,7 +5290,7 @@ msgstr "Ukuran"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:24
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:16
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
@@ -5309,7 +5305,7 @@ msgstr "Skala"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:11
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:18
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
@@ -5330,7 +5326,7 @@ msgstr "Nilai baku, wajib bila kolom NOT NULL"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:19
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:30
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
@@ -5345,7 +5341,7 @@ msgstr "Centang"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:20
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:12
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:32
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
@@ -5466,7 +5462,8 @@ msgstr "Pada tabel"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:5
@@ -5477,6 +5474,7 @@ msgid "Only if it does not yet exist"
 msgstr "Hanya bila belum ada"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
@@ -5485,7 +5483,7 @@ msgstr "Buat indeks hanya bila belum ada"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field(s)"
@@ -5494,15 +5492,18 @@ msgstr "Ruas terindeks"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field or expression"
 msgstr "Ruas atau ekspresi terindeks"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare values
+#. Index fields
+#. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:13
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:34
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
@@ -5523,6 +5524,7 @@ msgstr "Nama kolasi (BINARY|NOCASE)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:21
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 msgid "Sort type"
@@ -5541,7 +5543,7 @@ msgstr "Deskripsi tabel"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Temporary table"
@@ -5549,7 +5551,7 @@ msgstr "Tabel sementara"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Create table only if it does not yet exist"
@@ -5559,7 +5561,7 @@ msgstr "Buat tabel hanya bila belum ada"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Table's columns"
@@ -5569,7 +5571,7 @@ msgstr "Kolom tabel"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:20
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
 #: ../tools/common/t-app.c:1864 ../tools/common/web-server.c:867
@@ -5583,7 +5585,7 @@ msgstr "Naik otomatis"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:13
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
 #: ../tools/common/t-app.c:1991
@@ -5596,7 +5598,7 @@ msgstr "Unik"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:24
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
@@ -5612,7 +5614,7 @@ msgstr "Kunci primer"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:18
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:36
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:28
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 #: ../tools/browser/schema-browser/table-columns.c:661
@@ -5636,7 +5638,7 @@ msgstr "Metoda resolusi konflik (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:41
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:41
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
@@ -5648,7 +5650,7 @@ msgstr "Foreign key"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 msgid "Referenced table"
@@ -5657,7 +5659,7 @@ msgstr "Tabel yang diacu"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:43
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:41
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:43
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:43
 msgid "Fields"
@@ -5666,7 +5668,7 @@ msgstr "Ruas"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:43
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:44
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:44
 msgid "Fields in the foreign key"
@@ -5675,7 +5677,7 @@ msgstr "Ruas dalam foreign key"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:45
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:45
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:45
 msgid "Field"
@@ -5684,7 +5686,7 @@ msgstr "Ruas"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:47
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:46
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:46
 msgid "Referenced field"
@@ -5693,7 +5695,7 @@ msgstr "Ruas yang diacu"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:47
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:49
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:47
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:47
 msgid "Match type"
@@ -5702,7 +5704,7 @@ msgstr "Jenis kecocokan"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:48
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
@@ -5711,7 +5713,7 @@ msgstr "Metoda pencocokan bila lebih dari satu ruas dilibatkan"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:49
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:49
 msgid "On update action"
@@ -5720,7 +5722,7 @@ msgstr "Aksi saat dimutakhirkan"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:50
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:50
 msgid "On delete action"
@@ -5730,7 +5732,7 @@ msgstr "Aksi saat menghapus"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:52
 msgid "Global constraints"
@@ -6163,17 +6165,17 @@ msgstr "Parameter"
 msgid "near \"%s\": syntax error"
 msgstr "dekat \"%s\": galat sintaks"
 
-#: ../providers/ldap/gda-ldap-util.c:1421
+#: ../providers/ldap/gda-ldap-util.c:1381
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "Server LDAP mengembalikan lebih dari satu entri dengan DN '%s'"
 
-#: ../providers/ldap/gda-ldap-util.c:1608
+#: ../providers/ldap/gda-ldap-util.c:1568
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr ""
 "Tak bisa mengurai 'distinguised name' yang dikembalikan oleh server LDAP"
 
-#: ../providers/ldap/gda-ldap-util.c:1902
+#: ../providers/ldap/gda-ldap-util.c:1862
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr "Tipe data '%s' yang tak diharapkan bagi atribut objectClass!"
@@ -7004,7 +7006,7 @@ msgid "Index directory"
 msgstr "Direktori indeks"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match simple"
 msgstr "Kecocokan sedehana"
 
@@ -7013,28 +7015,28 @@ msgid "Match partial"
 msgstr "Cocok sebagian"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
 msgid "Match full"
 msgstr "Cocok lengkap"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 msgid "No action"
 msgstr "Tanpa aksi"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 msgid "Restrict"
 msgstr "Batasi"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 msgid "Cascade"
 msgstr "Cascade"
 
 #. To translators: Action of setting a value to NULL
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:72
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "Set to NULL"
 msgstr "Menata ke NULL"
 
@@ -7222,11 +7224,11 @@ msgstr "Tak bisa mengalokasikan Lob locator"
 msgid "Could not copy Lob locator"
 msgstr "Tak bisa menyalin Lob locator"
 
-#: ../providers/postgres/gda-postgres-ddl.c:910
+#: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
 msgstr "Tipe dataholder tidak diketahui."
 
-#: ../providers/postgres/gda-postgres-ddl.c:1083
+#: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
 msgstr "Tipe dataholder tidak diketahui. Laporkan ini sebagai kutu."
 
@@ -7593,6 +7595,11 @@ msgstr "Predikat"
 msgid "Constraint expression for a partial index"
 msgstr "Ekspresi konstrain bagi suatu indeks parsial"
 
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
+msgid "Collation name"
+msgstr "Nama kolasi"
+
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7819,57 +7826,53 @@ msgstr ""
 "anggota dari peran baru, memberi mereka hak untuk memberikan keanggotaan "
 "peran ini ke lainnya"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-msgid "With OIDs"
-msgstr "Dengan OID"
-
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Parent table(s)"
 msgstr "Tabel induk"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Inheritance"
 msgstr "Inheritansi"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Parent table"
 msgstr "Tabel induk"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Keep coupled"
 msgstr "Tetap terkopel"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
 msgstr "Pakai INHERIT sebagai ganti LIKE"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
 msgstr "Salin yang baku"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
 msgid "Copy default expressions"
 msgstr "Salin ekspresi baku"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Deferrable"
 msgstr "Dapat ditunda"
 
 #. To translators: Action of setting a value to its default value
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 msgid "Set to default"
 msgstr "Jadikan baku"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Not deferrable"
 msgstr "Tak dapat ditunda"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "Deferrable initially immediate"
 msgstr "Dapat ditunda, awalnya seketika"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:77
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
 msgid "Deferrable initially deferred"
 msgstr "Dapat ditunda, awalnya ditunda"
 
@@ -11375,26 +11378,26 @@ msgstr "Tak bisa mengkomit transaksi untuk mengakses favorit"
 msgid "Could not execute LDAP search"
 msgstr "Tak bisa mengeksekusi pencarian LDAP"
 
-#: ../tools/common/t-context.c:325
+#: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "Tak bisa menginterpretasi nilai bagi parameter '%s'"
 
-#: ../tools/common/t-context.c:341
+#: ../tools/common/t-context.c:343
 #, c-format
 msgid "No internal parameter named '%s' required by query"
 msgstr "Tak ada parameter internal bernama '%s' yang diperlukan oleh query"
 
-#: ../tools/common/t-context.c:424
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Koneksi ditutup"
 
-#: ../tools/common/t-context.c:555
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Tak bisa membuka berkas '%s' untuk ditulisi: %s\n"
 
-#: ../tools/common/t-context.c:569 ../tools/common/t-context.c:578
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "Tak bisa membuka pipa '%s': %s"
@@ -11564,7 +11567,7 @@ msgstr "Objek"
 msgid "Triggers"
 msgstr "Trigger"
 
-#: ../tools/common/web-server.c:1871
+#: ../tools/common/web-server.c:1873
 msgid "Command is incomplete"
 msgstr "Perintah tak lengkap"
 
@@ -11611,3 +11614,9 @@ msgstr "Galat: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Tak bisa mengurai berkasi '%s', mengabaikannya"
+
+#~ msgid "Internal GdaVproviderHub error"
+#~ msgstr "Galat GdaVproviderHub internal"
+
+#~ msgid "With OIDs"
+#~ msgstr "Dengan OID"
