@@ -231,10 +231,11 @@ stmt_reset_cb (GdaStatement *stmt, GdaBatch *batch)
 /**
  * gda_batch_add_statement:
  * @batch: a #GdaBatch object
- * @stmt: a statement to add to @batch's statements list
+ * @stmt: (transfer full): a statement to add to @batch's statements list
  *
  * Add @stmt to the list of statements managed by @batch. A #GdaStatement object can be
- * added multiple times to a #GdaBatch object.
+ * added multiple times to a #GdaBatch object. The @batch increases reference count for @stmt and
+ * the @stmt instance can be freed using g_object_unref().
  */
 void
 gda_batch_add_statement (GdaBatch *batch, GdaStatement *stmt)
@@ -285,7 +286,7 @@ gda_batch_remove_statement (GdaBatch *batch, GdaStatement *stmt)
  *
  * Creates a string representing the contents of @batch.
  *
- * Returns: a string containing the serialized version of @batch
+ * Returns: (transfer full): a string containing the serialized version of @batch
  */
 gchar *
 gda_batch_serialize (GdaBatch *batch)
