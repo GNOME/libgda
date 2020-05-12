@@ -183,6 +183,18 @@ gboolean string_equal (const gchar *s1, const gchar *s2)
 		return s2 ? FALSE : TRUE;
 }
 
+static void gda_quark_process (gpointer key,
+			       gpointer value,
+			       gpointer string)
+{
+  gchar *evalue;
+
+  g_string_append_c ((GString *)string, ',');
+  evalue = gda_rfc1738_encode ((const gchar *)value);
+  g_string_append_printf ((GString *)string, ",%s=%s", (gchar *)key, evalue);
+  g_free (evalue);
+}
+
 static gchar *
 make_cmp_string (const gchar *key_values_string)
 {
@@ -191,22 +203,9 @@ make_cmp_string (const gchar *key_values_string)
 
 	GdaQuarkList *ql;
 	GSList *list, *sorted_list = NULL;
-	GString *string = NULL;
+	GString *string = g_string_new("");
 	ql = gda_quark_list_new_from_string (key_values_string);
-	for (list = sorted_list; list; list = list->next) {
-		const gchar *value;
-		gchar *evalue;
-
-		if (!string)
-			string = g_string_new ("");
-		else
-			g_string_append_c (string, ',');
-
-		value = gda_quark_list_find (ql, (gchar *) list->data);
-		evalue = gda_rfc1738_encode (value);
-		g_string_append_printf (string, ",%s=%s", (gchar *) list->data, evalue);
-		g_free (evalue);
-	}
+	gda_quark_list_foreach (ql, gda_quark_process, string);
 	gda_quark_list_free (ql);
 	if (string)
 		return g_string_free (string, FALSE);
