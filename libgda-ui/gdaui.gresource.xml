@@ -8,6 +8,8 @@
     <file compressed="true">data-entries/gdaui-entry-integer.xml</file>
     <file compressed="true">data-entries/gdaui-entry-number.xml</file>
     <file compressed="true">data/server_operation.xml</file>
+	</gresource>
+	<gresource prefix="/gdaui/db-engines">
     <file>data/Bdb.png</file>
     <file>data/Firebird.png</file>
     <file>data/LDAP.png</file>
