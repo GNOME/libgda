@@ -283,7 +283,8 @@ sqlite_xml_fnames = [
 	'sqlite_specs_rename_table',
 	'sqlite_specs_add_column',
 	'sqlite_specs_create_view',
-	'sqlite_specs_drop_view'
+	'sqlite_specs_drop_view',
+	'sqlite_specs_rename_column'
 	]
 sqlite_xml_fnamesext = []
 foreach fn : sqlite_xml_fnames

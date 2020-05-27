@@ -60,6 +60,7 @@ mysql_xml_fnames = [
 	'mysql_specs_drop_view',
 	'mysql_specs_dsn',
 	'mysql_specs_rename_table',
+	'mysql_specs_rename_column'
 	]
 
 mysql_xml_fnamesext = []
