@@ -36,6 +36,10 @@ gchar *_gda_sqlite_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnecti
 				       GdaServerOperation *op, GError **error);
 gchar *_gda_sqlite_render_ADD_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
 				      GdaServerOperation *op, GError **error);
+gchar *_gda_sqlite_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
+gchar *_gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider, GdaConnection *cnc, 
+				      GdaServerOperation *op, GError **error);
 gchar *_gda_sqlite_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc, 
 				       GdaServerOperation *op, GError **error);
 gchar *_gda_sqlite_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cnc, 

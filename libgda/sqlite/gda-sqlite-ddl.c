@@ -21,6 +21,7 @@
  */
 
 #include "gda-sqlite-ddl.h"
+#include "gda-server-provider.h"
 #include <glib/gi18n-lib.h>
 #include <libgda/gda-data-handler.h>
 
@@ -712,4 +713,70 @@ _gda_sqlite_render_DROP_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 	g_string_free (string, FALSE);
 
 	return sql;
+}
+
+gchar *
+_gda_sqlite_render_DROP_COLUMN  (GdaServerProvider *provider,
+                                 GdaConnection *cnc,
+                                 GdaServerOperation *op,
+                                 GError **error)
+{
+  gchar *sql = NULL;
+
+  g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
+               _("DROP COLUMN operation is not supported by SQLite3 provider"));
+  return sql;
+}
+
+gchar *
+_gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider,
+                                   GdaConnection *cnc,
+                                   GdaServerOperation *op,
+                                   GError **error)
+{
+  gchar *sql = NULL;
+
+  GString *string;
+  gchar *tmp;
+
+  /* ALTER TABLE */
+  string = g_string_new ("ALTER TABLE ");
+
+  tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/COLUMN_DEF_P/TABLE_NAME", error);
+
+  if (!tmp) {
+    g_string_free (string, TRUE);
+    return NULL;
+  }
+
+  g_string_append (string, tmp);
+  g_free (tmp);
+
+  g_string_append (string, " RENAME COLUMN ");
+
+  tmp = gda_connection_operation_get_sql_identifier_at(cnc, op, "/COLUMN_DEF_P/COLUMN_NAME", error);
+  if (!tmp) {
+    g_string_free(string, TRUE);
+    return NULL;
+  }
+
+  g_string_append (string, tmp);
+  g_free (tmp);
+
+  g_string_append (string, " TO ");
+
+  tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/COLUMN_DEF_P/COLUMN_NEW_NAME", error);
+
+  if (!tmp) {
+    g_string_free (string, TRUE);
+    return NULL;
+  }
+
+  g_string_append (string, tmp);
+  g_free (tmp);
+
+  sql = string->str;
+  g_string_free (string, FALSE);
+
+  return sql;
 }
