@@ -18,7 +18,8 @@ postgres_xml_fnames = [
 	'postgres_specs_drop_user',
 	'postgres_specs_drop_view',
 	'postgres_specs_dsn',
-	'postgres_specs_rename_table'
+	'postgres_specs_rename_table',
+	'postgres_specs_rename_column'
 	]
 
 postgres_xml_res = []

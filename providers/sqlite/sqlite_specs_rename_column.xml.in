@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<serv_op>
+  <parameters id="COLUMN_DEF_P">
+    <parameter id="TABLE_NAME" _name="Table" _descr="Table to ALTER" gdatype="gchararray" nullok="FALSE" source="_DICT_TABLES_"/>
+    <parameter id="COLUMN_NAME" _name="Column" _descr="Column to rename" gdatype="gchararray" nullok="FALSE" source="_DICT_COLUMNS_"/>
+    <parameter id="COLUMN_NEW_NAME" _name="New name" _descr="New column name" gdatype="gchararray" nullok="FALSE"/>
+  </parameters>
+</serv_op>

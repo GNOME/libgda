@@ -17,5 +17,6 @@
     <file compressed="true">postgres_specs_drop_view.raw.xml</file>
     <file compressed="true">postgres_specs_dsn.raw.xml</file>
     <file compressed="true">postgres_specs_rename_table.raw.xml</file>
+    <file compressed="true">postgres_specs_rename_column.raw.xml</file>
   </gresource>
 </gresources>
