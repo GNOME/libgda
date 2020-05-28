@@ -1404,6 +1404,10 @@ gda_db_column_drop (GdaDdlModifiable *self,
                     gpointer user_data,
                     GError **error)
 {
+  g_set_error (error, GDA_DDL_MODIFIABLE_ERROR,
+               GDA_DDL_MODIFIABLE_NOT_IMPLEMENTED,
+               _("Operation is not implemented for the used provider"));
+
   return FALSE;
 }
 
