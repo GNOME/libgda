@@ -716,19 +716,6 @@ _gda_sqlite_render_DROP_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 }
 
 gchar *
-_gda_sqlite_render_DROP_COLUMN  (GdaServerProvider *provider,
-                                 GdaConnection *cnc,
-                                 GdaServerOperation *op,
-                                 GError **error)
-{
-  gchar *sql = NULL;
-
-  g_set_error (error, GDA_SERVER_PROVIDER_ERROR, GDA_SERVER_PROVIDER_NON_SUPPORTED_ERROR,
-               _("DROP COLUMN operation is not supported by SQLite3 provider"));
-  return sql;
-}
-
-gchar *
 _gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider,
                                    GdaConnection *cnc,
                                    GdaServerOperation *op,
