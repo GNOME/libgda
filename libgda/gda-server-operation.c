@@ -1319,6 +1319,8 @@ gda_server_operation_op_type_to_string (GdaServerOperationType type)
 		return "CREATE_INDEX";
         case GDA_SERVER_OPERATION_DROP_INDEX:
 		return "DROP_INDEX";
+        case GDA_SERVER_OPERATION_RENAME_INDEX:
+		return "RENAME_INDEX";
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 		return "RENAME_TABLE";
         case GDA_SERVER_OPERATION_COMMENT_TABLE:
@@ -1379,6 +1381,8 @@ gda_server_operation_string_to_op_type (const gchar *str)
 		operation_type = GDA_SERVER_OPERATION_DROP_INDEX;
 	else if (! g_ascii_strcasecmp (str, "RENAME_TABLE"))
 		operation_type = GDA_SERVER_OPERATION_RENAME_TABLE;
+	else if (! g_ascii_strcasecmp (str, "RENAME_INDEX"))
+		operation_type = GDA_SERVER_OPERATION_RENAME_INDEX;
 	else if (! g_ascii_strcasecmp (str, "COMMENT_TABLE"))
 		operation_type = GDA_SERVER_OPERATION_COMMENT_TABLE;
 	else if (! g_ascii_strcasecmp (str, "ADD_COLUMN"))
