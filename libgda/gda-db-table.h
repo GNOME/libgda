@@ -79,11 +79,6 @@ gboolean        gda_db_table_update          (GdaDbTable *self,
 void            gda_db_table_append_fkey (GdaDbTable *self,
                                           GdaDbFkey *fkey);
 
-gboolean        gda_db_table_add_index  (GdaDbTable *self,
-                                         GdaDbIndex *index,
-                                         GdaConnection *cnc,
-                                         gboolean ifnotexists,
-                                         GError **error);
 void            gda_db_table_append_constraint (GdaDbTable *self,
                                                 const gchar *constraint);
 
