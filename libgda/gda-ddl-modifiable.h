@@ -51,6 +51,13 @@ struct _GdaDdlModifiableInterface
                      GError **error);
 };
 
+typedef enum {
+    GDA_DDL_MODIFIABLE_NOT_IMPLEMENTED
+} GdaDdlModifiableErrror;
+
+#define GDA_DDL_MODIFIABLE_ERROR gda_ddl_modifiable_error_quark()
+GQuark gda_ddl_modifiable_error_quark (void);
+
 gboolean gda_ddl_modifiable_create (GdaDdlModifiable *self,
                                     GdaConnection *cnc,
                                     gpointer user_data,
