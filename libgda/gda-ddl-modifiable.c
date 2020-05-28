@@ -22,6 +22,8 @@
 #define G_LOG_DOMAIN "GDA-ddl-modifiable"
 #include "gda-ddl-modifiable.h"
 
+G_DEFINE_QUARK (gda_ddl_modifiable_error, gda_ddl_modifiable_error)
+
 /**
  * SECTION:gda-ddl-operation
  * @title: GdaDdlModifiable
