@@ -869,6 +869,13 @@ static OpReq op_req_CREATE_INDEX [] = {
 	{NULL, 0, 0}
 };
 
+static OpReq op_req_RENAME_INDEX [] = {
+	{"/INDEX_DEF_P/INDEX_NAME",       GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/INDEX_DEF_P/INDEX_ON_TABLE",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{"/INDEX_DEF_P/INDEX_NAME_NEW",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
+	{NULL, 0, 0}
+};
+
 static OpReq op_req_DROP_INDEX [] = {
 	{"/INDEX_DESC_P/INDEX_NAME",   GDA_SERVER_OPERATION_NODE_PARAM, G_TYPE_STRING},
 	{NULL, 0, 0}
@@ -950,6 +957,7 @@ gda_server_provider_create_operation (GdaServerProvider *provider, GdaConnection
 
 		op_req_table [GDA_SERVER_OPERATION_CREATE_INDEX] = op_req_CREATE_INDEX;
 		op_req_table [GDA_SERVER_OPERATION_DROP_INDEX] = op_req_DROP_INDEX;
+		op_req_table [GDA_SERVER_OPERATION_RENAME_INDEX] = op_req_RENAME_INDEX;
 
 		op_req_table [GDA_SERVER_OPERATION_CREATE_VIEW] = op_req_CREATE_VIEW;
 		op_req_table [GDA_SERVER_OPERATION_DROP_VIEW] = op_req_DROP_VIEW;
