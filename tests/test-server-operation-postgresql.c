@@ -1280,7 +1280,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   g_object_unref (fcol);
   g_object_unref (field);
 
-  res = gda_db_table_add_index (new_table, index, fixture->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (index), fixture->cnc, new_table, NULL);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
