@@ -76,28 +76,8 @@ gboolean        gda_db_table_update          (GdaDbTable *self,
                                               GdaConnection *cnc,
                                               GError **error);
 
-gboolean        gda_db_table_create          (GdaDbTable *self,
-                                              GdaConnection *cnc,
-                                              gboolean ifnotexists,
-                                              GError **error);
-
 void            gda_db_table_append_fkey (GdaDbTable *self,
                                           GdaDbFkey *fkey);
-
-gboolean        gda_db_table_rename      (GdaDbTable *old_name,
-                                          GdaDbTable *new_name,
-                                          GdaConnection *cnc,
-                                          GError **error);
-
-gboolean        gda_db_table_add_column (GdaDbTable *self,
-                                         GdaDbColumn *col,
-                                         GdaConnection *cnc,
-                                         GError **error);
-
-gboolean        gda_db_table_drop       (GdaDbTable *self,
-                                         GdaConnection *cnc,
-                                         gboolean ifexists,
-                                         GError **error);
 
 gboolean        gda_db_table_add_index  (GdaDbTable *self,
                                          GdaDbIndex *index,
