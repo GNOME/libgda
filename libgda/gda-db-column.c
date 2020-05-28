@@ -26,6 +26,8 @@
 #include "gda-db-buildable.h"
 #include "gda-server-provider.h"
 #include "gda-db-column-private.h"
+#include "gda-ddl-modifiable.h"
+#include "gda-lockable.h"
 
 G_DEFINE_QUARK (gda-db-column-error, gda_db_column_error)
 
@@ -36,6 +38,7 @@ typedef struct
   gchar *mp_comment;
   gchar *mp_default; /* property */
   gchar *mp_check;
+  gchar *mp_table; /* Property */
 
   GType m_gtype;
 
@@ -112,11 +115,22 @@ static const gchar *gdadbcolumnnode[GDA_DB_COLUMN_N_NODES] = {
 
 static void
 gda_db_column_buildable_interface_init (GdaDbBuildableInterface *iface);
+static void gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface);
+
+static gboolean gda_db_column_create (GdaDdlModifiable *self, GdaConnection *cnc,
+				     gpointer user_data, GError **error);
+static gboolean gda_db_column_drop (GdaDdlModifiable *self, GdaConnection *cnc,
+				   gpointer user_data, GError **error);
+static gboolean gda_db_column_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
+				     gpointer new_name, GError **error);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDbColumn, gda_db_column, G_TYPE_OBJECT,
                          G_ADD_PRIVATE (GdaDbColumn)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
-                                                gda_db_column_buildable_interface_init))
+                                                gda_db_column_buildable_interface_init)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_MODIFIABLE,
+                                                gda_ddl_modifiable_interface_init))
+
 enum {
     PROP_0,
     PROP_COLUMN_NAME,
@@ -129,6 +143,7 @@ enum {
     PROP_COLUMN_DEFAULT,
     PROP_COLUMN_CHECK,
     PROP_COLUMN_SCALE,
+    PROP_COLUMN_TABLE,
     /*<private>*/
     N_PROPS
 };
@@ -163,6 +178,7 @@ gda_db_column_finalize (GObject *object)
   g_free (priv->mp_type);
   g_free (priv->mp_default);
   g_free (priv->mp_check);
+  g_free (priv->mp_table);
 
   G_OBJECT_CLASS (gda_db_column_parent_class)->finalize (object);
 }
@@ -206,6 +222,9 @@ gda_db_column_get_property (GObject    *object,
       break;
     case PROP_COLUMN_SCALE:
       g_value_set_uint (value, priv->m_scale);
+      break;
+    case PROP_COLUMN_TABLE:
+      g_value_set_string (value, priv->mp_table);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -257,6 +276,10 @@ gda_db_column_set_property (GObject      *object,
     case PROP_COLUMN_SCALE:
       priv->m_scale = g_value_get_uint (value);
       break;
+    case PROP_COLUMN_TABLE:
+      g_free (priv->mp_table);
+      priv->mp_table = g_value_dup_string (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -303,6 +326,10 @@ gda_db_column_class_init (GdaDbColumnClass *klass)
   properties[PROP_COLUMN_SCALE] =
     g_param_spec_uint ("scale", "Scale", "Number of decimal for numeric type", 0, 64, 2,
                          G_PARAM_READWRITE);
+
+  properties[PROP_COLUMN_TABLE] =
+    g_param_spec_string ("table", "Table", "Parent table", NULL, G_PARAM_READWRITE);
+
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
@@ -322,6 +349,7 @@ gda_db_column_init (GdaDbColumn *self)
   priv->m_pkey = FALSE;
   priv->mp_default = NULL;
   priv->mp_comment = NULL;
+  priv->mp_table = NULL;
 }
 
 /**
@@ -554,6 +582,14 @@ gda_db_column_buildable_interface_init (GdaDbBuildableInterface *iface)
 {
     iface->parse_node = gda_db_column_parse_node;
     iface->write_node = gda_db_column_write_node;
+}
+
+static void
+gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface)
+{
+  iface->create = gda_db_column_create;
+  iface->drop   = gda_db_column_drop;
+  iface->rename = gda_db_column_rename;
 }
 
 static void
@@ -1259,3 +1295,189 @@ gda_db_column_new_from_meta (GdaMetaTableColumn *column)
   return gdacolumn;
 }
 
+static gboolean
+gda_db_column_create (GdaDdlModifiable *self,
+                      GdaConnection *cnc,
+                      gpointer user_data,
+                      GError **error)
+{
+
+  G_DEBUG_HERE();
+  GdaServerOperation *op = NULL;
+  GdaServerProvider *provider = NULL;
+  gchar *buffer_str = NULL;
+  GdaDbTable *table = GDA_DB_TABLE (user_data);
+  GdaDbColumn *column = GDA_DB_COLUMN (self);
+
+  g_return_val_if_fail(GDA_IS_DDL_MODIFIABLE (self), FALSE);
+  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
+  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+
+  const gchar *strtype;
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE (cnc));
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_ADD_COLUMN,
+                                             NULL, error);
+
+  if (!op)
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
+                   _("ServerOperation is NULL"));
+      goto on_error;
+    }
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (table)),
+                                          error, "/COLUMN_DEF_P/TABLE_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (column),
+                                          error, "/COLUMN_DEF_P/COLUMN_NAME"))
+    goto on_error;
+
+  strtype = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (cnc),
+                                                       cnc, gda_db_column_get_gtype(column));
+
+  if (!gda_server_operation_set_value_at (op, strtype,
+                                          error, "/COLUMN_DEF_P/COLUMN_TYPE"))
+    goto on_error;
+
+  guint size = gda_db_column_get_size (column);
+
+  buffer_str = g_strdup_printf("%d", size);
+
+  if (!gda_server_operation_set_value_at (op, buffer_str,
+                                          error, "/COLUMN_DEF_P/COLUMN_SIZE"))
+    goto on_error;
+
+  g_free (buffer_str);
+  buffer_str = NULL;
+
+  guint scale = gda_db_column_get_scale (column);
+
+  buffer_str = g_strdup_printf("%d", scale);
+
+  if (!gda_server_operation_set_value_at (op, buffer_str,
+                                          error, "/COLUMN_DEF_P/COLUMN_SCALE"))
+    goto on_error;
+
+  g_free (buffer_str);
+  buffer_str = NULL;
+
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (gda_db_column_get_nnul (column)),
+                                          error, "/COLUMN_DEF_P/COLUMN_NNUL"))
+    goto on_error;
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return TRUE;
+
+on_error:
+  if (op)
+    g_object_unref (op);
+
+  if (buffer_str)
+    g_free (buffer_str);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return FALSE;
+}
+
+static gboolean
+gda_db_column_drop (GdaDdlModifiable *self,
+                    GdaConnection *cnc,
+                    gpointer user_data,
+                    GError **error)
+{
+  return FALSE;
+}
+
+static gboolean
+gda_db_column_rename (GdaDdlModifiable *self,
+                      GdaConnection *cnc,
+                      gpointer user_data,
+                      GError **error)
+{
+  G_DEBUG_HERE();
+  GdaServerOperation *op = NULL;
+  GdaServerProvider *provider = NULL;
+  gchar *table = NULL;
+  GdaDbColumn *column = GDA_DB_COLUMN (self);
+  GdaDbColumn *column_new = GDA_DB_COLUMN (user_data);
+
+  g_return_val_if_fail(GDA_IS_DDL_MODIFIABLE (self), FALSE);
+  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE (cnc));
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_RENAME_COLUMN,
+                                             NULL, error);
+
+  if (!op)
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
+                   _("ServerOperation is NULL"));
+      goto on_error;
+    }
+
+  g_object_get (column, "table", &table, NULL);
+
+  if (!table)
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, table,
+                                          error, "/COLUMN_DEF_P/TABLE_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (column),
+                                          error, "/COLUMN_DEF_P/COLUMN_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (column_new),
+                                          error, "/COLUMN_DEF_P/COLUMN_NAME_NEW"))
+    goto on_error;
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return TRUE;
+
+on_error:
+  if (op)
+    g_object_unref (op);
+
+  if (table)
+    g_free (table);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
+  return FALSE;
+}

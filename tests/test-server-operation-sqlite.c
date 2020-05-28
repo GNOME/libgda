@@ -34,6 +34,7 @@
  * Employee table will be renamed to NewEmployee
  *
  */
+#include "gda-db-column.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <locale.h>
@@ -859,7 +860,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   g_object_unref (pname);
 
 /* Create table */
-  gboolean res = gda_db_table_create (tproject, fixture->cnc, TRUE, NULL);
+  gboolean res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), fixture->cnc, NULL, NULL);
 
   g_assert_true (res);
 
@@ -918,7 +919,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
 
   g_object_unref (fkey);
 
-  res = gda_db_table_create (temployee, fixture->cnc, TRUE, NULL);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (temployee), fixture->cnc, NULL, NULL);
 
   g_assert_true (res);
 
@@ -930,7 +931,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_column_set_scale (cost, 2);
   gda_db_column_set_nnul (cost, FALSE);
 
-  res = gda_db_table_add_column (tproject, cost, fixture->cnc, NULL);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), fixture->cnc, cost, NULL);
 
   g_assert_true (res);
 
@@ -941,7 +942,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   GdaDbTable *new_table = gda_db_table_new ();
   gda_db_base_set_name (GDA_DB_BASE (new_table), "NewEmployee");
 
-  res = gda_db_table_rename (temployee, new_table, fixture->cnc, NULL);
+  res = gda_ddl_modifiable_rename (GDA_DDL_MODIFIABLE (temployee), fixture->cnc, new_table, NULL);
 
   g_assert_true (res);
 
@@ -950,10 +951,12 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_view_set_istemp (myview, FALSE);
   gda_db_view_set_defstring (myview, "SELECT name, project_id FROM NewEmployee");
 
-  res = gda_db_view_create (myview, fixture->cnc, TRUE, NULL);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (myview), fixture->cnc, NULL, NULL);
 
   /* DROP_VIEW operation. We will reuse the  view */
-  res = gda_db_view_drop (myview, fixture->cnc, TRUE, GDA_DB_VIEW_RESTRICT, NULL);
+  GdaDbViewRefAction action = GDA_DB_VIEW_RESTRICT;
+
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (myview), fixture->cnc, &action, NULL);
 
   g_assert_true (res);
 
@@ -980,13 +983,75 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_db_index_drop (index, fixture->cnc, TRUE, NULL);
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (index), fixture->cnc, NULL, NULL);
 
   g_assert_true (res);
 
-  res = gda_db_table_drop (new_table, fixture->cnc, TRUE, NULL);
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (new_table), fixture->cnc, NULL, NULL);
 
   g_assert_true (res);
+}
+
+static void
+test_server_operation_operations_db_rename_column (TestObjectFixture *fixture,
+                                                   G_GNUC_UNUSED gconstpointer user_data)
+{
+
+/* Define table Project */
+  GdaDbTable *tproject = gda_db_table_new ();
+  gda_db_base_set_name (GDA_DB_BASE (tproject), "Project");
+  gda_db_table_set_is_temp (tproject, FALSE);
+
+  /* Defining column id */
+  GdaDbColumn *pid = gda_db_column_new ();
+  gda_db_column_set_name (pid, "id");
+  gda_db_column_set_type (pid, G_TYPE_INT);
+  gda_db_column_set_nnul (pid, TRUE);
+  gda_db_column_set_autoinc (pid, TRUE);
+  gda_db_column_set_unique (pid, TRUE);
+  gda_db_column_set_pkey (pid, TRUE);
+
+  gda_db_table_append_column (tproject, pid);
+
+  g_object_unref (pid);
+
+  /* Defining column name */
+  GdaDbColumn *pname = gda_db_column_new ();
+  gda_db_column_set_name (pname, "name");
+  gda_db_column_set_type (pname, G_TYPE_STRING);
+  gda_db_column_set_size (pname, 50);
+  gda_db_column_set_nnul (pname, TRUE);
+  gda_db_column_set_autoinc (pname, FALSE);
+  gda_db_column_set_unique (pname, TRUE);
+  gda_db_column_set_pkey (pname, FALSE);
+  gda_db_column_set_default (pname, "Default_name");
+
+  gda_db_table_append_column (tproject, pname);
+
+/* Create table */
+  gboolean res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), fixture->cnc, NULL, NULL);
+
+  g_assert_true (res);
+
+  g_object_set (pname, "table", gda_db_base_get_name (GDA_DB_BASE (tproject)), NULL);
+
+  GdaDbColumn *new_column = gda_db_column_new();
+  gda_db_column_set_name (new_column, "name_new");
+  gda_db_column_set_type (new_column, G_TYPE_STRING);
+
+  GError *error = NULL;
+
+  res = gda_ddl_modifiable_rename (GDA_DDL_MODIFIABLE (pname), fixture->cnc, new_column, &error);
+
+  if (error != NULL) {
+    g_print ("Error: %s", error->message != NULL ? error->message : "No detail");
+    g_clear_error (&error);
+  }
+
+  g_assert_true (res);
+
+  g_object_unref (new_column);
+  g_object_unref (tproject);
 }
 
 gint
@@ -1010,6 +1075,12 @@ main(gint argc, gchar *argv[])
               test_server_operation_operations_db,
               test_server_operation_finish);
 
+  g_test_add ("/test-server-operation-sqlite/gda-db-rename_column",
+              TestObjectFixture,
+              NULL,
+              test_server_operation_start,
+              test_server_operation_operations_db_rename_column,
+              test_server_operation_finish);
   return g_test_run();
 }
 
