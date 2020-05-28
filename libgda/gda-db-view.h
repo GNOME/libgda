@@ -65,20 +65,9 @@ gboolean     gda_db_view_get_replace   (GdaDbView *self);
 void         gda_db_view_set_replace   (GdaDbView *self,
                                         gboolean replace);
 
-gboolean     gda_db_view_create        (GdaDbView *self,
-                                        GdaConnection *cnc,
-                                        gboolean ifnotexists,
-                                        GError **error);
-
 gboolean     gda_db_view_prepare_create (GdaDbView *self,
                                          GdaServerOperation *op,
                                          GError **error);
-
-gboolean     gda_db_view_drop          (GdaDbView *self,
-                                        GdaConnection *cnc,
-                                        gboolean ifexists,
-                                        GdaDbViewRefAction action,
-                                        GError **error);
 
 G_END_DECLS
 
