@@ -1608,9 +1608,6 @@ gda_sqlite_provider_render_operation (GdaServerProvider *provider, GdaConnection
         case GDA_SERVER_OPERATION_ADD_COLUMN:
                 sql = _gda_sqlite_render_ADD_COLUMN (provider, cnc, op, error);
                 break;
-        case GDA_SERVER_OPERATION_DROP_COLUMN:
-                sql = _gda_sqlite_render_DROP_COLUMN (provider, cnc, op, error);
-                break;
         case GDA_SERVER_OPERATION_RENAME_COLUMN:
                 sql = _gda_sqlite_render_RENAME_COLUMN (provider, cnc, op, error);
                 break;
