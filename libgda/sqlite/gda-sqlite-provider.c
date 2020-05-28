@@ -1511,6 +1511,7 @@ gda_sqlite_provider_supports_operation (G_GNUC_UNUSED GdaServerProvider *provide
         case GDA_SERVER_OPERATION_RENAME_TABLE:
 
         case GDA_SERVER_OPERATION_ADD_COLUMN:
+        case GDA_SERVER_OPERATION_RENAME_COLUMN:
 
         case GDA_SERVER_OPERATION_CREATE_INDEX:
         case GDA_SERVER_OPERATION_DROP_INDEX:
