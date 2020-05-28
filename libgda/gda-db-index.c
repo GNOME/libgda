@@ -20,6 +20,7 @@
 
 #include "gda-db-index.h"
 #include "gda-connection.h"
+#include "gda-db-index-field.h"
 #include "gda-server-operation.h"
 #include "gda-server-provider.h"
 #include "gda-lockable.h"
@@ -332,14 +333,108 @@ on_error:
   return FALSE;
 }
 
+/**
+ * @self is a instance of GdaDbIndex
+ * @cnc is a opened connection
+ * @user_data is a GdaDbTable
+ * @error an error holder
+ *
+ */
 static gboolean
 gda_db_index_create (GdaDdlModifiable *self,
                      GdaConnection *cnc,
                      gpointer user_data,
                      GError **error)
 {
+  G_DEBUG_HERE();
+  GdaServerProvider *provider = NULL;
+  GdaServerOperation *op = NULL;
+
+  GdaDbTable *table = GDA_DB_TABLE (user_data);
+  GdaDbIndex *index = GDA_DB_INDEX (self);
+
+  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
+
+  if (!gda_connection_is_opened (cnc))
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+                   _("Connection is not opened"));
+      return FALSE;
+    }
+
+  gda_lockable_lock (GDA_LOCKABLE (cnc));
+
+  provider = gda_connection_get_provider (cnc);
+
+  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_CREATE_INDEX,
+                                             NULL, error);
+
+  if (!op)
+    {
+      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
+                   _("ServerOperation is NULL"));
+      goto on_error;
+    }
+
+  if (gda_db_index_get_unique(index))
+    {
+      if (!gda_server_operation_set_value_at (op, "UNIQUE", error,
+                                              "/INDEX_DEF_P/INDEX_TYPE"))
+        goto on_error;
+    }
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (index)),
+                                          error, "/INDEX_DEF_P/INDEX_NAME"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (table)),
+                                          error, "/INDEX_DEF_P/INDEX_ON_TABLE"))
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, "TRUE",
+					  error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
+    goto on_error;
+
+  GSList *it = gda_db_index_get_fields (index);
+  gint i = 0;
+
+  for (; it != NULL; it = it->next, i++)
+    {
+      GdaDbColumn *col = gda_db_index_field_get_column (GDA_DB_INDEX_FIELD (it->data));
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_column_get_name (col),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_FIELD",
+                                              i))
+        goto on_error;
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_index_field_get_collate (it->data),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_COLLATE",
+                                              i))
+        goto on_error;
+
+      if (!gda_server_operation_set_value_at (op,
+                                              gda_db_index_field_get_sort_order_str (it->data),
+                                              error,
+                                              "/INDEX_FIELDS_S/%d/INDEX_SORT_ORDER",
+                                              i))
+        goto on_error;
+    }
+
+  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
+    goto on_error;
+
+  g_object_unref (op);
 
   return TRUE;
+
+on_error:
+  if (op) g_object_unref (op);
+
+  return FALSE;
 }
 
 static gboolean
