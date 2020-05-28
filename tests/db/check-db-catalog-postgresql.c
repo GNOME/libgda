@@ -86,7 +86,7 @@ static void create_users_table (CheckDbObject *self) {
   gda_db_table_append_column (table, column_ts);
 
   gda_db_catalog_append_table (self->catalog, table);
-  res = gda_db_table_create (table, self->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (table), self->cnc, NULL, &error);
 
   g_object_unref (table);
   g_object_unref (column_id);
@@ -154,7 +154,7 @@ static void create_companies_table (CheckDbObject *self) {
   gda_db_table_append_column (table, column_ts);
 
   gda_db_catalog_append_table (self->catalog, table);
-  res = gda_db_table_create (table, self->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (table), self->cnc, NULL, &error);
 
   g_object_unref (table);
   g_object_unref (column_id);
@@ -223,7 +223,7 @@ static void create_countries_table (CheckDbObject *self) {
   gda_db_table_append_column (table, column_ts);
 
   gda_db_catalog_append_table (self->catalog, table);
-  res = gda_db_table_create (table, self->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (table), self->cnc, NULL, &error);
 
   g_object_unref (table);
   g_object_unref (column_id);

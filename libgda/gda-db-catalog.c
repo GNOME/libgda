@@ -36,6 +36,7 @@
 #include "gda-server-provider.h"
 #include <libgda/gda-lockable.h>
 #include "gda-meta-struct.h"
+#include "gda-ddl-modifiable.h"
 
 G_DEFINE_QUARK (gda_db_catalog_error, gda_db_catalog_error)
 
@@ -905,7 +906,7 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
 				}
 			else
 				{
-					st = gda_db_table_create (it->data,priv->cnc, TRUE, error);
+					st = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (it->data), priv->cnc, NULL, error);
 
 					if (!st)
 						break;
@@ -919,7 +920,7 @@ gda_db_catalog_perform_operation (GdaDbCatalog *self,
   if (st) {
   /*TODO: add update option for views */
     for (it = priv->mp_views; it; it = it->next) {
-        st = gda_db_view_create (it->data, priv->cnc, TRUE, error);
+        st = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (it->data), priv->cnc, NULL, error);
         if (!st) {
           break;
         }

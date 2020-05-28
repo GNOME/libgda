@@ -1145,7 +1145,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   g_object_unref (pname);
 
 /* Create table */
-  gboolean res = gda_db_table_create (tproject, fixture->cnc, TRUE, &error);
+  gboolean res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), fixture->cnc, NULL, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1207,7 +1207,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
 
   g_object_unref (fkey);
 
-  res = gda_db_table_create (temployee, fixture->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (temployee), fixture->cnc, NULL, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1222,7 +1222,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_column_set_scale (cost, 2);
   gda_db_column_set_nnul (cost, FALSE);
 
-  res = gda_db_table_add_column (tproject, cost, fixture->cnc, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), fixture->cnc, cost, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1236,7 +1236,7 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   GdaDbTable *new_table = gda_db_table_new ();
   gda_db_base_set_name (GDA_DB_BASE (new_table), "NewEmployee");
 
-  res = gda_db_table_rename (temployee, new_table, fixture->cnc, &error);
+  res = gda_ddl_modifiable_rename (GDA_DDL_MODIFIABLE (temployee), fixture->cnc, new_table, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1248,13 +1248,14 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   gda_db_view_set_istemp (myview, FALSE);
   gda_db_view_set_defstring (myview, "SELECT name, project_id FROM NewEmployee");
 
-  res = gda_db_view_create (myview, fixture->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (myview), fixture->cnc, NULL, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
 
   /* DROP_VIEW operation. We will reuse the  view */
-  res = gda_db_view_drop (myview, fixture->cnc, TRUE, GDA_DB_VIEW_RESTRICT, &error);
+  GdaDbViewRefAction action = GDA_DB_VIEW_RESTRICT;
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (myview), fixture->cnc, &action, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1286,14 +1287,14 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_db_index_drop (index, fixture->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (index), fixture->cnc, NULL, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
 
   g_assert_true (res);
 
-  res = gda_db_table_drop (new_table, fixture->cnc, TRUE, &error);
+  res = gda_ddl_modifiable_drop (GDA_DDL_MODIFIABLE (new_table), fixture->cnc, NULL, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
