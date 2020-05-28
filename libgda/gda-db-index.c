@@ -23,6 +23,7 @@
 #include "gda-server-operation.h"
 #include "gda-server-provider.h"
 #include "gda-lockable.h"
+#include "gda-ddl-modifiable.h"
 #include <glib/gi18n-lib.h>
 
 G_DEFINE_QUARK (gda_db_index_error, gda_db_index_error)
@@ -69,7 +70,20 @@ typedef struct
  * ]|
  */
 
-G_DEFINE_TYPE_WITH_PRIVATE (GdaDbIndex, gda_db_index, GDA_TYPE_DB_BASE)
+static void gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface);
+
+static gboolean gda_db_index_create (GdaDdlModifiable *self, GdaConnection *cnc,
+                                     gpointer user_data, GError **error);
+static gboolean gda_db_index_drop (GdaDdlModifiable *self, GdaConnection *cnc,
+                                   gpointer user_data, GError **error);
+static gboolean gda_db_index_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
+                                     gpointer new_name, GError **error);
+
+
+G_DEFINE_TYPE_WITH_CODE (GdaDbIndex, gda_db_index, GDA_TYPE_DB_BASE,
+                         G_ADD_PRIVATE(GdaDbIndex)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_MODIFIABLE,
+                                                gda_ddl_modifiable_interface_init))
 
 GdaDbIndex *
 gda_db_index_new (void)
@@ -103,6 +117,14 @@ gda_db_index_class_init (GdaDbIndexClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gda_db_index_finalize;
+}
+
+static void
+gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface)
+{
+  iface->create = gda_db_index_create;
+  iface->drop   = gda_db_index_drop;
+  iface->rename = gda_db_index_rename;
 }
 
 /**
@@ -250,10 +272,10 @@ gda_db_index_get_fields (GdaDbIndex *self)
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_index_drop (GdaDbIndex *self,
+static gboolean
+gda_db_index_drop (GdaDdlModifiable *self,
                    GdaConnection *cnc,
-                   gboolean ifexists,
+                   gpointer user_data,
                    GError **error)
 {
   G_DEBUG_HERE();
@@ -291,7 +313,7 @@ gda_db_index_drop (GdaDbIndex *self,
                                           error, "/INDEX_DESC_P/INDEX_NAME"))
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifexists), error,
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (TRUE), error,
                                           "/INDEX_DESC_P/INDEX_IFEXISTS"))
     goto on_error;
 
@@ -308,4 +330,23 @@ on_error:
   gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
   return FALSE;
+}
+
+static gboolean
+gda_db_index_create (GdaDdlModifiable *self,
+                     GdaConnection *cnc,
+                     gpointer user_data,
+                     GError **error)
+{
+
+  return TRUE;
+}
+
+static gboolean
+gda_db_index_rename (GdaDdlModifiable *old_name,
+                     GdaConnection *cnc,
+                     gpointer new_name,
+                     GError **error)
+{
+  return TRUE;
 }

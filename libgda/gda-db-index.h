@@ -60,10 +60,10 @@ void              gda_db_index_remove_field (GdaDbIndex *self, const gchar *name
 
 GSList           *gda_db_index_get_fields   (GdaDbIndex *self);
 
-gboolean          gda_db_index_drop (GdaDbIndex *self,
-                                     GdaConnection *cnc,
-                                     gboolean ifexists,
-                                     GError **error);
+//gboolean          gda_db_index_drop (GdaDbIndex *self,
+                                     //GdaConnection *cnc,
+                                     //gboolean ifexists,
+                                     //GError **error);
 
 G_END_DECLS
 
