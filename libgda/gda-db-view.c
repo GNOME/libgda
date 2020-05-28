@@ -25,6 +25,7 @@
 #include "gda-db-base.h"
 #include "gda-lockable.h"
 #include "gda-server-provider.h"
+#include "gda-ddl-modifiable.h"
 
 typedef struct
 {
@@ -61,11 +62,21 @@ typedef struct
  */
 
 static void gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface);
+static void gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface);
+
+static gboolean gda_db_view_create (GdaDdlModifiable *self, GdaConnection *cnc,
+                                    gpointer user_data, GError **error);
+static gboolean gda_db_view_drop (GdaDdlModifiable *self, GdaConnection *cnc,
+                                  gpointer user_data, GError **error);
+static gboolean gda_db_view_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
+                                    gpointer new_name, GError **error);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDbView, gda_db_view, GDA_TYPE_DB_BASE,
                          G_ADD_PRIVATE (GdaDbView)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
-                                                gda_db_view_buildable_interface_init))
+                                                gda_db_view_buildable_interface_init)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_MODIFIABLE,
+                                                gda_ddl_modifiable_interface_init))
 
 /* This is convenient way to name all nodes from xml file */
 enum {
@@ -340,6 +351,12 @@ gda_db_view_buildable_interface_init (GdaDbBuildableInterface *iface)
   iface->write_node = gda_db_view_write_node;
 }
 
+static void gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface)
+{
+  iface->create = gda_db_view_create;
+  iface->drop   = gda_db_view_drop;
+  iface->rename = gda_db_view_rename;
+}
 /**
  * gda_db_view_get_istemp:
  * @self: a #GdaDbView object
@@ -500,10 +517,10 @@ gda_db_view_set_replace (GdaDbView *self,
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_view_create (GdaDbView *self,
+static gboolean
+gda_db_view_create (GdaDdlModifiable *self,
                     GdaConnection *cnc,
-                    gboolean ifnotexists,
+                    gpointer user_data,
                     GError **error)
 {
   g_return_val_if_fail (self, FALSE);
@@ -516,7 +533,7 @@ gda_db_view_create (GdaDbView *self,
   GdaServerOperation *op = NULL;
 
   provider = gda_connection_get_provider (cnc);
-  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (self);
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (GDA_DB_VIEW (self));
 
   op = gda_server_provider_create_operation (provider,
                                              cnc,
@@ -629,11 +646,10 @@ gda_db_view_prepare_create (GdaDbView *self,
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_view_drop (GdaDbView *self,
+static gboolean
+gda_db_view_drop (GdaDdlModifiable *self,
                   GdaConnection *cnc,
-                  gboolean ifexists,
-                  GdaDbViewRefAction action,
+                  gpointer user_data,
                   GError **error)
 {
   g_return_val_if_fail (self, FALSE);
@@ -645,6 +661,7 @@ gda_db_view_drop (GdaDbView *self,
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
   gchar *action_str = NULL;
+  GdaDbViewRefAction *action = (GdaDbViewRefAction*)user_data;
 
   provider = gda_connection_get_provider (cnc);
 
@@ -662,11 +679,11 @@ gda_db_view_drop (GdaDbView *self,
                                           "/VIEW_DESC_P/VIEW_NAME"))
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR(ifexists), error,
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR(TRUE), error,
                                           "/VIEW_DESC_P/VIEW_IFEXISTS"))
     goto on_error;
 
-  switch (action)
+  switch (*action)
     {
     case GDA_DB_VIEW_RESTRICT:
       action_str = g_strdup ("RESTRICT");
@@ -675,7 +692,7 @@ gda_db_view_drop (GdaDbView *self,
       action_str = g_strdup ("CASCADE");
       break;
     default:
-      g_debug("Wrong value for action. It is %d\n", action);
+      g_debug("Wrong value for action. It is %d\n", *action);
       break;
     }
 
@@ -699,3 +716,8 @@ on_error:
   return FALSE;
 }
 
+static gboolean gda_db_view_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
+                                    gpointer new_name, GError **error)
+{
+  return TRUE;
+}
