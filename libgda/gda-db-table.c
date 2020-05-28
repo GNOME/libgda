@@ -27,6 +27,7 @@
 #include "gda-server-provider.h"
 #include "gda-connection.h"
 #include "gda-meta-struct.h"
+#include "gda-ddl-modifiable.h"
 #include <glib/gi18n-lib.h>
 
 G_DEFINE_QUARK (gda_db_table_error, gda_db_table_error)
@@ -62,11 +63,21 @@ typedef struct
  */
 
 static void gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface);
+static void gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface);
+
+static gboolean gda_db_table_create (GdaDdlModifiable *self, GdaConnection *cnc,
+                                     gpointer user_data, GError **error);
+static gboolean gda_db_table_drop (GdaDdlModifiable *self, GdaConnection *cnc,
+                                   gpointer user_data, GError **error);
+static gboolean gda_db_table_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
+                                     gpointer new_name, GError **error);
 
 G_DEFINE_TYPE_WITH_CODE (GdaDbTable, gda_db_table, GDA_TYPE_DB_BASE,
                          G_ADD_PRIVATE (GdaDbTable)
                          G_IMPLEMENT_INTERFACE (GDA_TYPE_DB_BUILDABLE,
-                                                gda_db_table_buildable_interface_init))
+                                                gda_db_table_buildable_interface_init)
+                         G_IMPLEMENT_INTERFACE (GDA_TYPE_DDL_MODIFIABLE,
+                                                gda_ddl_modifiable_interface_init))
 
 enum {
     PROP_0,
@@ -351,6 +362,13 @@ gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface)
   iface->write_node = gda_db_table_write_node;
 }
 
+static void
+gda_ddl_modifiable_interface_init (GdaDdlModifiableInterface *iface)
+{
+  iface->create = gda_db_table_create;
+  iface->drop   = gda_db_table_drop;
+  iface->rename = gda_db_table_rename;
+}
 /**
  * gda_db_table_set_comment:
  * @self: an #GdaDbTable object
@@ -742,10 +760,10 @@ on_error:
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_table_create (GdaDbTable *self,
+static gboolean
+gda_db_table_create (GdaDdlModifiable *self,
                      GdaConnection *cnc,
-                     gboolean ifnotexists,
+                     gpointer user_data,
                      GError **error)
 {
   g_return_val_if_fail (GDA_IS_DB_TABLE (self), FALSE);
@@ -758,6 +776,8 @@ gda_db_table_create (GdaDbTable *self,
   GdaServerOperation *op = NULL;
   gboolean res = FALSE;
 
+  GdaDbTable *table = GDA_DB_TABLE (self);
+
   provider = gda_connection_get_provider (cnc);
 
   op = gda_server_provider_create_operation (provider,
@@ -769,7 +789,7 @@ gda_db_table_create (GdaDbTable *self,
     {
       g_object_set_data_full (G_OBJECT (op), "connection", g_object_ref (cnc), g_object_unref);
 
-      if (gda_db_table_prepare_create (self, op, ifnotexists, error))
+      if (gda_db_table_prepare_create (table, op, TRUE, error))
         {
 #ifdef GDA_DEBUG
           gchar* str = gda_server_operation_render (op, error);
@@ -840,20 +860,23 @@ gda_db_table_append_fkey (GdaDbTable *self,
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_table_rename (GdaDbTable *old_name,
-                     GdaDbTable *new_name,
+static gboolean
+gda_db_table_rename (GdaDdlModifiable *old_name,
                      GdaConnection *cnc,
+                     gpointer new_name,
                      GError **error)
 {
   G_DEBUG_HERE();
   GdaServerOperation *op = NULL;
   GdaServerProvider *provider = NULL;
+  GdaDbTable *new_name_table = NULL;
 
   g_return_val_if_fail(GDA_IS_DB_TABLE (old_name), FALSE);
-  g_return_val_if_fail(GDA_IS_DB_TABLE (old_name), FALSE);
+  g_return_val_if_fail(new_name, FALSE);
   g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
   g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
+
+  new_name_table = GDA_DB_TABLE (new_name);
 
   if (!gda_connection_is_opened (cnc))
     {
@@ -874,7 +897,7 @@ gda_db_table_rename (GdaDbTable *old_name,
                                           error, "/TABLE_DESC_P/TABLE_NAME"))
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (new_name)),
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (new_name_table)),
                                           error, "/TABLE_DESC_P/TABLE_NEW_NAME"))
     goto on_error;
 
@@ -896,120 +919,6 @@ on_error:
   return FALSE;
 }
 
-/**
- * gda_db_table_add_column:
- * @self: an instance of #GdaDbTable where table should be added
- * @col: a column to add
- * @cnc: an opened connection to use
- * @error: An error container
- *
- * This is a convenient method to add a column @col to the table @self.
- *
- * Returns: %TRUE if no error occures and %FALSE otherwise
- *
- * Stability: Stable
- * Since: 6.0
- */
-gboolean
-gda_db_table_add_column (GdaDbTable *self,
-                         GdaDbColumn *col,
-                         GdaConnection *cnc,
-                         GError **error)
-{
-  G_DEBUG_HERE();
-  GdaServerOperation *op = NULL;
-  GdaServerProvider *provider = NULL;
-  gchar *buffer_str = NULL;
-
-  g_return_val_if_fail(GDA_IS_DB_TABLE (self), FALSE);
-  g_return_val_if_fail(GDA_IS_DB_COLUMN (col), FALSE);
-  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
-  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
-
-  const gchar *strtype;
-
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
-
-  gda_lockable_lock (GDA_LOCKABLE (cnc));
-
-  provider = gda_connection_get_provider (cnc);
-
-  op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_ADD_COLUMN,
-                                             NULL, error);
-
-  if (!op)
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
-                   _("ServerOperation is NULL"));
-      goto on_error;
-    }
-
-  if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (self)),
-                                          error, "/COLUMN_DEF_P/TABLE_NAME"))
-    goto on_error;
-
-  if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (col),
-                                          error, "/COLUMN_DEF_P/COLUMN_NAME"))
-    goto on_error;
-
-  strtype = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (cnc),
-                                                       cnc, gda_db_column_get_gtype(col));
-
-  if (!gda_server_operation_set_value_at (op, strtype,
-                                          error, "/COLUMN_DEF_P/COLUMN_TYPE"))
-    goto on_error;
-
-  guint size = gda_db_column_get_size (col);
-
-  buffer_str = g_strdup_printf("%d", size);
-
-  if (!gda_server_operation_set_value_at (op, buffer_str,
-                                          error, "/COLUMN_DEF_P/COLUMN_SIZE"))
-    goto on_error;
-
-  g_free (buffer_str);
-  buffer_str = NULL;
-
-  guint scale = gda_db_column_get_scale (col);
-
-  buffer_str = g_strdup_printf("%d", scale);
-
-  if (!gda_server_operation_set_value_at (op, buffer_str,
-                                          error, "/COLUMN_DEF_P/COLUMN_SCALE"))
-    goto on_error;
-
-  g_free (buffer_str);
-  buffer_str = NULL;
-
-  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (gda_db_column_get_nnul (col)),
-                                          error, "/COLUMN_DEF_P/COLUMN_NNUL"))
-    goto on_error;
-
-  if (!gda_server_provider_perform_operation (provider, cnc, op, error))
-    goto on_error;
-
-  g_object_unref (op);
-
-  gda_lockable_unlock (GDA_LOCKABLE (cnc));
-
-  return TRUE;
-
-on_error:
-  if (op)
-    g_object_unref (op);
-
-  if (buffer_str)
-    g_free (buffer_str);
-
-  gda_lockable_unlock (GDA_LOCKABLE (cnc));
-
-  return FALSE;
-}
 
 /**
  * gda_db_table_drop:
@@ -1025,10 +934,10 @@ on_error:
  * Stability: Stable
  * Since: 6.0
  */
-gboolean
-gda_db_table_drop (GdaDbTable *self,
+static gboolean
+gda_db_table_drop (GdaDdlModifiable *self,
                    GdaConnection *cnc,
-                   gboolean ifexists,
+                   gpointer user_data,
                    GError **error)
 {
   G_DEBUG_HERE();
@@ -1063,7 +972,7 @@ gda_db_table_drop (GdaDbTable *self,
                                           "/TABLE_DESC_P/TABLE_NAME"))
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (ifexists), error,
+  if (!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (TRUE), error,
                                           "/TABLE_DESC_P/TABLE_IFEXISTS"))
     goto on_error;
 
