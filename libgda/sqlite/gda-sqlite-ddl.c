@@ -765,7 +765,7 @@ _gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider,
 
   g_string_append (string, " TO ");
 
-  tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/COLUMN_DEF_P/COLUMN_NEW_NAME", error);
+  tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/COLUMN_DEF_P/COLUMN_NAME_NEW", error);
 
   if (!tmp) {
     g_string_free (string, TRUE);
@@ -777,6 +777,10 @@ _gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider,
 
   sql = string->str;
   g_string_free (string, FALSE);
+
+#ifdef GDA_DEBUG
+	g_print ("Renderer SQL for SQLite: %s\n", sql);
+#endif
 
   return sql;
 }
