@@ -443,5 +443,9 @@ gda_db_index_rename (GdaDdlModifiable *old_name,
                      gpointer new_name,
                      GError **error)
 {
-  return TRUE;
+  g_set_error (error, GDA_DDL_MODIFIABLE_ERROR,
+               GDA_DDL_MODIFIABLE_NOT_IMPLEMENTED,
+               _("Operation is not implemented for the used provider"));
+
+  return FALSE;
 }
