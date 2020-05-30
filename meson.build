@@ -112,13 +112,12 @@ lbdb_cargs = []
 # 	endif
 # endforeach
 
-sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: false)
-sqlite_internal = true
+sqlite_dep = dependency ('sqlite3', version: '>= 3.22.0', required: true)
 if sqlite_dep.found()
-	sqlite3_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
-								dependencies: sqlite_dep)
+	if compiler.has_function('sqlite3_table_column_metadata', dependencies: sqlite_dep)
+		message('Installed SQLite was not compiled with the SQLITE_ENABLE_COLUMN_METADATA')
+	endif
 endif
-
 
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4', required: false)
 if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
