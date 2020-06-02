@@ -220,7 +220,7 @@ common_declare_expected_change (const gchar *table_name, GdaMetaStoreChangeType 
 		/* clear any remaining changes not handled */
 		if (expected_changes) {
 			/* expected more changes */
-			gchar *estr = stringify_a_change ((GdaMetaStoreChange *) expected_changes->data);
+			gchar *estr = (gchar *) expected_changes->data;
 			g_print ("Received no change but EXPECTED GdaMetaStoreChange: %s", estr);
 			exit (EXIT_FAILURE);
 		}
