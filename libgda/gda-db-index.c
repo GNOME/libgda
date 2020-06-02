@@ -33,7 +33,7 @@ typedef struct
 {
   gboolean mUnique;
   GSList *mFieldList; /* A list of GdaDbIndexField */
-	gchar *mTable; /* A table associated with the index */
+  GdaDbTable *mTable; /* A table associated with the index */
 } GdaDbIndexPrivate;
 
 /**
@@ -119,9 +119,19 @@ gda_db_index_finalize (GObject *object)
   GdaDbIndexPrivate *priv = gda_db_index_get_instance_private (self);
 
   g_slist_free_full (priv->mFieldList, g_object_unref);
-	g_free (priv->mTable);
 
   G_OBJECT_CLASS (gda_db_index_parent_class)->finalize (object);
+}
+
+static void
+gda_db_index_dispose (GObject *object)
+{
+  GdaDbIndex *self = GDA_DB_INDEX (object);
+  GdaDbIndexPrivate *priv = gda_db_index_get_instance_private (self);
+
+  g_object_unref (priv->mTable);
+
+  G_OBJECT_CLASS (gda_db_index_parent_class)->dispose (object);
 }
 
 static void
@@ -135,7 +145,7 @@ gda_db_index_get_property (GObject    *object,
 
   switch (prop_id) {
     case PROP_TABLE:
-      g_value_set_string (value, priv->mTable);
+      g_value_set_object (value, priv->mTable);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -153,8 +163,10 @@ gda_db_index_set_property (GObject    *object,
 
   switch (prop_id) {
     case PROP_TABLE:
-      g_free (priv->mTable);
-      priv->mTable = g_strdup (g_value_get_string (value));
+      if (priv->mTable)
+        g_object_unref (priv->mTable);
+
+      priv->mTable = g_value_dup_object (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -167,13 +179,14 @@ gda_db_index_class_init (GdaDbIndexClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gda_db_index_finalize;
+  object_class->dispose = gda_db_index_dispose;
   object_class->get_property = gda_db_index_get_property;
   object_class->set_property = gda_db_index_set_property;
 
-  properties[PROP_TABLE] = g_param_spec_string ("table",
+  properties[PROP_TABLE] = g_param_spec_object ("table",
                                                   "Table",
                                                   "Table associated with index",
-                                                  NULL,
+                                                  GDA_TYPE_DB_TABLE,
                                                   G_PARAM_READWRITE);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -340,12 +353,10 @@ gda_db_index_drop (GdaDdlModifiable *self,
 {
   G_DEBUG_HERE();
   g_return_val_if_fail (GDA_IS_DB_INDEX (self), FALSE);
-  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   if (!gda_connection_is_opened(cnc))
     {
-      g_set_error (error, GDA_DB_INDEX_ERROR, GDA_DB_INDEX_CONNECTION_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -363,11 +374,7 @@ gda_db_index_drop (GdaDdlModifiable *self,
                                              NULL,
                                              error);
   if (!op)
-    {
-      g_set_error (error, GDA_DB_INDEX_ERROR, GDA_DB_INDEX_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      goto on_error;
-    }
+    goto on_error;
 
   if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (self)),
                                           error, "/INDEX_DESC_P/INDEX_NAME"))
@@ -379,6 +386,8 @@ gda_db_index_drop (GdaDdlModifiable *self,
 
   if (!gda_server_provider_perform_operation (provider, cnc, op, error))
     goto on_error;
+
+  g_object_unref (op);
 
   gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
@@ -393,6 +402,7 @@ on_error:
 }
 
 /**
+ * gda_db_index_create:
  * @self is a instance of GdaDbIndex
  * @cnc is a opened connection
  * @user_data is ignored
@@ -410,13 +420,11 @@ gda_db_index_create (GdaDdlModifiable *self,
   GdaServerOperation *op = NULL;
 
   GdaDbIndex *index = GDA_DB_INDEX (self);
-  gchar *table = NULL;
-
-  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
+  GdaDbTable *table = NULL;
 
   if (!gda_connection_is_opened (cnc))
     {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -429,13 +437,9 @@ gda_db_index_create (GdaDdlModifiable *self,
                                              NULL, error);
 
   if (!op)
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
-                   _("ServerOperation is NULL"));
-      goto on_error;
-    }
+    goto on_error;
 
-  if (gda_db_index_get_unique(index))
+  if (gda_db_index_get_unique (index))
     {
       if (!gda_server_operation_set_value_at (op, "UNIQUE", error,
                                               "/INDEX_DEF_P/INDEX_TYPE"))
@@ -449,11 +453,14 @@ gda_db_index_create (GdaDdlModifiable *self,
 
   g_object_get (index, "table", &table, NULL);
 
-  if (!gda_server_operation_set_value_at (op, table,
+  if (!table)
+    goto on_error;
+
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_name (GDA_DB_BASE (table)),
                                           error, "/INDEX_DEF_P/INDEX_ON_TABLE"))
     goto on_error;
 
-	g_free (table);
+  g_object_unref (table);
 
   if (!gda_server_operation_set_value_at (op, "TRUE",
                                           error, "/INDEX_DEF_P/INDEX_IFNOTEXISTS"))
@@ -493,12 +500,16 @@ gda_db_index_create (GdaDdlModifiable *self,
 
   g_object_unref (op);
 
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
+
   return TRUE;
 
 on_error:
   if (op) g_object_unref (op);
 
-  g_free (table);
+  g_object_unref (table);
+
+  gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
   return FALSE;
 }

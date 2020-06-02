@@ -38,7 +38,7 @@ typedef struct
   gchar *mp_comment;
   gchar *mp_default; /* property */
   gchar *mp_check;
-  gchar *mp_table; /* Property */
+  GdaDbTable *mp_table; /* Property */
 
   GType m_gtype;
 
@@ -178,9 +178,19 @@ gda_db_column_finalize (GObject *object)
   g_free (priv->mp_type);
   g_free (priv->mp_default);
   g_free (priv->mp_check);
-  g_free (priv->mp_table);
 
   G_OBJECT_CLASS (gda_db_column_parent_class)->finalize (object);
+}
+
+static void
+gda_db_column_dispose (GObject *object)
+{
+  GdaDbColumn *self = GDA_DB_COLUMN (object);
+  GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
+
+  g_object_unref (priv->mp_table);
+
+  G_OBJECT_CLASS (gda_db_column_parent_class)->dispose (object);
 }
 
 static void
@@ -224,7 +234,7 @@ gda_db_column_get_property (GObject    *object,
       g_value_set_uint (value, priv->m_scale);
       break;
     case PROP_COLUMN_TABLE:
-      g_value_set_string (value, priv->mp_table);
+      g_value_set_object (value, priv->mp_table);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -277,8 +287,8 @@ gda_db_column_set_property (GObject      *object,
       priv->m_scale = g_value_get_uint (value);
       break;
     case PROP_COLUMN_TABLE:
-      g_free (priv->mp_table);
-      priv->mp_table = g_value_dup_string (value);
+      g_object_unref (priv->mp_table);
+      priv->mp_table = g_value_get_object (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -292,6 +302,7 @@ gda_db_column_class_init (GdaDbColumnClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gda_db_column_finalize;
+  object_class->dispose = gda_db_column_dispose;
   object_class->get_property = gda_db_column_get_property;
   object_class->set_property = gda_db_column_set_property;
 
@@ -328,7 +339,7 @@ gda_db_column_class_init (GdaDbColumnClass *klass)
                          G_PARAM_READWRITE);
 
   properties[PROP_COLUMN_TABLE] =
-    g_param_spec_string ("table", "Table", "Parent table", NULL, G_PARAM_READWRITE);
+    g_param_spec_object ("table", "Table", "Parent table", GDA_TYPE_DB_TABLE, G_PARAM_READWRITE);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
@@ -1306,18 +1317,14 @@ gda_db_column_create (GdaDdlModifiable *self,
   GdaServerOperation *op = NULL;
   GdaServerProvider *provider = NULL;
   gchar *buffer_str = NULL;
-  GdaDbTable *table = GDA_DB_TABLE (user_data);
+  GdaDbTable *table = NULL;
   GdaDbColumn *column = GDA_DB_COLUMN (self);
-
-  g_return_val_if_fail(GDA_IS_DDL_MODIFIABLE (self), FALSE);
-  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
-  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
   const gchar *strtype;
 
   if (!gda_connection_is_opened (cnc))
     {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -1330,15 +1337,18 @@ gda_db_column_create (GdaDdlModifiable *self,
                                              NULL, error);
 
   if (!op)
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
-                   _("ServerOperation is NULL"));
-      goto on_error;
-    }
+    goto on_error;
+
+  g_object_get (column, "table", &table, NULL);
+
+  if (!table)
+    goto on_error;
 
   if (!gda_server_operation_set_value_at (op, gda_db_base_get_full_name (GDA_DB_BASE (table)),
                                           error, "/COLUMN_DEF_P/TABLE_NAME"))
     goto on_error;
+
+  g_object_unref (table);
 
   if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (column),
                                           error, "/COLUMN_DEF_P/COLUMN_NAME"))
@@ -1393,6 +1403,9 @@ on_error:
   if (buffer_str)
     g_free (buffer_str);
 
+  if (table)
+    g_object_unref (table);
+
   gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
   return FALSE;
@@ -1420,16 +1433,13 @@ gda_db_column_rename (GdaDdlModifiable *self,
   G_DEBUG_HERE();
   GdaServerOperation *op = NULL;
   GdaServerProvider *provider = NULL;
-  gchar *table = NULL;
+  GdaDbTable *table = NULL;
   GdaDbColumn *column = GDA_DB_COLUMN (self);
   GdaDbColumn *column_new = GDA_DB_COLUMN (user_data);
 
-  g_return_val_if_fail(GDA_IS_DDL_MODIFIABLE (self), FALSE);
-  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
-
   if (!gda_connection_is_opened (cnc))
     {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_CONNECTION_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -1442,20 +1452,18 @@ gda_db_column_rename (GdaDdlModifiable *self,
                                              NULL, error);
 
   if (!op)
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR, GDA_DB_TABLE_SERVER_OPERATION,
-                   _("ServerOperation is NULL"));
-      goto on_error;
-    }
+    goto on_error;
 
   g_object_get (column, "table", &table, NULL);
 
   if (!table)
     goto on_error;
 
-  if (!gda_server_operation_set_value_at (op, table,
+  if (!gda_server_operation_set_value_at (op, gda_db_base_get_name (GDA_DB_BASE (table)),
                                           error, "/COLUMN_DEF_P/TABLE_NAME"))
     goto on_error;
+
+  g_object_unref (table);
 
   if (!gda_server_operation_set_value_at (op, gda_db_column_get_name (column),
                                           error, "/COLUMN_DEF_P/COLUMN_NAME"))
@@ -1479,7 +1487,7 @@ on_error:
     g_object_unref (op);
 
   if (table)
-    g_free (table);
+    g_object_unref (table);
 
   gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
