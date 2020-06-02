@@ -215,11 +215,11 @@ gda_db_index_field_get_sort_order (GdaDbIndexField *self)
  * Since: 6.0
  */
 const gchar *
-gda_db_index_field_get_sort_order_str (GdaDbIndexField *field)
+gda_db_index_field_get_sort_order_str (GdaDbIndexField *self)
 {
-  g_return_val_if_fail (GDA_IS_DB_INDEX_FIELD(field), NULL);
+  g_return_val_if_fail (GDA_IS_DB_INDEX_FIELD (self), NULL);
 
-  GdaDbIndexSortOrder sorder = gda_db_index_field_get_sort_order (field);
+  GdaDbIndexSortOrder sorder = gda_db_index_field_get_sort_order (self);
 
   if (sorder == GDA_DB_INDEX_SORT_ORDER_ASC)
     return "ASC";

@@ -66,7 +66,7 @@ void                 gda_db_index_field_set_sort_order (GdaDbIndexField *self,
 
 GdaDbIndexSortOrder  gda_db_index_field_get_sort_order (GdaDbIndexField *self);
 
-const gchar *        gda_db_index_field_get_sort_order_str (GdaDbIndexField *field);
+const gchar *        gda_db_index_field_get_sort_order_str (GdaDbIndexField *self);
 
 G_END_DECLS
 
