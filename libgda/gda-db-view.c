@@ -654,7 +654,6 @@ gda_db_view_drop (GdaDdlModifiable *self,
 {
   g_return_val_if_fail (self, FALSE);
   g_return_val_if_fail (cnc && gda_connection_is_opened(cnc), FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   gda_lockable_lock ((GdaLockable*)cnc);
 
