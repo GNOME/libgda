@@ -129,7 +129,7 @@ gda_db_index_dispose (GObject *object)
   GdaDbIndex *self = GDA_DB_INDEX (object);
   GdaDbIndexPrivate *priv = gda_db_index_get_instance_private (self);
 
-  g_object_unref (priv->mTable);
+  if (priv->mTable) g_object_unref (priv->mTable);
 
   G_OBJECT_CLASS (gda_db_index_parent_class)->dispose (object);
 }
@@ -507,7 +507,7 @@ gda_db_index_create (GdaDdlModifiable *self,
 on_error:
   if (op) g_object_unref (op);
 
-  g_object_unref (table);
+  if (table) g_object_unref (table);
 
   gda_lockable_unlock (GDA_LOCKABLE (cnc));
 
