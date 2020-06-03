@@ -188,7 +188,7 @@ gda_db_column_dispose (GObject *object)
   GdaDbColumn *self = GDA_DB_COLUMN (object);
   GdaDbColumnPrivate *priv = gda_db_column_get_instance_private (self);
 
-  g_object_unref (priv->mp_table);
+  if (priv->mp_table) g_object_unref (priv->mp_table);
 
   G_OBJECT_CLASS (gda_db_column_parent_class)->dispose (object);
 }
@@ -287,8 +287,9 @@ gda_db_column_set_property (GObject      *object,
       priv->m_scale = g_value_get_uint (value);
       break;
     case PROP_COLUMN_TABLE:
-      g_object_unref (priv->mp_table);
-      priv->mp_table = g_value_get_object (value);
+      if (priv->mp_table)
+        g_object_unref (priv->mp_table);
+      priv->mp_table = g_value_dup_object (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -1320,7 +1321,7 @@ gda_db_column_create (GdaDdlModifiable *self,
   GdaDbTable *table = NULL;
   GdaDbColumn *column = GDA_DB_COLUMN (self);
 
-  const gchar *strtype;
+  const gchar *strtype = NULL;
 
   if (!gda_connection_is_opened (cnc))
     {
