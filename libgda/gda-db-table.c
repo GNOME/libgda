@@ -767,8 +767,6 @@ gda_db_table_create (GdaDdlModifiable *self,
                      GError **error)
 {
   g_return_val_if_fail (GDA_IS_DB_TABLE (self), FALSE);
-  g_return_val_if_fail (GDA_IS_CONNECTION (cnc) && gda_connection_is_opened (cnc), FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
 
   gda_lockable_lock (GDA_LOCKABLE(cnc));
 
@@ -824,6 +822,7 @@ gda_db_table_append_column (GdaDbTable *self,
 
   GdaDbTablePrivate *priv = gda_db_table_get_instance_private (self);
 
+  g_object_set (column, "table", self, NULL);
   priv->mp_columns = g_list_append (priv->mp_columns, g_object_ref (column));
 }
 
@@ -873,16 +872,8 @@ gda_db_table_rename (GdaDdlModifiable *old_name,
 
   g_return_val_if_fail(GDA_IS_DB_TABLE (old_name), FALSE);
   g_return_val_if_fail(new_name, FALSE);
-  g_return_val_if_fail(GDA_IS_CONNECTION (cnc), FALSE);
-  g_return_val_if_fail(error == NULL || *error == NULL, FALSE);
 
   new_name_table = GDA_DB_TABLE (new_name);
-
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_warning ("Connection is not opened");
-      return FALSE;
-    }
 
   gda_lockable_lock (GDA_LOCKABLE (cnc));
   provider = gda_connection_get_provider (cnc);
@@ -945,15 +936,6 @@ gda_db_table_drop (GdaDdlModifiable *self,
   GdaServerOperation *op = NULL;
 
   g_return_val_if_fail (GDA_IS_DB_TABLE (self), FALSE);
-  g_return_val_if_fail (GDA_IS_CONNECTION (cnc), FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_set_error (error, GDA_DB_TABLE_ERROR,  GDA_DB_TABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
 
   gda_lockable_lock (GDA_LOCKABLE (cnc));
 
@@ -998,7 +980,7 @@ on_error:
  * @self: a #GdaDbTable instance
  * @constr a constraint string to append
  *
- * Adds globat table constraint. It will be added to the sql string by the provider implementation
+ * Adds global table constraint. It will be added to the sql string by the provider implementation
  * if it supports it. Usually, table constraint is very complex and the current method just append
  * a list of constraints to the sql string.
  *
