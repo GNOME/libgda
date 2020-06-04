@@ -523,14 +523,10 @@ gda_db_view_create (GdaDdlModifiable *self,
                     gpointer user_data,
                     GError **error)
 {
-  g_return_val_if_fail (self, FALSE);
-  g_return_val_if_fail (cnc && gda_connection_is_opened(cnc), FALSE);
-  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
-
-  gda_lockable_lock ((GdaLockable*)cnc);
-
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
+
+  gda_lockable_lock ((GdaLockable*)cnc);
 
   provider = gda_connection_get_provider (cnc);
   GdaDbViewPrivate *priv = gda_db_view_get_instance_private (GDA_DB_VIEW (self));
@@ -652,9 +648,6 @@ gda_db_view_drop (GdaDdlModifiable *self,
                   gpointer user_data,
                   GError **error)
 {
-  g_return_val_if_fail (self, FALSE);
-  g_return_val_if_fail (cnc && gda_connection_is_opened(cnc), FALSE);
-
   gda_lockable_lock ((GdaLockable*)cnc);
 
   GdaServerProvider *provider = NULL;
@@ -673,7 +666,7 @@ gda_db_view_drop (GdaDdlModifiable *self,
     goto on_error;
 
   if (!gda_server_operation_set_value_at (op,
-                                          gda_db_base_get_full_name(GDA_DB_BASE(self)),
+                                          gda_db_base_get_full_name (GDA_DB_BASE (self)),
                                           error,
                                           "/VIEW_DESC_P/VIEW_NAME"))
     goto on_error;
@@ -703,8 +696,8 @@ gda_db_view_drop (GdaDdlModifiable *self,
     goto on_error;
 
   g_object_unref (op);
-  gda_lockable_unlock ((GdaLockable*)cnc);
   g_free (action_str);
+  gda_lockable_unlock ((GdaLockable*)cnc);
 
   return TRUE;
 
@@ -715,8 +708,14 @@ on_error:
   return FALSE;
 }
 
-static gboolean gda_db_view_rename (GdaDdlModifiable *old_name, GdaConnection *cnc,
-                                    gpointer new_name, GError **error)
+static gboolean
+gda_db_view_rename (GdaDdlModifiable *old_name,
+                    GdaConnection *cnc,
+                    gpointer new_name,
+                    GError **error)
 {
-  return TRUE;
+  g_set_error (error, GDA_DDL_MODIFIABLE_ERROR,
+               GDA_DDL_MODIFIABLE_NOT_IMPLEMENTED,
+               _("Operation is not implemented for the used provider"));
+  return FALSE;
 }
