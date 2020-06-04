@@ -433,7 +433,7 @@ gda_db_view_set_ifnoexist (GdaDbView *self,
  * Returns: view definition string
  *
  * Stability: Stable
- * Sinc: 6.0
+ * Since: 6.0
  */
 const gchar*
 gda_db_view_get_defstring (GdaDbView *self)

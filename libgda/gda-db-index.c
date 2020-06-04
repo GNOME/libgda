@@ -43,15 +43,18 @@ typedef struct
  * @stability: Stable
  * @include: libgda/libgda.h
  *
- * The object #GdaDBIndex holds information about index in a table. Just populate the information
- * using index API and append to the #GdaDbTable  instance using gda_db_table_add_index(). This
- * method executes all needed DB manopulations to add the atrget index to the DB. This can be
+ * The object #GdaDbIndex holds information about index in a table. Just populate the information
+ * using index API, set table as property, execute gda_ddl_modifiable_create() method. This
+ * method executes all needed DB manopulations to add the target index to the DB. This can be
  * illustarted by the following example:
  *
  * |[<!-- language="C" -->
+ * GdaDbTable *table = gda_db_table_new();
+ * // Populate table as needed.
  * GdaDbIndex      *index = gda_db_index_new ();
  * GdaDbIndexField *field = gda_db_index_field_new ();
  * GdaDbColumn     *fcol  = gda_db_column_new ();
+ * GError *error = NULL;
  *
  * gda_db_index_set_unique (index, TRUE);
  * gda_db_base_set_name (GDA_DB_BASE (index), "MyIndex");
@@ -65,7 +68,9 @@ typedef struct
  * g_object_unref (fcol);
  * g_object_unref (field);
  *
- * res = gda_db_table_add_index (new_table, index, fixture->cnc, TRUE, &error);
+ * g_object_set (index, "table", table, NULL);
+ *
+ * res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE(index), cnc, NULL, &error);
  *
  * if (!res)
  *   g_print("Error during index addition\n");

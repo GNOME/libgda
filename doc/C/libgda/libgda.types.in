@@ -69,3 +69,4 @@ gda_ddl_creator_get_type
 gda_ddl_table_get_type
 gda_ddl_column_get_type
 gda_ddl_buildable_get_type
+gda_ddl_modifiable_get_type

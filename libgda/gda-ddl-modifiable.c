@@ -26,7 +26,7 @@
 G_DEFINE_QUARK (gda_ddl_modifiable_error, gda_ddl_modifiable_error)
 
 /**
- * SECTION:gda-ddl-operation
+ * SECTION:gda-ddl-modifiable
  * @title: GdaDdlModifiable
  * @short_description: Interface to peform DDL operation
  * @see_also: #GdaDbTable, #GdaDbView, #GdaDbIndex, #GdaDbColumn
@@ -34,11 +34,11 @@ G_DEFINE_QUARK (gda_ddl_modifiable_error, gda_ddl_modifiable_error)
  * @include: libgda/libgda.h
  *
  * This interface should be used to perform some DDL opration using objects that implement it.
- * This interface is implemented by #GdaDbTable, #GdaDbColumn, #GdaDbIndex, and #GdaDbView. Calling
- * gda_ddl_modifiable_create() on #GdaDbColumn operation will execute ADD COLUMN operation. The
- * should pass a pointer to instance of GdaDbTable as user_data where column will be added (cretaed).
+ * Calling gda_ddl_modifiable_create() on #GdaDbColumn operation will execute ADD COLUMN
+ * operation. The user should pass a pointer to instance of #GdaDbTable as user_data where
+ * column will be added (cretaed).
  *
- * If the underlying object does not implement the operation, then FALSE is returned and the error
+ * If the underlying object does not implement the operation, then %FALSE is returned and the error
  * is set.
  */
 
@@ -53,7 +53,7 @@ gda_ddl_modifiable_default_init (GdaDdlModifiableInterface *iface)
 
 /**
  * gda_ddl_modifiable_create:
- * @self: Instance of GdaDdlModifiable
+ * @self: Instance of #GdaDdlModifiable
  * @cnc: Opened connection
  * @user_data: Additional information provided by the user
  * @error: Error holder
@@ -90,7 +90,7 @@ gda_ddl_modifiable_create (GdaDdlModifiable *self,
 
 /**
  * gda_ddl_modifiable_drop:
- * @self: Instance of GdaDdlModifiable
+ * @self: Instance of #GdaDdlModifiable
  * @cnc: Opened connection
  * @user_data: Additional information provided by the user
  * @error: Error holder
@@ -125,7 +125,7 @@ gda_ddl_modifiable_drop (GdaDdlModifiable *self,
 
 /**
  * gda_ddl_modifiable_rename:
- * @self: Instance of GdaDdlModifiable
+ * @self: Instance of #GdaDdlModifiable
  * @cnc: Opened connection
  * @user_data: Additional information provided by the user
  * @error: Error holder

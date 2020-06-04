@@ -1075,6 +1075,7 @@ gda_db_column_set_check (GdaDbColumn *self,
  * gda_db_column_prepare_create:
  * @self: a #GdaDbColumn instance
  * @op: a #GdaServerOperation instance to update for TABLE_CREATE operation
+ * @order: Order number for the column
  * @error: a #GError container
  *
  * This method populate @op with information stored in @self.
@@ -1286,7 +1287,7 @@ gda_db_column_prepare_add (GdaDbColumn *self,
  * object. If %NULL is passed this function works exactly as
  * gda_db_column_new().
  *
- * Returns: New object that should be freed with gda_db_column_free()
+ * Returns: New object that should be freed with g_object_unref()
  */
 GdaDbColumn*
 gda_db_column_new_from_meta (GdaMetaTableColumn *column)
