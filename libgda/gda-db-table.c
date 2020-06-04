@@ -745,20 +745,12 @@ on_error:
   return FALSE;
 }
 
-/**
- * gda_db_table_create:
+/*
  * @self: a #GdaDbTable object
  * @cnc: a #GdaConnection object
  * @ifnotexists: Set to %TRUE if table should be created with "IFNOTEXISTS" option
  * @error: container for error storage
  *
- * Execute a full set of steps to create tabe in the database.
- * This method is called with "IFNOTEXISTS" option.
- *
- * Returns: %TRUE if successful, %FALSE otherwise
- *
- * Stability: Stable
- * Since: 6.0
  */
 static gboolean
 gda_db_table_create (GdaDdlModifiable *self,
@@ -847,8 +839,7 @@ gda_db_table_append_fkey (GdaDbTable *self,
   priv->mp_fkeys = g_list_append (priv->mp_fkeys, g_object_ref (fkey));
 }
 
-/**
- * gda_db_table_rename:
+/*
  * @old_name: The originam table to rename.
  * @new_name: The new table to rename to
  * @cnc: Connection to use
@@ -910,9 +901,7 @@ on_error:
   return FALSE;
 }
 
-
-/**
- * gda_db_table_drop:
+/*
  * @self: An instance of GdaDbTable
  * @cnc: Open connection to use for the operation
  * @ifexists: Set to %TRUE if the flag "IF EXISTS" should be added.
