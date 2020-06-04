@@ -62,6 +62,24 @@ test('RawDdlCreator', trddlc,
 		]
 	)
 
+ddlmodifiable_sqlite = executable('test-ddl-modifiable-sqlite',
+	['test-ddl-modifiable-sqlite.c'],
+	c_args: test_cargs,
+	link_with: libgda,
+	dependencies: [
+		libgda_dep,
+		inc_rooth_dep,
+		inc_sqliteh_dep
+		],
+	install: false
+	)
+test('DdlModifiableSqlite', ddlmodifiable_sqlite,
+	env: [
+		'GDA_TOP_SRC_DIR='+gda_top_src,
+		'GDA_TOP_BUILD_DIR='+gda_top_build
+		]
+	)
+
 tbc = executable('test-bin-converter',
 	['test-bin-converter.c'] + tests_sources,
 	c_args: test_cargs,
