@@ -356,7 +356,7 @@ gda_db_index_drop (GdaDdlModifiable *self,
 
   if (!gda_connection_is_opened(cnc))
     {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }
@@ -424,7 +424,7 @@ gda_db_index_create (GdaDdlModifiable *self,
 
   if (!gda_connection_is_opened (cnc))
     {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED,
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
                    _("Connection is not opened"));
       return FALSE;
     }

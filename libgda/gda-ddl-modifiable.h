@@ -53,7 +53,7 @@ struct _GdaDdlModifiableInterface
 
 typedef enum {
     GDA_DDL_MODIFIABLE_NOT_IMPLEMENTED,
-    GDA_DDL_MODIFIABLE_CONNECTIO_NOT_OPENED
+    GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED
 } GdaDdlModifiableError;
 
 #define GDA_DDL_MODIFIABLE_ERROR gda_ddl_modifiable_error_quark()
