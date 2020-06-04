@@ -41,6 +41,7 @@ struct _GdaDbColumnClass
 /**
  * GdaDbColumnError:
  * @GDA_DB_COLUMN_ERROR_TYPE: Set if wrong column type was given in the xml file.
+ * @GDA_DB_COLUMN_ERROR_WRONG_OPERATION: Wrong operation requested
  *
  * Values used to describe the source of the error.
  */

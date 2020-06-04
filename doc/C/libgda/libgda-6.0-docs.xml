@@ -121,15 +121,18 @@
       <xi:include href="xml/gda-attributes-manager.xml"/>
     </chapter>
 
-    <chapter id="DB Catalog">
+    <chapter id="DDL and DB Catalog">
       <title>DB Catalog</title>
       <xi:include href="xml/gda-db-base.xml"/>
       <xi:include href="xml/gda-db-buildable.xml"/>
+      <xi:include href="xml/gda-ddl-modifiable.xml"/>
       <xi:include href="xml/gda-db-column.xml"/>
       <xi:include href="xml/gda-db-catalog.xml"/>
       <xi:include href="xml/gda-db-fkey.xml"/>
       <xi:include href="xml/gda-db-table.xml"/>
       <xi:include href="xml/gda-db-view.xml"/>
+      <xi:include href="xml/gda-db-index.xml"/>
+      <xi:include href="xml/gda-db-index-field.xml"/>
     </chapter>
 
     <chapter id="Statement">

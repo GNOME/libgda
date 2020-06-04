@@ -55,11 +55,10 @@ typedef struct
  * #GdaDbTable implements #GdaDbBuildable interface for parsing xml file.
  *
  * #GdaDbTable can be used as a container to hold other objects, e.g. #GdaDbColumn, #GdaDbFkey and
- * as soon as populated with al needed objects, a series of methods ccan be called:
- * gda_db_table_create(), gda_db_table_add_column(), gda_db_table_add_index().
+ * as soon as populated with all needed objects the table can be created using
+ * gda_ddl_modifiable_create(),
  *
- * To create table a method gda_db_table_create() can be called and to drop the table the
- * gda_db_table_drop() can be called.
+ * To delete the table a method gda_ddl_modifiable_drop() can be called.
  */
 
 static void gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface);
@@ -555,6 +554,7 @@ gda_db_table_get_is_temp (GdaDbTable *self)
  * gda_db_table_prepare_create:
  * @self: a #GdaDbTable instance
  * @op: an instance of #GdaServerOperation to populate.
+ * @ifnotexists: Set it to TRUE if "IF NOT EXISTS" should be added
  * @error: error container
  *
  * Populate @op with information stored in @self. This method sets @op to execute CREATE_TABLE
@@ -967,7 +967,7 @@ on_error:
 /**
  * gda_db_table_append_constraint:
  * @self: a #GdaDbTable instance
- * @constr a constraint string to append
+ * @constr: a constraint string to append
  *
  * Adds global table constraint. It will be added to the sql string by the provider implementation
  * if it supports it. Usually, table constraint is very complex and the current method just append

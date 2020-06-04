@@ -43,7 +43,8 @@ struct _GdaDbTableClass {
 /**
  * GdaDbTableError:
  * @GDA_DB_TABLE_COLUMN_EMPTY: Table doesn't contain columns
- *
+ * @GDA_DB_TABLE_CONNECTION_NOT_OPENED: Closed connection was passed as parameter
+ * @GDA_DB_TABLE_SERVER_OPERATION: Error related to #GdaServerOperation
  */
 typedef enum {
     GDA_DB_TABLE_COLUMN_EMPTY,
@@ -80,7 +81,7 @@ void            gda_db_table_append_fkey (GdaDbTable *self,
                                           GdaDbFkey *fkey);
 
 void            gda_db_table_append_constraint (GdaDbTable *self,
-                                                const gchar *constraint);
+                                                const gchar *constr);
 
 G_END_DECLS
 

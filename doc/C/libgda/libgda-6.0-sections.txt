@@ -33,7 +33,6 @@ gda_db_index_get_unique
 gda_db_index_append_field
 gda_db_index_remove_field
 gda_db_index_get_fields
-gda_db_index_drop
 </SECTION>
 
 <SECTION>
@@ -41,7 +40,7 @@ gda_db_index_drop
 <TITLE>GdaDbIndexField</TITLE>
 GDA_TYPE_DB_INDEX_FIELD
 GdaDbIndexSortOrder
-GdaDbIndexCollate
+GdaDbIndexField
 gda_db_index_field_new
 gda_db_index_field_set_column
 gda_db_index_field_get_column
@@ -49,7 +48,6 @@ gda_db_index_field_set_collate
 gda_db_index_field_get_collate
 gda_db_index_field_set_sort_order
 gda_db_index_field_get_sort_order
-gda_db_index_field_get_collate_str
 gda_db_index_field_get_sort_order_str
 </SECTION>
 
@@ -151,16 +149,11 @@ gda_db_table_append_column
 gda_db_table_get_columns
 gda_db_table_append_fkey
 gda_db_table_get_fkeys
-gda_db_table_create
 gda_db_table_prepare_create
 gda_db_table_update
 gda_db_table_append_constraint
-gda_db_table_add_column
-gda_db_table_add_index
-gda_db_table_drop
 gda_db_table_error_quark
 gda_db_table_get_is_temp
-gda_db_table_rename
 gda_db_table_set_is_temp
 </SECTION>
 
@@ -180,8 +173,6 @@ gda_db_view_set_istemp
 gda_db_view_get_replace
 gda_db_view_set_replace
 gda_db_view_prepare_create
-gda_db_view_create
-gda_db_view_drop
 </SECTION>
 
 <SECTION>
@@ -213,6 +204,22 @@ GDA_IS_COLUMN
 GDA_IS_COLUMN_CLASS
 GDA_TYPE_COLUMN
 gda_column_get_type
+</SECTION>
+
+<SECTION>
+<FILE>gda-ddl-modifiable</FILE>
+<TITLE>GdaDdlModifiable</TITLE>
+GdaDdlModifiable
+GdaDdlModifiableError
+gda_ddl_modifiable_create
+gda_ddl_modifiable_drop
+gda_ddl_modifiable_rename
+<SUBSECTION Standard>
+GDA_DDL_MODIFIABLE
+GDA_TYPE_DDL_MODIFIABLE
+GDA_IS_DDL_MODIFIABLE
+gda_ddl_modifiable_get_type
+GDA_DDL_MODIFIABLE_ERROR
 </SECTION>
 
 <SECTION>

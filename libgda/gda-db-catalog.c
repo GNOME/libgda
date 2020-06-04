@@ -428,8 +428,8 @@ on_error:
  *
  * The given @xmlfile will be checked before parsing and %FALSE will be
  * returned if fails. The @xmlfile will be validated internally using
- * gda_db_catalog_validate_to_file() or gda_db_catalog_validate_to_path() methods.
- * The same methods can be used to validate xmlfile before parsing it.
+ * gda_db_catalog_validate_file_from_path(). he same method can be used to validate xmlfile
+ * before parsing it.
  */
 gboolean
 gda_db_catalog_parse_file_from_path (GdaDbCatalog *self,
@@ -825,7 +825,7 @@ gda_db_catalog_append_view (GdaDbCatalog *self,
  * After population @self with all data this method may be
  * called to trigger code and modify user database. This is the main
  * method to work with database. For retrieving information from database to an
- * xml file use gda_db_catalog_parse_cnc() and gda_db_buildable_write_xml().
+ * xml file use gda_db_catalog_parse_cnc() and gda_db_buildable_write_node().
  *
  * Connection can be added as a property using g_object_set() call and should be opened to use
  * this method. See gda_connection_open() method for reference.
@@ -968,7 +968,7 @@ gda_db_catalog_write_to_file (GdaDbCatalog *self,
  *
  * Save content of @self to a user friendly xml file.
  *
- * Returns: %TRUE is no error, %FLASE otherwise.
+ * Returns: %TRUE is no error, %FALSE otherwise.
  *
  * Since: 6.0
  */

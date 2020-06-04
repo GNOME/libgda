@@ -49,7 +49,7 @@ typedef struct
  * database to an xml file #GdaDbFkey holds information about
  * foregn keys with a convenient set of methods to manipulate them.
  * #GdaDbFkey implements #GdaDbBuildable interface for parsing xml file. This is an example how
- * #GdaDGdaDbFkey can be used:
+ * #GdaDbFkey can be used:
  *
  * |[<!-- language="C" -->
  * GdaDbFkey *fkey = gda_db_fkey_new ();
@@ -628,6 +628,7 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
  * gda_db_fkey_prepare_create:
  * @self: a #GdaDbFkey instance
  * @op: a #GdaServerOperation to populate
+ * @i: Order number
  * @error: error container
  *
  * Prepare @op object for execution by populating with information stored in @self.
