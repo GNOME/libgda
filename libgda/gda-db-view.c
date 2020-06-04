@@ -525,11 +525,26 @@ gda_db_view_create (GdaDdlModifiable *self,
 {
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
+  GdaDbView *view = GDA_DB_VIEW (self);
 
   gda_lockable_lock ((GdaLockable*)cnc);
 
   provider = gda_connection_get_provider (cnc);
-  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (GDA_DB_VIEW (self));
+  GdaDbViewPrivate *priv = gda_db_view_get_instance_private (view);
+
+  if (!gda_db_base_get_name (GDA_DB_BASE (view)))
+    {
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_MISSED_DATA,
+                   _("View name is not set"));
+      return FALSE;
+    }
+
+  if (!priv->mp_defstring)
+    {
+      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_MISSED_DATA,
+                   _("View definition is not set"));
+      return FALSE;
+    }
 
   op = gda_server_provider_create_operation (provider,
                                              cnc,
