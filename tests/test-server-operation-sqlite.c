@@ -981,7 +981,9 @@ test_server_operation_operations_db (TestObjectFixture *fixture,
   g_object_unref (fcol);
   g_object_unref (field);
 
-  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (index), fixture->cnc, new_table, NULL);
+  g_object_set (index, "table", new_table, NULL);
+
+  res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (index), fixture->cnc, NULL, NULL);
 
   g_assert_true (res);
 
@@ -1035,7 +1037,7 @@ test_server_operation_operations_db_rename_column (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  g_object_set (pname, "table", gda_db_base_get_name (GDA_DB_BASE (tproject)), NULL);
+  g_object_set (pname, "table", tproject, NULL);
 
   GdaDbColumn *new_column = gda_db_column_new();
   gda_db_column_set_name (new_column, "name_new");
@@ -1176,7 +1178,7 @@ test_server_operation_operations_db_index (TestObjectFixture *fixture,
   gda_db_index_append_field (index, ifield);
   g_object_unref (ifield);
 
-  g_object_set (index, "table", gda_db_base_get_name (GDA_DB_BASE (tproject)), NULL);
+  g_object_set (index, "table", tproject, NULL);
 
   res = gda_ddl_modifiable_rename (GDA_DDL_MODIFIABLE (index), fixture->cnc, "newindex", &error);
 
@@ -1185,7 +1187,7 @@ test_server_operation_operations_db_index (TestObjectFixture *fixture,
     g_clear_error (&error);
   }
 
-  g_assert_true (res);
+  g_assert_false (res); // RENAME INDEX operation is not supported by SQLite3
   g_object_unref (index);
   g_object_unref (tproject);
 }
