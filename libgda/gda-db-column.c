@@ -1323,13 +1323,6 @@ gda_db_column_create (GdaDdlModifiable *self,
 
   const gchar *strtype = NULL;
 
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
-
   gda_lockable_lock (GDA_LOCKABLE (cnc));
 
   provider = gda_connection_get_provider (cnc);
@@ -1437,13 +1430,6 @@ gda_db_column_rename (GdaDdlModifiable *self,
   GdaDbTable *table = NULL;
   GdaDbColumn *column = GDA_DB_COLUMN (self);
   GdaDbColumn *column_new = GDA_DB_COLUMN (user_data);
-
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
 
   gda_lockable_lock (GDA_LOCKABLE (cnc));
 

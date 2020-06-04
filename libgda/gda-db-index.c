@@ -354,13 +354,6 @@ gda_db_index_drop (GdaDdlModifiable *self,
   G_DEBUG_HERE();
   g_return_val_if_fail (GDA_IS_DB_INDEX (self), FALSE);
 
-  if (!gda_connection_is_opened(cnc))
-    {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
-
   GdaServerProvider *provider = NULL;
   GdaServerOperation *op = NULL;
 
@@ -421,13 +414,6 @@ gda_db_index_create (GdaDdlModifiable *self,
 
   GdaDbIndex *index = GDA_DB_INDEX (self);
   GdaDbTable *table = NULL;
-
-  if (!gda_connection_is_opened (cnc))
-    {
-      g_set_error (error, GDA_DDL_MODIFIABLE_ERROR, GDA_DDL_MODIFIABLE_CONNECTION_NOT_OPENED,
-                   _("Connection is not opened"));
-      return FALSE;
-    }
 
   gda_lockable_lock (GDA_LOCKABLE (cnc));
 
