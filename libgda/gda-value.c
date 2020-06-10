@@ -1472,6 +1472,9 @@ string_to_time (const GValue *src, GValue *dest)
 
 /**
  * gda_time_copy:
+ * @time: an instance of #GdaTime to copy
+ *
+ * Create a copy of #GdaTime
  *
  * Returns: (transfer full): a pointer to a new #GdaTime struct
  */
@@ -1487,12 +1490,14 @@ gda_time_copy (const GdaTime* time)
  * gda_time_free:
  * @time: a #GdaTime to free
  *
+ * Free resources holded by the #GdaTime instance
+ *
  * Since: 6.0
  */
 void
-gda_time_free (GdaTime* boxed)
+gda_time_free (GdaTime* time)
 {
-	g_date_time_unref ((GDateTime*) boxed);
+	g_date_time_unref ((GDateTime*) time);
 }
 
 static void
@@ -1542,6 +1547,7 @@ gda_time_new (void)
 
 /**
  * gda_time_to_string:
+ * @time: #GdaTime instance to convert to string
  *
  * Creates a string representation of a #GdaTime in local time
  * with the timezone designation.
@@ -1559,6 +1565,7 @@ gda_time_to_string (GdaTime *time)
 
 /**
  * gda_time_to_string_local:
+ * @time: #GdaTime instance to convert to string
  *
  * Creates a string representation of a #GdaTime in local time
  * without timezone designation.
@@ -1578,6 +1585,7 @@ gda_time_to_string_local (GdaTime *time)
 
 /**
  * gda_time_to_string_utc:
+ * @time: #GdaTime instance to convert to string
  *
  * Creates a string representation of a #GdaTime in UTC time
  * with time zone indication.
@@ -1614,6 +1622,8 @@ gda_time_to_utc (GdaTime *time)
  * @fraction: fraction of seconds
  * @timezone: timezone in seconds added to UTC
  *
+ * Create new instance of #GdaTime from the provided values.
+ *
  * Returns: (transfer full): the a new value storing a time
  */
 GdaTime*
@@ -1641,6 +1651,8 @@ gda_time_new_from_values (gushort hour, gushort minute, gushort second, gulong f
  * gda_time_new_from_date_time:
  * @dt: a #GDateTime to get time from
  *
+ * Creates new instcne of #GdaTime from #GDateTime.
+ *
  * Returns: (transfer full): the a new value storing a time
  * Since: 6.0
  */
@@ -1654,6 +1666,8 @@ gda_time_new_from_date_time (GDateTime *dt)
  * gda_time_get_hour:
  * @time: a #GdaTime value to get hours from
  *
+ * Get hours from the #GdaTime instance
+ *
  * Since: 6.0
  */
 gushort
@@ -1666,6 +1680,8 @@ gda_time_get_hour (const GdaTime* time)
  * gda_time_set_hour:
  * @time: a #GdaTime value to set hours to
  * @hour: new hours to set to
+ *
+ * Set hour component to the #GdaTime instance.
  *
  * Since: 6.0
  */
@@ -1683,6 +1699,8 @@ gda_time_set_hour (GdaTime* time, gushort hour)
  * gda_time_get_minute:
  * @time: a #GdaTime value to get minutes from
  *
+ * Get minutes from the #GdaTime instance
+ *
  * Since: 6.0
  */
 gushort
@@ -1695,6 +1713,8 @@ gda_time_get_minute (const GdaTime* time)
  * gda_time_set_minute:
  * @time: a #GdaTime value to set hours to
  * @minute: new minutes to set to
+ *
+ * Set minutes to the #GdaTime instance
  *
  * Since: 6.0
  */
@@ -1712,6 +1732,8 @@ gda_time_set_minute (GdaTime* time, gushort minute)
  * gda_time_get_second:
  * @time: a #GdaTime value to get seconds from
  *
+ * Get second component from #GdaTime
+ *
  * Since: 6.0
  */
 gushort
@@ -1724,6 +1746,8 @@ gda_time_get_second (const GdaTime* time)
  * gda_time_set_second:
  * @time: a #GdaTime value to set hours to
  * @second: new seconds to set to
+ *
+ * Set second component
  *
  * Since: 6.0
  */
@@ -1740,6 +1764,10 @@ gda_time_set_second (GdaTime* time, gushort second)
 /**
  * gda_time_get_fraction:
  * @time: a #GdaTime value to get fraction of seconds from
+ *
+ * Extract fraction of seconds from the instance of #GdaTime
+ *
+ * Returns: fraction of seconds
  *
  * Since: 6.0
  */
@@ -1760,6 +1788,8 @@ gda_time_get_fraction (const GdaTime* time)
  * gda_time_set_fraction:
  * @time: a #GdaTime value to set hours to
  * @fraction: new second fraction to set to.
+ *
+ * Set new value for the second fraction
  *
  * Since: 6.0
  */
@@ -1808,6 +1838,8 @@ gda_time_get_tz (const GdaTime* time)
  * gda_time_set_timezone:
  * @time: a #GdaTime value to set time zone to
  * @timezone: new time zone to set to. See #gda_time_change_timezone
+ *
+ * Set timezone component for the instance of #GdaTime
  *
  * Since: 6.0
  */
