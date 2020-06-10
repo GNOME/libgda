@@ -1858,7 +1858,7 @@ gda_time_to_timezone (GdaTime *time, GTimeZone *ntz)
 }
 
 /**
- * gda_timestamp_copy:
+ * gda_date_time_copy:
  *
  * Returns: (transfer full):
  */
