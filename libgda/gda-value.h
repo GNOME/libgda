@@ -253,6 +253,7 @@ gushort                           gda_value_get_ushort (const GValue *value);
 void                              gda_value_set_ushort (GValue *value, const gushort val);
 const GdaTime                    *gda_value_get_time (const GValue *value);
 void                              gda_value_set_time (GValue *value, const GdaTime *val);
+void                              gda_time_set_timezone (GdaTime* time, glong timezone);
 
 
 
