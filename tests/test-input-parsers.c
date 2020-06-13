@@ -83,7 +83,6 @@ TestDate datedata[] = {
 	{"1900- 05-22", FALSE, 0, 0, 0},
 	{"1900-05 -22", FALSE, 0, 0, 0},
 	{"1900-05- 22", FALSE, 0, 0, 0},
-	{"65535-05-22", TRUE, 22, 5, 65535},
 	{"0001-05-22", TRUE, 22, 5, 1},
 	{"65536-05-22", FALSE, 0, 0, 0},
 };
@@ -93,7 +92,7 @@ test_parse_iso8601_date (void)
 {
 	guint i;
 
-	for (i = 0; i < sizeof (datedata) / sizeof (TestDate); i++) {
+	for (i = 0; i < G_N_ELEMENTS (datedata); i++) {
 		TestDate td = datedata[i];
 		GDate date;
 		/*g_print ("[%s]\n", td.in_string);*/
@@ -158,7 +157,7 @@ test_parse_iso8601_time (void)
 {
 	guint i;
 
-	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
+	for (i = 0; i < G_N_ELEMENTS (timedata); i++) {
 		TestTime td = timedata[i];
 		GdaTime* time = NULL;
     g_print ("Time to parse: %s\n", td.in_string);
@@ -189,9 +188,9 @@ static gboolean
 test_parse_iso8601_timestamp (void)
 {
 	guint idate, itime;
-	for (idate = 0; idate < sizeof (datedata) / sizeof (TestTime); idate++) {
+	for (idate = 0; idate < G_N_ELEMENTS (datedata); idate++) {
 		TestDate td = datedata [idate];
-		for (itime = 0; itime < sizeof (timedata) / sizeof (TestTime); itime++) {
+		for (itime = 0; itime < G_N_ELEMENTS (timedata); itime++) {
 			TestTime tt = timedata[itime];
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
@@ -250,7 +249,7 @@ test_date_handler (void)
 	gda_handler_time_set_str_spec (GDA_HANDLER_TIME (dh),
 				       G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
 
-	for (i = 0; i < sizeof (datedata) / sizeof (TestDate); i++) {
+	for (i = 0; i < G_N_ELEMENTS (datedata); i++) {
 		TestDate td = datedata[i];
 		GValue *value;
 		/*g_print ("[%s]\n", td.in_string);*/
@@ -319,7 +318,7 @@ test_time_handler (void)
 	dh = gda_data_handler_get_default (GDA_TYPE_TIME);
 	g_assert (dh);
 
-	for (i = 0; i < sizeof (timedata) / sizeof (TestTime); i++) {
+	for (i = 0; i < G_N_ELEMENTS (timedata); i++) {
 		TestTime td = timedata[i];
 		GValue *value;
 		g_print ("Time to parse: [%s]. Is Valid? %s\n", td.in_string, td.exp_retval ? "TRUE" : "FALSE");
@@ -352,7 +351,7 @@ test_time_handler (void)
 		gda_value_free (value);
 	}
 
-	for (j = 0; j < sizeof (timedata2) / sizeof (TestTime); j++) {
+	for (j = 0; j < G_N_ELEMENTS (timedata2); j++) {
 		TestTime td = timedata2[j];
 		GValue *value;
 		g_print ("Time Simplified format, to parse: [%s]\n", td.in_string);
@@ -400,9 +399,9 @@ test_timestamp_handler (void)
 	gda_handler_time_set_str_spec (GDA_HANDLER_TIME (dh),
 				       G_DATE_YEAR, G_DATE_MONTH, G_DATE_DAY, '-', FALSE);
 
-	for (idate = 0; idate < sizeof (datedata) / sizeof (TestTime); idate++) {
+	for (idate = 0; idate < G_N_ELEMENTS (datedata); idate++) {
 		TestDate td = datedata [idate];
-		for (itime = 0; itime < sizeof (timedata) / sizeof (TestTime); itime++) {
+		for (itime = 0; itime < G_N_ELEMENTS (timedata); itime++) {
 			TestTime tt = timedata[itime];
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
@@ -455,9 +454,9 @@ test_timestamp_handler (void)
 		}
 	}
 
-	for (idate = 0; idate < sizeof (datedata) / sizeof (TestTime); idate++) {
+	for (idate = 0; idate < G_N_ELEMENTS (datedata); idate++) {
 		TestDate td = datedata [idate];
-		for (itime2 = 0; itime2 < sizeof (timedata2) / sizeof (TestTime); itime2++) {
+		for (itime2 = 0; itime2 < G_N_ELEMENTS (timedata2); itime2++) {
 			TestTime tt = timedata2[itime2];
 			gchar *str;
 			str = g_strdup_printf ("%sT%s", td.in_string, tt.in_string);
