@@ -120,7 +120,6 @@ void         gda_connection_string_split (const gchar *string, gchar **out_cnc_p
 gboolean     gda_parse_iso8601_date (GDate *gdate, const gchar *value);
 GdaTime     *gda_parse_iso8601_time (const gchar *value);
 
-GDateTime    *gda_parse_iso8601_timestamp (const gchar *value);
 gboolean     gda_parse_formatted_date (GDate *gdate, const gchar *value,
 				       GDateDMY first, GDateDMY second, GDateDMY third, gchar sep);
 GdaTime     *gda_parse_formatted_time (const gchar *value, gchar sep);

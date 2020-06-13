@@ -2623,7 +2623,7 @@ gda_value_set_timestamp (GValue *value, const GDateTime *val)
  *   <listitem><para>numerical types: C locale format (dot as a fraction separator)</para></listitem>
  *   <listitem><para>G_TYPE_DATE: see <link linkend="gda-parse-iso8601-date">gda_parse_iso8601_date()</link></para></listitem>
  *   <listitem><para>GDA_TYPE_TIME: see <link linkend="gda-parse-iso8601-time">gda_parse_iso8601_time()</link></para></listitem>
- *   <listitem><para>GDA_TYPE_TIMESTAMP: see <link linkend="gda-parse-iso8601-timestamp">gda_parse_iso8601_timestamp()</link></para></listitem>
+ *   <listitem><para>GDA_TYPE_TIMESTAMP: see <link linkend="g-date-time-new-iso8601">g_date_time_new_from_iso8601()</link></para></listitem>
  * </itemizedlist>
  *
  * This function is typically used when reading configuration files or other non-user input that should be locale

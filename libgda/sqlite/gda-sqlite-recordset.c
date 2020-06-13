@@ -544,9 +544,11 @@ fetch_next_sqlite_row (GdaSqliteRecordset *model, gboolean do_store, GError **er
 					}
 				}
 				else if (g_type_is_a (type, G_TYPE_DATE_TIME)) {
-					GDateTime* timestamp = gda_parse_iso8601_timestamp (
+				    GTimeZone *tz = g_time_zone_new_utc ();
+					GDateTime* timestamp = g_date_time_new_from_iso8601 (
 									  (gchar *) SQLITE3_CALL (prov, sqlite3_column_text) (_gda_sqlite_pstmt_get_stmt (ps),
-										real_col));
+										real_col), tz);
+					g_time_zone_unref (tz);
 					if (timestamp == NULL) {
 						GError *lerror = NULL;
 						g_set_error (&lerror, GDA_SERVER_PROVIDER_ERROR,

@@ -3315,25 +3315,6 @@ gda_parse_formatted_time (const gchar *value, gchar sep)
 }
 
 /**
- * gda_parse_iso8601_timestamp:
- * @value: a string
- *
- * Extracts date and time parts from @value, and sets @timestamp's contents
- *
- * Accepted date format is "YYYY-MM-DDTHH:MM:SS[.ms][TZ]" where TZ is +hour or -hour
- *
- * Returns: (transfer full): a new #GDateTime if @value has been successfully parsed as a valid timestamp (see g_date_valid()). The returned instance should be freed using g_date_time_unref().
- */
-GDateTime*
-gda_parse_iso8601_timestamp (const gchar *value)
-{
-  GTimeZone *tz = g_time_zone_new_utc ();
-  GDateTime *dt = g_date_time_new_from_iso8601 (value,tz);
-  g_time_zone_unref (tz);
-  return dt;
-}
-
-/**
  * gda_parse_formatted_timestamp:
  * @value: a string to be parsed
  * @first: a #GDateDMY specifying which of year, month or day appears first (in the first bytes) in @value
@@ -3341,7 +3322,7 @@ gda_parse_iso8601_timestamp (const gchar *value)
  * @third: a #GDateDMY specifying which of year, month or day appears third (in the first bytes) in @value
  * @sep: specifies the expected separator character between year, month and day (for example '-')
  *
- * This function is similar to gda_parse_iso8601_timestamp() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
+ * This function is similar to g_date_time_new_from_iso8601() (with @first being @G_DATE_YEAR, @second being @G_DATE_MONTH,
  * @third being @G_DATE_DAY and @sep being '-') but allows one to specify the expected date format.
  *
  * Returns: (nullable) (transfer full): a new #GDateTime if @value has been successfully parsed as a valid date (see g_date_valid()).

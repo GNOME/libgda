@@ -198,7 +198,7 @@ test_parse_iso8601_timestamp (void)
 
 			GDateTime* timestamp = g_date_time_new_from_iso8601 (str, NULL);
 			if (timestamp == NULL && td.exp_retval && tt.exp_retval) {
-				g_print ("test_parse_iso8601: Wrong result for gda_parse_iso8601_timestamp (\"%s\"): for valid timestamp\n",
+				g_print ("test_parse_iso8601: Wrong result for g_date_time_new_from_iso8601(\"%s\"): for valid timestamp\n",
 					 str);
 				return FALSE;
 			}
@@ -217,7 +217,7 @@ test_parse_iso8601_timestamp (void)
 			      (((gint) ((g_date_time_get_seconds (timestamp) - g_date_time_get_second (timestamp)) * 1000000.0))
 											!= (gint) tt.fraction) ||
 			      ((g_date_time_get_utc_offset (timestamp) / 1000000) != tt.timezone)))) {
-				g_print ("test_parse_iso8601_timestamp: Wrong result for gda_parse_iso8601_timestamp (\"%s\"):\n"
+				g_print ("test_parse_iso8601_timestamp: Wrong result for g_date_time_new_from_iso8601(\"%s\"):\n"
 					 "   exp: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n"
 					 "   got: DD=%d MM=%d YYYY=%d HH=%d MM=%d SS=%d FF=%ld TZ=%ld\n",
 					 str, td.exp_day, td.exp_month, td.exp_year,
