@@ -25,86 +25,68 @@
 #include <libgda/sql-parser/gda-sql-parser.h>
 
 gchar *
-gda_mysql_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_mysql_render_CREATE_DB (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, 
 			    GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
-	gchar *sql = NULL;
-	gboolean first = TRUE;
-	gchar *tmp;
+	const gchar *tmp = NULL;
 
 	string = g_string_new ("CREATE DATABASE ");
 
 	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_IFNOTEXISTS");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-		g_string_append (string, "IF NOT EXISTS ");
-
-	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/DB_DEF_P/DB_NAME", error);
-	if (!tmp) {
-		g_string_free (string, TRUE);
-		return NULL;
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		tmp = g_value_get_string (value);
+		if (tmp)
+		  g_string_append (string, tmp);
 	}
 
-	g_string_append (string, tmp);
-	g_free (tmp);
-
-	value = gda_server_operation_get_value_at_path (op, "/DB_DEF_P/DB_CSET");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value)) {
-		g_string_append (string, " CHARACTER SET ");
-		g_string_append (string, g_value_get_string (value));
-		first = FALSE;
+	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_NAME");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		tmp = g_value_get_string (value);
+		if (tmp)
+		  g_string_append (string, tmp);
 	}
 
-	if (gda_server_operation_get_value_at_path (op, "/DB_DEF_P/DB_COLLATION")) {
-		tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/DB_DEF_P/DB_COLLATION", error);
-		if (!tmp) {
-			g_string_free (string, TRUE);
-			return NULL;
+	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_CSET");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+		tmp = g_value_get_string (value);
+		if (tmp) {
+		    g_string_append (string, " CHARACTER SET ");
+		    g_string_append (string, tmp);
 		}
+	}
 
-		if (first)
-			first = FALSE;
-		else
-			g_string_append (string, ", ");
+	value = gda_server_operation_get_value_at (op, "/DB_DEF_P/DB_COLLATION");
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+	    tmp = g_value_get_string (value);
+	    if (tmp) {
 		g_string_append (string, " COLLATION ");
 		g_string_append (string, tmp);
-		g_free (tmp);
+	    }
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
-
-	return sql;
+	return g_string_free (string, FALSE);
 }
 
 gchar *
-gda_mysql_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc, 
+gda_mysql_render_DROP_DB (GdaServerProvider *provider, G_GNUC_UNUSED GdaConnection *cnc, 
 			  GdaServerOperation *op, G_GNUC_UNUSED GError **error)
 {
 	GString *string;
 	const GValue *value;
-	gchar *sql = NULL;
-	gchar *tmp;
+	const gchar *tmp;
 
-	string = g_string_new ("DROP DATABASE ");
+	string = g_string_new ("DROP DATABASE IF EXISTS ");
 
-	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_IFEXISTS");
-	if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
-		g_string_append (string, "IF EXISTS ");
+	value = gda_server_operation_get_value_at (op, "/DB_DESC_P/DB_NAME");
 
-	tmp = gda_connection_operation_get_sql_identifier_at (cnc, op, "/DB_DESC_P/DB_NAME", error);
-	if (!tmp) {
-		g_string_free (string, TRUE);
-		return NULL;
+	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING)) {
+	  tmp = g_value_get_string (value);
+	  g_string_append (string, tmp);
 	}
-	g_string_append (string, tmp);
-	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
-
-	return sql;	
+	return g_string_free (string, FALSE);
 }
 
 
