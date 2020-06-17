@@ -32,7 +32,6 @@
 
 GdaProviderInfo *pinfo;
 GdaConnection   *cnc;
-gboolean         params_provided;
 gboolean         fork_tests = TRUE;
 
 /*
