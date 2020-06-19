@@ -1308,7 +1308,7 @@ prov_test_common_check_bigint (void)
 	g_value_set_int64 (tso, 4294967296);
 
 	/* insert date */
-	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO testbigin (thebigint) VALUES (##thebigint::gint64)", NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "INSERT INTO testbigint (thebigint) VALUES (##thebigint::gint64)", NULL, &error);
 	if (!stmt ||
 	    ! gda_statement_get_parameters (stmt, &params, &error) ||
 	    ! gda_set_set_holder_value (params, &error, "thebigint", g_value_get_int64 (tso)) ||
@@ -1320,7 +1320,7 @@ prov_test_common_check_bigint (void)
 	g_print ("Inserted int %s\n", gda_value_stringify (tso));
 
 	/* retreive date */
-	stmt = gda_sql_parser_parse_string (parser, "SELECT thebigint FROM testbigin", NULL, &error);
+	stmt = gda_sql_parser_parse_string (parser, "SELECT thebigint FROM testbigint", NULL, &error);
 	if (!stmt) {
 		number_failed ++;
 		goto out;
