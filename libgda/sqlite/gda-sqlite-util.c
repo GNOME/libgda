@@ -122,6 +122,7 @@ _gda_sqlite_compute_types_hash (SqliteConnectionData *cdata)
 		i++;
 		array [i] = type;
 		g_hash_table_insert (hash, "int64", array + i);
+		g_hash_table_insert (hash, "bigint", array + i);
 
 		type = G_TYPE_UINT64;
 		i++;
