@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-05-24 00:32+0000\n"
-"PO-Revision-Date: 2020-05-29 17:33+0300\n"
+"POT-Creation-Date: 2020-07-12 03:39+0000\n"
+"PO-Revision-Date: 2020-07-12 12:28+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -89,12 +89,12 @@ msgstr "Не вдалося зберегти визначення DSN: %s"
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3065
-#: ../libgda/sqlite/gda-sqlite-provider.c:3077
-#: ../libgda/sqlite/gda-sqlite-provider.c:3288
-#: ../libgda/sqlite/gda-sqlite-provider.c:3626
-#: ../libgda/sqlite/gda-sqlite-provider.c:3638
-#: ../libgda/sqlite/gda-sqlite-provider.c:3740
+#: ../libgda/sqlite/gda-sqlite-provider.c:3069
+#: ../libgda/sqlite/gda-sqlite-provider.c:3081
+#: ../libgda/sqlite/gda-sqlite-provider.c:3292
+#: ../libgda/sqlite/gda-sqlite-provider.c:3630
+#: ../libgda/sqlite/gda-sqlite-provider.c:3642
+#: ../libgda/sqlite/gda-sqlite-provider.c:3744
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -429,7 +429,6 @@ msgstr ""
 
 #: ../control-center/gdaui-login-dialog.c:106
 #: ../tools/browser/auth-dialog.c:192 ../tools/browser/login-dialog.c:112
-#| msgid "Connect"
 msgid "C_onnect"
 msgstr "_З'єднати"
 
@@ -461,7 +460,6 @@ msgstr "Параметри прийнятого з'єднання"
 #: ../control-center/provider-config.c:97
 #: ../control-center/provider-config.c:127
 #: ../control-center/provider-config.c:130
-#| msgid "Options"
 msgid "optional"
 msgstr "необов'язкове"
 
@@ -1235,7 +1233,7 @@ msgstr ""
 #: ../tools/browser/data-manager/data-widget.c:607
 #: ../tools/browser/gdaui-data-import.c:177
 msgid "no detail"
-msgstr ""
+msgstr "немає подробиць"
 
 #: ../libgda/gda-data-model-import.c:1066
 #, c-format
@@ -1636,17 +1634,17 @@ msgstr "Забагато значень (максимум — %d)"
 
 #: ../libgda/gda-data-select.c:3105
 msgid "No INSERT statement provided"
-msgstr ""
+msgstr "Не вказано інструкції INSERT"
 
 #: ../libgda/gda-data-select.c:3110
 msgid "Cannot add a row because the number of rows is unknown"
-msgstr ""
+msgstr "Не можна додати рядок, оскільки кількість рядків є невідомою"
 
 #: ../libgda/gda-data-select.c:3139
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:392
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:401
 msgid "Missing values to insert in INSERT statement"
-msgstr ""
+msgstr "Не вказано значень, які слід вставити за допомогою інструкції INSERT"
 
 #: ../libgda/gda-data-select.c:3300
 msgid "No DELETE statement provided"
@@ -1665,6 +1663,8 @@ msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
 "will be wrong: %s"
 msgstr ""
+"Сталася помилка — значення, яке поверне властивість «exec-params» буде"
+" помилковим: %s"
 
 #: ../libgda/gda-data-select.c:3831
 msgid "Data model has been modified"
@@ -1672,113 +1672,121 @@ msgstr "Модель даних було змінено"
 
 #: ../libgda/gda-data-select.c:3840
 msgid "Data model contains BLOBs"
-msgstr ""
+msgstr "У моделі даних містяться BLOB-и"
 
 #: ../libgda/gda-data-select.c:3851
 msgid "Can't get the number of rows of data model"
-msgstr ""
+msgstr "Не вдалося отримати кількість рядків у моделі даних"
 
-#: ../libgda/gda-db-column.c:577
+#: ../libgda/gda-db-column.c:625
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
 msgstr ""
+"Некоректний тип стовпчика %s. Див. програмний інтерфейс"
+" gda_g_type_from_string ().\n"
 
-#: ../libgda/gda-db-column.c:1061 ../libgda/gda-db-column.c:1174
+#: ../libgda/gda-db-column.c:1110 ../libgda/gda-db-column.c:1223
 #, c-format
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 
-#: ../libgda/gda-db-catalog.c:234
+#: ../libgda/gda-db-column.c:1417 ../libgda/gda-db-view.c:734
+#: ../libgda/gda-db-index.c:516
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "Дію для використаного надавача даних не реалізовано"
+
+#: ../libgda/gda-db-catalog.c:235
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
 msgstr ""
 
-#: ../libgda/gda-db-catalog.c:258
+#: ../libgda/gda-db-catalog.c:259
 #, c-format
 msgid "Context to validate xml file can't be created."
-msgstr ""
+msgstr "Не вдалося створити контекст для перевірки файла xml."
 
-#: ../libgda/gda-db-catalog.c:276
+#: ../libgda/gda-db-catalog.c:277
 #, c-format
-#| msgid "Value is invalid"
 msgid "xml file is invalid"
 msgstr "Файл xml є некоректним"
 
-#: ../libgda/gda-db-catalog.c:317
+#: ../libgda/gda-db-catalog.c:318
 #, c-format
 msgid "Root node should be <schema>."
-msgstr ""
+msgstr "Кореневим вузлом має бути <schema>."
 
-#: ../libgda/gda-db-catalog.c:450 ../libgda/gda-db-catalog.c:501
+#: ../libgda/gda-db-catalog.c:451 ../libgda/gda-db-catalog.c:502
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
-msgstr ""
+msgstr "Об'єкт xmlDoc не можна створити з назви xmfile «%s»"
 
-#: ../libgda/gda-db-catalog.c:459
+#: ../libgda/gda-db-catalog.c:460
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "Файл xml «%s» є некоректним\n"
 
-#: ../libgda/gda-db-catalog.c:858 ../libgda/gda-db-table.c:659
-#: ../libgda/gda-db-table.c:934 ../libgda/gda-db-table.c:1045
-#: ../libgda/gda-db-table.c:1120 ../libgda/gda-db-index.c:267
-#: ../libgda/gda-db-index.c:286
+#: ../libgda/gda-db-catalog.c:859 ../libgda/gda-db-table.c:677
 #, c-format
 msgid "Connection is not opened"
 msgstr "З'єднання не відкрито"
 
-#: ../libgda/gda-db-catalog.c:1047
+#: ../libgda/gda-db-catalog.c:1048
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Не вдалося відкрити потік для читання файла «%s»"
 
-#: ../libgda/gda-db-catalog.c:1063
+#: ../libgda/gda-db-catalog.c:1064
 #, c-format
-#| msgid "Cannot create directory '%s'"
 msgid "Can't create parse context for '%s'"
 msgstr "Не вдалося створити контекст обробки для «%s»"
 
-#: ../libgda/gda-db-catalog.c:1079
+#: ../libgda/gda-db-catalog.c:1080
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Помилка під час обробки, «%d»"
 
-#: ../libgda/gda-db-catalog.c:1096
+#: ../libgda/gda-db-catalog.c:1097
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Не вдалося обробити файл: «%s»"
 
-#: ../libgda/gda-db-catalog.c:1107
+#: ../libgda/gda-db-catalog.c:1108
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "Не вдалося створити документ XML з файла: «%s»"
 
-#: ../libgda/gda-db-catalog.c:1117
+#: ../libgda/gda-db-catalog.c:1118
 #, c-format
-#| msgid "XML document is not valid"
 msgid "XML file is not valid\n"
 msgstr "Файл XML є некоректним\n"
 
-#: ../libgda/gda-db-table.c:667
+#: ../libgda/gda-db-table.c:685
 #, c-format
 msgid "Empty column list"
 msgstr "Порожній список стовпчиків"
 
-#: ../libgda/gda-db-table.c:948 ../libgda/gda-db-table.c:1134
+#: ../libgda/gda-db-view.c:538
 #, c-format
-msgid "ServerOperation is NULL"
-msgstr "ServerOperation дорівнює NULL"
+msgid "View name is not set"
+msgstr "Не встановлено назви перегляду"
+
+#: ../libgda/gda-db-view.c:545
+#, c-format
+#| msgid "View definition: %s"
+msgid "View definition is not set"
+msgstr "Не встановлено визначення перегляду"
 
 #: ../libgda/gda-holder.c:503 ../libgda/gda-set.c:1157
 #, c-format
 msgid "Unable to set holder's value: %s"
-msgstr ""
+msgstr "Не вдалося встановити значення утримувача: %s"
 
 #: ../libgda/gda-holder.c:640
 msgid "The 'g-type' property cannot be changed"
-msgstr ""
+msgstr "Не можна змінювати властивість «g-type»"
 
 #: ../libgda/gda-holder.c:945
 #, c-format
@@ -2234,7 +2242,6 @@ msgid "No value can be retrieved from data model's row: %s"
 msgstr ""
 
 #: ../libgda/gda-row.c:276
-#| msgid "Details"
 msgid "No Detail"
 msgstr "Немає подробиць"
 
@@ -2291,120 +2298,120 @@ msgstr ""
 msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1343
+#: ../libgda/gda-server-operation.c:1347
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://gitlab."
 "gnome.org/GNOME/libgda/issues"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1606 ../libgda/gda-server-operation.c:1621
+#: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Мало бути використано теґ <%s>, маємо <%s>"
 
-#: ../libgda/gda-server-operation.c:1655 ../libgda/gda-server-operation.c:2277
+#: ../libgda/gda-server-operation.c:1661 ../libgda/gda-server-operation.c:2283
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:1713
+#: ../libgda/gda-server-operation.c:1719
 msgid "Missing attribute named 'path'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:2474
+#: ../libgda/gda-server-operation.c:2480
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-operation.c:2623
+#: ../libgda/gda-server-operation.c:2629
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_server_operation_prepare_create_database() ?"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:1004
+#: ../libgda/gda-server-provider.c:1021
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:1008
+#: ../libgda/gda-server-provider.c:1025
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
 
 #. CNC UNLOCK
-#: ../libgda/gda-server-provider.c:1491
+#: ../libgda/gda-server-provider.c:1508
 msgid ""
 "Internal error: connection reported as opened, yet no provider's data has "
 "been setted"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2075
+#: ../libgda/gda-server-provider.c:2092
 #, c-format
 msgid "Delaying opening connection for %u ms\n"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2189
+#: ../libgda/gda-server-provider.c:2206
 msgid ""
 "You need to define a GMainContext using gda_connection_set_main_context()"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2301
+#: ../libgda/gda-server-provider.c:2318
 #, c-format
 msgid "Delaying closing connection for %u ms\n"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2504
+#: ../libgda/gda-server-provider.c:2521
 #, c-format
 msgid "Delaying statement execution for %u ms\n"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2812 ../libgda/gda-server-provider.c:2824
-#: ../libgda/gda-server-provider.c:2836 ../libgda/gda-server-provider.c:2848
-#: ../libgda/gda-server-provider.c:2860 ../libgda/gda-server-provider.c:2872
+#: ../libgda/gda-server-provider.c:2829 ../libgda/gda-server-provider.c:2841
+#: ../libgda/gda-server-provider.c:2853 ../libgda/gda-server-provider.c:2865
+#: ../libgda/gda-server-provider.c:2877 ../libgda/gda-server-provider.c:2889
 #: ../providers/web/gda-web-provider.c:594
 #: ../providers/web/gda-web-provider.c:623
 msgid "Not supported"
 msgstr "Немає підтримки"
 
-#: ../libgda/gda-server-provider.c:2963
+#: ../libgda/gda-server-provider.c:2980
 #, c-format
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues Reported error is: %s"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:2967
+#: ../libgda/gda-server-provider.c:2984
 #, c-format
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues No error was reported"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:3392 ../libgda/gda-server-provider.c:3462
-#: ../libgda/gda-server-provider.c:3531
+#: ../libgda/gda-server-provider.c:3409 ../libgda/gda-server-provider.c:3479
+#: ../libgda/gda-server-provider.c:3548
 #, c-format
 msgid "Delaying transaction for %u ms\n"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:3401 ../libgda/gda-server-provider.c:3471
-#: ../libgda/gda-server-provider.c:3540
+#: ../libgda/gda-server-provider.c:3418 ../libgda/gda-server-provider.c:3488
+#: ../libgda/gda-server-provider.c:3557
 msgid "Database provider does not support transactions"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:3602 ../libgda/gda-server-provider.c:3663
-#: ../libgda/gda-server-provider.c:3724
+#: ../libgda/gda-server-provider.c:3619 ../libgda/gda-server-provider.c:3680
+#: ../libgda/gda-server-provider.c:3741
 msgid "Database provider does not support savepoints"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:3802
+#: ../libgda/gda-server-provider.c:3819
 #, c-format
 msgid "Delaying distributed transaction for %u ms\n"
 msgstr ""
 
-#: ../libgda/gda-server-provider.c:3813 ../libgda/gda-server-provider.c:3824
-#: ../libgda/gda-server-provider.c:3835 ../libgda/gda-server-provider.c:3846
-#: ../libgda/gda-server-provider.c:3857 ../libgda/gda-server-provider.c:3868
+#: ../libgda/gda-server-provider.c:3830 ../libgda/gda-server-provider.c:3841
+#: ../libgda/gda-server-provider.c:3852 ../libgda/gda-server-provider.c:3863
+#: ../libgda/gda-server-provider.c:3874 ../libgda/gda-server-provider.c:3885
 msgid "Database provider does not support distributed transactions"
 msgstr ""
 
@@ -2527,7 +2534,7 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr ""
 
-#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3468
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2239
 #: ../providers/postgres/gda-postgres-provider.c:2059
@@ -2679,7 +2686,7 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr ""
 
 #: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
-#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3449
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2219
 #: ../providers/postgres/gda-postgres-provider.c:2041
@@ -2887,20 +2894,20 @@ msgstr ""
 msgid "This report document does not handle %s output"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:67
+#: ../libgda/sqlite/gda-sqlite-ddl.c:68
 msgid "Internal error, creating table in SQLite provider"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:83
+#: ../libgda/sqlite/gda-sqlite-ddl.c:84
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:273 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:295
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:362
+#: ../libgda/sqlite/gda-sqlite-ddl.c:363
 msgid "Table to create must have at least one field"
 msgstr ""
 
@@ -2988,105 +2995,105 @@ msgstr ""
 msgid "Could not define the %s collation"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1704
-#: ../libgda/sqlite/gda-sqlite-provider.c:1715
-#: ../libgda/sqlite/gda-sqlite-provider.c:1729
-#: ../libgda/sqlite/gda-sqlite-provider.c:1740
+#: ../libgda/sqlite/gda-sqlite-provider.c:1708
+#: ../libgda/sqlite/gda-sqlite-provider.c:1719
+#: ../libgda/sqlite/gda-sqlite-provider.c:1733
+#: ../libgda/sqlite/gda-sqlite-provider.c:1744
 msgid "Error initializing database with passphrase"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1782
+#: ../libgda/sqlite/gda-sqlite-provider.c:1786
 msgid "Missing database name or directory"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1810
+#: ../libgda/sqlite/gda-sqlite-provider.c:1814
 #: ../providers/postgres/gda-postgres-provider.c:1083
 #: ../providers/postgres/gda-postgres-provider.c:1084
 msgid "Transactions are not supported in read-only mode"
 msgstr "У режимі лише-читання транзакції не підтримуються"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2226
+#: ../libgda/sqlite/gda-sqlite-provider.c:2230
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2273
-#: ../libgda/sqlite/gda-sqlite-provider.c:2283
+#: ../libgda/sqlite/gda-sqlite-provider.c:2277
+#: ../libgda/sqlite/gda-sqlite-provider.c:2287
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2385
+#: ../libgda/sqlite/gda-sqlite-provider.c:2389
 msgid "ILIKE operation not supported"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2417
+#: ../libgda/sqlite/gda-sqlite-provider.c:2421
 msgid "SIMILAR operation not supported"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2541
+#: ../libgda/sqlite/gda-sqlite-provider.c:2545
 msgid "Operator type not supported"
 msgstr "Підтримки типу оператора не передбачено"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2947
+#: ../libgda/sqlite/gda-sqlite-provider.c:2951
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1638
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3064
-#: ../libgda/sqlite/gda-sqlite-provider.c:3076
+#: ../libgda/sqlite/gda-sqlite-provider.c:3068
+#: ../libgda/sqlite/gda-sqlite-provider.c:3080
 #: ../providers/mysql/gda-mysql-provider.c:1963
 #: ../providers/postgres/gda-postgres-provider.c:1785
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3110
+#: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1991
 #: ../providers/postgres/gda-postgres-provider.c:1813
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3114
+#: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
 #: ../providers/postgres/gda-postgres-provider.c:1817
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3178
+#: ../libgda/sqlite/gda-sqlite-provider.c:3182
 msgid "Prepared statement has no associated GdaStatement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3219
-#: ../libgda/sqlite/gda-sqlite-provider.c:3256
+#: ../libgda/sqlite/gda-sqlite-provider.c:3223
+#: ../libgda/sqlite/gda-sqlite-provider.c:3260
 msgid "Can't create SQLite BLOB handle"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3223
-#: ../libgda/sqlite/gda-sqlite-provider.c:3261
+#: ../libgda/sqlite/gda-sqlite-provider.c:3227
+#: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't write to SQLite's BLOB"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3246
+#: ../libgda/sqlite/gda-sqlite-provider.c:3250
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3271
+#: ../libgda/sqlite/gda-sqlite-provider.c:3275
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3382
+#: ../libgda/sqlite/gda-sqlite-provider.c:3386
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3424
-#: ../libgda/sqlite/gda-sqlite-provider.c:3427
+#: ../libgda/sqlite/gda-sqlite-provider.c:3428
+#: ../libgda/sqlite/gda-sqlite-provider.c:3431
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2194
@@ -3098,7 +3105,7 @@ msgstr ""
 msgid "Missing parameter(s) to execute query"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3487
+#: ../libgda/sqlite/gda-sqlite-provider.c:3491
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2258
 #: ../providers/postgres/gda-postgres-provider.c:2078
@@ -3106,53 +3113,53 @@ msgstr ""
 msgid "Can't rewrite statement handle default values"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3608
+#: ../libgda/sqlite/gda-sqlite-provider.c:3612
 #: ../providers/mysql/gda-mysql-provider.c:2514
 msgid "Can't get BLOB's length"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3610
+#: ../libgda/sqlite/gda-sqlite-provider.c:3614
 #: ../providers/mysql/gda-mysql-provider.c:2516
 msgid "BLOB is too big"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3695
+#: ../libgda/sqlite/gda-sqlite-provider.c:3699
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3762
+#: ../libgda/sqlite/gda-sqlite-provider.c:3766
 msgid "Could not start transaction to create BLOB"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3937
-#: ../libgda/sqlite/gda-sqlite-provider.c:3958
-#: ../libgda/sqlite/gda-sqlite-provider.c:4050
-#: ../libgda/sqlite/gda-sqlite-provider.c:4070
-#: ../libgda/sqlite/gda-sqlite-provider.c:4093
+#: ../libgda/sqlite/gda-sqlite-provider.c:3941
+#: ../libgda/sqlite/gda-sqlite-provider.c:3962
+#: ../libgda/sqlite/gda-sqlite-provider.c:4054
+#: ../libgda/sqlite/gda-sqlite-provider.c:4074
+#: ../libgda/sqlite/gda-sqlite-provider.c:4097
 msgid "Function requires one argument"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3991
-#: ../libgda/sqlite/gda-sqlite-provider.c:4125
+#: ../libgda/sqlite/gda-sqlite-provider.c:3995
+#: ../libgda/sqlite/gda-sqlite-provider.c:4129
 msgid "Function requires two arguments"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4030
+#: ../libgda/sqlite/gda-sqlite-provider.c:4034
 msgid "Function requires one or two arguments"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4165
-#: ../libgda/sqlite/gda-sqlite-provider.c:4272
+#: ../libgda/sqlite/gda-sqlite-provider.c:4169
+#: ../libgda/sqlite/gda-sqlite-provider.c:4276
 msgid "Function requires two or three arguments"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4219
+#: ../libgda/sqlite/gda-sqlite-provider.c:4223
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4220
+#: ../libgda/sqlite/gda-sqlite-provider.c:4224
 msgid "Invalid regular expression"
 msgstr "Помилка у формальному виразі"
 
@@ -3168,10 +3175,10 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:420
 #: ../libgda/sqlite/gda-sqlite-recordset.c:433
-#: ../libgda/sqlite/gda-sqlite-recordset.c:569
-#: ../libgda/sqlite/gda-sqlite-recordset.c:582
-#: ../libgda/sqlite/gda-sqlite-recordset.c:595
-#: ../libgda/sqlite/gda-sqlite-recordset.c:608
+#: ../libgda/sqlite/gda-sqlite-recordset.c:571
+#: ../libgda/sqlite/gda-sqlite-recordset.c:584
+#: ../libgda/sqlite/gda-sqlite-recordset.c:597
+#: ../libgda/sqlite/gda-sqlite-recordset.c:610
 msgid "Integer value is too big"
 msgstr ""
 
@@ -3190,26 +3197,26 @@ msgstr ""
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:554
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:684
+#: ../libgda/sqlite/gda-sqlite-recordset.c:556
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:643
+#: ../libgda/sqlite/gda-sqlite-recordset.c:645
 msgid "SQLite provider fatal internal error"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:651
+#: ../libgda/sqlite/gda-sqlite-recordset.c:653
 msgid "Truncated data"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:707
+#: ../libgda/sqlite/gda-sqlite-recordset.c:709
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:739
+#: ../libgda/sqlite/gda-sqlite-recordset.c:741
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr ""
@@ -3561,7 +3568,6 @@ msgstr ""
 #: ../libgda/thread-wrapper/gda-worker.c:594
 #: ../libgda/thread-wrapper/gda-worker.c:660
 #, c-format
-#| msgid "Unknown parameter '%s'"
 msgid "Unknown requested job %u"
 msgstr ""
 
@@ -3593,7 +3599,6 @@ msgstr "Не вдалося побудувати пристрій для обм�
 
 #: ../libgda/thread-wrapper/gda-worker.c:818
 #, c-format
-#| msgid "Internal error"
 msgid "GdaWorker internal error"
 msgstr "Внутрішня помилка GdaWorker"
 
@@ -3602,7 +3607,6 @@ msgstr "Внутрішня помилка GdaWorker"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:365
 #: ../libgda-ui/data-entries/plugins/common-pict.c:483
 #: ../libgda-ui/gdaui-rt-editor.c:726 ../libgda-ui/internal/utility.c:497
-#| msgid "Error:"
 msgid "Error"
 msgstr "Помилка"
 
@@ -3642,7 +3646,6 @@ msgid "Save data to file"
 msgstr "Збереження даних до файла"
 
 #: ../libgda-ui/data-entries/common-bin.c:248
-#| msgid "Binary data"
 msgid "Clear data"
 msgstr "Вилучити дані"
 
@@ -3660,12 +3663,10 @@ msgstr[2] "%lu байтів"
 msgstr[3] "%lu байт"
 
 #: ../libgda-ui/data-entries/common-bin.c:315
-#| msgid "Unknown"
 msgid "Unknown size"
 msgstr "Невідомий розмір"
 
 #: ../libgda-ui/data-entries/common-bin.c:420
-#| msgid "Could not create directory '%s'"
 msgid "Could not create temporary directory"
 msgstr "Не вдалося створити тимчасовий каталог"
 
@@ -3978,7 +3979,6 @@ msgstr "Виберіть файл для збереження зображенн
 #: ../libgda-ui/gdaui-raw-grid.c:1734
 #: ../tools/browser/canvas/browser-canvas.c:470
 #: ../tools/browser/ldap-browser/entry-properties.c:227
-#| msgid "Save"
 msgid "_Save"
 msgstr "З_берегти"
 
@@ -4393,7 +4393,6 @@ msgid "Show last chunk of data"
 msgstr "Показати останній фрагмент даних"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:576
-#| msgid "Filter"
 msgid "Filter data"
 msgstr "Фільтрувати дані"
 
@@ -4512,7 +4511,6 @@ msgid "Shown columns"
 msgstr "Показані стовпчики"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1532
-#| msgid "Copy"
 msgid "_Copy"
 msgstr "_Копіювати"
 
@@ -4529,7 +4527,6 @@ msgid "Show Column _Titles"
 msgstr "Показувати за_головки стовпчиків"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1552
-#| msgid "Save"
 msgid "Save _As"
 msgstr "Зберегти _як"
 
@@ -5744,7 +5741,6 @@ msgid "Can't find libdb_sql-5."
 msgstr "Не вдалося знайти libdb_sql-5."
 
 #: ../providers/bdbsql/libmain.c:93
-#| msgid "Provider for Berkeley databases"
 msgid "Provider for Berkeley DB SQL databases"
 msgstr "Постачальник для баз даних Berkeley SQL DB"
 
@@ -6069,7 +6065,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Time limit"
-msgstr ""
+msgstr "Обмеження часу"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid ""
@@ -6079,7 +6075,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
-msgstr ""
+msgstr "Обмеження розміру"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
 msgid "Maximum number of entries that can be returned on a search operation"
@@ -6455,13 +6451,13 @@ msgstr "ISO-8859-8 (Іврит)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 msgid "TIS620 Thai"
-msgstr ""
+msgstr "TIS-620 таїландська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 msgid "EUC-KR Korean"
-msgstr ""
+msgstr "EUC-KR корейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
@@ -6485,7 +6481,7 @@ msgstr "ISO-8859-7 (Грецька)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 msgid "Windows Central European"
-msgstr ""
+msgstr "Windows центральноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
@@ -6515,7 +6511,7 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:177
 msgid "DOS Russian"
-msgstr ""
+msgstr "DOS, російська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
@@ -6533,13 +6529,13 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:183
 msgid "Mac West European"
-msgstr ""
+msgstr "Mac, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:185
 msgid "DOS Central European"
-msgstr ""
+msgstr "DOS, центральноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
@@ -6551,19 +6547,19 @@ msgstr "ISO-8859-13 (Балтійські)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
 msgid "Windows Cyrillic"
-msgstr ""
+msgstr "Windows, кирилиця"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:191
 msgid "Windows Arabic"
-msgstr ""
+msgstr "Windows, арабська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:193
 msgid "Windows Baltic"
-msgstr ""
+msgstr "Windows, балтійська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
@@ -6981,7 +6977,6 @@ msgid "Insufficient memory to convert string to binary buffer"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:483
-#| msgid "Could not get the Oracle parameter information"
 msgid "Could not determine the default date format"
 msgstr "Не вдалося визначити формат типової дати"
 
@@ -7815,7 +7810,6 @@ msgid "Error cleaning data on the server for session %s"
 msgstr ""
 
 #: ../providers/web/gda-web-util.c:524
-#| msgid "Internal error"
 msgid "Non detailed error"
 msgstr "Недеталізована помилка"
 
@@ -8041,12 +8035,10 @@ msgid "Commit transaction"
 msgstr "Надіслати транзакцію"
 
 #: ../tools/browser/browser-window.c:365
-#| msgid "Begin a new transaction"
 msgid "Begin transaction"
 msgstr "Почати транзакцію"
 
 #: ../tools/browser/browser-window.c:411
-#| msgid "_Fullscreen"
 msgid "Fullscreen"
 msgstr "На весь екран"
 
@@ -8063,7 +8055,6 @@ msgid "Connections List"
 msgstr "Список з'єднань"
 
 #: ../tools/browser/browser-window.c:423
-#| msgid "_New Window"
 msgid "New Window"
 msgstr "Нове вікно"
 
@@ -8082,7 +8073,6 @@ msgid "Quit"
 msgstr "Вийти"
 
 #: ../tools/browser/browser-window.c:438
-#| msgid "Perspective"
 msgid "Perspectives"
 msgstr "Перспективи"
 
@@ -8146,7 +8136,6 @@ msgid "Zoom in"
 msgstr "Збільшити"
 
 #: ../tools/browser/canvas/browser-canvas.c:343
-#| msgid "Zoom factor:"
 msgid "Zoom out"
 msgstr "Зменшити"
 
@@ -8163,7 +8152,6 @@ msgid "Radial layout"
 msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas.c:372
-#| msgid "Save"
 msgid "Save as"
 msgstr "Зберегти як"
 
@@ -8801,7 +8789,7 @@ msgstr "Назва стороннього ключа:"
 #. table to reference
 #: ../tools/browser/fk-declare.c:215
 msgid "Referenced table:"
-msgstr ""
+msgstr "Еталонна таблиця:"
 
 #: ../tools/browser/fk-declare.c:257
 msgid "Referenced column"
@@ -8940,7 +8928,7 @@ msgstr ""
 #: ../tools/browser/ldap-browser/class-properties.c:453
 msgid "Class name:"
 msgid_plural "Class names:"
-msgstr[0] "Назва класу:"
+msgstr[0] "Назва класу:Назва класу:"
 msgstr[1] "Назви класів:"
 msgstr[2] ""
 msgstr[3] "Назва класу:"
@@ -9002,7 +8990,7 @@ msgstr "Ніколи"
 #. DN
 #: ../tools/browser/ldap-browser/entry-properties.c:764
 msgid "Distinguished Name:"
-msgstr ""
+msgstr "Розпізнавана назва:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:911
 msgid "Can't display attribute value"
@@ -9633,7 +9621,7 @@ msgstr "Назва стовпчика"
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
 #: ../tools/browser/schema-browser/table-columns.c:654
 msgid "Not NULL?"
-msgstr ""
+msgstr "Не NULL?"
 
 #: ../tools/browser/schema-browser/table-columns.c:692
 msgid "LDAP virtual table definition"
@@ -9664,7 +9652,6 @@ msgstr ""
 
 #. To translators: "Object" is used when we can't determine if @table is a table or a view
 #: ../tools/browser/schema-browser/table-info.c:368
-#| msgid "Objects"
 msgid "Object"
 msgstr "Об'єкт"
 
@@ -9940,7 +9927,7 @@ msgstr "Інформація"
 #: ../tools/common/t-app.c:948
 #, c-format
 msgid "%s [<META DATA TYPE>]"
-msgstr ""
+msgstr "%s [<ТИП МЕТАДАНИХ>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
@@ -9951,7 +9938,7 @@ msgstr ""
 #: ../tools/common/t-app.c:958
 #, c-format
 msgid "%s <fkname> <tableA>(<colA>,...) <tableB>(<colB>,...)"
-msgstr ""
+msgstr "%s <назва-fk> <таблицяA>(<стовпчикA>,...) <таблицяB>(<стовпчикB>,...)"
 
 #: ../tools/common/t-app.c:959
 msgid ""
@@ -9962,7 +9949,7 @@ msgstr ""
 #: ../tools/common/t-app.c:968
 #, c-format
 msgid "%s <fkname> <tableA> <tableB>"
-msgstr ""
+msgstr "%s <назва-fk> <таблицяA> <таблицяB>"
 
 #: ../tools/common/t-app.c:969
 msgid "Un-declare a foreign key (not actually in database)"
@@ -9993,12 +9980,12 @@ msgstr "%s [<СХЕМА>]"
 
 #: ../tools/common/t-app.c:999
 msgid "List all schemas (or named schema)"
-msgstr ""
+msgstr "Вивести список усіх схем (або названої схеми)"
 
 #: ../tools/common/t-app.c:1008
 #, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
-msgstr ""
+msgstr "%s [<НАЗВА_ОБ'ЄКТА>|<СХЕМА>.*]"
 
 #: ../tools/common/t-app.c:1009
 msgid "Describe object or full list of objects"
@@ -10016,7 +10003,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1026
 #, c-format
 msgid "%s [<port> [<authentication token>]]"
-msgstr ""
+msgstr "%s [<порт> [<ключ розпізнавання>]]"
 
 #: ../tools/common/t-app.c:1027
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
@@ -10140,7 +10127,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1159
 #, c-format
 msgid "%s [<NAME> [<VALUE>]]"
-msgstr ""
+msgstr "%s [<НАЗВА> [<ЗНАЧЕННЯ>]]"
 
 #: ../tools/common/t-app.c:1160
 msgid "Set or show an option, or list all options "
@@ -10217,7 +10204,7 @@ msgstr ""
 
 #: ../tools/common/t-app.c:1243
 msgid "Set output format"
-msgstr ""
+msgstr "встановити формат виведення даних"
 
 #: ../tools/common/t-app.c:1249
 #, c-format
@@ -10965,7 +10952,7 @@ msgstr "Не вдалося виконати пошук LDAP"
 #: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
-msgstr ""
+msgstr "Не вдалося обробити значення параметра «%s»"
 
 #: ../tools/common/t-context.c:343
 #, c-format
@@ -10979,34 +10966,34 @@ msgstr "З'єднання завершене"
 #: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити файл «%s» для запису: %s\n"
 
 #: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
-msgstr ""
+msgstr "Не вдалося відкрити канал «%s»: %s"
 
 #: ../tools/common/t-favorites.c:184 ../tools/common/t-favorites.c:193
 msgid "Can't initialize dictionary to store favorites"
-msgstr ""
+msgstr "Не вдалося ініціалізувати словник для збереження улюблених записів"
 
 #: ../tools/common/t-favorites.c:185
 #, c-format
 msgid "Can't initialize dictionary to store favorites :%s"
-msgstr ""
+msgstr "Не вдалося ініціалізувати словник для збереження улюблених записів: %s"
 
 #: ../tools/common/t-term-context.c:523
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити файл «%s» для читання: %s\n"
 
 #: ../tools/common/t-utils.c:43
 msgid "not enforced"
-msgstr ""
+msgstr "не примусово"
 
 #: ../tools/common/t-utils.c:45
 msgid "stop with error"
-msgstr ""
+msgstr "зупинитися з помилкою"
 
 #: ../tools/common/t-utils.c:47
 msgid "stop with error, not deferrable"
@@ -11014,11 +11001,11 @@ msgstr ""
 
 #: ../tools/common/t-utils.c:49
 msgid "cascade changes"
-msgstr ""
+msgstr "каскадні зміни"
 
 #: ../tools/common/t-utils.c:51
 msgid "set to NULL"
-msgstr ""
+msgstr "встановити NULL"
 
 #: ../tools/common/t-utils.c:53
 msgid "set to default value"
@@ -11035,7 +11022,7 @@ msgstr ""
 
 #: ../tools/common/t-virtual-connection.c:117
 msgid "Virtual connection using this connection is busy"
-msgstr ""
+msgstr "Віртуальне з'єднання, яке використовує це з'єднання, зайнято"
 
 #: ../tools/common/web-server.c:505 ../tools/common/web-server.c:506
 msgid "Authentication required"
@@ -11053,7 +11040,7 @@ msgstr "Ключ:"
 
 #: ../tools/common/web-server.c:711
 msgid "SQL console:"
-msgstr ""
+msgstr "Консоль SQL:"
 
 #: ../tools/common/web-server.c:791 ../tools/common/web-server.c:1791
 msgid "Tables"
@@ -11062,7 +11049,7 @@ msgstr "Таблиці"
 #: ../tools/common/web-server.c:791
 #, c-format
 msgid "Tables in the '%s' schema"
-msgstr ""
+msgstr "Таблиці у схемі «%s»"
 
 #: ../tools/common/web-server.c:797 ../tools/common/web-server.c:1796
 msgid "Views"
@@ -11071,12 +11058,12 @@ msgstr "Відображення"
 #: ../tools/common/web-server.c:797
 #, c-format
 msgid "Views in the '%s' schema"
-msgstr ""
+msgstr "Перегляди у схемі «%s»"
 
 #: ../tools/common/web-server.c:841
 #, c-format
 msgid "Columns for the '%s' table:"
-msgstr ""
+msgstr "Стовпчики для таблиці «%s»:"
 
 #: ../tools/common/web-server.c:883
 msgid "Primary key:"
@@ -11088,12 +11075,12 @@ msgstr "Зв'язки:"
 
 #: ../tools/common/web-server.c:1005
 msgid "Foreign keys:"
-msgstr ""
+msgstr "Сторонні ключі:"
 
 #: ../tools/common/web-server.c:1017
 #, c-format
 msgid "To '%s':"
-msgstr ""
+msgstr "До «%s»:"
 
 #: ../tools/common/web-server.c:1192
 msgid "View definition:"
@@ -11112,7 +11099,7 @@ msgstr ""
 #: ../tools/common/web-server.c:1291
 #, c-format
 msgid "Time at which the trigger is fired: %s"
-msgstr ""
+msgstr "Час вмикання перемикача: %s"
 
 #: ../tools/common/web-server.c:1295
 msgid "Action:"
@@ -11125,7 +11112,7 @@ msgstr "Перемикачі:"
 #: ../tools/common/web-server.c:1555 ../tools/common/web-server.c:1649
 #, c-format
 msgid "For the '%s.%s' table:"
-msgstr ""
+msgstr "Для таблиці «%s.%s»:"
 
 #: ../tools/common/web-server.c:1621
 #, c-format
@@ -11135,7 +11122,7 @@ msgstr ""
 #: ../tools/common/web-server.c:1775
 #, c-format
 msgid "Database information for '%s'"
-msgstr ""
+msgstr "Дані щодо бази даних для «%s»"
 
 #: ../tools/common/web-server.c:1780
 msgid "Database information"
@@ -11151,11 +11138,11 @@ msgstr "Перемикачі"
 
 #: ../tools/common/web-server.c:1873
 msgid "Command is incomplete"
-msgstr ""
+msgstr "Команда є неповною"
 
 #: ../tools/misc/gda-list-server-op.c:50
 msgid "Gda server operations list"
-msgstr ""
+msgstr "Список дій для сервера Gda"
 
 #: ../tools/misc/gda-list-server-op.c:60
 #, c-format
@@ -11196,6 +11183,9 @@ msgstr "Помилка: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "Не вдалося обробити файл «%s», ігноруємо його"
+
+#~ msgid "ServerOperation is NULL"
+#~ msgstr "ServerOperation дорівнює NULL"
 
 #~ msgid "Data Source Properties"
 #~ msgstr "Властивості джерела даних"
@@ -11479,10 +11469,6 @@ msgstr "Не вдалося обробити файл «%s», ігноруємо
 
 #~ msgid "_Contents"
 #~ msgstr "В_міст"
-
-#, fuzzy
-#~ msgid "View contents"
-#~ msgstr "Рядок з'єднання"
 
 #, fuzzy
 #~ msgid "_New Diagram"
