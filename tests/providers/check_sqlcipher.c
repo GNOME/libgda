@@ -24,7 +24,6 @@
 
 extern GdaProviderInfo *pinfo;
 extern GdaConnection   *cnc;
-extern gboolean         params_provided;
 extern gboolean         fork_tests;
 
 int
@@ -60,11 +59,7 @@ main (G_GNUC_UNUSED int argc, G_GNUC_UNUSED char **argv)
 		number_failed += prov_test_common_clean ();
 	}
 
-	if (! params_provided)
-		return EXIT_SUCCESS;
-	else {
-		g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
-		return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-	}
+	g_print ("Test %s\n", (number_failed == 0) ? "Ok" : "failed");
+	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 

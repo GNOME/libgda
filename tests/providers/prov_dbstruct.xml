@@ -28,6 +28,7 @@
 
     <provider name="SQLite">
       <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint" replace_with="int"/>
+      <replace context="/FIELDS_A/@COLUMN_TYPE" expr="gint64" replace_with="bigint"/>
       <symbol name="now">CURRENT_TIMESTAMP</symbol>
     </provider>
   </specifics>
