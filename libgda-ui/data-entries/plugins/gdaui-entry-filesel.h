@@ -26,32 +26,10 @@
 G_BEGIN_DECLS
 
 #define GDAUI_TYPE_ENTRY_FILESEL          (gdaui_entry_filesel_get_type())
-#define GDAUI_ENTRY_FILESEL(obj)          G_TYPE_CHECK_INSTANCE_CAST (obj, gdaui_entry_filesel_get_type(), GdauiEntryFilesel)
-#define GDAUI_ENTRY_FILESEL_CLASS(klass)  G_TYPE_CHECK_CLASS_CAST (klass, gdaui_entry_filesel_get_type (), GdauiEntryFileselClass)
-#define GDAUI_IS_ENTRY_FILESEL(obj)       G_TYPE_CHECK_INSTANCE_TYPE (obj, gdaui_entry_filesel_get_type ())
 
+G_DECLARE_FINAL_TYPE(GdauiEntryFilesel, gdaui_entry_filesel, GDAUI, ENTRY_FILESEL, GdauiEntryWrapper)
 
-typedef struct _GdauiEntryFilesel GdauiEntryFilesel;
-typedef struct _GdauiEntryFileselClass GdauiEntryFileselClass;
-typedef struct _GdauiEntryFileselPrivate GdauiEntryFileselPrivate;
-
-
-/* struct for the object's data */
-struct _GdauiEntryFilesel
-{
-	GdauiEntryWrapper              object;
-	GdauiEntryFileselPrivate      *priv;
-};
-
-/* struct for the object's class */
-struct _GdauiEntryFileselClass
-{
-	GdauiEntryWrapperClass         parent_class;
-};
-
-GType        gdaui_entry_filesel_get_type        (void) G_GNUC_CONST;
 GtkWidget   *gdaui_entry_filesel_new             (GdaDataHandler *dh, GType type, const gchar *options);
-
 
 G_END_DECLS
 

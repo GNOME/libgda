@@ -29,7 +29,6 @@
  */
 static void gdaui_entry_filesel_class_init (GdauiEntryFileselClass * class);
 static void gdaui_entry_filesel_init (GdauiEntryFilesel * srv);
-static void gdaui_entry_filesel_dispose (GObject   * object);
 static void gdaui_entry_filesel_finalize (GObject   * object);
 
 /* virtual functions */
@@ -39,65 +38,37 @@ static GValue    *real_get_value (GdauiEntryWrapper *mgwrap);
 static void       connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activate_cb);
 static void       set_editable (GdauiEntryWrapper *mgwrap, gboolean editable);
 
-/* get a pointer to the parents to be able to call their destructor */
-static GObjectClass  *parent_class = NULL;
-
-/* private structure */
-struct _GdauiEntryFileselPrivate
+struct _GdauiEntryFilesel
 {
-	GtkWidget            *entry;
-	GtkWidget            *button;
-	GtkFileChooserAction  mode;
+  GdauiEntryWrapper parent_class;
+
+  GtkWidget            *entry;
+  GtkWidget            *button;
+  GtkFileChooserAction  mode;
 };
 
-GType
-gdaui_entry_filesel_get_type (void)
-{
-	static GType type = 0;
-
-	if (G_UNLIKELY (type == 0)) {
-		static const GTypeInfo info = {
-			sizeof (GdauiEntryFileselClass),
-			(GBaseInitFunc) NULL,
-			(GBaseFinalizeFunc) NULL,
-			(GClassInitFunc) gdaui_entry_filesel_class_init,
-			NULL,
-			NULL,
-			sizeof (GdauiEntryFilesel),
-			0,
-			(GInstanceInitFunc) gdaui_entry_filesel_init,
-			0
-		};
-		
-		type = g_type_register_static (GDAUI_TYPE_ENTRY_WRAPPER, "GdauiEntryFilesel", &info, 0);
-	}
-	return type;
-}
+G_DEFINE_TYPE (GdauiEntryFilesel, gdaui_entry_filesel, GDAUI_TYPE_ENTRY_WRAPPER)
 
 static void
 gdaui_entry_filesel_class_init (GdauiEntryFileselClass * class)
 {
-	GObjectClass   *object_class = G_OBJECT_CLASS (class);
+	GObjectClass *object_class = G_OBJECT_CLASS (class);
 
-	parent_class = g_type_class_peek_parent (class);
-
-	object_class->dispose = gdaui_entry_filesel_dispose;
 	object_class->finalize = gdaui_entry_filesel_finalize;
 
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->create_entry = create_entry;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_set_value = real_set_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->real_get_value = real_get_value;
 	GDAUI_ENTRY_WRAPPER_CLASS (class)->connect_signals = connect_signals;
-	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;	
+	GDAUI_ENTRY_WRAPPER_CLASS (class)->set_editable = set_editable;
 }
 
 static void
-gdaui_entry_filesel_init (GdauiEntryFilesel * gdaui_entry_filesel)
+gdaui_entry_filesel_init (GdauiEntryFilesel * self)
 {
-	gdaui_entry_filesel->priv = g_new0 (GdauiEntryFileselPrivate, 1);
-	gdaui_entry_filesel->priv->entry = NULL;
-	gdaui_entry_filesel->priv->button = NULL;
-	gdaui_entry_filesel->priv->mode = GTK_FILE_CHOOSER_ACTION_OPEN;
+	self->entry = NULL;
+	self->button = NULL;
+	self->mode = GTK_FILE_CHOOSER_ACTION_OPEN;
 }
 
 /**
@@ -108,7 +79,7 @@ gdaui_entry_filesel_init (GdauiEntryFilesel * gdaui_entry_filesel)
  *
  * Creates a new widget which is mainly a GtkEntry
  *
- * Returns: the new widget
+ * Returns: (transfer full): the newly created widget
  */
 GtkWidget *
 gdaui_entry_filesel_new (GdaDataHandler *dh, GType type, const gchar *options)
@@ -131,13 +102,13 @@ gdaui_entry_filesel_new (GdaDataHandler *dh, GType type, const gchar *options)
 		str = gda_quark_list_find (params, "MODE");
 		if (str) {
 			if ((*str == 'O') || (*str == 'o'))
-				filesel->priv->mode = GTK_FILE_CHOOSER_ACTION_OPEN;
+				filesel->mode = GTK_FILE_CHOOSER_ACTION_OPEN;
 			else if ((*str == 'S') || (*str == 's'))
-				filesel->priv->mode = GTK_FILE_CHOOSER_ACTION_SAVE;
+				filesel->mode = GTK_FILE_CHOOSER_ACTION_SAVE;
 			else if ((*str == 'P') || (*str == 'p'))
-				filesel->priv->mode = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+				filesel->mode = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 			else if ((*str == 'N') || (*str == 'n'))
-				filesel->priv->mode = GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER;
+				filesel->mode = GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER;
 		}
 		gda_quark_list_free (params);
 	}
@@ -145,40 +116,21 @@ gdaui_entry_filesel_new (GdaDataHandler *dh, GType type, const gchar *options)
 	return GTK_WIDGET (obj);
 }
 
-
-static void
-gdaui_entry_filesel_dispose (GObject   * object)
-{
-	GdauiEntryFilesel *gdaui_entry_filesel;
-
-	g_return_if_fail (object != NULL);
-	g_return_if_fail (GDAUI_IS_ENTRY_FILESEL (object));
-
-	gdaui_entry_filesel = GDAUI_ENTRY_FILESEL (object);
-	if (gdaui_entry_filesel->priv) {
-
-	}
-
-	/* parent class */
-	parent_class->dispose (object);
-}
-
 static void
 gdaui_entry_filesel_finalize (GObject   * object)
 {
-	GdauiEntryFilesel *gdaui_entry_filesel;
+	GdauiEntryFilesel *gdaui_entry_filesel = GDAUI_ENTRY_FILESEL (object);
 
 	g_return_if_fail (object != NULL);
 	g_return_if_fail (GDAUI_IS_ENTRY_FILESEL (object));
 
 	gdaui_entry_filesel = GDAUI_ENTRY_FILESEL (object);
-	if (gdaui_entry_filesel->priv) {
-		g_free (gdaui_entry_filesel->priv);
-		gdaui_entry_filesel->priv = NULL;
-	}
+
+	g_object_unref(gdaui_entry_filesel->entry);
+	g_object_unref(gdaui_entry_filesel->button);
 
 	/* parent class */
-	parent_class->finalize (object);
+	G_OBJECT_CLASS(gdaui_entry_filesel_parent_class)->finalize (object);
 }
 
 static void
@@ -189,14 +141,14 @@ button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 	gint result;
 	gchar *title;
 
-	if ((filesel->priv->mode == GTK_FILE_CHOOSER_ACTION_OPEN) ||
-	    (filesel->priv->mode == GTK_FILE_CHOOSER_ACTION_SAVE))
+	if ((filesel->mode == GTK_FILE_CHOOSER_ACTION_OPEN) ||
+	    (filesel->mode == GTK_FILE_CHOOSER_ACTION_SAVE))
 		title = _("Choose a file");
 	else
 		title = _("Choose a directory");
 	dlg = gtk_file_chooser_dialog_new (title,
 					   (GtkWindow *) gtk_widget_get_ancestor (GTK_WIDGET (filesel), GTK_TYPE_WINDOW), 
-					   filesel->priv->mode, 
+					   filesel->mode,
 					   _("_Cancel"), GTK_RESPONSE_CANCEL,
 					   _("_Apply"), GTK_RESPONSE_ACCEPT,
 					   NULL);
@@ -208,7 +160,7 @@ button_clicked_cb (G_GNUC_UNUSED GtkWidget *button, GdauiEntryFilesel *filesel)
 		gchar *file;
 
 		file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
-		gtk_entry_set_text (GTK_ENTRY (filesel->priv->entry), file);
+		gtk_entry_set_text (GTK_ENTRY (filesel->entry), file);
 		g_free (file);
 		gdaui_set_default_path (gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER (dlg)));
 	}
@@ -223,18 +175,17 @@ create_entry (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_FILESEL (mgwrap), NULL);
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
-	g_return_val_if_fail (filesel->priv, NULL);
 
 	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
 	wid = gtk_entry_new ();
 	gtk_box_pack_start (GTK_BOX (hbox), wid, TRUE, TRUE, 0);
 	gtk_widget_show (wid);
-	filesel->priv->entry = wid;
+	filesel->entry = wid;
 
 	wid = gtk_button_new_with_label (_("Choose"));
 
-	filesel->priv->button = wid;
+	filesel->button = wid;
 	gtk_box_pack_start (GTK_BOX (hbox), wid, FALSE, TRUE, 5);
 	gtk_widget_show (wid);
 	g_signal_connect (G_OBJECT (wid), "clicked",
@@ -251,7 +202,6 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_FILESEL (mgwrap));
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
-	g_return_if_fail (filesel->priv);
 
 	if (value) {
 		if (gda_value_is_null ((GValue *) value)) 
@@ -263,7 +213,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 			dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
 			str = gda_data_handler_get_str_from_value (dh, value);
 			if (str) {
-				gtk_entry_set_text (GTK_ENTRY (filesel->priv->entry), str);
+				gtk_entry_set_text (GTK_ENTRY (filesel->entry), str);
 				g_free (str);
 				sensitive = TRUE;
 			}
@@ -273,7 +223,7 @@ real_set_value (GdauiEntryWrapper *mgwrap, const GValue *value)
 		sensitive = FALSE;
 
 	if (!sensitive) 
-		gtk_entry_set_text (GTK_ENTRY (filesel->priv->entry), "");
+		gtk_entry_set_text (GTK_ENTRY (filesel->entry), "");
 }
 
 static GValue *
@@ -286,10 +236,9 @@ real_get_value (GdauiEntryWrapper *mgwrap)
 
 	g_return_val_if_fail (GDAUI_IS_ENTRY_FILESEL (mgwrap), NULL);
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
-	g_return_val_if_fail (filesel->priv, NULL);
 
 	dh = gdaui_data_entry_get_handler (GDAUI_DATA_ENTRY (mgwrap));
-	str = gtk_entry_get_text (GTK_ENTRY (filesel->priv->entry));
+	str = gtk_entry_get_text (GTK_ENTRY (filesel->entry));
 	value = gda_data_handler_get_value_from_str (dh, str, 
 						     gdaui_data_entry_get_value_type (GDAUI_DATA_ENTRY (mgwrap)));
 	if (!value) {
@@ -308,11 +257,10 @@ connect_signals(GdauiEntryWrapper *mgwrap, GCallback modify_cb, GCallback activa
 
 	g_return_if_fail (GDAUI_IS_ENTRY_FILESEL (mgwrap));
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
-	g_return_if_fail (filesel->priv);
 
-	g_signal_connect_swapped (G_OBJECT (filesel->priv->entry), "changed",
+	g_signal_connect_swapped (G_OBJECT (filesel->entry), "changed",
 				  modify_cb, mgwrap);
-	g_signal_connect_swapped (G_OBJECT (filesel->priv->entry), "activate",
+	g_signal_connect_swapped (G_OBJECT (filesel->entry), "activate",
 				  activate_cb, mgwrap);
 }
 
@@ -323,9 +271,8 @@ set_editable (GdauiEntryWrapper *mgwrap, gboolean editable)
 
 	g_return_if_fail (GDAUI_IS_ENTRY_FILESEL (mgwrap));
 	filesel = GDAUI_ENTRY_FILESEL (mgwrap);
-	g_return_if_fail (filesel->priv);
 
-	gtk_editable_set_editable (GTK_EDITABLE (filesel->priv->entry), editable);
-	gtk_widget_set_sensitive (filesel->priv->button, editable);
-	gtk_widget_set_visible (filesel->priv->button, editable);
+	gtk_editable_set_editable (GTK_EDITABLE (filesel->entry), editable);
+	gtk_widget_set_sensitive (filesel->button, editable);
+	gtk_widget_set_visible (filesel->button, editable);
 }
