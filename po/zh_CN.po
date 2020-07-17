@@ -8,10 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
-"product=libgda&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-19 16:53+0000\n"
-"PO-Revision-Date: 2014-01-05 15:51+0800\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
+"POT-Creation-Date: 2020-05-29 14:42+0000\n"
+"PO-Revision-Date: 2020-07-16 23:30-0400\n"
 "Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
 "Language-Team: Chinese Simplified <kde-i18n-doc@kde.org>\n"
 "Language: zh_CN\n"
@@ -19,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -113,16 +112,15 @@ msgstr "无法执行浏览器程序"
 #: ../libgda/gda-tree-mgr-select.c:187 ../libgda/gda-tree-mgr-select.c:222
 #: ../libgda/sqlite/gda-sqlite-provider.c:2703
 #: ../libgda/sqlite/gda-sqlite-provider.c:2715
-#: ../libgda/sqlite/gda-sqlite-provider.c:2737
-#: ../libgda/sqlite/gda-sqlite-provider.c:2927
-#: ../libgda/sqlite/gda-sqlite-provider.c:3270
-#: ../libgda/sqlite/gda-sqlite-provider.c:3282
-#: ../libgda/sqlite/gda-sqlite-provider.c:3413
+#: ../libgda/sqlite/gda-sqlite-provider.c:2926
+#: ../libgda/sqlite/gda-sqlite-provider.c:3269
+#: ../libgda/sqlite/gda-sqlite-provider.c:3281
+#: ../libgda/sqlite/gda-sqlite-provider.c:3412
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:128
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:250
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:420
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:819
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1547
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1575
 #: ../libgda/thread-wrapper/gda-thread-provider.c:452
 #: ../libgda/thread-wrapper/gda-thread-provider.c:532
 #: ../libgda-ui/data-entries/common-bin.c:81
@@ -135,8 +133,7 @@ msgstr "无法执行浏览器程序"
 #: ../libgda-ui/demos/main.c:774 ../libgda-ui/gdaui-data-filter.c:161
 #: ../libgda-ui/gdaui-init.c:106 ../libgda-ui/gdaui-init.c:114
 #: ../libgda-ui/gdaui-init.c:545 ../libgda-ui/gdaui-login.c:448
-#: ../libgda-ui/gdaui-rt-editor.c:732
-#: ../providers/jdbc/gda-jdbc-provider.c:520
+#: ../libgda-ui/gdaui-rt-editor.c:732 ../providers/jdbc/gda-jdbc-provider.c:520
 #: ../providers/jdbc/gda-jdbc-provider.c:1467
 #: ../providers/jdbc/gda-jdbc-provider.c:1496
 #: ../providers/jdbc/gda-jdbc-provider.c:1558
@@ -165,8 +162,7 @@ msgstr "无法执行浏览器程序"
 #: ../tools/browser/browser-connection.c:1145
 #: ../tools/browser/browser-connection.c:1361
 #: ../tools/browser/browser-window.c:920 ../tools/browser/browser-window.c:934
-#: ../tools/browser/browser-window.c:948
-#: ../tools/browser/browser-window.c:1173
+#: ../tools/browser/browser-window.c:948 ../tools/browser/browser-window.c:1173
 #: ../tools/browser/browser-window.c:1214
 #: ../tools/browser/browser-window.c:1482
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:423
@@ -228,6 +224,10 @@ msgid "Database access control center"
 msgstr "数据库访问控制中心"
 
 #: ../control-center/gda-control-center-5.0.desktop.in.h:2
+msgid "Gda Control Center"
+msgstr "Gda 控制中心"
+
+#: ../control-center/gda-control-center-5.0.desktop.in.h:3
 msgid "Configure your database access environment"
 msgstr "配置您的数据库访问环境"
 
@@ -345,7 +345,8 @@ msgstr "认证参数"
 msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
-msgstr "创建新数据源所需要的所有信息都已经检索。现在点击“应用”来关闭这个对话框"
+msgstr ""
+"创建新数据源所需要的所有信息都已经收集完毕。现在点击“应用”来关闭这个对话框。"
 
 #: ../control-center/gdaui-dsn-assistant.c:652
 msgid "Ready to add a new data source"
@@ -384,8 +385,8 @@ msgid "Authentication"
 msgstr "认证"
 
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84
-#: ../tools/browser/auth-dialog.c:232 ../tools/browser/login-dialog.c:193
+#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:232
+#: ../tools/browser/login-dialog.c:193
 msgid "Connection opening"
 msgstr "连接正在打开"
 
@@ -830,7 +831,7 @@ msgstr "连接事务状态跟踪：不存在 %s 的事务"
 #: ../libgda/gda-data-model-dir.c:786 ../libgda/gda-data-model-dir.c:885
 #: ../libgda/gda-data-model-dir.c:927 ../libgda/gda-data-model-dsn-list.c:311
 #: ../libgda/gda-data-model-iter.c:402 ../libgda/gda-data-model-iter.c:1123
-#: ../libgda/gda-data-proxy.c:3561 ../libgda/gda-data-proxy.c:3685
+#: ../libgda/gda-data-proxy.c:3559 ../libgda/gda-data-proxy.c:3683
 #: ../libgda/gda-data-select.c:1320 ../libgda/gda-data-select.c:1904
 #: ../libgda/gda-data-select.c:2860 ../libgda/gda-data-select.c:2927
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:918
@@ -895,8 +896,8 @@ msgstr "数据模型可否修改"
 #: ../libgda/gda-data-model-array.c:509 ../libgda/gda-data-model-array.c:661
 #: ../libgda/gda-data-model-array.c:748 ../libgda/gda-data-model-dir.c:797
 #: ../libgda/gda-data-model-dir.c:971 ../libgda/gda-data-model-dir.c:1337
-#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3634
-#: ../libgda/gda-data-proxy.c:3672 ../libgda/gda-data-select.c:1853
+#: ../libgda/gda-data-model-dsn-list.c:319 ../libgda/gda-data-proxy.c:3632
+#: ../libgda/gda-data-proxy.c:3670 ../libgda/gda-data-select.c:1853
 #: ../libgda/gda-data-select.c:1914
 #, c-format
 msgid "Row %d out of range (0-%d)"
@@ -905,8 +906,8 @@ msgstr "行 %d 超出范围 (0-%d)"
 #: ../libgda/gda-data-model-array.c:513 ../libgda/gda-data-model-array.c:664
 #: ../libgda/gda-data-model-array.c:751 ../libgda/gda-data-model-dir.c:800
 #: ../libgda/gda-data-model-dir.c:974 ../libgda/gda-data-model-dir.c:1340
-#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3637
-#: ../libgda/gda-data-proxy.c:3675 ../libgda/gda-data-select.c:1856
+#: ../libgda/gda-data-model-dsn-list.c:322 ../libgda/gda-data-proxy.c:3635
+#: ../libgda/gda-data-proxy.c:3673 ../libgda/gda-data-select.c:1856
 #: ../libgda/gda-data-select.c:1917
 #, c-format
 msgid "Row %d not found (empty data model)"
@@ -1382,7 +1383,7 @@ msgstr "无效的源数据模型(可能是有不兼容的列名称)"
 msgid "GdaDataProxy can't handle non random access data models"
 msgstr "GdaDataProxy 无法处理非随机访问数据模型"
 
-#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4074
+#: ../libgda/gda-data-proxy.c:1677 ../libgda/gda-data-proxy.c:4072
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr "第一列是手工添加的空列，不能移除"
@@ -1420,22 +1421,22 @@ msgstr "过滤表达式中有错误"
 msgid "Incorrect filter expression"
 msgstr "错误的过滤表达式"
 
-#: ../libgda/gda-data-proxy.c:3809
+#: ../libgda/gda-data-proxy.c:3807
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr "第一行是一个人工添加的空行，不能改变"
 
-#: ../libgda/gda-data-proxy.c:3838 ../libgda/gda-data-proxy.c:3849
+#: ../libgda/gda-data-proxy.c:3836 ../libgda/gda-data-proxy.c:3847
 #, c-format
 msgid "Wrong value type: expected '%s' and got '%s'"
 msgstr "错误的值类型：期望 '%s' 然而获得了 '%s'"
 
-#: ../libgda/gda-data-proxy.c:3937
+#: ../libgda/gda-data-proxy.c:3935
 #, c-format
 msgid "Trying to change read-only column: %d"
 msgstr "正在尝试更改只读列：%d"
 
-#: ../libgda/gda-data-proxy.c:3974
+#: ../libgda/gda-data-proxy.c:3972
 #, c-format
 msgid "Value type mismatch %s instead of %s"
 msgstr "值类型失配 %s 而不是 %s"
@@ -1623,7 +1624,7 @@ msgstr "无法设置保持器的值：%s"
 
 #: ../libgda/gda-holder.c:645
 msgid "The 'g-type' property cannot be changed"
-msgstr "'g-type' 属性不能更改。"
+msgstr "'g-type' 属性不能更改"
 
 #: ../libgda/gda-holder.c:936
 #, c-format
@@ -2202,7 +2203,7 @@ msgstr "'%s' 错误的参数类型：期望类型 '%s' 然而获得了 '%s'"
 msgid "Missing parameter '%s'"
 msgstr "丢失参数 '%s'"
 
-#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3113
+#: ../libgda/gda-statement.c:1402 ../libgda/sqlite/gda-sqlite-provider.c:3112
 #: ../providers/jdbc/gda-jdbc-provider.c:1506
 #: ../providers/mysql/gda-mysql-provider.c:2356
 #: ../providers/postgres/gda-postgres-provider.c:2150
@@ -2219,11 +2220,11 @@ msgstr "未命名的参数"
 msgid "Malformed table name"
 msgstr "错误的表名"
 
-#: ../libgda/gda-statement.c:2222
+#: ../libgda/gda-statement.c:2231
 msgid "Join is not in a FROM statement"
 msgstr "Join 不在 FROM 语句中"
 
-#: ../libgda/gda-statement.c:2229
+#: ../libgda/gda-statement.c:2238
 msgid "Could not find target the join is for"
 msgstr "找不到联合(join)的目标"
 
@@ -2358,7 +2359,7 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "无法重写除 INSERT 或 UPDATE 外的语句"
 
 #: ../libgda/gda-util.c:1781 ../libgda/gda-util.c:1838
-#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3094
+#: ../libgda/gda-util.c:1878 ../libgda/sqlite/gda-sqlite-provider.c:3093
 #: ../providers/jdbc/gda-jdbc-provider.c:1477
 #: ../providers/mysql/gda-mysql-provider.c:2336
 #: ../providers/postgres/gda-postgres-provider.c:2132
@@ -2710,41 +2711,34 @@ msgstr "在准备就绪语句中不允许有未命名的参数"
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr "无法构建 SELECT 语句以获取最后插入的行：%s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2736
-#: ../providers/mysql/gda-mysql-provider.c:2083
-#: ../providers/postgres/gda-postgres-provider.c:1880
-#, c-format
-msgid "Can't execute SELECT statement to get last inserted row: %s"
-msgstr "无法执行 SELECT 语句以获取最新插入的行：%s"
-
-#: ../libgda/sqlite/gda-sqlite-provider.c:2749
+#: ../libgda/sqlite/gda-sqlite-provider.c:2748
 #: ../providers/mysql/gda-mysql-provider.c:2096
 #: ../providers/postgres/gda-postgres-provider.c:1893
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr "用以获取最新插入行的 SELECT 语句没有返回任何行"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2753
+#: ../libgda/sqlite/gda-sqlite-provider.c:2752
 #: ../providers/mysql/gda-mysql-provider.c:2100
 #: ../providers/postgres/gda-postgres-provider.c:1897
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr "获取最新插入行的 SELECT 语句返回了过多 (%d) 的行"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2818
+#: ../libgda/sqlite/gda-sqlite-provider.c:2817
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "准备就绪语句没有相关联的 GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2858
-#: ../libgda/sqlite/gda-sqlite-provider.c:2895
+#: ../libgda/sqlite/gda-sqlite-provider.c:2857
+#: ../libgda/sqlite/gda-sqlite-provider.c:2894
 msgid "Can't create SQLite BLOB handle"
 msgstr "无法创建 SQLite BLOB 句柄"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2862
-#: ../libgda/sqlite/gda-sqlite-provider.c:2900
+#: ../libgda/sqlite/gda-sqlite-provider.c:2861
+#: ../libgda/sqlite/gda-sqlite-provider.c:2899
 msgid "Can't write to SQLite's BLOB"
 msgstr "无法创建 SQLite BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2885
+#: ../libgda/sqlite/gda-sqlite-provider.c:2884
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -2753,11 +2747,11 @@ msgstr ""
 "无法获取 SQLite BLOB 句柄 (报告的类型是 '%s')，请在 http://bugzilla.gnome."
 "org/ 上为“libgda”产品报告这个 bug。"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2910
+#: ../libgda/sqlite/gda-sqlite-provider.c:2909
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "无法识别要填充的 blob 的 ROWID"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2958
+#: ../libgda/sqlite/gda-sqlite-provider.c:2957
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:448
 #: ../providers/jdbc/gda-jdbc-provider.c:1356
 #: ../providers/ldap/gda-ldap-provider.c:801
@@ -2767,13 +2761,13 @@ msgstr "无法识别要填充的 blob 的 ROWID"
 msgid "Provider does not support asynchronous statement execution"
 msgstr "提供者不支持异步语句执行"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3027
+#: ../libgda/sqlite/gda-sqlite-provider.c:3026
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "空语句"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3069
-#: ../libgda/sqlite/gda-sqlite-provider.c:3072
+#: ../libgda/sqlite/gda-sqlite-provider.c:3068
+#: ../libgda/sqlite/gda-sqlite-provider.c:3071
 #: ../providers/jdbc/gda-jdbc-provider.c:1443
 #: ../providers/jdbc/gda-jdbc-provider.c:1446
 #: ../providers/mysql/gda-mysql-provider.c:2311
@@ -2785,7 +2779,7 @@ msgstr "空语句"
 msgid "Missing parameter(s) to execute query"
 msgstr "丢失要执行查询的参数"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3132
+#: ../libgda/sqlite/gda-sqlite-provider.c:3131
 #: ../providers/jdbc/gda-jdbc-provider.c:1525
 #: ../providers/mysql/gda-mysql-provider.c:2375
 #: ../providers/postgres/gda-postgres-provider.c:2169
@@ -2793,53 +2787,53 @@ msgstr "丢失要执行查询的参数"
 msgid "Can't rewrite statement handle default values"
 msgstr "无法重写语句句柄的默认值"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3252
+#: ../libgda/sqlite/gda-sqlite-provider.c:3251
 #: ../providers/mysql/gda-mysql-provider.c:2643
 msgid "Can't get BLOB's length"
 msgstr "无法获得 BLOB 的长度"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3254
+#: ../libgda/sqlite/gda-sqlite-provider.c:3253
 #: ../providers/mysql/gda-mysql-provider.c:2645
 msgid "BLOB is too big"
 msgstr "BLOB 过大"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3368
+#: ../libgda/sqlite/gda-sqlite-provider.c:3367
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "没有已处理的数据类型 '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3435
+#: ../libgda/sqlite/gda-sqlite-provider.c:3434
 msgid "Could not start transaction to create BLOB"
 msgstr "无法启动事务来创建 BLOB"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3600
-#: ../libgda/sqlite/gda-sqlite-provider.c:3621
-#: ../libgda/sqlite/gda-sqlite-provider.c:3712
-#: ../libgda/sqlite/gda-sqlite-provider.c:3732
-#: ../libgda/sqlite/gda-sqlite-provider.c:3755
+#: ../libgda/sqlite/gda-sqlite-provider.c:3599
+#: ../libgda/sqlite/gda-sqlite-provider.c:3620
+#: ../libgda/sqlite/gda-sqlite-provider.c:3711
+#: ../libgda/sqlite/gda-sqlite-provider.c:3731
+#: ../libgda/sqlite/gda-sqlite-provider.c:3754
 msgid "Function requires one argument"
 msgstr "函数要求一个参数"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3653
-#: ../libgda/sqlite/gda-sqlite-provider.c:3787
+#: ../libgda/sqlite/gda-sqlite-provider.c:3652
+#: ../libgda/sqlite/gda-sqlite-provider.c:3786
 msgid "Function requires two arguments"
 msgstr "函数要求两个参数"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3692
+#: ../libgda/sqlite/gda-sqlite-provider.c:3691
 msgid "Function requires one or two arguments"
 msgstr "函数要求一到两个参数"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3827
-#: ../libgda/sqlite/gda-sqlite-provider.c:3934
+#: ../libgda/sqlite/gda-sqlite-provider.c:3826
+#: ../libgda/sqlite/gda-sqlite-provider.c:3933
 msgid "Function requires two or three arguments"
 msgstr "函数要求两到三个参数"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3881
+#: ../libgda/sqlite/gda-sqlite-provider.c:3880
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "SQLite 正则 %s 出错："
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3882
+#: ../libgda/sqlite/gda-sqlite-provider.c:3881
 msgid "Invalid regular expression"
 msgstr "正则表达式无效"
 
@@ -3007,26 +3001,26 @@ msgstr "在第 %d 行第 %d 列找不到请求的值"
 msgid "Column not found"
 msgstr "列未找到"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1442
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1470
 msgid "No statement specified to modify the data"
 msgstr "没有指定修改数据的语句"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1449
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1477
 msgid "Invalid statement specified to modify the data"
 msgstr "指定的用于修改数据的语句无效"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1469
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1506
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1514
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1497
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1534
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1542
 msgid "Invalid parameter in statement to modify the data"
 msgstr "提供的用于修改数据的语句中的参数无效"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1546
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1574
 #, c-format
 msgid "Failed to modify data: %s"
 msgstr "修改数据失败：%s"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1628
+#: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1656
 msgid "Data model representing the table is read only"
 msgstr "代表表的数据模型为只读"
 
@@ -3129,7 +3123,7 @@ msgstr "选择的对象缺少表达式"
 msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
-msgstr "联合(join)不能同时指定联合的条件和要联合的字段列表。"
+msgstr "联合(join)不能同时指定联合的条件和要联合的字段列表"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1161
 msgid "Cross join can't have a join condition or a list of fields to join on"
@@ -3250,17 +3244,17 @@ msgstr "UPDATE 语句没有任何目标列可更新"
 msgid "A connection is required"
 msgstr "需要一个连接"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1449
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1447
 msgid "Signal does not exist\n"
 msgstr "信号不存在\n"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1458
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1456
 msgid "Signal to connect to must not have a return value\n"
 msgstr "要连接到的信号不能有返回值\n"
 
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1531
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1544
-#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1599
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1529
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1542
+#: ../libgda/thread-wrapper/gda-thread-wrapper.c:1597
 #, c-format
 msgid "Signal %lu does not exist"
 msgstr "信号 %lu 不存在"
@@ -3352,10 +3346,9 @@ msgstr "数据类型"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:183
 #: ../libgda-ui/gdaui-basic-form.c:834 ../libgda-ui/gdaui-basic-form.c:870
-#: ../libgda-ui/gdaui-raw-grid.c:785
-#: ../providers/ldap/gda-ldap-provider.c:1017 ../tools/config-info.c:122
-#: ../tools/config-info.c:291 ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995
-#: ../tools/gda-sql.c:5375
+#: ../libgda-ui/gdaui-raw-grid.c:785 ../providers/ldap/gda-ldap-provider.c:1017
+#: ../tools/config-info.c:122 ../tools/config-info.c:291
+#: ../tools/gda-sql.c:3278 ../tools/gda-sql.c:3995 ../tools/gda-sql.c:5375
 msgid "Value"
 msgstr "值"
 
@@ -4029,7 +4022,7 @@ msgstr "使用数据源："
 
 #: ../libgda-ui/gdaui-login.c:185
 msgid "Specify connection:"
-msgstr "指定连接"
+msgstr "指定连接："
 
 #. Create the DSN add button
 #: ../libgda-ui/gdaui-login.c:198
@@ -5298,7 +5291,7 @@ msgstr "新表名"
 
 #: ../providers/bdbsql/libmain.c:51
 msgid "Can't find libdb_sql-5."
-msgstr "找不到 libdb_sql-5"
+msgstr "找不到 libdb_sql-5。"
 
 #: ../providers/bdbsql/libmain.c:89
 msgid "Provider for BDB SQL databases"
@@ -5316,16 +5309,14 @@ msgstr "Firebird 数据库的提供者"
 msgid "Provider for embedded Firebird databases"
 msgstr "嵌入式 Firebird 数据库的提供者"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:122 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:250 ../providers/jdbc/GdaJValue.c:298
-#: ../providers/jdbc/GdaJValue.c:345 ../providers/jdbc/GdaJValue.c:388
-#: ../providers/jdbc/GdaJValue.c:515
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
+#: ../providers/jdbc/GdaJValue.c:298 ../providers/jdbc/GdaJValue.c:345
+#: ../providers/jdbc/GdaJValue.c:388 ../providers/jdbc/GdaJValue.c:515
 msgid "Invalid argument: NULL"
 msgstr "无效的参数：NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:68
-#: ../providers/jdbc/GdaInputStream.c:141
+#: ../providers/jdbc/GdaInputStream.c:68 ../providers/jdbc/GdaInputStream.c:141
 msgid "Can't read BLOB"
 msgstr "无法读取 BLOB"
 
@@ -5398,7 +5389,7 @@ msgstr "连接 URL"
 msgid ""
 "Connection string required by the JDBC driver, refer to the used JDBC driver "
 "for its contents and format"
-msgstr "JDBC 驱动要求的连接字符串，请查阅使用的 JDBC 驱动了解它的内容和格式。"
+msgstr "JDBC 驱动所需的连接字符串，请查阅使用的 JDBC 驱动了解它的内容和格式"
 
 #: ../providers/jdbc/libmain.c:153 ../providers/jdbc/libmain.c:163
 #, c-format
@@ -5671,7 +5662,7 @@ msgstr "MySQL 布尔型表示"
 
 #: ../providers/mysql/gda-mysql-provider.c:505
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
-msgstr "如果您已经给出了主机或端口，就不能再给定 UNIX 套接字。"
+msgstr "如果您已经提供了主机或端口信息，就不能再给定 UNIX 套接字"
 
 #: ../providers/mysql/gda-mysql-provider.c:513
 msgid "Invalid port number"
@@ -5702,6 +5693,12 @@ msgstr "无描述"
 #: ../providers/mysql/gda-mysql-provider.c:1861
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "准备就绪语句中不允许有未命名的语句参数。"
+
+#: ../providers/mysql/gda-mysql-provider.c:2083
+#: ../providers/postgres/gda-postgres-provider.c:1880
+#, c-format
+msgid "Can't execute SELECT statement to get last inserted row: %s"
+msgstr "无法执行 SELECT 语句以获取最新插入的行：%s"
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2637
@@ -5870,8 +5867,8 @@ msgid ""
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
-"明确指定要使用的连接协议。在其他参数正常情况下会导致使用不希望的协议时，可使"
-"用它。"
+"明确指定要使用的连接协议。如果提供的参数会导致使用其他非预期的协议时，可在此"
+"指定所需协议"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -7271,7 +7268,7 @@ msgid ""
 "Maximum wait for connection, in seconds. Zero or not specified means wait "
 "indefinitely. It is not recommended to use a timeout of less than 2 seconds"
 msgstr ""
-"最长的连接等待时间。0 或不指定表示无限期等待。不建议使用短于 2 秒的超时。"
+"最长的连接等待时间。0 或不指定表示无限期等待。不建议使用短于 2 秒的超时"
 
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:782
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:845
@@ -7292,8 +7289,7 @@ msgstr "至少需要 Mysql 5.0 版"
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:174
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:216
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:200
-#: ../providers/web/gda-web-meta.c:105
-#: ../providers/web/gda-web-recordset.c:310
+#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:310
 msgid "Can't import data from web server"
 msgstr "无法从网页服务器导入数据"
 
@@ -7426,22 +7422,22 @@ msgstr "服务器机密"
 msgid "The name of a database to use"
 msgstr "要使用的数据库名"
 
-#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:85
+#: ../testing/gda-test-blob.c:98 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
 msgstr "DSN '%s' 未声明"
 
-#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:90
+#: ../testing/gda-test-blob.c:103 ../testing/gda-test-connection.c:98
 #, c-format
 msgid "Can't open connection to DSN %s: %s\n"
 msgstr "无法打开到 DSN %s 的连接：%s\n"
 
-#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:100
+#: ../testing/gda-test-blob.c:114 ../testing/gda-test-connection.c:108
 #, c-format
 msgid "Can't open specified connection: %s\n"
 msgstr "无法打开指定连接：%s\n"
 
-#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:107
+#: ../testing/gda-test-blob.c:121 ../testing/gda-test-connection.c:115
 #, c-format
 msgid "Connection successfully opened!\n"
 msgstr "连接成功打开！\n"
@@ -7829,11 +7825,11 @@ msgstr "要退出程序吗？"
 
 #: ../tools/browser/browser-window.c:861
 msgid "all the connections will be closed."
-msgstr "所有的连接都将被关闭"
+msgstr "所有连接都将被关闭。"
 
 #: ../tools/browser/browser-window.c:868
 msgid "the connection will be closed."
-msgstr "连接将被关闭"
+msgstr "连接将被关闭。"
 
 #: ../tools/browser/browser-window.c:919
 #, c-format
@@ -8115,12 +8111,12 @@ msgstr "编码："
 #. first line as title
 #: ../tools/browser/common/gdaui-data-import.c:192
 msgid "First line as title:"
-msgstr "第一行作为标题"
+msgstr "第一行（作为标题）："
 
 #. separator
 #: ../tools/browser/common/gdaui-data-import.c:204
 msgid "Separator:"
-msgstr "分隔符"
+msgstr "分隔符："
 
 #: ../tools/browser/common/gdaui-data-import.c:208
 msgid "Comma"
@@ -8144,7 +8140,7 @@ msgstr "管道"
 
 #: ../tools/browser/common/gdaui-data-import.c:245
 msgid "Other:"
-msgstr "其它"
+msgstr "其它："
 
 #: ../tools/browser/common/gdaui-data-import.c:269
 msgid "Import preview"
@@ -8325,7 +8321,7 @@ msgstr "无效的方案名"
 
 #: ../tools/browser/connection-binding-properties.c:526
 msgid "Bind all tables of a connection using a schema prefix:"
-msgstr "使用一个方案前缀绑定一个连接的所有表"
+msgstr "使用一个方案前缀绑定一个连接的所有表："
 
 #: ../tools/browser/connection-binding-properties.c:530
 msgid ""
@@ -8366,7 +8362,7 @@ msgstr "未保存的"
 #: ../tools/browser/data-manager/data-console.c:328
 #: ../tools/browser/query-exec/query-console-page.c:338
 msgid "Variables' values:"
-msgstr "变量值"
+msgstr "变量值："
 
 #: ../tools/browser/data-manager/data-console.c:386
 msgid "Reset"
@@ -8660,7 +8656,7 @@ msgid ""
 msgstr ""
 "如果表名已设置\n"
 "实际执行的\n"
-"用来选择数据的 SQL 将无法更改。"
+"用来选择数据的 SQL 将无法更改"
 
 #: ../tools/browser/data-manager/data-source-editor.c:183
 msgid "Dependencies"
@@ -8726,7 +8722,28 @@ msgstr "应为 <%s> 根节点"
 msgid "SQL code to execute:"
 msgstr "要执行的 SQL 代码："
 
+#: ../tools/browser/gda-browser-5.0.appdata.xml.in.h:1
+msgid ""
+"Database Browser provides quick access to the data and schema of a database, "
+"and displays it in a intuitive graphical interface. It provides three "
+"perspectives to interact with a database: the schema browser, query "
+"execution, and data manager. The schema browser allows the user to view the "
+"tables of a database, and inspect the table's properties and relations. The "
+"query exeution perspective allows the user to execute SQL queries on the "
+"database. The data manager perspective allows the user to view the data "
+"contained in the database in a tabular form."
+msgstr ""
+"数据库浏览器可快速访问数据库中的数据与架构，并将其直观地显示在图形界面上。它"
+"提供了三个视图以实现与数据库的交互：架构浏览器、查询执行器和数据管理器。架构"
+"浏览器视图可让用户查看数据库的表结构，并检查表的属性和关系。查询执行视图可执"
+"行用户输入的SQL查询命令。数据管理器视图允许用户以表格形式查看数据库中存储的数"
+"据。"
+
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
+msgid "GdaBrowser"
+msgstr "Gda浏览器"
+
+#: ../tools/browser/gda-browser-5.0.desktop.in.h:3
 msgid "Browse your database's contents"
 msgstr "浏览您的数据库内容"
 
@@ -8834,9 +8851,8 @@ msgstr "_LDAP"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:507
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:513
-#: ../tools/browser/ldap-browser/ldap-search-page.c:465
-#: ../tools/gda-sql.c:2415 ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435
-#: ../tools/gda-sql.c:2443
+#: ../tools/browser/ldap-browser/ldap-search-page.c:465 ../tools/gda-sql.c:2415
+#: ../tools/gda-sql.c:2423 ../tools/gda-sql.c:2435 ../tools/gda-sql.c:2443
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -9365,7 +9381,7 @@ msgid ""
 "the query will be defined from the row selected in the grid"
 msgstr ""
 "选择此项使该收藏成为一项可从包含数据的网格发起执行的\n"
-"操作。执行该查询的参数将由网格中选择的行定义。"
+"操作。执行该查询的参数将由网格中选择的行定义"
 
 #: ../tools/browser/query-exec/query-result.c:219
 msgid "Statement:"
@@ -9489,12 +9505,12 @@ msgstr "无法加载图示"
 #: ../tools/browser/schema-browser/table-columns.c:269
 #, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "声明的外键“%s”，于"
+msgstr "声明的外键“%s”，于 "
 
 #: ../tools/browser/schema-browser/table-columns.c:272
 #, c-format
 msgid "Foreign key '%s' on "
-msgstr "外键“%s”，于"
+msgstr "外键“%s”，于 "
 
 #: ../tools/browser/schema-browser/table-columns.c:338
 #, c-format
@@ -10145,7 +10161,7 @@ msgstr "错误：%s\n"
 #: ../tools/gda-sql.c:1475 ../tools/gda-sql.c:1628 ../tools/gda-sql.c:2924
 #, c-format
 msgid "Done.\n"
-msgstr "搞定。\n"
+msgstr "完成。\n"
 
 #: ../tools/gda-sql.c:2009 ../tools/gda-sql.c:2171 ../tools/gda-sql.c:2229
 #: ../tools/gda-sql.c:2237
@@ -10970,7 +10986,7 @@ msgstr "输入终端中设置的认证令牌，若不需要则留空"
 
 #: ../tools/web-server.c:638
 msgid "Token:"
-msgstr "令牌"
+msgstr "令牌："
 
 #: ../tools/web-server.c:779
 msgid "SQL console:"
@@ -11046,7 +11062,7 @@ msgstr "触发器："
 #: ../tools/web-server.c:1643 ../tools/web-server.c:1737
 #, c-format
 msgid "For the '%s.%s' table:"
-msgstr "对于 '%s.%s' 表"
+msgstr "对于 '%s.%s' 表:"
 
 #: ../tools/web-server.c:1709
 #, c-format
@@ -11060,7 +11076,7 @@ msgstr "对 '%s' 的数据库信息"
 
 #: ../tools/web-server.c:1868
 msgid "Database information"
-msgstr "数据库信息："
+msgstr "数据库信息"
 
 #: ../tools/web-server.c:1877
 msgid "Objects"
