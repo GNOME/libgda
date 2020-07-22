@@ -11,17 +11,12 @@ It simply creates a ddl_db.db SQLite database file in which a table is added.
 
 Compiling and running:
 ----------------------
+Make sure the project was configued with option "-Dwith-examples=true"
+> meson -Dwith-examples=true
+> ninja
 
-To compile (make sure Libgda is installed prior to this):
-> make
-
-and to run:
+and to run (go to examples/DDL):
 > ./ddl
 
 The resulting ddl_db.db SQLite file should contain a single table named "products":
 
-[prompt]> sqlite3 ddl_db.db
-SQLite version 3.4.0
-Enter ".help" for instructions
-sqlite> .schema
-CREATE TABLE products (id integer PRIMARY KEY AUTOINCREMENT, product_name string NOT NULL);

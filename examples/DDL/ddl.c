@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include <libgda/libgda.h>
-#include <sql-parser/gda-sql-parser.h>
 
 GdaConnection *open_connection (void);
 void display_products_contents (GdaConnection *cnc);
 void create_table (GdaConnection *cnc);
+void add_product_reccord(GdaConnection *cnc);
 
 int
 main (int argc, char *argv[])
@@ -35,6 +35,7 @@ main (int argc, char *argv[])
 	/* open connections */
 	cnc = open_connection ();
 	create_table (cnc);
+	add_product_reccord (cnc);
 	display_products_contents (cnc);
 	closeresults = gda_connection_close (cnc,&error);
 
@@ -81,62 +82,39 @@ create_table (GdaConnection *cnc)
 
 	/* create a new GdaServerOperation object */
 	provider = gda_connection_get_provider (cnc);
-	op = gda_server_provider_create_operation (provider, cnc, GDA_SERVER_OPERATION_CREATE_TABLE, NULL, &error);
-	if (!op) {
-		g_print ("CREATE TABLE operation is not supported by the provider: %s\n",
-			 error && error->message ? error->message : "No detail");
-		exit (1);
-	}
+	GdaDbTable *products = gda_db_table_new ();
+	gda_db_base_set_name (GDA_DB_BASE (products), "products");
 
-	/* Set parameter's values */
-	/* table name */
-	if (!gda_server_operation_set_value_at (op, "products", &error, "/TABLE_DEF_P/TABLE_NAME")) goto on_set_error;
+	GdaDbColumn *id = gda_db_column_new();
+	gda_db_column_set_name (id, "id");
+	gda_db_column_set_type (id, G_TYPE_INT);
+	gda_db_column_set_autoinc (id, TRUE);
+	gda_db_column_set_pkey (id, TRUE);
 
-	/* "id' field */
-	i = 0;
-	if (!gda_server_operation_set_value_at (op, "id", &error, "/FIELDS_A/@COLUMN_NAME/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "integer", &error, "/FIELDS_A/@COLUMN_TYPE/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_AUTOINC/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_PKEY/%d", i)) goto on_set_error;
-	
-	/* 'product_name' field */
-	i++;
-	if (!gda_server_operation_set_value_at (op, "product_name", &error, "/FIELDS_A/@COLUMN_NAME/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "varchar", &error, "/FIELDS_A/@COLUMN_TYPE/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "50", &error, "/FIELDS_A/@COLUMN_SIZE/%d", i)) goto on_set_error;
-	if (!gda_server_operation_set_value_at (op, "TRUE", &error, "/FIELDS_A/@COLUMN_NNUL/%d", i)) goto on_set_error;
+	gda_db_table_append_column (products, id);
+	g_object_unref (id);
 
+	GdaDbColumn *product_name = gda_db_column_new();
+	gda_db_column_set_name (product_name, "product_name");
+	gda_db_column_set_type (product_name, G_TYPE_STRING);
+	gda_db_column_set_size (product_name, 50);
+	gda_db_column_set_nnul (product_name, TRUE);
 
-	/* Show the SQL to execute
-	 * This does not always work since some operations may not be accessible through SQL
-	 */
-	sql = gda_server_provider_render_operation (provider, cnc, op, &error);
-	if (!sql) {
-		g_print ("Error rendering SQL: %s\n",
-			 error && error->message ? error->message : "No detail");
-		exit (1);
-	}
-	g_print ("SQL to execute: %s\n", sql);
-	g_free (sql);
+	gda_db_table_append_column (products, product_name);
+	g_object_unref (product_name);
 
 	/* Actually execute the operation */
-	if (! gda_server_provider_perform_operation (provider, cnc, op, &error)) {
+	if (!gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (products), cnc, NULL, &error)) {
 		g_print ("Error executing the operation: %s\n",
 			 error && error->message ? error->message : "No detail");
 		exit (1);
 	}
-	g_object_unref (op);
-	return;
-
- on_set_error:
-	g_print ("Error setting value in GdaSererOperation: %s\n",
-		 error && error->message ? error->message : "No detail");
-	exit (1);
+	g_object_unref (products);
 }
 
 
-/* 
- * display the contents of the 'products' table 
+/*
+ * display the contents of the 'products' table
  */
 void
 display_products_contents (GdaConnection *cnc)
@@ -154,9 +132,24 @@ display_products_contents (GdaConnection *cnc)
 	stmt = gda_sql_parser_parse_string (parser, sql, NULL, NULL);
 	data_model = gda_connection_statement_execute_select (cnc, stmt, NULL, &error);
 	g_object_unref (stmt);
-        if (!data_model) 
+        if (!data_model)
                 g_error ("Could not get the contents of the 'products' table: %s\n",
                          error && error->message ? error->message : "No detail");
 	gda_data_model_dump (data_model, stdout);
 	g_object_unref (data_model);
+}
+
+void
+add_product_reccord (GdaConnection *cnc)
+{
+	GError *error = NULL;
+	GValue *name = gda_value_new (G_TYPE_STRING);
+	g_value_set_string (name, "John Smith");
+
+	if (!gda_connection_insert_row_into_table (
+		cnc, "products", NULL, "product_name", name, NULL)) {
+		g_print ("Error insering data to the column \"products\": %s",
+			 error && error->message ? error->message : "No Default");
+		exit (1);
+	}
 }
