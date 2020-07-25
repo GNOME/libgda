@@ -156,7 +156,7 @@ static GParamSpec *properties [N_PROPS] = {NULL};
 /**
  * gda_db_column_new:
  *
- * Returns: New instance of #GdaDbColumn
+ * Returns: New instance of #GdaDbColumn, to free with g_object_unref () once not needed anymore
  *
  * Stability: Stable
  * Since: 6.0

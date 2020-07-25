@@ -59,6 +59,68 @@ typedef struct
  * gda_ddl_modifiable_create(),
  *
  * To delete the table a method gda_ddl_modifiable_drop() can be called.
+ * 
+ * A simple example of how to create a table with 3 columns being the last column of the foreign key.
+ * 
+ * |[<!-- language="C" -->
+ * 
+ * GdaConnection *cnc;
+ * &sol;&ast Open connection here &ast;&sol;
+ * 
+ * GError        *error = NULL;
+ * 
+ * GdaDbTable *tproject = gda_db_table_new ();
+ * gda_db_base_set_name (GDA_DB_BASE (tproject), "Project");
+ *
+ * GdaDbColumn *pid   = gda_db_column_new ();
+ * GdaDbColumn *pname = gda_db_column_new ();
+ * GdaDbColumn *pfkey = gda_db_column_new ();
+ * GdaDbFkey   *fkey  = gda_db_fkey_new ();
+ * 
+ * gda_db_column_set_name (pid, "id");
+ * gda_db_column_set_type (pid, G_TYPE_INT);
+ * gda_db_column_set_nnul (pid, TRUE);
+ * gda_db_column_set_autoinc (pid, TRUE);
+ * gda_db_column_set_unique (pid, TRUE);
+ * gda_db_column_set_pkey (pid, TRUE);
+ *
+ * gda_db_column_set_name (pname, "name");
+ * gda_db_column_set_type (pname, G_TYPE_STRING);
+ * gda_db_column_set_size (pname, 30);
+ * gda_db_column_set_nnul (pname, TRUE);
+ * gda_db_column_set_unique (pname, TRUE);
+ * 
+ * gda_db_column_set_name (pfkey, "fkey");
+ * gda_db_column_set_type (pfkey, G_TYPE_INT);
+ * gda_db_column_set_nnul (pfkey, TRUE);
+ * 
+ * gda_db_fkey_set_ref_table (fkey, "AnotherTable");
+ * gda_db_fkey_set_ondelete (fkey, GDA_DB_FKEY_RESTRICT);
+ * gda_db_fkey_set_onupdate (fkey, GDA_DB_FKEY_RESTRICT);
+ * gda_db_fkey_set_field (fkey, "fkey", "another_table_id");
+ * 
+ * gda_db_table_append_column (tproject, pid);
+ * g_object_unref (pid);
+ * 
+ * gda_db_table_append_column (tproject, pname);
+ * g_object_unref (pname);
+ * 
+ * gda_db_table_append_column (tproject, pfkey);
+ * g_object_unref (pfkey);
+ * 
+ * gda_db_table_append_fkey (tproject, fkey);
+ * g_object_unref (fkey);
+ * 
+ * if (!gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (tproject), cnc, NULL, &error))
+ * {
+ *   g_error ("It was not possible to create the table in the database: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ * 
+ * g_object_unref (tproject);
+ *  
+ * ]|
+
  */
 
 static void gda_db_table_buildable_interface_init (GdaDbBuildableInterface *iface);
@@ -112,7 +174,7 @@ static const gchar *gdadbtablenodes[GDA_DB_TABLE_N_NODES] = {
 /**
  * gda_db_table_new:
  *
- * Returns: New instance of #GdaDbTable.
+ * Returns: New instance of #GdaDbTable, to free with g_object_unref () once not needed anymore
  *
  * Stability: Stable
  * Since: 6.0

@@ -2061,6 +2061,42 @@ gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
  *
  * The equivalent SQL command is: INSERT INTO &lt;table&gt; (&lt;column_name&gt; [,...]) VALUES (&lt;column_name&gt; = &lt;new_value&gt; [,...]).
  *
+ * A simple example to add a row in database
+ * 
+ * |[<!-- languede="C" -->
+ * 
+ * GdaConnection *cnc;
+ * &sol;&ast; Open connection here &ast;&sol;
+ * 
+ * GError        *error = NULL;
+ * 
+ * GValue *v_first_name = gda_value_new_from_string (first_name, G_TYPE_STRING);
+ * GValue *v_last_name  = gda_value_new_from_string (last_name, G_TYPE_STRING);
+ * GValue *v_email      = gda_value_new_from_string (email, G_TYPE_STRING);
+ * GValue *v_cod        = gda_value_new (G_TYPE_INT);
+ * 
+ * g_value_set_int (v_cod, cod);
+ * 
+ * if (!gda_connection_insert_row_into_table (cnc, "TABLE_CONTACTS", &error,
+ *                                            "col_first_name", v_first_name,
+ *                                            "col_last_name", v_last_name,
+ *                                            "col_email", v_email,
+ *                                            "col_cod", v_cod, NULL))
+ * {
+ *   g_error ("It was not possible to add a new row in the table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ * 
+ * gda_value_free (v_first_name);
+ * gda_value_free (v_last_name);
+ * gda_value_free (v_email);
+ * gda_value_free (v_cod);
+ * 
+ * g_error_free (error);
+ * 
+ * 
+ * ]|
+ * 
  * Returns: TRUE if no error occurred
  *
  * Since: 4.2.3
@@ -2240,6 +2276,46 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  *
  * The equivalent SQL command is: UPDATE &lt;table&gt; SET &lt;column_name&gt; = &lt;new_value&gt; [,...] WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
+ * A simple example for updating a specific row in the table
+ * 
+ * |[<!-- languede="C" -->
+ * 
+ * GdaConnection *cnc;
+ * &sol;&ast; Open connection here &ast;&sol;
+ * 
+ * GError        *error = NULL;
+ * 
+ * GValue *v_id         = gda_value_new (G_TYPE_INT);
+ * GValue *v_first_name = gda_value_new_from_string (first_name, G_TYPE_STRING);
+ * GValue *v_last_name  = gda_value_new_from_string (last_name, G_TYPE_STRING);
+ * GValue *v_email      = gda_value_new_from_string (email, G_TYPE_STRING);
+ * GValue *v_cod        = gda_value_new (G_TYPE_INT);
+ * 
+ * g_value_set_int (v_id, id);
+ * g_value_set_int (v_cod, cod);
+ * 
+ * if (!gda_connection_update_row_in_table (cnc, "TABLE_CONTACTS",
+ *                                          "col_id", v_id, &error,
+ *                                          "col_first_name", v_first_name,
+ *                                          "col_last_name", v_last_name,
+ *                                          "col_email", v_email,
+ *                                          "col_cod", v_cod, NULL))
+ * {
+ *   g_error ("Could not update row in table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ * 
+ * gda_value_free (v_id);
+ * gda_value_free (v_first_name);
+ * gda_value_free (v_last_name);
+ * gda_value_free (v_email);
+ * gda_value_free (v_cod);
+ * 
+ * g_error_free (error);
+ * 
+ * 
+ * ]|
+ * 
  * Returns: TRUE if no error occurred, FALSE otherwise
  *
  * Since: 4.2.3
