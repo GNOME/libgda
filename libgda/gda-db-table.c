@@ -65,7 +65,7 @@ typedef struct
  * |[<!-- language="C" -->
  * 
  * GdaConnection *cnc;
- * &sol;&ast Open connection here &ast;&sol;
+ * //Open connection here
  * 
  * GError        *error = NULL;
  * 
