@@ -2066,7 +2066,7 @@ gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
  * |[<!-- languede="C" -->
  * 
  * GdaConnection *cnc;
- * &sol;&ast; Open connection here &ast;&sol;
+ * // Open connection here
  * 
  * GError        *error = NULL;
  * 
@@ -2281,7 +2281,7 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  * |[<!-- languede="C" -->
  * 
  * GdaConnection *cnc;
- * &sol;&ast; Open connection here &ast;&sol;
+ * //Open connection here
  * 
  * GError        *error = NULL;
  * 
