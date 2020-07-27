@@ -46,7 +46,6 @@
 typedef struct
 {
   GdaConnection *cnc;
-  GdaServerProvider *provider;
 } TestObjectFixture;
 
 static void
@@ -54,7 +53,6 @@ test_server_operation_start (TestObjectFixture *fixture,
                              G_GNUC_UNUSED gconstpointer user_data)
 {
   fixture->cnc = NULL;
-  fixture->provider = NULL;
 
   const gchar *db_string = g_getenv("POSTGRESQL_CNC_PARAMS");
 
@@ -79,15 +77,16 @@ test_server_operation_start (TestObjectFixture *fixture,
 
   g_assert_nonnull (fixture->cnc);
 
-  fixture->provider = gda_connection_get_provider (fixture->cnc);
-
-  g_assert_nonnull (fixture->provider);
 }
 
 static void
 test_server_operation_finish (TestObjectFixture *fixture,
                               G_GNUC_UNUSED gconstpointer user_data)
 {
+  if (!GDA_IS_CONNECTION (fixture->cnc)) {
+    return;
+  }
+
   gboolean res = gda_connection_close (fixture->cnc, NULL);
 
   g_assert_true (res);
@@ -100,8 +99,12 @@ test_server_operation_operations (TestObjectFixture *fixture,
   GdaServerOperation *op = NULL;
   GError *error = NULL;
 
+  if (!GDA_IS_CONNECTION (fixture->cnc)) {
+    return;
+  }
+
 /* CREATE_TABLE operation */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_TABLE,
                                              NULL,
@@ -163,7 +166,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *id_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *id_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									 fixture->cnc,
 									 G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
@@ -235,7 +238,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *name_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *name_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									   fixture->cnc,
 									   G_TYPE_STRING);
 
@@ -316,7 +319,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -328,7 +331,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_clear_object (&op);
 
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_TABLE,
                                              NULL,
@@ -389,7 +392,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *id2_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *id2_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									  fixture->cnc,
 									  G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
@@ -461,7 +464,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *name2_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *name2_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									   fixture->cnc,
 									   G_TYPE_STRING);
   res = gda_server_operation_set_value_at (op,
@@ -554,7 +557,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *id3_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *id3_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									  fixture->cnc,
 									  G_TYPE_INT);
   res = gda_server_operation_set_value_at (op,
@@ -667,7 +670,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -681,7 +684,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* Start of ADD_COLUMN operation */
-  op = gda_server_provider_create_operation (fixture->provider, fixture->cnc,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc), fixture->cnc,
                                              GDA_SERVER_OPERATION_ADD_COLUMN,
                                              NULL,
                                              &error);
@@ -712,7 +715,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_assert_true (res);
 
 /* We need to pass DBMS specific string reprisentation of the column type */
-  const gchar *cost_dbms_type = gda_server_provider_get_default_dbms_type (fixture->provider,
+  const gchar *cost_dbms_type = gda_server_provider_get_default_dbms_type (gda_connection_get_provider (fixture->cnc),
 									   fixture->cnc,
 									   GDA_TYPE_NUMERIC);
   res = gda_server_operation_set_value_at (op,
@@ -755,7 +758,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -768,7 +771,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START RENAME_TABLE OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider, fixture->cnc,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc), fixture->cnc,
                                              GDA_SERVER_OPERATION_RENAME_TABLE,
                                              NULL,
                                              &error);
@@ -798,7 +801,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -812,7 +815,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START CREATE_VIEW OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_VIEW,
                                              NULL,
@@ -863,7 +866,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -877,7 +880,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START DROP_VIEW OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_VIEW,
                                              NULL,
@@ -908,7 +911,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -922,7 +925,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START CREATE_INDEX OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_CREATE_INDEX,
                                              NULL,
@@ -1006,7 +1009,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider, fixture->cnc, op, &error);
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc), fixture->cnc, op, &error);
 
   if (!res)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -1016,7 +1019,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START DROP_INDEX OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_INDEX,
                                              NULL,
@@ -1047,7 +1050,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -1061,7 +1064,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
   g_clear_object (&op);
 
   /* START DROP_TABLE OPERATION */
-  op = gda_server_provider_create_operation (fixture->provider,
+  op = gda_server_provider_create_operation (gda_connection_get_provider (fixture->cnc),
                                              fixture->cnc,
                                              GDA_SERVER_OPERATION_DROP_TABLE,
                                              NULL,
@@ -1092,7 +1095,7 @@ test_server_operation_operations (TestObjectFixture *fixture,
 
   g_assert_true (res);
 
-  res = gda_server_provider_perform_operation (fixture->provider,
+  res = gda_server_provider_perform_operation (gda_connection_get_provider (fixture->cnc),
                                                fixture->cnc,
                                                op,
                                                &error);
@@ -1110,6 +1113,10 @@ static void
 test_server_operation_operations_db (TestObjectFixture *fixture,
                                      G_GNUC_UNUSED gconstpointer user_data)
 {
+  if (!GDA_IS_CONNECTION (fixture->cnc)) {
+    return;
+  }
+
   GError *error = NULL;
 /* Define table Project */
   GdaDbTable *tproject = gda_db_table_new ();

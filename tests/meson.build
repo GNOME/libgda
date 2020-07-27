@@ -229,9 +229,9 @@ tsop = executable('test-server-operation-postgresql',
 	['test-server-operation-postgresql.c'] ,
 	c_args: [
 		'-include',
-		meson.build_root() + '/config.h',
-		'-DCHECK_FILES="'+meson.source_root()+'"',
-		'-DTOP_BUILD_DIR="'+meson.build_root()+'"'
+		gda_top_build + '/config.h',
+		'-DCHECK_FILES="'+gda_top_src+'"',
+		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
 	dependencies: [
