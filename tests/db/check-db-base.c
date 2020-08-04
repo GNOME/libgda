@@ -30,6 +30,11 @@ typedef struct {
 	GdaDbBase *obj;
 }BaseFixture;
 
+typedef struct {
+	GdaDbBase *obja;
+	GdaDbBase *objb;
+} TestBaseCompare;
+
 static void
 test_db_base_start (BaseFixture *self,
 		     G_GNUC_UNUSED gconstpointer user_data)
@@ -39,11 +44,40 @@ test_db_base_start (BaseFixture *self,
 }
 
 static void
+test_db_base_compare_start (TestBaseCompare *self,
+		     G_GNUC_UNUSED gconstpointer user_data)
+{
+	self->obja = gda_db_base_new ();
+	self->objb = gda_db_base_new();
+}
+
+static void
+test_db_base_compare_finish (TestBaseCompare *self,
+		      G_GNUC_UNUSED gconstpointer user_data)
+{
+	if (self->obja)
+		g_object_unref (self->obja);
+
+	if (self->objb)
+		g_object_unref (self->objb);
+}
+
+static void
 test_db_base_finish (BaseFixture *self,
 		      G_GNUC_UNUSED gconstpointer user_data)
 {
 	if (self->obj)
 		g_object_unref (self->obj);
+}
+
+static void
+test_db_base_compare_run1 (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    gda_db_base_set_name (self->obja, "name_a");
+    gda_db_base_set_name (self->objb, "name_b");
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
 }
 
 static void
@@ -224,6 +258,13 @@ main (gint   argc,
 		    test_db_base_start,
 		    test_db_base_run5,
 		    test_db_base_finish);
+
+	g_test_add ("/test-db/base-compare",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_run1,
+		    test_db_base_compare_finish);
 
 	return g_test_run();
 }

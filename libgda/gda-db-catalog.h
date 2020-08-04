@@ -106,6 +106,15 @@ gboolean         gda_db_catalog_write_to_path (GdaDbCatalog *self,
 
 gboolean         gda_db_catalog_validate_file_from_path (const gchar *xmlfile,
                                                          GError **error);
+GdaDbTable *gda_db_catalog_get_table (GdaDbCatalog *self,
+                                      const gchar *catalog,
+                                      const gchar *schema,
+                                      const gchar *name);
+
+GdaDbView *gda_db_catalog_get_view (GdaDbCatalog *self,
+                                    const gchar *catalog,
+                                    const gchar *schema,
+                                    const gchar *name);
 G_END_DECLS
 
 #endif /* GDA_DB_CATALOG_H */

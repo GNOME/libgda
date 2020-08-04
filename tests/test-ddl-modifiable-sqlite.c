@@ -51,6 +51,8 @@ test_ddl_modifiable_start (TestObjectFixture *fixture,
 
   gchar *dbname = g_strdup_printf("DB_DIR=.;DB_NAME=%s_%d", DB_TEST_BASE, g_random_int ());
 
+  g_print ("Will use DB: %s\n", dbname);
+
   fixture->cnc = gda_connection_open_from_string (PROVIDER_NAME,
                                                   dbname,
                                                   NULL,
