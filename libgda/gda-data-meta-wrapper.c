@@ -168,7 +168,7 @@ gda_data_meta_wrapper_init (GdaDataMetaWrapper *model)
 	priv->model = NULL;
 	priv->cols_to_wrap = NULL;
 	priv->cols_to_wrap_size = 0;
-	priv->mode = GDA_DATA_META_WRAPPER_MODE_LC;
+	priv->mode = GDA_SQL_IDENTIFIERS_LOWER_CASE;
 	priv->reserved_keyword_func = NULL;
 	priv->computed_rows = NULL;
 	priv->buffer = NULL;
