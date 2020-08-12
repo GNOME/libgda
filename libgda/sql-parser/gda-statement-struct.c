@@ -120,7 +120,7 @@ gda_sql_statement_new (GdaSqlStatementType type)
 	stmt->stmt_type = type;
 	if (infos && infos->construct) {
 		stmt->contents = infos->construct ();
-		GDA_SQL_ANY_PART (stmt->contents)->type = type;
+		GDA_SQL_ANY_PART (stmt->contents)->type = (GdaSqlAnyPartType) type;
 	}
 	else
 		TO_IMPLEMENT;
@@ -157,7 +157,7 @@ gda_sql_statement_copy (GdaSqlStatement *stmt)
 	}
 	else if (infos && infos->construct) {
 		copy->contents = infos->construct ();
-		GDA_SQL_ANY_PART (copy->contents)->type = stmt->stmt_type;
+		GDA_SQL_ANY_PART (copy->contents)->type = (GdaSqlAnyPartType) stmt->stmt_type;
 	}
 	else
 		TO_IMPLEMENT;
@@ -440,7 +440,7 @@ foreach_check_validity (GdaSqlAnyPart *node, GdaSqlStatementCheckValidityData *d
         case GDA_SQL_ANY_STMT_DELETE_SAVEPOINT:
         case GDA_SQL_ANY_STMT_UNKNOWN: {
 		GdaSqlStatementContentsInfo *cinfo;
-		cinfo = gda_sql_statement_get_contents_infos (node->type);
+		cinfo = gda_sql_statement_get_contents_infos ((GdaSqlStatementType) node->type);
 		if (cinfo->check_validity_func)
 			return cinfo->check_validity_func (node, data, error);
 		break;
@@ -996,7 +996,7 @@ gda_sql_any_part_check_structure (GdaSqlAnyPart *node, GError **error)
         case GDA_SQL_ANY_STMT_DELETE_SAVEPOINT:
         case GDA_SQL_ANY_STMT_UNKNOWN: {
 		GdaSqlStatementContentsInfo *cinfo;
-		cinfo = gda_sql_statement_get_contents_infos (node->type);
+		cinfo = gda_sql_statement_get_contents_infos ((GdaSqlStatementType) node->type);
 		if (cinfo->check_structure_func)
 			return cinfo->check_structure_func (node, NULL, error);
 		break;
