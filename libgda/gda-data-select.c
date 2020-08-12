@@ -554,19 +554,6 @@ _gda_data_select_share_private_data (GdaDataSelect *model, GdaDataSelect *slave)
 	privs->sh = priv->sh;
 }
 
-/*
- * Allows the #GdaServerProvider object to adjust the "model-usage" property for extra flags as OFFLINE and
- * ALLOW_NOPARAM. Only these flags are taken from @flags and added to the current "model-usage" flags of @model.
- */
-void
-_gda_data_select_update_usage_flags (GdaDataSelect *model, GdaDataModelAccessFlags flags)
-{
-	GdaDataModelAccessFlags eflags;
-	GdaDataSelectPrivate *priv = gda_data_select_get_instance_private (model);
-	eflags = priv->sh->usage_flags;
-	eflags |= flags & (GDA_STATEMENT_MODEL_OFFLINE | GDA_STATEMENT_MODEL_ALLOW_NOPARAM);
-	priv->sh->usage_flags = eflags;
-}
 
 void
 _gda_data_select_internals_free (GdaDataSelectInternals *inter)

@@ -2529,7 +2529,7 @@ worker_statement_execute (WorkerExecuteStatementData *data, GError **error)
 	if (GDA_IS_DATA_SELECT (result)) {
 		/* adjust flags because the providers don't necessarily do it: make sure extra flags as OFFLINE and
 		 * ALLOW_NOPARAM are included */
-		_gda_data_select_update_usage_flags ((GdaDataSelect*) result, data->model_usage);
+  	data->model_usage = data->model_usage & (GDA_STATEMENT_MODEL_OFFLINE | GDA_STATEMENT_MODEL_ALLOW_NOPARAM);
 
 		/* if necessary honor the OFFLINE flag */
 		if ((data->model_usage & GDA_STATEMENT_MODEL_OFFLINE) &&
