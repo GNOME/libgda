@@ -88,6 +88,28 @@ library_build:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
+paralel_build:
+  stage: build
+  script:
+  - export PGPASSWORD=$POSTGRES_PASSWORD
+  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+  - meson --prefix=/usr --buildtype=debug -Dgtk_doc=true --werror _build
+  - cd _build
+  - ninja
+  - broadwayd &
+  - GDK_BACKEND=broadway meson test
+  - ninja install
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
+    - _build/doc/C/libgda/html
+    - _build/doc/C/libgdaui/html
+    - _build/doc/Gda-6.0
+    - _build/doc/Gdaui-6.0
+    expire_in: 1 week
+
 pages:
   stage: deploy_doc
   script:
