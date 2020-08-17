@@ -19,6 +19,7 @@
  */
 #include "common.h"
 #include <sql-parser/gda-sql-parser.h>
+#include "../test-cnc-utils.h"
 
 /* list of changes expected during a modify operation */
 GSList *expected_changes;
@@ -765,15 +766,9 @@ test_setup (const gchar *prov_id, const gchar *dbcreate_str) {
 	 * dbXXXXX where XXXXX is a string generated from the random int32 numbers
 	 * that correspond to ASCII codes for characters a-z
 	 */
-	GString *buffer = g_string_new ("db");
+	dbname = test_random_string ("db", 5);
 
-	for (int i = 0; i < 7; ++i) {
-	    gint32 character = g_random_int_range (97, 123);
-	    buffer = g_string_append_c (buffer, character);
-	}
-
-	opndb = gda_server_operation_prepare_create_database (prov_id, buffer->str, &error);
-	dbname = g_string_free (buffer, FALSE);
+	opndb = gda_server_operation_prepare_create_database (prov_id, dbname, &error);
 
 	g_assert_nonnull (opndb);
 

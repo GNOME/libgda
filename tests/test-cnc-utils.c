@@ -492,3 +492,16 @@ test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gcha
 
 	return retval;
 }
+
+gchar*
+test_random_string(const gchar *prefix, gint ncharacters)
+{
+	GString *buffer = g_string_new (prefix);
+
+	for (int i = 0; i < ncharacters; ++i) {
+	    gint32 character = g_random_int_range (97, 123);
+	    buffer = g_string_append_c (buffer, character);
+	}
+
+    return g_string_free (buffer, FALSE);
+}
