@@ -25,7 +25,8 @@ GSList *expected_changes;
 
 static void meta_changed_cb (GdaMetaStore *store, GSList *changes, gpointer data);
 static GError *suggest_update_cb (GdaMetaStore *store, GdaMetaContext *context, gpointer data);
-
+gchar *dbname = NULL;
+static GdaQuarkList *quark_list = NULL;
 /*
  * Declare a GdaMetaStore to test
  */
@@ -751,22 +752,69 @@ test_parameters (GdaMetaStore *store)
 }
 
 gboolean
-test_setup (const gchar *prov_id) {
+test_setup (const gchar *prov_id, const gchar *dbcreate_str) {
 	GError *error = NULL;
 	GdaServerOperation *opndb;
 
-	opndb = gda_server_operation_prepare_create_database (prov_id, "test", &error);
-	if (opndb == NULL) {
-		g_message ("Provider doesn't support database creation: %s",
-		           error && error->message ? error->message : "No error was set");
-		g_clear_error (&error);
-	} else {
-		if (!gda_server_operation_perform_create_database (opndb, prov_id, &error)) {
-			g_warning ("Creating database error: %s",
-		           error && error->message ? error->message : "No error was set");
+	g_assert_null (quark_list);
+
+	quark_list = gda_quark_list_new_from_string (dbcreate_str);
+
+	/* We will use a unique name for database for every test.
+	 * The format of the database name is:
+	 * dbXXXXX where XXXXX is a string generated from the random int32 numbers
+	 * that correspond to ASCII codes for characters a-z
+	 */
+	GString *buffer = g_string_new ("db");
+
+	for (int i = 0; i < 7; ++i) {
+	    gint32 character = g_random_int_range (97, 123);
+	    buffer = g_string_append_c (buffer, character);
+	}
+
+	opndb = gda_server_operation_prepare_create_database (prov_id, buffer->str, &error);
+	dbname = g_string_free (buffer, FALSE);
+
+	g_assert_nonnull (opndb);
+
+	const gchar *value = NULL;
+	gboolean res;
+	value = gda_quark_list_find (quark_list, "HOST");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/HOST");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (quark_list, "ADM_LOGIN");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_LOGIN");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (quark_list, "ADM_PASSWORD");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_PASSWORD");
+	g_assert_true (res);
+
+	/* This operation may fail if the template1 database is locked by other process. We need
+	 * to try again short time after when template1 is available
+	 */
+	res = FALSE;
+
+	for (gint i = 0; i < 100; ++i) {
+		g_print ("Attempt to create database... %d\n", i);
+		res = gda_server_operation_perform_create_database (opndb, prov_id, &error);
+		if (!res) {
 			g_clear_error (&error);
-			return FALSE;
+			g_usleep(1E5);
+			continue;
+		} else {
+			break;
 		}
+	}
+
+	if (!res) {
+	    g_warning ("Creating database error: %s",
+		       error && error->message ? error->message : "No error was set");
+	    g_clear_error (&error);
+	    g_free (dbname);
+	    gda_quark_list_free (quark_list);
+	    return FALSE;
 	}
 	return TRUE;
 }
@@ -778,6 +826,9 @@ test_finish (GdaConnection *cnc) {
 	GdaServerOperation *opndb;
 	const gchar *prov_id;
 
+	g_assert_nonnull (dbname);
+	g_assert_nonnull (quark_list);
+
 	prov_id = gda_connection_get_provider_name (cnc);
 
 	if (!gda_connection_close (cnc, &error)) {
@@ -787,13 +838,47 @@ test_finish (GdaConnection *cnc) {
 		return 1;
 	}
 
-	opndb = gda_server_operation_prepare_drop_database (prov_id, "test", &error);
+	opndb = gda_server_operation_prepare_drop_database (prov_id, dbname, &error);
+	g_free (dbname);
+
+	const gchar *value = NULL;
+	gboolean res;
+	value = gda_quark_list_find (quark_list, "HOST");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/HOST");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (quark_list, "ADM_LOGIN");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_LOGIN");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (quark_list, "ADM_PASSWORD");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_PASSWORD");
+	g_assert_true (res);
+
+	gda_quark_list_free (quark_list);
+
 	if (opndb == NULL) {
 		g_message ("Provider doesn't support database dropping: %s",
 		           error && error->message ? error->message : "No error was set");
 		g_clear_error (&error);
 	} else {
-		if (!gda_server_operation_perform_drop_database (opndb, prov_id, &error)) {
+		res = FALSE;
+
+		for (gint i = 0; i < 100; ++i) {
+			g_print ("Attempt to drop database... %d\n", i);
+			G_DEBUG_HERE();
+			res = gda_server_operation_perform_drop_database (opndb, prov_id, &error);
+			G_DEBUG_HERE();
+			if (!res) {
+				g_clear_error (&error);
+				g_usleep (1E5);
+				continue;
+			} else {
+				break;
+			}
+		}
+
+		if (!res) {
 			g_warning ("Dropping database error: %s",
 		           error && error->message ? error->message : "No error was set");
 			g_clear_error (&error);
