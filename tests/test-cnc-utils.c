@@ -505,3 +505,93 @@ test_random_string(const gchar *prefix, gint ncharacters)
 
     return g_string_free (buffer, FALSE);
 }
+
+CreateDBObject *
+test_create_db_object_new ()
+{
+	CreateDBObject *obj = g_new0 (CreateDBObject, 1);
+	obj->dbname = NULL;
+	obj->quark_list = NULL;
+	return obj;
+}
+
+void
+test_create_db_object_free (CreateDBObject *obj)
+{
+	gda_quark_list_free (obj->quark_list);
+	g_free (obj->dbname);
+	g_free (obj);
+}
+
+CreateDBObject *
+test_create_database (const gchar *prov_id)
+{
+	GError *error = NULL;
+	GdaServerOperation *opndb;
+	CreateDBObject *crdbobj;
+	const gchar *db_create_str;
+
+	crdbobj = test_create_db_object_new ();
+
+	GString *create_params = g_string_new (NULL);
+	gchar *provider_upper_case = g_ascii_strup (prov_id, -1);
+	g_string_append_printf (create_params, "%s_DBCREATE_PARAMS", provider_upper_case);
+	g_free (provider_upper_case);
+
+	db_create_str = g_getenv (create_params->str);
+	g_string_free (create_params, TRUE);
+
+	crdbobj->quark_list = gda_quark_list_new_from_string (db_create_str);
+
+	/* We will use a unique name for database for every test.
+	 * The format of the database name is:
+	 * dbXXXXX where XXXXX is a string generated from the random int32 numbers
+	 * that correspond to ASCII codes for characters a-z
+	 */
+	crdbobj->dbname = test_random_string ("db", 5);
+
+	opndb = gda_server_operation_prepare_create_database (prov_id, crdbobj->dbname, &error);
+
+	g_assert_nonnull (opndb);
+
+	const gchar *value = NULL;
+	gboolean res;
+	value = gda_quark_list_find (crdbobj->quark_list, "HOST");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/HOST");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (crdbobj->quark_list, "ADM_LOGIN");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_LOGIN");
+	g_assert_true (res);
+
+	value = gda_quark_list_find (crdbobj->quark_list, "ADM_PASSWORD");
+	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_PASSWORD");
+	g_assert_true (res);
+
+	/* This operation may fail if the template1 database is locked by other process. We need
+	 * to try again short time after when template1 is available
+	 */
+	res = FALSE;
+
+	for (gint i = 0; i < 100; ++i) {
+		g_print ("Attempt to create database... %d\n", i);
+		res = gda_server_operation_perform_create_database (opndb, prov_id, &error);
+		if (!res) {
+			g_clear_error (&error);
+			g_usleep (1E5);
+			continue;
+		} else {
+			break;
+		}
+	}
+
+	if (!res) {
+		g_warning ("Creating database error: %s",
+			   error && error->message ? error->message : "No error was set");
+		g_clear_error (&error);
+		test_create_db_object_free (crdbobj);
+		return NULL;
+	}
+
+	return crdbobj;
+}
