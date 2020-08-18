@@ -23,12 +23,15 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
+#include "../test-cnc-utils.h"
 
 typedef struct {
   GdaDbCatalog *catalog;
   GdaConnection *cnc;
   gboolean started_db;
   gboolean cont;
+  gchar *dbname;
+  GdaQuarkList *quark_list;
 } CheckDbObject;
 
 
@@ -249,6 +252,13 @@ test_db_catalog_start (CheckDbObject *self,
   self->cont = FALSE;
   GError *error = NULL;
 
+  CreateDBObject *crdbobj = test_create_database ("PostgreSQL");
+
+  g_assert_nonnull (crdbobj);
+
+  self->dbname = crdbobj->dbname;
+  self->quark_list = crdbobj->quark_list;
+
   gchar **env = g_get_environ ();
   const gchar *cnc_string = g_environ_getenv (env, "POSTGRESQL_META_CNC");
 
@@ -260,8 +270,11 @@ test_db_catalog_start (CheckDbObject *self,
 
   g_message ("Connecting using: %s", cnc_string);
 
+  GString *new_cnc_string = g_string_new (cnc_string);
+  g_string_append_printf (new_cnc_string, ";DB_NAME=%s", self->dbname);
+
   self->cnc = gda_connection_new_from_string("PostgreSQL",
-                                             cnc_string,
+                                             new_cnc_string->str,
                                              NULL,
                                              GDA_CONNECTION_OPTIONS_NONE,
                                              NULL);
