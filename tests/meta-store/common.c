@@ -818,67 +818,13 @@ test_setup (const gchar *prov_id, const gchar *dbcreate_str) {
 gboolean
 test_finish (GdaConnection *cnc) {
 	GError *error = NULL;
-	GdaServerOperation *opndb;
-	const gchar *prov_id;
-
-	g_assert_nonnull (dbname);
-	g_assert_nonnull (quark_list);
-
-	prov_id = gda_connection_get_provider_name (cnc);
 
 	if (!gda_connection_close (cnc, &error)) {
 		g_warning ("Error clossing connection to database: %s",
 		           error && error->message ? error->message : "No error was set");
 		g_clear_error (&error);
-		return 1;
+		return FALSE;
 	}
 
-	opndb = gda_server_operation_prepare_drop_database (prov_id, dbname, &error);
-	g_free (dbname);
-
-	const gchar *value = NULL;
-	gboolean res;
-	value = gda_quark_list_find (quark_list, "HOST");
-	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/HOST");
-	g_assert_true (res);
-
-	value = gda_quark_list_find (quark_list, "ADM_LOGIN");
-	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_LOGIN");
-	g_assert_true (res);
-
-	value = gda_quark_list_find (quark_list, "ADM_PASSWORD");
-	res = gda_server_operation_set_value_at (opndb, value, NULL, "/SERVER_CNX_P/ADM_PASSWORD");
-	g_assert_true (res);
-
-	gda_quark_list_free (quark_list);
-
-	if (opndb == NULL) {
-		g_message ("Provider doesn't support database dropping: %s",
-		           error && error->message ? error->message : "No error was set");
-		g_clear_error (&error);
-	} else {
-		res = FALSE;
-
-		for (gint i = 0; i < 100; ++i) {
-			g_print ("Attempt to drop database... %d\n", i);
-			G_DEBUG_HERE();
-			res = gda_server_operation_perform_drop_database (opndb, prov_id, &error);
-			G_DEBUG_HERE();
-			if (!res) {
-				g_clear_error (&error);
-				g_usleep (1E5);
-				continue;
-			} else {
-				break;
-			}
-		}
-
-		if (!res) {
-			g_warning ("Dropping database error: %s",
-		           error && error->message ? error->message : "No error was set");
-			g_clear_error (&error);
-			return FALSE;
-		}
-	}
 	return TRUE;
 }
