@@ -957,7 +957,7 @@ msgstr ""
 #: ../libgda/gda-data-comparator.c:450
 msgid "Can't get the number of rows of data model to compare to"
 msgstr ""
-"No es pot obtenir el nombre de files del model de dades al que comparar"
+"No es pot obtenir el nombre de files del model de dades al qual comparar"
 
 #: ../libgda/gda-data-comparator.c:535 ../libgda/gda-data-comparator.c:571
 msgid "Differences computation cancelled on signal handling"
@@ -4154,7 +4154,7 @@ msgstr "Longitud màxima acceptable del text"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:3
 msgid "Multiline"
-msgstr "Multilínia"
+msgstr "Línies múltiples"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Display only one line, or a complete text editor"
@@ -7755,7 +7755,7 @@ msgstr "Contrasenya del rol"
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:6
 msgid "Encrypt password"
-msgstr "Encripta la contrasenya"
+msgstr "Xifra la contrasenya"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7766,9 +7766,9 @@ msgid ""
 " the presented password string is already in MD5-encrypted format, then it "
 "is stored encrypted as-is."
 msgstr ""
-"Controla si la contrasenya s'emmagatzema encriptada als catàlegs del "
+"Controla si la contrasenya s'emmagatzema xifrada als catàlegs del "
 "sistema. Si la cadena de contrasenya presentada ja està en format xifrat "
-"MD5, es guardarà encriptada tal com és."
+"MD5, es guardarà xifrada tal com és."
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
