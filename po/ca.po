@@ -8,7 +8,7 @@
 # Jordi Mas <jmas@softcatala.org>, 2020
 # Miquel-Àngel Burgos i Fradeja <miquel.angel.burgos@gmail.com>, 2020
 # Ma. Teresa Guix <maite.guix@gmail.com>, 2020
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
@@ -17,10 +17,10 @@ msgstr ""
 "PO-Revision-Date: 2020-08-13 05:38+0000\n"
 "Last-Translator: Ma. Teresa Guix <maite.guix@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/ca/)\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../control-center/dsn-config.c:79
@@ -2043,11 +2043,11 @@ msgstr "Error intern: no es pot llegir l'esquema d'informació: %s"
 
 #: ../libgda/gda-meta-store.c:1773
 msgid "Missing view name from <view> node"
-msgstr "Falta el nom de la vista en el node <view> "
+msgstr "Falta el nom de la vista en el node <view>"
 
 #: ../libgda/gda-meta-store.c:1815
 msgid "Missing view definition from <view> node"
-msgstr "Falta la definició de la vista en el node <view> "
+msgstr "Falta la definició de la vista en el node <view>"
 
 #: ../libgda/gda-meta-store.c:1829
 #, c-format
@@ -3176,7 +3176,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1236
 msgid "Wrong encryption passphrase"
-msgstr "Contraseña de cifrado errónea"
+msgstr "Contrasenya de xifratge incorrecta"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1279
 msgid ""
@@ -3223,7 +3223,7 @@ msgstr "No es poden fer transaccions en el mode de només lectura"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2230
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
-msgstr "SQLite no permet especificar camps on aplicar la clàusula DISTINCT "
+msgstr "SQLite no permet especificar camps on aplicar la clàusula DISTINCT"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2277
 #: ../libgda/sqlite/gda-sqlite-provider.c:2287
@@ -3288,7 +3288,7 @@ msgstr "No es pot crear el gestor BLOB de SQLite"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3227
 #: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't write to SQLite's BLOB"
-msgstr "No es pot escriure al BLOB d'SQLite"
+msgstr "No es pot escriure al BLOB de SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3250
 #, c-format
@@ -3399,7 +3399,7 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-recordset.c:597
 #: ../libgda/sqlite/gda-sqlite-recordset.c:610
 msgid "Integer value is too big"
-msgstr "El valor sencer és massa gran."
+msgstr "El valor sencer és massa gran"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:501
 msgid "Unable to open BLOB"
@@ -3680,7 +3680,7 @@ msgstr ""
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
 "El «JOIN» creuat no pot tenir una condició de «JOIN» o una una llista de "
-"camps en els quals unir-se."
+"camps en els quals unir-se"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1180
 msgid "Empty FROM clause"
@@ -3812,7 +3812,7 @@ msgid ""
 "Possible memory leak as no destroy function provided to free value returned "
 "by the worker thread"
 msgstr ""
-"Possible fuga de memòria al no existir una funció de destrucció de la valor "
+"Possible fuga de memòria al no existir una funció de destrucció del valor "
 "lliure retornat pel fil de treball"
 
 #: ../libgda/thread-wrapper/gda-worker.c:594
@@ -4305,12 +4305,12 @@ msgstr "Ni idea de què es tracta"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:259
 msgid "Set to host mask"
-msgstr "Estableix la màscara de l'amfitrió "
+msgstr "Estableix la màscara de l'amfitrió"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-cidr.c:268
 #, c-format
 msgid "Set to class %c network"
-msgstr "Estableix la xarxa de classe %c "
+msgstr "Estableix la xarxa de classe %c"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:194
 msgid "Choose a file"
@@ -4339,7 +4339,7 @@ msgstr "Especifica què se li permetrà seleccionar a l’usuari"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:3
 msgid "Only let the user pick an existing file"
-msgstr "Deixa que l'usuari triï un arxiu existent"
+msgstr "Deixa que l'usuari triï un fitxer existent"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:4
 msgid "Let the user pick an existing file, or type in a new filename"
@@ -4777,7 +4777,7 @@ msgstr "dades a mostrar"
 #: ../libgda-ui/gdaui-raw-form.c:216
 #, c-format
 msgid "Can't append row to data model: %s"
-msgstr "No s'ha pogut afegir la fila al el model de dades: %s"
+msgstr "No s'ha pogut afegir la fila al model de dades: %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:249
 msgid ""
@@ -4924,7 +4924,7 @@ msgstr "Heu d’especificar el nom del fitxer"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2061
 msgid "Got empty file while converting the data"
-msgstr "L'arxiu està buit mentre es converteixen les dades"
+msgstr "EL fitxer està buit mentre es converteixen les dades"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2074
 #, c-format
@@ -5616,7 +5616,7 @@ msgstr "Camp o expressió indexada"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:34
 msgid "Compare method"
-msgstr "Método de comparación"
+msgstr "Mètode de comparació"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare
 #. values
@@ -5627,7 +5627,7 @@ msgstr "Método de comparación"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:15
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:36
 msgid "Collation name (BINARY|NOCASE)"
-msgstr "Nom de la recolecció (BINARI | NOCASE)"
+msgstr "Nom de la intercalació (BINARI | NOCASE)"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
@@ -6051,7 +6051,7 @@ msgstr ""
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:2
 msgid "Table to rename"
-msgstr "Taula a canviar de nom "
+msgstr "Taula a canviar de nom"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
@@ -6317,7 +6317,7 @@ msgstr "Nom distintiu relatiu"
 #: ../providers/ldap/gdaprov-data-model-ldap.c:885
 #, c-format
 msgid "Multiple value LDAP attribute does not fit into a single value"
-msgstr "L'atribut LDAP de valor múltiple no s'ajusta a un solo valor"
+msgstr "L'atribut LDAP de valor múltiple no s'ajusta a un únic valor"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:931
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1312
@@ -6981,7 +6981,7 @@ msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server "
 "only)."
 msgstr ""
-"Sòcol: arxiu sòcol de connexió Unix a servidor local (només per a servidors "
+"Sòcol: fitxer sòcol de connexió Unix a servidor local (només per a servidors "
 "locals)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
@@ -7766,9 +7766,9 @@ msgid ""
 " the presented password string is already in MD5-encrypted format, then it "
 "is stored encrypted as-is."
 msgstr ""
-"Controla si la contrasenya s'emmagatzema xifrada als catàlegs del "
-"sistema. Si la cadena de contrasenya presentada ja està en format xifrat "
-"MD5, es guardarà xifrada tal com és."
+"Controla si la contrasenya s'emmagatzema xifrada als catàlegs del sistema. "
+"Si la cadena de contrasenya presentada ja està en format xifrat MD5, es "
+"guardarà xifrada tal com és."
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7833,7 +7833,7 @@ msgstr "Pot entrar"
 #. available since PostgreSQL 8.1
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:85
 msgid "Set to TRUE if the role is allowed to log in"
-msgstr "Establir a TRUE si es permet iniciar sessió al el rolv"
+msgstr "Establir a TRUE si es permet iniciar sessió al rol"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -8229,7 +8229,7 @@ msgstr "Nom del servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "The name of the web server which proxies connections"
-msgstr "El nom de servidor web que enruta les connexions"
+msgstr "El nom de servidor web que encamina les connexions dels servidors intermediaris"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:4
 msgid "Web server port (leave this field empty for default)"
@@ -8562,11 +8562,11 @@ msgstr "Disposició radial"
 
 #: ../tools/browser/canvas/browser-canvas.c:372
 msgid "Save as"
-msgstr "Desar com a"
+msgstr "Desa com a"
 
 #: ../tools/browser/canvas/browser-canvas.c:377
 msgid "Print"
-msgstr "Imprimir"
+msgstr "Imprimeix"
 
 #: ../tools/browser/canvas/browser-canvas.c:467
 msgid "Save diagram as"
@@ -8753,8 +8753,8 @@ msgid ""
 msgstr ""
 "La connexió virtual que aneu a definir pot vincular taules des d'una "
 "connexió existent així com vincular un conjunt de dades que apareixerà com "
-"una taula (important dades CVS, per exemple). Podeu afegir totes els vincles"
-" que necessiti."
+"una taula (important dades CVS, per exemple). Podeu afegir tots els vincles"
+" que necessiteu."
 
 #: ../tools/browser/connection-binding-properties.c:286
 msgid "Add binding"
@@ -9189,7 +9189,7 @@ msgstr "Propietats de l'origen de dades seleccionat:"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:166
 msgid "Error parsing XML specifications"
-msgstr "S'ha produït un error al analitzar les especificacions XML"
+msgstr "S'ha produït un error a l'analitzar les especificacions XML"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:180
 #, c-format
@@ -9215,7 +9215,7 @@ msgid ""
 "define which table is referenced, which columns are part of the foreign key,"
 " and which column each one references"
 msgstr ""
-"definir què taula es referencia, quines columnes són part de la clau "
+"definir quina taula es referencia, quines columnes són part de la clau "
 "externa, i a quines columnes referencia cadascuna"
 
 #. FK name
@@ -10404,7 +10404,7 @@ msgstr ""
 #: ../tools/common/t-app.c:585
 #, c-format
 msgid "Opening connection '%s' for: "
-msgstr "Obrint la connexió per a: '%s': "
+msgstr "Obrint la connexió per a: '%s':"
 
 #: ../tools/common/t-app.c:941 ../tools/common/t-app.c:1114
 #: ../tools/common/t-app.c:1179 ../tools/common/t-app.c:1186
@@ -10414,7 +10414,7 @@ msgstr "%s [<FILE>]"
 
 #: ../tools/common/t-app.c:942
 msgid "Show commands history, or save it to file"
-msgstr "Mostra l'historial d'ordres, o guardar-lo en un arxiu"
+msgstr "Mostra l'historial d'ordres, o deseu-lo en un fitxer"
 
 #: ../tools/common/t-app.c:947 ../tools/common/t-app.c:957
 #: ../tools/common/t-app.c:967 ../tools/common/t-app.c:977
@@ -10485,7 +10485,7 @@ msgstr "%s [<SCHEMA>]"
 
 #: ../tools/common/t-app.c:999
 msgid "List all schemas (or named schema)"
-msgstr "Listar todos los esquemas (o el esquema de nombre)"
+msgstr "Llistar tots els esquemes (o l'esquema amb nom)"
 
 #: ../tools/common/t-app.c:1008
 #, c-format
