@@ -230,7 +230,7 @@ msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
 #: ../control-center/gdaui-dsn-assistant.c:121
 #, c-format
 msgid "Missing mandatory information, to create database: '%s'"
-msgstr "Falta informació obligatòria per crear base de dades: '%s'"
+msgstr "Falta informació obligatòria per crear base de dades: «%s»"
 
 #: ../control-center/gdaui-dsn-assistant.c:135
 #, c-format
@@ -434,7 +434,7 @@ msgid ""
 "Define the name of the new data source which will be created as a copy of "
 "'%s':"
 msgstr ""
-"Definiu el nom de la nova font de dades que es crearà com a còpia de '%s':"
+"Definiu el nom de la nova font de dades que es crearà com a còpia de «%s»:"
 
 #: ../control-center/gdaui-dsn-editor.c:472
 #, c-format
@@ -551,13 +551,13 @@ msgstr ""
 #: ../libgda/gda-config.c:1154
 #, c-format
 msgid "Malformed data source name '%s'"
-msgstr "Nom de la font de dades incorrecte '%s'"
+msgstr "Nom de la font de dades incorrecte «%s»"
 
 #: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
 #: ../libgda/gda-config.c:1291
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
-msgstr "No s'ha pogut desar la informació d'autenticació de DSN '%s': %s"
+msgstr "No s'ha pogut desar la informació d'autenticació de DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1226 ../libgda/gda-config.c:1402
 msgid "Can't manage system-wide configuration"
@@ -566,18 +566,18 @@ msgstr "No es pot gestionar la configuració a tot el sistema"
 #: ../libgda/gda-config.c:1281 ../libgda/gda-config.c:1313
 #, c-format
 msgid "Gnome-DB: authentication for the '%s' DSN"
-msgstr "Gnome-DB: autenticació de la versió '%s' DSN"
+msgstr "Gnome-DB: autenticació de la versió «%s» DSN"
 
 #: ../libgda/gda-config.c:1350 ../libgda/gda-config.c:1362
 #: ../libgda/gda-config.c:1426
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
-msgstr "No s'ha pogut suprimir la informació d'autenticació de DSN '%s': %s"
+msgstr "No s'ha pogut suprimir la informació d'autenticació de DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1396 ../libgda-ui/gdaui-login.c:640
 #, c-format
 msgid "Unknown DSN '%s'"
-msgstr "DSN desconegut '%s'"
+msgstr "DSN desconegut «%s»"
 
 #: ../libgda/gda-config.c:1491
 #, c-format
@@ -704,7 +704,7 @@ msgstr "Alenteix artificialment l’execució de consultes"
 #: ../libgda/gda-connection.c:628 ../libgda/gda-connection.c:643
 #, c-format
 msgid "Can't set the '%s' property when the connection is opened"
-msgstr "No es pot configurar la propietat  '%s' quan la connexió és oberta"
+msgstr "No es pot configurar la propietat «%s» quan la connexió és oberta"
 
 #: ../libgda/gda-connection.c:594
 #, c-format
@@ -714,12 +714,12 @@ msgstr "No hi ha cap DSN amb nom «%s»"
 #: ../libgda/gda-connection.c:664
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
-msgstr "No es pot configurar la propietat '%s' un cop oberta la connexió"
+msgstr "No es pot configurar la propietat «%s» un cop oberta la connexió"
 
 #: ../libgda/gda-connection.c:950
 #, c-format
 msgid "Malformed data source specification '%s'"
-msgstr "Especificació de l'origen de dades incorrecta '%s'"
+msgstr "Especificació de l'origen de dades incorrecta «%s»"
 
 #: ../libgda/gda-connection.c:958 ../libgda/gda-connection.c:1412
 #: ../libgda/gda-connection.c:1414
@@ -796,7 +796,7 @@ msgstr "L'argument no és vàlid"
 #: ../libgda/gda-connection.c:4193
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
-msgstr "Manquen o són erronis els arguments per a la taula  '%s': %s"
+msgstr "Manquen o són erronis els arguments per a la taula «%s»: %s"
 
 #: ../libgda/gda-connection.c:5313
 #, c-format
@@ -946,7 +946,7 @@ msgstr "Els models de dades a comparar no tenen el mateix nombre de columnes"
 
 #: ../libgda/gda-data-comparator.c:433
 #, c-format
-msgid "Type mismatch for column %d: '%s' and '%s'"
+msgid "Type mismatch for column %d: «%s» and '%s'"
 msgstr "Els tipus de la columna %d no coincideixen: «%s» i «%s»"
 
 #: ../libgda/gda-data-comparator.c:444
@@ -1031,7 +1031,7 @@ msgid ""
 "Custom BDB model implementation is not complete: the '%s' method is missing"
 msgstr ""
 "La implementació del model personalitzat BDB no està completa: falta el "
-"mètode '%s'"
+"mètode «%s»"
 
 #: ../libgda/gda-data-model-bdb.c:858 ../libgda/gda-data-model-bdb.c:948
 #, c-format
@@ -1049,7 +1049,7 @@ msgstr "El model de dades no admet obtenir valor individual"
 #: ../libgda/gda-data-model.c:679 ../libgda/gda-data-model.c:689
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
-msgstr "El model de dades ha retornat un valor de tipus '%s' no vàlid "
+msgstr "El model de dades ha retornat un valor de tipus «%s» no vàlid "
 
 #: ../libgda/gda-data-model.c:686
 msgid "Data model returned invalid NULL value"
@@ -1083,7 +1083,7 @@ msgstr "El model no permet la supressió de columnes"
 #: ../libgda/gda-data-model.c:1180
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
-msgstr "El paràmetre '%s' ha de contenir un valor de cadena, ignorat."
+msgstr "El paràmetre «%s» ha de contenir un valor de cadena, ignorat."
 
 #: ../libgda/gda-data-model.c:1189 ../libgda/gda-data-model.c:1199
 #: ../libgda/gda-data-model.c:1209 ../libgda/gda-data-model.c:1251
@@ -1093,12 +1093,12 @@ msgstr "El paràmetre '%s' ha de contenir un valor de cadena, ignorat."
 #: ../libgda/gda-data-model.c:1465
 #, c-format
 msgid "The '%s' parameter must hold a boolean value, ignored."
-msgstr "El paràmetre '%s' ha de contenir un valor booleà, ignorat."
+msgstr "El paràmetre «%s» ha de contenir un valor booleà, ignorat."
 
 #: ../libgda/gda-data-model.c:1344
 #, c-format
 msgid "The '%s' parameter must hold an integer value, ignored."
-msgstr "El paràmetre '%s' ha de contenir un valor sencer, ignorat."
+msgstr "El paràmetre «%s» ha de contenir un valor sencer, ignorat."
 
 #: ../libgda/gda-data-model.c:1386
 #, c-format
@@ -1155,7 +1155,7 @@ msgstr ""
 #: ../libgda/gda-data-model.c:2093
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
-msgstr "No es pot transformar '%s' del tipus GDA %s al tipus GDA %s"
+msgstr "No es pot transformar «%s» del tipus GDA %s al tipus GDA %s"
 
 #: ../libgda/gda-data-model.c:2294
 #, c-format
@@ -1275,12 +1275,12 @@ msgstr "L’opció %s ha de contenir un valor de cadena, ignorat."
 #: ../libgda/gda-data-model-import.c:714
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
-msgstr "L’opció '%s' ha de contenir un valor booleà, ignorat."
+msgstr "L’opció «%s» ha de contenir un valor booleà, ignorat."
 
 #: ../libgda/gda-data-model-import.c:955
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
-msgstr "L'opció '%s' ha de contenir un valor GType, ignorat."
+msgstr "L'opció «%s» ha de contenir un valor GType, ignorat."
 
 #: ../libgda/gda-data-model-import.c:1023
 #, c-format
@@ -1298,7 +1298,7 @@ msgstr "sense detalls"
 #: ../libgda/gda-data-model-import.c:1066
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
-msgstr "No s'ha pogut convertir la cadena '%s' a un valor '%s' "
+msgstr "No s'ha pogut convertir la cadena «%s» a un valor «%s»"
 
 #: ../libgda/gda-data-model-import.c:1124
 #, c-format
@@ -1349,7 +1349,7 @@ msgstr "La fila té massa valors (que s'ignoren)"
 #: ../libgda/gda-data-model-import.c:1506
 #, c-format
 msgid "Could not convert '%s' to a value of type %s"
-msgstr "No s'ha pogut convertir '%s' en un valor del tipus %s"
+msgstr "No s'ha pogut convertir «%s» en un valor del tipus %s"
 
 #: ../libgda/gda-data-model-import.c:1579
 #, c-format
@@ -1584,14 +1584,14 @@ msgstr "La declaració UPDATE ha de contenir una condició WHERE"
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr ""
-"La modificació de la declaració fa servir un paràmetre '%s' desconegut"
+"La modificació de la declaració fa servir un paràmetre «%s» desconegut"
 
 #: ../libgda/gda-data-select.c:1353
 #, c-format
 msgid ""
 "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"La modificació del paràmetre '%s' de la declaració és un %s quan hauria de "
+"La modificació del paràmetre «%s» de la declaració és un %s quan hauria de "
 "ser un %s"
 
 #: ../libgda/gda-data-select.c:1419
@@ -2053,14 +2053,14 @@ msgstr "Falta la definició de la vista en el node <view>"
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
-"La definició de la vista conté més d'una declaració (per a la vista '%s')"
+"La definició de la vista conté més d'una declaració (per a la vista «%s»)"
 
 #: ../libgda/gda-meta-store.c:1856
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
 "La definició de la vista no és una declaració de selecció (per a la vista "
-"'%s')"
+"«%s»)"
 
 #: ../libgda/gda-meta-store.c:1883 ../libgda/gda-meta-struct-io.c:179
 msgid "Missing table name from <table> node"
@@ -2081,7 +2081,7 @@ msgstr ""
 #: ../libgda/gda-meta-store.c:2217
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
-msgstr "Falta el nom de la columna de la clau externa (de la taula '%s')"
+msgstr "Falta el nom de la columna de la clau externa (de la taula «%s»)"
 
 #: ../libgda/gda-meta-store.c:2229
 #, c-format
@@ -2091,7 +2091,7 @@ msgstr "No s'ha trobat la columna «%s» a la taula «%s»"
 #: ../libgda/gda-meta-store.c:2488 ../libgda/gda-meta-struct.c:1277
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
-msgstr "Columna de la clau externa '%s' no trobada a la taula '%s'"
+msgstr "Columna de la clau externa «%s» no trobada a la taula «%s»"
 
 #: ../libgda/gda-meta-store.c:2613
 msgid ""
@@ -2157,7 +2157,7 @@ msgid ""
 "Internal error, while updating internal meta store table '%s': Parameter "
 "value type error: %s"
 msgstr ""
-"Error intern en actualitzar la taula de metaemmagatzematge interna «%s»: "
+"Error intern en actualitzar la taula de meta emmagatzematge interna «%s»: "
 "error de tipus de valor de paràmetre: %s"
 
 #: ../libgda/gda-meta-store.c:3786
@@ -2168,7 +2168,7 @@ msgstr "Els models de dades han de tenir el mateix nombre de columnes"
 #: ../libgda/gda-meta-store.c:4992
 #, c-format
 msgid "Unknown database object '%s'"
-msgstr "Objecte de base de dades desconegut '%s'"
+msgstr "Objecte de base de dades desconegut «%s»"
 
 #: ../libgda/gda-meta-store.c:3866
 #, c-format
@@ -2347,7 +2347,7 @@ msgstr "El node arrel del fitxer «%s» ha de ser <schema>."
 #: ../libgda/gda-meta-struct-io.c:239
 #, c-format
 msgid "Missing column name for table '%s'"
-msgstr "Falta el nom de la columna de la taula '%s'"
+msgstr "Falta el nom de la columna de la taula «%s»"
 
 #: ../libgda/gda-meta-struct-io.c:292
 #, c-format
@@ -2365,7 +2365,7 @@ msgstr "El nom de la taula referenciada «%s» no és vàlid"
 #: ../libgda/gda-meta-struct-io.c:358
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
-msgstr "Falta el nom de la columna de la clau externa per a la taula '%s'"
+msgstr "Falta el nom de la columna de la clau externa per a la taula «%s»"
 
 #: ../libgda/gda-provider-meta.c:83
 #, c-format
@@ -2502,7 +2502,7 @@ msgstr "El proveïdor %s ha creat un GdaServerOperation sense node per a '%s'"
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
 "El proveïdor %s ha creat una GdaServerOperation amb un tipus de node "
-"incorrecte per a '%s'"
+"incorrecte per a «%s»"
 
 #. CNC UNLOCK
 #: ../libgda/gda-server-provider.c:1508
@@ -2615,7 +2615,7 @@ msgstr "Node arrel de les especificacions != 'data-set-spec': '%s'"
 #: ../libgda/gda-set.c:1458
 #, c-format
 msgid "Missing node <parameters>: '%s'"
-msgstr "Manca el node <parameters>: '%s'"
+msgstr "Manca el node <parameters>: «%s»"
 
 #: ../libgda/gda-set.c:1673
 msgid "Data set does not allow modifications"
@@ -2681,7 +2681,7 @@ msgstr "Es desconeix l'ID de destinació de la part dreta %u"
 #: ../libgda/gda-statement.c:453
 #, c-format
 msgid "Could not determine GType for parameter '%s'"
-msgstr "No s'ha pogut determinar GType per al paràmetre '%s'"
+msgstr "No s'ha pogut determinar GType per al paràmetre «%s»"
 
 #: ../libgda/gda-statement.c:454
 msgid "Unnamed"
@@ -2690,7 +2690,7 @@ msgstr "Sense nom"
 #: ../libgda/gda-statement.c:473
 #, c-format
 msgid "Can't handle default value of type '%s'"
-msgstr "No pot gestionar el valor per defecte de tipus '%s'"
+msgstr "No pot gestionar el valor per defecte de tipus «%s»"
 
 #: ../libgda/gda-statement.c:734
 msgid "Missing SQL code"
@@ -2699,18 +2699,18 @@ msgstr "Manca el codi SQL"
 #: ../libgda/gda-statement.c:756
 #, c-format
 msgid "No data handler for type '%s'"
-msgstr "No hi ha un gestor de dades per al tipus '%s'"
+msgstr "No hi ha un gestor de dades per al tipus «%s»"
 
 #: ../libgda/gda-statement.c:1339
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr ""
-"Tipus de paràmetre incorrecte per a '%s': tipus esperat '%s' s'obté '%s'"
+"Tipus de paràmetre incorrecte per a «%s»: tipus esperat «%s» s'obté «%s»"
 
 #: ../libgda/gda-statement.c:1351
 #, c-format
 msgid "Missing parameter '%s'"
-msgstr "Manca el paràmetre '%s'"
+msgstr "Manca el paràmetre «%s»"
 
 #: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
@@ -2719,7 +2719,7 @@ msgstr "Manca el paràmetre '%s'"
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
-msgstr "El paràmetre '%s' no és vàlid"
+msgstr "El paràmetre «%s» no és vàlid"
 
 #: ../libgda/gda-statement.c:1409
 msgid "Unnamed parameter"
@@ -2783,7 +2783,7 @@ msgstr "No es van poder obtenir els paràmetres de la declaració SELECT: %s"
 msgid ""
 "Could not bind SELECT statement's parameter '%s' to provided parameters: %s"
 msgstr ""
-"No es van poder vincular els paràmetres '%s' No es van poder vincular els "
+"No es van poder vincular els paràmetres «%s» No es van poder vincular els "
 "paràmetres: %s"
 
 #: ../libgda/gda-tree-mgr-select.c:254
@@ -2817,7 +2817,7 @@ msgstr "No es pot obtenir el nom de la taula"
 #: ../libgda/gda-util.c:707
 #, c-format
 msgid "Field number %d not found in source named '%s'"
-msgstr "Número de camp %d no es troba a la font anomenada '%s'"
+msgstr "Número de camp %d no es troba a la font anomenada «%s»"
 
 #: ../libgda/gda-util.c:882
 msgid "SELECT statement has no FROM part"
@@ -2846,7 +2846,7 @@ msgstr "La taula no té cap columna"
 #: ../libgda/gda-util.c:1050
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
-msgstr "La columna de la taula '%s' no forma part de SELECT"
+msgstr "La columna de la taula «%s» no forma part de SELECT"
 
 #. To translators: this error message occurs when no "INSERT INTO <table>
 #. (field1, ...)..."
@@ -2877,7 +2877,7 @@ msgstr "No es pot reescriure una sentència que no sigui INSERT o UPDATE"
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
-msgstr "Falta paràmetre '%s' per a executar la consulta"
+msgstr "Falta paràmetre «%s» per a executar la consulta"
 
 #: ../libgda/gda-util.c:3040
 msgid "The 'first', 'second' and 'third' arguments must be different"
@@ -2991,7 +2991,7 @@ msgstr "Representació tipus Gda"
 #: ../libgda-report/RML/gda-report-rml-document.c:186
 #, c-format
 msgid "Could not find the '%s' program"
-msgstr "No s'ha pogut trobar el programa '%s'"
+msgstr "No s'ha pogut trobar el programa «%s»"
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:282
 msgid "Could not find the DocBook XSL stylesheet for HTML"
@@ -3005,29 +3005,29 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:314
 #, c-format
 msgid "Object type '%s' cannot be declared in this context"
-msgstr "El tipus d'objecte '%s' no es pot declarar en aquest context"
+msgstr "El tipus d'objecte «%s» no es pot declarar en aquest context"
 
 #: ../libgda-report/engine/gda-report-engine.c:322
 #, c-format
 msgid "An object with the '%s' name has already been declared"
-msgstr "Ja s'ha declarat un objecte amb el nom '%s' "
+msgstr "Ja s'ha declarat un objecte amb el nom «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:357
 #, c-format
 msgid "Object type '%s' cannot be requested in this context"
-msgstr "No es pot requerir el tipus d'objecte '%s' a aquest context"
+msgstr "No es pot requerir el tipus d'objecte «%s» a aquest context"
 
 #: ../libgda-report/engine/gda-report-engine.c:576
 #, c-format
 msgid "Unknown query '%s'"
-msgstr "Consulta '%s' desconeguda"
+msgstr "Consulta «%s» desconeguda"
 
 #: ../libgda-report/engine/gda-report-engine.c:587
 #: ../libgda-report/engine/gda-report-engine.c:614
 #: ../tools/common/t-app.c:2780 ../tools/common/t-app.c:2990
 #, c-format
 msgid "No connection named '%s' found"
-msgstr "No s'ha trobat cap connexió anomenada '%s'"
+msgstr "No s'ha trobat cap connexió anomenada «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:659
 msgid "Query is not specified (not named and not defined)"
@@ -3038,7 +3038,7 @@ msgstr "No s'ha especificat la consulta (sense nom i sense definició)"
 #: ../libgda-report/engine/gda-report-engine.c:1032
 #, c-format
 msgid "Unknown parameter '%s'"
-msgstr "Paràmetre '%s' desconegut"
+msgstr "Paràmetre «%s» desconegut"
 
 #: ../libgda-report/engine/gda-report-engine.c:850
 msgid "Parameter name not specified"
@@ -3052,18 +3052,18 @@ msgstr "No s’ha especificat cap expressió"
 #, c-format
 msgid "Cannot cast value from type '%s' to type '%s'"
 msgstr ""
-"No es pot executar un «cast» sobre el paràmetre del tipus '%s' al tipus '%s'"
+"No es pot executar un «cast» sobre el paràmetre del tipus «%s» al tipus «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1061
 #, c-format
 msgid "Cannot cast parameter from type '%s' to type '%s'"
 msgstr ""
-"No es pot executar un «cast» sobre el paràmetre del tipus '%s' al tipus '%s'"
+"No es pot executar un «cast» sobre el paràmetre del tipus «%s» al tipus «%s»"
 
 #: ../libgda-report/engine/gda-report-engine.c:1154
 #, c-format
 msgid "Expression '%s' should return exactly one value"
-msgstr "L'expressió '%s'  hauria de tornar exactament un valor"
+msgstr "L'expressió «%s» hauria de tornar exactament un valor"
 
 #: ../libgda-report/engine/gda-report-engine.c:1194
 msgid "Binary data"
@@ -3122,7 +3122,7 @@ msgstr "Representació booleana Sqlite "
 #: ../libgda/sqlite/gda-sqlite-provider.c:124
 #, c-format
 msgid "Parameter '%s' not found in statement"
-msgstr "El paràmetre '%s'  no es troba a la declaració"
+msgstr "El paràmetre «%s» no es troba a la declaració"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:138
 #: ../libgda/sqlite/gda-sqlite-provider.c:154
@@ -3130,12 +3130,12 @@ msgstr "El paràmetre '%s'  no es troba a la declaració"
 #: ../libgda/sqlite/gda-sqlite-provider.c:212
 #, c-format
 msgid "No column name to associate to parameter '%s'"
-msgstr "No hi ha cap nom de columna a associar al paràmetre '%s'"
+msgstr "No hi ha cap nom de columna a associar al paràmetre «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:182
 #, c-format
 msgid "Parameter '%s' not found is statement"
-msgstr "El paràmetre '%s' no es troba a la declaració"
+msgstr "El paràmetre «%s» no es troba a la declaració"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:222
 msgid "Binding a BLOB for this type of statement is not supported"
@@ -3165,7 +3165,7 @@ msgid ""
 msgstr ""
 "El format de cadena de connexió ha canviat: substituïu URI per DB_DIR (el "
 "camí d'accés al fitxer de base de dades) i DB_NAME (el fitxer de la base de "
-"dades sense el '%s' al final)."
+"dades sense el «%s» al final)."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1176
 #: ../providers/mdb/gda-mdb-provider.c:317
@@ -3196,7 +3196,7 @@ msgstr "No s'ha pogut establir l'opció empty_result_callbacks SQLite: %s"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1406
 #, c-format
 msgid "Could not register function '%s'"
-msgstr "No s'ha pogut registrar la funció '%s'"
+msgstr "No s'ha pogut registrar la funció «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1424
 #, c-format
@@ -3229,7 +3229,7 @@ msgstr "SQLite no permet especificar camps on aplicar la clàusula DISTINCT"
 #: ../libgda/sqlite/gda-sqlite-provider.c:2287
 #, c-format
 msgid "'%s' compound not supported by SQLite"
-msgstr "'%s' component no suportat per SQLite"
+msgstr "«%s» component no suportat per SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2389
 msgid "ILIKE operation not supported"
@@ -3296,7 +3296,7 @@ msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
-"No es pot obtenir el gestor de BLOB de SQLite (el tipus reportat és '%s'), "
+"No es pot obtenir el gestor de BLOB de SQLite (el tipus reportat és «%s»), "
 "si us plau comuniqueu aquest error a "
 "http://gitlab.gnome.org/GNOME/libgda/issues"
 
@@ -3375,7 +3375,7 @@ msgstr "La funció requereix dos o tres arguments"
 #: ../libgda/sqlite/gda-sqlite-provider.c:4223
 #, c-format
 msgid "SQLite regexp '%s' error:"
-msgstr "Error en l'expressió regular '%s' de SQLite:"
+msgstr "Error en l'expressió regular «%s» de SQLite:"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:4224
 msgid "Invalid regular expression"
@@ -3409,18 +3409,18 @@ msgstr "No es pot obrir el BLOB"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:651
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
-msgstr "Data no vàlida '%s' (el format ha de ser AAAA-MM-DD)"
+msgstr "Data no vàlida «%s» (el format ha de ser AAAA-MM-DD)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:538
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
-msgstr "Hora no vàlida '%s' (el format ha de ser HH:MM:SS[.ms][+HH:mm])"
+msgstr "Hora no vàlida «%s» (el format ha de ser HH:MM:SS[.ms][+HH:mm])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:556
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
-msgstr "Marca de temps '%s' (el format ha de ser AAAA-MM-DDTHH:MM:SS[.ms])"
+msgstr "Marca de temps «%s» (el format ha de ser AAAA-MM-DDTHH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:645
 msgid "SQLite provider fatal internal error"
@@ -3451,7 +3451,7 @@ msgstr "S'ha d'especificar el nom d'espai"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:137
 #, c-format
 msgid "There is already a namespace named '%s' in use with another connection"
-msgstr "Ja hi ha un espai de nom anomenat '%s' en ús amb una altra connexió"
+msgstr "Ja hi ha un espai de nom anomenat «%s» en ús amb una altra connexió"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:147
 #, c-format
@@ -3465,7 +3465,7 @@ msgstr "La connexió no estava representada al concentrador"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:352
 #, c-format
 msgid "Unable to get information about table '%s'"
-msgstr "No es pot obtenir informació sobre la taula '%s'"
+msgstr "No es pot obtenir informació sobre la taula «%s»"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:578
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:594
@@ -3482,7 +3482,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
-msgstr "Hora no vàlida '%s' (el format ha de serHH:MM:SS[.ms])"
+msgstr "Hora no vàlida «%s» (el format ha de ser HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
 msgid "Provider did not clean its connection data"
@@ -3495,7 +3495,7 @@ msgid ""
 "virtual method"
 msgstr ""
 "Error intern: el proveïdor virtual no implementa el mètode virtual "
-"create_operació ()"
+"create_operation()"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:159
 msgid "Internal error: invalid provider handle"
@@ -3599,7 +3599,7 @@ msgstr "Falta la taula en la sentència"
 #: ../libgda/sql-parser/gda-statement-struct.c:851
 #, c-format
 msgid "Column '%s' not found"
-msgstr "No s'ha trobat la columna '%s' "
+msgstr "No s'ha trobat la columna «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:669
 #: ../libgda/sql-parser/gda-statement-struct.c:784
@@ -3615,14 +3615,14 @@ msgstr "Falta el nom de la taula en la sentència"
 #: ../libgda/sql-parser/gda-statement-struct.c:878
 #, c-format
 msgid "Table '%s' not found"
-msgstr "No s'ha trobat la taula %s"
+msgstr "No s'ha trobat la taula «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:806
 #: ../libgda/sql-parser/gda-statement-struct.c:821
 #: ../tools/common/t-connection.c:1887 ../tools/common/t-connection.c:1941
 #, c-format
 msgid "Could not identify table for field '%s'"
-msgstr "No es pot identificar la taula per al camp'%s'"
+msgstr "No es pot identificar la taula per al camp «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1008
 msgid "Expression can't have both a type cast and a parameter specification"
@@ -3635,7 +3635,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1044
 #, c-format
 msgid "'%s' is not a valid identifier"
-msgstr "%s no és un identificador vàlid."
+msgstr "«%s» no és un identificador vàlid"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1021
 #: ../libgda/sql-parser/gda-statement-struct.c:1034
@@ -3773,7 +3773,7 @@ msgstr "SELECT no pot tenir un «limit òfset» sense un límit "
 #: ../libgda/sql-parser/gda-statement-struct-select.c:456
 #, c-format
 msgid "Multiple targets named or aliased '%s'"
-msgstr "Hi ha diverses destinacions anomenades '%s'"
+msgstr "Hi ha diverses destinacions anomenades «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:290
 msgid "UPDATE statement needs a table to update data"
@@ -3876,7 +3876,7 @@ msgstr "_Obre"
 #: ../libgda-ui/gdaui-rt-editor.c:721
 #, c-format
 msgid "Could not load the contents of '%s'"
-msgstr "No s'ha pogut carregar el contingut de '%s'"
+msgstr "No s'ha pogut carregar el contingut de «%s»"
 
 #: ../libgda-ui/data-entries/common-bin.c:159
 msgid "Select a file to save data to"
@@ -3885,7 +3885,7 @@ msgstr "Seleccioneu un fitxer on guardar les dades"
 #: ../libgda-ui/data-entries/common-bin.c:177
 #, c-format
 msgid "Could not save data to '%s'"
-msgstr "No s'han pogut desar les dades a '%s'"
+msgstr "No s'han pogut desar les dades a «%s»"
 
 #: ../libgda-ui/data-entries/common-bin.c:234
 msgid "Load data from file"
@@ -4140,7 +4140,7 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set"
 " using the 'handler' property) expect some mis-behaviours"
 msgstr ""
-"El giny de la classe '%s'  no està associat a GdaDataHandler, (que s'ha "
+"El giny de la classe «%s» no està associat a GdaDataHandler, (que s'ha "
 "d'establir utilitzant la propietat \"handler\") s'espera algun comportament "
 "maligne"
 
@@ -4254,7 +4254,7 @@ msgstr "_Desar"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:478
 #, c-format
 msgid "Could not save the image to '%s'"
-msgstr "No s'ha pogut desar la imatge a '%s'"
+msgstr "No s'ha pogut desar la imatge a «%s»"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:1
 msgid "Sources"
@@ -4451,7 +4451,7 @@ msgstr "Salta línies entre paraules o grafemes"
 #: ../libgda-ui/data-entries/plugins/libmain.c:287
 #, c-format
 msgid "Missing spec. file '%s'"
-msgstr "Falta el fitxer spec. '%s'"
+msgstr "Falta el fitxer spec. «%s»"
 
 #: ../libgda-ui/data/server_operation.xml.h:1 ../tools/common/t-app.c:940
 #: ../tools/common/t-app.c:1034 ../tools/common/t-app.c:1046
@@ -4490,7 +4490,7 @@ msgid ""
 "Error opening the connection for file '%s':\n"
 "%s\n"
 msgstr ""
-"S'ha produït un error en obrir la connexió per al fitxer '%s':\n"
+"S'ha produït un error en obrir la connexió per al fitxer «%s»:\n"
 "%s\n"
 
 #: ../libgda-ui/demos/main.c:808
@@ -4508,7 +4508,7 @@ msgid ""
 "To illustrate that calls are non blocking, there is a spinner at the top (which must never stop spinning), and a 1 second delay is added whenever the connection is used."
 msgstr ""
 "<b><big>Nota:\n"
-"</big></b>Molts dels elements de demostració utilitzen una connexió oberta a l'SQLite usant el fitxer '%s'.\n"
+"</big></b>Molts dels elements de demostració utilitzen una connexió oberta a l'SQLite usant el fitxer «%s».\n"
 "\n"
 "En el codi font que es mostra aquí, els objectes <i>demo_cnc</i> and <i>demo_parser</i> són creats pel marc i posats a disposició de tots els elements demostrats.\n"
 "\n"
@@ -4563,7 +4563,7 @@ msgstr "_D'acord"
 #: ../libgda-ui/gdaui-basic-form.c:2184 ../libgda-ui/gdaui-raw-grid.c:2300
 #, c-format
 msgid "'%s' document not parsed successfully"
-msgstr "'%s' document no analitzat correctament"
+msgstr "«%s» document no analitzat correctament"
 
 #: ../libgda-ui/gdaui-basic-form.c:2337
 msgid ""
@@ -4942,7 +4942,7 @@ msgstr "Si trieu sí, es perdran els continguts."
 #: ../libgda-ui/gdaui-raw-grid.c:2594 ../libgda-ui/gdaui-raw-grid.c:2649
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
-msgstr "L'atribut '%s' hauria de ser un valor G_TYPE_STRING "
+msgstr "L'atribut «%s» hauria de ser un valor G_TYPE_STRING "
 
 #: ../libgda-ui/gdaui-rt-editor.c:102
 msgid ""
@@ -5095,7 +5095,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-server-operation.c:369
 #, c-format
 msgid "Mal formed Server Operation. No Node at path: '%s'"
-msgstr "Operació de servidor mal formulat. No hi ha node a la ruta: '%s'"
+msgstr "Operació de servidor mal formulat. No hi ha node a la ruta: «%s»"
 
 #: ../libgda-ui/gdaui-server-operation.c:442
 msgid "Add a new field"
@@ -5142,12 +5142,12 @@ msgstr "No es pot configurar la cadena d'autentificació: no cal autenticació"
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:195
 #, c-format
 msgid "Unknown provider '%s'"
-msgstr "Proveïdor '%s' desconegut"
+msgstr "Proveïdor «%s» desconegut"
 
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:199
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
-msgstr "E proveïdor '%s' no ha informat dels paràmetres necessaris per DSN"
+msgstr "E proveïdor «%s» no ha informat dels paràmetres necessaris per DSN"
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:82
@@ -6478,7 +6478,7 @@ msgid ""
 msgstr ""
 "El format de cadena de connexió ha canviat: substituïu FILENAME per DB_DIR "
 "(el camí d'accés al fitxer de base de dades) i DB_NAME (el fitxer de la base"
-" de dades sense el '%s' al final)."
+" de dades sense el «%s» al final)."
 
 #: ../providers/mdb/gda-mdb-provider.c:336
 #, c-format
@@ -6514,7 +6514,7 @@ msgstr "El número de port no és vàlid"
 #: ../providers/mysql/gda-mysql-provider.c:493
 #, c-format
 msgid "Unknown MySQL protocol '%s'"
-msgstr "Protocol MySQL desconegut '%s'"
+msgstr "Protocol MySQL desconegut «%s»"
 
 #: ../providers/mysql/gda-mysql-provider.c:538
 #, c-format
@@ -7365,11 +7365,11 @@ msgstr "Representació binària de PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:166
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr "Memòria insuficient per a convertir el búfer binari en cadena"
+msgstr "Memòria insuficient per a convertir la memòria intermèdia binària en cadena"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:206
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr "Memòria insuficient per a convertir la cadena en búfer binari"
+msgstr "Memòria insuficient per a convertir la cadena en memòria intermèdia binària"
 
 #: ../providers/postgres/gda-postgres-provider.c:483
 msgid "Could not determine the default date format"
@@ -7427,7 +7427,7 @@ msgstr "Error intern"
 #: ../providers/postgres/gda-postgres-provider.c:1325
 #, c-format
 msgid "Wrong savepoint name '%s'"
-msgstr "Nom del punt de recuperació incorrecte '%s'"
+msgstr "Nom del punt de recuperació incorrecte «%s»"
 
 #: ../providers/postgres/gda-postgres-provider.c:2168
 #: ../providers/postgres/gda-postgres-provider.c:2170
@@ -7447,12 +7447,12 @@ msgstr "Nombre de trossos de la fila llegits des de la creació l'objecte "
 #: ../providers/postgres/gda-postgres-recordset.c:611
 #, c-format
 msgid "Invalid date format '%s'"
-msgstr "El format de data no és vàlid '%s'"
+msgstr "El format de data no és vàlid «%s»"
 
 #: ../providers/postgres/gda-postgres-recordset.c:673
 #, c-format
 msgid "Invalid timestamp value '%s'"
-msgstr "El valor de marca de temps '%s' no és vàlid"
+msgstr "El valor de marca de temps «%s» no és vàlid"
 
 #: ../providers/postgres/gda-postgres-recordset.c:749
 #, c-format
@@ -8151,7 +8151,7 @@ msgstr "Proveïdor per a bases de dades SQLite"
 #: ../providers/web/gda-web-util.c:337 ../providers/web/gda-web-util.c:481
 #, c-format
 msgid "Invalid HOST/SCRIPT '%s'"
-msgstr "AMFITRIÓ/SCRIPT '%s' no vàlid"
+msgstr "AMFITRIÓ/SCRIPT «%s» no vàlid"
 
 #: ../providers/web/gda-web-provider.c:323
 #: ../providers/web/gda-web-provider.c:329
@@ -8257,7 +8257,7 @@ msgstr "Nom de la base de dades que es farà servir"
 #: ../testing/gda-test-blob.c:99 ../testing/gda-test-connection.c:93
 #, c-format
 msgid "DSN '%s' is not declared"
-msgstr "El DSN '%s' no està declarat"
+msgstr "El DSN «%s» no està declarat"
 
 #: ../testing/gda-test-blob.c:104 ../testing/gda-test-connection.c:98
 #, c-format
@@ -8286,7 +8286,7 @@ msgstr "Ordre sense nom no vàlida"
 #: ../tools/base/base-tool-command.c:279
 #, c-format
 msgid "Command '%s' not found"
-msgstr "No s'ha trobat l'ordre '%s' "
+msgstr "No s'ha trobat l'ordre «%s»"
 
 #: ../tools/base/base-tool-command.c:320
 #, c-format
@@ -8305,7 +8305,7 @@ msgstr "Ús"
 #: ../tools/base/base-tool-input.c:500
 #, c-format
 msgid "Could not save history file to '%s': %s"
-msgstr "No s'ha pogut desar el fitxer d'historial '%s': %s"
+msgstr "No s'ha pogut desar el fitxer d'historial «%s»: %s"
 
 #: ../tools/base/base-tool-output.c:92 ../tools/base/base-tool-output.c:498
 #: ../tools/base/base-tool-output.c:580
@@ -8909,7 +8909,7 @@ msgstr "BBB:"
 #: ../tools/browser/data-manager/data-console.c:503
 #, c-format
 msgid "'%s' data manager"
-msgstr "Gestor de dades '%s' "
+msgstr "Gestor de dades «%s»"
 
 #: ../tools/browser/data-manager/data-console.c:504
 #: ../tools/browser/data-manager/data-console.c:515
@@ -8948,7 +8948,7 @@ msgstr "Font de dades de SQL"
 #: ../tools/browser/schema-browser/table-info.c:383
 #, c-format
 msgid "In schema '%s'"
-msgstr "En esquema '%s'"
+msgstr "En esquema «%s»"
 
 #: ../tools/browser/data-manager/data-console.c:820
 #, c-format
@@ -8973,7 +8973,7 @@ msgstr "Canviar entre modes de redacció i execució"
 #: ../tools/browser/schema-browser/favorite-selector.c:169
 #, c-format
 msgid "Could not remove favorite: %s"
-msgstr "No s'ha pogut eliminar el favorit: %s"
+msgstr "No s'ha pogut eliminar el preferit: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:250
 #: ../tools/browser/data-manager/data-favorite-selector.c:598
@@ -8989,13 +8989,13 @@ msgstr "No s'ha pogut eliminar el favorit: %s"
 #: ../tools/browser/schema-browser/table-info.c:519
 #, c-format
 msgid "Could not add favorite: %s"
-msgstr "No s'ha pogut afegir el favorit : %s"
+msgstr "No s'ha pogut afegir el preferit: %s"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:281
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:282
 #: ../tools/browser/query-exec/query-favorite-selector.c:335
 msgid "Favorite's properties"
-msgstr "Propietats del favorit"
+msgstr "Propietats del preferit"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:303
 msgid "Specifications"
@@ -9019,7 +9019,7 @@ msgstr "Gestor de dades sense nom"
 #: ../tools/browser/query-exec/query-exec-perspective.c:331
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:342
 msgid "Show favorites"
-msgstr "Mostrar els favorits"
+msgstr "Mostrar els preferits"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:364
 msgid "New data manager tab"
@@ -9077,7 +9077,7 @@ msgstr "La declaració a executar no és una declaració de selecció"
 #: ../tools/browser/data-manager/data-source.c:1141
 #, c-format
 msgid "Contents of '%s'"
-msgstr "Contingut de'%s'"
+msgstr "Contingut de «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:1152
 msgid "Could not build SELECT statement"
@@ -9171,8 +9171,8 @@ msgstr "No s'ha definit cap font de dades"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No es pot enllaçar el paràmetre '%s' del tipus '%s' a un paràmetre del tipus"
-" '%s'"
+"No es pot enllaçar el paràmetre «%s» del tipus «%s» a un paràmetre del tipus"
+" «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:162
 #: ../tools/browser/schema-browser/table-columns.c:307
@@ -9208,7 +9208,7 @@ msgstr "_Afegir"
 #: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:393
 #, c-format
 msgid "Declare a foreign key for table '%s'"
-msgstr "Declarar una clau externa per a la taula '%s'"
+msgstr "Declarar una clau externa per a la taula «%s»"
 
 #: ../tools/browser/fk-declare.c:186
 msgid ""
@@ -9444,7 +9444,7 @@ msgstr "Abast de la cerca:"
 #: ../tools/browser/ldap-browser/hierarchy-view.c:521
 #, c-format
 msgid "Could not find LDAP entry with DN '%s'"
-msgstr "No s'ha pogut trobar l'entrada LDAP amb DN %s"
+msgstr "No s'ha pogut trobar l'entrada LDAP amb DN «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:366
 msgid "New LDAP entries tab"
@@ -9473,7 +9473,7 @@ msgstr "Propietats de la classe LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:531
 msgid "Add class to Favorites"
-msgstr "Afegeix una classe als favorits"
+msgstr "Afegeix una classe als preferits"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:539
 msgid "Move back to previous LDAP class"
@@ -9497,7 +9497,7 @@ msgstr "Detalls de l'entrada LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:537
 msgid "Add entry to Favorites"
-msgstr "Afegeix una entrada a Favorits"
+msgstr "Afegeix una entrada a preferits"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:545
 msgid "Move back to previous LDAP entry"
@@ -9550,7 +9550,7 @@ msgstr "Executeu la cerca LDAP: %s"
 #: ../tools/browser/ldap-browser/ldap-search-page.c:337
 #, c-format
 msgid "Virtual table '%s' for this LDAP search has been defined"
-msgstr "S'ha definit una taula virtual '%s' per a aquesta cerca LDAP"
+msgstr "S'ha definit una taula virtual «%s» per a aquesta cerca LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:361
 msgid "Define search as a virtual table"
@@ -9670,7 +9670,7 @@ msgid ""
 "drag item to\n"
 "define one"
 msgstr ""
-"Sense favorits: \n"
+"Sense preferits: \n"
 "arrossegueu un element\n"
 "per a definir un"
 
@@ -9767,7 +9767,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:337
 msgid "Add SQL to favorite"
-msgstr "Afegeix SQL als favorits"
+msgstr "Afegeix SQL als preferits"
 
 #: ../tools/browser/query-exec/query-console-page.c:350
 msgid "Execution history:"
@@ -9791,22 +9791,22 @@ msgstr "Resultats de l'execució:"
 
 #: ../tools/browser/query-exec/query-console-page.c:651
 msgid "New favorite"
-msgstr "Nou favorit"
+msgstr "Nou preferit"
 
 #: ../tools/browser/query-exec/query-console-page.c:662
 #: ../tools/browser/query-exec/query-console-page.c:695
 #, c-format
 msgid "Modify favorite '%s'"
-msgstr "Modifica el favorit '%s'"
+msgstr "Modifica el preferit «%s»"
 
 #: ../tools/browser/query-exec/query-console-page.c:683
 msgid "Modify a favorite"
-msgstr "Modifica un favorit"
+msgstr "Modifica un preferit"
 
 #: ../tools/browser/query-exec/query-console-page.c:730
 #: ../tools/browser/query-exec/query-console-page.c:750
 msgid "Favorite's name"
-msgstr "Nom del favorit"
+msgstr "Nom del preferit"
 
 #: ../tools/browser/query-exec/query-console-page.c:731
 #: ../tools/browser/query-exec/query-favorite-selector.c:685
@@ -9815,11 +9815,11 @@ msgstr "Consulta sense nom"
 
 #: ../tools/browser/query-exec/query-console-page.c:734
 msgid "Name of the favorite to create"
-msgstr "Nom del favorit a crear"
+msgstr "Nom del preferit a crear"
 
 #: ../tools/browser/query-exec/query-console-page.c:735
 msgid "Enter the name of the favorite to create"
-msgstr "Introduïu el nom del favorit a crear"
+msgstr "Introduïu el nom del preferit a crear"
 
 #: ../tools/browser/query-exec/query-console-page.c:866
 msgid "Invalid variable's contents"
@@ -9964,7 +9964,7 @@ msgid ""
 "containing data. The parameters required to execute\n"
 "the query will be defined from the row selected in the grid"
 msgstr ""
-"Marqueu aquesta opció per a què aquest favorit sigui una acció\n"
+"Marqueu aquesta opció per a què aquest preferit sigui una acció\n"
 "que es pot proposar per executar-se des de reixetes \n"
 "que continguin dades. Els paràmetres requerits per a executar \n"
 "la consulta es definiran des de la fila seleccionada a la reixeta."
@@ -10037,7 +10037,7 @@ msgstr "Diagrama «%s»"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:432
 msgid "Missing table attribute in favorite's contents"
-msgstr "Falta un atribut de la taula en el contingut dels favorits"
+msgstr "Falta un atribut de la taula en el contingut dels preferits"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:531
 msgid "Manage data in selected tables"
@@ -10054,12 +10054,12 @@ msgstr "No s'ha pogut carregar el diagrama"
 #: ../tools/browser/schema-browser/table-columns.c:271
 #, c-format
 msgid "Declared foreign key '%s' on "
-msgstr "Clau externa '%s' declarada"
+msgstr "Clau externa «%s» declarada"
 
 #: ../tools/browser/schema-browser/table-columns.c:274
 #, c-format
 msgid "Foreign key '%s' on "
-msgstr "Clau externa '%s' en "
+msgstr "Clau externa «%s» en "
 
 #: ../tools/browser/schema-browser/table-columns.c:340
 #, c-format
@@ -10067,7 +10067,7 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"tipus incompatibles: '%s' per a la clau externa i  '%s' per a la clau "
+"tipus incompatibles: «%s» per a la clau externa i «%s» per a la clau "
 "primària referenciada"
 
 #: ../tools/browser/schema-browser/table-columns.c:389
@@ -10110,7 +10110,7 @@ msgstr "No s'ha pogut trobar la taula '%s.%s'"
 #: ../tools/browser/schema-browser/table-columns.c:975
 #, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "No s'ha pogut trobar cap la clau externa declarada '%s'"
+msgstr "No s'ha pogut trobar cap la clau externa declarada «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:274
 #: ../tools/browser/schema-browser/table-info.c:750
@@ -10166,7 +10166,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/table-info.c:802
 #, c-format
 msgid "Default value: '%s'"
-msgstr "Valor per defecte: '%s'"
+msgstr "Valor per defecte: «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:812
 msgid "Default value: auto incremented value"
@@ -10184,11 +10184,11 @@ msgstr "Cancel·la"
 #: ../tools/browser/schema-browser/table-info.c:980
 #, c-format
 msgid "Can't find information about table '%s'"
-msgstr "No es pot trobar informació sobre la taula '%s'"
+msgstr "No es pot trobar informació sobre la taula «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:1029
 msgid "Add to Favorites"
-msgstr "Afegir als favorits"
+msgstr "Afegir als preferits"
 
 #: ../tools/browser/schema-browser/table-info.c:1037
 msgid "View table's contents"
@@ -10404,7 +10404,7 @@ msgstr ""
 #: ../tools/common/t-app.c:585
 #, c-format
 msgid "Opening connection '%s' for: "
-msgstr "Obrint la connexió per a: '%s':"
+msgstr "Obrint la connexió per a: «%s»:"
 
 #: ../tools/common/t-app.c:941 ../tools/common/t-app.c:1114
 #: ../tools/common/t-app.c:1179 ../tools/common/t-app.c:1186
@@ -10659,20 +10659,20 @@ msgstr "Mostra tota la informació sobre la connexió o una part."
 #: ../tools/common/t-app.c:1220 ../tools/common/t-app.c:1227
 #: ../tools/common/t-app.c:1234 ../tools/common/t-app.c:1248
 msgid "Query buffer & query favorites"
-msgstr "Búfer de consulta i consultes favorites"
+msgstr "Memòria intermèdia de consulta i consultes preferides"
 
 #: ../tools/common/t-app.c:1180
 msgid "Edit the query buffer (or file) with external editor"
-msgstr "Editeu el búfer de consulta (o fitxer) amb un editor extern"
+msgstr "Edita la memòria intermèdia de consulta (o fitxer) amb un editor extern"
 
 #: ../tools/common/t-app.c:1187
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr ""
-"Restabliu el búfer de consulta (o carregueu el fitxer al búfer de consulta)"
+"Restabliu la memòria intermèdia de consulta (o carregueu el fitxer a la memòria intermèdia de consulta)"
 
 #: ../tools/common/t-app.c:1194
 msgid "Show the contents of the query buffer"
-msgstr "Mostra el contingut del búfer de consulta"
+msgstr "Mostra el contingut de la memòria intermèdia de consulta"
 
 #: ../tools/common/t-app.c:1200
 #, c-format
@@ -10682,12 +10682,12 @@ msgstr "%s [<FAVORITE_NAME>]"
 #: ../tools/common/t-app.c:1201
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
-"Executeu el contingut del búfer de consulta o executeu el favorit de "
+"Executa el contingut de la memòria intermèdia de consulta o executa el preferit de "
 "consulta especificat"
 
 #: ../tools/common/t-app.c:1208
 msgid "Write query buffer to file"
-msgstr "Escriviu el búfer de consulta al fitxer"
+msgstr "Escriu la memòria intermèdia de consulta al fitxer"
 
 #: ../tools/common/t-app.c:1214 ../tools/common/t-app.c:1221
 #: ../tools/common/t-app.c:1228
@@ -10697,15 +10697,15 @@ msgstr "%s <FAVORITE_NAME>"
 
 #: ../tools/common/t-app.c:1215
 msgid "Save query buffer as favorite"
-msgstr "Deseu el búfer de consulta com a preferit"
+msgstr "Desa la memòria intermèdia de consulta com a preferit"
 
 #: ../tools/common/t-app.c:1222
 msgid "Load a query favorite into query buffer"
-msgstr "Carregueu un favorit de consulta al búfer de consulta"
+msgstr "Carrega una consulta preferida a la memòria intermèdia de consulta"
 
 #: ../tools/common/t-app.c:1229
 msgid "Delete a query favorite"
-msgstr "Eliminar una consulta favorita"
+msgstr "Eliminar una consulta preferida"
 
 #: ../tools/common/t-app.c:1235 ../tools/common/t-app.c:1292
 #, c-format
@@ -10714,7 +10714,7 @@ msgstr "%s"
 
 #: ../tools/common/t-app.c:1236
 msgid "List all query favorites"
-msgstr "Llista tots els favorits de la consulta"
+msgstr "Llista tots els preferits de la consulta"
 
 #: ../tools/common/t-app.c:1243
 msgid "Set output format"
@@ -10938,12 +10938,12 @@ msgstr "Extra"
 #: ../tools/common/t-app.c:1843
 #, c-format
 msgid "List of columns for view '%s'"
-msgstr "Llista de columnes per a la vista '%s'"
+msgstr "Llista de columnes per a la vista «%s»"
 
 #: ../tools/common/t-app.c:1847
 #, c-format
 msgid "List of columns for table '%s'"
-msgstr "Llista de columnes per a la taula '%s'"
+msgstr "Llista de columnes per a la taula «%s»"
 
 #: ../tools/common/t-app.c:1858 ../tools/common/web-server.c:863
 msgid "yes"
@@ -10956,12 +10956,12 @@ msgstr "no"
 #: ../tools/common/t-app.c:1886
 #, c-format
 msgid "Could not determine columns of view '%s'"
-msgstr "No s'ha pogut determinar les columnes de la vista '%s'"
+msgstr "No s'ha pogut determinar les columnes de la vista «%s»"
 
 #: ../tools/common/t-app.c:1890
 #, c-format
 msgid "Could not determine columns of table '%s'"
-msgstr "No s'ha pogut determinar les columnes de la taula '%s'"
+msgstr "No s'ha pogut determinar les columnes de la taula «%s»"
 
 #: ../tools/common/t-app.c:1903
 #, c-format
@@ -10993,7 +10993,7 @@ msgstr ""
 #: ../tools/common/t-app.c:2246 ../tools/common/t-app.c:2317
 #, c-format
 msgid "No option named '%s'"
-msgstr "No hi ha cap opció amb el nom '%s'"
+msgstr "No hi ha cap opció amb el nom «%s»"
 
 #: ../tools/common/t-app.c:2258
 msgid "List of options"
@@ -11054,7 +11054,7 @@ msgstr "Fet.\n"
 #: ../tools/common/t-app.c:2864 ../tools/common/t-app.c:3026
 #, c-format
 msgid "A connection named '%s' already exists"
-msgstr "Ja existeix una connexió anomenada '%s'"
+msgstr "Ja existeix una connexió anomenada «%s»"
 
 #: ../tools/common/t-app.c:2892
 msgid "No opened connection"
@@ -11076,7 +11076,7 @@ msgstr "El nom de la connexió «%s» no és vàlid"
 #: ../tools/common/t-app.c:3041
 #, c-format
 msgid "No connection or dataset named '%s' found"
-msgstr "No s'ha trobat cap connexió o conjunt de dades anomenat '%s'"
+msgstr "No s'ha trobat cap connexió o conjunt de dades anomenat «%s»"
 
 #. force create of meta store
 #. add existing connections to virtual connection
@@ -11111,12 +11111,12 @@ msgstr "No s'ha obert cap connexió"
 #: ../tools/common/t-app.c:3142
 #, c-format
 msgid "Could not write to temporary file '%s': %s"
-msgstr "No s'ha pogut escriure al fitxer temporal '%s': %s"
+msgstr "No s'ha pogut escriure al fitxer temporal «%s»: %s"
 
 #: ../tools/common/t-app.c:3179
 #, c-format
 msgid "could not start editor '%s'"
-msgstr "no ha pogut iniciar l'editor '%s'"
+msgstr "no ha pogut iniciar l'editor «%s»"
 
 #: ../tools/common/t-app.c:3184
 msgid "Could not start /bin/sh"
@@ -11128,7 +11128,7 @@ msgstr "Falta FILE per escriure-ho"
 
 #: ../tools/common/t-app.c:3365
 msgid "Favorite name"
-msgstr "Nom del favorit"
+msgstr "Nom del preferit"
 
 #: ../tools/common/t-app.c:3366
 msgid "Comments"
@@ -11141,21 +11141,21 @@ msgstr "SQL"
 #: ../tools/common/t-app.c:3473 ../tools/common/t-app.c:3573
 #: ../tools/common/t-app.c:3638
 msgid "Missing query buffer name"
-msgstr "Manca el nom del búfer de consulta"
+msgstr "Manca el nom de la memòria intermèdia de consulta"
 
 #: ../tools/common/t-app.c:3497
 msgid "Query buffer is empty"
-msgstr "El búfer de consulta és buit"
+msgstr "La memòria intermèdia de consulta és buida"
 
 #: ../tools/common/t-app.c:3541 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
-msgstr "No s'ha pogut trobar el favorit"
+msgstr "No s'ha pogut trobar el preferit"
 
 #: ../tools/common/t-app.c:3723 ../tools/common/t-app.c:3788
 #: ../tools/common/t-app.c:4503
 #, c-format
 msgid "No parameter named '%s' defined"
-msgstr "No s'ha definit cap paràmetre amb el nom '%s'"
+msgstr "No s'ha definit cap paràmetre amb el nom «%s»"
 
 #: ../tools/common/t-app.c:3735
 msgid "List of defined parameters"
@@ -11179,12 +11179,12 @@ msgstr "Argument perdut"
 #: ../tools/common/t-app.c:4038 ../tools/common/t-app.c:4107
 #, c-format
 msgid "Could not find dataset named '%s'"
-msgstr "No s'ha pogut trobar el conjunt de dades anomenat '%s'"
+msgstr "No s'ha pogut trobar el conjunt de dades anomenat «%s»"
 
 #: ../tools/common/t-app.c:4059
 #, c-format
 msgid "Could not identify column '%s'"
-msgstr "No s'ha pogut identificar la columna '%s'"
+msgstr "No s'ha pogut identificar la columna «%s»"
 
 #: ../tools/common/t-app.c:4161
 #, c-format
@@ -11199,7 +11199,7 @@ msgstr "No s'ha pogut importar el fitxer %s"
 #: ../tools/common/t-app.c:4266
 #, c-format
 msgid "Graph written to '%s'\n"
-msgstr "Gràfica escrita en '%s'\n"
+msgstr "Gràfica escrita en «%s»\n"
 
 #: ../tools/common/t-app.c:4269
 #, c-format
@@ -11209,7 +11209,7 @@ msgid ""
 "\tdot -Tpng -o graph.png %s\n"
 "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment variables to view the graph\n"
 msgstr ""
-"Gràfica escrita en '%s'\n"
+"Gràfica escrita en «%s»\n"
 "Utilitza 'dot' (del paquet GraphViz) per a crear una imatge, per exemple:\n"
 "\tdot -Tpng -o graph.png %s\n"
 "Nota: activi les variables d'entorn  GDA_SQL_VIEWER_PNG o GDA_SQL_VIEWER_PDF per a veure la gràfica\n"
@@ -11273,7 +11273,7 @@ msgstr "Especificació de declaració de clau externa incorrecta"
 #: ../tools/common/t-app.c:4998
 #, c-format
 msgid "Malformed table name specification '%s'"
-msgstr "Especificació de nom de taula incorrecta '%s'"
+msgstr "Especificació de nom de taula incorrecta «%s»"
 
 #: ../tools/common/t-app.c:5090 ../tools/common/t-app.c:5167
 msgid "Missing foreign key name argument"
@@ -11287,7 +11287,7 @@ msgstr "La connexió no és una connexió LDAP"
 #: ../tools/common/t-app.c:5214
 #, c-format
 msgid "Unknown search scope '%s'"
-msgstr "Àmbit de cerca '%s' desconegut"
+msgstr "Àmbit de cerca «%s» desconegut"
 
 #: ../tools/common/t-app.c:5224
 msgid "Missing filter which to operate"
@@ -11309,12 +11309,12 @@ msgstr "Falta l'operació a realitzar sobre els atributs de l'entrada LDAP"
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
 msgstr ""
-"Operació '%s' a realitzar sobre els atributs de l'entrada LDAP desconeguda\""
+"Operació «%s» a realitzar sobre els atributs de l'entrada LDAP desconeguda\""
 
 #: ../tools/common/t-app.c:5443
 #, c-format
 msgid "Wrong attribute value specification '%s'"
-msgstr "Especificació '%s'  incorrecta del valor dels atributs "
+msgstr "Especificació «%s» incorrecta del valor dels atributs "
 
 #: ../tools/common/t-app.c:5502
 msgid "Missing DN (Distinguished name) argument"
@@ -11323,12 +11323,12 @@ msgstr "Falta l'argument DN (nom distintiu)"
 #: ../tools/common/t-app.c:5515
 #, c-format
 msgid "Unknown '%s' argument"
-msgstr "Argument '%s' desconegut"
+msgstr "Argument «%s» desconegut"
 
 #: ../tools/common/t-app.c:5526
 #, c-format
 msgid "Could not find entry with DN '%s'"
-msgstr "No s'ha pogut trobar l'entrada amb DN '%s'"
+msgstr "No s'ha pogut trobar l'entrada amb DN «%s»"
 
 #: ../tools/common/t-app.c:5534 ../tools/common/t-config-info.c:123
 #: ../tools/common/t-config-info.c:292
@@ -11350,7 +11350,7 @@ msgstr "Llista de proveïdors instal·lats"
 #: ../tools/common/t-config-info.c:111
 #, c-format
 msgid "Could not find provider '%s'"
-msgstr "No s'ha pogut trobar el proveïdor '%s'"
+msgstr "No s'ha pogut trobar el proveïdor «%s»"
 
 #: ../tools/common/t-config-info.c:126
 #, c-format
@@ -11360,7 +11360,7 @@ msgstr "Descripció del proveïdor «%s»"
 #: ../tools/common/t-config-info.c:280
 #, c-format
 msgid "Could not find data source '%s'"
-msgstr "No s'ha pogut trobar l'origen de les dades '%s'"
+msgstr "No s'ha pogut trobar l'origen de les dades «%s»"
 
 #: ../tools/common/t-config-info.c:295
 #, c-format
@@ -11489,12 +11489,12 @@ msgstr ""
 #: ../tools/common/t-favorites.c:634 ../tools/common/t-favorites.c:1061
 #: ../tools/common/t-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
-msgstr "No es pot inicialitzar la transacció per a accedir a favorits"
+msgstr "No es pot inicialitzar la transacció per a accedir a preferits"
 
 #: ../tools/common/t-connection.c:1675 ../tools/common/t-favorites.c:807
 #: ../tools/common/t-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
-msgstr "No es poden realitzar transaccions per a accedir a favorits"
+msgstr "No es poden realitzar transaccions per a accedir a preferits"
 
 #: ../tools/common/t-connection.c:2234
 msgid "Could not execute LDAP search"
@@ -11526,12 +11526,12 @@ msgstr "No es pot obrir canonada '%s': %s"
 
 #: ../tools/common/t-favorites.c:184 ../tools/common/t-favorites.c:193
 msgid "Can't initialize dictionary to store favorites"
-msgstr "No es pot inicialitzar el diccionari per emmagatzemar favorits"
+msgstr "No es pot inicialitzar el diccionari per emmagatzemar preferits"
 
 #: ../tools/common/t-favorites.c:185
 #, c-format
 msgid "Can't initialize dictionary to store favorites :%s"
-msgstr "No es pot inicialitzar el diccionari per a emmagatzemar favorits :%s"
+msgstr "No es pot inicialitzar el diccionari per a emmagatzemar preferits :%s"
 
 #: ../tools/common/t-term-context.c:523
 #, c-format
