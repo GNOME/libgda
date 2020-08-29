@@ -2477,12 +2477,12 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:1719
 msgid "Missing attribute named 'path'"
-msgstr "Falta l'atribut anomenat «ruta »"
+msgstr "Falta l'atribut anomenat «ruta»"
 
 #: ../libgda/gda-server-operation.c:2480
 #, c-format
 msgid "Missing required value for '%s'"
-msgstr "Falta el valor requerit per a '%s'"
+msgstr "Falta el valor requerit per a «%s»"
 
 #: ../libgda/gda-server-operation.c:2629
 msgid ""
@@ -2886,7 +2886,7 @@ msgstr "Els arguments 'primer', 'segon' i 'tercer' han de ser diferents"
 #: ../libgda/gda-util.c:3045
 #, c-format
 msgid "Invalid separator '%c'"
-msgstr "Separador '%c' no vàlid"
+msgstr "Separador «%c» no vàlid"
 
 #: ../libgda/gda-util.c:3047
 msgid "Invalid null separator"
@@ -3201,7 +3201,7 @@ msgstr "No s'ha pogut registrar la funció «%s»"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1424
 #, c-format
 msgid "Could not define the %s collation"
-msgstr "No s'ha pogut definir la recopilació %s "
+msgstr "No s'ha pogut definir la intercalació %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1708
 #: ../libgda/sqlite/gda-sqlite-provider.c:1719
@@ -4170,7 +4170,7 @@ msgid ""
 "character, suitable to enter passwords"
 msgstr ""
 "Si està en TRUE, tots els caràcters es mostren utilitzant un únic caràcter "
-"«invisible», apropiat per introduir contrasenyes \""
+"«invisible», apropiat per introduir contrasenyes   "
 
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:254
 #, c-format
@@ -4185,12 +4185,12 @@ msgstr "El tipus %s no és numèric"
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:251
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
-msgstr "El separador decimal no pot ser el caràcter '%c'"
+msgstr "El separador decimal no pot ser el caràcter «%c»"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:261
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
-msgstr "El separador de milers no pot ser el caràcter '%c'"
+msgstr "El separador de milers no pot ser el caràcter «%c»"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:109
 #: ../libgda-ui/data-entries/plugins/common-pict.c:124
@@ -4364,8 +4364,8 @@ msgid ""
 "'@':alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any "
 "other character will be left unmodified)"
 msgstr ""
-"Caràcters permesos en cada posició ('0':digit, '9': digit excepte 0, "
-"'@':alpha, '^':majúscules, '#':alphanumeric, '*':qualsevol caràcter; "
+"Caràcters permesos en cada posició («0»:digit, «9»: digit excepte 0, "
+"«@»:alpha, «^»:majúscules, «#»:alphanumeric, «*»:qualsevol caràcter; "
 "qualsevol altre caràcter es deixarà sense modificar)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:3
@@ -4377,8 +4377,8 @@ msgid ""
 "Writing mask for corresponding characters in format ('_': writable, "
 "'-':writable, removed from actual value, ' ': not writable)"
 msgstr ""
-"Escrivint la màscara per als caràcters corresponents en format ('_': "
-"escrivible, '-':escrivible, eliminat del valor actual, ' ': no escrivible)"
+"Escrivint la màscara per als caràcters corresponents en format («_»: "
+"escrivible, «-»:escrivible, eliminat del valor actual, « »: no escrivible)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -6018,7 +6018,7 @@ msgstr "Comparacions per localització"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:12
 msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
-msgstr "Habilita l'ús de mètodes de recolecció addicionals (LOCALE i DCASE)"
+msgstr "Habilita l'ús de mètodes d'intercalació addicionals (LOCALE i DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:13
@@ -6745,12 +6745,12 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:32
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:75
 msgid "Collation"
-msgstr "Recolecció"
+msgstr "Intercalació"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "Collation method to use in the new database"
-msgstr "Mètode de recopilació a utilitzar en la nova base de dades"
+msgstr "Mètode d'intercalació a utilitzar en la base de dades nova"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
@@ -7728,7 +7728,7 @@ msgstr "Expressió de restricció per a un índex parcial"
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
 msgid "Collation name"
-msgstr "Nom de la recolecció"
+msgstr "Nom de la intercalació"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
