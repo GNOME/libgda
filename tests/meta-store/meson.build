@@ -1,6 +1,12 @@
 meta_store_common_sources = files([
 	'common.c',
-	'common.h'
+	'common.h',
+	'../test-cnc-utils.h',
+	'../test-cnc-utils.c',
+	'../raw-ddl-creator.c',
+	'../raw-ddl-creator.h',
+	'../test-errors.c',
+	'../test-errors.h'
 	])
 
 tchkmst = executable('check_meta_store_memory',

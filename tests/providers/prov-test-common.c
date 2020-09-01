@@ -55,14 +55,10 @@ prov_test_common_setup (void)
 	 * testXXXXX where XXXXX is a string generated from the random int32 numbers
 	 * that correspond to ASCII codes for characters a-z
 	 */
-	GString *buffer = g_string_new ("test");
+	gchar *dbname = test_random_string ("test", 5);
 
-	for (int i = 0; i < 5; ++i) {
-	    gint32 character = g_random_int_range (97, 123);
-	    buffer = g_string_append_c (buffer, character);
-	}
-	cnc = test_cnc_setup_connection (pinfo->id, buffer->str, &error);
-	g_string_free (buffer, TRUE);
+	cnc = test_cnc_setup_connection (pinfo->id, dbname, &error);
+	g_free (dbname);
 	if (!cnc) {
 		if (error) {
 			if (error->domain != TEST_ERROR) {

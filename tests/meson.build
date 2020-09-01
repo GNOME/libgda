@@ -226,7 +226,14 @@ test('SqlRenderer', tsqlr,
 	)
 
 tsop = executable('test-server-operation-postgresql',
-	['test-server-operation-postgresql.c'] ,
+	['test-server-operation-postgresql.c',
+	'test-cnc-utils.h',
+	'test-cnc-utils.c',
+	'test-errors.h',
+	'test-errors.c',
+	'raw-ddl-creator.h',
+	'raw-ddl-creator.c'
+	] ,
 	c_args: [
 		'-include',
 		gda_top_build + '/config.h',
