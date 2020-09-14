@@ -698,7 +698,7 @@ msgstr "Calcula la demora d'execució per a cada sentència executada"
 
 #: ../libgda/gda-connection.c:388
 msgid "Artificially slows down the execution of queries"
-msgstr "Alenteix artificialment l’execució de consultes"
+msgstr "Alenteix artificialment l'execució de consultes"
 
 #: ../libgda/gda-connection.c:586 ../libgda/gda-connection.c:614
 #: ../libgda/gda-connection.c:628 ../libgda/gda-connection.c:643
@@ -801,7 +801,7 @@ msgstr "Manquen o són erronis els arguments per a la taula «%s»: %s"
 #: ../libgda/gda-connection.c:5313
 #, c-format
 msgid "While extracting data from Data Store: %s"
-msgstr "Mentre s’extreuen dades del Data Store: %s"
+msgstr "Mentre s'extreuen dades del Data Store: %s"
 
 #: ../libgda/gda-connection.c:5371
 #, c-format
@@ -1270,12 +1270,12 @@ msgstr "La propietat \"opcions\" no és un objecte GdaSet"
 #: ../libgda/gda-data-model-import.c:698
 #, c-format
 msgid "The %s option must hold a string value, ignored."
-msgstr "L’opció %s ha de contenir un valor de cadena, ignorat."
+msgstr "L'opció %s ha de contenir un valor de cadena, ignorat."
 
 #: ../libgda/gda-data-model-import.c:714
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
-msgstr "L’opció «%s» ha de contenir un valor booleà, ignorat."
+msgstr "L'opció «%s» ha de contenir un valor booleà, ignorat."
 
 #: ../libgda/gda-data-model-import.c:955
 #, c-format
@@ -1362,7 +1362,7 @@ msgstr "No especificat <gda_array_field> en <gda_array>"
 
 #: ../libgda/gda-data-model-import.c:1842 ../libgda/gda-data-select.c:3813
 msgid "Data model does not support random access"
-msgstr "El model de dades no admet l’accés aleatori"
+msgstr "El model de dades no admet l'accés aleatori"
 
 #: ../libgda/gda-data-model-import.c:1902
 #, c-format
@@ -1612,7 +1612,7 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:1598 ../libgda/gda-data-select.c:1653
 msgid "Unique row condition has already been specified"
-msgstr "La condició de fila única ja s'ha especificat"
+msgstr "Ja s'ha especificat una condició única de fila"
 
 #: ../libgda/gda-data-select.c:1735 ../libgda/gda-data-select.c:1746
 msgid "No table to select from in SELECT statement"
@@ -2750,7 +2750,7 @@ msgstr "Error de format de ruta: %s"
 #: ../libgda/gda-tree-mgr-tables.c:253
 msgid "No connection and no GdaMetaStore specified"
 msgstr ""
-"No s’ha especificat cap connexió i no s’ha especificat cap GdaMetaStore"
+"No s'ha especificat cap connexió i no s'ha especificat cap GdaMetaStore"
 
 #: ../libgda/gda-tree-mgr-columns.c:354
 msgid "No schema specified"
@@ -3046,7 +3046,7 @@ msgstr "No s'ha especificat el nom del paràmetre"
 
 #: ../libgda-report/engine/gda-report-engine.c:900
 msgid "No expression specified"
-msgstr "No s’ha especificat cap expressió"
+msgstr "No s'ha especificat cap expressió"
 
 #: ../libgda-report/engine/gda-report-engine.c:923
 #, c-format
@@ -3183,7 +3183,7 @@ msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
 msgstr ""
-"ADVERTIMENT DE SEGURETAT: l’extensió de càrrega està habilitada per a ordres"
+"ADVERTIMENT DE SEGURETAT: l'extensió de càrrega està habilitada per a ordres"
 " SQL, això significa que un atacant pot accedir a funcions de càrrega "
 "d’extensions"
 
@@ -3645,7 +3645,7 @@ msgstr "identificador buit"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1056
 msgid "Operation has no operand"
-msgstr "L’operació no té cap operand"
+msgstr "L'operació no té cap operand"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1082
 #: ../libgda/sql-parser/gda-statement-struct.c:1089
@@ -3662,11 +3662,11 @@ msgstr "Operador %d desconegut"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1148
 msgid "Missing expression in select field"
-msgstr "Falta l’expressió en un camp seleccionat"
+msgstr "Falta l'expressió en un camp seleccionat"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1157
 msgid "Missing expression in select target"
-msgstr "Falta l’expressió en una destinació seleccionada"
+msgstr "Falta l'expressió en una destinació seleccionada"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1166
 msgid ""
@@ -4335,7 +4335,7 @@ msgstr "Model de selecció"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:2
 msgid "Specifies what the user will be allowed to select"
-msgstr "Especifica què se li permetrà seleccionar a l’usuari"
+msgstr "Especifica què se li permetrà seleccionar a l'usuari"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:3
 msgid "Only let the user pick an existing file"
@@ -4348,11 +4348,11 @@ msgstr ""
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:5
 msgid "Let the user pick an existing folder"
-msgstr "Deixa que l’usuari triï una carpeta existent"
+msgstr "Deixa que l'usuari triï una carpeta existent"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:6
 msgid "Let the user name an existing or new folder"
-msgstr "Deixa que l’usuari nomeni una carpeta existent o nova"
+msgstr "Deixa que l'usuari nomeni una carpeta existent o nova"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:1
 msgid "Format"
@@ -4835,7 +4835,7 @@ msgstr "Desant les dades en un fitxer"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1740
 msgid "The data will be exported to the selected file."
-msgstr "Les dades s’exportaran al fitxer seleccionat."
+msgstr "Les dades s'exportaran al fitxer seleccionat."
 
 #: ../libgda-ui/gdaui-raw-grid.c:1750 ../tools/common/t-config-info.c:426
 msgid "File name"
@@ -5238,7 +5238,7 @@ msgstr "Directori"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
 msgid "Directory where the database file is stored"
-msgstr "Directori on s’emmagatzema el fitxer de base de dades"
+msgstr "Directori on s'emmagatzema el fitxer de base de dades"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:5
@@ -5499,7 +5499,7 @@ msgstr "Directori on estarà el fitxer de base de dades"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:1
 msgid "Index description"
-msgstr "Descripció de l’índex"
+msgstr "Descripció de l'índex"
 
 #. To translators: "Type" is the data type of a table's column
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:2
@@ -6137,7 +6137,7 @@ msgid ""
 "The instance to connect to, if not specified, a connection to the default "
 "instance is made"
 msgstr ""
-"Si no s’especifica, es fa una instància per connectar-se a una instància "
+"Si no s'especifica, es fa una instància per connectar-se a una instància "
 "predeterminada"
 
 #. Connection parameters
@@ -6220,7 +6220,7 @@ msgid ""
 msgstr ""
 "Objecte Dummy GdaDataModelLdap: si veieu aquest missatge a l'aplicació, és "
 "probable que hi hagi un problema d'instal·lació amb el proveïdor LDAP. En "
-"qualsevol cas, l’objecte GdaDataModelLdap no serà útil."
+"qualsevol cas, l'objecte GdaDataModelLdap no serà útil."
 
 #: ../providers/ldap/gda-ldap-connection.c:128
 #, c-format
@@ -6230,7 +6230,7 @@ msgstr ""
 
 #: ../providers/ldap/gda-ldap-connection.c:213
 msgid "File used to store startup data"
-msgstr "Fitxer que s’utilitza per emmagatzemar dades d’inici"
+msgstr "Fitxer que s'utilitza per emmagatzemar dades d’inici"
 
 #: ../providers/ldap/gda-ldap-connection.c:260
 #, c-format
@@ -7914,7 +7914,7 @@ msgid ""
 " the new role, giving them the right to grant membership in this role to "
 "others"
 msgstr ""
-"Llista un o més rols existents que s’afegeixen automàticament com a membres "
+"Llista un o més rols existents que s'afegeixen automàticament com a membres "
 "del nou rol, donant-los el dret d’atorgar la pertinença a aquest paper a "
 "altres persones"
 
@@ -8008,7 +8008,7 @@ msgid ""
 "Existing groups to which the new user will be immediately added as a new "
 "member"
 msgstr ""
-"Grups existents als quals s’afegirà immediatament el nou usuari com a membre"
+"Grups existents als quals s'afegirà immediatament el nou usuari com a membre"
 " nou"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:18
@@ -8243,7 +8243,7 @@ msgstr "Camí a l'script PHP"
 msgid ""
 "The path of the script to use if service is not at the web server's root"
 msgstr ""
-"La ruta de l'script a utilitzar si el servei no està a l’arrel del servidor "
+"La ruta de l'script a utilitzar si el servei no està a l'arrel del servidor "
 "web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
@@ -8862,7 +8862,7 @@ msgid ""
 "contents"
 msgstr ""
 "Restabliu el contingut \n"
-"de l’editor"
+"de l'editor"
 
 #: ../tools/browser/data-manager/data-console.c:392
 msgid "Add a new data source"
@@ -9049,7 +9049,7 @@ msgstr "No s'ha pogut trobar la taula '%s'"
 #: ../tools/browser/data-manager/data-source.c:466
 #, c-format
 msgid "The \"%s\" object is not a table"
-msgstr "L’objecte \"%s\" no és una taula"
+msgstr "L'objecte \"%s\" no és una taula"
 
 #. Translators: Do not translate "name"
 #: ../tools/browser/data-manager/data-source.c:485
@@ -9575,7 +9575,7 @@ msgid ""
 "table."
 msgstr ""
 "Cada vegada que es seleccionen les dades de la taula virtual que es crearà, "
-"s’executarà la cerca LDAP i es retornarà la informació com a contingut de la"
+"s'executarà la cerca LDAP i es retornarà la informació com a contingut de la"
 " taula."
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:139
@@ -9602,7 +9602,7 @@ msgstr ""
 
 #: ../tools/browser/login-dialog.c:243
 msgid "Cancelled by the user"
-msgstr "Cancel·lat per l’usuari"
+msgstr "Cancel·lat per l'usuari"
 
 #: ../tools/browser/mgr-favorites.c:251
 msgid "Multiple statements"
@@ -9699,7 +9699,7 @@ msgstr "Cap"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:1
 msgid "View the schema and data of databases"
-msgstr "Consulteu l’esquema i les dades de les bases de dades"
+msgstr "Consulteu l'esquema i les dades de les bases de dades"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
@@ -9741,7 +9741,7 @@ msgid ""
 "contents"
 msgstr ""
 "Netegeu el contingut \n"
-"de l’editor"
+"de l'editor"
 
 #: ../tools/browser/query-exec/query-console-page.c:309
 msgid ""
@@ -9877,7 +9877,7 @@ msgid ""
 "Internal error, please report error to "
 "http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
-"Error intern, informeu de l’error a\n"
+"Error intern, informeu de l'error a\n"
 "http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../tools/browser/query-exec/query-console-page.c:1086
@@ -9991,7 +9991,7 @@ msgstr "No s'ha trobat la taula"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:303
 msgid "Requested object is not a table or view"
-msgstr "L’objecte sol·licitat no és una taula o vista"
+msgstr "L'objecte sol·licitat no és una taula o vista"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:392
 msgid "Auto incremented"
@@ -10244,7 +10244,7 @@ msgstr "Previsualització:"
 msgid ""
 "Free form to test the configured\n"
 "data entry"
-msgstr "Formulari gratuït per a provar l’entrada de dades configurada"
+msgstr "Formulari gratuït per a provar l'entrada de dades configurada"
 
 #: ../tools/browser/text-search.c:265
 msgid "Hide search toolbar"
@@ -10810,7 +10810,7 @@ msgid ""
 "specified"
 msgstr ""
 "Mostra el contingut d’un conjunt de dades, mostrant només les columnes "
-"especificades si s’especifica"
+"especificades si s'especifica"
 
 #: ../tools/common/t-app.c:1325
 #, c-format
@@ -11058,7 +11058,7 @@ msgstr "Ja existeix una connexió anomenada «%s»"
 
 #: ../tools/common/t-app.c:2892
 msgid "No opened connection"
-msgstr "No s’ha obert cap connexió"
+msgstr "No s'ha obert cap connexió"
 
 #: ../tools/common/t-app.c:2903
 msgid "DSN or connection string"
