@@ -1007,7 +1007,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
                         g_string_append_printf (string, "host='%s'", pq_host);
                 if (pq_port > 0)
                         g_string_append_printf (string, " port=%d", pq_port);
-                g_string_append_printf (string, " dbname='%s'", pq_db ? pq_db : "template1");
+                g_string_append_printf (string, " dbname='%s'", pq_db ? pq_db : "postgres");
                 if (pq_options && *pq_options)
                         g_string_append_printf (string, " options='%s'", pq_options);
                 if (pq_user && *pq_user)
