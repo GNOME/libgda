@@ -1195,7 +1195,7 @@ msgstr "No es pot modificar la columna"
 #: ../libgda/gda-data-model-dir.c:943 ../libgda/gda-data-model-dir.c:946
 #: ../libgda/gda-data-model-dir.c:1159 ../libgda/gda-data-model-dir.c:1163
 msgid "New path must be a subpath of the base directory"
-msgstr "La nova ruta ha de ser una subruta de directori base"
+msgstr "El camí nou ha de ser un subcamí de directori base"
 
 #: ../libgda/gda-data-model-dir.c:986 ../libgda/gda-data-model-dir.c:1033
 #, c-format
@@ -2477,7 +2477,7 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:1719
 msgid "Missing attribute named 'path'"
-msgstr "Falta l'atribut anomenat «ruta»"
+msgstr "Falta l'atribut anomenat «path»"
 
 #: ../libgda/gda-server-operation.c:2480
 #, c-format
@@ -2495,7 +2495,7 @@ msgstr ""
 #: ../libgda/gda-server-provider.c:1021
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr "El proveïdor %s ha creat un GdaServerOperation sense node per a '%s'"
+msgstr "El proveïdor %s ha creat un GdaServerOperation sense node per a «%s»"
 
 #: ../libgda/gda-server-provider.c:1025
 #, c-format
@@ -2591,12 +2591,12 @@ msgstr "El proveïdor de bases de dades no admet transaccions distribuïdes"
 #: ../libgda/gda-set.c:1149 ../libgda/gda-set.c:1254
 #, c-format
 msgid "%s() does not handle values of type '%s'."
-msgstr "%s() no gestiona valors de tipus '%s'."
+msgstr "%s() no gestiona valors de tipus «%s»."
 
 #: ../libgda/gda-set.c:1204
 #, c-format
 msgid "GdaHolder with ID '%s' not found in set"
-msgstr "No s'ha trobat el GdaHolder amb ID '%s' en el conjunt"
+msgstr "No s'ha trobat el GdaHolder amb ID «%s» en el conjunt"
 
 #: ../libgda/gda-set.c:1371
 #, c-format
@@ -2604,13 +2604,13 @@ msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some"
 " weird errors may occur)"
 msgstr ""
-"No s'ha pogut analitzar '%s': la validació de la importació de dades XML no "
+"No s'ha pogut analitzar «%s»: la validació de la importació de dades XML no "
 "es realitzarà (podrien ocórrer errors estranys)"
 
 #: ../libgda/gda-set.c:1419
 #, c-format
 msgid "Spec's root node != 'data-set-spec': '%s'"
-msgstr "Node arrel de les especificacions != 'data-set-spec': '%s'"
+msgstr "Node arrel de les especificacions != 'data-set-spec': «%s»"
 
 #: ../libgda/gda-set.c:1458
 #, c-format
@@ -2744,7 +2744,7 @@ msgstr "Indica si el GdaTree és una llista o un arbre"
 #: ../libgda/gda-tree.c:716 ../libgda/gda-tree.c:724
 #, c-format
 msgid "Path format error: %s"
-msgstr "Error de format de ruta: %s"
+msgstr "Error de format de camí: %s"
 
 #: ../libgda/gda-tree-mgr-columns.c:268 ../libgda/gda-tree-mgr-schemas.c:214
 #: ../libgda/gda-tree-mgr-tables.c:253
@@ -2939,7 +2939,7 @@ msgstr "Representació de cadenes"
 
 #: ../libgda/handlers/gda-handler-text.c:207
 msgid "Large String representation"
-msgstr "Representació de cadenes llargues"
+msgstr "Representació de cadenes grans"
 
 #. To translators: DD represents a place holder in a date string. For example
 #. in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day
@@ -3091,7 +3091,7 @@ msgstr "L'execució del programa %s ha fallat: %s"
 #: ../libgda-report/gda-report-document.c:344
 #, c-format
 msgid "This report document does not handle %s output"
-msgstr "Aquest document d'informe no gestiona sortides en %s "
+msgstr "Aquest document d'informe no gestiona sortides en %s"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:68
 msgid "Internal error, creating table in SQLite provider"
@@ -3117,7 +3117,7 @@ msgstr "Representació binària SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:74
 msgid "Sqlite boolean representation"
-msgstr "Representació booleana Sqlite "
+msgstr "Representació booleana Sqlite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:124
 #, c-format
@@ -3148,12 +3148,12 @@ msgstr "TRUE si el proveïdor és el valor intern predeterminat"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:974
 msgid "Can't find libsqlite3."
-msgstr "No es pot trobar la libsqlite3. "
+msgstr "No es pot trobar la libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1128
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr "La cadena de connexió ha de contenir els valors DB_DIR i DB_NAME "
+msgstr "La cadena de connexió ha de contenir els valors DB_DIR i DB_NAME"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1154
 #: ../libgda/sqlite/gda-sqlite-provider.c:1161
@@ -3824,18 +3824,18 @@ msgstr "Treball %u sol·licitat desconegut "
 #: ../libgda/thread-wrapper/gda-worker.c:602
 #, c-format
 msgid "Job %u has been cancelled"
-msgstr "S'ha cancel·lat el treball %u "
+msgstr "S'ha cancel·lat el treball %u"
 
 #: ../libgda/thread-wrapper/gda-worker.c:617
 #: ../libgda/thread-wrapper/gda-worker.c:667
 #, c-format
 msgid "Job %u is being processed"
-msgstr "S'està processant el treball %u "
+msgstr "S'està processant el treball %u"
 
 #: ../libgda/thread-wrapper/gda-worker.c:620
 #, c-format
 msgid "Job %u has not yet been processed"
-msgstr "Encara no s'ha processat el treball %u "
+msgstr "Encara no s'ha processat el treball %u"
 
 #: ../libgda/thread-wrapper/gda-worker.c:670
 #, c-format
@@ -4170,7 +4170,7 @@ msgid ""
 "character, suitable to enter passwords"
 msgstr ""
 "Si està en TRUE, tots els caràcters es mostren utilitzant un únic caràcter "
-"«invisible», apropiat per introduir contrasenyes   "
+"«invisible», apropiat per introduir contrasenyes"
 
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:254
 #, c-format
@@ -4388,7 +4388,7 @@ msgstr "Codificació"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:2
 msgid "How password should be encoded"
-msgstr "Com s'hauria de codificar la contrasenya "
+msgstr "Com s'hauria de codificar la contrasenya"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:3
 msgid "MD5 Sum"
@@ -4510,7 +4510,7 @@ msgstr ""
 "<b><big>Nota:\n"
 "</big></b>Molts dels elements de demostració utilitzen una connexió oberta a l'SQLite usant el fitxer «%s».\n"
 "\n"
-"En el codi font que es mostra aquí, els objectes <i>demo_cnc</i> and <i>demo_parser</i> són creats pel marc i posats a disposició de tots els elements demostrats.\n"
+"En el codi font que es mostra aquí, els objectes <i>demo_cnc</i> i <i>demo_parser</i> són creats pel marc i posats a disposició de tots els elements demostrats.\n"
 "\n"
 "Per il·lustrar que les trucades no es bloquegen, hi ha un rotàmetre a la part superior (que mai ha de deixar de girar), i s'afegeix un retard d'1 segon cada vegada que s'utilitza la connexió."
 
@@ -4602,7 +4602,7 @@ msgstr "Filtra"
 
 #: ../libgda-ui/gdaui-data-filter.c:182
 msgid "any valid SQL expression"
-msgstr "qualsevol expressió SQL vàlida "
+msgstr "qualsevol expressió SQL vàlida"
 
 #: ../libgda-ui/gdaui-data-filter.c:186
 msgid ""
@@ -4709,7 +4709,7 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-data-store.c:375
 msgid "Trying to modify a read-only row"
-msgstr "Intentant modificar una fila de només lectura "
+msgstr "Intentant modificar una fila de només lectura"
 
 #: ../libgda-ui/gdaui-data-store.c:577
 msgid "Can't access row while data model is being reset"
@@ -4822,12 +4822,12 @@ msgstr "Mostra els _títols de les columnes"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1552
 msgid "Save _As"
-msgstr "Desar _Com"
+msgstr "_Anomena i desa"
 
 #. create dialog box
 #: ../libgda-ui/gdaui-raw-grid.c:1731
 msgid "Saving Data"
-msgstr "Desant les dades "
+msgstr "S'estan desant les dades"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1739
 msgid "Saving data to a file"
@@ -4850,7 +4850,7 @@ msgstr "Detalls"
 #. file type
 #: ../libgda-ui/gdaui-raw-grid.c:1792
 msgid "File type:"
-msgstr "Tipus de fitxer."
+msgstr "Tipus de fitxer:"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1802
 msgid "Tab-delimited"
@@ -5095,7 +5095,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-server-operation.c:369
 #, c-format
 msgid "Mal formed Server Operation. No Node at path: '%s'"
-msgstr "Operació de servidor mal formulat. No hi ha node a la ruta: «%s»"
+msgstr "Operació de servidor mal formulat. No hi ha node al camí: «%s»"
 
 #: ../libgda-ui/gdaui-server-operation.c:442
 msgid "Add a new field"
@@ -5205,7 +5205,7 @@ msgstr "Corregir dades primer"
 
 #: ../libgda-ui/internal/utility.c:499
 msgid "Ok"
-msgstr "Acceptar"
+msgstr "D'acord"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:1
 msgid "Database file"
@@ -6680,7 +6680,7 @@ msgstr "Sòcol UNIX"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:9
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:8
 msgid "Full path of the UNIX socket to use when connecting locally"
-msgstr "Ruta completa al sòcol UNIX per a utilitzar a l'connectar localment"
+msgstr "Camí completa al sòcol UNIX per a utilitzar al connectar localment"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
@@ -7395,7 +7395,7 @@ msgstr "No s'ha pogut establir search_path a %s"
 #: ../providers/postgres/gda-postgres-provider.c:691
 #, c-format
 msgid "Search path %s is invalid"
-msgstr "La ruta de cerca %s no és vàlida"
+msgstr "El camí de cerca %s no és vàlid"
 
 #: ../providers/postgres/gda-postgres-provider.c:1094
 #: ../providers/postgres/gda-postgres-provider.c:1096
@@ -7442,7 +7442,7 @@ msgstr "No s'ha pogut establir el paràmetre d'ID de transacció XA"
 
 #: ../providers/postgres/gda-postgres-recordset.c:152
 msgid "Number of rows chunks read since the object creation"
-msgstr "Nombre de trossos de la fila llegits des de la creació l'objecte "
+msgstr "Nombre de trossos de la fila llegits des de la creació l'objecte"
 
 #: ../providers/postgres/gda-postgres-recordset.c:611
 #, c-format
@@ -7493,7 +7493,7 @@ msgid ""
 "empty)"
 msgstr ""
 "Amfitrió en el qual s'està executant la base de dades (per als servidors "
-"executant-sota sòcols de domini UNIX, introduïu la ruta del sòcol "
+"executant-sota sòcols de domini UNIX, introduïu el camí del sòcol "
 "(generalment /tmp), o deixeu aquest camp buit)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
@@ -7536,7 +7536,7 @@ msgstr "Plantilla"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
 msgid "The name of the template from which to create the new database"
 msgstr ""
-"El nom de la plantilla des de la qual es crearà la base de dades nova "
+"El nom de la plantilla des de la qual es crearà la base de dades nova"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
@@ -8070,7 +8070,7 @@ msgstr "Camí de cerca"
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 msgid "Search path among database's schemas ('search_path' variable)"
 msgstr ""
-"Ruta de cerca entre els esquemes de la base de dades  ('search_path' "
+"Camí de cerca entre els esquemes de la base de dades  ('search_path' "
 "variable)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
@@ -8159,7 +8159,7 @@ msgstr "AMFITRIÓ/SCRIPT «%s» no vàlid"
 #: ../providers/web/gda-web-provider.c:343
 #, c-format
 msgid "The connection string must contain the %s value"
-msgstr "La cadena de connexió ha de contenir el valor %s "
+msgstr "La cadena de connexió ha de contenir el valor %s"
 
 #: ../providers/web/gda-web-provider.c:601
 #: ../providers/web/gda-web-provider.c:630
@@ -8243,7 +8243,7 @@ msgstr "Camí a l'script PHP"
 msgid ""
 "The path of the script to use if service is not at the web server's root"
 msgstr ""
-"La ruta de l'script a utilitzar si el servei no està a l'arrel del servidor "
+"El camí de l'script a utilitzar si el servei no està a l'arrel del servidor "
 "web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
@@ -9971,7 +9971,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:219
 msgid "Statement:"
-msgstr "Declaració"
+msgstr "Declaració:"
 
 #: ../tools/browser/query-exec/query-result.c:293
 msgid "Execution Parameters"
@@ -11032,7 +11032,7 @@ msgstr "Manca el nom del proveïdor"
 
 #: ../tools/common/t-app.c:2652
 msgid "Missing DSN name"
-msgstr "Manca el nom del DSN."
+msgstr "Manca el nom del DSN"
 
 #: ../tools/common/t-app.c:2830
 #, c-format
