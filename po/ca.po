@@ -811,54 +811,54 @@ msgstr "Error intern: No hi ha un magatzem de meta en connexió"
 #: ../libgda/gda-connection.c:5389
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar els espais de noms"
+msgstr "El paràmetre «name» és necessari per a filtrar els espais de noms"
 
 #: ../libgda/gda-connection.c:5400
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar els tipus de dades"
+msgstr "El paràmetre «name» és necessari per a filtrar els tipus de dades"
 
 #: ../libgda/gda-connection.c:5411
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar taules"
+msgstr "El paràmetre «name» és necessari per a filtrar taules"
 
 #: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter views"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar vistes"
+msgstr "El paràmetre «name» és necessari per a filtrar vistes"
 
 #: ../libgda/gda-connection.c:5432
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar camps"
+msgstr "El paràmetre «name» és necessari per a filtrar camps"
 
 #: ../libgda/gda-connection.c:5438
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
-msgstr "El paràmetre \"nom _de_camp\" és necessari per a filtrar camps"
+msgstr "El paràmetre «field_name» és necessari per a filtrar camps"
 
 #: ../libgda/gda-connection.c:5445
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr ""
-"Els paràmetres \"nom\" i/o \"nom _de_camp\" són necessaris per a filtrar "
+"Els paràmetres «name» i/o «field_name» són necessaris per a filtrar "
 "camps"
 
 #: ../libgda/gda-connection.c:5454 ../libgda/gda-connection.c:5475
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
-msgstr "El paràmetre \"nom\" és necessari per a filtrar índexs"
+msgstr "El paràmetre «name» és necessari per a filtrar índexs"
 
 #: ../libgda/gda-connection.c:5460 ../libgda/gda-connection.c:5479
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
-msgstr "El paràmetre \"'nom_índex'\" és necessari per a filtrar índexs"
+msgstr "El paràmetre «index_name» és necessari per a filtrar índexs"
 
 #: ../libgda/gda-connection.c:5467
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
-msgstr "Els paràmetres \"nom\" i/o \"nom _índex\" són necessaris per a filtrar índex"
+msgstr "Els paràmetres «name» i/o «index_name» són necessaris per a filtrar índex"
 
 #: ../libgda/gda-connection.c:5487
 #, c-format
@@ -952,7 +952,7 @@ msgstr "Els tipus de la columna %d no coincideixen: «%s» i «%s»"
 #: ../libgda/gda-data-comparator.c:444
 msgid "Can't get the number of rows of data model to compare from"
 msgstr ""
-"No es pot obtenir el nombre de files del model de dades des del que comparar"
+"No es pot obtenir el nombre de files del model de dades des del qual comparar"
 
 #: ../libgda/gda-data-comparator.c:450
 msgid "Can't get the number of rows of data model to compare to"
@@ -1265,7 +1265,7 @@ msgstr "Llista de fonts de dades definides"
 
 #: ../libgda/gda-data-model-import.c:490
 msgid "\"options\" property is not a GdaSet object"
-msgstr "La propietat \"opcions\" no és un objecte GdaSet"
+msgstr "La propietat «opcions» no és un objecte GdaSet"
 
 #: ../libgda/gda-data-model-import.c:698
 #, c-format
@@ -1318,7 +1318,7 @@ msgstr "S'espera <gda_array> node en XML file, té <%s>"
 #: ../libgda/gda-data-model-import.c:1290
 #: ../libgda/gda-data-model-import.c:1612
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr "Cap atribut \"gdatype\" especificat a <gda_array_field>"
+msgstr "Cap atribut «gdatype» especificat a <gda_array_field>"
 
 #: ../libgda/gda-data-model-import.c:1341
 msgid "Expected <gda_array_field> in <gda_array>"
@@ -1957,7 +1957,7 @@ msgstr ""
 
 #: ../libgda/gda-init.c:61
 msgid "Ignoring attempt to re-initialize GDA library."
-msgstr "S'està ignorant l'intent de reinicialitzar la llibreria GDA."
+msgstr "S'està ignorant l'intent de reinicialitzar la biblioteca GDA."
 
 #: ../libgda/gda-init.c:76
 msgid "libgda needs GModule. Finishing..."
@@ -2064,7 +2064,7 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:1883 ../libgda/gda-meta-struct-io.c:179
 msgid "Missing table name from <table> node"
-msgstr "Falta el nom de la taula del node <table> "
+msgstr "Falta el nom de la taula del node <table>"
 
 #: ../libgda/gda-meta-store.c:2126
 #, c-format
@@ -2557,7 +2557,7 @@ msgid ""
 "Internal error please report bug to "
 "https://gitlab.gnome.org/GNOME/libgda/issues No error was reported"
 msgstr ""
-"S'ha produït un error intern si us plau informeu a  "
+"S'ha produït un error intern si us plau informeu a "
 "https://gitlab.gnome.org/GNOME/libgda/issues Cap error informat"
 
 #: ../libgda/gda-server-provider.c:3409 ../libgda/gda-server-provider.c:3479
@@ -2923,7 +2923,7 @@ msgstr ""
 
 #: ../libgda/handlers/gda-handler-bin.c:202
 msgid "Binary representation"
-msgstr "Representació binària "
+msgstr "Representació binària"
 
 #: ../libgda/handlers/gda-handler-boolean.c:138
 msgid "Boolean representation"
@@ -3580,7 +3580,7 @@ msgstr "El codi SQL no conté cap declaració"
 #: ../libgda/sql-parser/gda-sql-parser.c:792
 #, c-format
 msgid "Syntax error at line %d, column %d"
-msgstr "Error de sintaxi a la línia  %d, columna %d"
+msgstr "Error de sintaxi a la línia %d, columna %d"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:806
 #, c-format
@@ -3679,7 +3679,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct.c:1171
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» creuat no pot tenir una condició de «JOIN» o una una llista de "
+"El «JOIN» creuat no pot tenir una condició de «JOIN» o una llista de "
 "camps en els quals unir-se"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1180
@@ -3767,7 +3767,7 @@ msgstr "SELECT no pot tenir un HAVING sense un GROUP BY"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:422
 msgid "SELECT can't have a limit offset without a limit"
-msgstr "SELECT no pot tenir un «limit òfset» sense un límit "
+msgstr "SELECT no pot tenir un «limit offset» sense un límit"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:447
 #: ../libgda/sql-parser/gda-statement-struct-select.c:456
@@ -4989,7 +4989,7 @@ msgstr ""
 " - I espaiat inicial per al sagnat\n"
 "\"\"\"- Això és una llista d'elements\n"
 "- Simplement utilitza els guions\n"
-" -  I espaiat inicial per al sagnat\n"
+" - I espaiat inicial per al sagnat\n"
 "\n"
 "Les àrees en brut es delimiten dins de cometes dobles i no s'interpreta cap marcat"
 
@@ -5147,7 +5147,7 @@ msgstr "Proveïdor «%s» desconegut"
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:199
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
-msgstr "E proveïdor «%s» no ha informat dels paràmetres necessaris per DSN"
+msgstr "El proveïdor «%s» no ha informat dels paràmetres necessaris per DSN"
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:82
@@ -5988,7 +5988,7 @@ msgstr "Defineix si cal afegir l'extensió \".db\" a l'argument DB_NAME"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:7
 msgid "Extra functions"
-msgstr "Funcions extra"
+msgstr "Funcions extres"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:8
@@ -7820,7 +7820,7 @@ msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
 msgstr ""
-"Establir a TRUE si el rol creat hereta els privilegis dels rols dels que és "
+"Establir a TRUE si el rol creat hereta els privilegis dels rols dels quals és "
 "membre"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -8070,7 +8070,7 @@ msgstr "Camí de cerca"
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 msgid "Search path among database's schemas ('search_path' variable)"
 msgstr ""
-"Camí de cerca entre els esquemes de la base de dades  ('search_path' "
+"Camí de cerca entre els esquemes de la base de dades («search_path» "
 "variable)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
@@ -8461,7 +8461,7 @@ msgstr "Llista de connexions"
 
 #: ../tools/browser/browser-window.c:423
 msgid "New Window"
-msgstr "Finestra  nova"
+msgstr "Finestra nova"
 
 #: ../tools/browser/browser-window.c:426
 msgid "About"
@@ -8817,13 +8817,13 @@ msgid ""
 "Name of the schema the\n"
 "tables will be in"
 msgstr ""
-"El nom de l'esquema \n"
-"en el què estaran les taules "
+"El nom de l'esquema\n"
+"en el qual estaran les taules"
 
 #: ../tools/browser/data-manager/analyser.c:193
 #, c-format
 msgid "Obtain referenced data in table %s from "
-msgstr "Obteniu dades de referència des de la taula  %s "
+msgstr "Obteniu dades de referència des de la taula %s "
 
 #: ../tools/browser/data-manager/analyser.c:198
 #, c-format
@@ -9044,17 +9044,17 @@ msgstr "Nom de taula incorrecte \"%s\""
 #: ../tools/browser/data-manager/data-source.c:461
 #, c-format
 msgid "Could not find the \"%s\" table"
-msgstr "No s'ha pogut trobar la taula '%s'"
+msgstr "No s'ha pogut trobar la taula «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:466
 #, c-format
 msgid "The \"%s\" object is not a table"
-msgstr "L'objecte \"%s\" no és una taula"
+msgstr "L'objecte «%s» no és una taula"
 
 #. Translators: Do not translate "name"
 #: ../tools/browser/data-manager/data-source.c:485
 msgid "Missing attribute \"name\" for table"
-msgstr "Falta l'atribut \"nom\" per a la taula"
+msgstr "Falta l'atribut «name» per a la taula"
 
 #: ../tools/browser/data-manager/data-source.c:625
 #, c-format
@@ -9310,7 +9310,7 @@ msgstr "Vista prèvia de la importació"
 
 #: ../tools/browser/gdaui-data-import.c:285
 msgid "No data."
-msgstr "No hi ha dades"
+msgstr "No hi ha dades."
 
 #: ../tools/browser/gdaui-entry-import.c:182
 msgid "Data set import from file"
@@ -9415,7 +9415,7 @@ msgstr "Mai"
 #. DN
 #: ../tools/browser/ldap-browser/entry-properties.c:764
 msgid "Distinguished Name:"
-msgstr "Nom distintiu"
+msgstr "Nom distintiu:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:911
 msgid "Can't display attribute value"
@@ -9936,7 +9936,7 @@ msgstr ""
 "Les següents dreceres estan permeses:\n"
 "   <small><b>CTRL - l</b></small> netejar l'editor\n"
 "   <small><b>CTRL - ENTER</b></small> executar SQL\n"
-"   <small><b>CTRL - Up</b></small>moure a l'anterior SQL executada a l'historial\n"
+"   <small><b>CTRL - Up</b></small> moure a l'anterior SQL executada a l'historial\n"
 "   <small><b>CTRL - Down</b></small> moure a la següent SQL executada en l'historial \n"
 "   <small><b>CTRL - SPACE</b></small> obtenir una llista de finalització"
 
@@ -10110,7 +10110,7 @@ msgstr "No s'ha pogut trobar la taula '%s.%s'"
 #: ../tools/browser/schema-browser/table-columns.c:975
 #, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr "No s'ha pogut trobar cap la clau externa declarada «%s»"
+msgstr "No s'ha pogut trobar cap clau externa declarada «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:274
 #: ../tools/browser/schema-browser/table-info.c:750
@@ -11244,7 +11244,7 @@ msgstr "Nombre d'arguments incorrecte"
 
 #: ../tools/common/t-app.c:4521 ../tools/common/t-app.c:4536
 msgid "Could not write file"
-msgstr "No s'ha pogut escriure el fitxer "
+msgstr "No s'ha pogut escriure el fitxer"
 
 #: ../tools/common/t-app.c:4688
 msgid "Missing data on which to operate"
@@ -11503,12 +11503,12 @@ msgstr "No s'ha pogut executar la cerca a l'LDAP"
 #: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
-msgstr "No s'ha pogut interpretar el valor del paràmetre '%s'"
+msgstr "No s'ha pogut interpretar el valor del paràmetre «%s»"
 
 #: ../tools/common/t-context.c:343
 #, c-format
 msgid "No internal parameter named '%s' required by query"
-msgstr "No es requereix cap paràmetre intern anomenat  '%s' a la consulta"
+msgstr "No es requereix cap paràmetre intern anomenat «%s» a la consulta"
 
 #: ../tools/common/t-context.c:426
 msgid "Connection closed"
@@ -11710,7 +11710,7 @@ msgstr "No s'ha pogut crear l'objecte del proveïdor: %s\n"
 #: ../tools/misc/gda-list-server-op.c:76
 #, c-format
 msgid "Existing operation types for provider '%s':\n"
-msgstr "Tipus d’operacions existents per al proveïdor '%s':\n"
+msgstr "Tipus d’operacions existents per al proveïdor «%s»:\n"
 
 #: ../tools/misc/gda-list-server-op.c:78
 #, c-format
@@ -11735,4 +11735,4 @@ msgstr "Error: %s\n"
 #: ../tools/misc/gda-list-server-op.c:379
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
-msgstr "No es pot analitzar el fitxer '%s', ignorant-lo"
+msgstr "No es pot analitzar el fitxer «%s», ignorant-lo"
