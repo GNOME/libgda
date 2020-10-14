@@ -2227,7 +2227,7 @@ msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
-"Els noms personalitzats d'objectes de la base de dades que comencen per '_' "
+"Els noms personalitzats d'objectes de la base de dades que comencen per «_» "
 "estan reservats per a ús intern"
 
 #: ../libgda/gda-meta-store.c:4644
@@ -3209,7 +3209,7 @@ msgstr "No s'ha pogut definir la intercalació %s"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1744
 msgid "Error initializing database with passphrase"
 msgstr ""
-"S'ha produït un error en inicialitzar la base de dades amb contrasenya "
+"S'ha produït un error en inicialitzar la base de dades amb contrasenya"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1786
 msgid "Missing database name or directory"
@@ -3534,7 +3534,7 @@ msgstr ""
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:713
 #, c-format
 msgid "Can't declare virtual table (\"%s\"): %s"
-msgstr "No es pot declarar la taula virtual (\"%s\"): %s"
+msgstr "No es pot declarar la taula virtual («%s»): %s"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:856
 msgid "Internal SQLite error: no data to iterate on"
@@ -3674,7 +3674,7 @@ msgid ""
 " join on"
 msgstr ""
 "El JOINT no pot especificar una condició d'unió i al mateix temps una llista"
-" de camps als quals unir-se."
+" de camps als quals unir-se"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1171
 msgid "Cross join can't have a join condition or a list of fields to join on"
@@ -4017,7 +4017,7 @@ msgid ""
 " %s and %s, which means the data model has some incoherencies"
 msgstr ""
 "El renderitzador de la cel·la de dades ha demanat mostrar valors de tipus de"
-" dades diferents, al menys %s i %s, el que vol dir que el model de dades té "
+" dades diferents, almenys %s i %s, el que vol dir que el model de dades té "
 "algunes incoherències "
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
@@ -4891,11 +4891,11 @@ msgstr "Cadena buida quan sigui NULL?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1844 ../libgda-ui/gdaui-raw-grid.c:1849
 msgid "Export NULL values as an empty \"\" string"
-msgstr "Exporta els valors NULL com una cadena buida \"\""
+msgstr "Exporta els valors NULL com una cadena buida «»"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1851
 msgid "Invalid data as NULL?"
-msgstr "Dades no vàlides com a NUL? "
+msgstr "Dades no vàlides com a NUL?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1854 ../libgda-ui/gdaui-raw-grid.c:1859
 msgid ""
@@ -7805,7 +7805,7 @@ msgstr "Pot crear rols"
 #. available since PostgreSQL 8.1
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:65
 msgid "Set to TRUE if the role is allowed to create roles"
-msgstr "Configura a TRUE si es permet que el rol crei rols"
+msgstr "Configura a TRUE si es permet al rol crear rols"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -9091,7 +9091,7 @@ msgstr ""
 #: ../tools/browser/data-manager/data-source-editor.c:112
 #: ../tools/browser/ui-formgrid.c:532 ../tools/browser/ui-formgrid.c:543
 msgid "Zoom..."
-msgstr "Zoom"
+msgstr "Zoom..."
 
 #: ../tools/browser/data-manager/data-source-editor.c:159
 msgid "Id"
@@ -9763,7 +9763,7 @@ msgid ""
 msgstr ""
 "Sagna l'SQL a l'editor \n"
 "i fa que el codi sigui més llegible \n"
-"(elimina comentaris) "
+"(elimina comentaris)"
 
 #: ../tools/browser/query-exec/query-console-page.c:337
 msgid "Add SQL to favorite"
@@ -9857,7 +9857,7 @@ msgstr ""
 "passa quan se seleccionen «blobs» (i la transacció\n"
 "haurà de romandre oberta mentre els «blobs»\n"
 "estiguin accessibles, netegi l'element corresponent \n"
-"de l'històric abans de tancar la transacció).\""
+"de l'històric abans de tancar la transacció)."
 
 #: ../tools/browser/query-exec/query-console-page.c:1011
 msgid "Statement executed"
@@ -10545,7 +10545,7 @@ msgid ""
 "SQL commands to be executed across multiple connections and/or datasets)"
 msgstr ""
 "Enllaça les connexions o conjunts de dades (<OBJ NAME>) en una de nova "
-"(permetent que els comandaments SQL s'executin a través de múltiples "
+"(permetent que les ordres SQL s'executin a través de múltiples "
 "connexions i/o conjunts de dades)"
 
 #: ../tools/common/t-app.c:1066 ../tools/common/t-app.c:1076
@@ -10651,7 +10651,7 @@ msgstr "%s [<NAME>]"
 
 #: ../tools/common/t-app.c:1170
 msgid "Show a piece of information, or all information about the connection"
-msgstr "Mostra tota la informació sobre la connexió o una part."
+msgstr "Mostra tota la informació sobre la connexió o una part"
 
 #: ../tools/common/t-app.c:1178 ../tools/common/t-app.c:1185
 #: ../tools/common/t-app.c:1192 ../tools/common/t-app.c:1199
@@ -10871,7 +10871,7 @@ msgstr ""
 "«set» com a 2n paràmetre, es mostren tots els atributs establerts; si es "
 "posa «all» com a 2n paràmetre també es mostren els atributs no establerts i "
 "si es posa «unset» com a 2n paràmetre, només es mostren els atributs no "
-"establerts. \""
+"establerts."
 
 #: ../tools/common/t-app.c:1379
 #, c-format
