@@ -1049,7 +1049,7 @@ msgstr "El model de dades no admet obtenir valor individual"
 #: ../libgda/gda-data-model.c:679 ../libgda/gda-data-model.c:689
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
-msgstr "El model de dades ha retornat un valor de tipus «%s» no vàlid "
+msgstr "El model de dades ha retornat un valor de tipus «%s» no vàlid"
 
 #: ../libgda/gda-data-model.c:686
 msgid "Data model returned invalid NULL value"
@@ -1061,15 +1061,15 @@ msgstr "El model de dades no admet l'establiment de valors individuals"
 
 #: ../libgda/gda-data-model.c:808
 msgid "Data model does not support setting values"
-msgstr "El model de dades no admet valors de configuració "
+msgstr "El model de dades no admet valors de configuració"
 
 #: ../libgda/gda-data-model.c:885 ../libgda/gda-data-model.c:919
 msgid "Data model does not support row append"
-msgstr "El model de dades no permet afegir files "
+msgstr "El model de dades no permet afegir files"
 
 #: ../libgda/gda-data-model.c:910
 msgid "Model does not allow row insertion"
-msgstr "El model no permet inserir files "
+msgstr "El model no permet inserir files"
 
 #: ../libgda/gda-data-model.c:945
 msgid "Model does not allow row deletion"
@@ -1313,7 +1313,7 @@ msgstr "Error en llegir el node en el fitxer XML"
 #: ../libgda/gda-data-model-import.c:1244
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
-msgstr "S'espera <gda_array> node en XML file, té <%s>"
+msgstr "S'espera <gda_array> node en el fitxer XML, té <%s>"
 
 #: ../libgda/gda-data-model-import.c:1290
 #: ../libgda/gda-data-model-import.c:1612
@@ -1335,7 +1335,7 @@ msgstr "S'esperava <gda_array_data> en <gda_array>"
 
 #: ../libgda/gda-data-model-import.c:1386
 msgid "Can't read the contents of the <gda_array_data> node"
-msgstr "No es pot llegir el contingut del node <gda_array_data> "
+msgstr "No es pot llegir el contingut del node <gda_array_data>"
 
 #: ../libgda/gda-data-model-import.c:1435
 #, c-format
@@ -1616,7 +1616,7 @@ msgstr "Ja s'ha especificat una condició única de fila"
 
 #: ../libgda/gda-data-select.c:1735 ../libgda/gda-data-select.c:1746
 msgid "No table to select from in SELECT statement"
-msgstr "No hi ha taula per a seleccionar en la declaració SELECT "
+msgstr "No hi ha taula per a seleccionar en la declaració SELECT"
 
 #: ../libgda/gda-data-select.c:1740
 msgid "SELECT statement uses more than one table to select from"
@@ -2076,7 +2076,7 @@ msgstr "La columna «%s» ja existeix i té característiques diferents"
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
 "Falta el nom de la taula referenciada per a les claus externes (per a la "
-"taula '%s')"
+"taula «%s»)"
 
 #: ../libgda/gda-meta-store.c:2217
 #, c-format
@@ -2134,7 +2134,7 @@ msgstr "Més d'una declaració SQL"
 #: ../libgda/gda-meta-store.c:3058 ../libgda/gda-meta-store.c:3181
 #, c-format
 msgid "Parameter '%s' is not present in statement"
-msgstr "El paràmetre '%s' no està present a la declaració"
+msgstr "El paràmetre «%s» no està present a la declaració"
 
 #: ../libgda/gda-meta-store.c:3068
 #, c-format
@@ -2216,7 +2216,7 @@ msgstr ""
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
 "No s'ha pogut analitzar la descripció XML de l'objecte personalitzat de la "
-"base de dades a afegir "
+"base de dades a afegir"
 
 #: ../libgda/gda-meta-store.c:4541
 msgid "Missing custom database object name"
@@ -2332,7 +2332,7 @@ msgstr "Falta el nom de l'objecte en l'estructura GdaMetaDbObject"
 #: ../libgda/gda-meta-struct.c:2555
 #, c-format
 msgid "Database object '%s' already exists"
-msgstr "L'objecte de la base de dades '%s' ja existeix"
+msgstr "L'objecte de la base de dades «%s» ja existeix"
 
 #: ../libgda/gda-meta-struct-io.c:84
 #, c-format
@@ -2354,7 +2354,7 @@ msgstr "Falta el nom de la columna de la taula «%s»"
 msgid "Missing foreign key's referenced table name for table '%s'"
 msgstr ""
 "Falta el nom de la taula referenciada per les claus externes per a la taula "
-"'%s'"
+"«%s»"
 
 #: ../libgda/gda-meta-struct-io.c:304 ../libgda/gda-meta-struct-io.c:311
 #: ../libgda/gda-meta-struct-io.c:318
@@ -2666,7 +2666,7 @@ msgstr "Tipus de declaració erroni"
 #: ../libgda/gda-sql-builder.c:568
 #, c-format
 msgid "Could not convert value to type '%s', value not defined"
-msgstr "No s'ha pogut convertir el valor al tipus '%s', valor no definit"
+msgstr "No s'ha pogut convertir el valor al tipus «%s», valor no definit"
 
 #: ../libgda/gda-sql-builder.c:1314
 #, c-format
@@ -2804,7 +2804,7 @@ msgstr "No s'ha indicat cap declaració SELECT"
 #: ../libgda/gda-tree-mgr-select.c:284
 #, c-format
 msgid "No value specified for parameter '%s'"
-msgstr "Cap valor especificat per al paràmetre '%s'"
+msgstr "Cap valor especificat per al paràmetre «%s»"
 
 #: ../libgda/gda-tree-mgr-select.c:317
 msgid "Unable to get iterator's value"
@@ -3750,7 +3750,7 @@ msgstr ""
 msgid "VALUES lists must all be the same length in INSERT statement"
 msgstr ""
 "Les llistes VALUES han de tenir totes la mateixa longitud en les "
-"declaracions INSERT "
+"declaracions INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:404
 msgid "SELECT does not contain any expression"
@@ -4875,7 +4875,7 @@ msgstr "Totes les dades (sense modificacions locals)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1827
 msgid "Only displayed data"
-msgstr "Només les dades mostrades "
+msgstr "Només les dades mostrades"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1829
 msgid "Only selected data"
@@ -4942,7 +4942,7 @@ msgstr "Si trieu sí, es perdran els continguts."
 #: ../libgda-ui/gdaui-raw-grid.c:2594 ../libgda-ui/gdaui-raw-grid.c:2649
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
-msgstr "L'atribut «%s» hauria de ser un valor G_TYPE_STRING "
+msgstr "L'atribut «%s» hauria de ser un valor G_TYPE_STRING"
 
 #: ../libgda-ui/gdaui-rt-editor.c:102
 msgid ""
@@ -5035,7 +5035,7 @@ msgstr "Mostra l'ajuda de sintaxi"
 
 #: ../libgda-ui/gdaui-rt-editor.c:177
 msgid "_Add image"
-msgstr "_Afegir imatge..."
+msgstr "_Afegir imatge"
 
 #: ../libgda-ui/gdaui-rt-editor.c:177
 msgid "Insert image"
@@ -5081,7 +5081,7 @@ msgstr "Augmentar la mida de la lletra (zoom in)"
 
 #: ../libgda-ui/gdaui-rt-editor.c:917
 msgid "Show source markup"
-msgstr "Mostra l'origen del marcat "
+msgstr "Mostra l'origen del marcat"
 
 #: ../libgda-ui/gdaui-server-operation.c:170
 msgid "The specification of the operation to implement"
@@ -5917,7 +5917,7 @@ msgstr "Índex per a eliminar"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:3
 msgid "If exists"
-msgstr "Si existeix "
+msgstr "Si existeix"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:4
@@ -6043,7 +6043,7 @@ msgstr "Permetre extensions"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:16
 msgid "Allow SQLite to load extensions using the load_extension() function"
 msgstr ""
-"Permet que SQLite carregui les extensions usant la funció load_extension() "
+"Permet que SQLite carregui les extensions usant la funció load_extension()"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
@@ -6156,7 +6156,7 @@ msgstr "Servidor de bases de dades"
 msgid "Host on which the database server is running or leave this field empty"
 msgstr ""
 "Amfitrió on s'està executant el servidor de base de dades o deixeu aquest "
-"camp buit "
+"camp buit"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:7
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
@@ -6359,7 +6359,7 @@ msgstr "Nom base distintiu, punt de partida per a les recerques"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 msgid "Host on which the LDAP server is running"
-msgstr "Amfitrió on s'està executant el servidor LDAP "
+msgstr "Amfitrió on s'està executant el servidor LDAP"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
@@ -6568,7 +6568,7 @@ msgid ""
 "access anyway."
 msgstr ""
 "No es pot usar CURSOR. Es requereix almenys la versió 5.0 de MySQL. S'està "
-"usant accés aleatori de totes maneres"
+"usant accés aleatori de totes maneres."
 
 #: ../providers/mysql/gda-mysql-recordset.c:152
 msgid ""
@@ -6662,7 +6662,7 @@ msgstr "Paràmetres d'accés del servidor"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:5
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:4
 msgid "Host on which the database server is running"
-msgstr "Amfitrió on s'està executant el servidor de base de dades "
+msgstr "Amfitrió on s'està executant el servidor de base de dades"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:7
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:7
@@ -7527,7 +7527,7 @@ msgstr "Propietari"
 msgid "The name of the database user who will own the new database"
 msgstr ""
 "El nom de l'usuari de la base de dades que serà propietari de la base de "
-"dades nova "
+"dades nova"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
 msgid "Template"
@@ -8100,7 +8100,7 @@ msgstr ""
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:1909
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:1948
 msgid "Mysql version 5.0 at least is required"
-msgstr "Es requereix almenys la versió 5.0 de MySQL. "
+msgstr "Es requereix almenys la versió 5.0 de MySQL"
 
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:177
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:219
@@ -9114,8 +9114,8 @@ msgid ""
 "Table to display data from, leave empty\n"
 "to specify a SELECT statement instead"
 msgstr ""
-"Taula per a mostrar les dades, deixar-la buida\n"
-"per a especificar una declaració SELECT en el seu lloc \""
+"Taula des de la qual mostrar les dades, deixeu-la buida\n"
+"per a poder especificar una declaració SELECT."
 
 #: ../tools/browser/data-manager/data-source-editor.c:181
 msgid ""
@@ -9574,7 +9574,7 @@ msgid ""
 " LDAP search will be executed and data returned as the contents of the "
 "table."
 msgstr ""
-"Cada vegada que es seleccionen les dades de la taula virtual que es crearà, "
+"Cada vegada que se seleccionen les dades de la taula virtual que es crearà, "
 "s'executarà la cerca LDAP i es retornarà la informació com a contingut de la"
 " taula."
 
@@ -9900,8 +9900,8 @@ msgstr "Fa menys d’un minut:\n"
 #, c-format
 msgid "%lu minute ago:\n"
 msgid_plural "%lu minutes ago:\n"
-msgstr[0] "fa %lu minut\n"
-msgstr[1] "fa %lu minuts\n"
+msgstr[0] "fa %lu minut:\n"
+msgstr[1] "fa %lu minuts:\n"
 
 #: ../tools/browser/query-exec/query-editor.c:1225
 #, c-format
@@ -9935,10 +9935,10 @@ msgstr ""
 "per a la definició de variables) \n"
 "Les següents dreceres estan permeses:\n"
 "   <small><b>CTRL - l</b></small> netejar l'editor\n"
-"   <small><b>CTRL - ENTER</b></small> executar SQL\n"
-"   <small><b>CTRL - Up</b></small> moure a l'anterior SQL executada a l'historial\n"
-"   <small><b>CTRL - Down</b></small> moure a la següent SQL executada en l'historial \n"
-"   <small><b>CTRL - SPACE</b></small> obtenir una llista de finalització"
+"   <small><b>CTRL - Retorn</b></small> executar SQL\n"
+"   <small><b>CTRL - Fletxa amunt</b></small> moure a l'anterior SQL executada a l'historial\n"
+"   <small><b>CTRL - Fletxa avall</b></small> moure a la següent SQL executada en l'historial\n"
+"   <small><b>CTRL - Espai</b></small> obtenir una llista de finalització"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:339
 msgid "New query execution tab"
