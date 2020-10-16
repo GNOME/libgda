@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-04-05 09:17+0000\n"
-"PO-Revision-Date: 2020-05-29 17:41+0300\n"
+"POT-Creation-Date: 2020-09-04 11:18+0000\n"
+"PO-Revision-Date: 2020-10-16 17:39+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 20.07.70\n"
+"X-Generator: Lokalize 20.11.70\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -27,7 +27,7 @@ msgstr "Джерела даних"
 
 #: ../control-center/dsn-config.c:137
 msgid "Configured data sources in the system"
-msgstr ""
+msgstr "Налаштовані у системі джерела даних"
 
 #: ../control-center/dsn-config.c:186
 msgid ""
@@ -35,6 +35,10 @@ msgid ""
 "the information needed to open a connection to a specific database using a "
 "'provider' is referenced using a unique name."
 msgstr ""
+"Джерела даних є засоби, за якими ідентифікуються з'єднання із базою даних:"
+" посилання на усі відомості, потрібні для відкриття з'єднання із певною базою"
+" даних з використанням «надавача даних» («provider»), виконується з"
+" використанням унікальної назви."
 
 #: ../control-center/dsn-config.c:268
 #, c-format
@@ -62,13 +66,15 @@ msgstr "Вибрати"
 
 #: ../control-center/dsn-properties-dialog.c:148
 msgid "Change the data source properties (the name can't be modified)."
-msgstr ""
+msgstr "Змінити властивості джерела даних (назву змінювати не можна)."
 
 #: ../control-center/dsn-properties-dialog.c:152
 msgid ""
 "For information only, this data source is a system wide data source\n"
 "and you don't have the permission change it."
 msgstr ""
+"Лише для інформування, це джерело даних є загальносистемним джерелом даних,\n"
+"у вас немає прав доступу для внесення до нього змін."
 
 #: ../control-center/dsn-properties-dialog.c:202
 #, c-format
@@ -91,7 +97,7 @@ msgstr "Невідома помилка"
 
 #: ../control-center/dsn-properties-dialog.c:268
 msgid "Could not execute browser program"
-msgstr ""
+msgstr "Не вдалося виконати програму-браузер"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-properties-dialog.c:269 ../libgda/gda-config.c:383
@@ -231,7 +237,7 @@ msgstr "Налаштовування середовища доступу до в
 
 #: ../control-center/gdaui-dsn-assistant.c:125
 msgid "Missing mandatory information, to create database"
-msgstr ""
+msgstr "Для створення бази даних не вистачає обов'язкової інформації"
 
 #: ../control-center/gdaui-dsn-assistant.c:137
 #, c-format
@@ -249,6 +255,10 @@ msgid ""
 "\n"
 "Just follow the steps!"
 msgstr ""
+"За допомогою цієї допоміжної програми ви зможете виконати процедуру створення"
+" джерела даних і, якщо захочете, створити базу даних.\n"
+"\n"
+"Просто виконайте покрокові настанови!"
 
 #: ../control-center/gdaui-dsn-assistant.c:442
 msgid "Add a new data source..."
@@ -287,6 +297,8 @@ msgid ""
 "This page lets you choose between using an existing database or to create a "
 "new database to use with this new data source"
 msgstr ""
+"За допомогою цієї сторінки ви можете вибрати наявну базу даних або створити"
+" нову для використання із цим новим джерелом даних"
 
 #: ../control-center/gdaui-dsn-assistant.c:538
 msgid "Create a new database:"
@@ -325,6 +337,8 @@ msgid ""
 "The following fields represent the authentication information needed to open "
 "a connection."
 msgstr ""
+"Наступні поля містять відомості щодо розпізнавання, які потрібні для"
+" відкриття з'єднання."
 
 #: ../control-center/gdaui-dsn-assistant.c:631
 msgid "Authentication parameters"
@@ -335,6 +349,8 @@ msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
 msgstr ""
+"Усі відомості, потрібні для створення джерела даних, отримано. Тепер"
+" натисніть кнопку «Застосувати», щоб закрити це діалогове вікно."
 
 #: ../control-center/gdaui-dsn-assistant.c:652
 msgid "Ready to add a new data source"
@@ -342,7 +358,7 @@ msgstr "Готовність до додавання нового джерела
 
 #: ../control-center/gdaui-dsn-editor.c:129
 msgid "Data source _name:"
-msgstr ""
+msgstr "_Назва джерела даних:"
 
 #: ../control-center/gdaui-dsn-editor.c:151
 msgid "_System wide data source:"
@@ -362,6 +378,9 @@ msgid ""
 "available,\n"
 "editing the data source's attributes is disabled</span>"
 msgstr ""
+"<span foreground='red'>Надавач даних, який використовується цим джерелом"
+" даних, є недоступним, —\n"
+"редагування атрибутів джерела даних вимкнено.</span>"
 
 #. connection's authentication
 #: ../control-center/gdaui-dsn-editor.c:216 ../libgda/gda-config.c:1646
@@ -381,12 +400,16 @@ msgid ""
 "Fill in the following authentication elements\n"
 "to open a connection"
 msgstr ""
+"Заповніть наведені нижче дані для розпізнавання,\n"
+"щоб відкрити з'єднання"
 
 #: ../control-center/gdaui-login-dialog.c:85
 msgid ""
 "No authentication required,\n"
 "confirm connection opening"
 msgstr ""
+"У розпізнаванні немає потреби,\n"
+"підтвердження відкриття з'єднання"
 
 #: ../control-center/main.c:53 ../libgda-ui/internal/utility.c:482
 #: ../tools/browser/support.c:152
@@ -431,7 +454,7 @@ msgstr "Створення джерела даних"
 
 #: ../control-center/main.c:199
 msgid "_Delete datasource"
-msgstr ""
+msgstr "Ви_лучити джерело даних"
 
 #: ../control-center/main.c:199
 msgid "Delete selected data source"
@@ -443,7 +466,7 @@ msgstr "В_ластивості"
 
 #: ../control-center/main.c:200
 msgid "Edit properties for selected data source"
-msgstr ""
+msgstr "Редагувати властивості для вибраного джерела даних"
 
 #: ../control-center/main.c:201 ../control-center/main.c:202
 #: ../tools/browser/browser-window.c:298
@@ -456,7 +479,7 @@ msgstr "Про програму"
 
 #: ../control-center/main.c:202
 msgid "About GNOME-DB"
-msgstr ""
+msgstr "Про GNOME-DB"
 
 #. title
 #: ../control-center/main.c:390 ../control-center/provider-config.c:60
@@ -465,7 +488,7 @@ msgstr "Надавачі даних"
 
 #: ../control-center/provider-config.c:61
 msgid "Installed providers"
-msgstr ""
+msgstr "Встановлені надавачі даних"
 
 #: ../control-center/provider-config.c:99
 msgid ""
@@ -475,55 +498,59 @@ msgstr ""
 
 #: ../libgda/gda-batch.c:321
 msgid "Statement could not be found in batch's statements"
-msgstr ""
+msgstr "Не вдалося знайти інструкцію у пакетних інструкціях"
 
 #: ../libgda/gda-batch.c:446
 #, c-format
 msgid "Conflicting parameter '%s'"
-msgstr ""
+msgstr "Конфлікт із параметром «%s»"
 
 #: ../libgda/gda-config.c:382 ../libgda/gda-config.c:408
 #: ../libgda/gda-config.c:532 ../libgda/gda-config.c:557
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
-msgstr ""
+msgstr "Помилка під час спроби завантажити відомості для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:718
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr ""
+"Помилка під час спроби створити специфічного для користувача каталогу"
+" налаштувань «%s»"
 
 #: ../libgda/gda-config.c:767 ../libgda/gda-config.c:780
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
+"Каталог специфічних для користувача налаштувань «%s» вже існує і не є"
+" каталогом"
 
 #: ../libgda/gda-config.c:1042
 #, c-format
 msgid "Malformed data source name '%s'"
-msgstr ""
+msgstr "Помилкове форматування назви джерела даних «%s»"
 
 #: ../libgda/gda-config.c:1067 ../libgda/gda-config.c:1079
 #: ../libgda/gda-config.c:1177
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
-msgstr ""
+msgstr "Не вдалося зберегти відомості для розпізнавання для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1112 ../libgda/gda-config.c:1287
 msgid "Can't manage system-wide configuration"
-msgstr ""
+msgstr "Не можна керувати загальносистемними налаштуваннями"
 
 #: ../libgda/gda-config.c:1167 ../libgda/gda-config.c:1199
 #, c-format
 msgid "Authentication for the '%s' DSN"
-msgstr ""
+msgstr "Розпізнавання для DSN «%s»"
 
 #: ../libgda/gda-config.c:1236 ../libgda/gda-config.c:1248
 #: ../libgda/gda-config.c:1312
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
-msgstr ""
+msgstr "Не вдалося вилучити відомості для розпізнавання для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1281 ../libgda-ui/gdaui-login.c:665
 #, c-format
@@ -549,7 +576,7 @@ msgstr "Не вдалося завантажити постачальника: %
 #: ../libgda/gda-config.c:1599
 #, c-format
 msgid "Can't instantiate provider '%s'"
-msgstr ""
+msgstr "Не вдалося створити екземпляр надавача даних «%s»"
 
 #: ../libgda/gda-config.c:1643 ../libgda/gda-data-model-dsn-list.c:109
 #: ../libgda/gda-data-model-dsn-list.c:110 ../tools/config-info.c:69
@@ -652,15 +679,15 @@ msgstr ""
 
 #: ../libgda/gda-connection.c:414
 msgid "Number of history events to keep in memory"
-msgstr ""
+msgstr "Кількість подій журналу, які слід зберігати у пам'яті"
 
 #: ../libgda/gda-connection.c:427
 msgid "Computes execution delay for each executed statement"
-msgstr ""
+msgstr "Обчислює затримку виконання для кожної виконаної інструкції"
 
 #: ../libgda/gda-connection.c:441
 msgid "Artificially slows down the execution of queries"
-msgstr ""
+msgstr "Штучно уповільнює виконання запитів"
 
 #: ../libgda/gda-connection.c:733 ../libgda/gda-connection.c:762
 #: ../libgda/gda-connection.c:777 ../libgda/gda-connection.c:793
@@ -703,7 +730,7 @@ msgstr ""
 #: ../tools/browser/auth-dialog.c:485 ../tools/gda-sql.c:1264
 #, c-format
 msgid "Malformed connection string '%s'"
-msgstr ""
+msgstr "Помилкове форматування рядка з'єднання «%s»"
 
 #: ../libgda/gda-connection.c:1288
 msgid "No database driver specified"
@@ -711,7 +738,7 @@ msgstr "Не вказано драйвера бази даних"
 
 #: ../libgda/gda-connection.c:1577 ../libgda/gda-connection.c:1579
 msgid "No DSN or connection string specified"
-msgstr ""
+msgstr "Не вказано DSN або рядка з'єднання"
 
 #: ../libgda/gda-connection.c:1589
 msgid "No provider specified"
@@ -1200,7 +1227,7 @@ msgstr ""
 #: ../tools/browser/common/gdaui-data-import.c:177
 #: ../tools/browser/data-manager/data-widget.c:611
 msgid "no detail"
-msgstr ""
+msgstr "немає подробиць"
 
 #: ../libgda/gda-data-model-import.c:1086
 #, c-format
@@ -1563,7 +1590,7 @@ msgstr "Забагато значень (максимум — %d)"
 
 #: ../libgda/gda-data-select.c:3094
 msgid "No INSERT statement provided"
-msgstr ""
+msgstr "Не вказано інструкції INSERT"
 
 #: ../libgda/gda-data-select.c:3099
 msgid "Cannot add a row because the number of rows in unknown"
@@ -1573,7 +1600,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:403
 msgid "Missing values to insert in INSERT statement"
-msgstr ""
+msgstr "Не вказано значень, які слід вставити за допомогою інструкції INSERT"
 
 #: ../libgda/gda-data-select.c:3289
 msgid "No DELETE statement provided"
@@ -1585,6 +1612,8 @@ msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
 "will be wrong: %s"
 msgstr ""
+"Сталася помилка — значення, яке поверне властивість «exec-params» буде"
+" помилковим: %s"
 
 #: ../libgda/gda-data-select.c:3819
 msgid "Data model has been modified"
@@ -1592,20 +1621,20 @@ msgstr "Модель даних було змінено"
 
 #: ../libgda/gda-data-select.c:3828
 msgid "Data model contains BLOBs"
-msgstr ""
+msgstr "У моделі даних містяться BLOB-и"
 
 #: ../libgda/gda-data-select.c:3839
 msgid "Can't get the number of rows of data model"
-msgstr ""
+msgstr "Не вдалося отримати кількість рядків у моделі даних"
 
 #: ../libgda/gda-holder.c:544 ../libgda/gda-set.c:1183
 #, c-format
 msgid "Unable to set holder's value: %s"
-msgstr ""
+msgstr "Не вдалося встановити значення утримувача: %s"
 
 #: ../libgda/gda-holder.c:645
 msgid "The 'g-type' property cannot be changed"
-msgstr ""
+msgstr "Не можна змінювати властивість «g-type»"
 
 #: ../libgda/gda-holder.c:936
 #, c-format
@@ -3985,7 +4014,7 @@ msgstr "Дані для показу"
 
 #: ../libgda-ui/gdaui-raw-form.c:200 ../libgda-ui/gdaui-raw-grid.c:196
 msgid "Delete the current record"
-msgstr ""
+msgstr "Вилучити поточний запис"
 
 #: ../libgda-ui/gdaui-raw-form.c:204 ../libgda-ui/gdaui-raw-grid.c:200
 msgid "Create a new record"
@@ -4001,19 +4030,19 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-raw-form.c:207
 msgid "Go to first record"
-msgstr ""
+msgstr "Перейти до першого запису"
 
 #: ../libgda-ui/gdaui-raw-form.c:208
 msgid "Go to last record"
-msgstr ""
+msgstr "Перейти до останнього запису"
 
 #: ../libgda-ui/gdaui-raw-form.c:209
 msgid "Go to previous record"
-msgstr ""
+msgstr "Перейти до попереднього запису"
 
 #: ../libgda-ui/gdaui-raw-form.c:210
 msgid "Go to next record"
-msgstr ""
+msgstr "Перейти до наступного запису"
 
 #: ../libgda-ui/gdaui-raw-form.c:211 ../libgda-ui/gdaui-raw-grid.c:207
 msgid "Filter records"
@@ -5479,7 +5508,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Time limit"
-msgstr ""
+msgstr "Обмеження часу"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid ""
@@ -5489,7 +5518,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
-msgstr ""
+msgstr "Обмеження розміру"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
 msgid "Maximum number of entries that can be returned on a search operation"
@@ -5889,13 +5918,13 @@ msgstr "ISO-8859-8 (Іврит)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:62
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:157
 msgid "TIS620 Thai"
-msgstr ""
+msgstr "TIS-620 таїландська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:64
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:159
 msgid "EUC-KR Korean"
-msgstr ""
+msgstr "EUC-KR корейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:66
@@ -5919,7 +5948,7 @@ msgstr "ISO-8859-7 (Грецька)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:72
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:167
 msgid "Windows Central European"
-msgstr ""
+msgstr "Windows центральноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
@@ -5949,7 +5978,7 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:177
 msgid "DOS Russian"
-msgstr ""
+msgstr "DOS, російська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
@@ -5967,13 +5996,13 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:183
 msgid "Mac West European"
-msgstr ""
+msgstr "Mac, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:90
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:185
 msgid "DOS Central European"
-msgstr ""
+msgstr "DOS, центральноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:92
@@ -5985,19 +6014,19 @@ msgstr "ISO-8859-13 (Балтійські)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:94
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:189
 msgid "Windows Cyrillic"
-msgstr ""
+msgstr "Windows, кирилиця"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:96
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:191
 msgid "Windows Arabic"
-msgstr ""
+msgstr "Windows, арабська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:98
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:193
 msgid "Windows Baltic"
-msgstr ""
+msgstr "Windows, балтійська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
@@ -6268,7 +6297,7 @@ msgstr "Уступами"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
 msgid "Set to NULL"
-msgstr ""
+msgstr "Встановити NULL"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
 msgid "Don't pack keys"
@@ -6470,7 +6499,6 @@ msgid "Insufficient memory to convert string to binary buffer"
 msgstr ""
 
 #: ../providers/postgres/gda-postgres-provider.c:524
-#| msgid "Could not get the Oracle parameter information"
 msgid "Could not determine the default date format"
 msgstr "Не вдалося визначити формат типової дати"
 
@@ -7553,7 +7581,7 @@ msgstr ""
 
 #: ../tools/browser/browser-virtual-connection.c:115
 msgid "Virtual connection using this connection is busy"
-msgstr ""
+msgstr "Віртуальне з'єднання, яке використовує це з'єднання, зайнято"
 
 #: ../tools/browser/browser-window.c:276
 msgid "_Fullscreen"
@@ -7604,7 +7632,7 @@ msgstr ""
 
 #: ../tools/browser/browser-window.c:287
 msgid "Fetch meta data"
-msgstr ""
+msgstr "Отримати метадані"
 
 #: ../tools/browser/browser-window.c:288
 msgid "_Close Connection"
@@ -7681,7 +7709,7 @@ msgstr "Довідка"
 
 #: ../tools/browser/browser-window.c:300
 msgid "_Manual"
-msgstr ""
+msgstr "В_ручну"
 
 #: ../tools/browser/browser-window.c:300
 msgid "Manual"
@@ -7953,7 +7981,7 @@ msgstr "Назва стороннього ключа:"
 #. table to reference
 #: ../tools/browser/common/fk-declare.c:219
 msgid "Referenced table:"
-msgstr ""
+msgstr "Еталонна таблиця:"
 
 #: ../tools/browser/common/fk-declare.c:262
 msgid "Referenced column"
@@ -8631,18 +8659,18 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/class-properties.c:427
 msgid "Class OID:"
-msgstr ""
+msgstr "OID класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:438
 msgid "Class kind:"
-msgstr ""
+msgstr "Тип класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:452
 msgid "Class name:"
 msgid_plural "Class names:"
-msgstr[0] "Назва класу:"
+msgstr[0] "Назви класів:"
 msgstr[1] "Назви класів:"
-msgstr[2] ""
+msgstr[2] "Назви класів:"
 msgstr[3] "Назва класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:465
@@ -8702,7 +8730,7 @@ msgstr "Ніколи"
 #. DN
 #: ../tools/browser/ldap-browser/entry-properties.c:764
 msgid "Distinguished Name:"
-msgstr ""
+msgstr "Розпізнавана назва:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:911
 msgid "Can't display attribute value"
@@ -8790,7 +8818,7 @@ msgstr "Властивості класу LDAP"
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:514
 #: ../tools/browser/schema-browser/table-info.c:990
 msgid "Add to _Favorites"
-msgstr ""
+msgstr "Додати до _вибраних"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 msgid "Add class to favorites"
@@ -9229,7 +9257,7 @@ msgstr[3] "%lu день тому\n"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:318
 msgid "_Query"
-msgstr ""
+msgstr "З_апит"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:318
 msgid "Query"
@@ -9420,7 +9448,7 @@ msgstr "Назва стовпчика"
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
 #: ../tools/browser/schema-browser/table-columns.c:652
 msgid "Not NULL?"
-msgstr ""
+msgstr "Не NULL?"
 
 #: ../tools/browser/schema-browser/table-columns.c:690
 msgid "LDAP virtual table definition"
@@ -9827,7 +9855,7 @@ msgstr ""
 
 #: ../tools/gda-list-server-op.c:50
 msgid "Gda server operations list"
-msgstr ""
+msgstr "Список дій для сервера Gda"
 
 #: ../tools/gda-list-server-op.c:60
 #, c-format
@@ -9938,7 +9966,7 @@ msgstr "З'єднання завершене"
 #: ../tools/gda-sql.c:896
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
-msgstr ""
+msgstr "Не вдалося обробити значення параметра «%s»"
 
 #: ../tools/gda-sql.c:913
 #, c-format
@@ -9948,17 +9976,17 @@ msgstr ""
 #: ../tools/gda-sql.c:1089
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити файл «%s» для запису: %s\n"
 
 #: ../tools/gda-sql.c:1103 ../tools/gda-sql.c:1112
 #, c-format
 msgid "Can't open pipe '%s': %s"
-msgstr ""
+msgstr "Не вдалося відкрити канал «%s»: %s"
 
 #: ../tools/gda-sql.c:1152
 #, c-format
 msgid "Can't open file '%s' for reading: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити файл «%s» для читання: %s\n"
 
 #: ../tools/gda-sql.c:1221 ../tools/gda-sql.c:3134
 #, c-format
@@ -10040,7 +10068,7 @@ msgstr "Інформація"
 #: ../tools/gda-sql.c:2017
 #, c-format
 msgid "%s [<META DATA TYPE>]"
-msgstr ""
+msgstr "%s [<ТИП МЕТАДАНИХ>]"
 
 #: ../tools/gda-sql.c:2018
 msgid ""
@@ -10093,7 +10121,7 @@ msgstr "%s [<СХЕМА>]"
 
 #: ../tools/gda-sql.c:2063
 msgid "List all schemas (or named schema)"
-msgstr ""
+msgstr "Вивести список усіх схем (або названої схеми)"
 
 #: ../tools/gda-sql.c:2071
 #, c-format
@@ -10305,7 +10333,7 @@ msgstr ""
 
 #: ../tools/gda-sql.c:2302
 msgid "Set output format"
-msgstr ""
+msgstr "встановити формат виведення даних"
 
 #: ../tools/gda-sql.c:2319
 #, c-format
@@ -10462,7 +10490,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2492
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
-msgstr ""
+msgstr "Невідомий формат виведення: «%s», повертаємося до типового"
 
 #: ../tools/gda-sql.c:2637
 msgid "DSN list"
@@ -10783,7 +10811,7 @@ msgstr "Некоректна специфікація порту"
 
 #: ../tools/gda-sql.c:6009
 msgid "Command is incomplete"
-msgstr ""
+msgstr "Команда є неповною"
 
 #: ../tools/html-doc.c:86
 msgid "Generated by the GDA SQL console"
@@ -10795,15 +10823,15 @@ msgstr "Консоль"
 
 #: ../tools/tools-favorites.c:185 ../tools/tools-favorites.c:194
 msgid "Can't initialize dictionary to store favorites"
-msgstr ""
+msgstr "Не вдалося ініціалізувати словник для збереження улюблених записів"
 
 #: ../tools/tool-utils.c:37
 msgid "not enforced"
-msgstr ""
+msgstr "не примусово"
 
 #: ../tools/tool-utils.c:39
 msgid "stop with error"
-msgstr ""
+msgstr "зупинитися з помилкою"
 
 #: ../tools/tool-utils.c:41
 msgid "stop with error, not deferrable"
@@ -10811,11 +10839,11 @@ msgstr ""
 
 #: ../tools/tool-utils.c:43
 msgid "cascade changes"
-msgstr ""
+msgstr "каскадні зміни"
 
 #: ../tools/tool-utils.c:45
 msgid "set to NULL"
-msgstr ""
+msgstr "встановити NULL"
 
 #: ../tools/tool-utils.c:47
 msgid "set to default value"
@@ -10837,7 +10865,7 @@ msgstr "Ключ:"
 
 #: ../tools/web-server.c:779
 msgid "SQL console:"
-msgstr ""
+msgstr "Консоль SQL:"
 
 #: ../tools/web-server.c:859 ../tools/web-server.c:1879
 msgid "Tables"
@@ -10846,7 +10874,7 @@ msgstr "Таблиці"
 #: ../tools/web-server.c:859
 #, c-format
 msgid "Tables in the '%s' schema"
-msgstr ""
+msgstr "Таблиці у схемі «%s»"
 
 #: ../tools/web-server.c:865 ../tools/web-server.c:1884
 msgid "Views"
@@ -10855,12 +10883,12 @@ msgstr "Відображення"
 #: ../tools/web-server.c:865
 #, c-format
 msgid "Views in the '%s' schema"
-msgstr ""
+msgstr "Перегляди у схемі «%s»"
 
 #: ../tools/web-server.c:924
 #, c-format
 msgid "Columns for the '%s' table:"
-msgstr ""
+msgstr "Стовпчики для таблиці «%s»:"
 
 #: ../tools/web-server.c:970
 msgid "Primary key:"
@@ -10872,7 +10900,7 @@ msgstr "Зв'язки:"
 
 #: ../tools/web-server.c:1092
 msgid "Foreign keys:"
-msgstr ""
+msgstr "Сторонні ключі:"
 
 #: ../tools/web-server.c:1104
 #, c-format
@@ -10896,7 +10924,7 @@ msgstr ""
 #: ../tools/web-server.c:1378
 #, c-format
 msgid "Time at which the trigger is fired: %s"
-msgstr ""
+msgstr "Час вмикання перемикача: %s"
 
 #: ../tools/web-server.c:1382
 msgid "Action:"
@@ -10919,7 +10947,7 @@ msgstr ""
 #: ../tools/web-server.c:1863
 #, c-format
 msgid "Database information for '%s'"
-msgstr ""
+msgstr "Дані щодо бази даних для «%s»"
 
 #: ../tools/web-server.c:1868
 msgid "Database information"
