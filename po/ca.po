@@ -5085,7 +5085,7 @@ msgstr "Mostra l'origen del marcat"
 
 #: ../libgda-ui/gdaui-server-operation.c:170
 msgid "The specification of the operation to implement"
-msgstr "L'especificació de l'operació per a implementar "
+msgstr "L'especificació de l'operació per a implementar"
 
 #: ../libgda-ui/gdaui-server-operation.c:176
 msgid "Request section header to be hidden if there is only one section"
@@ -6255,7 +6255,7 @@ msgstr "La cadena de connexió ha de contenir el valor de DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:412
 msgid "Invalid value for 'TLS_REQCERT'"
-msgstr "El valor no és vàlid per a 'TLS_REQCERT'"
+msgstr "El valor no és vàlid per a «TLS_REQCERT»"
 
 #: ../providers/ldap/gda-ldap-provider.c:930 ../tools/common/t-app.c:2749
 #: ../tools/common/t-app.c:4476 ../tools/common/t-app.c:4593
@@ -6500,7 +6500,7 @@ msgstr "El nom d'una base de dades a utilitzar (nom de fitxer sense el .mdb)"
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:80
 msgid "MySQL boolean representation"
-msgstr "Representació booleana MySQL "
+msgstr "Representació booleana MySQL"
 
 #: ../providers/mysql/gda-mysql-provider.c:449
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
@@ -9039,7 +9039,7 @@ msgstr "No està llest"
 #: ../tools/browser/data-manager/data-source.c:444
 #, c-format
 msgid "Malformed table name \"%s\""
-msgstr "Nom de taula incorrecte \"%s\""
+msgstr "Nom de taula «%s» incorrecte"
 
 #: ../tools/browser/data-manager/data-source.c:461
 #, c-format
@@ -9059,12 +9059,12 @@ msgstr "Falta l'atribut «name» per a la taula"
 #: ../tools/browser/data-manager/data-source.c:625
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
-msgstr "No s'ha pogut trobar cap clau externa cap a \"%s\""
+msgstr "No s'ha pogut trobar cap clau externa cap a «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:630
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
-msgstr "Es desconeixen els camps involucrats en la clau externa cap a \"%s\" "
+msgstr "Es desconeixen els camps involucrats en la clau externa cap a «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:894
 msgid "No SELECT statement to execute"
@@ -9115,7 +9115,7 @@ msgid ""
 "to specify a SELECT statement instead"
 msgstr ""
 "Taula des de la qual mostrar les dades, deixeu-la buida\n"
-"per a poder especificar una declaració SELECT."
+"per a poder especificar una declaració SELECT"
 
 #: ../tools/browser/data-manager/data-source-editor.c:181
 msgid ""
@@ -9791,7 +9791,7 @@ msgstr "Resultats de l'execució:"
 
 #: ../tools/browser/query-exec/query-console-page.c:651
 msgid "New favorite"
-msgstr "Nou preferit"
+msgstr "Preferit nou"
 
 #: ../tools/browser/query-exec/query-console-page.c:662
 #: ../tools/browser/query-exec/query-console-page.c:695
@@ -10134,7 +10134,7 @@ msgid ""
 "(menu Connection/Fetch meta data)."
 msgstr ""
 "No s'ha trobat la taula. Si creieu que això és un error actualitzeu les "
-"metadades de la base de dades (menú Connexió / Cerca metadades). "
+"metadades de la base de dades (menú Connexió / Cerca metadades)."
 
 #: ../tools/browser/schema-browser/table-info.c:442
 msgid "Relations"
@@ -10357,7 +10357,7 @@ msgstr ""
 "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
 "Per exemple:\n"
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-"      defineix <b>id</b>com un nombre sencer no NULL\n"
+"      defineix <b>id</b> com un nombre sencer no NULL\n"
 "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
 "      defineix <b>edat</b> com una cadena\n"
 "\n"
@@ -11097,7 +11097,7 @@ msgstr "%s de l'espai de noms «%s»"
 #: ../tools/common/t-app.c:3089
 #, c-format
 msgid "%s mapped to the %s table"
-msgstr "%s assenyalat a la taula %s "
+msgstr "%s assenyalat a la taula %s"
 
 #: ../tools/common/t-app.c:3122 ../tools/common/t-app.c:3225
 #: ../tools/common/t-app.c:3259 ../tools/common/t-app.c:3282
@@ -11585,7 +11585,7 @@ msgid ""
 "required"
 msgstr ""
 "Introduïu el testimoni d'autenticació com s'ha establert des de la consola, "
-"o deixeu buit si no és necessari."
+"o deixeu buit si no és necessari"
 
 #: ../tools/common/web-server.c:570
 msgid "Token:"
@@ -11602,7 +11602,7 @@ msgstr "Taules"
 #: ../tools/common/web-server.c:791
 #, c-format
 msgid "Tables in the '%s' schema"
-msgstr "Taules a l'esquema '%s'"
+msgstr "Taules a l'esquema «%s»"
 
 #: ../tools/common/web-server.c:797 ../tools/common/web-server.c:1796
 msgid "Views"
