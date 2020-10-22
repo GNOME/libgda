@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-07-12 03:39+0000\n"
-"PO-Revision-Date: 2020-07-12 12:28+0300\n"
+"POT-Creation-Date: 2020-10-19 09:21+0000\n"
+"PO-Revision-Date: 2020-10-22 17:34+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 20.07.70\n"
+"X-Generator: Lokalize 20.11.70\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -36,6 +36,10 @@ msgid ""
 "the information needed to open a connection to a specific database using a "
 "'provider' is referenced using a unique name."
 msgstr ""
+"Джерела даних є засоби, за якими ідентифікуються з'єднання із базою даних: "
+"посилання на усі відомості, потрібні для відкриття з'єднання із певною базою "
+"даних з використанням «надавача даних» («provider»), виконується з "
+"використанням унікальної назви."
 
 #: ../control-center/dsn-config.c:256
 msgid "No data source selected."
@@ -79,8 +83,8 @@ msgstr "Не вдалося зберегти визначення DSN: %s"
 #: ../libgda/gda-data-model-dir.c:339 ../libgda/gda-data-model-import.c:1705
 #: ../libgda/gda-data-pivot.c:1219 ../libgda/gda-data-pivot.c:1249
 #: ../libgda/gda-data-pivot.c:1350 ../libgda/gda-data-pivot.c:1464
-#: ../libgda/gda-data-proxy.c:3099 ../libgda/gda-data-select.c:2384
-#: ../libgda/gda-data-select.c:2394 ../libgda/gda-data-select.c:3777
+#: ../libgda/gda-data-proxy.c:3099 ../libgda/gda-data-select.c:2371
+#: ../libgda/gda-data-select.c:2381 ../libgda/gda-data-select.c:3764
 #: ../libgda/gda-holder.c:504 ../libgda/gda-holder.c:1975
 #: ../libgda/gda-meta-store.c:1209 ../libgda/gda-meta-store.c:1215
 #: ../libgda/gda-server-operation.c:656 ../libgda/gda-server-operation.c:1111
@@ -251,6 +255,10 @@ msgid ""
 "\n"
 "Just follow the steps!"
 msgstr ""
+"За допомогою цієї допоміжної програми ви зможете виконати процедуру "
+"створення джерела даних і, якщо захочете, створити базу даних.\n"
+"\n"
+"Просто виконайте покрокові настанови!"
 
 #: ../control-center/gdaui-dsn-assistant.c:482
 msgid "Add a new data source..."
@@ -290,6 +298,8 @@ msgid ""
 "This page lets you choose between using an existing database or to create a "
 "new database to use with this new data source"
 msgstr ""
+"За допомогою цієї сторінки ви можете вибрати наявну базу даних або створити "
+"нову для використання із цим новим джерелом даних"
 
 #: ../control-center/gdaui-dsn-assistant.c:572
 msgid "Create a new database:"
@@ -319,6 +329,8 @@ msgid ""
 "The following fields represent the authentication information needed to open "
 "a connection."
 msgstr ""
+"Наступні поля містять відомості щодо розпізнавання, які потрібні для "
+"відкриття з'єднання."
 
 #: ../control-center/gdaui-dsn-assistant.c:665
 #: ../control-center/provider-config.c:106
@@ -330,6 +342,8 @@ msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
 msgstr ""
+"Усі відомості, потрібні для створення джерела даних, отримано. Тепер "
+"натисніть кнопку «Застосувати», щоб закрити це діалогове вікно."
 
 #: ../control-center/gdaui-dsn-assistant.c:686
 msgid "Ready to add a new data source"
@@ -353,6 +367,9 @@ msgid ""
 "available,\n"
 "editing the data source's attributes is disabled</span>"
 msgstr ""
+"<span foreground='red'>Надавач даних, який використовується цим джерелом "
+"даних, є недоступним, —\n"
+"редагування атрибутів джерела даних вимкнено.</span>"
 
 #: ../control-center/gdaui-dsn-editor.c:320
 #, c-format
@@ -420,12 +437,16 @@ msgid ""
 "Fill in the following authentication elements\n"
 "to open a connection"
 msgstr ""
+"Заповніть наведені нижче дані для розпізнавання,\n"
+"щоб відкрити з'єднання"
 
 #: ../control-center/gdaui-login-dialog.c:85
 msgid ""
 "No authentication required,\n"
 "confirm connection opening"
 msgstr ""
+"У розпізнаванні немає потреби,\n"
+"підтвердження відкриття з'єднання"
 
 #: ../control-center/gdaui-login-dialog.c:106
 #: ../tools/browser/auth-dialog.c:192 ../tools/browser/login-dialog.c:112
@@ -480,44 +501,48 @@ msgstr ""
 
 #: ../libgda/gda-batch.c:270
 msgid "Statement could not be found in batch's statements"
-msgstr ""
+msgstr "Не вдалося знайти інструкцію у пакетних інструкціях"
 
 #: ../libgda/gda-batch.c:396
 #, c-format
 msgid "Conflicting parameter '%s'"
-msgstr ""
+msgstr "Конфлікт із параметром «%s»"
 
 #: ../libgda/gda-config.c:520 ../libgda/gda-config.c:546
 #: ../libgda/gda-config.c:671 ../libgda/gda-config.c:696
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
-msgstr ""
+msgstr "Помилка під час спроби завантажити відомості для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:859
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr ""
+"Помилка під час спроби створити специфічного для користувача каталогу "
+"налаштувань «%s»"
 
 #: ../libgda/gda-config.c:908 ../libgda/gda-config.c:921
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
+"Каталог специфічних для користувача налаштувань «%s» вже існує і не є "
+"каталогом"
 
 #: ../libgda/gda-config.c:1154
 #, c-format
 msgid "Malformed data source name '%s'"
-msgstr ""
+msgstr "Помилкове форматування назви джерела даних «%s»"
 
 #: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
 #: ../libgda/gda-config.c:1291
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
-msgstr ""
+msgstr "Не вдалося зберегти відомості для розпізнавання для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1226 ../libgda/gda-config.c:1402
 msgid "Can't manage system-wide configuration"
-msgstr ""
+msgstr "Не можна керувати загальносистемними налаштуваннями"
 
 #: ../libgda/gda-config.c:1281 ../libgda/gda-config.c:1313
 #, c-format
@@ -528,7 +553,7 @@ msgstr ""
 #: ../libgda/gda-config.c:1426
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
-msgstr ""
+msgstr "Не вдалося вилучити відомості для розпізнавання для DSN «%s»: %s"
 
 #: ../libgda/gda-config.c:1396 ../libgda-ui/gdaui-login.c:640
 #, c-format
@@ -554,7 +579,7 @@ msgstr "Не вдалося завантажити постачальника: %
 #: ../libgda/gda-config.c:1716
 #, c-format
 msgid "Can't instantiate provider '%s'"
-msgstr ""
+msgstr "Не вдалося створити екземпляр надавача даних «%s»"
 
 #: ../libgda/gda-config.c:1761 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
@@ -646,15 +671,15 @@ msgstr "GdaMetaStore, який використано з'єднанням"
 
 #: ../libgda/gda-connection.c:359
 msgid "Number of history events to keep in memory"
-msgstr ""
+msgstr "Кількість подій журналу, які слід зберігати у пам'яті"
 
 #: ../libgda/gda-connection.c:372
 msgid "Computes execution delay for each executed statement"
-msgstr ""
+msgstr "Обчислює затримку виконання для кожної виконаної інструкції"
 
 #: ../libgda/gda-connection.c:388
 msgid "Artificially slows down the execution of queries"
-msgstr ""
+msgstr "Штучно уповільнює виконання запитів"
 
 #: ../libgda/gda-connection.c:586 ../libgda/gda-connection.c:614
 #: ../libgda/gda-connection.c:628 ../libgda/gda-connection.c:643
@@ -665,17 +690,17 @@ msgstr ""
 #: ../libgda/gda-connection.c:594
 #, c-format
 msgid "No DSN named '%s' defined"
-msgstr ""
+msgstr "Не визначено DSN із назвою «%s»"
 
 #: ../libgda/gda-connection.c:664
 #, c-format
 msgid "Can't set the '%s' property once the connection is opened"
-msgstr ""
+msgstr "Неможливо встановити властивість «%s» після відкриття з'єднання"
 
 #: ../libgda/gda-connection.c:950
 #, c-format
 msgid "Malformed data source specification '%s'"
-msgstr ""
+msgstr "Помилкове форматування специфікації джерела даних «%s»"
 
 #: ../libgda/gda-connection.c:958 ../libgda/gda-connection.c:1412
 #: ../libgda/gda-connection.c:1414
@@ -685,13 +710,13 @@ msgstr "Джерело даних \"%s\" не знайдено у конфігу
 
 #: ../libgda/gda-connection.c:997 ../libgda/gda-connection.c:1069
 msgid "Datasource configuration error: no provider specified"
-msgstr ""
+msgstr "Помилка налаштовування джерела даних: не вказано надавача"
 
 #: ../libgda/gda-connection.c:1204 ../tools/browser/auth-dialog.c:384
 #: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:779
 #, c-format
 msgid "Malformed connection string '%s'"
-msgstr ""
+msgstr "Помилкове форматування рядка з'єднання «%s»"
 
 #: ../libgda/gda-connection.c:1210
 msgid "No database driver specified"
@@ -703,7 +728,7 @@ msgstr "Не вказано постачальника"
 
 #: ../libgda/gda-connection.c:1424 ../libgda/gda-connection.c:1426
 msgid "No DSN or connection string specified"
-msgstr ""
+msgstr "Не вказано DSN або рядка з'єднання"
 
 #: ../libgda/gda-connection.c:1522
 msgid "Connection is already opened"
@@ -712,140 +737,141 @@ msgstr "З'єднання уже відкрито"
 #: ../libgda/gda-connection.c:1545
 #, c-format
 msgid "Error while maintaining the meta data up to date: %s"
-msgstr ""
+msgstr "Помилка під час підтримання актуальності метаданих: %s"
 
 #: ../libgda/gda-connection.c:1947
 msgid "Provider does not provide a GdaDataHandler for dates"
-msgstr ""
+msgstr "Надавач даних не надає GdaDataHandler для дат"
 
-#: ../libgda/gda-connection.c:2083 ../libgda/gda-connection.c:2153
-#: ../libgda/gda-connection.c:2264 ../libgda/gda-connection.c:2338
-#: ../libgda/gda-connection.c:2481 ../libgda/gda-connection.c:2928
-#: ../libgda/gda-connection.c:3142 ../libgda/gda-connection.c:3501
-#: ../libgda/gda-connection.c:3522 ../libgda/gda-connection.c:3606
-#: ../libgda/gda-connection.c:3618 ../libgda/gda-connection.c:3693
-#: ../libgda/gda-connection.c:3708 ../libgda/gda-connection.c:3795
-#: ../libgda/gda-connection.c:3823 ../libgda/gda-connection.c:3852
-#: ../libgda/gda-connection.c:3878 ../libgda/gda-connection.c:3904
-#: ../libgda/gda-connection.c:3930 ../libgda/gda-connection.c:4969
-#: ../libgda/gda-connection.c:5214 ../libgda/gda-connection.c:5287
-#: ../libgda/gda-connection.c:6176
+#: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
+#: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
+#: ../libgda/gda-connection.c:2557 ../libgda/gda-connection.c:3004
+#: ../libgda/gda-connection.c:3218 ../libgda/gda-connection.c:3577
+#: ../libgda/gda-connection.c:3598 ../libgda/gda-connection.c:3682
+#: ../libgda/gda-connection.c:3694 ../libgda/gda-connection.c:3769
+#: ../libgda/gda-connection.c:3784 ../libgda/gda-connection.c:3871
+#: ../libgda/gda-connection.c:3899 ../libgda/gda-connection.c:3928
+#: ../libgda/gda-connection.c:3954 ../libgda/gda-connection.c:3980
+#: ../libgda/gda-connection.c:4006 ../libgda/gda-connection.c:5045
+#: ../libgda/gda-connection.c:5290 ../libgda/gda-connection.c:5363
+#: ../libgda/gda-connection.c:6252
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
 msgstr "З'єднання розірвано"
 
-#: ../libgda/gda-connection.c:3386 ../libgda/gda-connection.c:3401
+#: ../libgda/gda-connection.c:3462 ../libgda/gda-connection.c:3477
 msgid "Statement is a selection statement"
-msgstr ""
+msgstr "Інструкція є інструкцією вибору"
 
-#: ../libgda/gda-connection.c:3458 ../libgda/gda-connection.c:3558
-#: ../libgda/gda-connection.c:3647
+#: ../libgda/gda-connection.c:3534 ../libgda/gda-connection.c:3634
+#: ../libgda/gda-connection.c:3723
 msgid "Statement is not a selection statement"
-msgstr ""
+msgstr "Інструкція не є інструкцією вибору"
 
-#: ../libgda/gda-connection.c:4107
+#: ../libgda/gda-connection.c:4183
 msgid "Invalid argument"
 msgstr "Неправильний аргумент"
 
-#: ../libgda/gda-connection.c:4117
+#: ../libgda/gda-connection.c:4193
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr ""
+"Пропущено аргументи для таблиці «%s» або вказано помилкові аргументи: %s"
 
-#: ../libgda/gda-connection.c:5237
+#: ../libgda/gda-connection.c:5313
 #, c-format
 msgid "While extracting data from Data Store: %s"
 msgstr "Під час видобування даних зі сховища даних: %s"
 
-#: ../libgda/gda-connection.c:5295
+#: ../libgda/gda-connection.c:5371
 #, c-format
 msgid "Internal error: No meta store in connection"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5313
+#: ../libgda/gda-connection.c:5389
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5324
+#: ../libgda/gda-connection.c:5400
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5335
+#: ../libgda/gda-connection.c:5411
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5346
+#: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5356
+#: ../libgda/gda-connection.c:5432
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5362
+#: ../libgda/gda-connection.c:5438
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5369
+#: ../libgda/gda-connection.c:5445
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5378 ../libgda/gda-connection.c:5399
+#: ../libgda/gda-connection.c:5454 ../libgda/gda-connection.c:5475
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5384 ../libgda/gda-connection.c:5403
+#: ../libgda/gda-connection.c:5460 ../libgda/gda-connection.c:5479
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5391
+#: ../libgda/gda-connection.c:5467
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5411
+#: ../libgda/gda-connection.c:5487
 #, c-format
 msgid "Invalid meta type to get data from store"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5422
+#: ../libgda/gda-connection.c:5498
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5614 ../libgda/gda-connection.c:5668
-#: ../libgda/gda-connection.c:5713 ../libgda/gda-connection.c:5758
-#: ../libgda/gda-connection.c:5803
+#: ../libgda/gda-connection.c:5690 ../libgda/gda-connection.c:5744
+#: ../libgda/gda-connection.c:5789 ../libgda/gda-connection.c:5834
+#: ../libgda/gda-connection.c:5879
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 
-#: ../libgda/gda-connection.c:6936
+#: ../libgda/gda-connection.c:7012
 msgid "Unspecified table name"
 msgstr "Не вказано назви таблиці"
 
-#: ../libgda/gda-connection.c:6978
+#: ../libgda/gda-connection.c:7054
 msgid "Invalid type"
 msgstr "Некоректний тип"
 
-#: ../libgda/gda-connection.c:7074
+#: ../libgda/gda-connection.c:7150
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr ""
 
-#: ../libgda/gda-connection.c:7193 ../libgda/gda-connection.c:7203
+#: ../libgda/gda-connection.c:7269 ../libgda/gda-connection.c:7279
 #, c-format
 msgid "Wrong SQL identifier value"
-msgstr ""
+msgstr "Помилкове значення ідентифікатора SQL"
 
 #: ../libgda/gda-data-access-wrapper.c:578
 #: ../libgda/gda-data-meta-wrapper.c:514 ../libgda/gda-data-model-array.c:397
@@ -855,17 +881,17 @@ msgstr ""
 #: ../libgda/gda-data-model-dir.c:857 ../libgda/gda-data-model-dsn-list.c:269
 #: ../libgda/gda-data-model-iter.c:414 ../libgda/gda-data-model-iter.c:1133
 #: ../libgda/gda-data-proxy.c:3538 ../libgda/gda-data-proxy.c:3662
-#: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1934
-#: ../libgda/gda-data-select.c:2936
+#: ../libgda/gda-data-select.c:1341 ../libgda/gda-data-select.c:1921
+#: ../libgda/gda-data-select.c:2923
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:931
 #: ../libgda-ui/gdaui-combo.c:777
 #, c-format
 msgid "Column %d out of range (0-%d)"
-msgstr ""
+msgstr "Стовпчик %d поза межами припустимого діапазону (0-%d)"
 
 #: ../libgda/gda-data-access-wrapper.c:618
 msgid "Can't set iterator's position"
-msgstr ""
+msgstr "Не вдалося встановити позицію ітератора"
 
 #: ../libgda/gda-data-access-wrapper.c:696
 msgid "Can't access data"
@@ -890,10 +916,11 @@ msgstr "Не вказано нової моделі даних"
 #: ../libgda/gda-data-comparator.c:413
 msgid "Data models must support random access model"
 msgstr ""
+"У моделях ітератора має бути передбачено підтримку моделі випадкового доступу"
 
 #: ../libgda/gda-data-comparator.c:422
 msgid "Data models to compare don't have the same number of columns"
-msgstr ""
+msgstr "У моделях даних для порівняння різна кількість стовпчиків"
 
 #: ../libgda/gda-data-comparator.c:433
 #, c-format
@@ -920,8 +947,8 @@ msgstr "Чи може бути змінено модель даних"
 #: ../libgda/gda-data-model-array.c:717 ../libgda/gda-data-model-dir.c:730
 #: ../libgda/gda-data-model-dir.c:901 ../libgda/gda-data-model-dir.c:1267
 #: ../libgda/gda-data-model-dsn-list.c:277 ../libgda/gda-data-proxy.c:3611
-#: ../libgda/gda-data-proxy.c:3649 ../libgda/gda-data-select.c:1881
-#: ../libgda/gda-data-select.c:1944
+#: ../libgda/gda-data-proxy.c:3649 ../libgda/gda-data-select.c:1868
+#: ../libgda/gda-data-select.c:1931
 #, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "Рядок %d поза діапазоном (0-%d)"
@@ -930,8 +957,8 @@ msgstr "Рядок %d поза діапазоном (0-%d)"
 #: ../libgda/gda-data-model-array.c:720 ../libgda/gda-data-model-dir.c:733
 #: ../libgda/gda-data-model-dir.c:904 ../libgda/gda-data-model-dir.c:1270
 #: ../libgda/gda-data-model-dsn-list.c:280 ../libgda/gda-data-proxy.c:3614
-#: ../libgda/gda-data-proxy.c:3652 ../libgda/gda-data-select.c:1884
-#: ../libgda/gda-data-select.c:1947
+#: ../libgda/gda-data-proxy.c:3652 ../libgda/gda-data-select.c:1871
+#: ../libgda/gda-data-select.c:1934
 #, c-format
 msgid "Row %d not found (empty data model)"
 msgstr "Не знайдено рядок %d (порожня модель даних)"
@@ -1300,7 +1327,7 @@ msgstr "Мало бути використано теґ <gda_array>, маємо 
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr ""
 
-#: ../libgda/gda-data-model-import.c:1842 ../libgda/gda-data-select.c:3826
+#: ../libgda/gda-data-model-import.c:1842 ../libgda/gda-data-select.c:3813
 msgid "Data model does not support random access"
 msgstr ""
 
@@ -1436,7 +1463,7 @@ msgstr ""
 msgid "Error in filter expression"
 msgstr ""
 
-#: ../libgda/gda-data-proxy.c:3231 ../libgda/gda-data-select.c:1684
+#: ../libgda/gda-data-proxy.c:3231 ../libgda/gda-data-select.c:1671
 msgid "Incorrect filter expression"
 msgstr ""
 
@@ -1460,221 +1487,221 @@ msgstr ""
 msgid "Value type mismatch %s instead of %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:677
+#: ../libgda/gda-data-select.c:664
 msgid ""
 "INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
 "set number of columns before using with GdaDataSelect"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1086
+#: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1112
+#: ../libgda/gda-data-select.c:1099
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1119
+#: ../libgda/gda-data-select.c:1106
 msgid "Can't get the prepared statement's actual statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1125
+#: ../libgda/gda-data-select.c:1112
 msgid "Unsupported type of SELECT statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1217
+#: ../libgda/gda-data-select.c:1204
 msgid "INSERT statement must contain values to insert"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1223
+#: ../libgda/gda-data-select.c:1210
 msgid "INSERT statement must insert only one row"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1250
+#: ../libgda/gda-data-select.c:1237
 msgid "DELETE statement must have a WHERE part"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1290
+#: ../libgda/gda-data-select.c:1277
 msgid "UPDATE statement must have a WHERE part"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1344
+#: ../libgda/gda-data-select.c:1331
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1366
+#: ../libgda/gda-data-select.c:1353
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1432
+#: ../libgda/gda-data-select.c:1419
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1517 ../libgda/gda-data-select.c:1739
-#: ../libgda/gda-data-select.c:3651
+#: ../libgda/gda-data-select.c:1504 ../libgda/gda-data-select.c:1726
+#: ../libgda/gda-data-select.c:3638
 msgid "No connection to use"
 msgstr "Немає з'єднання для використання"
 
-#: ../libgda/gda-data-select.c:1579
+#: ../libgda/gda-data-select.c:1566
 msgid "Invalid unique row condition (only equal operators are allowed)"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1611 ../libgda/gda-data-select.c:1666
+#: ../libgda/gda-data-select.c:1598 ../libgda/gda-data-select.c:1653
 msgid "Unique row condition has already been specified"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1748 ../libgda/gda-data-select.c:1759
+#: ../libgda/gda-data-select.c:1735 ../libgda/gda-data-select.c:1746
 msgid "No table to select from in SELECT statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1753
+#: ../libgda/gda-data-select.c:1740
 msgid "SELECT statement uses more than one table to select from"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1927 ../libgda/gda-data-select.c:2759
-#: ../libgda/gda-data-select.c:2975 ../libgda/gda-data-select.c:3018
-#: ../libgda/gda-data-select.c:3100 ../libgda/gda-data-select.c:3295
+#: ../libgda/gda-data-select.c:1914 ../libgda/gda-data-select.c:2746
+#: ../libgda/gda-data-select.c:2962 ../libgda/gda-data-select.c:3005
+#: ../libgda/gda-data-select.c:3087 ../libgda/gda-data-select.c:3282
 msgid "Data model does only support random access"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1968
+#: ../libgda/gda-data-select.c:1955
 msgid "Unable to retrieve data after modifications"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:1992 ../libgda/gda-data-select.c:2003
-#: ../libgda/gda-data-select.c:2033
+#: ../libgda/gda-data-select.c:1979 ../libgda/gda-data-select.c:1990
+#: ../libgda/gda-data-select.c:2020
 msgid ""
 "Unable to retrieve data after modifications, no further modification will be "
 "allowed"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2172
+#: ../libgda/gda-data-select.c:2159
 #, c-format
 msgid "Can't calculate internal row number: %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2181
+#: ../libgda/gda-data-select.c:2168
 #, c-format
 msgid "Can't fetch next row: %s"
 msgstr "Не вдалося отримати наступний рядок: %s"
 
-#: ../libgda/gda-data-select.c:2233
+#: ../libgda/gda-data-select.c:2220
 #, c-format
 msgid "Can't move back iter at row: %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2242
+#: ../libgda/gda-data-select.c:2229
 msgid "Internal error: No fetch_prev() method implementation for data model"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2247
+#: ../libgda/gda-data-select.c:2234
 #, c-format
 msgid "Can't fetch previous row: %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2289
+#: ../libgda/gda-data-select.c:2276
 #, c-format
 msgid "Can't move iter at row '%d': %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2308
+#: ../libgda/gda-data-select.c:2295
 #, c-format
 msgid "Can't fetch row '%d': %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2383 ../libgda/gda-data-select.c:2393
+#: ../libgda/gda-data-select.c:2370 ../libgda/gda-data-select.c:2380
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2388
+#: ../libgda/gda-data-select.c:2375
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2476 ../libgda/gda-data-select.c:2570
+#: ../libgda/gda-data-select.c:2463 ../libgda/gda-data-select.c:2557
 msgid "Some columns can't be modified"
 msgstr "Вміст деяких стовпчиків не може бути змінено"
 
-#: ../libgda/gda-data-select.c:2625
+#: ../libgda/gda-data-select.c:2612
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2665
+#: ../libgda/gda-data-select.c:2652
 msgid "Unable to identify a way to fetch a single row"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2672
+#: ../libgda/gda-data-select.c:2659
 msgid "Can only operate on non compound SELECT statements"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:2754 ../libgda/gda-data-select.c:2924
-#: ../libgda/gda-data-select.c:3095 ../libgda/gda-data-select.c:3290
+#: ../libgda/gda-data-select.c:2741 ../libgda/gda-data-select.c:2911
+#: ../libgda/gda-data-select.c:3082 ../libgda/gda-data-select.c:3277
 msgid "Modifications are not allowed anymore"
 msgstr "Внесення змін більше не є можливим"
 
-#: ../libgda/gda-data-select.c:2764 ../libgda/gda-data-select.c:2929
+#: ../libgda/gda-data-select.c:2751 ../libgda/gda-data-select.c:2916
 msgid "No UPDATE statement provided"
 msgstr "Не надано інструкції UPDATE"
 
-#: ../libgda/gda-data-select.c:2804
+#: ../libgda/gda-data-select.c:2791
 msgid "Could not get iterator's value"
 msgstr "Не вдалося отримати значення ітератора"
 
-#: ../libgda/gda-data-select.c:2953
+#: ../libgda/gda-data-select.c:2940
 #, c-format
 msgid "Column %d can't be modified"
 msgstr "Стовпчик %d не може бути змінено"
 
-#: ../libgda/gda-data-select.c:3026
+#: ../libgda/gda-data-select.c:3013
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr "Забагато значень (максимум — %d)"
 
-#: ../libgda/gda-data-select.c:3105
+#: ../libgda/gda-data-select.c:3092
 msgid "No INSERT statement provided"
 msgstr "Не вказано інструкції INSERT"
 
-#: ../libgda/gda-data-select.c:3110
+#: ../libgda/gda-data-select.c:3097
 msgid "Cannot add a row because the number of rows is unknown"
 msgstr "Не можна додати рядок, оскільки кількість рядків є невідомою"
 
-#: ../libgda/gda-data-select.c:3139
+#: ../libgda/gda-data-select.c:3126
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:392
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:401
 msgid "Missing values to insert in INSERT statement"
 msgstr "Не вказано значень, які слід вставити за допомогою інструкції INSERT"
 
-#: ../libgda/gda-data-select.c:3300
+#: ../libgda/gda-data-select.c:3287
 msgid "No DELETE statement provided"
 msgstr "Не надано інструкції DELETE"
 
-#: ../libgda/gda-data-select.c:3619
+#: ../libgda/gda-data-select.c:3606
 #, c-format
 msgid ""
 "Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
 "expressions"
 msgstr ""
 
-#: ../libgda/gda-data-select.c:3775
+#: ../libgda/gda-data-select.c:3762
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
 "will be wrong: %s"
 msgstr ""
-"Сталася помилка — значення, яке поверне властивість «exec-params» буде"
-" помилковим: %s"
+"Сталася помилка — значення, яке поверне властивість «exec-params» буде "
+"помилковим: %s"
 
-#: ../libgda/gda-data-select.c:3831
+#: ../libgda/gda-data-select.c:3818
 msgid "Data model has been modified"
 msgstr "Модель даних було змінено"
 
-#: ../libgda/gda-data-select.c:3840
+#: ../libgda/gda-data-select.c:3827
 msgid "Data model contains BLOBs"
 msgstr "У моделі даних містяться BLOB-и"
 
-#: ../libgda/gda-data-select.c:3851
+#: ../libgda/gda-data-select.c:3838
 msgid "Can't get the number of rows of data model"
 msgstr "Не вдалося отримати кількість рядків у моделі даних"
 
@@ -1682,8 +1709,8 @@ msgstr "Не вдалося отримати кількість рядків у 
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
 msgstr ""
-"Некоректний тип стовпчика %s. Див. програмний інтерфейс"
-" gda_g_type_from_string ().\n"
+"Некоректний тип стовпчика %s. Див. програмний інтерфейс "
+"gda_g_type_from_string ().\n"
 
 #: ../libgda/gda-db-column.c:1110 ../libgda/gda-db-column.c:1223
 #, c-format
@@ -1728,7 +1755,7 @@ msgstr "Об'єкт xmlDoc не можна створити з назви xmfile
 msgid "xml file '%s' is not valid\n"
 msgstr "Файл xml «%s» є некоректним\n"
 
-#: ../libgda/gda-db-catalog.c:859 ../libgda/gda-db-table.c:677
+#: ../libgda/gda-db-catalog.c:859 ../libgda/gda-db-table.c:739
 #, c-format
 msgid "Connection is not opened"
 msgstr "З'єднання не відкрито"
@@ -1763,7 +1790,7 @@ msgstr "Не вдалося створити документ XML з файла:
 msgid "XML file is not valid\n"
 msgstr "Файл XML є некоректним\n"
 
-#: ../libgda/gda-db-table.c:685
+#: ../libgda/gda-db-table.c:747
 #, c-format
 msgid "Empty column list"
 msgstr "Порожній список стовпчиків"
@@ -1775,7 +1802,6 @@ msgstr "Не встановлено назви перегляду"
 
 #: ../libgda/gda-db-view.c:545
 #, c-format
-#| msgid "View definition: %s"
 msgid "View definition is not set"
 msgstr "Не встановлено визначення перегляду"
 
@@ -2902,7 +2928,7 @@ msgstr ""
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:277
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr ""
@@ -5767,7 +5793,7 @@ msgstr "Некоректний аргумент: NULL"
 msgid "Can't read BLOB"
 msgstr "Не вдалося прочитати BLOB"
 
-#: ../providers/jdbc/gda-jdbc-ddl.c:157 ../providers/mysql/gda-mysql-ddl.c:361
+#: ../providers/jdbc/gda-jdbc-ddl.c:157 ../providers/mysql/gda-mysql-ddl.c:343
 #: ../providers/oracle/gda-oracle-ddl.c:157
 #: ../providers/postgres/gda-postgres-ddl.c:403
 #: ../providers/web/gda-web-ddl.c:155
@@ -6767,7 +6793,7 @@ msgstr "Уступами"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "Set to NULL"
-msgstr ""
+msgstr "Встановити NULL"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
 msgid "Don't pack keys"
@@ -8919,18 +8945,18 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/class-properties.c:428
 msgid "Class OID:"
-msgstr ""
+msgstr "OID класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:439
 msgid "Class kind:"
-msgstr ""
+msgstr "Тип класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:453
 msgid "Class name:"
 msgid_plural "Class names:"
-msgstr[0] "Назва класу:Назва класу:"
+msgstr[0] "Назви класів:"
 msgstr[1] "Назви класів:"
-msgstr[2] ""
+msgstr[2] "Назви класів:"
 msgstr[3] "Назва класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:466
@@ -10451,7 +10477,7 @@ msgstr "посилання %s.%s"
 #: ../tools/common/t-app.c:2152
 #, c-format
 msgid "Unknown output format: '%s', reset to default"
-msgstr ""
+msgstr "Невідомий формат виведення: «%s», повертаємося до типового"
 
 #: ../tools/common/t-app.c:2246 ../tools/common/t-app.c:2317
 #, c-format
