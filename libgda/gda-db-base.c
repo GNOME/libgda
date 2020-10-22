@@ -141,8 +141,7 @@ gda_db_base_set_names (GdaDbBase *self,
   else
     g_string_printf (fullnamestr, "%s", priv->m_name);
 
-  priv->m_fullname = g_strdup (fullnamestr->str);
-  g_string_free (fullnamestr, TRUE);
+  priv->m_fullname = g_string_free (fullnamestr, FALSE);
 }
 
 /**
@@ -166,6 +165,7 @@ gda_db_base_get_full_name (GdaDbBase *self)
   GdaDbBasePrivate *priv = gda_db_base_get_instance_private (self);
 
   GString *fullnamestr = NULL;
+  g_free (priv->m_fullname);
 
   fullnamestr = g_string_new (NULL);
 
@@ -177,10 +177,12 @@ gda_db_base_get_full_name (GdaDbBase *self)
   else if (priv->m_name)
     g_string_printf (fullnamestr, "%s", priv->m_name);
   else
+  {
+    g_string_free (fullnamestr, TRUE);
     return NULL;
+  }
 
-  priv->m_fullname = g_strdup (fullnamestr->str);
-  g_string_free (fullnamestr, TRUE);
+  priv->m_fullname = g_string_free (fullnamestr, FALSE);
 
   return priv->m_fullname;
 }

@@ -322,12 +322,15 @@ gda_db_table_parse_node (GdaDbBuildable *buildable,
   name = xmlGetProp (node, (xmlChar *)gdadbtablenodes[GDA_DB_TABLE_NAME]);
   g_assert (name); /* If here bug with xml validation */
   gda_db_base_set_name(GDA_DB_BASE(self), (gchar*)name);
+  xmlFree(name);
 
   xmlChar *tempt = xmlGetProp (node, (xmlChar*)gdadbtablenodes[GDA_DB_TABLE_TEMP]);
 
-  if (tempt && (*tempt == 't' || *tempt == 't'))
+  if (tempt)
     {
-      g_object_set (G_OBJECT(self), "istemp", TRUE, NULL);
+      if (*tempt == 't' || *tempt == 't')
+        g_object_set (G_OBJECT(self), "istemp", TRUE, NULL);
+
       xmlFree (tempt);
     }
 
