@@ -1558,7 +1558,7 @@ msgstr "Error intern: no s'ha establert la propietat «prepared-stmt»"
 
 #: ../libgda/gda-data-select.c:1106
 msgid "Can't get the prepared statement's actual statement"
-msgstr "No es pot obtenir la declaració preparada de la declaració actual"
+msgstr "No es pot obtenir la declaració preparada de la declaració real"
 
 #: ../libgda/gda-data-select.c:1112
 msgid "Unsupported type of SELECT statement"
@@ -1566,7 +1566,7 @@ msgstr "Tipus de declaració SELECT no suportada"
 
 #: ../libgda/gda-data-select.c:1204
 msgid "INSERT statement must contain values to insert"
-msgstr "La declaració INSERT necessita valors que inserir"
+msgstr "La declaració INSERT necessita valors a inserir"
 
 #: ../libgda/gda-data-select.c:1210
 msgid "INSERT statement must insert only one row"
@@ -1697,7 +1697,7 @@ msgstr "No es poden modificar algunes columnes"
 #: ../libgda/gda-data-select.c:2612
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
-"Error intern: no es pot obtenir la consulta actual de la consulta preparada"
+"Error intern: no es pot obtenir la consulta real de la consulta preparada"
 
 #: ../libgda/gda-data-select.c:2652
 msgid "Unable to identify a way to fetch a single row"
@@ -4007,7 +4007,7 @@ msgid ""
 "display type (%s)"
 msgstr ""
 "El tipus especificat del renderitzador de la cel·la de dades (%s) difereix "
-"del valor actual del tipus que mostrar (%s)"
+"del valor real del tipus a mostrar (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:409
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
@@ -9964,7 +9964,7 @@ msgid ""
 "containing data. The parameters required to execute\n"
 "the query will be defined from the row selected in the grid"
 msgstr ""
-"Marqueu aquesta opció per a què aquest preferit sigui una acció\n"
+"Marqueu aquesta opció perquè aquest preferit sigui una acció\n"
 "que es pot proposar per executar-se des de reixetes \n"
 "que continguin dades. Els paràmetres requerits per a executar \n"
 "la consulta es definiran des de la fila seleccionada a la reixeta."
