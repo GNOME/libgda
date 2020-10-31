@@ -3805,7 +3805,7 @@ msgstr ""
 #: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
 msgid "Could not find signal named \"%s\""
-msgstr "No s'ha pogut trobar el senyal anomenat \"%s\""
+msgstr "No s'ha pogut trobar el senyal anomenat «%s»"
 
 #: ../libgda/thread-wrapper/gda-worker.c:183
 msgid ""
@@ -4018,7 +4018,7 @@ msgid ""
 msgstr ""
 "El renderitzador de la cel·la de dades ha demanat mostrar valors de tipus de"
 " dades diferents, almenys %s i %s, el que vol dir que el model de dades té "
-"algunes incoherències "
+"algunes incoherències"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
@@ -4378,7 +4378,7 @@ msgid ""
 "'-':writable, removed from actual value, ' ': not writable)"
 msgstr ""
 "Escrivint la màscara per als caràcters corresponents en format («_»: "
-"escrivible, «-»:escrivible, eliminat del valor actual, « »: no escrivible)"
+"escrivible, «-»:escrivible, eliminat del valor real, « »: no escrivible)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -8751,10 +8751,10 @@ msgid ""
 "existing connection as well as bind a data set which will appear as a table "
 "(importing CSV data for example). You can add as many binds as needed"
 msgstr ""
-"La connexió virtual que aneu a definir pot vincular taules des d'una "
+"La connexió virtual que definiu pot vincular taules des d'una "
 "connexió existent així com vincular un conjunt de dades que apareixerà com "
 "una taula (important dades CVS, per exemple). Podeu afegir tots els vincles"
-" que necessiteu."
+" que necessiteu"
 
 #: ../tools/browser/connection-binding-properties.c:286
 msgid "Add binding"
@@ -9029,7 +9029,7 @@ msgstr "Nova pestanya del gestor de dades"
 #: ../tools/browser/data-manager/data-source.c:404
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
-msgstr "El node ha de ser \"taula\" o \"consulta\", i és \"%s\""
+msgstr "El node ha de ser «table» o «query», i és «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:437
 #: ../tools/browser/schema-browser/mgr-columns.c:278
@@ -9965,9 +9965,9 @@ msgid ""
 "the query will be defined from the row selected in the grid"
 msgstr ""
 "Marqueu aquesta opció perquè aquest preferit sigui una acció\n"
-"que es pot proposar per executar-se des de reixetes \n"
+"que es pot proposar per executar-se des de les graelles \n"
 "que continguin dades. Els paràmetres requerits per a executar \n"
-"la consulta es definiran des de la fila seleccionada a la reixeta."
+"la consulta es definiran des de la fila seleccionada a la graella"
 
 #: ../tools/browser/query-exec/query-result.c:219
 msgid "Statement:"
@@ -10391,8 +10391,8 @@ msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", "
 "\"rdn\" and \"none\")"
 msgstr ""
-"Defineix com es maneja la columna DN per a les recerques LDAP (entre \"dn\","
-" \"rdn\" i \"none\")"
+"Defineix com es maneja la columna DN per a les recerques LDAP (entre «dn», "
+"«rdn» i «none»)"
 
 #: ../tools/common/t-app.c:282
 msgid ""
@@ -11194,7 +11194,7 @@ msgstr "Format d'importació «%s» desconegut"
 #: ../tools/common/t-app.c:4182
 #, c-format
 msgid "Could not import file '%s'"
-msgstr "No s'ha pogut importar el fitxer %s"
+msgstr "No s'ha pogut importar el fitxer «%s»"
 
 #: ../tools/common/t-app.c:4266
 #, c-format
@@ -11522,7 +11522,7 @@ msgstr "No es pot obrir «%s» per a escriure-hi: %s\n"
 #: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
-msgstr "No es pot obrir canonada '%s': %s"
+msgstr "No es pot obrir canonada «%s»: %s"
 
 #: ../tools/common/t-favorites.c:184 ../tools/common/t-favorites.c:193
 msgid "Can't initialize dictionary to store favorites"
