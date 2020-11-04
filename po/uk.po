@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-10-16 14:41+0000\n"
-"PO-Revision-Date: 2020-10-22 17:29+0300\n"
+"POT-Creation-Date: 2020-10-22 14:31+0000\n"
+"PO-Revision-Date: 2020-11-04 20:42+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -670,6 +670,8 @@ msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
 msgstr ""
+"Визначає, чи працює з'єднання як обгортка потоку обробки іншого з'єднання, що"
+" робить його безпечним щодо паралельних потоків обробки"
 
 #: ../libgda/gda-connection.c:400
 msgid ""
@@ -753,8 +755,8 @@ msgid ""
 "Internal error: provider does not implement the open_connection() virtual "
 "method"
 msgstr ""
-"Внутрішня помилку: у надавачі даних не реалізовано віртуальний метод"
-" open_connection()"
+"Внутрішня помилку: у надавачі даних не реалізовано віртуальний метод "
+"open_connection()"
 
 #: ../libgda/gda-connection.c:1733
 #, c-format
@@ -830,7 +832,7 @@ msgstr "Помилка під час оновлення метаданих"
 
 #: ../libgda/gda-connection.c:5869
 msgid "Wrong filter arguments"
-msgstr ""
+msgstr "Помилкові аргументи фільтрування"
 
 #: ../libgda/gda-connection.c:6057 ../libgda/gda-connection.c:6110
 #: ../libgda/gda-connection.c:6154 ../libgda/gda-connection.c:6198
@@ -838,6 +840,8 @@ msgstr ""
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
+"Стеження за станом передавання даних з'єднанням: немає передавання даних для "
+"%s"
 
 #: ../libgda/gda-data-access-wrapper.c:636
 #: ../libgda/gda-data-meta-wrapper.c:578 ../libgda/gda-data-model-array.c:439
@@ -853,11 +857,11 @@ msgstr ""
 #: ../libgda-ui/gdaui-combo.c:825
 #, c-format
 msgid "Column %d out of range (0-%d)"
-msgstr ""
+msgstr "Стовпчик %d поза межами припустимого діапазону (0-%d)"
 
 #: ../libgda/gda-data-access-wrapper.c:676
 msgid "Can't set iterator's position"
-msgstr ""
+msgstr "Не вдалося встановити позицію ітератора"
 
 #: ../libgda/gda-data-access-wrapper.c:754
 msgid "Can't access data"
@@ -882,27 +886,31 @@ msgstr "Не вказано нової моделі даних"
 #: ../libgda/gda-data-comparator.c:461
 msgid "Data models must support random access model"
 msgstr ""
+"У моделях ітератора має бути передбачено підтримку моделі випадкового доступу"
 
 #: ../libgda/gda-data-comparator.c:470
 msgid "Data models to compare don't have the same number of columns"
-msgstr ""
+msgstr "У моделях даних для порівняння різна кількість стовпчиків"
 
 #: ../libgda/gda-data-comparator.c:481
 #, c-format
 msgid "Type mismatch for column %d: '%s' and '%s'"
-msgstr ""
+msgstr "Невідповідність типів у стовпчику %d: «%s» і «%s»"
 
 #: ../libgda/gda-data-comparator.c:492
 msgid "Can't get the number of rows of data model to compare from"
 msgstr ""
+"Не вдалося отримати кількість рядків початкової моделі даних для порівняння"
 
 #: ../libgda/gda-data-comparator.c:498
 msgid "Can't get the number of rows of data model to compare to"
 msgstr ""
+"Не вдалося отримати кількість рядків результативної моделі даних для"
+" порівняння"
 
 #: ../libgda/gda-data-comparator.c:583 ../libgda/gda-data-comparator.c:619
 msgid "Differences computation cancelled on signal handling"
-msgstr ""
+msgstr "Скасовано обчислення різниць при обробці сигналів"
 
 #: ../libgda/gda-data-model-array.c:180
 msgid "Whether data model can be modified"
@@ -953,65 +961,65 @@ msgstr "Рядок не знайдено у моделі даних"
 #: ../libgda/gda-data-model-bdb.c:262
 #, c-format
 msgid "Could not load the Berkeley DB library: %s"
-msgstr ""
+msgstr "Не вдалося завантажити бібліотеку бази даних Berkeley: %s"
 
 #: ../libgda/gda-data-model-bdb.c:266 ../libgda/gda-data-model-bdb.c:270
 #, c-format
 msgid "Could not load the '%s' symbol from the Berkeley DB library"
-msgstr ""
+msgstr "Не вдалося завантажити символ «%s» з бібліотеки бази даних Berkeley"
 
 #: ../libgda/gda-data-model-bdb.c:293 ../libgda/gda-data-model-bdb.c:367
 msgid "Berkeley DB library not loaded"
-msgstr ""
+msgstr "Не завантажено бібліотеку бази даних Berkeley"
 
 #: ../libgda/gda-data-model-bdb.c:695 ../libgda/gda-data-model-bdb.c:728
 #: ../libgda/gda-data-model-bdb.c:834 ../libgda/gda-data-model-bdb.c:925
 #, c-format
 msgid ""
 "Custom BDB model implementation is not complete: the '%s' method is missing"
-msgstr ""
+msgstr "Нетипова реалізація моделі BDB є неповною: не вистачає методу «%s»"
 
 #: ../libgda/gda-data-model-bdb.c:862 ../libgda/gda-data-model-bdb.c:952
 #, c-format
 msgid "Expected GdaBinary value, got %s"
-msgstr ""
+msgstr "Очікували на значення GdaBinary, отримано %s"
 
 #: ../libgda/gda-data-model-bdb.c:908
 msgid "Key modification is not supported"
-msgstr ""
+msgstr "Підтримки модифікації ключа не передбачено"
 
 #: ../libgda/gda-data-model.c:705
 msgid "Data model does not support getting individual value"
-msgstr ""
+msgstr "У моделі даних не передбачено отримання індивідуального значення"
 
 #: ../libgda/gda-data-model.c:748 ../libgda/gda-data-model.c:758
 #, c-format
 msgid "Data model returned value of invalid '%s' type"
-msgstr ""
+msgstr "Моделлю даних повернуто значення некоректного типу «%s»"
 
 #: ../libgda/gda-data-model.c:755
 msgid "Data model returned invalid NULL value"
-msgstr ""
+msgstr "Моделлю даних повернуто некоректне значення NULL"
 
 #: ../libgda/gda-data-model.c:825
 msgid "Data model does not support setting individual value"
-msgstr ""
+msgstr "У моделі даних не передбачено встановлення індивідуального значення"
 
 #: ../libgda/gda-data-model.c:883
 msgid "Data model does not support setting values"
-msgstr ""
+msgstr "У моделі даних не передбачено встановлення значень"
 
 #: ../libgda/gda-data-model.c:1047 ../libgda/gda-data-model.c:1083
 msgid "Data model does not support row append"
-msgstr ""
+msgstr "У моделі даних не передбачено дописування рядків"
 
 #: ../libgda/gda-data-model.c:1074
 msgid "Model does not allow row insertion"
-msgstr ""
+msgstr "У моделі не дозволено вставлення рядків"
 
 #: ../libgda/gda-data-model.c:1111
 msgid "Model does not allow row deletion"
-msgstr ""
+msgstr "У моделі не дозволено вилучення рядків"
 
 #: ../libgda/gda-data-model.c:1120
 msgid "Data model does not support row removal"
@@ -1021,7 +1029,7 @@ msgstr "У моделі даних не передбачено вилученн�
 #: ../libgda/gda-data-model.c:1352
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити рядкове значення, проігноровано."
 
 #: ../libgda/gda-data-model.c:1361 ../libgda/gda-data-model.c:1371
 #: ../libgda/gda-data-model.c:1381 ../libgda/gda-data-model.c:1423
@@ -1036,7 +1044,7 @@ msgstr "Параметр «%s» має містити булеве значен�
 #: ../libgda/gda-data-model.c:1516
 #, c-format
 msgid "The '%s' parameter must hold an integer value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити ціле значення, проігноровано."
 
 #: ../libgda/gda-data-model.c:1558
 #, c-format
@@ -1055,11 +1063,13 @@ msgstr "Експортовані дані"
 #: ../libgda/gda-data-model.c:1942
 #, c-format
 msgid "Expected tag <gda_value> or <gda_array_value>, got <%s>, ignoring"
-msgstr ""
+msgstr "Мав бути теґ <gda_value> або <gda_array_value>, маємо <%s>, ігноруємо"
 
 #: ../libgda/gda-data-model.c:1972
 msgid "Cannot retrieve column data type (type is UNKNOWN or not specified)"
 msgstr ""
+"Не вдалося отримати тип даних стовпчика (значенням типу є UNKNOWN або тип не"
+" вказано)"
 
 #: ../libgda/gda-data-model.c:2058
 #, c-format
@@ -1073,7 +1083,7 @@ msgstr "Не вдалося отримати ітератор для модел�
 #: ../libgda/gda-data-model.c:2147
 #, c-format
 msgid "Inexistent column in source data model: %d"
-msgstr ""
+msgstr "У початковій моделі даних є стовпчик, якого не існує: %d"
 
 #: ../libgda/gda-data-model.c:2161
 #, c-format
@@ -1102,11 +1112,11 @@ msgstr "Не вдалося створити дамп атрибутів мод�
 #: ../libgda/gda-data-model.c:2482
 #, c-format
 msgid "Could not dump data model's contents: %s"
-msgstr ""
+msgstr "Не вдалося створити дамп вмісту моделі даних: %s"
 
 #: ../libgda/gda-data-model.c:2703
 msgid "Data model does not support backward cursor move"
-msgstr ""
+msgstr "У моделі даних не передбачено зворотного руху курсора"
 
 #: ../libgda/gda-data-model.c:3002
 #: ../tools/browser/common/gdaui-entry-import.c:214
@@ -1130,17 +1140,17 @@ msgstr "Рядок не знайдено"
 
 #: ../libgda/gda-data-model-dir.c:997 ../libgda/gda-data-model-dir.c:999
 msgid "Column cannot be modified"
-msgstr ""
+msgstr "Вносити зміни до стовпчика не можна"
 
 #: ../libgda/gda-data-model-dir.c:1013 ../libgda/gda-data-model-dir.c:1016
 #: ../libgda/gda-data-model-dir.c:1229 ../libgda/gda-data-model-dir.c:1233
 msgid "New path must be a subpath of the base directory"
-msgstr ""
+msgstr "Новий шлях має бути підлеглим шляхом базового каталогу"
 
 #: ../libgda/gda-data-model-dir.c:1056 ../libgda/gda-data-model-dir.c:1103
 #, c-format
 msgid "Could not rename file '%s' to '%s'"
-msgstr ""
+msgstr "Не вдалося перейменувати файл «%s» на «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1082
 #, c-format
