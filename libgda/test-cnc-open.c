@@ -98,7 +98,9 @@ test1a (void)
 	provs = gda_config_list_providers ();
 	g_assert (provs != NULL);
 	g_assert (gda_data_model_get_n_rows (provs) >= 1);
-	g_print ("Providers:\n%s\n", gda_data_model_dump_as_string (provs));
+	gchar *printstr = gda_data_model_dump_as_string (provs);
+	g_print ("Providers:\n%s\n", printstr);
+	g_free (printstr);
 
 	sqlite = gda_config_get_provider ("SQLite", &error);
 	if (error != NULL) {

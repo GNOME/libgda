@@ -178,6 +178,7 @@ gda_db_column_finalize (GObject *object)
   g_free (priv->mp_type);
   g_free (priv->mp_default);
   g_free (priv->mp_check);
+  g_free (priv->mp_comment);
 
   G_OBJECT_CLASS (gda_db_column_parent_class)->finalize (object);
 }
@@ -1127,12 +1128,9 @@ gda_db_column_prepare_create  (GdaDbColumn *self,
           g_free (numstr);
           return FALSE;
         }
-      else
-        {
-          g_free (numstr);
-          numstr = NULL;
-        }
     }
+
+  g_free (numstr);
 
 /* We need to set scale only for numeric column type */
   if (priv->m_gtype == G_TYPE_FLOAT ||
@@ -1146,11 +1144,8 @@ gda_db_column_prepare_create  (GdaDbColumn *self,
           g_free (numstr);
           return FALSE;
         }
-      else
-        {
-          g_free (numstr);
-          numstr = NULL;
-        }
+
+      g_free (numstr);
     }
 
   if(!gda_server_operation_set_value_at (op, GDA_BOOL_TO_STR (priv->m_nnul), error,
