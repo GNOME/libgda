@@ -13,4 +13,20 @@ Numeric.get_string nullable=true
 MetaStore.extract_v name="extract"
 ServerOperation.set_value_at_path name="set_value_at"
 ServerOperation.get_value_at_path name="get_value_at"
+// Fails but the method states a custom position of GLib.Error
+// so it is unbindable
+Connection.get_meta_store_data skip=false
 
+Connection.update_row_in_table skip=false
+Connection.statement_execute_select_fullv skip=false
+Connection.insert_row_into_table skip=false
+
+
+ServerOperation.prepare_create_table skip=false
+ServerOperation.get_node_info skip=false
+
+
+SqlBuilder.add_expr skip=false
+SqlBuilder.add_function skip=false
+SqlBuilder.add_case skip=false
+SqlBuilder.add_field_value skip=false

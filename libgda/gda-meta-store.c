@@ -2704,7 +2704,7 @@ gda_meta_store_sql_identifier_quote (const gchar *id, GdaConnection *cnc)
 }
 
 /**
- * gda_meta_store_extract: (skip)
+ * gda_meta_store_extract:
  * @store: a #GdaMetaStore object
  * @select_sql: a SELECT statement
  * @error: (nullable): a place to store errors, or %NULL

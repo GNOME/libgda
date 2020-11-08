@@ -1083,7 +1083,7 @@ gda_server_operation_new (GdaServerOperationType op_type, const gchar *xml_file)
 }
 
 /**
- * gda_server_operation_get_node_info: (skip)
+ * gda_server_operation_get_node_info:
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/") as a format string, similar to g_strdup_printf()'s argument
  * @...: the arguments to insert into the format string
@@ -2058,7 +2058,7 @@ gda_server_operation_get_value_at_path (GdaServerOperation *op, const gchar *pat
 }
 
 /**
- * gda_server_operation_get_value_at: (skip)
+ * gda_server_operation_get_value_at: (rename-to gda_server_operation_get_value_at_format)
  * @op: a #GdaServerOperation object
  * @path_format: a complete path to a node (starting with "/")
  * @...: arguments to use with @path_format to make a complete path

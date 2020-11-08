@@ -1092,7 +1092,7 @@ gda_set_copy (GdaSet *set)
 }
 
 /**
- * gda_set_new_inline: (skip)
+ * gda_set_new_inline:
  * @nb: the number of value holders which will be contained in the new #GdaSet
  * @...: a serie of a (const gchar*) id, (GType) type, and value
  *
