@@ -2533,6 +2533,46 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
  *
  * The equivalent SQL command is: DELETE FROM &lt;table&gt; WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
  *
+ * A simple example to remove a row in database.
+ *
+ * |[<!-- languede="C" -->
+ *
+ * GdaConnection *cnc;
+ * //Open connection here
+ *
+ * GError *error = NULL;
+ *
+ * GValue *v_id = gda_value_new (G_TYPE_INT);
+ * GValue *v_name = gda_value_new_from_string ("Aldibino Refinino", G_TYPE_STRING);
+ *
+ * //The number 10 represents a primary key record in the table
+ * g_value_set_int (v_id, 10);
+ *
+ * //Delete a record with a specific ID in the col_id column
+ * if (!gda_connection_delete_row_from_table (cnc, "TABLE_CONTACTS",
+ *                                            "col_id", v_id,
+ *                                            &error))
+ * {
+ *   g_error ("Could not delete row in table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ *
+ * //Delete a record with a specific NAME in the col_name column
+ * if (!gda_connection_delete_row_from_table (cnc, "TABLE_CONTACTS",
+ *                                            "col_name", v_name,
+ *                                            &error))
+ * {
+ *   g_error ("Could not delete row in table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ *
+ * gda_value_free (v_id);
+ * gda_value_free (v_name);
+ *
+ * g_error_free (error);
+ *
+ * ]|
+ *
  * Returns: TRUE if no error occurred, FALSE otherwise
  *
  * Since: 4.2.3
