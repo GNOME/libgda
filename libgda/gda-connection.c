@@ -2063,7 +2063,7 @@ gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
  *
  * A simple example to add a row in database
  * 
- * |[<!-- languede="C" -->
+ * |[<!-- languege="C" -->
  * 
  * GdaConnection *cnc;
  * // Open connection here
@@ -2278,7 +2278,7 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  *
  * A simple example for updating a specific row in the table
  * 
- * |[<!-- languede="C" -->
+ * |[<!-- languege="C" -->
  * 
  * GdaConnection *cnc;
  * //Open connection here
@@ -2535,7 +2535,7 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
  *
  * A simple example to remove a row in database.
  *
- * |[<!-- languede="C" -->
+ * |[<!-- languege="C" -->
  *
  * GdaConnection *cnc;
  * //Open connection here
