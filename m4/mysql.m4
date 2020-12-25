@@ -217,7 +217,12 @@ dnl Try detect API version
     		AC_MSG_CHECKING([checking for Mysql 8 API version])
 	    	AX_COMPARE_VERSION($mysql_version, [ge], [8.0.0],
 		    	[
-		    		mysql8=yes
+				AX_COMPARE_VERSION($mysql_version, [ge], [10.0.0],
+				[
+					mysql8=no
+				],[
+					mysql8=yes
+				])
 		    	],[
 		    		mysql8=no
 		    	])
