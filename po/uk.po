@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-11-07 19:59+0000\n"
-"PO-Revision-Date: 2020-12-10 19:47+0200\n"
+"POT-Creation-Date: 2020-12-10 17:50+0000\n"
+"PO-Revision-Date: 2020-12-26 10:24+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -270,6 +270,9 @@ msgid ""
 "source. Mandatory fields are marked with a star. To create a local database "
 "in a file, select the 'SQLite' type of database."
 msgstr ""
+"Наступні поля пов'язано із записами базових даних вашого нового джерела"
+" даних. Обов'язкові до заповнення поля позначено зірочкою. Для створення"
+" локальної бази даних у файлі, виберіть тип бази даних «SQLite»."
 
 #: ../control-center/gdaui-dsn-assistant.c:469
 msgid "Data source name"
@@ -314,6 +317,10 @@ msgid ""
 "database (mandatory fields are marked with a star).This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
+"Вказані нижче поля відповідають відомостям, які потрібні для створення бази"
+" даних (обов'язкові до заповнення поля позначено зірочкою). Ці відомості є"
+" специфічними для бази даних, тому вам слід ознайомитися із підручником до"
+" неї, щоб дізнатися більше."
 
 #: ../control-center/gdaui-dsn-assistant.c:583
 msgid "New database definition"
@@ -325,6 +332,10 @@ msgid ""
 "(mandatory fields are marked with a star). This information is database-"
 "specific, so check the manual for more information."
 msgstr ""
+"Вказані нижче поля відповідають відомостям, які потрібні для відкриття"
+" з'єднання із базою даних (обов'язкові до заповнення поля позначено"
+" зірочкою). Ці відомості є специфічними для бази даних, тому вам слід"
+" ознайомитися із підручником до неї, щоб дізнатися більше."
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:608
@@ -495,6 +506,8 @@ msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
 msgstr ""
+"Надавачі даних — додатки, які реалізують доступ до кожної з баз даних за"
+" допомогою засобів, які передбачено розробниками відповідних баз даних."
 
 #: ../libgda/gda-batch.c:321
 msgid "Statement could not be found in batch's statements"
@@ -664,6 +677,8 @@ msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
 msgstr ""
+"Унікальний GThread, з якого буде доступним з'єднання. Його слід змінювати,"
+" лише якщо це передбачено реалізацією надавачем даних доступу до бази даних."
 
 #: ../libgda/gda-connection.c:384
 msgid ""
@@ -1160,11 +1175,11 @@ msgstr "Не вдалося створити каталог «%s»"
 #: ../libgda/gda-data-model-dir.c:1153
 #, c-format
 msgid "Could not overwrite contents of file '%s'"
-msgstr ""
+msgstr "Не вдалося перезаписати вміст файла «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1173 ../libgda/gda-data-model-dir.c:1175
 msgid "Wrong type of data"
-msgstr ""
+msgstr "Помилковий тип даних"
 
 #: ../libgda/gda-data-model-dir.c:1216 ../libgda/gda-data-model-dir.c:1219
 msgid "Column cannot be set"
@@ -7575,7 +7590,7 @@ msgstr "Будівник"
 
 #: ../tools/browser/browser-stock-icons.c:50
 msgid "Ldap entries"
-msgstr ""
+msgstr "Записи LDAP"
 
 #: ../tools/browser/browser-stock-icons.c:51
 msgid "Add table"
@@ -9006,9 +9021,8 @@ msgid ""
 "Can't get the list of files used to store information about each connection: "
 "%s\n"
 msgstr ""
-"Не вдалося отримати список файлів, які використовуються для зберігання даних"
-" щодо кожного з'єднання: "
-"%s\n"
+"Не вдалося отримати список файлів, які використовуються для зберігання даних "
+"щодо кожного з'єднання: %s\n"
 
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:319
 #, c-format
@@ -9016,9 +9030,8 @@ msgid ""
 "Error while purging files used to store information about each connection: "
 "%s\n"
 msgstr ""
-"Помилка під час спроби очищення файлів, які використовуються для зберігання"
-" даних щодо кожного з'єднання: "
-"%s\n"
+"Помилка під час спроби очищення файлів, які використовуються для зберігання "
+"даних щодо кожного з'єднання: %s\n"
 
 #: ../tools/browser/mgr-favorites.c:251
 msgid "Multiple statements"
@@ -9238,8 +9251,8 @@ msgid ""
 "Internal error, please report error to http://bugzilla.gnome.org/ for the "
 "\"libgda\" product"
 msgstr ""
-"Внутрішня помилка, будь ласка, повідомте про помилку на сайті"
-" http://bugzilla.gnome.org/ для продукту «libgda»"
+"Внутрішня помилка, будь ласка, повідомте про помилку на сайті http://"
+"bugzilla.gnome.org/ для продукту «libgda»"
 
 #: ../tools/browser/query-exec/query-console-page.c:1222
 msgid "_Execute"
@@ -10194,7 +10207,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2099
 #, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
-msgstr ""
+msgstr "%s [[<НАЗВА_CNC>] [<DSN>|<РЯДОК ЗʼЄДНАННЯ>]]"
 
 #: ../tools/gda-sql.c:2100
 msgid "Opens a new connection or lists opened connections"
@@ -10203,7 +10216,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2109
 #, c-format
 msgid "%s [<CNC_NAME>]"
-msgstr ""
+msgstr "%s [<НАЗВА_CNC>]"
 
 #: ../tools/gda-sql.c:2110
 msgid "Close a connection"
@@ -10255,7 +10268,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2154
 #, c-format
 msgid "%s [<PROVIDER>]"
-msgstr ""
+msgstr "%s [<НАДАВАЧ_ДАНИХ>]"
 
 #: ../tools/gda-sql.c:2155
 msgid "List all installed database providers (or named one's attributes)"
@@ -10303,7 +10316,7 @@ msgstr ""
 
 #: ../tools/gda-sql.c:2212
 msgid "Show usage and distribution terms"
-msgstr ""
+msgstr "Показати дані щодо користування і умов розповсюдження"
 
 #: ../tools/gda-sql.c:2220
 #, c-format
@@ -10312,56 +10325,57 @@ msgstr "%s [<НАЗВА> [<ЗНАЧЕННЯ>]]"
 
 #: ../tools/gda-sql.c:2221
 msgid "Set or show an option, or list all options "
-msgstr ""
+msgstr "Встановити або показати параметра або список усіх параметрів"
 
 #: ../tools/gda-sql.c:2227 ../tools/gda-sql.c:2235 ../tools/gda-sql.c:2243
 #: ../tools/gda-sql.c:2251 ../tools/gda-sql.c:2259 ../tools/gda-sql.c:2267
 #: ../tools/gda-sql.c:2275 ../tools/gda-sql.c:2283 ../tools/gda-sql.c:2291
 #: ../tools/gda-sql.c:2317
 msgid "Query buffer & query favorites"
-msgstr ""
+msgstr "Буфер запитів і вибрані записи запитів"
 
 #: ../tools/gda-sql.c:2230
 msgid "Edit the query buffer (or file) with external editor"
-msgstr ""
+msgstr "Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
 
 #: ../tools/gda-sql.c:2238
 msgid "Reset the query buffer (or load file into query buffer)"
-msgstr ""
+msgstr "Скинути буфер запитів (або завантажити файл до буфера запитів)"
 
 #: ../tools/gda-sql.c:2246
 msgid "Show the contents of the query buffer"
-msgstr ""
+msgstr "Показати вміст буфера запитів"
 
 #: ../tools/gda-sql.c:2253
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
-msgstr ""
+msgstr "%s [<НАЗВА_ВИБРАНОГО>]"
 
 #: ../tools/gda-sql.c:2254
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
+"Виконати вміст буфера запитів або виконати вказаний вибраний запис запитів"
 
 #: ../tools/gda-sql.c:2262
 msgid "Write query buffer to file"
-msgstr ""
+msgstr "Записати буфер запиту до файла"
 
 #: ../tools/gda-sql.c:2269 ../tools/gda-sql.c:2277 ../tools/gda-sql.c:2285
 #, c-format
 msgid "%s <FAVORITE_NAME>"
-msgstr ""
+msgstr "%s <НАЗВА_ВИБРАНОГО>"
 
 #: ../tools/gda-sql.c:2270
 msgid "Save query buffer as favorite"
-msgstr ""
+msgstr "Зберегти буфер запиту як вибраний запис"
 
 #: ../tools/gda-sql.c:2278
 msgid "Load a query favorite into query buffer"
-msgstr ""
+msgstr "Завантажити вибраний запис запиту до буфера запитів"
 
 #: ../tools/gda-sql.c:2286
 msgid "Delete a query favorite"
-msgstr ""
+msgstr "Вилучити вибраний запис запиту"
 
 #: ../tools/gda-sql.c:2293 ../tools/gda-sql.c:2362
 #, c-format
@@ -10370,7 +10384,7 @@ msgstr "%s"
 
 #: ../tools/gda-sql.c:2294
 msgid "List all query favorites"
-msgstr ""
+msgstr "Вивести список усіх вибраних записів запиту"
 
 #: ../tools/gda-sql.c:2302
 msgid "Set output format"
@@ -10379,11 +10393,11 @@ msgstr "встановити формат виведення даних"
 #: ../tools/gda-sql.c:2319
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
-msgstr ""
+msgstr "%s [<НАЗВА>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_РЯДКА>] <ФАЙЛ>"
 
 #: ../tools/gda-sql.c:2320
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr ""
+msgstr "Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
 
 #: ../tools/gda-sql.c:2325 ../tools/gda-sql.c:2334 ../tools/gda-sql.c:2343
 #: ../tools/gda-sql.c:2351
@@ -10393,7 +10407,7 @@ msgstr "Контекст виконання"
 #: ../tools/gda-sql.c:2327
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
-msgstr ""
+msgstr "%s [<НАЗВА> [<ЗНАЧЕННЯ>|_null_]]"
 
 #: ../tools/gda-sql.c:2328
 msgid "Set or show internal parameter, or list all if no parameter specified "
@@ -10442,7 +10456,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2371
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
-msgstr ""
+msgstr "%s <НАЗВА НАБОРУ ДАНИХ> <ВЗІРЕЦЬ>"
 
 #: ../tools/gda-sql.c:2372
 msgid "Show a dataset's contents where lines match a regular expression"
@@ -10511,7 +10525,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2437
 #, c-format
 msgid "%s <DN> <new DN>"
-msgstr ""
+msgstr "%s <DN> <нова DN>"
 
 #: ../tools/gda-sql.c:2438
 msgid "Renames an LDAP entry"
@@ -10520,13 +10534,14 @@ msgstr "Перейменовує запис LDAP"
 #: ../tools/gda-sql.c:2445
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
-msgstr ""
+msgstr "%s <DN> <ДІЯ> [<АТРИБУТ>[=<ЗНАЧЕННЯ>]] [<АТРИБУТ>=<ЗНАЧЕННЯ> ...]"
 
 #: ../tools/gda-sql.c:2446
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
 msgstr ""
+"Змінює атрибути запису LDAP; записом <ДІЯ> може бути DELETE, REPLACE або ADD"
 
 #: ../tools/gda-sql.c:2492
 #, c-format
@@ -10535,7 +10550,7 @@ msgstr "Невідомий формат виведення: «%s», поверт
 
 #: ../tools/gda-sql.c:2637
 msgid "DSN list"
-msgstr ""
+msgstr "Список DSN"
 
 #: ../tools/gda-sql.c:2690 ../tools/gda-sql.c:5860
 msgid "Missing arguments"
@@ -10553,11 +10568,12 @@ msgstr "Не вказано назви DSN"
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
+"Отримуємо відомості щодо структури бази даних, дія може бути досить тривалою…"
 
 #: ../tools/gda-sql.c:2944 ../tools/gda-sql.c:3129
 #, c-format
 msgid "A connection named '%s' already exists"
-msgstr ""
+msgstr "З'єднання із назвою «%s» вже існує"
 
 #: ../tools/gda-sql.c:2970
 msgid "No opened connection"
@@ -10565,16 +10581,16 @@ msgstr "Немає відкритого з'єднання"
 
 #: ../tools/gda-sql.c:2981
 msgid "DSN or connection string"
-msgstr ""
+msgstr "DSN або рядок з'єднання"
 
 #: ../tools/gda-sql.c:3121
 msgid "Missing required connection names"
-msgstr ""
+msgstr "Не вказано обов'язкові назви з'єднань"
 
 #: ../tools/gda-sql.c:3144
 #, c-format
 msgid "No connection or dataset named '%s' found"
-msgstr ""
+msgstr "Не знайдено з'єднання або набору даних із назвою «%s»"
 
 #. force create of meta store
 #. add existing connections to virtual connection
@@ -10587,14 +10603,14 @@ msgstr ""
 #: ../tools/gda-sql.c:3179
 #, c-format
 msgid "%s in the '%s' namespace"
-msgstr ""
+msgstr "%s у просторі назв «%s»"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/gda-sql.c:3193
 #, c-format
 msgid "%s mapped to the %s table"
-msgstr ""
+msgstr "%s пов'язано із таблицею %s"
 
 #: ../tools/gda-sql.c:3268
 #, c-format
@@ -10613,12 +10629,12 @@ msgstr "Не вдалося отримати домашній каталог: %s
 #: ../tools/gda-sql.c:3372
 #, c-format
 msgid "Working directory is now: %s"
-msgstr ""
+msgstr "Тепер робочим каталогом є цей каталог: %s"
 
 #: ../tools/gda-sql.c:3377
 #, c-format
 msgid "Could not change working directory to '%s': %s"
-msgstr ""
+msgstr "Не вдалося змінити робочий каталог на «%s»: %s"
 
 #: ../tools/gda-sql.c:3396 ../tools/gda-sql.c:3491 ../tools/gda-sql.c:3527
 #: ../tools/gda-sql.c:3549 ../tools/gda-sql.c:3584 ../tools/gda-sql.c:3621
@@ -10643,11 +10659,11 @@ msgstr "Не вдалося запустити /bin/sh"
 
 #: ../tools/gda-sql.c:3592
 msgid "Missing FILE to write to"
-msgstr ""
+msgstr "Не вказано ФАЙЛ, до якого слід виконати запис"
 
 #: ../tools/gda-sql.c:3627
 msgid "Favorite name"
-msgstr ""
+msgstr "Назва вибраного запису"
 
 #: ../tools/gda-sql.c:3628
 msgid "Comments"
@@ -10659,28 +10675,28 @@ msgstr "SQL"
 
 #: ../tools/gda-sql.c:3737 ../tools/gda-sql.c:3845 ../tools/gda-sql.c:3913
 msgid "Missing query buffer name"
-msgstr ""
+msgstr "Не вказано назви буфера запиту"
 
 #: ../tools/gda-sql.c:3766
 msgid "Query buffer is empty"
-msgstr ""
+msgstr "Буфер запитів порожній"
 
 #: ../tools/gda-sql.c:3813 ../tools/tools-favorites.c:1092
 msgid "Could not find favorite"
-msgstr ""
+msgstr "Не вдалося знайти вибраний запис"
 
 #: ../tools/gda-sql.c:3985 ../tools/gda-sql.c:5571 ../tools/gda-sql.c:5649
 #, c-format
 msgid "No parameter named '%s' defined"
-msgstr ""
+msgstr "Параметр із назвою «%s» не визначено"
 
 #: ../tools/gda-sql.c:3996
 msgid "List of defined parameters"
-msgstr ""
+msgstr "Список визначених параметрів"
 
 #: ../tools/gda-sql.c:4035
 msgid "dimensions (columns x rows)"
-msgstr ""
+msgstr "розмірності (стовпчики x рядки)"
 
 #: ../tools/gda-sql.c:4036
 msgid "List of kept data"
@@ -10714,28 +10730,28 @@ msgstr "Не вдалося імпортувати файл «%s»"
 
 #: ../tools/gda-sql.c:4415
 msgid "Missing foreign key declaration specification"
-msgstr ""
+msgstr "Не вказано специфікації оголошення сторонніх ключів"
 
 #: ../tools/gda-sql.c:4532
 msgid "Malformed foreign key declaration specification"
-msgstr ""
+msgstr "Помилкове форматування специфікації оголошення сторонніх ключів"
 
 #: ../tools/gda-sql.c:4564
 #, c-format
 msgid "Malformed table name specification '%s'"
-msgstr ""
+msgstr "Помилкове форматування специфікації назв таблиць «%s»"
 
 #: ../tools/gda-sql.c:4653 ../tools/gda-sql.c:4728
 msgid "Missing foreign key name argument"
-msgstr ""
+msgstr "Не вказано аргумент назви стороннього ключа"
 
 #: ../tools/gda-sql.c:4760 ../tools/gda-sql.c:5888
 msgid "Wrong row condition"
-msgstr ""
+msgstr "Помилкова умова щодо рядків"
 
 #: ../tools/gda-sql.c:4788
 msgid "No unique row identified"
-msgstr ""
+msgstr "Не визначено унікального рядка"
 
 #: ../tools/gda-sql.c:4870 ../tools/gda-sql.c:5577
 msgid "Wrong number of arguments"
@@ -10747,7 +10763,7 @@ msgstr "Не вказано даних, з якими слід виконати 
 
 #: ../tools/gda-sql.c:4908
 msgid "Missing row fields specifications"
-msgstr ""
+msgstr "Не вказано специфікації полів рядка"
 
 #: ../tools/gda-sql.c:4926
 msgid "Wrong SELECT argument"
@@ -10760,7 +10776,7 @@ msgstr "Помилковий аргумент поля даних"
 #: ../tools/gda-sql.c:5042 ../tools/gda-sql.c:5139 ../tools/gda-sql.c:5232
 #: ../tools/gda-sql.c:5327
 msgid "Connection is not an LDAP connection"
-msgstr ""
+msgstr "З'єднання не є з'єднанням LDAP"
 
 #: ../tools/gda-sql.c:5064
 #, c-format
@@ -10769,33 +10785,33 @@ msgstr "Невідомий діапазон пошуку «%s»"
 
 #: ../tools/gda-sql.c:5074
 msgid "Missing filter which to operate"
-msgstr ""
+msgstr "Не вказано фільтр, з яким слід працювати"
 
 #: ../tools/gda-sql.c:5154
 msgid "Missing current DN or new DN specification"
-msgstr ""
+msgstr "Не вказано поточної або нової специфікації DN"
 
 #: ../tools/gda-sql.c:5247
 msgid "Missing DN of LDAP entry"
-msgstr ""
+msgstr "Не вказано DN запису LDAP"
 
 #: ../tools/gda-sql.c:5252
 msgid "Missing operation to perform on LDAP entry's attributes"
-msgstr ""
+msgstr "Не вказано дію, яку слід виконати над атрибутами запису LDAP"
 
 #: ../tools/gda-sql.c:5264
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
-msgstr ""
+msgstr "Невідома дія «%s», яку слід виконати над атрибутами запису LDAP"
 
 #: ../tools/gda-sql.c:5285
 #, c-format
 msgid "Wrong attribute value specification '%s'"
-msgstr ""
+msgstr "Помилкова специфікація значення атрибута «%s»"
 
 #: ../tools/gda-sql.c:5341
 msgid "Missing DN (Distinguished name) argument"
-msgstr ""
+msgstr "Не вказано аргументу DN (Розпізнаваної назви)"
 
 #: ../tools/gda-sql.c:5354
 #, c-format
@@ -10836,7 +10852,7 @@ msgstr ""
 
 #: ../tools/gda-sql.c:5788
 msgid "HTTPD server stopped"
-msgstr ""
+msgstr "Роботу сервера HTTPD зупинено"
 
 #: ../tools/gda-sql.c:5807
 msgid "Could not start HTTPD server"
@@ -10844,7 +10860,7 @@ msgstr "Не вдалося запустити сервер HTTPD"
 
 #: ../tools/gda-sql.c:5811
 msgid "HTTPD server started"
-msgstr ""
+msgstr "Роботу сервера HTTPD розпочато"
 
 #: ../tools/gda-sql.c:5816
 msgid "Invalid port specification"
@@ -10856,7 +10872,7 @@ msgstr "Команда є неповною"
 
 #: ../tools/html-doc.c:86
 msgid "Generated by the GDA SQL console"
-msgstr ""
+msgstr "Створено консоллю SQL GDA"
 
 #: ../tools/html-doc.c:108
 msgid "Console"
@@ -10876,7 +10892,7 @@ msgstr "зупинитися з помилкою"
 
 #: ../tools/tool-utils.c:41
 msgid "stop with error, not deferrable"
-msgstr ""
+msgstr "зупинено з помилкою, затримка є неприпустимою"
 
 #: ../tools/tool-utils.c:43
 msgid "cascade changes"
@@ -10983,7 +10999,7 @@ msgstr "Для таблиці «%s.%s»:"
 #: ../tools/web-server.c:1709
 #, c-format
 msgid "Triggers in the '%s' schema:"
-msgstr ""
+msgstr "Перемикачі у структурі «%s»:"
 
 #: ../tools/web-server.c:1863
 #, c-format
