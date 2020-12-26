@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-11-09 05:23+0000\n"
-"PO-Revision-Date: 2020-12-10 19:53+0200\n"
+"POT-Creation-Date: 2020-12-10 17:54+0000\n"
+"PO-Revision-Date: 2020-12-26 10:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -270,6 +270,9 @@ msgid ""
 "source. Mandatory fields are marked with a star. To create a local database "
 "in a file, select the 'SQLite' type of database."
 msgstr ""
+"Наступні поля пов'язано із записами базових даних вашого нового джерела"
+" даних. Обов'язкові до заповнення поля позначено зірочкою. Для створення"
+" локальної бази даних у файлі, виберіть тип бази даних «SQLite»."
 
 #: ../control-center/gdaui-dsn-assistant.c:508
 #: ../control-center/gdaui-dsn-editor.c:428
@@ -315,6 +318,10 @@ msgid ""
 "database (mandatory fields are marked with a star). This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
+"Вказані нижче поля відповідають відомостям, які потрібні для створення бази"
+" даних (обов'язкові до заповнення поля позначено зірочкою). Ці відомості є"
+" специфічними для бази даних, тому вам слід ознайомитися із підручником до"
+" неї, щоб дізнатися більше."
 
 #: ../control-center/gdaui-dsn-assistant.c:619
 msgid "New database definition"
@@ -498,6 +505,8 @@ msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
 msgstr ""
+"Надавачі даних — додатки, які реалізують доступ до кожної з баз даних за"
+" допомогою засобів, які передбачено розробниками відповідних баз даних."
 
 #: ../libgda/gda-batch.c:270
 msgid "Statement could not be found in batch's statements"
@@ -792,32 +801,32 @@ msgstr "Внутрішня помилка: немає метасховища у 
 #: ../libgda/gda-connection.c:5429
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
-msgstr ""
+msgstr "Для фільтрування просторів назв потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5440
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
-msgstr ""
+msgstr "Для фільтрування типів даних потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5451
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
-msgstr ""
+msgstr "Для фільтрування таблиць потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5462
 #, c-format
 msgid "Parameter 'name' is required to filter views"
-msgstr ""
+msgstr "Для фільтрування переглядів потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5472
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
-msgstr ""
+msgstr "Для фільтрування полів потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
-msgstr ""
+msgstr "Для фільтрування полів потрібен параметр «field_name»"
 
 #: ../libgda/gda-connection.c:5485
 #, c-format
@@ -827,27 +836,29 @@ msgstr ""
 #: ../libgda/gda-connection.c:5494 ../libgda/gda-connection.c:5515
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
-msgstr ""
+msgstr "Для фільтрування індексів потрібен параметр «name»"
 
 #: ../libgda/gda-connection.c:5500 ../libgda/gda-connection.c:5519
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
-msgstr ""
+msgstr "Для фільтрування індексів потрібен параметр «index_name»"
 
 #: ../libgda/gda-connection.c:5507
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
+"Параметри: для фільтрування індексів потрібен параметр «name» і/або"
+" «index_name»"
 
 #: ../libgda/gda-connection.c:5527
 #, c-format
 msgid "Invalid meta type to get data from store"
-msgstr ""
+msgstr "Некоректний метатип для отримання даних зі сховища"
 
 #: ../libgda/gda-connection.c:5538
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
-msgstr ""
+msgstr "Внутрішня помилка під час створення інструкції для отримання даних: %s"
 
 #: ../libgda/gda-connection.c:5730 ../libgda/gda-connection.c:5784
 #: ../libgda/gda-connection.c:5829 ../libgda/gda-connection.c:5874
@@ -1190,16 +1201,16 @@ msgstr "Не вдалося перезаписати вміст файла «%s�
 
 #: ../libgda/gda-data-model-dir.c:1103 ../libgda/gda-data-model-dir.c:1105
 msgid "Wrong type of data"
-msgstr ""
+msgstr "Помилковий тип даних"
 
 #: ../libgda/gda-data-model-dir.c:1146 ../libgda/gda-data-model-dir.c:1149
 msgid "Column cannot be set"
-msgstr ""
+msgstr "Неможливо встановити стовпчик"
 
 #: ../libgda/gda-data-model-dir.c:1222
 #, c-format
 msgid "Cannot set contents of filename '%s'"
-msgstr ""
+msgstr "Не вдалося встановити вміст файла із назвою «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1234
 #, c-format
@@ -1208,7 +1219,7 @@ msgstr "Не вдалося створити каталог «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1243 ../libgda/gda-data-model-dir.c:1245
 msgid "Cannot add row: filename missing"
-msgstr ""
+msgstr "Не вдалося додати рядок: не вказано назви файла"
 
 #: ../libgda/gda-data-model-dir.c:1287
 #, c-format
@@ -1219,7 +1230,7 @@ msgstr "Не вдалося вилучити файл «%s»"
 #: ../libgda/gda-data-model-dsn-list.c:100 ../tools/common/t-app.c:2532
 #: ../tools/common/t-config-info.c:427
 msgid "DSN"
-msgstr ""
+msgstr "DSN"
 
 #. To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 #. * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon
@@ -1235,31 +1246,31 @@ msgstr "Загальна"
 
 #: ../libgda/gda-data-model-dsn-list.c:136
 msgid "List of defined data sources"
-msgstr ""
+msgstr "Вивести список визначених джерел даних"
 
 #: ../libgda/gda-data-model-import.c:490
 msgid "\"options\" property is not a GdaSet object"
-msgstr ""
+msgstr "властивість «options» не є об'єктом GdaSet"
 
 #: ../libgda/gda-data-model-import.c:698
 #, c-format
 msgid "The %s option must hold a string value, ignored."
-msgstr ""
+msgstr "Параметр %s має містити рядкове значення, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:714
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити булеве значення, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:955
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити значення GType, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:1023
 #, c-format
 msgid "Character conversion at line %d, error: %s"
-msgstr ""
+msgstr "Перетворення символів у рядку %d, помилка: %s"
 
 #: ../libgda/gda-data-model-import.c:1026
 #: ../libgda/sqlite/gda-sqlite-provider.c:1299
@@ -1272,7 +1283,7 @@ msgstr "немає подробиць"
 #: ../libgda/gda-data-model-import.c:1066
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
-msgstr ""
+msgstr "Не вдалося перетворити рядок «%s» на значення «%s»"
 
 #: ../libgda/gda-data-model-import.c:1124
 #, c-format
@@ -1282,12 +1293,12 @@ msgstr "Помилка під час обробки файла CSV: %s"
 #. error
 #: ../libgda/gda-data-model-import.c:1225
 msgid "Failed to read node in XML file"
-msgstr ""
+msgstr "Не вдалося прочитати вузол у файлі XML"
 
 #: ../libgda/gda-data-model-import.c:1244
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
-msgstr ""
+msgstr "У файлі XML мав бути вузол <gda_array>, маємо <%s>"
 
 #: ../libgda/gda-data-model-import.c:1290
 #: ../libgda/gda-data-model-import.c:1612
@@ -9924,7 +9935,7 @@ msgstr ""
 
 #: ../tools/common/html-doc.c:86
 msgid "Generated by the GDA SQL console"
-msgstr ""
+msgstr "Створено консоллю SQL GDA"
 
 #: ../tools/common/html-doc.c:108
 msgid "Console"
@@ -10064,7 +10075,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1035
 #, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
-msgstr ""
+msgstr "%s [[<НАЗВА_CNC>] [<DSN>|<РЯДОК ЗʼЄДНАННЯ>]]"
 
 #: ../tools/common/t-app.c:1036
 msgid "Opens a new connection or lists opened connections"
@@ -10073,7 +10084,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1047
 #, c-format
 msgid "%s [<CNC_NAME>]"
-msgstr ""
+msgstr "%s [<НАЗВА_CNC>]"
 
 #: ../tools/common/t-app.c:1048
 msgid "Close a connection"
@@ -10125,7 +10136,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1097
 #, c-format
 msgid "%s [<PROVIDER>]"
-msgstr ""
+msgstr "%s [<НАДАВАЧ_ДАНИХ>]"
 
 #: ../tools/common/t-app.c:1098
 msgid "List all installed database providers (or named one's attributes)"
@@ -10174,7 +10185,7 @@ msgstr ""
 
 #: ../tools/common/t-app.c:1150
 msgid "Show usage and distribution terms"
-msgstr ""
+msgstr "Показати дані щодо користування і умов розповсюдження"
 
 #: ../tools/common/t-app.c:1159
 #, c-format
@@ -10183,7 +10194,7 @@ msgstr "%s [<НАЗВА> [<ЗНАЧЕННЯ>]]"
 
 #: ../tools/common/t-app.c:1160
 msgid "Set or show an option, or list all options "
-msgstr ""
+msgstr "Встановити або показати параметра або список усіх параметрів"
 
 #: ../tools/common/t-app.c:1169 ../tools/common/t-app.c:1266
 #, c-format
@@ -10200,50 +10211,51 @@ msgstr ""
 #: ../tools/common/t-app.c:1220 ../tools/common/t-app.c:1227
 #: ../tools/common/t-app.c:1234 ../tools/common/t-app.c:1248
 msgid "Query buffer & query favorites"
-msgstr ""
+msgstr "Буфер запитів і вибрані записи запитів"
 
 #: ../tools/common/t-app.c:1180
 msgid "Edit the query buffer (or file) with external editor"
-msgstr ""
+msgstr "Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
 
 #: ../tools/common/t-app.c:1187
 msgid "Reset the query buffer (or load file into query buffer)"
-msgstr ""
+msgstr "Скинути буфер запитів (або завантажити файл до буфера запитів)"
 
 #: ../tools/common/t-app.c:1194
 msgid "Show the contents of the query buffer"
-msgstr ""
+msgstr "Показати вміст буфера запитів"
 
 #: ../tools/common/t-app.c:1200
 #, c-format
 msgid "%s [<FAVORITE_NAME>]"
-msgstr ""
+msgstr "%s [<НАЗВА_ВИБРАНОГО>]"
 
 #: ../tools/common/t-app.c:1201
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
+"Виконати вміст буфера запитів або виконати вказаний вибраний запис запитів"
 
 #: ../tools/common/t-app.c:1208
 msgid "Write query buffer to file"
-msgstr ""
+msgstr "Записати буфер запиту до файла"
 
 #: ../tools/common/t-app.c:1214 ../tools/common/t-app.c:1221
 #: ../tools/common/t-app.c:1228
 #, c-format
 msgid "%s <FAVORITE_NAME>"
-msgstr ""
+msgstr "%s <НАЗВА_ВИБРАНОГО>"
 
 #: ../tools/common/t-app.c:1215
 msgid "Save query buffer as favorite"
-msgstr ""
+msgstr "Зберегти буфер запиту як вибраний запис"
 
 #: ../tools/common/t-app.c:1222
 msgid "Load a query favorite into query buffer"
-msgstr ""
+msgstr "Завантажити вибраний запис запиту до буфера запитів"
 
 #: ../tools/common/t-app.c:1229
 msgid "Delete a query favorite"
-msgstr ""
+msgstr "Вилучити вибраний запис запиту"
 
 #: ../tools/common/t-app.c:1235 ../tools/common/t-app.c:1292
 #, c-format
@@ -10252,7 +10264,7 @@ msgstr "%s"
 
 #: ../tools/common/t-app.c:1236
 msgid "List all query favorites"
-msgstr ""
+msgstr "Вивести список усіх вибраних записів запиту"
 
 #: ../tools/common/t-app.c:1243
 msgid "Set output format"
@@ -10261,11 +10273,11 @@ msgstr "встановити формат виведення даних"
 #: ../tools/common/t-app.c:1249
 #, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
-msgstr ""
+msgstr "%s [<НАЗВА>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_РЯДКА>] <ФАЙЛ>"
 
 #: ../tools/common/t-app.c:1250
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr ""
+msgstr "Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
 
 #: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1265
 #: ../tools/common/t-app.c:1275 ../tools/common/t-app.c:1282
@@ -10275,7 +10287,7 @@ msgstr "Контекст виконання"
 #: ../tools/common/t-app.c:1256
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
-msgstr ""
+msgstr "%s [<НАЗВА> [<ЗНАЧЕННЯ>|_null_]]"
 
 #: ../tools/common/t-app.c:1257
 msgid "Set or show internal parameter, or list all if no parameter specified "
@@ -10320,7 +10332,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1303
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
-msgstr ""
+msgstr "%s <НАЗВА НАБОРУ ДАНИХ> <ВЗІРЕЦЬ>"
 
 #: ../tools/common/t-app.c:1304
 msgid "Show a dataset's contents where lines match a regular expression"
@@ -10394,7 +10406,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1379
 #, c-format
 msgid "%s <DN> <new DN>"
-msgstr ""
+msgstr "%s <DN> <нова DN>"
 
 #: ../tools/common/t-app.c:1380
 msgid "Renames an LDAP entry"
@@ -10403,13 +10415,14 @@ msgstr "Перейменовує запис LDAP"
 #: ../tools/common/t-app.c:1387
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
-msgstr ""
+msgstr "%s <DN> <ДІЯ> [<АТРИБУТ>[=<ЗНАЧЕННЯ>]] [<АТРИБУТ>=<ЗНАЧЕННЯ> ...]"
 
 #: ../tools/common/t-app.c:1388
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
 msgstr ""
+"Змінює атрибути запису LDAP; записом <ДІЯ> може бути DELETE, REPLACE або ADD"
 
 #: ../tools/common/t-app.c:1425
 msgid "History is not supported"
@@ -10526,16 +10539,16 @@ msgstr "Не вдалося отримати домашній каталог: %s
 #: ../tools/common/t-app.c:2434
 #, c-format
 msgid "Working directory is now: %s"
-msgstr ""
+msgstr "Тепер робочим каталогом є цей каталог: %s"
 
 #: ../tools/common/t-app.c:2439
 #, c-format
 msgid "Could not change working directory to '%s': %s"
-msgstr ""
+msgstr "Не вдалося змінити робочий каталог на «%s»: %s"
 
 #: ../tools/common/t-app.c:2535
 msgid "DSN list"
-msgstr ""
+msgstr "Список DSN"
 
 #: ../tools/common/t-app.c:2590
 msgid "Missing arguments"
@@ -10553,6 +10566,7 @@ msgstr "Не вказано назви DSN"
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
+"Отримуємо відомості щодо структури бази даних, дія може бути досить тривалою…"
 
 #: ../tools/common/t-app.c:2837
 #, c-format
@@ -10567,7 +10581,7 @@ msgstr "Виконано.\n"
 #: ../tools/common/t-app.c:2864 ../tools/common/t-app.c:3026
 #, c-format
 msgid "A connection named '%s' already exists"
-msgstr ""
+msgstr "З'єднання із назвою «%s» вже існує"
 
 #: ../tools/common/t-app.c:2892
 msgid "No opened connection"
@@ -10575,11 +10589,11 @@ msgstr "Немає відкритого з'єднання"
 
 #: ../tools/common/t-app.c:2903
 msgid "DSN or connection string"
-msgstr ""
+msgstr "DSN або рядок з'єднання"
 
 #: ../tools/common/t-app.c:3018
 msgid "Missing required connection names"
-msgstr ""
+msgstr "Не вказано обов'язкові назви з'єднань"
 
 #: ../tools/common/t-app.c:3031 ../tools/common/t-connection.c:730
 #, c-format
@@ -10589,7 +10603,7 @@ msgstr ""
 #: ../tools/common/t-app.c:3041
 #, c-format
 msgid "No connection or dataset named '%s' found"
-msgstr ""
+msgstr "Не знайдено з'єднання або набору даних із назвою «%s»"
 
 #. force create of meta store
 #. add existing connections to virtual connection
@@ -10602,14 +10616,14 @@ msgstr ""
 #: ../tools/common/t-app.c:3075
 #, c-format
 msgid "%s in the '%s' namespace"
-msgstr ""
+msgstr "%s у просторі назв «%s»"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/common/t-app.c:3089
 #, c-format
 msgid "%s mapped to the %s table"
-msgstr ""
+msgstr "%s пов'язано із таблицею %s"
 
 #: ../tools/common/t-app.c:3122 ../tools/common/t-app.c:3225
 #: ../tools/common/t-app.c:3259 ../tools/common/t-app.c:3282
@@ -10636,11 +10650,11 @@ msgstr "Не вдалося запустити /bin/sh"
 
 #: ../tools/common/t-app.c:3326
 msgid "Missing FILE to write to"
-msgstr ""
+msgstr "Не вказано ФАЙЛ, до якого слід виконати запис"
 
 #: ../tools/common/t-app.c:3365
 msgid "Favorite name"
-msgstr ""
+msgstr "Назва вибраного запису"
 
 #: ../tools/common/t-app.c:3366
 msgid "Comments"
@@ -10653,29 +10667,29 @@ msgstr "SQL"
 #: ../tools/common/t-app.c:3473 ../tools/common/t-app.c:3573
 #: ../tools/common/t-app.c:3638
 msgid "Missing query buffer name"
-msgstr ""
+msgstr "Не вказано назви буфера запиту"
 
 #: ../tools/common/t-app.c:3497
 msgid "Query buffer is empty"
-msgstr ""
+msgstr "Буфер запитів порожній"
 
 #: ../tools/common/t-app.c:3541 ../tools/common/t-favorites.c:1091
 msgid "Could not find favorite"
-msgstr ""
+msgstr "Не вдалося знайти вибраний запис"
 
 #: ../tools/common/t-app.c:3723 ../tools/common/t-app.c:3788
 #: ../tools/common/t-app.c:4503
 #, c-format
 msgid "No parameter named '%s' defined"
-msgstr ""
+msgstr "Параметр із назвою «%s» не визначено"
 
 #: ../tools/common/t-app.c:3735
 msgid "List of defined parameters"
-msgstr ""
+msgstr "Список визначених параметрів"
 
 #: ../tools/common/t-app.c:3816
 msgid "dimensions (columns x rows)"
-msgstr ""
+msgstr "розмірності (стовпчики x рядки)"
 
 #: ../tools/common/t-app.c:3817
 msgid "List of kept data"
@@ -10729,11 +10743,11 @@ msgstr "Не вдалося запустити сервер HTTPD"
 
 #: ../tools/common/t-app.c:4347
 msgid "HTTPD server stopped"
-msgstr ""
+msgstr "Роботу сервера HTTPD зупинено"
 
 #: ../tools/common/t-app.c:4366
 msgid "HTTPD server started"
-msgstr ""
+msgstr "Роботу сервера HTTPD розпочато"
 
 #: ../tools/common/t-app.c:4371
 msgid "Invalid port specification"
@@ -10741,11 +10755,11 @@ msgstr "Некоректна специфікація порту"
 
 #: ../tools/common/t-app.c:4408
 msgid "Wrong row condition"
-msgstr ""
+msgstr "Помилкова умова щодо рядків"
 
 #: ../tools/common/t-app.c:4437
 msgid "No unique row identified"
-msgstr ""
+msgstr "Не визначено унікального рядка"
 
 #: ../tools/common/t-app.c:4509 ../tools/common/t-app.c:4651
 msgid "Wrong number of arguments"
@@ -10761,7 +10775,7 @@ msgstr "Не вказано даних, з якими слід виконати 
 
 #: ../tools/common/t-app.c:4693
 msgid "Missing row fields specifications"
-msgstr ""
+msgstr "Не вказано специфікації полів рядка"
 
 #: ../tools/common/t-app.c:4711
 msgid "Wrong SELECT argument"
@@ -10773,25 +10787,25 @@ msgstr "Помилковий аргумент поля даних"
 
 #: ../tools/common/t-app.c:4849
 msgid "Missing foreign key declaration specification"
-msgstr ""
+msgstr "Не вказано специфікації оголошення сторонніх ключів"
 
 #: ../tools/common/t-app.c:4966
 msgid "Malformed foreign key declaration specification"
-msgstr ""
+msgstr "Помилкове форматування специфікації оголошення сторонніх ключів"
 
 #: ../tools/common/t-app.c:4998
 #, c-format
 msgid "Malformed table name specification '%s'"
-msgstr ""
+msgstr "Помилкове форматування специфікації назв таблиць «%s»"
 
 #: ../tools/common/t-app.c:5090 ../tools/common/t-app.c:5167
 msgid "Missing foreign key name argument"
-msgstr ""
+msgstr "Не вказано аргумент назви стороннього ключа"
 
 #: ../tools/common/t-app.c:5192 ../tools/common/t-app.c:5293
 #: ../tools/common/t-app.c:5390 ../tools/common/t-app.c:5488
 msgid "Connection is not an LDAP connection"
-msgstr ""
+msgstr "З'єднання не є з'єднанням LDAP"
 
 #: ../tools/common/t-app.c:5214
 #, c-format
@@ -10800,33 +10814,33 @@ msgstr "Невідомий діапазон пошуку «%s»"
 
 #: ../tools/common/t-app.c:5224
 msgid "Missing filter which to operate"
-msgstr ""
+msgstr "Не вказано фільтр, з яким слід працювати"
 
 #: ../tools/common/t-app.c:5308
 msgid "Missing current DN or new DN specification"
-msgstr ""
+msgstr "Не вказано поточної або нової специфікації DN"
 
 #: ../tools/common/t-app.c:5405
 msgid "Missing DN of LDAP entry"
-msgstr ""
+msgstr "Не вказано DN запису LDAP"
 
 #: ../tools/common/t-app.c:5410
 msgid "Missing operation to perform on LDAP entry's attributes"
-msgstr ""
+msgstr "Не вказано дію, яку слід виконати над атрибутами запису LDAP"
 
 #: ../tools/common/t-app.c:5422
 #, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
-msgstr ""
+msgstr "Невідома дія «%s», яку слід виконати над атрибутами запису LDAP"
 
 #: ../tools/common/t-app.c:5443
 #, c-format
 msgid "Wrong attribute value specification '%s'"
-msgstr ""
+msgstr "Помилкова специфікація значення атрибута «%s»"
 
 #: ../tools/common/t-app.c:5502
 msgid "Missing DN (Distinguished name) argument"
-msgstr ""
+msgstr "Не вказано аргументу DN (Розпізнаваної назви)"
 
 #: ../tools/common/t-app.c:5515
 #, c-format
@@ -11049,7 +11063,7 @@ msgstr "зупинитися з помилкою"
 
 #: ../tools/common/t-utils.c:47
 msgid "stop with error, not deferrable"
-msgstr ""
+msgstr "зупинено з помилкою, затримка є неприпустимою"
 
 #: ../tools/common/t-utils.c:49
 msgid "cascade changes"
@@ -11169,7 +11183,7 @@ msgstr "Для таблиці «%s.%s»:"
 #: ../tools/common/web-server.c:1621
 #, c-format
 msgid "Triggers in the '%s' schema:"
-msgstr ""
+msgstr "Перемикачі у структурі «%s»:"
 
 #: ../tools/common/web-server.c:1775
 #, c-format
