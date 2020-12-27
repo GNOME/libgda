@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-12-10 17:50+0000\n"
-"PO-Revision-Date: 2020-12-26 10:24+0200\n"
+"POT-Creation-Date: 2020-12-26 08:26+0000\n"
+"PO-Revision-Date: 2020-12-27 12:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -270,9 +270,9 @@ msgid ""
 "source. Mandatory fields are marked with a star. To create a local database "
 "in a file, select the 'SQLite' type of database."
 msgstr ""
-"Наступні поля пов'язано із записами базових даних вашого нового джерела"
-" даних. Обов'язкові до заповнення поля позначено зірочкою. Для створення"
-" локальної бази даних у файлі, виберіть тип бази даних «SQLite»."
+"Наступні поля пов'язано із записами базових даних вашого нового джерела "
+"даних. Обов'язкові до заповнення поля позначено зірочкою. Для створення "
+"локальної бази даних у файлі, виберіть тип бази даних «SQLite»."
 
 #: ../control-center/gdaui-dsn-assistant.c:469
 msgid "Data source name"
@@ -317,10 +317,10 @@ msgid ""
 "database (mandatory fields are marked with a star).This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
-"Вказані нижче поля відповідають відомостям, які потрібні для створення бази"
-" даних (обов'язкові до заповнення поля позначено зірочкою). Ці відомості є"
-" специфічними для бази даних, тому вам слід ознайомитися із підручником до"
-" неї, щоб дізнатися більше."
+"Вказані нижче поля відповідають відомостям, які потрібні для створення бази "
+"даних (обов'язкові до заповнення поля позначено зірочкою). Ці відомості є "
+"специфічними для бази даних, тому вам слід ознайомитися із підручником до "
+"неї, щоб дізнатися більше."
 
 #: ../control-center/gdaui-dsn-assistant.c:583
 msgid "New database definition"
@@ -332,10 +332,10 @@ msgid ""
 "(mandatory fields are marked with a star). This information is database-"
 "specific, so check the manual for more information."
 msgstr ""
-"Вказані нижче поля відповідають відомостям, які потрібні для відкриття"
-" з'єднання із базою даних (обов'язкові до заповнення поля позначено"
-" зірочкою). Ці відомості є специфічними для бази даних, тому вам слід"
-" ознайомитися із підручником до неї, щоб дізнатися більше."
+"Вказані нижче поля відповідають відомостям, які потрібні для відкриття "
+"з'єднання із базою даних (обов'язкові до заповнення поля позначено "
+"зірочкою). Ці відомості є специфічними для бази даних, тому вам слід "
+"ознайомитися із підручником до неї, щоб дізнатися більше."
 
 #. connection's spec
 #: ../control-center/gdaui-dsn-assistant.c:608
@@ -506,8 +506,8 @@ msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
 msgstr ""
-"Надавачі даних — додатки, які реалізують доступ до кожної з баз даних за"
-" допомогою засобів, які передбачено розробниками відповідних баз даних."
+"Надавачі даних — додатки, які реалізують доступ до кожної з баз даних за "
+"допомогою засобів, які передбачено розробниками відповідних баз даних."
 
 #: ../libgda/gda-batch.c:321
 msgid "Statement could not be found in batch's statements"
@@ -677,8 +677,8 @@ msgid ""
 "Unique GThread from which the connection will be available.This should only "
 "be modified by the database providers' implementation"
 msgstr ""
-"Унікальний GThread, з якого буде доступним з'єднання. Його слід змінювати,"
-" лише якщо це передбачено реалізацією надавачем даних доступу до бази даних."
+"Унікальний GThread, з якого буде доступним з'єднання. Його слід змінювати, "
+"лише якщо це передбачено реалізацією надавачем даних доступу до бази даних."
 
 #: ../libgda/gda-connection.c:384
 msgid ""
@@ -693,6 +693,8 @@ msgid ""
 "Make the connection set up a monitoring function in the mainloop to monitor "
 "the wrapped connection"
 msgstr ""
+"Налаштувати функцію спостереження у основному циклі обробки для спостереження"
+" за огорнутим з'єднанням"
 
 #: ../libgda/gda-connection.c:414
 msgid "Number of history events to keep in memory"
@@ -1106,6 +1108,8 @@ msgid ""
 "Destination column %d can't be NULL but has no correspondence in the source "
 "data model"
 msgstr ""
+"Стовпчик призначення %d не може містити значення NULL, але немає"
+" відповідності у моделі даних джерела"
 
 #: ../libgda/gda-data-model.c:2171
 #, c-format
@@ -1113,11 +1117,13 @@ msgid ""
 "Destination column %d has a gda type (%s) incompatible with source column %d "
 "type (%s)"
 msgstr ""
+"Стовпчик призначення %d належить до типу gda (%s), який є несумісним із типом"
+" початкового стовпчика %d (%s)"
 
 #: ../libgda/gda-data-model.c:2267
 #, c-format
 msgid "Can't transform '%s' from GDA type %s to GDA type %s"
-msgstr ""
+msgstr "Не вдалося перетворити «%s» з типу GDA %s до типу GDA %s"
 
 #: ../libgda/gda-data-model.c:2474
 #, c-format
@@ -1183,12 +1189,12 @@ msgstr "Помилковий тип даних"
 
 #: ../libgda/gda-data-model-dir.c:1216 ../libgda/gda-data-model-dir.c:1219
 msgid "Column cannot be set"
-msgstr ""
+msgstr "Неможливо встановити стовпчик"
 
 #: ../libgda/gda-data-model-dir.c:1292
 #, c-format
 msgid "Cannot set contents of filename '%s'"
-msgstr ""
+msgstr "Не вдалося встановити вміст файла із назвою «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1304
 #, c-format
@@ -1197,7 +1203,7 @@ msgstr "Не вдалося створити каталог «%s»"
 
 #: ../libgda/gda-data-model-dir.c:1313 ../libgda/gda-data-model-dir.c:1315
 msgid "Cannot add row: filename missing"
-msgstr ""
+msgstr "Не вдалося додати рядок: не вказано назви файла"
 
 #: ../libgda/gda-data-model-dir.c:1357
 #, c-format
@@ -1208,7 +1214,7 @@ msgstr "Не вдалося вилучити файл «%s»"
 #: ../libgda/gda-data-model-dsn-list.c:104 ../tools/config-info.c:427
 #: ../tools/gda-sql.c:2634
 msgid "DSN"
-msgstr ""
+msgstr "DSN"
 
 #. To translators: a "Connection string" is a semi-colon delimited list of key=value pairs which
 #. * define the parameters for a connection, such as "DB_NAME=thedb;HOSTNAME=moon
@@ -1224,31 +1230,31 @@ msgstr "Загальна"
 
 #: ../libgda/gda-data-model-dsn-list.c:140
 msgid "List of defined data sources"
-msgstr ""
+msgstr "Вивести список визначених джерел даних"
 
 #: ../libgda/gda-data-model-import.c:504
 msgid "\"options\" property is not a GdaSet object"
-msgstr ""
+msgstr "властивість «options» не є об'єктом GdaSet"
 
 #: ../libgda/gda-data-model-import.c:718
 #, c-format
 msgid "The '%s' option must hold a string value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити рядкове значення, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:734
 #, c-format
 msgid "The '%s' option must hold a boolean value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити булеве значення, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:977
 #, c-format
 msgid "The '%s' option must hold a GType value, ignored."
-msgstr ""
+msgstr "Параметр «%s» має містити значення GType, проігноровано."
 
 #: ../libgda/gda-data-model-import.c:1043
 #, c-format
 msgid "Character conversion at line %d, error: %s"
-msgstr ""
+msgstr "Перетворення символів у рядку %d, помилка: %s"
 
 #: ../libgda/gda-data-model-import.c:1046
 #: ../libgda/sqlite/gda-sqlite-provider.c:922
@@ -1261,7 +1267,7 @@ msgstr "немає подробиць"
 #: ../libgda/gda-data-model-import.c:1086
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
-msgstr ""
+msgstr "Не вдалося перетворити рядок «%s» на значення «%s»"
 
 #: ../libgda/gda-data-model-import.c:1142
 #, c-format
@@ -1271,26 +1277,26 @@ msgstr "Помилка під час обробки файла CSV: %s"
 #. error
 #: ../libgda/gda-data-model-import.c:1242
 msgid "Failed to read node in XML file"
-msgstr ""
+msgstr "Не вдалося прочитати вузол у файлі XML"
 
 #: ../libgda/gda-data-model-import.c:1261
 #, c-format
 msgid "Expected <gda_array> node in XML file, got <%s>"
-msgstr ""
+msgstr "У файлі XML мав бути вузол <gda_array>, маємо <%s>"
 
 #: ../libgda/gda-data-model-import.c:1307
 #: ../libgda/gda-data-model-import.c:1629
 msgid "No \"gdatype\" attribute specified in <gda_array_field>"
-msgstr ""
+msgstr "У <gda_array_field> не вказано атрибуту «gdatype»"
 
 #: ../libgda/gda-data-model-import.c:1358
 msgid "Expected <gda_array_field> in <gda_array>"
-msgstr ""
+msgstr "Мало бути <gda_array_field> у <gda_array>"
 
 #: ../libgda/gda-data-model-import.c:1389
 #, c-format
 msgid "Expected <gda_array_data> in <gda_array>, got <%s>"
-msgstr ""
+msgstr "Мало бути <gda_array_data> у <gda_array>, маємо <%s>"
 
 #: ../libgda/gda-data-model-import.c:1391
 msgid "Expected <gda_array_data> in <gda_array>"
@@ -8022,7 +8028,7 @@ msgstr ""
 
 #: ../tools/browser/common/fk-declare.c:642
 msgid "Missing information to undeclare foreign key"
-msgstr ""
+msgstr "Не вистачає даних для скасування оголошення стороннього ключа"
 
 #: ../tools/browser/common/gdaui-data-import.c:121
 msgid "Import specifications"
@@ -8031,19 +8037,19 @@ msgstr "Імпортувати специфікації"
 #. file to import from
 #: ../tools/browser/common/gdaui-data-import.c:140
 msgid "File to import from:"
-msgstr ""
+msgstr "Файл для імпортування:"
 
 #: ../tools/browser/common/gdaui-data-import.c:144
 msgid "File to import data from"
-msgstr ""
+msgstr "Файл, з якого слід імпортувати дані"
 
 #: ../tools/browser/common/gdaui-data-import.c:148
 msgid "Comma separated values"
-msgstr ""
+msgstr "Значення, розділені комами"
 
 #: ../tools/browser/common/gdaui-data-import.c:153
 msgid "XML exported"
-msgstr ""
+msgstr "Експортований XML"
 
 #: ../tools/browser/common/gdaui-data-import.c:157
 msgid "All files"
@@ -8057,7 +8063,7 @@ msgstr "Кодування:"
 #. first line as title
 #: ../tools/browser/common/gdaui-data-import.c:192
 msgid "First line as title:"
-msgstr ""
+msgstr "Перший рядок як заголовок:"
 
 #. separator
 #: ../tools/browser/common/gdaui-data-import.c:204
@@ -8098,7 +8104,7 @@ msgstr "Немає даних."
 
 #: ../tools/browser/common/gdaui-entry-import.c:182
 msgid "Data set import from file"
-msgstr ""
+msgstr "Імпорт набору даних з файла"
 
 #: ../tools/browser/common/gdaui-entry-import.c:215
 #: ../tools/browser/query-exec/query-result.c:230
@@ -8114,7 +8120,7 @@ msgstr[3] "%d стовпчик"
 #: ../tools/browser/query-exec/query-result.c:232
 #, c-format
 msgid "Data set with %s and %s"
-msgstr ""
+msgstr "Набір даних із %s і %s"
 
 #: ../tools/browser/common/gdaui-entry-import.c:221
 msgid "Modify"
@@ -8134,23 +8140,23 @@ msgstr "Немає набору даних"
 #, c-format
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%d таблиця у поточній структурі:"
+msgstr[1] "%d таблиці у поточній структурі:"
+msgstr[2] "%d таблиць у поточній структурі:"
+msgstr[3] "%d таблиця у поточній структурі:"
 
 #: ../tools/browser/common/objects-cloud.c:255
 msgid "Tables in current schema:"
-msgstr ""
+msgstr "Таблиці у поточній структурі:"
 
 #: ../tools/browser/common/objects-cloud.c:258
 #, c-format
 msgid "%d Table in schema '%s':"
 msgid_plural "%d Tables in schema '%s':"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%d таблиця у структурі «%s»:"
+msgstr[1] "%d таблиці у структурі «%s»:"
+msgstr[2] "%d таблиць у структурі «%s»:"
+msgstr[3] "%d таблиця у структурі «%s»:"
 
 #. no connection at all or not authenticated
 #: ../tools/browser/common/objects-cloud.c:268 ../tools/web-server.c:719
@@ -8159,11 +8165,11 @@ msgstr "Немає"
 
 #: ../tools/browser/common/ui-formgrid.c:346
 msgid "Enable or disable auto update of data"
-msgstr ""
+msgstr "Увімкнути або вимкнути автоматичне оновлення даних"
 
 #: ../tools/browser/common/ui-formgrid.c:364
 msgid "Toggle between grid and form presentations"
-msgstr ""
+msgstr "Перемкнутися між показом сітки і формою"
 
 #: ../tools/browser/common/ui-formgrid.c:505
 msgid "Execute action"
@@ -8171,7 +8177,7 @@ msgstr "Виконати дію"
 
 #: ../tools/browser/common/ui-formgrid.c:553
 msgid "View LDAP entry's details"
-msgstr ""
+msgstr "Переглянути подробиці щодо запису LDAP"
 
 #: ../tools/browser/common/ui-formgrid.c:568
 #: ../tools/browser/common/ui-formgrid.c:579
@@ -8182,7 +8188,7 @@ msgstr "Масштаб…"
 #: ../tools/browser/common/ui-formgrid.c:656
 #: ../tools/browser/data-manager/data-source.c:812
 msgid "Statement to execute is not a selection statement"
-msgstr ""
+msgstr "Інструкція, яку слід виконати, не є інструкцією вибору"
 
 #: ../tools/browser/common/ui-formgrid.c:664
 #: ../tools/browser/common/ui-formgrid.c:692
@@ -8201,7 +8207,7 @@ msgstr ""
 #: ../tools/browser/common/ui-formgrid.c:782
 #: ../tools/browser/common/ui-formgrid.c:786
 msgid "Action successfully executed"
-msgstr ""
+msgstr "Дію успішно виконано"
 
 #: ../tools/browser/common/ui-formgrid.c:803
 #, c-format
@@ -8255,11 +8261,11 @@ msgstr "Пов'язати набір даних"
 
 #: ../tools/browser/connection-binding-properties.c:419
 msgid "Bind a data set as a table:"
-msgstr ""
+msgstr "Пов'язати набір даних як таблицю:"
 
 #: ../tools/browser/connection-binding-properties.c:423
 msgid "Import a data set and make it appear as a table"
-msgstr ""
+msgstr "Імпортувати набір даних і сформатувати його до таблиці"
 
 #: ../tools/browser/connection-binding-properties.c:426
 #: ../tools/browser/connection-binding-properties.c:536
@@ -8272,7 +8278,7 @@ msgstr "Некоректна назва схема"
 
 #: ../tools/browser/connection-binding-properties.c:526
 msgid "Bind all tables of a connection using a schema prefix:"
-msgstr ""
+msgstr "Пов'язати усі таблиці з'єднання за допомогою префікса структури:"
 
 #: ../tools/browser/connection-binding-properties.c:530
 msgid ""
@@ -8285,14 +8291,16 @@ msgid ""
 "Name of the schema the\n"
 "tables will be in"
 msgstr ""
+"Назва структури, яку\n"
+"буде використано для таблиць"
 
 #: ../tools/browser/data-manager/analyser.c:192
 msgid "Obtain referenced data in table "
-msgstr ""
+msgstr "Отримати дані, на які посилається таблиця "
 
 #: ../tools/browser/data-manager/analyser.c:209
 msgid "List referencing data in "
-msgstr ""
+msgstr "Показати список даних, на які посилається "
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -8363,6 +8371,8 @@ msgid ""
 "View specifications\n"
 "as XML (advanced)"
 msgstr ""
+"Переглянути специфікації\n"
+"як XML (розширений режим)"
 
 #: ../tools/browser/data-manager/data-console.c:433
 msgid "BBB:"
@@ -8422,10 +8432,12 @@ msgstr "Для таблиці: %s"
 msgid ""
 "Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
+"Перемикаємося на режим виконання. Натисніть клавішу Esc, щоб повернутися до"
+" режиму редактора"
 
 #: ../tools/browser/data-manager/data-console.c:923
 msgid "_Toggle mode"
-msgstr ""
+msgstr "П_еремкнути режим"
 
 #: ../tools/browser/data-manager/data-console.c:923
 msgid "Switch between compose and execute modes"
@@ -8478,14 +8490,14 @@ msgstr "Засіб керування даними без назви"
 #: ../tools/browser/query-exec/query-exec-perspective.c:314
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:309
 msgid "_Show Favorites"
-msgstr ""
+msgstr "_Показати вибрані"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:332
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:314
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:309
 msgid "Show or hide favorites"
-msgstr ""
+msgstr "Показати або приховати панель вибраних записів"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:336
 msgid "_Manager"
@@ -8497,17 +8509,17 @@ msgstr "Керівник"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
 msgid "_New Data Manager"
-msgstr ""
+msgstr "_Нове керування даними"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:337
 msgid "New data manager"
-msgstr ""
+msgstr "Нове керування даними"
 
 #. Translators: Do not translate "table" nor "query"
 #: ../tools/browser/data-manager/data-source.c:405
 #, c-format
 msgid "Node must be \"table\" or \"query\", and is \"%s\""
-msgstr ""
+msgstr "Вузлом має бути \"table\" або \"query\", маємо ж «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:438
 #: ../tools/browser/schema-browser/mgr-columns.c:278
@@ -8517,7 +8529,7 @@ msgstr "Неготовий"
 #: ../tools/browser/data-manager/data-source.c:445
 #, c-format
 msgid "Malformed table name \"%s\""
-msgstr ""
+msgstr "Помилкове форматування назви таблиці «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:462
 #, c-format
@@ -8527,26 +8539,26 @@ msgstr "Не вдалося знайти таблицю «%s»"
 #: ../tools/browser/data-manager/data-source.c:467
 #, c-format
 msgid "The \"%s\" object is not a table"
-msgstr ""
+msgstr "Об'єкт «%s» не є таблицею"
 
 #. Translators: Do not translate "name"
 #: ../tools/browser/data-manager/data-source.c:486
 msgid "Missing attribute \"name\" for table"
-msgstr ""
+msgstr "Не вистачає атрибута «name» для таблиці"
 
 #: ../tools/browser/data-manager/data-source.c:626
 #, c-format
 msgid "Could not find any foreign key to \"%s\""
-msgstr ""
+msgstr "Не вдалося знайти жодного стороннього ключа до «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:631
 #, c-format
 msgid "The fields involved in the foreign key to \"%s\" are not known"
-msgstr ""
+msgstr "Поля, які включено до стороннього ключа до «%s», є невідомими"
 
 #: ../tools/browser/data-manager/data-source.c:952
 msgid "No SELECT statement to execute"
-msgstr ""
+msgstr "Немає інструкції SELECT для виконання"
 
 #: ../tools/browser/data-manager/data-source.c:1024
 msgid "Refresh data"
@@ -8559,11 +8571,11 @@ msgstr "Вміст «%s»"
 
 #: ../tools/browser/data-manager/data-source.c:1222
 msgid "Could not build SELECT statement"
-msgstr ""
+msgstr "Не вдалося побудувати інструкцію SELECT"
 
 #: ../tools/browser/data-manager/data-source.c:1289
 msgid "Multiple statements detected, only the first will be used"
-msgstr ""
+msgstr "Виявлено декілька інструкцій, буде використано лише першу"
 
 #: ../tools/browser/data-manager/data-source-editor.c:159
 msgid "Id"
@@ -8574,6 +8586,8 @@ msgid ""
 "Data source's ID\n"
 "(as referenced by other data sources)"
 msgstr ""
+"Ідентифікатор джерела даних\n"
+"(як на нього посилаються інші джерела даних)"
 
 #: ../tools/browser/data-manager/data-source-editor.c:167
 msgid "Data source's description"
@@ -8584,12 +8598,16 @@ msgid ""
 "Table to display data from, leave empty\n"
 "to specify a SELECT statement instead"
 msgstr ""
+"Таблиця для показу даних, не заповнюйте,\n"
+"щоб вказати замість нього інструкцію SELECT"
 
 #: ../tools/browser/data-manager/data-source-editor.c:175
 msgid ""
 "SELECT\n"
 "SQL"
 msgstr ""
+"SELECT\n"
+"SQL"
 
 #: ../tools/browser/data-manager/data-source-editor.c:176
 msgid ""
@@ -8604,7 +8622,7 @@ msgstr "Залежності"
 
 #: ../tools/browser/data-manager/data-source-editor.c:184
 msgid "Required and provided named parameters"
-msgstr ""
+msgstr "Потрібні і надані іменовані параметри"
 
 #: ../tools/browser/data-manager/data-source-editor.c:244
 msgid "Requires:"
@@ -8638,7 +8656,7 @@ msgstr ""
 #: ../tools/browser/data-manager/ui-spec-editor.c:164
 #: ../tools/browser/schema-browser/table-columns.c:305
 msgid "Remove"
-msgstr ""
+msgstr "Вилучити"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:245
 msgid "Data sources:"
@@ -8646,21 +8664,21 @@ msgstr "Джерела даних:"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:303
 msgid "Selected data source's properties:"
-msgstr ""
+msgstr "Вибрані властивості джерела даних:"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:174
 msgid "Error parsing XML specifications"
-msgstr ""
+msgstr "Помилка під час обробки специфікації XML"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:188
 #, c-format
 msgid "Expecting <%s> root node"
-msgstr ""
+msgstr "Мав бути кореневий вузол <%s>"
 
 #: ../tools/browser/data-manager/xml-spec-editor.c:318
 #: ../tools/browser/query-exec/query-console-page.c:318
 msgid "SQL code to execute:"
-msgstr ""
+msgstr "Код SQL, який слід виконати:"
 
 #: ../tools/browser/gda-browser-5.0.appdata.xml.in.h:1
 msgid ""
@@ -8676,15 +8694,15 @@ msgstr ""
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "GdaBrowser"
-msgstr ""
+msgstr "GdaBrowser"
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:3
 msgid "Browse your database's contents"
-msgstr ""
+msgstr "Навігація вмістом вашої бази даних"
 
 #: ../tools/browser/ldap-browser/class-properties.c:407
 msgid "Could not get information about LDAP class"
-msgstr ""
+msgstr "Не вдалося отримати відомості щодо класу LDAP"
 
 #: ../tools/browser/ldap-browser/class-properties.c:427
 msgid "Class OID:"
@@ -8704,7 +8722,7 @@ msgstr[3] "Назва класу:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:465
 msgid "This LDAP class is obsolete"
-msgstr ""
+msgstr "Цей клас LDAP є застарілим"
 
 #: ../tools/browser/ldap-browser/class-properties.c:473
 msgid "Required attribute:"
@@ -8725,27 +8743,27 @@ msgstr[3] "Необов'язковий атрибут:"
 #: ../tools/browser/ldap-browser/class-properties.c:508
 msgid "Children class:"
 msgid_plural "Children classes:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Дочірні класи:"
+msgstr[1] "Дочірні класи:"
+msgstr[2] "Дочірні класи:"
+msgstr[3] "Дочірній клас:"
 
 #: ../tools/browser/ldap-browser/class-properties.c:553
 msgid "Inherited class:"
 msgid_plural "Inherited classes:"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Успадковані класи:"
+msgstr[1] "Успадковані класи:"
+msgstr[2] "Успадковані класи:"
+msgstr[3] "Успадкований клас:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:222
 msgid "Select the file to save data to"
-msgstr ""
+msgstr "Виберіть файл для збереження даних"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:243
 #, c-format
 msgid "Could not save data: %s"
-msgstr ""
+msgstr "Не вдалося зберегти дані: %s"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:532
 msgid "Non activated"
@@ -8763,12 +8781,12 @@ msgstr "Розпізнавана назва:"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:911
 msgid "Can't display attribute value"
-msgstr ""
+msgstr "Не вдалося показати значення атрибуту"
 
 #: ../tools/browser/ldap-browser/entry-properties.c:926
 #: ../tools/browser/ldap-browser/entry-properties.c:961
 msgid "Could not get information about LDAP entry"
-msgstr ""
+msgstr "Не вдалося отримати відомості щодо запису LDAP"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:152
 msgid "Base DN:"
@@ -8789,14 +8807,14 @@ msgstr "Діапазон пошуку:"
 #: ../tools/browser/ldap-browser/hierarchy-view.c:522
 #, c-format
 msgid "Could not find LDAP entry with DN '%s'"
-msgstr ""
+msgstr "Не вдалося знайти запис LDAP із DN «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:507
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:513
 #: ../tools/browser/ldap-browser/ldap-search-page.c:465
 msgid "_LDAP"
-msgstr ""
+msgstr "_LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:336
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:507
@@ -8808,31 +8826,31 @@ msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "_New LDAP Entries Browser"
-msgstr ""
+msgstr "_Новий навігатор записами LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
 msgid "Open a new LDAP entries browser"
-msgstr ""
+msgstr "Відкрити нове вікно навігатора записами LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "_New LDAP Classes Browser"
-msgstr ""
+msgstr "_Новий навігатор класами LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
 msgid "Open a new LDAP classes browser"
-msgstr ""
+msgstr "Відкрити новий навігатор класами LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
 msgid "_New LDAP Search"
-msgstr ""
+msgstr "_Новий пошук LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
 msgid "Open a new LDAP search form"
-msgstr ""
+msgstr "Відкрити нову форму пошуку LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:317
 msgid "LDAP classes browser"
-msgstr ""
+msgstr "Навігатор класами LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:337
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:573
@@ -8851,15 +8869,15 @@ msgstr "Додати до _вибраних"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 msgid "Add class to favorites"
-msgstr ""
+msgstr "Додати клас до вибраних"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:510
 msgid "Previous Class"
-msgstr ""
+msgstr "Попередній клас"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:510
 msgid "Move back to previous LDAP class"
-msgstr ""
+msgstr "Повернутися до попереднього класу LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:512
 msgid "Next Class"
@@ -9323,7 +9341,7 @@ msgstr "_Новий редактор"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:319
 msgid "Open a new query editor"
-msgstr ""
+msgstr "Відкрити редактор нового запиту"
 
 #: ../tools/browser/query-exec/query-favorite-selector.c:286
 #, c-format
@@ -9363,7 +9381,7 @@ msgstr "Затримка виконання"
 #: ../tools/browser/query-exec/query-result.c:447
 #: ../tools/cmdtool/tool-output.c:488 ../tools/cmdtool/tool-output.c:570
 msgid "Number of rows impacted"
-msgstr ""
+msgstr "Кількість задіяних рядків"
 
 #: ../tools/browser/query-exec/query-result.c:293
 msgid "Execution Parameters"
@@ -9375,7 +9393,7 @@ msgstr "Не вибрано результатів"
 
 #: ../tools/browser/query-exec/query-result.c:398
 msgid "Re-execute query"
-msgstr ""
+msgstr "Повторно виконати запит"
 
 #: ../tools/browser/query-exec/query-result.c:496
 msgid "Execution error:\n"
@@ -9387,7 +9405,7 @@ msgstr "Таблицю не знайдено"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:303
 msgid "Requested object is not a table or view"
-msgstr ""
+msgstr "Запитаний об'єкт не є таблицею або переглядом"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:394
 msgid "Auto incremented"
@@ -9395,7 +9413,7 @@ msgstr "Автозбільшення"
 
 #: ../tools/browser/schema-browser/objects-index.c:175
 msgid "Tables' index"
-msgstr ""
+msgstr "Покажчик таблиць"
 
 #: ../tools/browser/schema-browser/perspective-main.c:33
 msgid "Schema browser"
@@ -9423,7 +9441,7 @@ msgstr "Діаграма зв'язків"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:372
 msgid "Error parsing favorite's contents"
-msgstr ""
+msgstr "Помилка під час обробки вмісту вибраного запису"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:381
 #: ../tools/browser/schema-browser/relations-diagram.c:461
@@ -9433,7 +9451,7 @@ msgstr "Діаграма «%s»"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:431
 msgid "Missing table attribute in favorite's contents"
-msgstr ""
+msgstr "Пропущено атрибут таблиці у вмісті вибраного запису"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:517
 #: ../tools/browser/schema-browser/table-info.c:992
@@ -9468,12 +9486,12 @@ msgstr "Не вдалося завантажити діаграму"
 #: ../tools/browser/schema-browser/table-columns.c:269
 #, c-format
 msgid "Declared foreign key '%s' on "
-msgstr ""
+msgstr "Оголошено сторонній ключ «%s» на "
 
 #: ../tools/browser/schema-browser/table-columns.c:272
 #, c-format
 msgid "Foreign key '%s' on "
-msgstr ""
+msgstr "Сторонній ключ «%s» на "
 
 #: ../tools/browser/schema-browser/table-columns.c:338
 #, c-format
@@ -9481,11 +9499,13 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
+"несумісні типи: «%s» для стороннього ключа і «%s» для основного ключа, на"
+" який посилаються"
 
 #: ../tools/browser/schema-browser/table-columns.c:387
 #, c-format
 msgid "Could not compute table's UNIQUE constraints for %s.%s.%s"
-msgstr ""
+msgstr "Не вдалося обчислити обмеження UNIQUE таблиці для %s.%s.%s"
 
 #: ../tools/browser/schema-browser/table-columns.c:410
 msgid "Unique constraint"
@@ -9493,7 +9513,7 @@ msgstr "Обмеження унікальності"
 
 #: ../tools/browser/schema-browser/table-columns.c:432
 msgid "Tables referencing this one"
-msgstr ""
+msgstr "Таблиці, які посилаються на цю"
 
 #: ../tools/browser/schema-browser/table-columns.c:630
 msgid "Column Name"
@@ -9506,11 +9526,11 @@ msgstr "Не NULL?"
 
 #: ../tools/browser/schema-browser/table-columns.c:690
 msgid "LDAP virtual table definition"
-msgstr ""
+msgstr "Визначення віртуальної таблиці LDAP"
 
 #: ../tools/browser/schema-browser/table-columns.c:737
 msgid "Constraints and integrity rules"
-msgstr ""
+msgstr "Правила обмеження і цілісності"
 
 #: ../tools/browser/schema-browser/table-columns.c:930
 #, c-format
@@ -9520,7 +9540,7 @@ msgstr "Не вдалося знайти таблицю «%s.%s»"
 #: ../tools/browser/schema-browser/table-columns.c:965
 #, c-format
 msgid "Could not find declared foreign key '%s'"
-msgstr ""
+msgstr "Не вдалося знайти оголошений сторонній ключ «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:358
 msgid ""
@@ -9547,7 +9567,7 @@ msgstr "Метадані ще недоступні"
 
 #: ../tools/browser/schema-browser/table-info.c:693
 msgid "Can't find information about table"
-msgstr ""
+msgstr "Не вдалося знайти відомості щодо таблиці"
 
 #: ../tools/browser/schema-browser/table-info.c:729
 #, c-format
@@ -9555,6 +9575,8 @@ msgid ""
 "Internal error while building INSERT statement:\n"
 "%s"
 msgstr ""
+"Внутрішня помилка під час побудови інструкції INSERT:\n"
+"%s"
 
 #: ../tools/browser/schema-browser/table-info.c:775
 #, c-format
@@ -9563,7 +9585,7 @@ msgstr "Типове значення: «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:785
 msgid "Default value: auto incremented value"
-msgstr ""
+msgstr "Типове значення: автоматично збільшуване значення"
 
 #: ../tools/browser/schema-browser/table-info.c:899
 #: ../tools/browser/schema-browser/table-info.c:923
@@ -9573,7 +9595,7 @@ msgstr "Значення, які слід вставити до таблиці"
 #: ../tools/browser/schema-browser/table-info.c:960
 #, c-format
 msgid "Can't find information about table '%s'"
-msgstr ""
+msgstr "Не вдалося знайти відомості щодо таблиці «%s»"
 
 #: ../tools/browser/schema-browser/table-info.c:989
 msgid "_Table"
@@ -9581,11 +9603,11 @@ msgstr "_Таблиця"
 
 #: ../tools/browser/schema-browser/table-info.c:990
 msgid "Add table to favorites"
-msgstr ""
+msgstr "Додано таблицю для вибраних"
 
 #: ../tools/browser/schema-browser/table-info.c:992
 msgid "View table's contents"
-msgstr ""
+msgstr "Вміст таблиці перегляду"
 
 #: ../tools/browser/schema-browser/table-info.c:994
 msgid "_Insert Data"
@@ -9593,7 +9615,7 @@ msgstr "_Вставити дані"
 
 #: ../tools/browser/schema-browser/table-info.c:994
 msgid "Insert data into table"
-msgstr ""
+msgstr "Вставити дані до таблиці"
 
 #: ../tools/browser/schema-browser/table-info.c:996
 msgid "_Declare Foreign Key"
@@ -9601,7 +9623,7 @@ msgstr "_Оголосити сторонній ключ"
 
 #: ../tools/browser/schema-browser/table-info.c:996
 msgid "Declare a foreign key for table"
-msgstr ""
+msgstr "Оголосити сторонній ключ для таблиці"
 
 #: ../tools/browser/schema-browser/table-preferences.c:263
 msgid "default"
@@ -9613,7 +9635,7 @@ msgstr "Поля таблиці"
 
 #: ../tools/browser/schema-browser/table-preferences.c:384
 msgid "Field's display preferences"
-msgstr ""
+msgstr "Налаштування показу поля"
 
 #: ../tools/browser/schema-browser/table-preferences.c:460
 msgid "Data entry type:"
@@ -9644,6 +9666,8 @@ msgid ""
 "Free form to test the configured\n"
 "data entry"
 msgstr ""
+"Довільні дані для тестування\n"
+"налаштованого запису даних"
 
 #: ../tools/browser/support.c:194
 msgid "Information:"
@@ -9654,6 +9678,8 @@ msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
 msgstr ""
+"Не вдалося показати довідку. Будь ласка, переконайтеся, що встановлено"
+" пакунок документації."
 
 #: ../tools/browser/support.c:264
 msgid "Unable to open help file"
@@ -9661,7 +9687,7 @@ msgstr "Не вдалося відкрити файл довідки"
 
 #: ../tools/browser/support.c:274 ../tools/browser/support.c:276
 msgid "Help is being loaded, please wait..."
-msgstr ""
+msgstr "Завантажуємо довідку. Будь ласка, зачекайте…"
 
 #: ../tools/browser/support.c:322
 msgid "Close tab"
@@ -9673,11 +9699,11 @@ msgstr "Резюме"
 
 #: ../tools/browser/support.c:442
 msgid "Structural"
-msgstr ""
+msgstr "Структурний"
 
 #: ../tools/browser/support.c:444
 msgid "Auxilliary"
-msgstr ""
+msgstr "Допоміжний"
 
 #: ../tools/browser/support.h:117
 msgid ""
@@ -9764,15 +9790,15 @@ msgstr "Список заголовків"
 
 #: ../tools/command-exec.c:377
 msgid "List of views"
-msgstr ""
+msgstr "Список переглядів"
 
 #: ../tools/command-exec.c:422
 msgid "List of schemas"
-msgstr ""
+msgstr "Список структур"
 
 #: ../tools/command-exec.c:496 ../tools/command-exec.c:632
 msgid "No object found"
-msgstr ""
+msgstr "Не знайдено об'єкта"
 
 #: ../tools/command-exec.c:662 ../tools/web-server.c:932
 msgid "Column"
@@ -9789,12 +9815,12 @@ msgstr "Додатково"
 #: ../tools/command-exec.c:669
 #, c-format
 msgid "List of columns for view '%s'"
-msgstr ""
+msgstr "Список стовпчиків для перегляду «%s»"
 
 #: ../tools/command-exec.c:673
 #, c-format
 msgid "List of columns for table '%s'"
-msgstr ""
+msgstr "Список стовпчиків таблиці «%s»"
 
 #: ../tools/command-exec.c:685 ../tools/web-server.c:947
 msgid "yes"
@@ -9807,12 +9833,12 @@ msgstr "ні"
 #: ../tools/command-exec.c:716
 #, c-format
 msgid "Could not determine columns of view '%s'"
-msgstr ""
+msgstr "Не вдалося визначити стовпчики перегляду «%s»"
 
 #: ../tools/command-exec.c:720
 #, c-format
 msgid "Could not determine columns of table '%s'"
-msgstr ""
+msgstr "Не вдалося визначити стовпчики таблиці «%s»"
 
 #: ../tools/command-exec.c:733
 #, c-format
@@ -9905,7 +9931,7 @@ msgstr "Не вдалося вилучити:"
 #: ../tools/config-info.c:643
 #, c-format
 msgid "No file to purge!"
-msgstr ""
+msgstr "Немає файлів до очищення!"
 
 #: ../tools/gda-list-server-op.c:50
 msgid "Gda server operations list"
@@ -9924,7 +9950,7 @@ msgstr "Не вдалося створити об'єкт постачальни�
 #: ../tools/gda-list-server-op.c:76
 #, c-format
 msgid "Existing operation types for provider '%s':\n"
-msgstr ""
+msgstr "Наявні типи дій для надавача даних «%s»:\n"
 
 #: ../tools/gda-list-server-op.c:78
 #, c-format
@@ -9949,34 +9975,37 @@ msgstr "Не вдалося обробити файл «%s», ігноруємо
 #: ../tools/gda-sql.c:196
 #, c-format
 msgid "GDA SQL console version "
-msgstr ""
+msgstr "Версія консолі SQL GDA "
 
 #: ../tools/gda-sql.c:214
 msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
 "\" and \"none\")"
 msgstr ""
+"Визначає, як обробляється стовпчик DN для LDAP, у якому виконується пошук"
+" (варіанти — \"dn\", \"rdn\" і \"none\")"
 
 #: ../tools/gda-sql.c:220
 msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
-msgstr ""
+msgstr "Визначає атрибути LDAP, які типово отримуються командами LDAP"
 
 #: ../tools/gda-sql.c:228
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
 msgstr ""
+"Встановіть значення TRUE, якщо перший рядок файла CSV містить назви стовпчиків"
 
 #: ../tools/gda-sql.c:234
 msgid "Quote character for CSV format"
-msgstr ""
+msgstr "Символ лапок для формату CSV"
 
 #: ../tools/gda-sql.c:240
 msgid "Separator character for CSV format"
-msgstr ""
+msgstr "Символ-роздільник для формату CSV"
 
 #: ../tools/gda-sql.c:352
 msgid "Welcome to the GDA SQL console, version "
-msgstr ""
+msgstr "Вітаємо у консолі SQL GDA, версія "
 
 #: ../tools/gda-sql.c:358
 #, c-format
@@ -9987,31 +10016,36 @@ msgid ""
 "      or any SQL query terminated by a semicolon\n"
 "\n"
 msgstr ""
+"Тип:  %s для показу даних щодо користування та умов розповсюдження\n"
+"      %s або %s для довідки щодо внутрішніх команд\n"
+"      %s (або CTRL-D) для виходу («.» можна замінити на «\\»)\n"
+"      або будь-який запит SQL, який завершується крапкою з комою\n"
+"\n"
 
 #: ../tools/gda-sql.c:413
 #, c-format
 msgid "Opening connection '%s' for: "
-msgstr ""
+msgstr "Відкриття з'єднання «%s» для: "
 
 #: ../tools/gda-sql.c:429
 #, c-format
 msgid "Can't open connection %d: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити з'єднання %d: %s\n"
 
 #: ../tools/gda-sql.c:444
 #, c-format
 msgid "Opening connection '%s' (GDA_SQL_CNC environment variable): "
-msgstr ""
+msgstr "Відкриття з'єднання «%s» (змінна середовища GDA_SQL_CNC): "
 
 #: ../tools/gda-sql.c:459
 #, c-format
 msgid "Can't open connection defined by GDA_SQL_CNC: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити з'єднання, яке визначено GDA_SQL_CNC: %s\n"
 
 #: ../tools/gda-sql.c:471
 #, c-format
 msgid "Can't run HTTP server on port %d\n"
-msgstr ""
+msgstr "Не вдалося запустити сервер HTTP на порту %d\n"
 
 #: ../tools/gda-sql.c:801
 msgid "Connection closed"
@@ -10025,7 +10059,7 @@ msgstr "Не вдалося обробити значення параметра
 #: ../tools/gda-sql.c:913
 #, c-format
 msgid "No internal parameter named '%s' required by query"
-msgstr ""
+msgstr "Немає внутрішнього параметра із назвою «%s», який потрібен запиту"
 
 #: ../tools/gda-sql.c:1089
 #, c-format
@@ -10045,7 +10079,7 @@ msgstr "Не вдалося відкрити файл «%s» для читанн
 #: ../tools/gda-sql.c:1221 ../tools/gda-sql.c:3134
 #, c-format
 msgid "Connection name '%s' is invalid"
-msgstr ""
+msgstr "Назва з'єднання «%s» є некоректним"
 
 #: ../tools/gda-sql.c:1287
 #, c-format
@@ -10060,12 +10094,12 @@ msgstr "Немає імені користувача для «%s»"
 #: ../tools/gda-sql.c:1311
 #, c-format
 msgid "\tPassword for '%s': "
-msgstr ""
+msgstr "\tПароль до «%s»: "
 
 #: ../tools/gda-sql.c:1320
 #, c-format
 msgid "No password for '%s'"
-msgstr ""
+msgstr "Немає пароля до «%s»"
 
 #: ../tools/gda-sql.c:1409
 #, c-format
@@ -10073,6 +10107,8 @@ msgid ""
 "Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
 "MM the month and DD the day\n"
 msgstr ""
+"Форматом дати для цього з'єднання буде такий: %s%c%s%c%s, де YYYY є роком, MM"
+" — місяцем, а DD — днем\n"
 
 #: ../tools/gda-sql.c:1423
 #, c-format
@@ -10080,11 +10116,12 @@ msgid ""
 "All the information related to the '%s' connection will be stored in the "
 "'%s' file\n"
 msgstr ""
+"Усі відомості, пов'язані зі з'єднанням «%s», буде збережено у файлі «%s»\n"
 
 #: ../tools/gda-sql.c:1453
 #, c-format
 msgid "Error getting meta data in background: %s\n"
-msgstr ""
+msgstr "Помилка під час фонового отримання метаданих: %s\n"
 
 #: ../tools/gda-sql.c:1461 ../tools/gda-sql.c:1614
 #, c-format
@@ -10092,6 +10129,8 @@ msgid ""
 "Getting database schema information for connection '%s', this may take some "
 "time... "
 msgstr ""
+"Отримуємо відомості щодо структури бази даних для з'єднання «%s», дія може"
+" бути досить тривалою…"
 
 #: ../tools/gda-sql.c:1468 ../tools/gda-sql.c:1621 ../tools/gda-sql.c:2917
 #, c-format
@@ -10111,7 +10150,7 @@ msgstr "%s [<ФАЙЛ>]"
 
 #: ../tools/gda-sql.c:2010
 msgid "Show commands history, or save it to file"
-msgstr ""
+msgstr "Показати журнал команд або зберегти його до файла"
 
 #: ../tools/gda-sql.c:2015 ../tools/gda-sql.c:2024 ../tools/gda-sql.c:2033
 #: ../tools/gda-sql.c:2042 ../tools/gda-sql.c:2051 ../tools/gda-sql.c:2060
@@ -10129,6 +10168,8 @@ msgid ""
 "Force reading the database meta data (or part of the meta data, ex:\"tables"
 "\")"
 msgstr ""
+"Примусово прочитати метадані бази даних (або частину метаданих,"
+" приклад:\"tables\")"
 
 #: ../tools/gda-sql.c:2026
 #, c-format
@@ -10140,6 +10181,8 @@ msgid ""
 "Declare a new foreign key (not actually in database): tableA references "
 "tableB"
 msgstr ""
+"Оголосити новий сторонній ключ (якого насправді немає у базі даних): tableA"
+" посилається на tableB"
 
 #: ../tools/gda-sql.c:2035
 #, c-format
@@ -10149,6 +10192,7 @@ msgstr "%s <назва-fk> <таблицяA> <таблицяB>"
 #: ../tools/gda-sql.c:2036
 msgid "Un-declare a foreign key (not actually in database)"
 msgstr ""
+"Скасувати оголошення стороннього ключа (якого насправді немає у базі даних)"
 
 #: ../tools/gda-sql.c:2044
 #, c-format
@@ -10157,7 +10201,7 @@ msgstr "%s [<ТАБЛИЦЯ>]"
 
 #: ../tools/gda-sql.c:2045
 msgid "List all tables (or named table)"
-msgstr ""
+msgstr "Вивести список усіх таблиць (або вказану за назвою таблицю)"
 
 #: ../tools/gda-sql.c:2053
 #, c-format
@@ -10166,7 +10210,7 @@ msgstr "%s [<ПЕРЕГЛЯД>]"
 
 #: ../tools/gda-sql.c:2054
 msgid "List all views (or named view)"
-msgstr ""
+msgstr "Вивести список усіх переглядів (або вказаного за назвою перегляду)"
 
 #: ../tools/gda-sql.c:2062
 #, c-format
@@ -10184,7 +10228,7 @@ msgstr "%s [<НАЗВА_ОБ'ЄКТА>|<СХЕМА>.*]"
 
 #: ../tools/gda-sql.c:2072
 msgid "Describe object or full list of objects"
-msgstr ""
+msgstr "Описати об'єкт або увесь список об'єктів"
 
 #: ../tools/gda-sql.c:2080
 #, c-format
@@ -10193,7 +10237,7 @@ msgstr "%s [<ТАБЛИЦЯ1> [<ТАБЛИЦЯ2>...]]"
 
 #: ../tools/gda-sql.c:2081
 msgid "Create a graph of all or the listed tables"
-msgstr ""
+msgstr "Створити графік на основі усіх або вказаних у списку таблиць"
 
 #: ../tools/gda-sql.c:2089
 #, c-format
@@ -10203,6 +10247,8 @@ msgstr "%s [<порт> [<ключ розпізнавання>]]"
 #: ../tools/gda-sql.c:2090
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
 msgstr ""
+"Запустити або зупинити вбудований сервер HTTP (на вказаному порті або на"
+" типовому порті 12345)"
 
 #: ../tools/gda-sql.c:2099
 #, c-format
@@ -10211,7 +10257,7 @@ msgstr "%s [[<НАЗВА_CNC>] [<DSN>|<РЯДОК ЗʼЄДНАННЯ>]]"
 
 #: ../tools/gda-sql.c:2100
 msgid "Opens a new connection or lists opened connections"
-msgstr ""
+msgstr "Відкриває нове з'єднання або виводить список відкритих з'єднань"
 
 #: ../tools/gda-sql.c:2109
 #, c-format
@@ -10236,7 +10282,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2125 ../tools/gda-sql.c:2134 ../tools/gda-sql.c:2143
 #: ../tools/gda-sql.c:2152
 msgid "DSN (data sources) management"
-msgstr ""
+msgstr "Керування DSN (джерела даних)"
 
 #: ../tools/gda-sql.c:2127
 #, c-format
