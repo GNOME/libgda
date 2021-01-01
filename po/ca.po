@@ -16,7 +16,8 @@ msgstr ""
 "POT-Creation-Date: 2020-08-13 02:38+0000\n"
 "PO-Revision-Date: 2020-08-13 05:38+0000\n"
 "Last-Translator: Ma. Teresa Guix <maite.guix@gmail.com>, 2020\n"
-"Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/ca/)\n"
+"Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/"
+"ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,13 +36,13 @@ msgstr "Fonts de dades"
 
 #: ../control-center/dsn-config.c:182
 msgid ""
-"Data sources are the means by which database connections are identified: all"
-" the information needed to open a connection to a specific database using a "
+"Data sources are the means by which database connections are identified: all "
+"the information needed to open a connection to a specific database using a "
 "'provider' is referenced using a unique name."
 msgstr ""
 "Les fonts de dades són els mitjans pels quals s'identifiquen les connexions "
-"a bases de dades: a través d'un nom únic, el «proveïdor», es referencia tota"
-" la informació necessària per establir una connexió a una base de dades "
+"a bases de dades: a través d'un nom únic, el «proveïdor», es referencia tota "
+"la informació necessària per a establir una connexió a una base de dades "
 "específica."
 
 #: ../control-center/dsn-config.c:256
@@ -92,8 +93,7 @@ msgstr "No s'ha pogut desar la definició DSN: %s"
 #: ../libgda/gda-meta-store.c:1209 ../libgda/gda-meta-store.c:1215
 #: ../libgda/gda-server-operation.c:656 ../libgda/gda-server-operation.c:1111
 #: ../libgda/gda-set.c:1158 ../libgda/gda-tree-mgr-select.c:142
-#: ../libgda/gda-tree-mgr-select.c:176
-#: ../libgda-report/engine/rt-parser.c:1197
+#: ../libgda/gda-tree-mgr-select.c:176 ../libgda-report/engine/rt-parser.c:1197
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
@@ -115,8 +115,7 @@ msgstr "No s'ha pogut desar la definició DSN: %s"
 #: ../libgda-ui/data-entries/plugins/common-pict.c:484
 #: ../libgda-ui/demos/main.c:775 ../libgda-ui/gdaui-data-filter.c:131
 #: ../libgda-ui/gdaui-init.c:543 ../libgda-ui/gdaui-login.c:420
-#: ../libgda-ui/gdaui-rt-editor.c:727
-#: ../providers/jdbc/gda-jdbc-provider.c:525
+#: ../libgda-ui/gdaui-rt-editor.c:727 ../providers/jdbc/gda-jdbc-provider.c:525
 #: ../providers/jdbc/gda-jdbc-provider.c:1454
 #: ../providers/jdbc/gda-jdbc-provider.c:1483
 #: ../providers/jdbc/gda-jdbc-provider.c:1543
@@ -185,8 +184,7 @@ msgstr "No s'ha pogut desar la definició DSN: %s"
 #: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
 #: ../tools/common/t-connection.c:1210 ../tools/common/t-connection.c:1212
 #: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1981
-#: ../tools/misc/gda-list-server-op.c:68
-#: ../tools/misc/gda-list-server-op.c:126
+#: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
 msgstr "Sense detalls"
@@ -208,8 +206,8 @@ msgid ""
 msgstr ""
 "Des del centre de control de bases de dades, podeu gestionar les fonts de "
 "dades definides (connexions de bases de dades) i comprovar quins proveïdors "
-"de bases de dades estan instal·lats (i es poden utilitzar per connectar-se a"
-" diferents bases de dades)."
+"de bases de dades estan instal·lats (i es poden utilitzar per a connectar-se "
+"a diferents bases de dades)."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
 msgid "Database access control center"
@@ -230,7 +228,7 @@ msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
 #: ../control-center/gdaui-dsn-assistant.c:121
 #, c-format
 msgid "Missing mandatory information, to create database: '%s'"
-msgstr "Falta informació obligatòria per crear base de dades: «%s»"
+msgstr "Falta informació obligatòria per a crear base de dades: «%s»"
 
 #: ../control-center/gdaui-dsn-assistant.c:135
 #, c-format
@@ -260,11 +258,13 @@ msgstr "Definició d'una font de dades nova"
 
 #: ../control-center/gdaui-dsn-assistant.c:476
 msgid ""
-"This assistant will guide you through the process of creating a new data source, and optionally will allow you to create a new database.\n"
+"This assistant will guide you through the process of creating a new data "
+"source, and optionally will allow you to create a new database.\n"
 "\n"
 "Just follow the steps!"
 msgstr ""
-"L'auxiliar us guiarà a través del procés de creació d'una font de dades nova i, opcionalment, us permetrà crear una base de dades nova.\n"
+"L'auxiliar us guiarà a través del procés de creació d'una font de dades nova "
+"i, opcionalment, us permetrà crear una base de dades nova.\n"
 "\n"
 "Només heu de seguir els passos."
 
@@ -274,12 +274,12 @@ msgstr "Afegeix una font de dades nova..."
 
 #: ../control-center/gdaui-dsn-assistant.c:500
 msgid ""
-"The following fields represent the basic information items for your new data"
-" source. Mandatory fields are marked with a star. To create a local database"
-" in a file, select the 'SQLite' type of database."
+"The following fields represent the basic information items for your new data "
+"source. Mandatory fields are marked with a star. To create a local database "
+"in a file, select the 'SQLite' type of database."
 msgstr ""
 "Els camps següents representen els elements bàsics d'informació per a la "
-"font de dades nova. Els camps obligatoris estan marcats amb asterisc. Per "
+"font de dades nova. Els camps obligatoris estan marcats amb asterisc. Per a "
 "crear una base de dades local en un fitxer, seleccioneu el tipus de base de "
 "dades «SQLite»."
 
@@ -311,7 +311,7 @@ msgid ""
 "new database to use with this new data source"
 msgstr ""
 "Aquesta pàgina us permet triar entre una base de dades existent o crear-ne "
-"una de nova per utilitzar amb aquesta font de dades nova"
+"una de nova per a utilitzar amb aquesta font de dades nova"
 
 #: ../control-center/gdaui-dsn-assistant.c:572
 msgid "Create a new database:"
@@ -327,10 +327,10 @@ msgid ""
 "database (mandatory fields are marked with a star). This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
-"Els camps següents representen la informació necessària per crear una nova "
-"base de dades (els camps obligatoris estan marcats amb un asterisc). Aquesta"
-" informació és específica de la base de dades; per tant, consulteu el manual"
-" per obtenir més informació."
+"Els camps següents representen la informació necessària per a crear una nova "
+"base de dades (els camps obligatoris estan marcats amb un asterisc). Aquesta "
+"informació és específica de la base de dades; per tant, consulteu el manual "
+"per a obtenir més informació."
 
 #: ../control-center/gdaui-dsn-assistant.c:619
 msgid "New database definition"
@@ -342,10 +342,10 @@ msgstr "Paràmetres de la connexió"
 
 #: ../control-center/gdaui-dsn-assistant.c:654
 msgid ""
-"The following fields represent the authentication information needed to open"
-" a connection."
+"The following fields represent the authentication information needed to open "
+"a connection."
 msgstr ""
-"Els camps següents representen la informació d'autenticació necessària per "
+"Els camps següents representen la informació d'autenticació necessària per a "
 "establir una connexió."
 
 #: ../control-center/gdaui-dsn-assistant.c:665
@@ -358,12 +358,12 @@ msgid ""
 "All information needed to create a new data source has been retrieved. Now, "
 "press 'Apply' to close this dialog."
 msgstr ""
-"Ja s'ha obtingut tota la informació necessària per crear una font de dades "
-"nova. Premeu «Aplica» per tancar aquest diàleg."
+"Ja s'ha obtingut tota la informació necessària per a crear una font de dades "
+"nova. Premeu «Aplica» per a tancar aquest diàleg."
 
 #: ../control-center/gdaui-dsn-assistant.c:686
 msgid "Ready to add a new data source"
-msgstr "A punt per afegir una font de dades nova"
+msgstr "A punt per a afegir una font de dades nova"
 
 #: ../control-center/gdaui-dsn-editor.c:221
 msgid "_System wide data source:"
@@ -379,10 +379,12 @@ msgstr "_Descripció:"
 
 #: ../control-center/gdaui-dsn-editor.c:271
 msgid ""
-"<span foreground='red'>The database provider used by this data source is not available,\n"
+"<span foreground='red'>The database provider used by this data source is not "
+"available,\n"
 "editing the data source's attributes is disabled</span>"
 msgstr ""
-"<span foreground='red'>No està disponible el proveïdor de la base de dades que fa servir aquesta font de dades.\n"
+"<span foreground='red'>No està disponible el proveïdor de la base de dades "
+"que fa servir aquesta font de dades.\n"
 "S'ha inhabilitat l'edició dels atributs de la font de dades</span>"
 
 #: ../control-center/gdaui-dsn-editor.c:320
@@ -442,8 +444,8 @@ msgid "Could not create data source: %s"
 msgstr "No s'ha pogut crear la font de dades: %s"
 
 #: ../control-center/gdaui-login-dialog.c:76
-#: ../control-center/gdaui-login-dialog.c:84
-#: ../tools/browser/auth-dialog.c:214 ../tools/browser/login-dialog.c:184
+#: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:214
+#: ../tools/browser/login-dialog.c:184
 msgid "Connection opening"
 msgstr "Establiment de la connexió"
 
@@ -453,7 +455,7 @@ msgid ""
 "to open a connection"
 msgstr ""
 "Empleneu els elements d'autenticació següents\n"
-"per establir una connexió"
+"per a establir una connexió"
 
 #: ../control-center/gdaui-login-dialog.c:85
 msgid ""
@@ -545,8 +547,8 @@ msgstr ""
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
-"Ja existeix el directori de configuració específica de l'usuari «%s» però no"
-" és un directori"
+"Ja existeix el directori de configuració específica de l'usuari «%s» però no "
+"és un directori"
 
 #: ../libgda/gda-config.c:1154
 #, c-format
@@ -634,8 +636,8 @@ msgstr "Llista de proveïdors instal·lats"
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr ""
-"No hi ha un proveïdor de SQLite per defecte Intenta crear-ne un de nou. S'ha"
-" produït un error: %s"
+"No hi ha un proveïdor de SQLite per defecte Intenta crear-ne un de nou. S'ha "
+"produït un error: %s"
 
 #: ../libgda/gda-config.c:1949 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
@@ -842,8 +844,7 @@ msgstr "El paràmetre «field_name» és necessari per a filtrar camps"
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr ""
-"Els paràmetres «name» i/o «field_name» són necessaris per a filtrar "
-"camps"
+"Els paràmetres «name» i/o «field_name» són necessaris per a filtrar camps"
 
 #: ../libgda/gda-connection.c:5454 ../libgda/gda-connection.c:5475
 #, c-format
@@ -858,12 +859,13 @@ msgstr "El paràmetre «index_name» és necessari per a filtrar índexs"
 #: ../libgda/gda-connection.c:5467
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
-msgstr "Els paràmetres «name» i/o «index_name» són necessaris per a filtrar índex"
+msgstr ""
+"Els paràmetres «name» i/o «index_name» són necessaris per a filtrar índex"
 
 #: ../libgda/gda-connection.c:5487
 #, c-format
 msgid "Invalid meta type to get data from store"
-msgstr "El tipus de meta no és vàlid per obtenir dades de la botiga"
+msgstr "El tipus de meta no és vàlid per a obtenir dades de la botiga"
 
 #: ../libgda/gda-connection.c:5498
 #, c-format
@@ -1146,11 +1148,11 @@ msgstr ""
 #: ../libgda/gda-data-model.c:1997
 #, c-format
 msgid ""
-"Destination column %d has a gda type (%s) incompatible with source column %d"
-" type (%s)"
+"Destination column %d has a gda type (%s) incompatible with source column %d "
+"type (%s)"
 msgstr ""
-"La columna de destinació %d té un tipus gda (%s) incompatible amb la columna"
-" d'origen %d tipus (%s)"
+"La columna de destinació %d té un tipus gda (%s) incompatible amb la columna "
+"d'origen %d tipus (%s)"
 
 #: ../libgda/gda-data-model.c:2093
 #, c-format
@@ -1487,8 +1489,8 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
-"El model de dades en servidor intermediari informa que les modificacions són"
-" acceptades, però no ha emès el senyal «row-inserted», «row-updated» o «row-"
+"El model de dades en servidor intermediari informa que les modificacions són "
+"acceptades, però no ha emès el senyal «row-inserted», «row-updated» o «row-"
 "removed» corresponent. Aquest és un error de la implementació del %s "
 "(informeu de l'error)."
 
@@ -1499,8 +1501,8 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
-"El model de dades en servidor intermediari informa que les modificacions són"
-" acceptades, però no ha emès el senyal «row-inserted», «row-updated» o «row-"
+"El model de dades en servidor intermediari informa que les modificacions són "
+"acceptades, però no ha emès el senyal «row-inserted», «row-updated» o «row-"
 "removed» corresponent. Aquest pot ser un error de la implementació del %s "
 "(informeu de l'error)."
 
@@ -1549,8 +1551,7 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
-msgstr ""
-"Expressió SQL incorrecta, només s'accepta una sentència de modificació"
+msgstr "Expressió SQL incorrecta, només s'accepta una sentència de modificació"
 
 #: ../libgda/gda-data-select.c:1099
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
@@ -1583,13 +1584,11 @@ msgstr "La declaració UPDATE ha de contenir una condició WHERE"
 #: ../libgda/gda-data-select.c:1331
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
-msgstr ""
-"La modificació de la declaració fa servir un paràmetre «%s» desconegut"
+msgstr "La modificació de la declaració fa servir un paràmetre «%s» desconegut"
 
 #: ../libgda/gda-data-select.c:1353
 #, c-format
-msgid ""
-"Modification statement's  '%s' parameter is a %s when it should be a %s"
+msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 "La modificació del paràmetre «%s» de la declaració és un %s quan hauria de "
 "ser un %s"
@@ -1597,8 +1596,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:1419
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
-"La declaració de modificació ha de ser una declaració INSERT, UPDATE o "
-"DELETE"
+"La declaració de modificació ha de ser una declaració INSERT, UPDATE o DELETE"
 
 #: ../libgda/gda-data-select.c:1504 ../libgda/gda-data-select.c:1726
 #: ../libgda/gda-data-select.c:3638
@@ -1607,8 +1605,7 @@ msgstr "No hi ha cap connexió a utilitzar"
 
 #: ../libgda/gda-data-select.c:1566
 msgid "Invalid unique row condition (only equal operators are allowed)"
-msgstr ""
-"Condició de fila única no vàlida (només es permeten operadors d'igual)"
+msgstr "Condició de fila única no vàlida (només es permeten operadors d'igual)"
 
 #: ../libgda/gda-data-select.c:1598 ../libgda/gda-data-select.c:1653
 msgid "Unique row condition has already been specified"
@@ -1637,11 +1634,11 @@ msgstr "No es poden recuperar les dades després de les modificacions"
 #: ../libgda/gda-data-select.c:1979 ../libgda/gda-data-select.c:1990
 #: ../libgda/gda-data-select.c:2020
 msgid ""
-"Unable to retrieve data after modifications, no further modification will be"
-" allowed"
+"Unable to retrieve data after modifications, no further modification will be "
+"allowed"
 msgstr ""
-"No es poden recuperar les dades després de les modificacions. No es permeten"
-" més modificacions"
+"No es poden recuperar les dades després de les modificacions. No es permeten "
+"més modificacions"
 
 #: ../libgda/gda-data-select.c:2159
 #, c-format
@@ -1661,8 +1658,8 @@ msgstr "No es pot tornar l'iterador de la fila: %s"
 #: ../libgda/gda-data-select.c:2229
 msgid "Internal error: No fetch_prev() method implementation for data model"
 msgstr ""
-"Error intern: no hi ha cap implementació de mètode fetch_prev() per al model"
-" de dades"
+"Error intern: no hi ha cap implementació de mètode fetch_prev() per al model "
+"de dades"
 
 #: ../libgda/gda-data-select.c:2234
 #, c-format
@@ -1751,8 +1748,8 @@ msgstr "No s'ha proporcionat una declaració DELETE"
 #: ../libgda/gda-data-select.c:3606
 #, c-format
 msgid ""
-"Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d"
-" expressions"
+"Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
+"expressions"
 msgstr ""
 "Error intern: GdaDataSelect té %d GdaColumns, i la instrucció SELECT té %d "
 "expressions"
@@ -1763,8 +1760,8 @@ msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
 "will be wrong: %s"
 msgstr ""
-"S'ha produït un error. El valor retornat per la propietat «exec-params» serà"
-" incorrecte: %s"
+"S'ha produït un error. El valor retornat per la propietat «exec-params» serà "
+"incorrecte: %s"
 
 #: ../libgda/gda-data-select.c:3818
 msgid "Data model has been modified"
@@ -1787,8 +1784,7 @@ msgstr ""
 
 #: ../libgda/gda-db-column.c:1110 ../libgda/gda-db-column.c:1223
 #, c-format
-msgid ""
-"Internal error: Operation should be prepared, setting a connection data"
+msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Error intern: s'ha de preparar l'operació. S'estan establint dades de "
 "connexió"
@@ -1805,13 +1801,13 @@ msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
 msgstr ""
-"No s'ha pogut analitzar «%s»: la validació de fitxers XML de GbaDbCreator no"
-" es portarà a terme (poden produir-se errors)"
+"No s'ha pogut analitzar «%s»: la validació de fitxers XML de GbaDbCreator no "
+"es portarà a terme (poden produir-se errors)"
 
 #: ../libgda/gda-db-catalog.c:259
 #, c-format
 msgid "Context to validate xml file can't be created."
-msgstr "No es pot crear el context per validar el fitxer xml."
+msgstr "No es pot crear el context per a validar el fitxer xml."
 
 #: ../libgda/gda-db-catalog.c:277
 #, c-format
@@ -1940,8 +1936,8 @@ msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
 "where '%s' was bound to '%s'"
 msgstr ""
-"No es poden vincular contenidors si no són del mateix tipus. S'està trencant"
-" el vincle existent entre «%s» i «%s»"
+"No es poden vincular contenidors si no són del mateix tipus. S'està trencant "
+"el vincle existent entre «%s» i «%s»"
 
 #: ../libgda/gda-holder.c:1808
 msgid "Cannot bind holders if their type is not the same"
@@ -1949,8 +1945,7 @@ msgstr "No es poden vincular contenidors si no són del mateix tipus"
 
 #: ../libgda/gda-holder.c:1974
 #, c-format
-msgid ""
-"Could not change GdaHolder to match value change in bound GdaHolder: %s"
+msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
 "No s'ha pogut canviar el GdaHolder per a fer-lo coincidir amb el canvi de "
 "valor del GdaHolder vinculat: %s"
@@ -2110,11 +2105,9 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:2669 ../libgda/gda-meta-store.c:2700
 #, c-format
-msgid ""
-"Schema description does not contain the object '%s', check installation"
+msgid "Schema description does not contain the object '%s', check installation"
 msgstr ""
-"La descripció de l'esquema no conté l'objecte «%s». Comproveu la "
-"instal·lació"
+"La descripció de l'esquema no conté l'objecte «%s». Comproveu la instal·lació"
 
 #: ../libgda/gda-meta-store.c:2739
 #, c-format
@@ -2457,11 +2450,11 @@ msgstr "L'especificació de la GdaServerOperation no s'ajusta a la DTD\n"
 
 #: ../libgda/gda-server-operation.c:1347
 msgid ""
-"Non handled GdaServerOperationType, please report error to "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"Non handled GdaServerOperationType, please report error to http://gitlab."
+"gnome.org/GNOME/libgda/issues"
 msgstr ""
-"GdaServerOperationType no gestionat. Informeu de l'error a "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"GdaServerOperationType no gestionat. Informeu de l'error a http://gitlab."
+"gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
@@ -2545,20 +2538,20 @@ msgstr "No suportat"
 #: ../libgda/gda-server-provider.c:2980
 #, c-format
 msgid ""
-"Internal error please report bug to "
-"https://gitlab.gnome.org/GNOME/libgda/issues Reported error is: %s"
+"Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
+"issues Reported error is: %s"
 msgstr ""
-"S'ha produït un error intern si us plau informeu a "
-"https://gitlab.gnome.org/GNOME/libgda/issues L'error reportat és: %s"
+"S'ha produït un error intern si us plau informeu a https://gitlab.gnome.org/"
+"GNOME/libgda/issues L'error reportat és: %s"
 
 #: ../libgda/gda-server-provider.c:2984
 #, c-format
 msgid ""
-"Internal error please report bug to "
-"https://gitlab.gnome.org/GNOME/libgda/issues No error was reported"
+"Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
+"issues No error was reported"
 msgstr ""
-"S'ha produït un error intern si us plau informeu a "
-"https://gitlab.gnome.org/GNOME/libgda/issues Cap error informat"
+"S'ha produït un error intern si us plau informeu a https://gitlab.gnome.org/"
+"GNOME/libgda/issues Cap error informat"
 
 #: ../libgda/gda-server-provider.c:3409 ../libgda/gda-server-provider.c:3479
 #: ../libgda/gda-server-provider.c:3548
@@ -2601,8 +2594,8 @@ msgstr "No s'ha trobat el GdaHolder amb ID «%s» en el conjunt"
 #: ../libgda/gda-set.c:1371
 #, c-format
 msgid ""
-"Could not parse '%s': XML data import validation will not be performed (some"
-" weird errors may occur)"
+"Could not parse '%s': XML data import validation will not be performed (some "
+"weird errors may occur)"
 msgstr ""
 "No s'ha pogut analitzar «%s»: la validació de la importació de dades XML no "
 "es realitzarà (podrien ocórrer errors estranys)"
@@ -2631,8 +2624,8 @@ msgstr "Un o més valors no són vàlids"
 
 #: ../libgda/gda-set.c:2379 ../libgda/gda-set.c:2392
 msgid ""
-"Replacing data model must have the same characteristics as the data model it"
-" replaces"
+"Replacing data model must have the same characteristics as the data model it "
+"replaces"
 msgstr ""
 "La substitució del model de dades ha de tenir les mateixes característiques "
 "que el model de dades que substitueix"
@@ -2788,11 +2781,11 @@ msgstr ""
 
 #: ../libgda/gda-tree-mgr-select.c:254
 #: ../libgda-report/engine/gda-report-engine.c:592
-#: ../libgda-report/engine/gda-report-engine.c:619
-#: ../tools/common/t-app.c:2976 ../tools/common/t-app.c:4669
-#: ../tools/common/t-app.c:5186 ../tools/common/t-app.c:5287
-#: ../tools/common/t-app.c:5384 ../tools/common/t-app.c:5482
-#: ../tools/common/t-context.c:269 ../tools/common/t-context.c:421
+#: ../libgda-report/engine/gda-report-engine.c:619 ../tools/common/t-app.c:2976
+#: ../tools/common/t-app.c:4669 ../tools/common/t-app.c:5186
+#: ../tools/common/t-app.c:5287 ../tools/common/t-app.c:5384
+#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:269
+#: ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "No s'ha especificat cap connexió"
@@ -2862,7 +2855,7 @@ msgstr "Falta el nom de la taula en la declaració UPDATE"
 #: ../libgda/gda-util.c:1723
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr ""
-"No es pot reescriure la declaració UPDATE per gestionar els valors "
+"No es pot reescriure la declaració UPDATE per a gestionar els valors "
 "predeterminats"
 
 #: ../libgda/gda-util.c:1731
@@ -3023,8 +3016,8 @@ msgid "Unknown query '%s'"
 msgstr "Consulta «%s» desconeguda"
 
 #: ../libgda-report/engine/gda-report-engine.c:587
-#: ../libgda-report/engine/gda-report-engine.c:614
-#: ../tools/common/t-app.c:2780 ../tools/common/t-app.c:2990
+#: ../libgda-report/engine/gda-report-engine.c:614 ../tools/common/t-app.c:2780
+#: ../tools/common/t-app.c:2990
 #, c-format
 msgid "No connection named '%s' found"
 msgstr "No s'ha trobat cap connexió anomenada «%s»"
@@ -3101,8 +3094,7 @@ msgstr "S'ha produït un error intern en crear la taula al proveïdor SQLite"
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr "No hi ha camps definits per a l'operació CREATE TABLE"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:274
-#: ../providers/mysql/gda-mysql-ddl.c:277
+#: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:277
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr "No existeix el camp especificat en la restricció de la clau externa"
@@ -3160,8 +3152,8 @@ msgstr "La cadena de connexió ha de contenir els valors DB_DIR i DB_NAME"
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
-"to the database file) and DB_NAME (the database file without the '%s' at the"
-" end)."
+"to the database file) and DB_NAME (the database file without the '%s' at the "
+"end)."
 msgstr ""
 "El format de cadena de connexió ha canviat: substituïu URI per DB_DIR (el "
 "camí d'accés al fitxer de base de dades) i DB_NAME (el fitxer de la base de "
@@ -3183,8 +3175,8 @@ msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
 msgstr ""
-"ADVERTIMENT DE SEGURETAT: l'extensió de càrrega està habilitada per a ordres"
-" SQL, això significa que un atacant pot accedir a funcions de càrrega "
+"ADVERTIMENT DE SEGURETAT: l'extensió de càrrega està habilitada per a ordres "
+"SQL, això significa que un atacant pot accedir a funcions de càrrega "
 "d’extensions"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1298
@@ -3208,8 +3200,7 @@ msgstr "No s'ha pogut definir la intercalació %s"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1733
 #: ../libgda/sqlite/gda-sqlite-provider.c:1744
 msgid "Error initializing database with passphrase"
-msgstr ""
-"S'ha produït un error en inicialitzar la base de dades amb contrasenya"
+msgstr "S'ha produït un error en inicialitzar la base de dades amb contrasenya"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1786
 msgid "Missing database name or directory"
@@ -3257,7 +3248,7 @@ msgstr "No es permet un paràmetre sense nom a les declaracions preparades"
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
-"No es pot construir una declaració SELECT per obtenir l'última fila "
+"No es pot construir una declaració SELECT per a obtenir l'última fila "
 "inserida: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3114
@@ -3265,7 +3256,7 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:1813
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
-"La declaració SELECT per obtenir l'última fila inserida no retorna cap fila"
+"La declaració SELECT per a obtenir l'última fila inserida no retorna cap fila"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
@@ -3273,7 +3264,7 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"La sentència SELECT per obtenir l'última fila inserida ha retornat massa "
+"La sentència SELECT per a obtenir l'última fila inserida ha retornat massa "
 "(%d) files"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3182
@@ -3297,8 +3288,8 @@ msgid ""
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
 "No es pot obtenir el gestor de BLOB de SQLite (el tipus reportat és «%s»), "
-"si us plau comuniqueu aquest error a "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"si us plau comuniqueu aquest error a http://gitlab.gnome.org/GNOME/libgda/"
+"issues"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3275
 msgid "Can't identify the ROWID of the blob to fill"
@@ -3329,7 +3320,7 @@ msgstr "Falta/falten paràmetre(s) per a executar la consulta"
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr ""
-"No es pot reescriure la declaració per gestionar els valors predeterminats"
+"No es pot reescriure la declaració per a gestionar els valors predeterminats"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3612
 #: ../providers/mysql/gda-mysql-provider.c:2514
@@ -3522,8 +3513,7 @@ msgstr "No s'han pogut calcular les columnes de la taula virtual"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:599
 #, c-format
 msgid "Can't get data model description for column %d"
-msgstr ""
-"No es pot obtenir la descripció del model de dades per a la columna %d"
+msgstr "No es pot obtenir la descripció del model de dades per a la columna %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:651
 #, c-format
@@ -3670,17 +3660,17 @@ msgstr "Falta l'expressió en una destinació seleccionada"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1166
 msgid ""
-"Join can't at the same time specify a join condition and a list of fields to"
-" join on"
+"Join can't at the same time specify a join condition and a list of fields to "
+"join on"
 msgstr ""
-"El JOINT no pot especificar una condició d'unió i al mateix temps una llista"
-" de camps als quals unir-se"
+"El JOINT no pot especificar una condició d'unió i al mateix temps una llista "
+"de camps als quals unir-se"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1171
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
-"El «JOIN» creuat no pot tenir una condició de «JOIN» o una llista de "
-"camps en els quals unir-se"
+"El «JOIN» creuat no pot tenir una condició de «JOIN» o una llista de camps "
+"en els quals unir-se"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1180
 msgid "Empty FROM clause"
@@ -3731,8 +3721,7 @@ msgid "INSERT statement needs a table to insert into"
 msgstr "La declaració INSERT necessita una taula en la qual inserir"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:362
-msgid ""
-"Can't specify values to insert and SELECT statement in INSERT statement"
+msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
 "No es poden especificar valors per a inserir i una declaració SELECT en una "
 "declaració INSERT"
@@ -3789,13 +3778,12 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:302
 msgid "UPDATE statement does not have any target columns to update"
-msgstr ""
-"La declaració UPDATE no té cap columna de destinació per a actualitzar"
+msgstr "La declaració UPDATE no té cap columna de destinació per a actualitzar"
 
 #: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
-"The GMainContext passed when gda_signal_connect() was called is not owned by"
-" any thread, you may expect some undesired behaviours, use "
+"The GMainContext passed when gda_signal_connect() was called is not owned by "
+"any thread, you may expect some undesired behaviours, use "
 "g_main_context_acquire()"
 msgstr ""
 "El GMainContext transmès quan es va cridar a gda_signal_connect() no és "
@@ -3937,11 +3925,10 @@ msgstr "Obre amb"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:168
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:182
 #: ../libgda-ui/gdaui-basic-form.c:782 ../libgda-ui/gdaui-basic-form.c:818
-#: ../libgda-ui/gdaui-raw-grid.c:674
-#: ../providers/ldap/gda-ldap-provider.c:1087 ../tools/common/t-app.c:2256
-#: ../tools/common/t-app.c:2327 ../tools/common/t-app.c:3734
-#: ../tools/common/t-app.c:5536 ../tools/common/t-config-info.c:124
-#: ../tools/common/t-config-info.c:293
+#: ../libgda-ui/gdaui-raw-grid.c:674 ../providers/ldap/gda-ldap-provider.c:1087
+#: ../tools/common/t-app.c:2256 ../tools/common/t-app.c:2327
+#: ../tools/common/t-app.c:3734 ../tools/common/t-app.c:5536
+#: ../tools/common/t-config-info.c:124 ../tools/common/t-config-info.c:293
 msgid "Value"
 msgstr "Valor"
 
@@ -3963,8 +3950,8 @@ msgstr "Editable"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:246
 #, c-format
 msgid ""
-"Could not find icon file bin-attachment.png in resources please report error"
-" to https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"
+"Could not find icon file bin-attachment.png in resources please report error "
+"to https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"
 msgstr ""
 "No s'ha pogut trobar el fitxer icona bin-attachment.png als recursos. "
 "Informeu-vos d'errors a https://gitlab.gnome.org/GNOME/libgda/issues. "
@@ -4013,11 +4000,11 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
 #, c-format
 msgid ""
-"Data cell renderer asked to display values of different data types, at least"
-" %s and %s, which means the data model has some incoherencies"
+"Data cell renderer asked to display values of different data types, at least "
+"%s and %s, which means the data model has some incoherencies"
 msgstr ""
-"El renderitzador de la cel·la de dades ha demanat mostrar valors de tipus de"
-" dades diferents, almenys %s i %s, el que vol dir que el model de dades té "
+"El renderitzador de la cel·la de dades ha demanat mostrar valors de tipus de "
+"dades diferents, almenys %s i %s, el que vol dir que el model de dades té "
 "algunes incoherències"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
@@ -4137,8 +4124,8 @@ msgstr "Reinicia"
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:410
 #, c-format
 msgid ""
-"Widget of class '%s' does not have any associated GdaDataHandler, (to be set"
-" using the 'handler' property) expect some mis-behaviours"
+"Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
+"using the 'handler' property) expect some mis-behaviours"
 msgstr ""
 "El giny de la classe «%s» no està associat a GdaDataHandler, (que s'ha "
 "d'establir utilitzant la propietat \"handler\") s'espera algun comportament "
@@ -4170,7 +4157,7 @@ msgid ""
 "character, suitable to enter passwords"
 msgstr ""
 "Si està en TRUE, tots els caràcters es mostren utilitzant un únic caràcter "
-"«invisible», apropiat per introduir contrasenyes"
+"«invisible», apropiat per a introduir contrasenyes"
 
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:254
 #, c-format
@@ -4360,13 +4347,13 @@ msgstr "Format"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:2
 msgid ""
-"Allowed characters at each position('0':digit, '9': digit except 0, "
-"'@':alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any "
-"other character will be left unmodified)"
+"Allowed characters at each position('0':digit, '9': digit except 0, '@':"
+"alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
+"character will be left unmodified)"
 msgstr ""
-"Caràcters permesos en cada posició («0»:digit, «9»: digit excepte 0, "
-"«@»:alpha, «^»:majúscules, «#»:alphanumeric, «*»:qualsevol caràcter; "
-"qualsevol altre caràcter es deixarà sense modificar)"
+"Caràcters permesos en cada posició («0»:digit, «9»: digit excepte 0, «@»:"
+"alpha, «^»:majúscules, «#»:alphanumeric, «*»:qualsevol caràcter; qualsevol "
+"altre caràcter es deixarà sense modificar)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:3
 msgid "Mask"
@@ -4374,8 +4361,8 @@ msgstr "Màscara"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:4
 msgid ""
-"Writing mask for corresponding characters in format ('_': writable, "
-"'-':writable, removed from actual value, ' ': not writable)"
+"Writing mask for corresponding characters in format ('_': writable, '-':"
+"writable, removed from actual value, ' ': not writable)"
 msgstr ""
 "Escrivint la màscara per als caràcters corresponents en format («_»: "
 "escrivible, «-»:escrivible, eliminat del valor real, « »: no escrivible)"
@@ -4461,8 +4448,7 @@ msgstr "Falta el fitxer spec. «%s»"
 msgid "General"
 msgstr "General"
 
-#: ../libgda-ui/data/server_operation.xml.h:2
-#: ../tools/browser/fk-declare.c:250
+#: ../libgda-ui/data/server_operation.xml.h:2 ../tools/browser/fk-declare.c:250
 #: ../tools/browser/schema-browser/table-info.c:436
 msgid "Columns"
 msgstr "Columnes"
@@ -4501,18 +4487,28 @@ msgstr "Demostracions de codi libgda-ui"
 #, c-format
 msgid ""
 "<b><big>Note:\n"
-"</big></b>Many of the demonstrated items use an opened connection to the SQLite using the '%s' file.\n"
+"</big></b>Many of the demonstrated items use an opened connection to the "
+"SQLite using the '%s' file.\n"
 "\n"
-"In the source code shown here, the <i>demo_cnc</i> and <i>demo_parser</i> objects are created by the framework and made available to all the demonstrated items.\n"
+"In the source code shown here, the <i>demo_cnc</i> and <i>demo_parser</i> "
+"objects are created by the framework and made available to all the "
+"demonstrated items.\n"
 "\n"
-"To illustrate that calls are non blocking, there is a spinner at the top (which must never stop spinning), and a 1 second delay is added whenever the connection is used."
+"To illustrate that calls are non blocking, there is a spinner at the top "
+"(which must never stop spinning), and a 1 second delay is added whenever the "
+"connection is used."
 msgstr ""
 "<b><big>Nota:\n"
-"</big></b>Molts dels elements de demostració utilitzen una connexió oberta a l'SQLite usant el fitxer «%s».\n"
+"</big></b>Molts dels elements de demostració utilitzen una connexió oberta a "
+"l'SQLite usant el fitxer «%s».\n"
 "\n"
-"En el codi font que es mostra aquí, els objectes <i>demo_cnc</i> i <i>demo_parser</i> són creats pel marc i posats a disposició de tots els elements demostrats.\n"
+"En el codi font que es mostra aquí, els objectes <i>demo_cnc</i> i "
+"<i>demo_parser</i> són creats pel marc i posats a disposició de tots els "
+"elements demostrats.\n"
 "\n"
-"Per il·lustrar que les trucades no es bloquegen, hi ha un rotàmetre a la part superior (que mai ha de deixar de girar), i s'afegeix un retard d'1 segon cada vegada que s'utilitza la connexió."
+"Per il·lustrar que les trucades no es bloquegen, hi ha un rotàmetre a la "
+"part superior (que mai ha de deixar de girar), i s'afegeix un retard d'1 "
+"segon cada vegada que s'utilitza la connexió."
 
 #: ../libgda-ui/gdaui-basic-form.c:267
 msgid ""
@@ -4606,10 +4602,10 @@ msgstr "qualsevol expressió SQL vàlida"
 
 #: ../libgda-ui/gdaui-data-filter.c:186
 msgid ""
-"Columns can be referenced by their name or more easily using "
-"<b><tt>_&lt;column number&gt;</tt></b>. For example a valid expression can "
-"be: <b><tt>_2 like 'doe%'</tt></b> to filter rows where the 2nd column "
-"starts with <tt>doe</tt>."
+"Columns can be referenced by their name or more easily using <b><tt>_&lt;"
+"column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 "
+"like 'doe%'</tt></b> to filter rows where the 2nd column starts with "
+"<tt>doe</tt>."
 msgstr ""
 "Les columnes es poden referenciar pel seu nom o, més fàcilment, usant "
 "<b><tt>_&lt;número de columna&gt;</tt></b>. Un exemple d'expressió vàlida "
@@ -4767,8 +4763,7 @@ msgstr "Font de dades..."
 
 #: ../libgda-ui/gdaui-login.c:419
 msgid "Could not execute the Database access control center"
-msgstr ""
-"No s'ha pogut executar el centre de control d'accés a la Base de dades"
+msgstr "No s'ha pogut executar el centre de control d'accés a la Base de dades"
 
 #: ../libgda-ui/gdaui-raw-form.c:142 ../libgda-ui/gdaui-raw-grid.c:244
 msgid "Data to display"
@@ -4991,7 +4986,8 @@ msgstr ""
 "- Simplement utilitza els guions\n"
 " - I espaiat inicial per al sagnat\n"
 "\n"
-"Les àrees en brut es delimiten dins de cometes dobles i no s'interpreta cap marcat"
+"Les àrees en brut es delimiten dins de cometes dobles i no s'interpreta cap "
+"marcat"
 
 #: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "_Bold"
@@ -5741,8 +5737,7 @@ msgstr "Conflicte"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
-msgstr ""
-"Mètode de resolució de conflictes (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
+msgstr "Mètode de resolució de conflictes (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:41
@@ -6079,7 +6074,7 @@ msgstr "Proveïdor de bases de dades SQL Berkeley DB"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
 msgid "The name of a database to connect to (without the .fdb)"
-msgstr "El nom d'una base de dades per connectar-se (sense el .fdb)"
+msgstr "El nom d'una base de dades per a connectar-se (sense el .fdb)"
 
 #: ../providers/firebird/libmain-client.c:69
 msgid "Provider for Firebird databases"
@@ -6089,16 +6084,14 @@ msgstr "Proveïdor de bases de dades Firebird"
 msgid "Provider for embedded Firebird databases"
 msgstr "Proveïdor de bases de dades Firebird incrustades"
 
-#: ../providers/jdbc/GdaInputStream.c:48
-#: ../providers/jdbc/GdaInputStream.c:124 ../providers/jdbc/GdaJValue.c:207
-#: ../providers/jdbc/GdaJValue.c:247 ../providers/jdbc/GdaJValue.c:289
-#: ../providers/jdbc/GdaJValue.c:337 ../providers/jdbc/GdaJValue.c:383
-#: ../providers/jdbc/GdaJValue.c:512
+#: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
+#: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
+#: ../providers/jdbc/GdaJValue.c:289 ../providers/jdbc/GdaJValue.c:337
+#: ../providers/jdbc/GdaJValue.c:383 ../providers/jdbc/GdaJValue.c:512
 msgid "Invalid argument: NULL"
 msgstr "Argument no vàlid: NULL"
 
-#: ../providers/jdbc/GdaInputStream.c:70
-#: ../providers/jdbc/GdaInputStream.c:145
+#: ../providers/jdbc/GdaInputStream.c:70 ../providers/jdbc/GdaInputStream.c:145
 msgid "Can't read BLOB"
 msgstr "No es pot llegir el BLOB"
 
@@ -6137,7 +6130,7 @@ msgid ""
 "The instance to connect to, if not specified, a connection to the default "
 "instance is made"
 msgstr ""
-"Si no s'especifica, es fa una instància per connectar-se a una instància "
+"Si no s'especifica, es fa una instància per a connectar-se a una instància "
 "predeterminada"
 
 #. Connection parameters
@@ -6180,8 +6173,8 @@ msgstr "Connexió URL"
 
 #: ../providers/jdbc/jdbc_specs_dsn.xml.in.h:2
 msgid ""
-"Connection string required by the JDBC driver, refer to the used JDBC driver"
-" for its contents and format"
+"Connection string required by the JDBC driver, refer to the used JDBC driver "
+"for its contents and format"
 msgstr ""
 "Cadena de connexió requerida pel driver JDBC, referit al driver JDBC usat "
 "per al seu contingut i format"
@@ -6196,8 +6189,8 @@ msgid ""
 "Could not find Libgda's JAR (gdaprovider-6.0.jar), JDBC provider is "
 "unavailable."
 msgstr ""
-"No s'ha pogut trobar el JAR de Libgda (gdaprovider-6.0.jar), el proveïdor de"
-" JDBC no està disponible."
+"No s'ha pogut trobar el JAR de Libgda (gdaprovider-6.0.jar), el proveïdor de "
+"JDBC no està disponible."
 
 #: ../providers/jdbc/libmain.c:513
 #, c-format
@@ -6208,8 +6201,8 @@ msgstr "No es pot crear una màquina virtual JAVA: %s"
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
-"No s'ha pogut trobar el temps d'execució de JVM (libjvm.so). El proveïdor de"
-" JDBC no està disponible."
+"No s'ha pogut trobar el temps d'execució de JVM (libjvm.so). El proveïdor de "
+"JDBC no està disponible."
 
 #. dummy setup to enable GIR compilation
 #: ../providers/ldap/gda-data-model-ldap.c:156
@@ -6230,7 +6223,7 @@ msgstr ""
 
 #: ../providers/ldap/gda-ldap-connection.c:213
 msgid "File used to store startup data"
-msgstr "Fitxer que s'utilitza per emmagatzemar dades d’inici"
+msgstr "Fitxer que s'utilitza per a emmagatzemar dades d’inici"
 
 #: ../providers/ldap/gda-ldap-connection.c:260
 #, c-format
@@ -6364,8 +6357,8 @@ msgstr "Amfitrió on s'està executant el servidor LDAP"
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
 msgstr ""
-"Port del servidor de base de dades (deixeu aquest camp buit per utilitzar el"
-" port predeterminat)"
+"Port del servidor de base de dades (deixeu aquest camp buit per a utilitzar "
+"el port predeterminat)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:13
@@ -6429,8 +6422,8 @@ msgstr "Límit de temps"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid ""
-"Time limit after which a search operation should be terminated by the server"
-" (leave undefined or 0 for unlimited)"
+"Time limit after which a search operation should be terminated by the server "
+"(leave undefined or 0 for unlimited)"
 msgstr ""
 "El límit de temps rere el qual el servidor ha d'interrompre una operació de "
 "cerca (sense definir o amb valor 0 equival a temps il·limitat)"
@@ -6477,8 +6470,8 @@ msgid ""
 "at the end)."
 msgstr ""
 "El format de cadena de connexió ha canviat: substituïu FILENAME per DB_DIR "
-"(el camí d'accés al fitxer de base de dades) i DB_NAME (el fitxer de la base"
-" de dades sense el «%s» al final)."
+"(el camí d'accés al fitxer de base de dades) i DB_NAME (el fitxer de la base "
+"de dades sense el «%s» al final)."
 
 #: ../providers/mdb/gda-mdb-provider.c:336
 #, c-format
@@ -6556,11 +6549,11 @@ msgstr "No es pot llegir el BLOB complet en la memòria"
 #: ../providers/mysql/gda-mysql-provider.c:2555
 #, c-format
 msgid ""
-"Unhandled data type '%s', please report this bug to "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
+"GNOME/libgda/issues"
 msgstr ""
-"Tipus de dades «%s» no gestionat. Informeu de l'error a "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"Tipus de dades «%s» no gestionat. Informeu de l'error a http://gitlab.gnome."
+"org/GNOME/libgda/issues"
 
 #: ../providers/mysql/gda-mysql-provider.c:2601
 msgid ""
@@ -6575,8 +6568,8 @@ msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
 msgstr ""
-"No es pot usar CURSOR. Es requereix almenys la versió 5.0 de MySQL. S'ignora"
-" la mida dels trossos."
+"No es pot usar CURSOR. Es requereix almenys la versió 5.0 de MySQL. S'ignora "
+"la mida dels trossos."
 
 #: ../providers/mysql/gda-mysql-recordset.c:240
 #: ../providers/postgres/gda-postgres-recordset.c:147
@@ -6714,12 +6707,12 @@ msgstr "Protocol de connexió"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
 msgid ""
 "Explicitly specifies a connection protocol to use. It is useful when the "
-"other connection parameters normally would cause a protocol to be used other"
-" than the one you want"
+"other connection parameters normally would cause a protocol to be used other "
+"than the one you want"
 msgstr ""
 "Explicita un protocol de connexió a utilitzar. És util quan la resta de "
-"paràmetres de connexió solen fer que s'utilitzi un protocol diferent del que"
-" voleu"
+"paràmetres de connexió solen fer que s'utilitzi un protocol diferent del que "
+"voleu"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -6738,7 +6731,7 @@ msgstr "Joc de caràcters"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "Character set encoding to use in the new database"
 msgstr ""
-"Codificació del conjunt de caràcters per utilitzar a la nova base de dades"
+"Codificació del conjunt de caràcters per a utilitzar a la nova base de dades"
 
 #. DSN parameters
 #. other table options
@@ -6978,8 +6971,7 @@ msgstr "TCP: connexió TCP/IP a un servidor local o remot."
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid ""
-"Socket: Unix socket file connection to local server (Local Unix server "
-"only)."
+"Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
 "Sòcol: fitxer sòcol de connexió Unix a servidor local (només per a servidors "
 "locals)."
@@ -7365,11 +7357,13 @@ msgstr "Representació binària de PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:166
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr "Memòria insuficient per a convertir la memòria intermèdia binària en cadena"
+msgstr ""
+"Memòria insuficient per a convertir la memòria intermèdia binària en cadena"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:206
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr "Memòria insuficient per a convertir la cadena en memòria intermèdia binària"
+msgstr ""
+"Memòria insuficient per a convertir la cadena en memòria intermèdia binària"
 
 #: ../providers/postgres/gda-postgres-provider.c:483
 msgid "Could not determine the default date format"
@@ -7535,8 +7529,7 @@ msgstr "Plantilla"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
 msgid "The name of the template from which to create the new database"
-msgstr ""
-"El nom de la plantilla des de la qual es crearà la base de dades nova"
+msgstr "El nom de la plantilla des de la qual es crearà la base de dades nova"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
@@ -7762,9 +7755,9 @@ msgstr "Xifra la contrasenya"
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:35
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:7
 msgid ""
-"Controls whether the password is stored encrypted in the system catalogs. If"
-" the presented password string is already in MD5-encrypted format, then it "
-"is stored encrypted as-is."
+"Controls whether the password is stored encrypted in the system catalogs. If "
+"the presented password string is already in MD5-encrypted format, then it is "
+"stored encrypted as-is."
 msgstr ""
 "Controla si la contrasenya s'emmagatzema xifrada als catàlegs del sistema. "
 "Si la cadena de contrasenya presentada ja està en format xifrat MD5, es "
@@ -7820,8 +7813,8 @@ msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
 msgstr ""
-"Establir a TRUE si el rol creat hereta els privilegis dels rols dels quals és "
-"membre"
+"Establir a TRUE si el rol creat hereta els privilegis dels rols dels quals "
+"és membre"
 
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7898,8 +7891,8 @@ msgstr "Membres del rol"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:111
 msgid ""
-"Lists one or more existing roles which are automatically added as members of"
-" the new role"
+"Lists one or more existing roles which are automatically added as members of "
+"the new role"
 msgstr ""
 "Llista un o més rols existents que s'afegeixen automàticament com a membres "
 "del nou rol"
@@ -7910,8 +7903,8 @@ msgstr "Administradors del rol"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:113
 msgid ""
-"Lists one or more existing roles which are automatically added as members of"
-" the new role, giving them the right to grant membership in this role to "
+"Lists one or more existing roles which are automatically added as members of "
+"the new role, giving them the right to grant membership in this role to "
 "others"
 msgstr ""
 "Llista un o més rols existents que s'afegeixen automàticament com a membres "
@@ -7989,7 +7982,7 @@ msgstr "Identificador de l'usuari"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:9
 msgid "Can be used to choose the PostgreSQL user ID of the new user"
 msgstr ""
-"Es pot usar per triar un identificador d'usuari PostgreSQL o un nou usuari"
+"Es pot usar per a triar un identificador d'usuari PostgreSQL o un nou usuari"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:11
 msgid "Set to TRUE if the user is allowed to create databases"
@@ -8008,8 +8001,8 @@ msgid ""
 "Existing groups to which the new user will be immediately added as a new "
 "member"
 msgstr ""
-"Grups existents als quals s'afegirà immediatament el nou usuari com a membre"
-" nou"
+"Grups existents als quals s'afegirà immediatament el nou usuari com a membre "
+"nou"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:18
 msgid "User"
@@ -8034,8 +8027,7 @@ msgstr "Desplega automàticament objectes que depenen de la columna (CASCADE)"
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:8
 msgid "Refuse to drop the column if any objects depend on it (RESTRICT)"
 msgstr ""
-"Refusar l'eliminació de la taula si qualsevol objecte depèn d'ella "
-"(RESTRICT)"
+"Refusar l'eliminació de la taula si qualsevol objecte depèn d'ella (RESTRICT)"
 
 #. DSN parameters
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:19
@@ -8070,8 +8062,7 @@ msgstr "Camí de cerca"
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 msgid "Search path among database's schemas ('search_path' variable)"
 msgstr ""
-"Camí de cerca entre els esquemes de la base de dades («search_path» "
-"variable)"
+"Camí de cerca entre els esquemes de la base de dades («search_path» variable)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
 msgid "Connection timeout"
@@ -8083,8 +8074,7 @@ msgid ""
 "indefinitely. It is not recommended to use a timeout of less than 2 seconds"
 msgstr ""
 "Espera màxima de la connexió en segons. Zero o no especificat significa "
-"esperar indefinidament. No es recomana utilitzar un temps inferior a 2 "
-"segons"
+"esperar indefinidament. No es recomana utilitzar un temps inferior a 2 segons"
 
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:793
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:856
@@ -8104,8 +8094,7 @@ msgstr "Es requereix almenys la versió 5.0 de MySQL"
 
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:177
 #: ../providers/reuseable/mysql/gda-mysql-reuseable.c:219
-#: ../providers/web/gda-web-meta.c:105
-#: ../providers/web/gda-web-recordset.c:283
+#: ../providers/web/gda-web-meta.c:105 ../providers/web/gda-web-recordset.c:283
 msgid "Can't import data from web server"
 msgstr "No es poden importar dades del servidor web"
 
@@ -8229,7 +8218,9 @@ msgstr "Nom del servidor web"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "The name of the web server which proxies connections"
-msgstr "El nom de servidor web que encamina les connexions dels servidors intermediaris"
+msgstr ""
+"El nom de servidor web que encamina les connexions dels servidors "
+"intermediaris"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:4
 msgid "Web server port (leave this field empty for default)"
@@ -8374,15 +8365,14 @@ msgid ""
 "File used to store any information associated\n"
 "to this connection (favorites, descriptions, ...)"
 msgstr ""
-"Fitxer utilitzat per emmagatzemar qualsevol informació associada\n"
+"Fitxer utilitzat per a emmagatzemar qualsevol informació associada\n"
 "a aquesta connexió (favorits, descripcions, ...)"
 
 #: ../tools/browser/browser-connections-list.c:316
 msgid "Opened connections"
 msgstr "Connexions obertes"
 
-#: ../tools/browser/browser-connections-list.c:343
-#: ../tools/common/t-app.c:2905
+#: ../tools/browser/browser-connections-list.c:343 ../tools/common/t-app.c:2905
 msgid "List of opened connections"
 msgstr "Llista de connexions obertes"
 
@@ -8533,8 +8523,8 @@ msgstr "Tan_ca"
 #, c-format
 msgid ""
 "The current perspective has changed to the '%s' perspective, you can switch "
-"back to previous perspective through the 'Perspective/%s' menu, or using the"
-" '%s' shortcut"
+"back to previous perspective through the 'Perspective/%s' menu, or using the "
+"'%s' shortcut"
 msgstr ""
 "La perspectiva actual ha canviat a la perspectiva «%s». Podeu tornar a la "
 "perspectiva anterior a través del menú «Perspectiva/%s» o utilitzant la "
@@ -8751,10 +8741,10 @@ msgid ""
 "existing connection as well as bind a data set which will appear as a table "
 "(importing CSV data for example). You can add as many binds as needed"
 msgstr ""
-"La connexió virtual que definiu pot vincular taules des d'una "
-"connexió existent així com vincular un conjunt de dades que apareixerà com "
-"una taula (important dades CVS, per exemple). Podeu afegir tots els vincles"
-" que necessiteu"
+"La connexió virtual que definiu pot vincular taules des d'una connexió "
+"existent així com vincular un conjunt de dades que apareixerà com una taula "
+"(important dades CVS, per exemple). Podeu afegir tots els vincles que "
+"necessiteu"
 
 #: ../tools/browser/connection-binding-properties.c:286
 msgid "Add binding"
@@ -8957,8 +8947,7 @@ msgstr "Per taula: %s"
 
 #: ../tools/browser/data-manager/data-console.c:906
 msgid ""
-"Switching to execution mode. Hit the Escape key to return to the compose "
-"mode"
+"Switching to execution mode. Hit the Escape key to return to the compose mode"
 msgstr ""
 "Passant al mode d'execució. Feu clic a la tecla Escape per a tornar al mode "
 "de redacció"
@@ -9085,8 +9074,7 @@ msgstr "No es va poder construir la declaració SELECT"
 
 #: ../tools/browser/data-manager/data-source.c:1219
 msgid "Multiple statements detected, only the first will be used"
-msgstr ""
-"S'han detectat múltiples declaracions, només es farà servir la primera"
+msgstr "S'han detectat múltiples declaracions, només es farà servir la primera"
 
 #: ../tools/browser/data-manager/data-source-editor.c:112
 #: ../tools/browser/ui-formgrid.c:532 ../tools/browser/ui-formgrid.c:543
@@ -9132,7 +9120,7 @@ msgid ""
 "Can't be changed if a table name is set"
 msgstr ""
 "SQL executat\n"
-"per seleccionar dades\n"
+"per a seleccionar dades\n"
 "No es pot canviar si s'ha configurat un nom de taula"
 
 #: ../tools/browser/data-manager/data-source-editor.c:190
@@ -9171,8 +9159,8 @@ msgstr "No s'ha definit cap font de dades"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
-"No es pot enllaçar el paràmetre «%s» del tipus «%s» a un paràmetre del tipus"
-" «%s»"
+"No es pot enllaçar el paràmetre «%s» del tipus «%s» a un paràmetre del tipus "
+"«%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:162
 #: ../tools/browser/schema-browser/table-columns.c:307
@@ -9212,8 +9200,8 @@ msgstr "Declarar una clau externa per a la taula «%s»"
 
 #: ../tools/browser/fk-declare.c:186
 msgid ""
-"define which table is referenced, which columns are part of the foreign key,"
-" and which column each one references"
+"define which table is referenced, which columns are part of the foreign key, "
+"and which column each one references"
 msgstr ""
 "definir quina taula es referencia, quines columnes són part de la clau "
 "externa, i a quines columnes referencia cadascuna"
@@ -9570,13 +9558,12 @@ msgstr "Nom de la taula LDAP virtual a crear"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:126
 msgid ""
-"Everytime data is selected from the virtual table which will be created, the"
-" LDAP search will be executed and data returned as the contents of the "
-"table."
+"Everytime data is selected from the virtual table which will be created, the "
+"LDAP search will be executed and data returned as the contents of the table."
 msgstr ""
 "Cada vegada que se seleccionen les dades de la taula virtual que es crearà, "
-"s'executarà la cerca LDAP i es retornarà la informació com a contingut de la"
-" taula."
+"s'executarà la cerca LDAP i es retornarà la informació com a contingut de la "
+"taula."
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:139
 msgid "Table name:"
@@ -9703,8 +9690,8 @@ msgstr "Consulteu l'esquema i les dades de les bases de dades"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
-"Database Browser provides quick access to the data and schema of a database,"
-" and displays it in a intuitive graphical interface. It provides three "
+"Database Browser provides quick access to the data and schema of a database, "
+"and displays it in a intuitive graphical interface. It provides three "
 "perspectives to interact with a database: the schema browser, query "
 "execution, and data manager. The schema browser allows the user to view the "
 "tables of a database, and inspect the table's properties and relations. The "
@@ -9719,8 +9706,8 @@ msgstr ""
 "L'explorador de l'esquema permet a l'usuari veure les taules d'una base de "
 "dades i inspeccionar les propietats de les taules i les seves relacions. "
 "L'execució de consultes permet a l'usuari executar consultes SQL sobre la "
-"base de dades. La perspectiva de gestió de dades permet a l'usuari veure les"
-" dades contingudes a la base de dades en forma de taula."
+"base de dades. La perspectiva de gestió de dades permet a l'usuari veure les "
+"dades contingudes a la base de dades en forma de taula."
 
 #: ../tools/browser/org.gnome.gda.Browser.desktop.in.h:1
 msgid "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
@@ -9835,8 +9822,8 @@ msgid ""
 "A query is already being executed, to execute another query, open a new "
 "connection."
 msgstr ""
-"Ja s'està executant una consulta, per executar una altra consulta, obriu una"
-" nova connexió."
+"Ja s'està executant una consulta, per a executar una altra consulta, obriu "
+"una nova connexió."
 
 #: ../tools/browser/query-exec/query-console-page.c:943
 #, c-format
@@ -9874,8 +9861,8 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-console-page.c:1031
 msgid ""
-"Internal error, please report error to "
-"http://gitlab.gnome.org/GNOME/libgda/issues"
+"Internal error, please report error to http://gitlab.gnome.org/GNOME/libgda/"
+"issues"
 msgstr ""
 "Error intern, informeu de l'error a\n"
 "http://gitlab.gnome.org/GNOME/libgda/issues"
@@ -9925,8 +9912,10 @@ msgid ""
 "The following shortcuts are allowed:\n"
 "   <small><b>CTRL - l</b></small> to clear the editor\n"
 "   <small><b>CTRL - ENTER</b></small> to execute SQL\n"
-"   <small><b>CTRL - Up</b></small> to move to previous executed SQL in history\n"
-"   <small><b>CTRL - Down</b></small> to move to next executed SQL in history\n"
+"   <small><b>CTRL - Up</b></small> to move to previous executed SQL in "
+"history\n"
+"   <small><b>CTRL - Down</b></small> to move to next executed SQL in "
+"history\n"
 "   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
 msgstr ""
 "Introduïu el codi SQL a executar\n"
@@ -9936,8 +9925,10 @@ msgstr ""
 "Les següents dreceres estan permeses:\n"
 "   <small><b>CTRL - l</b></small> netejar l'editor\n"
 "   <small><b>CTRL - Retorn</b></small> executar SQL\n"
-"   <small><b>CTRL - Fletxa amunt</b></small> moure a l'anterior SQL executada a l'historial\n"
-"   <small><b>CTRL - Fletxa avall</b></small> moure a la següent SQL executada en l'historial\n"
+"   <small><b>CTRL - Fletxa amunt</b></small> moure a l'anterior SQL "
+"executada a l'historial\n"
+"   <small><b>CTRL - Fletxa avall</b></small> moure a la següent SQL "
+"executada en l'historial\n"
 "   <small><b>CTRL - Espai</b></small> obtenir una llista de finalització"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:339
@@ -9965,7 +9956,7 @@ msgid ""
 "the query will be defined from the row selected in the grid"
 msgstr ""
 "Marqueu aquesta opció perquè aquest preferit sigui una acció\n"
-"que es pot proposar per executar-se des de les graelles \n"
+"que es pot proposar per a executar-se des de les graelles \n"
 "que continguin dades. Els paràmetres requerits per a executar \n"
 "la consulta es definiran des de la fila seleccionada a la graella"
 
@@ -10226,7 +10217,7 @@ msgid ""
 msgstr ""
 "Defineix com es mostraran en els formularis les dades\n"
 "per a la columna seleccionada. Deixi-ho com «per defecte»\n"
-"per tenir la pantalla per predeterminada"
+"per a tenir la pantalla per predeterminada"
 
 #: ../tools/browser/schema-browser/table-preferences.c:463
 msgid "Options:"
@@ -10324,8 +10315,8 @@ msgid ""
 "Unable to display help. Please make sure the documentation package is "
 "installed."
 msgstr ""
-"No es pot mostrar l'ajuda. Assegureu-vos que hi hagi instal·lat el paquet de"
-" documentació."
+"No es pot mostrar l'ajuda. Assegureu-vos que hi hagi instal·lat el paquet de "
+"documentació."
 
 #: ../tools/browser/ui-support.c:312
 msgid "Unable to open help file"
@@ -10348,7 +10339,8 @@ msgid ""
 "      defines <b>age</b> as a string\n"
 "\n"
 "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</tt> and\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> and\n"
 "<tt>binary</tt></small>"
 msgstr ""
 "<small>Aquesta àrea permet donar valors a\n"
@@ -10362,7 +10354,8 @@ msgstr ""
 "      defineix <b>edat</b> com una cadena\n"
 "\n"
 "Els tipus vàlids són: <tt>cadena</tt>, <tt>booleà</tt>, <tt>sencer</tt>,\n"
-"<tt>data</tt>, <tt>hora</tt>, <tt>marca horària</tt>, <tt>guint</tt>, <tt>blob</tt> i\n"
+"<tt>data</tt>, <tt>hora</tt>, <tt>marca horària</tt>, <tt>guint</tt>, "
+"<tt>blob</tt> i\n"
 "<tt>binari</tt></small>"
 
 #: ../tools/common/html-doc.c:86
@@ -10388,8 +10381,8 @@ msgstr "Caràcter separador del format CSV"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", "
-"\"rdn\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
+"\" and \"none\")"
 msgstr ""
 "Defineix com es maneja la columna DN per a les recerques LDAP (entre «dn», "
 "«rdn» i «none»)"
@@ -10398,8 +10391,7 @@ msgstr ""
 msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
 msgstr ""
-"Defineix els atributs LDAP obtinguts de manera predeterminada per ordres "
-"LDAP"
+"Defineix els atributs LDAP obtinguts de manera predeterminada per ordres LDAP"
 
 #: ../tools/common/t-app.c:585
 #, c-format
@@ -10431,8 +10423,8 @@ msgstr "%s [<META DATA TYPE>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, "
-"ex:\"tables\")"
+"Force reading the database meta data (or part of the meta data, ex:\"tables"
+"\")"
 msgstr ""
 "Forçar la lectura de les metadades de la base de dades (o part de les "
 "metadades, ex: «taules»)"
@@ -10545,8 +10537,8 @@ msgid ""
 "SQL commands to be executed across multiple connections and/or datasets)"
 msgstr ""
 "Enllaça les connexions o conjunts de dades (<OBJ NAME>) en una de nova "
-"(permetent que les ordres SQL s'executin a través de múltiples "
-"connexions i/o conjunts de dades)"
+"(permetent que les ordres SQL s'executin a través de múltiples connexions i/"
+"o conjunts de dades)"
 
 #: ../tools/common/t-app.c:1066 ../tools/common/t-app.c:1076
 #: ../tools/common/t-app.c:1086 ../tools/common/t-app.c:1096
@@ -10663,12 +10655,14 @@ msgstr "Memòria intermèdia de consulta i consultes preferides"
 
 #: ../tools/common/t-app.c:1180
 msgid "Edit the query buffer (or file) with external editor"
-msgstr "Edita la memòria intermèdia de consulta (o fitxer) amb un editor extern"
+msgstr ""
+"Edita la memòria intermèdia de consulta (o fitxer) amb un editor extern"
 
 #: ../tools/common/t-app.c:1187
 msgid "Reset the query buffer (or load file into query buffer)"
 msgstr ""
-"Restabliu la memòria intermèdia de consulta (o carregueu el fitxer a la memòria intermèdia de consulta)"
+"Restabliu la memòria intermèdia de consulta (o carregueu el fitxer a la "
+"memòria intermèdia de consulta)"
 
 #: ../tools/common/t-app.c:1194
 msgid "Show the contents of the query buffer"
@@ -10682,8 +10676,8 @@ msgstr "%s [<FAVORITE_NAME>]"
 #: ../tools/common/t-app.c:1201
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
-"Executa el contingut de la memòria intermèdia de consulta o executa el preferit de "
-"consulta especificat"
+"Executa el contingut de la memòria intermèdia de consulta o executa el "
+"preferit de consulta especificat"
 
 #: ../tools/common/t-app.c:1208
 msgid "Write query buffer to file"
@@ -10759,8 +10753,8 @@ msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
 msgstr ""
-"Definiu el paràmetre intern com a contingut del fitxer FILE o com a valor de"
-" la taula existent"
+"Definiu el paràmetre intern com a contingut del fitxer FILE o com a valor de "
+"la taula existent"
 
 #: ../tools/common/t-app.c:1283
 #, c-format
@@ -10773,8 +10767,8 @@ msgid ""
 "and COLUMN_FIELDS criteria and optionally DATA_FIELDS for the data"
 msgstr ""
 "Realitza una anàlisi estadística de les dades del SELECT usant criteris de "
-"\"CAMPS_DE_FILES i CAMPS_DE_COLUMNES i, opcionalment, CAMPS_DE_DADES per les"
-" dades\""
+"\"CAMPS_DE_FILES i CAMPS_DE_COLUMNES i, opcionalment, CAMPS_DE_DADES per les "
+"dades\""
 
 #: ../tools/common/t-app.c:1290 ../tools/common/t-app.c:1301
 #: ../tools/common/t-app.c:1312 ../tools/common/t-app.c:1323
@@ -11038,8 +11032,8 @@ msgstr "Manca el nom del DSN"
 #, c-format
 msgid "Getting database schema information, this may take some time... "
 msgstr ""
-"Per obtenir informació sobre l'esquema de la base de dades, això pot trigar "
-"una mica..."
+"Per a obtenir informació sobre l'esquema de la base de dades, això pot "
+"trigar una mica..."
 
 #: ../tools/common/t-app.c:2837
 #, c-format
@@ -11124,7 +11118,7 @@ msgstr "No s'ha pogut iniciar /bin/sh"
 
 #: ../tools/common/t-app.c:3326
 msgid "Missing FILE to write to"
-msgstr "Falta FILE per escriure-ho"
+msgstr "Falta FILE per a escriure-ho"
 
 #: ../tools/common/t-app.c:3365
 msgid "Favorite name"
@@ -11207,12 +11201,14 @@ msgid ""
 "Graph written to '%s'\n"
 "Use 'dot' (from the GraphViz package) to create a picture, for example:\n"
 "\tdot -Tpng -o graph.png %s\n"
-"Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment variables to view the graph\n"
+"Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment variables "
+"to view the graph\n"
 msgstr ""
 "Gràfica escrita en «%s»\n"
 "Utilitza 'dot' (del paquet GraphViz) per a crear una imatge, per exemple:\n"
 "\tdot -Tpng -o graph.png %s\n"
-"Nota: activi les variables d'entorn  GDA_SQL_VIEWER_PNG o GDA_SQL_VIEWER_PDF per a veure la gràfica\n"
+"Nota: activi les variables d'entorn  GDA_SQL_VIEWER_PNG o GDA_SQL_VIEWER_PDF "
+"per a veure la gràfica\n"
 
 #: ../tools/common/t-app.c:4325
 msgid "Could not start HTTPD server"
@@ -11481,8 +11477,7 @@ msgstr "Encara no s'ha obert la connexió"
 #: ../tools/common/t-connection.c:1542
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
-"No es pot inicialitzar el diccionari per a desar les preferències de la "
-"taula"
+"No es pot inicialitzar el diccionari per a desar les preferències de la taula"
 
 #: ../tools/common/t-connection.c:1588 ../tools/common/t-connection.c:1594
 #: ../tools/common/t-connection.c:1730 ../tools/common/t-favorites.c:628
@@ -11526,7 +11521,7 @@ msgstr "No es pot obrir canonada «%s»: %s"
 
 #: ../tools/common/t-favorites.c:184 ../tools/common/t-favorites.c:193
 msgid "Can't initialize dictionary to store favorites"
-msgstr "No es pot inicialitzar el diccionari per emmagatzemar preferits"
+msgstr "No es pot inicialitzar el diccionari per a emmagatzemar preferits"
 
 #: ../tools/common/t-favorites.c:185
 #, c-format
