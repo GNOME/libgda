@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-12-27 10:34+0000\n"
-"PO-Revision-Date: 2021-01-06 21:02+0200\n"
+"POT-Creation-Date: 2021-01-06 19:03+0000\n"
+"PO-Revision-Date: 2021-01-07 15:23+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -200,10 +200,10 @@ msgid ""
 "(database connections), and check which database providers are installed "
 "(and usable to connect to different databases)."
 msgstr ""
-"За допомогою центру керування базою даних ви можете керувати визначеними"
-" джерелами даних (з'єднаннями бази даних) і перевірити, які надавачі доступу"
-" до бази даних встановлено (і які є придатними для встановлення з'єднання із"
-" різними базами даних)."
+"За допомогою центру керування базою даних ви можете керувати визначеними "
+"джерелами даних (з'єднаннями бази даних) і перевірити, які надавачі доступу "
+"до бази даних встановлено (і які є придатними для встановлення з'єднання із "
+"різними базами даних)."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
 msgid "Database access control center"
@@ -628,8 +628,8 @@ msgstr "Список встановлених постачальників"
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr ""
-"Немає типового надавача даних SQLite. Намагаємося створити. Повідомлення про"
-" помилку: %s"
+"Немає типового надавача даних SQLite. Намагаємося створити. Повідомлення про "
+"помилку: %s"
 
 #: ../libgda/gda-config.c:1949 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
@@ -1377,14 +1377,14 @@ msgstr "У рядку рядка %d недостатньо значень (як�
 #: ../libgda/gda-data-model-iter.c:194
 msgid "Iter has an invalid/non-existent reference to a data model"
 msgstr ""
-"У ітераторі є некоректне посилання або посилання, якого не існує, на модель"
-" даних"
+"У ітераторі є некоректне посилання або посилання, якого не існує, на модель "
+"даних"
 
 #: ../libgda/gda-data-model-iter.c:198
 msgid "Referenced data model in iterator doesn't belong to given data model"
 msgstr ""
-"Модель даних, на яку посилається ітератор, не належить до вказаної моделі"
-" даних"
+"Модель даних, на яку посилається ітератор, не належить до вказаної моделі "
+"даних"
 
 #: ../libgda/gda-data-model-iter.c:396
 #, c-format
@@ -1470,8 +1470,8 @@ msgstr "GdaDataProxy не може обробляти моделі без вип
 msgid ""
 "The first row is an empty row artificially prepended and cannot be removed"
 msgstr ""
-"Першим рядком є порожній рядок, який додано спеціально і який не можна"
-" вилучати"
+"Першим рядком є порожній рядок, який додано спеціально і який не можна "
+"вилучати"
 
 #: ../libgda/gda-data-proxy.c:2150
 #, c-format
@@ -1480,9 +1480,9 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This is a bug of the %s's implementation (please report a bug)."
 msgstr ""
-"Проксі-модель даних повідомляє про прийнятність змін, але не надсилає"
-" відповідних сигналів «row-inserted», «row-updated» або «row-removed». Це"
-" вада реалізації %s (будь ласка, повідомте розробникам про ваду)."
+"Проксі-модель даних повідомляє про прийнятність змін, але не надсилає "
+"відповідних сигналів «row-inserted», «row-updated» або «row-removed». Це "
+"вада реалізації %s (будь ласка, повідомте розробникам про ваду)."
 
 #: ../libgda/gda-data-proxy.c:2189
 #, c-format
@@ -1491,9 +1491,9 @@ msgid ""
 "the corresponding \"row-inserted\", \"row-updated\" or \"row-removed\" "
 "signal. This may be a bug of the %s's implementation (please report a bug)."
 msgstr ""
-"Проксі-модель даних повідомляє про прийнятність змін, але не надсилає"
-" відповідних сигналів «row-inserted», «row-updated» або «row-removed». Це"
-" може бути вада реалізації %s (будь ласка, повідомте розробникам про ваду)."
+"Проксі-модель даних повідомляє про прийнятність змін, але не надсилає "
+"відповідних сигналів «row-inserted», «row-updated» або «row-removed». Це "
+"може бути вада реалізації %s (будь ласка, повідомте розробникам про ваду)."
 
 #: ../libgda/gda-data-proxy.c:3099
 #, c-format
@@ -1512,8 +1512,8 @@ msgstr "Помилковий вираз для фільтрування"
 msgid ""
 "The first row is an empty row artificially prepended and cannot be altered"
 msgstr ""
-"Першим рядком є порожній рядок, який додано спеціально і який не можна"
-" змінювати"
+"Першим рядком є порожній рядок, який додано спеціально і який не можна "
+"змінювати"
 
 #: ../libgda/gda-data-proxy.c:3815 ../libgda/gda-data-proxy.c:3826
 #, c-format
@@ -1579,8 +1579,8 @@ msgstr "Інструкція з внесення змін використову
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
-"Параметр «%s» інструкція із внесення змін має значення %s, але він повинен"
-" мати значення %s"
+"Параметр «%s» інструкція із внесення змін має значення %s, але він повинен "
+"мати значення %s"
 
 #: ../libgda/gda-data-select.c:1419
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
@@ -1595,8 +1595,8 @@ msgstr "Немає з'єднання для використання"
 #: ../libgda/gda-data-select.c:1566
 msgid "Invalid unique row condition (only equal operators are allowed)"
 msgstr ""
-"Некоректна умова унікальності рядка (можна використовувати лише оператори"
-" рівності)"
+"Некоректна умова унікальності рядка (можна використовувати лише оператори "
+"рівності)"
 
 #: ../libgda/gda-data-select.c:1598 ../libgda/gda-data-select.c:1653
 msgid "Unique row condition has already been specified"
@@ -1680,8 +1680,8 @@ msgstr "Вміст деяких стовпчиків не може бути зм
 #: ../libgda/gda-data-select.c:2612
 msgid "Internal error: can't get the prepared statement's actual statement"
 msgstr ""
-"Внутрішня помилка: не вдалося отримати справжню інструкцію з приготованої"
-" інструкції"
+"Внутрішня помилка: не вдалося отримати справжню інструкцію з приготованої "
+"інструкції"
 
 #: ../libgda/gda-data-select.c:2652
 msgid "Unable to identify a way to fetch a single row"
@@ -1738,8 +1738,8 @@ msgid ""
 "Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
 "expressions"
 msgstr ""
-"Внутрішня помилка: GdaDataSelect має %d GdaColumns, а інструкція SELECT"
-" містить %d виразів"
+"Внутрішня помилка: GdaDataSelect має %d GdaColumns, а інструкція SELECT "
+"містить %d виразів"
 
 #: ../libgda/gda-data-select.c:3762
 #, c-format
@@ -1787,8 +1787,8 @@ msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
 msgstr ""
-"Не вдалося обробити «%s»: перевірку файлів XML для GdaDbCreator не буде"
-" виконано (у результаті можуть статися неочікувані помилки)"
+"Не вдалося обробити «%s»: перевірку файлів XML для GdaDbCreator не буде "
+"виконано (у результаті можуть статися неочікувані помилки)"
 
 #: ../libgda/gda-db-catalog.c:260
 #, c-format
@@ -1884,8 +1884,8 @@ msgstr "Не вдалося перетворити рядок до типу «%s
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
-"Не можна встановлювати цей метод для встановлення значення, оскільки вже є"
-" статичне значення"
+"Не можна встановлювати цей метод для встановлення значення, оскільки вже є "
+"статичне значення"
 
 #: ../libgda/gda-holder.c:1044 ../libgda/gda-holder.c:1190
 #, c-format
@@ -1897,8 +1897,8 @@ msgstr "(%s): у Holder не може бути значень NULL"
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
 msgstr ""
-"(%s): помилковий тип значення Holder: мав бути тип «%s», якщо типом значення"
-" є «%s»"
+"(%s): помилковий тип значення Holder: мав бути тип «%s», якщо типом значення "
+"є «%s»"
 
 #: ../libgda/gda-holder.c:1197
 #, c-format
@@ -1911,8 +1911,8 @@ msgstr ""
 msgid ""
 "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr ""
-"GdaHolder належить до типу gda (%s), який є несумісним із "
-"типом початкового стовпчика %d (%s)"
+"GdaHolder належить до типу gda (%s), який є несумісним із типом початкового "
+"стовпчика %d (%s)"
 
 #. break holder's binding because type differ
 #: ../libgda/gda-holder.c:1755
@@ -1921,17 +1921,19 @@ msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
 "where '%s' was bound to '%s'"
 msgstr ""
+"Не можна пов'язати утримувачі, якщо вони різних типів — порушення наявного"
+" зв'язку, де «%s» було пов'язано із «%s»"
 
 #: ../libgda/gda-holder.c:1808
 msgid "Cannot bind holders if their type is not the same"
-msgstr ""
+msgstr "Не можна пов'язати утримувачі, якщо вони різних типів"
 
 #: ../libgda/gda-holder.c:1974
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
-"Не вдалося змінити GdaHolder так, щоб він відповідав зміні у межах GdaHolder:"
-" %s"
+"Не вдалося змінити GdaHolder так, щоб він відповідав зміні у межах "
+"GdaHolder: %s"
 
 #: ../libgda/gda-init.c:61
 msgid "Ignoring attempt to re-initialize GDA library."
@@ -1960,6 +1962,7 @@ msgstr "Схема, у якій буде створено об'єкти бази
 #: ../libgda/gda-meta-store.c:992
 msgid "Catalog specified but no schema specified, store will not be usable"
 msgstr ""
+"Вказано каталог, але не вказано схеми, сховищем не можна буде скористатися"
 
 #: ../libgda/gda-meta-store.c:1081
 msgid "Can't obtain connection lock"
@@ -1990,105 +1993,120 @@ msgstr "Не було встановлено помилки"
 #: ../libgda/gda-meta-store.c:1361
 #, c-format
 msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
-msgstr ""
+msgstr "Внутрішня помилка. Не вдалося створити таблицю MetaStore «%s»: %s"
 
 #: ../libgda/gda-meta-store.c:1378
 msgid ""
 "Could not set the internal schema's version. No prepared statement's "
 "parameters were found"
 msgstr ""
+"Не вдалося встановити версію внутрішньої схеми. Не знайдено параметрів"
+" приготованої інструкції"
 
 #: ../libgda/gda-meta-store.c:1387
 msgid "Could not set the internal schema's version. Statement execution fails"
 msgstr ""
+"Не вдалося встановити версію внутрішньої схеми. Виконання інструкції зазнало"
+" невдачі"
 
 #: ../libgda/gda-meta-store.c:1591
 #, c-format
 msgid "Internal error: no information schema was found: %s"
-msgstr ""
+msgstr "Внутрішня помилка: не знайдено схеми інформації: %s"
 
 #: ../libgda/gda-meta-store.c:1599
 #, c-format
 msgid "Internal error: can't read information schema: %s"
-msgstr ""
+msgstr "Внутрішня помилка: не вдалося прочитати схему інформації: %s"
 
 #: ../libgda/gda-meta-store.c:1773
 msgid "Missing view name from <view> node"
-msgstr ""
+msgstr "Пропущено назву панелі перегляду з вузла <view>"
 
 #: ../libgda/gda-meta-store.c:1815
 msgid "Missing view definition from <view> node"
-msgstr ""
+msgstr "Пропущено визначення панелі перегляду з вузла <view>"
 
 #: ../libgda/gda-meta-store.c:1829
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr ""
+"Визначення панелі перегляду містить понад одну інструкцію (для панелі"
+" перегляду «%s»)"
 
 #: ../libgda/gda-meta-store.c:1856
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr ""
+"Визначення панелі перегляду не є інструкцією вибору (для панелі перегляду «"
+"%s»)"
 
 #: ../libgda/gda-meta-store.c:1883 ../libgda/gda-meta-struct-io.c:179
 msgid "Missing table name from <table> node"
-msgstr ""
+msgstr "У вузлі <table> пропущено назву таблиці"
 
 #: ../libgda/gda-meta-store.c:2126
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
-msgstr ""
+msgstr "Стовпчик «%s» вже існує і має інші характеристики"
 
 #: ../libgda/gda-meta-store.c:2161
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr ""
+"Пропущено назву таблиці, на яку посилається сторонній ключ (для таблиці «%s»)"
 
 #: ../libgda/gda-meta-store.c:2217
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
-msgstr ""
+msgstr "Пропущено назву стовпчика стороннього ключа (для таблиці «%s»)"
 
 #: ../libgda/gda-meta-store.c:2229
 #, c-format
 msgid "Column '%s' not found in table '%s'"
-msgstr ""
+msgstr "Стовпчика «%s» немає у таблиці «%s»"
 
 #: ../libgda/gda-meta-store.c:2488 ../libgda/gda-meta-struct.c:1277
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
-msgstr ""
+msgstr "Стовпчика стороннього ключа «%s» не знайдено у таблиці «%s»"
 
 #: ../libgda/gda-meta-store.c:2613
 msgid ""
 "Could not update the internal schema's version. No prepared statement's "
 "parameters were found"
 msgstr ""
+"Не вдалося оновити версію внутрішньої схеми. Не знайдено параметрів"
+" приготованої інструкції"
 
 #: ../libgda/gda-meta-store.c:2622
 msgid ""
 "Could not update the internal schema's version. Statement execution fails"
 msgstr ""
+"Не вдалося оновити версію внутрішньої схеми. Виконання інструкції зазнало"
+" невдачі"
 
 #: ../libgda/gda-meta-store.c:2669 ../libgda/gda-meta-store.c:2700
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr ""
+"У описі схеми не міститься об'єкта «%s», перевірте, чи встановлено потрібні"
+" компоненти"
 
 #: ../libgda/gda-meta-store.c:2739
 #, c-format
 msgid "Could not find description for column named '%s'"
-msgstr ""
+msgstr "Не вдалося знайти опис для стовпчика з назвою «%s»"
 
 #: ../libgda/gda-meta-store.c:2858 ../libgda/gda-meta-store.c:2869
 #: ../libgda/gda-meta-store.c:2906
 msgid "Could not get the internal schema's version"
-msgstr ""
+msgstr "Не вдалося отримати версію внутрішньої схеми"
 
 #: ../libgda/gda-meta-store.c:3029 ../libgda/gda-meta-store.c:3153
 #: ../tools/common/t-context.c:289
 msgid "More than one SQL statement"
-msgstr ""
+msgstr "Декілька інструкцій SQL"
 
 #: ../libgda/gda-meta-store.c:3058 ../libgda/gda-meta-store.c:3181
 #, c-format
@@ -2098,7 +2116,7 @@ msgstr "Параметра «%s» немає в інструкції"
 #: ../libgda/gda-meta-store.c:3068
 #, c-format
 msgid "While extracting data from Meta Store: %s"
-msgstr ""
+msgstr "Під час видобування даних метасховища: %s"
 
 #: ../libgda/gda-meta-store.c:3080 ../libgda/gda-meta-store.c:3200
 #, c-format
@@ -2116,6 +2134,8 @@ msgid ""
 "Internal error, while updating internal meta store table '%s': Parameter "
 "value type error: %s"
 msgstr ""
+"Внутрішня помилка під час оновлення таблиці внутрішнього метасховища «%s»:"
+" помилка типу значення параметра: %s"
 
 #: ../libgda/gda-meta-store.c:3786
 msgid "Data models should have the same number of columns"
@@ -2161,57 +2181,63 @@ msgstr[3] "Атрибут «%s» має %d значення"
 #: ../libgda/gda-meta-store.c:4385
 msgid "Attributes names starting with a '_' are reserved for internal usage"
 msgstr ""
+"Атрибути, назви яких починаються з «_», зарезервовано для внутрішнього вжитку"
 
 #: ../libgda/gda-meta-store.c:4411
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
 msgstr ""
+"Не вдалося розпочати виконання дії, оскільки вже розпочато виконання іншої"
+" дії, і це могло призвести до проблем із атрибутами GdaMetaStore"
 
 #: ../libgda/gda-meta-store.c:4528
 msgid "Could not parse XML description of custom database object to add"
 msgstr ""
+"Не вдалося обробити опис XML нетипового об'єкта бази даних для додавання"
 
 #: ../libgda/gda-meta-store.c:4541
 msgid "Missing custom database object name"
-msgstr ""
+msgstr "Не вказано назву нетипового об'єкта бази даних"
 
 #: ../libgda/gda-meta-store.c:4546
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
+"Нетипові об'єкти бази даних, назви яких починаються з «_», зарезервовано для"
+" внутрішнього вжитку"
 
 #: ../libgda/gda-meta-store.c:4644
 msgid "Another object with the same name already exists"
-msgstr ""
+msgstr "Вже існує інший об'єкт із тією самою назвою"
 
 #: ../libgda/gda-meta-store.c:4751
 msgid "Missing table name in meta data context"
-msgstr ""
+msgstr "Пропущено назву таблиці у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:4776
 msgid "Missing column name in meta data context"
-msgstr ""
+msgstr "Пропущено назву стовпчика у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:4792
 #, c-format
 msgid "Missing condition in meta data context"
-msgstr ""
+msgstr "Пропущено умову у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:4817
 #, c-format
 msgid "Malformed condition in meta data context"
-msgstr ""
+msgstr "Помилкове форматування умови у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:4834
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
-msgstr ""
+msgstr "Невідома назва стовпчика, «%s, у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:4856
 msgid "Unknown table in meta data context"
-msgstr ""
+msgstr "Невідома таблиця у контексті метаданих"
 
 #: ../libgda/gda-meta-store.c:5131 ../libgda/gda-meta-store.c:5161
 #: ../libgda/gda-meta-store.c:5350 ../libgda/gda-meta-store.c:5379
@@ -2224,20 +2250,20 @@ msgstr "Не вдалося знайти об'єкт із назвою «%s»"
 #: ../libgda/gda-meta-store.c:5229 ../libgda/gda-meta-store.c:5248
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
-msgstr ""
+msgstr "Не вдалося знайти стовпчик «%s» у таблиці «%s»"
 
 #. To translators: GdaMetaStore is an object holding meta data information
 #. * which will be used as an information source
 #: ../libgda/gda-meta-struct.c:103
 msgid "GdaMetaStore object to fetch information from"
-msgstr ""
+msgstr "Об'єкт GdaMetaStore для отримання інформації"
 
 #. To translators: The GdaMetaStruct object computes lists of tables, views,
 #. * and some other information, the "Features to compute" allows one to avoid
 #. * computing some features which won't be used
 #: ../libgda/gda-meta-struct.c:111
 msgid "Features to compute"
-msgstr ""
+msgstr "Можливості для обчислення"
 
 #: ../libgda/gda-meta-struct.c:793
 #, c-format
@@ -2245,21 +2271,23 @@ msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
 "type"
 msgstr ""
+"Об'єкт %s.%s.%s вже існує у GdaMetaStruct і належить до іншого типу об'єктів"
 
 #: ../libgda/gda-meta-struct.c:819
 #, c-format
 msgid "View %s.%s.%s not found in meta store object"
-msgstr ""
+msgstr "Перегляд %s.%s.%s не знайдено в об'єкті метасховища"
 
 #: ../libgda/gda-meta-struct.c:899
 #, c-format
 msgid "Table %s.%s.%s not found (or missing columns information)"
 msgstr ""
+"Не знайдено таблиці %s.%s.%s (або пропущено інформацію щодо стовпчиків)"
 
 #: ../libgda/gda-meta-struct.c:1040
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
-msgstr ""
+msgstr "Внутрішня помилка GdaMetaStore: не знайдено стовпчик %s"
 
 #: ../libgda/gda-meta-struct.c:1192
 #, c-format
@@ -2267,15 +2295,17 @@ msgid ""
 "Meta data incoherence in foreign key constraint for table %s.%s.%s "
 "referencing table %s.%s.%s"
 msgstr ""
+"Розходження метаданих у обмеженні стороннього ключа для таблиці %s.%s.%s, яка"
+" посилається на таблицю %s.%s.%s"
 
 #: ../libgda/gda-meta-struct.c:1724
 #, c-format
 msgid "No meta struct was provided for object sorting"
-msgstr ""
+msgstr "Для упорядковування об'єктів не надано метаструктури"
 
 #: ../libgda/gda-meta-struct.c:2530
 msgid "Missing object name in GdaMetaDbObject structure"
-msgstr ""
+msgstr "Не вказано назви об'єкта у структурі GdaMetaDbObject"
 
 #: ../libgda/gda-meta-struct.c:2555
 #, c-format
@@ -2290,28 +2320,29 @@ msgstr "Не вдалося завантажити файл «%s»"
 #: ../libgda/gda-meta-struct-io.c:91
 #, c-format
 msgid "Root node of file '%s' should be <schema>."
-msgstr ""
+msgstr "Кореневим вузлом файла «%s» має бути <schema>."
 
 #: ../libgda/gda-meta-struct-io.c:239
 #, c-format
 msgid "Missing column name for table '%s'"
-msgstr ""
+msgstr "Пропущено назву стовпчика для таблиці «%s»"
 
 #: ../libgda/gda-meta-struct-io.c:292
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
 msgstr ""
+"Пропущено назву таблиці, на яку посилається сторонній ключ для таблиці «%s»"
 
 #: ../libgda/gda-meta-struct-io.c:304 ../libgda/gda-meta-struct-io.c:311
 #: ../libgda/gda-meta-struct-io.c:318
 #, c-format
 msgid "Invalid referenced table name '%s'"
-msgstr ""
+msgstr "Некоректне посилання на таблицю з назвою «%s»"
 
 #: ../libgda/gda-meta-struct-io.c:358
 #, c-format
 msgid "Missing foreign key's column name for table '%s'"
-msgstr ""
+msgstr "Пропущено назву стовпчика стороннього ключа для таблиці «%s»"
 
 #: ../libgda/gda-provider-meta.c:83
 #, c-format
@@ -2326,16 +2357,18 @@ msgstr "З'єднання не відкрито"
 #: ../libgda/gda-provider-meta.c:126
 #, c-format
 msgid "No rows or more than one row was returned from query"
-msgstr ""
+msgstr "Немає рядків або запитом повернуто декілька рядків"
 
 #: ../libgda/gda-row.c:162
 msgid "Can't set a number of values, because a data model is in use"
 msgstr ""
+"Не вдалося встановити декілька значень, оскільки модель даних перебуває у"
+" користуванні"
 
 #: ../libgda/gda-row.c:275
 #, c-format
 msgid "No value can be retrieved from data model's row: %s"
-msgstr ""
+msgstr "Із рядка моделі даних не вдалося отримати значення: %s"
 
 #: ../libgda/gda-row.c:276
 msgid "No Detail"
@@ -2348,7 +2381,7 @@ msgstr "Значення у рядку не знайдено!"
 #: ../libgda/gda-server-operation.c:582
 #, c-format
 msgid "GdaServerOperation: could not find file '%s'"
-msgstr ""
+msgstr "GdaServerOperation: не вдалося знайти файл «%s»"
 
 #: ../libgda/gda-server-operation.c:596
 #, c-format
@@ -2362,7 +2395,7 @@ msgstr "GdaServerOperation: не вдалося завантажити вказ�
 #: ../libgda/gda-server-operation.c:655 ../libgda/gda-server-operation.c:1110
 #, c-format
 msgid "Could not load XML specifications: %s"
-msgstr ""
+msgstr "Не вдалося завантажити специфікації XML: %s"
 
 #: ../libgda/gda-server-operation.c:748
 #, c-format
@@ -2370,6 +2403,8 @@ msgid ""
 "Could not parse '%s': Validation for XML files for server operations will "
 "not be performed (some weird errors may occur)"
 msgstr ""
+"Не вдалося обробити «%s»: перевірку файлів XML для дій із сервером не буде "
+"виконано (у результаті можуть статися неочікувані помилки)"
 
 #: ../libgda/gda-server-operation.c:773
 #, c-format
@@ -2377,6 +2412,8 @@ msgid ""
 "GdaServerOperation: file '%s' does not conform to DTD:\n"
 "%s"
 msgstr ""
+"GdaServerOperation: файл «%s» не відповідає DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:776
 #, c-format
@@ -2384,21 +2421,26 @@ msgid ""
 "GdaServerOperation specification does not conform to DTD:\n"
 "%s"
 msgstr ""
+"Специфікація GdaServerOperation не відповідає DTD:\n"
+"%s"
 
 #: ../libgda/gda-server-operation.c:783
 #, c-format
 msgid "GdaServerOperation: file '%s' does not conform to DTD"
-msgstr ""
+msgstr "GdaServerOperation: файл «%s» не відповідає DTD"
 
 #: ../libgda/gda-server-operation.c:786
 msgid "GdaServerOperation specification does not conform to DTD\n"
-msgstr ""
+msgstr "Специфікація GdaServerOperation не відповідає DTD\n"
 
 #: ../libgda/gda-server-operation.c:1347
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://gitlab."
 "gnome.org/GNOME/libgda/issues"
 msgstr ""
+"Непридатний до обробки GdaServerOperationType, будь ласка, повідомте про"
+" помилку на сторінці http://gitlab."
+"gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
@@ -2409,15 +2451,17 @@ msgstr "Мало бути використано теґ <%s>, маємо <%s>"
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
+"Значення списку параметрів можна встановлювати лише для окремих параметрів у"
+" ньому"
 
 #: ../libgda/gda-server-operation.c:1719
 msgid "Missing attribute named 'path'"
-msgstr ""
+msgstr "Пропущено атрибути із назвою «path»"
 
 #: ../libgda/gda-server-operation.c:2480
 #, c-format
 msgid "Missing required value for '%s'"
-msgstr ""
+msgstr "Пропущено обов'язкове значення для «%s»"
 
 #: ../libgda/gda-server-operation.c:2629
 msgid ""
@@ -2445,17 +2489,18 @@ msgstr ""
 #: ../libgda/gda-server-provider.c:2092
 #, c-format
 msgid "Delaying opening connection for %u ms\n"
-msgstr ""
+msgstr "Затримуємо відкриття з'єднання на %u мс\n"
 
 #: ../libgda/gda-server-provider.c:2206
 msgid ""
 "You need to define a GMainContext using gda_connection_set_main_context()"
 msgstr ""
+"Вам слід визначити GMainContext за допомогою gda_connection_set_main_context()"
 
 #: ../libgda/gda-server-provider.c:2318
 #, c-format
 msgid "Delaying closing connection for %u ms\n"
-msgstr ""
+msgstr "Затримуємо закриття з'єднання на %u мс\n"
 
 #: ../libgda/gda-server-provider.c:2521
 #, c-format
