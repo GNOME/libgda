@@ -692,7 +692,7 @@ msgstr "El GdaMetaStore que utilitza la connexió"
 
 #: ../libgda/gda-connection.c:359
 msgid "Number of history events to keep in memory"
-msgstr "Nombre d'esdeveniments de la història per guardar-los"
+msgstr "Nombre d'esdeveniments de la història per a guardar-los"
 
 #: ../libgda/gda-connection.c:372
 msgid "Computes execution delay for each executed statement"
@@ -1038,7 +1038,7 @@ msgstr ""
 #: ../libgda/gda-data-model-bdb.c:858 ../libgda/gda-data-model-bdb.c:948
 #, c-format
 msgid "Expected GdaBinary value, got %s"
-msgstr "S'esperava un valor GdaBinary però s'ha obtingut %s"
+msgstr "S'esperava un valor GdaBinary, però s'ha obtingut %s"
 
 #: ../libgda/gda-data-model-bdb.c:904
 msgid "Key modification is not supported"
@@ -3541,7 +3541,7 @@ msgstr "No s'ha trobat la columna"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1471
 msgid "No statement specified to modify the data"
-msgstr "No ha especificat cap declaració per modificar les dades"
+msgstr "No ha especificat cap declaració per a modificar les dades"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1478
 msgid "Invalid statement specified to modify the data"
@@ -4506,7 +4506,7 @@ msgstr ""
 "<i>demo_parser</i> són creats pel marc i posats a disposició de tots els "
 "elements demostrats.\n"
 "\n"
-"Per il·lustrar que les trucades no es bloquegen, hi ha un rotàmetre a la "
+"Per a il·lustrar que les trucades no es bloquegen, hi ha un rotàmetre a la "
 "part superior (que mai ha de deixar de girar), i s'afegeix un retard d'1 "
 "segon cada vegada que s'utilitza la connexió."
 
@@ -4970,12 +4970,12 @@ msgstr ""
 "\"\"\"= Títol de nivell 1 =\n"
 "== Títol de nivell 2 ==\n"
 "\n"
-"\"\"\"Per embellir tenim la **negreta**\n"
+"\"\"\"Per a embellir tenim la **negreta**\n"
 "i la //italic//.\n"
 "També hi ha el __subratllat__, --ratllat--\n"
 "i ``monoespaiat``.\n"
 "\"\"\"\n"
-"\"\"\"Per embellir tenim la **negreta**\n"
+"\"\"\"Per a embellir tenim la **negreta**\n"
 "i la //itàlica//.\n"
 "També hi ha el __subratllat__, --ratllat--\n"
 "i ``monoespaiat``.\n"
@@ -9701,7 +9701,7 @@ msgid ""
 msgstr ""
 "L'explorador de la base de dades proporciona un accés ràpid a les dades i a "
 "l'esquema d'una base de dades i els mostra en una interfície gràfica "
-"intuïtiva. Ofereix tres perspectives per interactuar amb una base de dades: "
+"intuïtiva. Ofereix tres perspectives per a interactuar amb una base de dades: "
 "l'explorador de l'esquema, l'execució de consultes i la gestió de dades. "
 "L'explorador de l'esquema permet a l'usuari veure les taules d'una base de "
 "dades i inspeccionar les propietats de les taules i les seves relacions. "
