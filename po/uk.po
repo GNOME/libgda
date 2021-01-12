@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-07 13:43+0000\n"
-"PO-Revision-Date: 2021-01-11 19:24+0200\n"
+"POT-Creation-Date: 2021-01-11 17:25+0000\n"
+"PO-Revision-Date: 2021-01-12 22:40+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -1765,8 +1765,8 @@ msgid ""
 "Could not parse '%s': XML data import validation will not be performed (some "
 "weird errors may occur)"
 msgstr ""
-"Не вдалося обробити «%s»: перевірку імпортованих даних XML не буде виконано"
-" (у результаті можуть статися неочікувані помилки)"
+"Не вдалося обробити «%s»: перевірку імпортованих даних XML не буде виконано "
+"(у результаті можуть статися неочікувані помилки)"
 
 #: ../libgda/gda-init.c:241
 #, c-format
@@ -2227,8 +2227,8 @@ msgid ""
 "Replacing data model must have the same characteristics as the data model it "
 "replaces"
 msgstr ""
-"Модель-замінник даних повинна мати ті самі характеристики, що і модель, яку"
-" вона замінює"
+"Модель-замінник даних повинна мати ті самі характеристики, що і модель, яку "
+"вона замінює"
 
 #: ../libgda/gda-sql-builder.c:297 ../libgda/gda-sql-builder.c:1397
 #, c-format
@@ -2511,8 +2511,8 @@ msgstr "У з'єднанні не передбачено підтримки ро
 msgid ""
 "Cannot unregister connection not registered with GdaXaTransaction object"
 msgstr ""
-"Неможливо скасувати реєстрацію з'єднання, яке не зареєстровано за допомогою"
-" об'єкта GdaXaTransaction"
+"Неможливо скасувати реєстрацію з'єднання, яке не зареєстровано за допомогою "
+"об'єкта GdaXaTransaction"
 
 #: ../libgda/gda-xa-transaction.c:388 ../libgda/gda-xa-transaction.c:419
 #: ../libgda/gda-xa-transaction.c:490 ../libgda/gda-xa-transaction.c:495
@@ -2654,7 +2654,7 @@ msgstr "Помилка під час виконання програми %s: %s"
 #: ../libgda-report/gda-report-document.c:372
 #, c-format
 msgid "This report document does not handle %s output"
-msgstr ""
+msgstr "У цьому документі звіту не передбачено обробки виведення %s"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:222 ../providers/jdbc/gda-jdbc-ddl.c:142
 #: ../providers/mysql/gda-mysql-ddl.c:336
@@ -2666,17 +2666,17 @@ msgstr "Створена таблиця має містити принаймні
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:119
 msgid "SQLite binary representation"
-msgstr ""
+msgstr "Двійкове представлення SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-handler-boolean.c:117
 msgid "Sqlite boolean representation"
-msgstr ""
+msgstr "Булеве представлення Sqlite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:118
 #: ../libgda/sqlite/gda-sqlite-provider.c:176
 #, c-format
 msgid "Parameter '%s' not found is statement"
-msgstr ""
+msgstr "У інструкції не знайдено параметра «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:132
 #: ../libgda/sqlite/gda-sqlite-provider.c:148
@@ -2684,15 +2684,15 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:206
 #, c-format
 msgid "No column name to associate to parameter '%s'"
-msgstr ""
+msgstr "Немає назви стовпчика, яку слід пов'язати із параметром «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:216
 msgid "Binding a BLOB for this type of statement is not supported"
-msgstr ""
+msgstr "Підтримки прив'язки BLOB до цього типу інструкції не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:635
 msgid "Can't find libsqlite3."
-msgstr ""
+msgstr "Не вдалося знайти libsqlite3."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:740
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:374
@@ -2710,7 +2710,7 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:769
 #: ../providers/mdb/gda-mdb-provider.c:252
 msgid "The connection string must contain DB_DIR and DB_NAME values"
-msgstr ""
+msgstr "У рядку з'єднання мають міститися значення DB_DIR і DB_NAME"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:796
 #: ../libgda/sqlite/gda-sqlite-provider.c:804
@@ -2729,7 +2729,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:881
 msgid "Wrong encryption passphrase"
-msgstr ""
+msgstr "Помилковий пароль шифрування"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:902
 msgid "Extension loading is not supported"
@@ -2738,18 +2738,18 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:921
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
-msgstr ""
+msgstr "Не вдалося встановити параметр SQLite empty_result_callbacks: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1012
 #: ../libgda/sqlite/gda-sqlite-provider.c:1032
 #, c-format
 msgid "Could not register function '%s'"
-msgstr ""
+msgstr "Не вдалося зареєструвати функцію «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1051
 #, c-format
 msgid "Could not define the %s collation"
-msgstr ""
+msgstr "Не вдалося визначити об'єднання %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1209
 #: ../libgda/sqlite/gda-sqlite-provider.c:1251
@@ -2773,11 +2773,11 @@ msgstr "Не вистачає файла специфікації «%s»"
 #: ../libgda/sqlite/gda-sqlite-provider.c:1411
 #: ../libgda/sqlite/gda-sqlite-provider.c:1422
 msgid "Error initializing database with passphrase"
-msgstr ""
+msgstr "Помилка ініціалізації бази даних з використанням пароля"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1464
 msgid "Missing database name or directory"
-msgstr ""
+msgstr "Пропущено назву бази даних або каталог"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1490
 #: ../providers/postgres/gda-postgres-provider.c:1163
@@ -2788,6 +2788,8 @@ msgstr "У режимі лише-читання транзакції не під
 #: ../libgda/sqlite/gda-sqlite-provider.c:1887
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
+"У SQLite не передбачено підтримки задання полів для застосування пункту"
+" DISTINCT"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1934
 #: ../libgda/sqlite/gda-sqlite-provider.c:1944
@@ -2797,14 +2799,14 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2042
 msgid "ILIKE operation not supported"
-msgstr ""
+msgstr "Підтримки операції ILIKE не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2589
 #: ../providers/jdbc/gda-jdbc-provider.c:1258
 #: ../providers/postgres/gda-postgres-provider.c:1717
 #: ../providers/web/gda-web-provider.c:1271
 msgid "Unnamed parameter is not allowed in prepared statements"
-msgstr ""
+msgstr "Не можна використовувати параметр без назви у приготованих інструкціях"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2702
 #: ../libgda/sqlite/gda-sqlite-provider.c:2714
@@ -2813,12 +2815,16 @@ msgstr ""
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
+"Не вдалося побудувати інструкцію SELECT для отримання останнього вставленого"
+" рядка: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2748
 #: ../providers/mysql/gda-mysql-provider.c:2096
 #: ../providers/postgres/gda-postgres-provider.c:1893
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
+"Інструкція SELECT для отримання останнього вставленого рядка не повернула"
+" жодного рядка"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2752
 #: ../providers/mysql/gda-mysql-provider.c:2100
@@ -2826,20 +2832,22 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
+"Інструкція SELECT для отримання останнього вставленого рядка повернула надто"
+" багато рядків (%d)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2817
 msgid "Prepared statement has no associated GdaStatement"
-msgstr ""
+msgstr "Приготована інструкція не має пов'язаного GdaStatement"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2857
 #: ../libgda/sqlite/gda-sqlite-provider.c:2894
 msgid "Can't create SQLite BLOB handle"
-msgstr ""
+msgstr "Не вдалося створити обробник BLOB SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2861
 #: ../libgda/sqlite/gda-sqlite-provider.c:2899
 msgid "Can't write to SQLite's BLOB"
-msgstr ""
+msgstr "Не вдалося записати до BLOB SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2884
 #, c-format
@@ -2850,7 +2858,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2909
 msgid "Can't identify the ROWID of the blob to fill"
-msgstr ""
+msgstr "Не вдалося ідентифікувати ROWID блобу для заповнення"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2957
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:448
@@ -2865,7 +2873,7 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:3026
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
-msgstr ""
+msgstr "Порожня інструкція"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3068
 #: ../libgda/sqlite/gda-sqlite-provider.c:3071
@@ -2878,7 +2886,7 @@ msgstr ""
 #: ../providers/web/gda-web-provider.c:1482
 #: ../providers/web/gda-web-provider.c:1485
 msgid "Missing parameter(s) to execute query"
-msgstr ""
+msgstr "Пропущено параметри для виконання запиту"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3131
 #: ../providers/jdbc/gda-jdbc-provider.c:1525
@@ -2886,26 +2894,26 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:2169
 #: ../providers/web/gda-web-provider.c:1549
 msgid "Can't rewrite statement handle default values"
-msgstr ""
+msgstr "Не можна перезаписувати типові значення обробника інструкцій"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3251
 #: ../providers/mysql/gda-mysql-provider.c:2643
 msgid "Can't get BLOB's length"
-msgstr ""
+msgstr "Не вдалося отримати довжину BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3253
 #: ../providers/mysql/gda-mysql-provider.c:2645
 msgid "BLOB is too big"
-msgstr ""
+msgstr "BLOB є надто великим"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3367
 #, c-format
 msgid "Non handled data type '%s'"
-msgstr ""
+msgstr "Непридатний до обробки тип даних «%s»"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3434
 msgid "Could not start transaction to create BLOB"
-msgstr ""
+msgstr "Не вдалося запустити транзакцію для створення BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3599
 #: ../libgda/sqlite/gda-sqlite-provider.c:3620
@@ -2913,26 +2921,26 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:3731
 #: ../libgda/sqlite/gda-sqlite-provider.c:3754
 msgid "Function requires one argument"
-msgstr ""
+msgstr "Функція потребує одного аргументу"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3652
 #: ../libgda/sqlite/gda-sqlite-provider.c:3786
 msgid "Function requires two arguments"
-msgstr ""
+msgstr "Функція потребує двох аргументів"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3691
 msgid "Function requires one or two arguments"
-msgstr ""
+msgstr "Функція потребує одного або двох аргументів"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3826
 #: ../libgda/sqlite/gda-sqlite-provider.c:3933
 msgid "Function requires two or three arguments"
-msgstr ""
+msgstr "Функція потребує двох або трьох аргументів"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3880
 #, c-format
 msgid "SQLite regexp '%s' error:"
-msgstr ""
+msgstr "Помилка формального виразу SQLite «%s»:"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3881
 msgid "Invalid regular expression"
@@ -2946,7 +2954,7 @@ msgstr "Помилка у формальному виразі"
 #: ../providers/web/gda-web-recordset.c:185
 #, c-format
 msgid "Column %d out of range (0-%d), ignoring its specified type"
-msgstr ""
+msgstr "Стовпчик %d поза діапазоном (0-%d), ігноруємо його вказаний тип"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:434
 #: ../libgda/sqlite/gda-sqlite-recordset.c:447
@@ -2955,17 +2963,17 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-recordset.c:610
 #: ../libgda/sqlite/gda-sqlite-recordset.c:623
 msgid "Integer value is too big"
-msgstr ""
+msgstr "Надто велике ціле значення"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:513
 msgid "Unable to open BLOB"
-msgstr ""
+msgstr "Не вдалося відкрити BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:534
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:672
 #, c-format
 msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
-msgstr ""
+msgstr "Некоректна дата «%s» (дату має бути вказано у форматі РРРР-ММ-ДД)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:549
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:688
@@ -2982,21 +2990,21 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:658
 msgid "SQLite provider fatal internal error"
-msgstr ""
+msgstr "Критична внутрішня помилка надавача даних SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:666
 msgid "Truncated data"
-msgstr ""
+msgstr "Обрізані дані"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:719
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
-msgstr ""
+msgstr "Не вдалося знайти потрібного рядка"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:750
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
-msgstr ""
+msgstr "Не вдалося встановити ітератор на запитаному рядку"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #, c-format
@@ -5678,7 +5686,7 @@ msgstr "Назва бази даних, якою слід скористатис
 #: ../providers/mysql/gda-mysql-ddl.c:263
 #: ../providers/postgres/gda-postgres-ddl.c:278
 msgid "No field specified in foreign key constraint"
-msgstr ""
+msgstr "Не вказано поля у обмеженні стороннього ключа"
 
 #: ../providers/mysql/gda-mysql-ddl.c:280
 #: ../providers/postgres/gda-postgres-ddl.c:295
