@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-11 17:22+0000\n"
-"PO-Revision-Date: 2021-01-12 22:34+0200\n"
+"POT-Creation-Date: 2021-01-12 20:36+0000\n"
+"PO-Revision-Date: 2021-01-13 21:30+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3170,8 +3170,8 @@ msgstr "У режимі лише-читання транзакції не під
 #: ../libgda/sqlite/gda-sqlite-provider.c:2230
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
-"У SQLite не передбачено підтримки задання полів для застосування пункту"
-" DISTINCT"
+"У SQLite не передбачено підтримки задання полів для застосування пункту "
+"DISTINCT"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2277
 #: ../libgda/sqlite/gda-sqlite-provider.c:2287
@@ -3205,16 +3205,16 @@ msgstr "Не можна використовувати параметр без �
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
-"Не вдалося побудувати інструкцію SELECT для отримання останнього вставленого"
-" рядка: %s"
+"Не вдалося побудувати інструкцію SELECT для отримання останнього вставленого "
+"рядка: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1991
 #: ../providers/postgres/gda-postgres-provider.c:1813
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
-"Інструкція SELECT для отримання останнього вставленого рядка не повернула"
-" жодного рядка"
+"Інструкція SELECT для отримання останнього вставленого рядка не повернула "
+"жодного рядка"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
@@ -3222,8 +3222,8 @@ msgstr ""
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
-"Інструкція SELECT для отримання останнього вставленого рядка повернула надто"
-" багато рядків (%d)"
+"Інструкція SELECT для отримання останнього вставленого рядка повернула надто "
+"багато рядків (%d)"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3182
 msgid "Prepared statement has no associated GdaStatement"
@@ -3405,17 +3405,17 @@ msgstr ""
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:188
 msgid "Connection was not represented in hub"
-msgstr ""
+msgstr "З'єднання не представлено у концентраторі"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:352
 #, c-format
 msgid "Unable to get information about table '%s'"
-msgstr ""
+msgstr "Не вдалося отримати відомості щодо таблиці «%s»"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:578
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:594
 msgid "Integer value is out of bounds"
-msgstr ""
+msgstr "Ціле значення поза припустимим діапазоном"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:634
 msgid "Blob constraints are not handled in virtual table condition"
@@ -3425,11 +3425,11 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
-msgstr ""
+msgstr "Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
 msgid "Provider did not clean its connection data"
-msgstr ""
+msgstr "Надавачем даних не виконано чищення даних з'єднання"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:115
 #, c-format
@@ -3437,51 +3437,53 @@ msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
 msgstr ""
+"Внутрішня помилка: у віртуальному надавачі даних не реалізовано віртуальний"
+" метод create_operation()"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:159
 msgid "Internal error: invalid provider handle"
-msgstr ""
+msgstr "Внутрішня помилка: некоректний обробник надавача даних"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
-msgstr ""
+msgstr "Помилка внутрішньої реалізації: не визначено спосіб закриття з'єднання"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
 msgid "Wrong usage of Libgda's virtual tables"
-msgstr ""
+msgstr "Помилкове використання віртуальних таблиць Libgda"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:559
 msgid "Data model must have at least one column"
-msgstr ""
+msgstr "У моделі даних має бути принаймні один стовпчик"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:576
 msgid "Could not compute virtual table's columns"
-msgstr ""
+msgstr "Не вдалося обчислити стовпчики віртуальної таблиці"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:599
 #, c-format
 msgid "Can't get data model description for column %d"
-msgstr ""
+msgstr "Не вдалося отримати опис моделі даних для стовпчика %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:651
 #, c-format
 msgid "Can't get data model's column type for column %d"
-msgstr ""
+msgstr "Не вдалося отримати тип стовпчика моделі даних для стовпчика %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:713
 #, c-format
 msgid "Can't declare virtual table (\"%s\"): %s"
-msgstr ""
+msgstr "Не вдалося оголосити віртуальну таблицю («%s»): %s"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:856
 msgid "Internal SQLite error: no data to iterate on"
-msgstr ""
+msgstr "Внутрішня помилка SQLite: немає даних для ітерації"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:962
 #, c-format
 msgid "Could not find requested value at row %d and col %d"
-msgstr ""
+msgstr "Не вдалося знайти потрібне значення у рядку %d і стовпчику %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:986
 msgid "Column not found"
@@ -3489,17 +3491,17 @@ msgstr "Стовпчик не знайдено"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1471
 msgid "No statement specified to modify the data"
-msgstr ""
+msgstr "Не вказано інструкції для внесення змін до даних"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1478
 msgid "Invalid statement specified to modify the data"
-msgstr ""
+msgstr "Вказано некоректну інструкцію для внесення змін до даних"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1498
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1535
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1543
 msgid "Invalid parameter in statement to modify the data"
-msgstr ""
+msgstr "Некоректний параметр у інструкції для внесення змін до даних"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1575
 #, c-format
@@ -3508,12 +3510,12 @@ msgstr "Не вдалося внести зміни до даних: %s"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1658
 msgid "Data model representing the table is read only"
-msgstr ""
+msgstr "Модель даних, що представляє таблицю, є придатною лише до читання"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:617
 #: ../libgda/sql-parser/gda-sql-parser.c:708
 msgid "SQL code does not contain any statement"
-msgstr ""
+msgstr "У коді SQL не міститься жодної інструкції"
 
 #: ../libgda/sql-parser/gda-sql-parser.c:792
 #, c-format
@@ -3523,11 +3525,11 @@ msgstr "Синтаксична помилка у рядку %d, стовпчик
 #: ../libgda/sql-parser/gda-sql-parser.c:806
 #, c-format
 msgid "Overflow error at line %d, column %d"
-msgstr ""
+msgstr "Помилка переповнення у рядку %d, стовпчик %d"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:590
 msgid "GdaSqlField is not part of an INSERT or UPDATE statement"
-msgstr ""
+msgstr "GdaSqlField не є частиною жодної інструкції INSERT або UPDATE"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:603
 msgid "Missing table in statement"
@@ -3565,23 +3567,24 @@ msgstr "Не вдалося ідентифікувати таблицю для �
 #: ../libgda/sql-parser/gda-statement-struct.c:1008
 msgid "Expression can't have both a type cast and a parameter specification"
 msgstr ""
+"Вираз не може бути одночасно приведенням до типу і специфікацією параметра"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1018
 #: ../libgda/sql-parser/gda-statement-struct.c:1031
 #: ../libgda/sql-parser/gda-statement-struct.c:1044
 #, c-format
 msgid "'%s' is not a valid identifier"
-msgstr ""
+msgstr "«%s» не є коректним ідентифікатором"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1021
 #: ../libgda/sql-parser/gda-statement-struct.c:1034
 #: ../libgda/sql-parser/gda-statement-struct.c:1047
 msgid "Empty identifier"
-msgstr ""
+msgstr "Порожній ідентифікатор"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1056
 msgid "Operation has no operand"
-msgstr ""
+msgstr "У операції немає операнда"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1082
 #: ../libgda/sql-parser/gda-statement-struct.c:1089
@@ -3594,15 +3597,15 @@ msgstr "Помилкова кількість операндів"
 #: ../libgda/sql-parser/gda-statement-struct.c:1125
 #, c-format
 msgid "Unknown operator %d"
-msgstr ""
+msgstr "Невідомий оператор %d"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1148
 msgid "Missing expression in select field"
-msgstr ""
+msgstr "Пропущено вираз у полі вибору"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1157
 msgid "Missing expression in select target"
-msgstr ""
+msgstr "Пропущено вираз у цілі вибору"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1166
 msgid ""
@@ -3616,53 +3619,57 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1180
 msgid "Empty FROM clause"
-msgstr ""
+msgstr "Порожній вираз FROM"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1455
 msgid "Select field is not in a SELECT statement"
-msgstr ""
+msgstr "Поле вибору не перебуває у інструкції SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:233
 msgid "COMPOUND statement contains an undefined COMPOUND statement"
-msgstr ""
+msgstr "Інструкція COMPOUND містить невизначену інструкцію COMPOUND"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:242
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:281
 msgid "COMPOUND statement contains an undefined SELECT statement"
-msgstr ""
+msgstr "Інструкція COMPOUND містить невизначену інструкцію SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:251
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:293
 msgid "COMPOUND statement contains a non SELECT statement"
-msgstr ""
+msgstr "Інструкція COMPOUND містить інструкцію, відмінну від SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:265
 msgid "COMPOUND statement does not contain any SELECT statement"
-msgstr ""
+msgstr "У інструкції COMPOUND не міститься жодної інструкції SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:271
 msgid "COMPOUND statement only contains one SELECT statement"
-msgstr ""
+msgstr "Інструкція COMPOUND містить лише одну інструкцію SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:301
 msgid "COMPOUND statement contains an empty SELECT statement"
-msgstr ""
+msgstr "Інструкція COMPOUND містить порожню інструкцію SELECT"
 
 #: ../libgda/sql-parser/gda-statement-struct-compound.c:307
 msgid "All statements in a COMPOUND must have the same number of columns"
-msgstr ""
+msgstr "Усі інструкції у COMPOUND повинні мати однакову кількість стовпчиків"
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
 msgstr ""
+"Інструкція DELETE повинна містити дані щодо таблиці, з якої слід вилучити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:356
 msgid "INSERT statement needs a table to insert into"
 msgstr ""
+"У інструкції INSERT має бути вказано таблицю, до якої слід вставити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:362
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
+"Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції"
+" INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:383
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:409
@@ -3677,7 +3684,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:404
 msgid "SELECT does not contain any expression"
-msgstr ""
+msgstr "SELECT не містить жодного виразу"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:410
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
@@ -3695,11 +3702,11 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-select.c:456
 #, c-format
 msgid "Multiple targets named or aliased '%s'"
-msgstr ""
+msgstr "Декілька цілей із назвою або альтернативною назвою «%s»"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:290
 msgid "UPDATE statement needs a table to update data"
-msgstr ""
+msgstr "В інструкції UPDATE має бути вказано таблицю, у якій слід оновити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:296
 msgid ""
