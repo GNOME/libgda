@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-23 18:59+0000\n"
-"PO-Revision-Date: 2021-01-27 17:16+0100\n"
+"POT-Creation-Date: 2021-01-27 16:19+0000\n"
+"PO-Revision-Date: 2021-01-29 15:51+0100\n"
 "Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
@@ -233,15 +233,13 @@ msgstr "Centrul de control de acces la baza de date"
 
 #: ../control-center/gda-control-center-5.0.desktop.in.h:2
 msgid "Gda Control Center"
-msgstr ""
+msgstr "Centru de control Gda"
 
 #: ../control-center/gda-control-center-5.0.desktop.in.h:3
 msgid "Configure your database access environment"
 msgstr "Configurați mediul de acces la baza de date"
 
 #: ../control-center/gdaui-dsn-assistant.c:125
-#, fuzzy
-#| msgid "Missing mandatory information, to create database"
 msgid "Missing mandatory information, to create database"
 msgstr "Lipsesc informațiile obligatorii, pentru a crea o bază de date"
 
@@ -320,18 +318,13 @@ msgid "Create a new database?"
 msgstr "Creați o bază de date nouă?"
 
 #: ../control-center/gdaui-dsn-assistant.c:559
-#, fuzzy
-#| msgid ""
-#| "The following fields represent the information needed to create a new "
-#| "database (mandatory fields are marked with a star).This information is "
-#| "database-specific, so check the manual for more information."
 msgid ""
 "The following fields represent the information needed to create a new "
 "database (mandatory fields are marked with a star).This information is "
 "database-specific, so check the manual for more information."
 msgstr ""
 "Următoarele câmpuri reprezintă informațiile necesare pentru a crea o bază de "
-"date nouă (câmpurile obligatorii sunt marcate cu o stea). Aceste infomații "
+"date nouă (câmpurile obligatorii sunt marcate cu o stea). Aceste informații "
 "sunt specifice bazelor de date, prin urmare verificați manualul pentru mai "
 "multe informații."
 
@@ -453,10 +446,8 @@ msgid "Database access services for the GNOME Desktop"
 msgstr "Serviciile de acces la baza de date pentru Desktop GNOME"
 
 #: ../control-center/main.c:196
-#, fuzzy
-#| msgid "_Data sources"
 msgid "_Data source"
-msgstr "Surse de _date"
+msgstr "Sursă de _date"
 
 #: ../control-center/main.c:196
 msgid "Database"
@@ -475,8 +466,6 @@ msgid "_New datasource"
 msgstr "Sursă de date _nouă"
 
 #: ../control-center/main.c:198
-#, fuzzy
-#| msgid "Create new data source"
 msgid "Create new data source"
 msgstr "Creează o sursă de date nouă"
 
@@ -572,10 +561,9 @@ msgid "Can't manage system-wide configuration"
 msgstr "Nu se poate administra configurația aplicată sistemului"
 
 #: ../libgda/gda-config.c:1167 ../libgda/gda-config.c:1199
-#, fuzzy, c-format
-#| msgid "Gnome-DB: authentication for the '%s' DSN"
+#, c-format
 msgid "Authentication for the '%s' DSN"
-msgstr "Gnome-DB: autentificare pentru „%s” DSN"
+msgstr "Autentificare pentru DSN-ul „%s”"
 
 #: ../libgda/gda-config.c:1236 ../libgda/gda-config.c:1248
 #: ../libgda/gda-config.c:1312
@@ -699,16 +687,12 @@ msgstr ""
 "modificat doar de implementarea furnizorului bazei de date"
 
 #: ../libgda/gda-connection.c:384
-#, fuzzy
-#| msgid ""
-#| "Tells if the connection acts as a thread wrapper around another "
-#| "connection, making it completely thread safe"
 msgid ""
 "Determines if the connection acts as a thread wrapper around another "
 "connection, making it completely thread safe"
 msgstr ""
-"Spune în cazul în care conexiunea se comportă ca o încadrare de fire de "
-"execuție în jurul altei conexiuni, pe care o face sigură de fire de conexiune"
+"Determină dacă conexiunea se comportă ca o încadrare de fire de execuție în "
+"jurul altei conexiuni, pe care o face sigură de fire de conexiune"
 
 #: ../libgda/gda-connection.c:400
 msgid ""
@@ -828,10 +812,9 @@ msgid "Connection is closed"
 msgstr "Conexiunea este închisă"
 
 #: ../libgda/gda-connection.c:3287
-#, fuzzy, c-format
-#| msgid "Named transaction is not supported"
+#, c-format
 msgid "Asynchronous execution is not supported"
-msgstr "Tranzacția numită nu este suportată"
+msgstr "Execuția nesincronă nu este suportată"
 
 #: ../libgda/gda-connection.c:3392 ../libgda/gda-connection.c:3485
 #, c-format
@@ -1260,8 +1243,7 @@ msgid "\"options\" property is not a GdaSet object"
 msgstr "proprietatea „opțiuni” nu este un obiect GdaSet"
 
 #: ../libgda/gda-data-model-import.c:718
-#, fuzzy, c-format
-#| msgid "The '%s' option must hold a string value, ignored."
+#, c-format
 msgid "The '%s' option must hold a string value, ignored."
 msgstr "Opțiunea „%s” trebuie să dețină o valoare de tip șir, se ignoră."
 
@@ -1674,8 +1656,6 @@ msgid "No INSERT statement provided"
 msgstr "Nicio comandă INSERT furnizată"
 
 #: ../libgda/gda-data-select.c:3099
-#, fuzzy
-#| msgid "Cannot add a row because the number of rows in unknown"
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr ""
 "Nu se poate adăuga un rând deoarece numărul de rânduri nu este cunoscut"
@@ -1829,10 +1809,8 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:1146 ../libgda/gda-meta-store.c:1155
 #: ../libgda/gda-meta-store.c:2349 ../libgda/gda-meta-store.c:2358
-#, fuzzy
-#| msgid "Could not get the internal schema's version"
 msgid "Could not set the internal schema's version"
-msgstr "Nu s-a putut obține versiunea schemei interne"
+msgstr "Nu s-a putut stabili versiunea schemei interne"
 
 #: ../libgda/gda-meta-store.c:1524
 msgid "Missing view name from <view> node"
@@ -2166,10 +2144,6 @@ msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr "Specificația GdaServerOperation nu se conformează cu DTD\n"
 
 #: ../libgda/gda-server-operation.c:1265
-#, fuzzy
-#| msgid ""
-#| "Non handled GdaServerOperationType, please report error to http://"
-#| "bugzilla.gnome.org/ for the \"libgda\" product"
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://bugzilla."
 "gnome.org/ for the \"libgda\" product"
@@ -2565,10 +2539,10 @@ msgstr ""
 #: ../libgda/gda-xa-transaction.c:522 ../libgda/gda-xa-transaction.c:552
 #: ../libgda/gda-xa-transaction.c:610 ../libgda/gda-xa-transaction.c:655
 #: ../libgda/gda-xa-transaction.c:689
-#, fuzzy, c-format
-#| msgid "Provider error: %s method not implemented for provider %s"
+#, c-format
 msgid "Provider error: %s method not implemented for provider %s"
-msgstr "Eroare furnizor: metoda %s nu este implementată pentru furnizorul %s"
+msgstr ""
+"Eroare de furnizor: metoda %s nu este implementată pentru furnizorul %s"
 
 #: ../libgda/handlers/gda-handler-bin.c:127
 msgid "Binary representation"
@@ -2752,10 +2726,8 @@ msgstr "Nu se poate găsi libsqlite3."
 #: ../providers/mysql/gda-mysql-provider.c:639
 #: ../providers/postgres/gda-postgres-provider.c:554
 #: ../providers/web/gda-web-provider.c:343
-#, fuzzy
-#| msgid "Provider does not support asynchronous server operation"
 msgid "Provider does not support asynchronous connection open"
-msgstr "Furnizorul nu suportă operații de server asincronice"
+msgstr "Furnizorul nu suportă deschideri de conexiuni asincronice"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:769
 #: ../providers/mdb/gda-mdb-provider.c:252
@@ -2900,10 +2872,7 @@ msgid "Can't write to SQLite's BLOB"
 msgstr "Nu se poate scrie la BLOB SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2884
-#, fuzzy, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
+#, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
@@ -3154,10 +3123,9 @@ msgid "Can't get data model's column type for column %d"
 msgstr "Nu se poate obține tipul de coloană al modelului pentru coloana %d"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:703
-#, fuzzy, c-format
-#| msgid "Can't declare virtual table (%s)"
+#, c-format
 msgid "Can't declare virtual table (%s)"
-msgstr "Nu se poate declara tabela virtuală (%s)"
+msgstr "Nu se poate declara tabel virtual (%s)"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:840
 msgid "Internal SQLite error: no data to iterate on"
@@ -3447,10 +3415,7 @@ msgstr "Selectează fișier de încărcat"
 #: ../libgda-ui/data-entries/common-bin.c:79
 #: ../libgda-ui/data-entries/plugins/common-pict.c:422
 #: ../libgda-ui/gdaui-rt-editor.c:730
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not load the contents of '%s':\n"
-#| " %s"
+#, c-format
 msgid ""
 "Could not load the contents of '%s':\n"
 " %s"
@@ -3463,15 +3428,12 @@ msgid "Select a file to save data to"
 msgstr "Selectează un fișier la care să salvezi datele"
 
 #: ../libgda-ui/data-entries/common-bin.c:156
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not save data to '%s':\n"
-#| " %s"
+#, c-format
 msgid ""
 "Could not save data to '%s':\n"
 " %s"
 msgstr ""
-"Nu s-au putut salva datele lui „%s”:\n"
+"Nu s-au putut salva date la „%s”:\n"
 " %s"
 
 #: ../libgda-ui/data-entries/common-bin.c:196
@@ -3667,10 +3629,8 @@ msgid "Value will be determined by default"
 msgstr "Valoarea va fi determinată implicit"
 
 #: ../libgda-ui/data-entries/gdaui-entry-shell.c:406
-#, fuzzy
-#| msgid "Value is invalid"
 msgid "Value is invalid"
-msgstr "Valoarea nu este validă"
+msgstr "Valoarea este nevalidă"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Maximum length"
@@ -3784,10 +3744,7 @@ msgid "Select a file to save the image to"
 msgstr "Selectează un fișier în care se salvează imaginea"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:534
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not save the image to '%s':\n"
-#| " %s"
+#, c-format
 msgid ""
 "Could not save the image to '%s':\n"
 " %s"
@@ -3899,16 +3856,21 @@ msgid ""
 "alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
 "character will be left unmodified)"
 msgstr ""
+"Caractere permise la fiecare poziție('0':cifră, '9': cifră cu excepția lui "
+"0, '@':alfa, '^':majuscule alfa, '#':alfanumeric, '*':orice caracter, orice "
+"alt caracter va fi lăsat nemodificat)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:3
 msgid "Mask"
-msgstr ""
+msgstr "Mască"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:4
 msgid ""
 "Writing mask for corresponding characters in format ('_': writable, '-':"
 "writable, removed from actual value, ' ': not writable)"
 msgstr ""
+"Se scrie masca corespunzătoare caracterelor în format ('_': inscripționabil, "
+"'-':inscripționabil, eliminat de la valoare, ' ': neinscripționabil)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -4029,16 +3991,7 @@ msgid "Libgda-ui Code Demos"
 msgstr "Coduri mostră Libgda"
 
 #: ../libgda-ui/demos/main.c:855
-#, fuzzy, c-format
-#| msgid ""
-#| "<b><big>Note:\n"
-#| "</big></b>Many of the demonstrated items use an\n"
-#| "opened connection to the SQLite using the\n"
-#| "'%s' file.\n"
-#| "\n"
-#| "In the source code shown here, the <i>demo_cnc</i> and \n"
-#| "<i>demo_parser</i> objects are created by the framework and\n"
-#| "made available to all the demonstrated items."
+#, c-format
 msgid ""
 "<b><big>Note:\n"
 "</big></b>Many of the demonstrated items use an\n"
@@ -4160,6 +4113,10 @@ msgid ""
 "like 'doe%'</tt></b> to filter rows where the 2nd column starts with "
 "<tt>doe</tt>."
 msgstr ""
+"Coloanele pot fi referențiate prin numele lor sau mai ușor utilizând "
+"<b><tt>_&lt;numărul coloanei&gt;</tt></b>. De exemplu o expresie validă "
+"poate fi: <b><tt>_2 like 'doe%'</tt></b> pentru a filtra rândurile unde a "
+"doua coloană începe cu <tt>doe</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:231
 msgid "Set filter"
@@ -4192,20 +4149,16 @@ msgstr "Model de date intern GdaDataProxy"
 
 #: ../libgda-ui/gdaui-data-store.c:387 ../libgda-ui/gdaui-data-store.c:454
 #: ../libgda-ui/gdaui-data-store.c:484 ../libgda-ui/gdaui-data-store.c:514
-#, fuzzy
-#| msgid "Can't append row to data model: %s"
 msgid "Can't modify row while data model is being reset"
-msgstr "Nu se poate adăuga rândul la modelul de date: %s"
+msgstr "Nu se poate modifica rândul în timp ce modelul de date este restabilit"
 
 #: ../libgda-ui/gdaui-data-store.c:401
 msgid "Trying to modify a read-only row"
 msgstr "Se încearcă modificarea unui rând protejat la scriere"
 
 #: ../libgda-ui/gdaui-data-store.c:597
-#, fuzzy
-#| msgid "Can't append row to data model: %s"
 msgid "Can't access row while data model is being reset"
-msgstr "Nu se poate adăuga rândul la modelul de date: %s"
+msgstr "Nu se poate accesa rândul în timp ce modelul de date este restabilit"
 
 #: ../libgda-ui/gdaui-init.c:72
 msgid "Attempt to initialize an already initialized library"
@@ -4266,14 +4219,10 @@ msgid "Create a new record"
 msgstr "Creează o înregistrare nouă"
 
 #: ../libgda-ui/gdaui-raw-form.c:205 ../libgda-ui/gdaui-raw-grid.c:201
-#, fuzzy
-#| msgid "Commit the modifications"
 msgid "Commit the modifications"
 msgstr "Comite modificările"
 
 #: ../libgda-ui/gdaui-raw-form.c:206 ../libgda-ui/gdaui-raw-grid.c:202
-#, fuzzy
-#| msgid "Clear all the modifications"
 msgid "Clear all the modifications"
 msgstr "Golește toate modificările"
 
@@ -4705,11 +4654,6 @@ msgid "Current modified data is invalid"
 msgstr "Datele curente modificate nu sunt valide"
 
 #: ../libgda-ui/internal/utility.c:376
-#, fuzzy
-#| msgid ""
-#| "You may now choose to correct it, or to discard the modifications.\n"
-#| "\n"
-#| "What do you wan to do?"
 msgid ""
 "You may now choose to correct it, or to discard the modifications.\n"
 "\n"
@@ -5284,10 +5228,9 @@ msgstr "Conflict"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:40
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:40
-#, fuzzy
-#| msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
 msgid "Conflict resolution method (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
-msgstr "Metodă de rezolvare a conflictului (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE"
+msgstr ""
+"Metodă de rezolvare a conflictului (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 
 #. other table constraints
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
@@ -5435,7 +5378,7 @@ msgstr "Numele unei baze de date de utilizat (fără .db)"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:3
 msgid "Append '.db'"
-msgstr ""
+msgstr "Adaugă „.db”"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:4
@@ -5443,6 +5386,7 @@ msgstr ""
 msgid ""
 "Defines if the '.db' extension need to be appended to the DB_NAME argument"
 msgstr ""
+"Definește dacă extensia „.db” trebuie să fie adăugată la argumentul NUME_DB"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:7
@@ -5539,22 +5483,16 @@ msgid "Provider for BDB SQL databases"
 msgstr "Furnizor pentru baze de date SQL BDB"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
-#, fuzzy
-#| msgid "The name of a database to use (without the .db)"
 msgid "The name of a database to connect to (without the .fdb)"
-msgstr "Numele unei baze de date de utilizat (fără .db)"
+msgstr "Numele unei baze de date la care să se conecteze (fără .db)"
 
 #: ../providers/firebird/libmain-client.c:69
-#, fuzzy
-#| msgid "Provider for SQLite databases"
 msgid "Provider for Firebird databases"
-msgstr "Furnizor pentru bazele de date SQLite"
+msgstr "Furnizor pentru bazele de date Firebird"
 
 #: ../providers/firebird/libmain-embed.c:69
-#, fuzzy
-#| msgid "Provider for Berkeley databases"
 msgid "Provider for embedded Firebird databases"
-msgstr "Furnizor pentru bazele de date Berkeley"
+msgstr "Furnizor pentru bazele de date înglobate Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:122
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:250
@@ -5568,10 +5506,8 @@ msgid "Can't read BLOB"
 msgstr "Nu se poate citi BLOB"
 
 #: ../providers/jdbc/gda-jdbc-provider.c:494
-#, fuzzy
-#| msgid "Missing parameter(s) to execute query"
 msgid "Missing parameters to open database connection"
-msgstr "Lipsesc parametrii pentru executarea interogării"
+msgstr "Lipsesc parametrii pentru deschiderea unei conexiuni la baza de date"
 
 #: ../providers/jdbc/GdaJValue.c:187
 #, c-format
@@ -5597,6 +5533,8 @@ msgid ""
 "The instance to connect to, if not specified, a connection to the default "
 "instance is made"
 msgstr ""
+"Instanța la care să se conecteze, dacă nu e specificată, o conexiune la "
+"instanța implicită este făcută"
 
 #. Connection parameters
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:5
@@ -5628,10 +5566,8 @@ msgid "Port"
 msgstr "Port"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:8
-#, fuzzy
-#| msgid "Database server port"
 msgid "Database server port, 1433 by default"
-msgstr "Portul serverului pentru baza de date"
+msgstr "Portul serverului pentru baza de date, implicit 1433"
 
 #: ../providers/jdbc/jdbc_specs_dsn.xml.in.h:1
 msgid "Connection URL"
@@ -5642,6 +5578,8 @@ msgid ""
 "Connection string required by the JDBC driver, refer to the used JDBC driver "
 "for its contents and format"
 msgstr ""
+"Șirul de conexiune necesar de driverul JDBC, consultați driverul JDBC "
+"folosit pentru conținutul și formatul lui"
 
 #: ../providers/jdbc/libmain.c:153 ../providers/jdbc/libmain.c:163
 #, c-format
@@ -5654,8 +5592,6 @@ msgid "Can't create JAVA virtual machine: %s"
 msgstr "Nu se poate crea mașina virtuală JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:487
-#, fuzzy
-#| msgid "Could not the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
@@ -5667,7 +5603,7 @@ msgstr "Șirul de conexiune trebuie să conțină valoarea DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:417
 msgid "Invalid value for 'TLS_REQCERT'"
-msgstr ""
+msgstr "Valoare nevalidă pentru „TLS_REQCERT”"
 
 #: ../providers/ldap/gda-ldap-provider.c:866 ../tools/gda-sql.c:2827
 #: ../tools/gda-sql.c:4821 ../tools/gda-sql.c:5548 ../tools/gda-sql.c:5851
@@ -5696,7 +5632,7 @@ msgstr "Nu s-a putut analiza numele distins returnat de serverul LDAP"
 #: ../providers/ldap/gda-ldap-util.c:1639
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
-msgstr ""
+msgstr "Tip de date neașteptat „%s” pentru atributul objectClass!"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:218
 #: ../providers/ldap/gdaprov-data-model-ldap.c:419
@@ -5706,10 +5642,8 @@ msgstr "Nume distins"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:416
 #: ../providers/ldap/gdaprov-data-model-ldap.c:431
-#, fuzzy
-#| msgid "Distinguished name"
 msgid "Relative distinguished name"
-msgstr "Nume distins"
+msgstr "Nume relativ distins"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:902
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1199
@@ -5719,45 +5653,40 @@ msgstr "Rezultatul trunchiat deoarece s-a atins limita serverului LDAP"
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1583
 #, c-format
 msgid "Unknown GdaLdapModificationType %d"
-msgstr ""
+msgstr "GdaLdapModificationType %d necunoscut"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1590
-#, fuzzy
-#| msgid "No provider specified"
 msgid "No GdaLdapEntry specified"
-msgstr "Niciun furnizor specificat"
+msgstr "Nicio GdaLdapEntry specificată"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1596
-#, fuzzy
-#| msgid "No provider specified"
 msgid "No GdaLdapEntry specified to define attributes to add"
-msgstr "Niciun furnizor specificat"
+msgstr "Nicio GdaLdapEntry specificată care să definească atribute de adăugat"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1602
-#, fuzzy
-#| msgid "No provider specified"
 msgid "No GdaLdapEntry specified to define attributes to remove"
-msgstr "Niciun furnizor specificat"
+msgstr "Nicio GdaLdapEntry specificată care să definească atribute de eliminat"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1608
-#, fuzzy
-#| msgid "No provider specified"
 msgid "No GdaLdapEntry specified to define attributes to replace"
-msgstr "Niciun furnizor specificat"
+msgstr "Nicio GdaLdapEntry specificată care să definească atribute de înlocuit"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1614
 msgid "No GdaLdapEntry specified to compare attributes"
-msgstr ""
+msgstr "Nicio GdaLdapEntry specificată pentru a compara atributele"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1619
 msgid "GdaLdapEntry specified to compare have different DN"
-msgstr ""
+msgstr "GdaLdapEntry specificată pentru comparație are DN-uri diferite"
 
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:2
 msgid ""
 "User name, as a DN or simple user name, for Active Directory may be "
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
+"Numele de utilizator, ca un DN sau nume de utilizator simplu, pentru "
+"Directorul Activ poate fi numedeutilizator@DOMENIU sau DOMENIU\\ "
+"numedeutilizator (fără spațiu)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -5799,22 +5728,25 @@ msgstr "Dacă să se folosească sau nu SSL pentru stabilirea conexiunii"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:9
 msgid "Certificate check type"
-msgstr ""
+msgstr "Tipul de verificare a certificatului"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:10
 msgid ""
 "Specifies what checks to perform on server certificates in a SSL/TLS session"
 msgstr ""
+"Specifică ce să se verifice la certificatele de server într-o sesiune SSL/TLS"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:11
 msgid "Certificates file"
-msgstr ""
+msgstr "Fișierul certificatelor"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:12
 msgid ""
 "Specifies the file that contains certificates for all of the recognized "
 "Certificate Authorities, in a SSL/TLS session"
 msgstr ""
+"Specifică fișierul care conține certificate pentru toate Autoritățile de "
+"certificare recunoscute, într-o sesiune SSL/TLS"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:13
 msgid "Cache server data"
@@ -5830,42 +5762,43 @@ msgstr ""
 "valoarea implicită este TRUE"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
-#, fuzzy
-#| msgid "Login limit"
 msgid "Time limit"
-msgstr "Limită de autentificare"
+msgstr "Limită de timp"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:16
 msgid ""
 "Time limit after which a search operation should be terminated by the server "
 "(leave undefined or 0 for unlimited)"
 msgstr ""
+"Limita de timp după care o operație de căutare ar trebui terminată de către "
+"server (lăsați nedefinit sau 0 pentru nelimitat)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
-#, fuzzy
-#| msgid "Login limit"
 msgid "Size limit"
-msgstr "Limită de autentificare"
+msgstr "Limită de dimensiune"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:18
 msgid "Maximum number of entries that can be returned on a search operation"
 msgstr ""
+"Numărul maxim de intrări care pot fi returnate de o operație de căutare"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:19
 msgid "Never: certificate not requested or checked"
-msgstr ""
+msgstr "Niciodată: certificat necerut sau neverificat"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
-msgstr ""
+msgstr "Permite: certificatul cerut, niciunul sau unul rău acceptat."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:21
 msgid "Try: certificate requested, none accepted, otherwise checked."
 msgstr ""
+"Încercare: certificatul a fost cerut, niciunul acceptat, restul a fost "
+"verificat."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
-msgstr ""
+msgstr "Cerere: certificatul cerut și verificat"
 
 #: ../providers/ldap/libmain.c:75
 msgid ""
@@ -5943,10 +5876,9 @@ msgid "Invalid port number"
 msgstr "Număr de port nevalid"
 
 #: ../providers/mysql/gda-mysql-provider.c:548
-#, fuzzy, c-format
-#| msgid "Unknown provider '%s'"
+#, c-format
 msgid "Unknown MySQL protocol '%s'"
-msgstr "Furnizor necunoscut „%s”"
+msgstr "Protocol MySQL necunoscut „%s”"
 
 #: ../providers/mysql/gda-mysql-provider.c:593
 #, c-format
@@ -5985,17 +5917,13 @@ msgstr "Nu se poate citi întreg BLOB în memorie"
 
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2684
-#, fuzzy, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
+#, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
 "org/ for the \"libgda\" product."
 msgstr ""
-"Nu se poate obține operatorul BLOB SQLite (tipul raportat este „%s”), "
-"raportați acest defect la http://bugzilla.gnome.org/ pentru produsul "
-"„libgda”."
+"Tip de date negestionat „%s”, raportați acest defect la http://bugzilla."
+"gnome.org/ pentru produsul „libgda”."
 
 #: ../providers/mysql/gda-mysql-provider.c:2731
 msgid ""
@@ -6141,10 +6069,8 @@ msgstr "Parolă administrator"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
-#, fuzzy
-#| msgid "Connection properties"
 msgid "Connection protocol"
-msgstr "Proprietăți conexiune"
+msgstr "Protocolul conexiunii"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
@@ -6154,6 +6080,9 @@ msgid ""
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
+"Specifică explicit protocolul de conexiune de folosit. Este folositor când "
+"alți parametrii de conexiune vor cauza ca alt protocol să fie folosit în loc "
+"de cel dorit"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -6400,13 +6329,13 @@ msgstr "SJIS pentru Japoneză Windows"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
 msgid "Automatic"
-msgstr ""
+msgstr "Automat"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid "TCP: TCP/IP connection to local or remote server."
-msgstr ""
+msgstr "TCP: conexiune TCP/IP la server local sau la distanță."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
@@ -6414,6 +6343,8 @@ msgstr ""
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
+"Soclu: Conexiunea la fișierul soclu Unix către un server local (numai "
+"servere locale Unix)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
@@ -6421,6 +6352,8 @@ msgstr ""
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
+"Linie de asamblare: Conexiune numită la serverul local sau la distanță "
+"(numai servere Windows)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
@@ -6428,6 +6361,8 @@ msgstr ""
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
+"Memorie: Conexiune cu memorie partajată la serverul local (numai servere "
+"Windows locale)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6729,8 +6664,6 @@ msgid "Compact"
 msgstr "Compact"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
-#, fuzzy
-#| msgid "Replace it already exists"
 msgid "Replace if it already exists"
 msgstr "Înlocuiește dacă există deja"
 
@@ -6858,10 +6791,8 @@ msgid "Insufficient memory to convert string to binary buffer"
 msgstr "Memorie insuficientă pentru a converti șirul la amortizor binar"
 
 #: ../providers/postgres/gda-postgres-provider.c:524
-#, fuzzy
-#| msgid "could not determine the indexed columns for index"
 msgid "Could not determine the default date format"
-msgstr "nu s-a putut determina coloanele indexate pentru indice"
+msgstr "Nu s-a putut determina formatul de dată implicit"
 
 #: ../providers/postgres/gda-postgres-provider.c:580
 msgid "The connection string must contain a DB_NAME value"
@@ -7531,8 +7462,6 @@ msgid "Existing user"
 msgstr "Utilizator existent"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
-#, fuzzy
-#| msgid "Replace it already exists"
 msgid "Replace it already exists"
 msgstr "Înlocuiește dacă există deja"
 
@@ -7586,16 +7515,17 @@ msgid "Search path among database's schemas ('search_path' variable)"
 msgstr "Caută cale prin schemele bazei de date (variabila „search_path”)"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:13
-#, fuzzy
-#| msgid "Connections list"
 msgid "Connection timeout"
-msgstr "Lista de conexiuni"
+msgstr "Conexiune expirată"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:14
 msgid ""
 "Maximum wait for connection, in seconds. Zero or not specified means wait "
 "indefinitely. It is not recommended to use a timeout of less than 2 seconds"
 msgstr ""
+"Timpul maxim de așteptat pentru o conexiune, în secunde. Zero sau "
+"nespecificat înseamnă așteptare infinită. Nu este recomandată o limită de "
+"timp mai mică de 2 secunde"
 
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:782
 #: ../providers/reuseable/mysql/gda-mysql-meta.c:845
@@ -7871,8 +7801,6 @@ msgid "Executing LDAP search"
 msgstr "Se execută căutarea LDAP"
 
 #: ../tools/browser/browser-connection.c:2563
-#, fuzzy
-#| msgid "Fetching LDAP entry's attributes"
 msgid "Fetching LDAP entry's attributes"
 msgstr "Se aduc atributele intrării LDAP"
 
@@ -8010,14 +7938,10 @@ msgid "_Connect"
 msgstr "_Conectează"
 
 #: ../tools/browser/browser-window.c:281
-#, fuzzy
-#| msgid "Open a new connection"
 msgid "Open a connection"
-msgstr "Deschide o conexiune nouă"
+msgstr "Deschide o conexiune"
 
 #: ../tools/browser/browser-window.c:282
-#, fuzzy
-#| msgid "_Bind connection"
 msgid "_Bind Connection"
 msgstr "Leagă co_nexiunea"
 
@@ -8036,8 +7960,6 @@ msgid "Connection properties"
 msgstr "Proprietăți conexiune"
 
 #: ../tools/browser/browser-window.c:286
-#, fuzzy
-#| msgid "_Connections list"
 msgid "_Connections List"
 msgstr "Lista de _conexiuni"
 
@@ -8046,18 +7968,14 @@ msgid "Connections list"
 msgstr "Lista de conexiuni"
 
 #: ../tools/browser/browser-window.c:287
-#, fuzzy
-#| msgid "_Fetch meta data"
 msgid "_Fetch Meta Data"
-msgstr "Adu d_ate meta"
+msgstr "Adu metad_ate"
 
 #: ../tools/browser/browser-window.c:287
 msgid "Fetch meta data"
 msgstr "Adu date meta"
 
 #: ../tools/browser/browser-window.c:288
-#, fuzzy
-#| msgid "_Close connection"
 msgid "_Close Connection"
 msgstr "În_chide conexiunea"
 
@@ -8114,8 +8032,6 @@ msgid "Open a new window for current connection"
 msgstr "Deschide o fereastră nouă pentru conexiunea curentă"
 
 #: ../tools/browser/browser-window.c:295
-#, fuzzy
-#| msgid "New window for _connection"
 msgid "New Window for _Connection"
 msgstr "Fereastră nouă pentru _conexiune"
 
@@ -8141,22 +8057,16 @@ msgid "Manual"
 msgstr "Manual"
 
 #: ../tools/browser/browser-window.c:302
-#, fuzzy
-#| msgid "Begin a new transaction"
 msgid "Begin a new transaction"
 msgstr "Începe o tranzacție nouă"
 
 #: ../tools/browser/browser-window.c:304
-#, fuzzy
-#| msgid "Commit current transaction"
 msgid "Commit current transaction"
 msgstr "Comite tranzacția curentă"
 
 #: ../tools/browser/browser-window.c:306
-#, fuzzy
-#| msgid "Rollback current transaction"
 msgid "Rollback current transaction"
-msgstr "Anulează tranzacția curentă"
+msgstr "Derulează înapoi tranzacția curentă"
 
 #: ../tools/browser/browser-window.c:516 ../tools/browser/browser-window.c:571
 #: ../tools/browser/common/ui-formgrid.c:851
@@ -8207,10 +8117,7 @@ msgid "Error updating bound connection: %s"
 msgstr "Eroare la actualizarea conexiunii de legătură: %s"
 
 #: ../tools/browser/browser-window.c:1213
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not open connection:\n"
-#| "%s"
+#, c-format
 msgid "Could not open binding connection: %s"
 msgstr ""
 "Nu s-a putut deschide conexiunea:\n"
@@ -8408,15 +8315,11 @@ msgid "Declare a foreign key for table '%s'"
 msgstr "Declară o cheie străină pentru tabela „%s”"
 
 #: ../tools/browser/common/fk-declare.c:189
-#, fuzzy
-#| msgid ""
-#| "define which table is references, which columns are part of the foreign "
-#| "key, and which column each one references"
 msgid ""
 "define which table is references, which columns are part of the foreign key, "
 "and which column each one references"
 msgstr ""
-"definește care tabelă este referințe, care coloane fac parte din cheia "
+"definește care tabel este de referințe, care coloane fac parte din cheia "
 "străină, și la care coloană se referă fiecare"
 
 #: ../tools/browser/common/fk-declare.c:208
@@ -8710,10 +8613,8 @@ msgstr ""
 "în care va fi tabela"
 
 #: ../tools/browser/data-manager/analyser.c:192
-#, fuzzy
-#| msgid "Obtain referenced data in table "
 msgid "Obtain referenced data in table "
-msgstr "Obține datele referențiate în tabela "
+msgstr "Obține datele referențiate în tabel "
 
 #: ../tools/browser/data-manager/analyser.c:209
 msgid "List referencing data in "
@@ -8906,8 +8807,6 @@ msgstr "Administrator de date nedenumit"
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:332
 #: ../tools/browser/query-exec/query-exec-perspective.c:314
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:309
-#, fuzzy
-#| msgid "_Show favorites"
 msgid "_Show Favorites"
 msgstr "_Afișează favoritele"
 
@@ -9114,6 +9013,15 @@ msgid ""
 "database. The data manager perspective allows the user to view the data "
 "contained in the database in a tabular form."
 msgstr ""
+"Navigator baze de date oferă acces rapid la datele și schema unei baze de "
+"date, și o afișează într-o interfață grafică intuitivă. Oferă trei "
+"perspective de interacționat cu o bază de date: navigatorul de scheme, "
+"execuția interogărilor și administratorul de date.Navigatorul de scheme "
+"permite utilizatorului să vizualizeze tabelele unei baze de date, și să "
+"inspecteze proprietățile și relațiile tabelului. Execuția interogărilor "
+"permite utilizatorului să execute interogări SQL pe baza de date. "
+"Administratorul de date permite utilizatorului să vizioneze datele conținute "
+"în baza de date într-o formă tabulară."
 
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:2
 msgid "GdaBrowser"
@@ -9223,8 +9131,7 @@ msgid "Search scope:"
 msgstr "Domeniu de căutare:"
 
 #: ../tools/browser/ldap-browser/hierarchy-view.c:522
-#, fuzzy, c-format
-#| msgid "Could not find LDAP entry whith DN '%s'"
+#, c-format
 msgid "Could not find LDAP entry with DN '%s'"
 msgstr "Nu s-a putut găsi o intrare LDAP cu DN-ul „%s”"
 
@@ -9244,8 +9151,6 @@ msgid "LDAP"
 msgstr "LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:337
-#, fuzzy
-#| msgid "_New LDAP entries browser"
 msgid "_New LDAP Entries Browser"
 msgstr "Navigator _nou de intrări LDAP"
 
@@ -9254,8 +9159,6 @@ msgid "Open a new LDAP entries browser"
 msgstr "Deschide un navigator nou de intrări LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:339
-#, fuzzy
-#| msgid "_New LDAP classes browser"
 msgid "_New LDAP Classes Browser"
 msgstr "Navigator _nou de clase LDAP"
 
@@ -9264,8 +9167,6 @@ msgid "Open a new LDAP classes browser"
 msgstr "Deschide un navigator nou de clase LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:341
-#, fuzzy
-#| msgid "_New LDAP search"
 msgid "_New LDAP Search"
 msgstr "Căutare LDAP _nouă"
 
@@ -9289,14 +9190,10 @@ msgstr "Proprietățile clasei LDAP"
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:514
 #: ../tools/browser/schema-browser/table-info.c:990
-#, fuzzy
-#| msgid "Add to _Favorites"
 msgid "Add to _Favorites"
 msgstr "Adaugă la _favorite"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:508
-#, fuzzy
-#| msgid "Add class to favorites"
 msgid "Add class to favorites"
 msgstr "Adaugă clasa la favorite"
 
@@ -9329,8 +9226,6 @@ msgid "LDAP entry's details"
 msgstr "Detaliile intrării LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:514
-#, fuzzy
-#| msgid "Add entry to favorites"
 msgid "Add entry to favorites"
 msgstr "Adaugă intrarea la favorite"
 
@@ -9398,10 +9293,8 @@ msgid "Virtual table '%s' for this LDAP search has been defined"
 msgstr "Tabela virtuală „%s” pentru această căutare LDAP a fost definită"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:466
-#, fuzzy
-#| msgid "Define as table"
 msgid "Define as Table"
-msgstr "Definește ca tabelă"
+msgstr "Definește ca tabel"
 
 #: ../tools/browser/ldap-browser/ldap-search-page.c:466
 msgid "Define search as a virtual table"
@@ -9470,15 +9363,12 @@ msgid "All files are in the directory: %s\n"
 msgstr "Toate fișierele sunt în directorul: %s\n"
 
 #: ../tools/browser/main.c:170 ../tools/gda-sql.c:307
-#, fuzzy, c-format
-#| msgid ""
-#| "Error while purging files used to store information about each "
-#| "connection: %s\n"
+#, c-format
 msgid ""
 "Can't get the list of files used to store information about each connection: "
 "%s\n"
 msgstr ""
-"Eroare în timp ce se eliminau fișierele folosite pentru a stoca informații "
+"Nu s-a putut obține lista fișierelor folosite pentru a stoca informații "
 "despre fiecare conexiune: %s\n"
 
 #: ../tools/browser/main.c:185 ../tools/gda-sql.c:319
@@ -9735,7 +9625,7 @@ msgstr "Anulează ultima modificare"
 
 #: ../tools/browser/query-exec/query-editor.c:698
 msgid "Copy all in a single line"
-msgstr ""
+msgstr "Copiază tot într-o singură linie"
 
 #: ../tools/browser/query-exec/query-editor.c:1245
 msgid "In the future:\n"
@@ -10067,8 +9957,6 @@ msgid "Insert data into table"
 msgstr "Inserează date în tabelă"
 
 #: ../tools/browser/schema-browser/table-info.c:996
-#, fuzzy
-#| msgid "_Declare foreign key"
 msgid "_Declare Foreign Key"
 msgstr "_Declară o cheie străină"
 
@@ -10156,28 +10044,10 @@ msgid "Structural"
 msgstr "Structural"
 
 #: ../tools/browser/support.c:444
-#, fuzzy
-#| msgid "Auxilliary"
 msgid "Auxilliary"
 msgstr "Auxiliar"
 
 #: ../tools/browser/support.h:117
-#, fuzzy
-#| msgid ""
-#| "<small>This area allows to give values to\n"
-#| "variables defined in the SQL code\n"
-#| "using the following syntax:\n"
-#| "<b><tt>##&lt;variable name&gt;::&lt;type&gt;[::null]</tt></b>\n"
-#| "For example:\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
-#| "      defines <b>id</b> as a non NULL integer\n"
-#| "<span foreground=\"#4e9a06\"><b><tt>##age::string::null</tt></b></span>\n"
-#| "      defines <b>age</b> as a a string\n"
-#| "\n"
-#| "Valid types are: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-#| "<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-#| "<tt>blob</tt> and\n"
-#| "<tt>binary</tt></small>"
 msgid ""
 "<small>This area allows to give values to\n"
 "variables defined in the SQL code\n"
@@ -10226,25 +10096,23 @@ msgid "Invalid unnamed command"
 msgstr "Comandă nedenumită nevalidă"
 
 #: ../tools/cmdtool/tool-command.c:282
-#, fuzzy, c-format
-#| msgid "Column '%s' not found"
+#, c-format
 msgid "Command '%s' not found"
-msgstr "Nu s-a găsit coloana „%s”"
+msgstr "Nu s-a găsit comanda „%s”"
 
 #: ../tools/cmdtool/tool-command.c:313
-#, fuzzy, c-format
-#| msgid "Syntax error at line %d, column %d"
+#, c-format
 msgid "Syntax error after '\\'"
-msgstr "Eroare de sintaxă la linia %d, coloana %d"
+msgstr "Eroare de sintaxă după „\\”"
 
 #: ../tools/cmdtool/tool-command.c:343
 #, c-format
 msgid "Unbalanced usage of quotes"
-msgstr ""
+msgstr "Utilizare nebalansată a ghilimelelor"
 
 #: ../tools/cmdtool/tool-help.c:249 ../tools/cmdtool/tool-help.c:440
 msgid "Usage"
-msgstr ""
+msgstr "Utilizare"
 
 #: ../tools/cmdtool/tool-input.c:478
 #, c-format
@@ -10407,10 +10275,9 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: ../tools/config-info.c:555
-#, fuzzy, c-format
-#| msgid "Unknown provider '%s'"
+#, c-format
 msgid "Unknown criteria '%s'"
-msgstr "Furnizor necunoscut „%s”"
+msgstr "Criteriu necunoscut „%s”"
 
 #: ../tools/config-info.c:614
 msgid "Failed to remove: "
@@ -10470,37 +10337,35 @@ msgid ""
 "Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
 "\" and \"none\")"
 msgstr ""
+"Definește cum coloana DN este administrată pentru LDAP căutat (printre care "
+"„dn”, „rdn” și „none”)"
 
 #: ../tools/gda-sql.c:220
 msgid ""
 "Defines the LDAP attributes which are fetched by default by LDAP commands"
 msgstr ""
+"Definește atributele LDAP care sunt preluate implicit de comenzile LDAP"
 
 #: ../tools/gda-sql.c:228
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
 msgstr ""
+"Stabilește la ADEVĂRAT când prima linie a unui fișier CSV conține numele "
+"coloanelor"
 
 #: ../tools/gda-sql.c:234
 msgid "Quote character for CSV format"
-msgstr ""
+msgstr "Caracterul ghilimele pentru formatul CSV"
 
 #: ../tools/gda-sql.c:240
 msgid "Separator character for CSV format"
-msgstr ""
+msgstr "Caracterul separator pentru formatul CSV"
 
 #: ../tools/gda-sql.c:352
 msgid "Welcome to the GDA SQL console, version "
 msgstr "Bun venit la consola GDA SQL, versiunea "
 
 #: ../tools/gda-sql.c:358
-#, fuzzy, c-format
-#| msgid ""
-#| "Type: .copyright to show usage and distribution terms\n"
-#| "      .? for help with internal commands\n"
-#| "      .q (or CTRL-D) to quit\n"
-#| "      (the '.' can be replaced by a '\\')\n"
-#| "      or any query terminated by a semicolon\n"
-#| "\n"
+#, c-format
 msgid ""
 "Type: %s to show usage and distribution terms\n"
 "      %s or %s for help with internal commands\n"
@@ -10508,18 +10373,16 @@ msgid ""
 "      or any SQL query terminated by a semicolon\n"
 "\n"
 msgstr ""
-"Tip: .drepturi de autor pentru a afișa termenii de utilizare și distribuție\n"
-"      .? pentru ajutor la comenzile interne\n"
-"      .q (sau CTRL-D) pentru a părăsi\n"
-"      („.” poate fi înlocuit de „\\”)\n"
-"      sau orice interogare terminată cu punct și virgulă\n"
+"Tip: %s pentru a afișa termenii de utilizare și distribuție\n"
+"      %s sau %s pentru ajutor la comenzile interne\n"
+"      %s (sau CTRL-D) pentru a părăsi („.” poate fi înlocuit de „\\”)\n"
+"      sau orice interogare SQL terminată cu punct și virgulă\n"
 "\n"
 
 #: ../tools/gda-sql.c:413
-#, fuzzy, c-format
-#| msgid "Opening connection '%s' for: %s\n"
+#, c-format
 msgid "Opening connection '%s' for: "
-msgstr "Se deschide conexiunea „%s” pentru: %s\n"
+msgstr "Se deschide conexiunea „%s” pentru: "
 
 #: ../tools/gda-sql.c:429
 #, c-format
@@ -10527,11 +10390,9 @@ msgid "Can't open connection %d: %s\n"
 msgstr "Nu se poate deschide conexiunea %d: %s\n"
 
 #: ../tools/gda-sql.c:444
-#, fuzzy, c-format
-#| msgid "Opening connection '%s' for: %s (GDA_SQL_CNC environment variable)\n"
+#, c-format
 msgid "Opening connection '%s' (GDA_SQL_CNC environment variable): "
-msgstr ""
-"Se deschide conexiunea „%s” pentru: %s (variabilă de mediu GDA_SQL_CNC)\n"
+msgstr "Se deschide conexiunea „%s” (variabilă de mediu GDA_SQL_CNC): "
 
 #: ../tools/gda-sql.c:459
 #, c-format
@@ -10563,10 +10424,9 @@ msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Nu se poate deschide fișierul „%s” pentru scriere: %s\n"
 
 #: ../tools/gda-sql.c:1103 ../tools/gda-sql.c:1112
-#, fuzzy, c-format
-#| msgid "Can't open pipe '%s': %s\n"
+#, c-format
 msgid "Can't open pipe '%s': %s"
-msgstr "Nu se poate deschide conexiunea „%s”: %s\n"
+msgstr "Nu se poate deschide conexiunea „%s”: %s"
 
 #: ../tools/gda-sql.c:1152
 #, c-format
@@ -10604,6 +10464,8 @@ msgid ""
 "Date format for this connection will be: %s%c%s%c%s, where YYYY is the year, "
 "MM the month and DD the day\n"
 msgstr ""
+"Formatul de dată pentru această conexiune va fi: %s%c%s%c%s, unde YYYY este "
+"anul, MM este luna și DD este ziua\n"
 
 #: ../tools/gda-sql.c:1423
 #, c-format
@@ -10640,10 +10502,9 @@ msgstr "Gata.\n"
 
 #: ../tools/gda-sql.c:2009 ../tools/gda-sql.c:2171 ../tools/gda-sql.c:2229
 #: ../tools/gda-sql.c:2237
-#, fuzzy, c-format
-#| msgid "%s [FILE]"
+#, c-format
 msgid "%s [<FILE>]"
-msgstr "%s [FILE]"
+msgstr "%s [<FIȘIER>]"
 
 #: ../tools/gda-sql.c:2010
 msgid "Show commands history, or save it to file"
@@ -10656,10 +10517,9 @@ msgid "Information"
 msgstr "Infomații"
 
 #: ../tools/gda-sql.c:2017
-#, fuzzy, c-format
-#| msgid "%s [META DATA TYPE]"
+#, c-format
 msgid "%s [<META DATA TYPE>]"
-msgstr "%s [META DATA TYPE]"
+msgstr "%s [<TIP DE METADATE>]"
 
 #: ../tools/gda-sql.c:2018
 msgid ""
@@ -10692,60 +10552,54 @@ msgid "Un-declare a foreign key (not actually in database)"
 msgstr "Elimină o cheie străină (care nu este fizic în baza de date)"
 
 #: ../tools/gda-sql.c:2044
-#, fuzzy, c-format
-#| msgid "%s [TABLE]"
+#, c-format
 msgid "%s [<TABLE>]"
-msgstr "%s [TABLE]"
+msgstr "%s [<TABEL>]"
 
 #: ../tools/gda-sql.c:2045
 msgid "List all tables (or named table)"
 msgstr "Enumeră toate tabelele (sau tabela denumită)"
 
 #: ../tools/gda-sql.c:2053
-#, fuzzy, c-format
-#| msgid "%s [VIEW]"
+#, c-format
 msgid "%s [<VIEW>]"
-msgstr "%s [VIEW]"
+msgstr "%s [<VIZUALIZARE>]"
 
 #: ../tools/gda-sql.c:2054
 msgid "List all views (or named view)"
 msgstr "Enumeră toate vizualizările (sau vizualizarea denumită)"
 
 #: ../tools/gda-sql.c:2062
-#, fuzzy, c-format
-#| msgid "%s [SCHEMA]"
+#, c-format
 msgid "%s [<SCHEMA>]"
-msgstr "%s [SCHEMA]"
+msgstr "%s [<SCHEMĂ>]"
 
 #: ../tools/gda-sql.c:2063
 msgid "List all schemas (or named schema)"
 msgstr "Enumeră toate schemele (sau schema denumită)"
 
 #: ../tools/gda-sql.c:2071
-#, fuzzy, c-format
-#| msgid "%s [OBJ_NAME|SCHEMA.*]"
+#, c-format
 msgid "%s [<OBJ_NAME>|<SCHEMA>.*]"
-msgstr "%s [OBJ_NAME|SCHEMA.*]"
+msgstr "%s [<NUME_OBIECT>|<SCHEMĂ>.*]"
 
 #: ../tools/gda-sql.c:2072
 msgid "Describe object or full list of objects"
 msgstr "Descrie obiectul sau lista completă de obiecte"
 
 #: ../tools/gda-sql.c:2080
-#, fuzzy, c-format
-#| msgid "%s [TABLE1 [TABLE2...]]"
+#, c-format
 msgid "%s [<TABLE1> [<TABLE2>...]]"
-msgstr "%s [TABLE1 [TABLE2...]]"
+msgstr "%s [<TABEL1> [<TABEL2>...]]"
 
 #: ../tools/gda-sql.c:2081
 msgid "Create a graph of all or the listed tables"
 msgstr "Creeză un grafic pentru toate tabelele enumerate"
 
 #: ../tools/gda-sql.c:2089
-#, fuzzy, c-format
-#| msgid "%s [port [authentication token]]"
+#, c-format
 msgid "%s [<port> [<authentication token>]]"
-msgstr "%s [port [semn de autentificare]]"
+msgstr "%s [<port> [<jeton de autentificare>]]"
 
 #: ../tools/gda-sql.c:2090
 msgid "Start/stop embedded HTTP server (on given port or on 12345 by default)"
@@ -10754,36 +10608,36 @@ msgstr ""
 "implicit)"
 
 #: ../tools/gda-sql.c:2099
-#, fuzzy, c-format
-#| msgid "%s [CNC_NAME [DSN|CONNECTION STRING]]"
+#, c-format
 msgid "%s [[<CNC_NAME>] [<DSN>|<CONNECTION STRING>]]"
-msgstr "%s [CNC_NAME [DSN|CONNECTION STRING]]"
+msgstr "%s [[<NUME_CNC>] [<DSN>|<ȘIR DE CONEXIUNE>]]"
 
 #: ../tools/gda-sql.c:2100
 msgid "Opens a new connection or lists opened connections"
 msgstr "Deschide o conexiune nouă sau enumeră conexiunile deschise"
 
 #: ../tools/gda-sql.c:2109
-#, fuzzy, c-format
-#| msgid "%s [CNC_NAME]"
+#, c-format
 msgid "%s [<CNC_NAME>]"
-msgstr "%s [CNC_NAME]"
+msgstr "%s [<NUME_CNC>]"
 
 #: ../tools/gda-sql.c:2110
 msgid "Close a connection"
 msgstr "Închide o conexiune"
 
 #: ../tools/gda-sql.c:2118
-#, fuzzy, c-format
-#| msgid "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
+#, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
-msgstr "%s CNC_NAME CNC_NAME1 CNC_NAME2 [CNC_NAME ...]"
+msgstr "%s <NUME CNC> <NUME OBIECT> [<NUME OBIECT> ...]"
 
 #: ../tools/gda-sql.c:2119
 msgid ""
 "Bind connections or datasets (<OBJ NAME>) into a single new one (allowing "
 "SQL commands to be executed across multiple connections and/or datasets)"
 msgstr ""
+"Leagă conexiuni la seturi de date (<NUME OBIECT>) într-una singură "
+"(permițând comenzilor să fie executate în conexiuni și/sau seturi de date "
+"multiple)"
 
 #: ../tools/gda-sql.c:2125 ../tools/gda-sql.c:2134 ../tools/gda-sql.c:2143
 #: ../tools/gda-sql.c:2152
@@ -10791,40 +10645,36 @@ msgid "DSN (data sources) management"
 msgstr "Administrare DSN (surse de date)"
 
 #: ../tools/gda-sql.c:2127
-#, fuzzy, c-format
-#| msgid "%s [DSN]"
+#, c-format
 msgid "%s [<DSN>]"
-msgstr "%s [DSN]"
+msgstr "%s [<DSN>]"
 
 #: ../tools/gda-sql.c:2128
 msgid "List all DSN (or named DSN's attributes)"
 msgstr "Listează toate DSN (sau atributele DSN denumite)"
 
 #: ../tools/gda-sql.c:2136
-#, fuzzy, c-format
-#| msgid "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
+#, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
-msgstr "%s DSN_NAME DSN_DEFINITION [DESCRIPTION]"
+msgstr "%s <NUME_DSN> <DEFINIȚIE_DSN> [<DESCRIERE>]"
 
 #: ../tools/gda-sql.c:2137
 msgid "Create (or modify) a DSN"
 msgstr "Creează (sau modifică) un DSN"
 
 #: ../tools/gda-sql.c:2145
-#, fuzzy, c-format
-#| msgid "%s DSN_NAME [DSN_NAME...]"
+#, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
-msgstr "%s DSN_NAME [DSN_NAME...]"
+msgstr "%s <NUME_DSN> [<NUME_DSN>...]"
 
 #: ../tools/gda-sql.c:2146
 msgid "Remove a DSN"
 msgstr "Elimină un DSN"
 
 #: ../tools/gda-sql.c:2154
-#, fuzzy, c-format
-#| msgid "%s [PROVIDER]"
+#, c-format
 msgid "%s [<PROVIDER>]"
-msgstr "%s [PROVIDER]"
+msgstr "%s [<FURNIZOR>]"
 
 #: ../tools/gda-sql.c:2155
 msgid "List all installed database providers (or named one's attributes)"
@@ -10838,10 +10688,9 @@ msgid "Input/Output"
 msgstr "Intrare/Ieșire"
 
 #: ../tools/gda-sql.c:2163 ../tools/gda-sql.c:2261
-#, fuzzy, c-format
-#| msgid "%s FILE"
+#, c-format
 msgid "%s <FILE>"
-msgstr "%s FILE"
+msgstr "%s <FIȘIER>"
 
 #: ../tools/gda-sql.c:2164
 msgid "Execute commands from file"
@@ -10852,26 +10701,22 @@ msgid "Send output to a file or |pipe"
 msgstr "Trimite ieșirea la un fișier sau |conexiune"
 
 #: ../tools/gda-sql.c:2179 ../tools/gda-sql.c:2187
-#, fuzzy, c-format
-#| msgid "%s [TEXT]"
+#, c-format
 msgid "%s [<TEXT>]"
-msgstr "%s [TEXT]"
+msgstr "%s [<TEXT>]"
 
 #: ../tools/gda-sql.c:2180
 msgid "Print TEXT or an empty line to standard output"
-msgstr ""
+msgstr "Tipărește TEXT sau o linie goală în ieșirea standard"
 
 #: ../tools/gda-sql.c:2188
-#, fuzzy
-#| msgid "Send output to output stream"
 msgid "Send TEXT or an empty line to current output stream"
-msgstr "Trimite rezultatul la fluxul de ieșire"
+msgstr "Trimite TEXT sau o linie goală către fluxul de ieșire curent"
 
 #: ../tools/gda-sql.c:2203
-#, fuzzy, c-format
-#| msgid "%s [DIR]"
+#, c-format
 msgid "%s [<DIR>]"
-msgstr "%s [DIR]"
+msgstr "%s [<DIR>]"
 
 #: ../tools/gda-sql.c:2204
 msgid "Change the current working directory"
@@ -10882,55 +10727,45 @@ msgid "Show usage and distribution terms"
 msgstr "Afișează termenii de utilizare și distribuție"
 
 #: ../tools/gda-sql.c:2220
-#, fuzzy, c-format
-#| msgid "%s [NAME [VALUE|_null_]]"
+#, c-format
 msgid "%s [<NAME> [<VALUE>]]"
-msgstr "%s [NAME [VALUE|_null_]]"
+msgstr "%s [<NUME> [<VALOARE>]]"
 
 #: ../tools/gda-sql.c:2221
-#, fuzzy
-#| msgid "Set or show internal parameter, or list all if no parameters"
 msgid "Set or show an option, or list all options "
-msgstr ""
-"Stabilește sau afișează parametrul intern, sau enumeră toate dacă nu există "
-"parametri"
+msgstr "Stabilește sau afișează o opțiune, sau listează toate opțiunile "
 
 #: ../tools/gda-sql.c:2227 ../tools/gda-sql.c:2235 ../tools/gda-sql.c:2243
 #: ../tools/gda-sql.c:2251 ../tools/gda-sql.c:2259 ../tools/gda-sql.c:2267
 #: ../tools/gda-sql.c:2275 ../tools/gda-sql.c:2283 ../tools/gda-sql.c:2291
 #: ../tools/gda-sql.c:2317
-#, fuzzy
-#| msgid "Query buffer name"
 msgid "Query buffer & query favorites"
-msgstr "Numele amortizorului de interogare"
+msgstr "Memorie interogare și favorite interogare"
 
 #: ../tools/gda-sql.c:2230
 msgid "Edit the query buffer (or file) with external editor"
 msgstr "Editează amortizorul interogării (sau fișierul) cu un editor extern"
 
 #: ../tools/gda-sql.c:2238
-#, fuzzy
-#| msgid "Edit the query buffer (or file) with external editor"
 msgid "Reset the query buffer (or load file into query buffer)"
-msgstr "Editează amortizorul interogării (sau fișierul) cu un editor extern"
+msgstr ""
+"Restabilește memoria interogării (sau încarcă fișierul în memoria "
+"interogării)"
 
 #: ../tools/gda-sql.c:2246
 msgid "Show the contents of the query buffer"
 msgstr "Afișează conținuturile amortizorului de interogare"
 
 #: ../tools/gda-sql.c:2253
-#, fuzzy, c-format
-#| msgid "%s [NAME]"
+#, c-format
 msgid "%s [<FAVORITE_NAME>]"
-msgstr "%s [NAME]"
+msgstr "%s [<NUME_FAVORIT>]"
 
 #: ../tools/gda-sql.c:2254
-#, fuzzy
-#| msgid "Execute contents of query buffer, or named query buffer"
 msgid "Execute contents of query buffer, or execute specified query favorite"
 msgstr ""
-"Execută conținuturile amortizorului de interogare, sau ale amortizorului de "
-"interogare denumit"
+"Execută conținuturile memoriei de interogare, sau execută interogarea "
+"specificată favorită"
 
 #: ../tools/gda-sql.c:2262
 msgid "Write query buffer to file"
@@ -10939,25 +10774,19 @@ msgstr "Scrie amortizorul de interogare la fișier"
 #: ../tools/gda-sql.c:2269 ../tools/gda-sql.c:2277 ../tools/gda-sql.c:2285
 #, c-format
 msgid "%s <FAVORITE_NAME>"
-msgstr ""
+msgstr "%s <NUME_FAVORIT>"
 
 #: ../tools/gda-sql.c:2270
-#, fuzzy
-#| msgid "Save query buffer to dictionary"
 msgid "Save query buffer as favorite"
-msgstr "Salvează amortizorul de interogare la dicționar"
+msgstr "Salvează memoria interogării ca favorit"
 
 #: ../tools/gda-sql.c:2278
-#, fuzzy
-#| msgid "Show the contents of the query buffer"
 msgid "Load a query favorite into query buffer"
-msgstr "Afișează conținuturile amortizorului de interogare"
+msgstr "Încarcă favorita interogării în memoria interogării"
 
 #: ../tools/gda-sql.c:2286
-#, fuzzy
-#| msgid "Delay key write"
 msgid "Delete a query favorite"
-msgstr "Întârzie scrierea cheii"
+msgstr "Șterge favorita interogării"
 
 #: ../tools/gda-sql.c:2293 ../tools/gda-sql.c:2362
 #, c-format
@@ -10973,10 +10802,9 @@ msgid "Set output format"
 msgstr "Stabilește formatul de ieșire"
 
 #: ../tools/gda-sql.c:2319
-#, fuzzy, c-format
-#| msgid "%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"
+#, c-format
 msgid "%s [<NAME>|<TABLE> <COLUMN> <ROW_CONDITION>] <FILE>"
-msgstr "%s [NAME|TABLE COLUMN ROW_CONDITION] FILE"
+msgstr "%s [<NUME>|<TABEL> <COLOANĂ> <CONDIȚIA_RÂNDULUI>] <FIȘIER>"
 
 #: ../tools/gda-sql.c:2320
 msgid "Export internal parameter or table's value to the FILE file"
@@ -10988,34 +10816,29 @@ msgid "Execution context"
 msgstr "Contextul execuției"
 
 #: ../tools/gda-sql.c:2327
-#, fuzzy, c-format
-#| msgid "%s [NAME [VALUE|_null_]]"
+#, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
-msgstr "%s [NAME [VALUE|_null_]]"
+msgstr "%s [<NUME> [<VALOARE>|_null_]]"
 
 #: ../tools/gda-sql.c:2328
-#, fuzzy
-#| msgid "Set or show internal parameter, or list all if no parameters"
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
-"Stabilește sau afișează parametrul intern, sau enumeră toate dacă nu există "
-"parametri"
+"Stabilește sau afișează parametrul intern, sau listează toate dacă nu există "
+"parametri "
 
 #: ../tools/gda-sql.c:2336
-#, fuzzy, c-format
-#| msgid "%s [NAME]"
+#, c-format
 msgid "%s [<NAME>]"
-msgstr "%s [NAME]"
+msgstr "%s [<NUME>]"
 
 #: ../tools/gda-sql.c:2337
 msgid "Unset (delete) internal named parameter (or all parameters)"
 msgstr "Destabilește (șterge) parametrul intern denumit (sau toți parametrii)"
 
 #: ../tools/gda-sql.c:2345
-#, fuzzy, c-format
-#| msgid "%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"
+#, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
-msgstr "%s NAME [FILE|TABLE COLUMN ROW_CONDITION]"
+msgstr "%s <NUME> [<FIȘIER>|<TABEL> <COLOANĂ> <CONDIȚIE_RÂND>]"
 
 #: ../tools/gda-sql.c:2346
 msgid ""
@@ -11026,10 +10849,9 @@ msgstr ""
 "la o valoare de tabelă existentă"
 
 #: ../tools/gda-sql.c:2353
-#, fuzzy, c-format
-#| msgid "%s SELECT ROW_FIELDS COLUMN_FIELDS [DATA_FIELDS]"
+#, c-format
 msgid "%s <SELECT> <ROW_FIELDS> [<COLUMN_FIELDS> [<DATA_FIELDS> ...]]"
-msgstr "%s SELECT ROW_FIELDS COLUMN_FIELDS [DATA_FIELDS]"
+msgstr "%s <SELECT> <CÂMPURI_RÂND> [<CÂMPURI_COLOANĂ> [<CÂMPURI_DATE> ...]]"
 
 #: ../tools/gda-sql.c:2354
 msgid ""
@@ -11041,60 +10863,59 @@ msgstr ""
 
 #: ../tools/gda-sql.c:2360 ../tools/gda-sql.c:2369 ../tools/gda-sql.c:2378
 #: ../tools/gda-sql.c:2387 ../tools/gda-sql.c:2396 ../tools/gda-sql.c:2405
-#, fuzzy
-#| msgid "Database's description"
 msgid "Datasets' manipulations"
-msgstr "Descrierea bazei de date"
+msgstr "Manipulările setului de date"
 
 #: ../tools/gda-sql.c:2363
 msgid "Lists all the datasets kept in memory for reference"
-msgstr ""
+msgstr "Listează toate seturile de date păstrate în memorie prin referință"
 
 #: ../tools/gda-sql.c:2371
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
-msgstr ""
+msgstr "%s <NUMELE SETULUI DE DATE> <MOSTRĂ>"
 
 #: ../tools/gda-sql.c:2372
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr ""
+"Arată conținutul unui set de date unde liniile se potrivesc unei expresii "
+"regulate"
 
 #: ../tools/gda-sql.c:2380
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
-msgstr ""
+msgstr "%s <NUMELE SETULUI DE DATE> [<COLOANĂ> [<COLOANĂ> ...]]"
 
 #: ../tools/gda-sql.c:2381
 msgid ""
 "Show a dataset's contents, showing only the specified columns if any "
 "specified"
-msgstr ""
+msgstr "Arată conținutul unui set de date, arătând numai colonele specificate"
 
 #: ../tools/gda-sql.c:2389
-#, fuzzy, c-format
-#| msgid "%s DSN_NAME [DSN_NAME...]"
+#, c-format
 msgid "%s <DATASET NAME> [<DATASET NAME> ...]"
-msgstr "%s DSN_NAME [DSN_NAME...]"
+msgstr "%s <NUME SET DE DATE> [<NUME SET DE DATE> ...]"
 
 #: ../tools/gda-sql.c:2390
-#, fuzzy
-#| msgid "Provider for PostgreSQL databases"
 msgid "Remove one or more datasets"
-msgstr "Furnizor pentru bazele de date PostgreSQL"
+msgstr "Elimină unul sau mai multe seturi de date"
 
 #: ../tools/gda-sql.c:2398
 #, c-format
 msgid "%s <DATASET NAME> <DATASET NAME>"
-msgstr ""
+msgstr "%s <NUMELE SETULUI DE DATE> <NUMELE SETULUI DE DATE>"
 
 #: ../tools/gda-sql.c:2399
 msgid "Rename a dataset, useful to rename the '_' dataset to keep it"
 msgstr ""
+"Redenumește setul de date, folositor la redenumirea setului de date „_” "
+"pentru a-l păstra"
 
 #: ../tools/gda-sql.c:2407
 #, c-format
 msgid "%s CSV <FILE NAME>"
-msgstr ""
+msgstr "%s CSV <NUME FIȘIER>"
 
 #: ../tools/gda-sql.c:2408
 msgid "Import a dataset from a file"
@@ -11103,18 +10924,16 @@ msgstr "Importă un set de date dintr-un fișier"
 #: ../tools/gda-sql.c:2417
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
-msgstr ""
+msgstr "%s <filtru> [<base|onelevel|subtree> [<DN de bază>]]"
 
 #: ../tools/gda-sql.c:2418
-#, fuzzy
-#| msgid "LDAP entries"
 msgid "Search LDAP entries"
-msgstr "Intrări LDAP"
+msgstr "Caută intrări LDAP"
 
 #: ../tools/gda-sql.c:2425
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
-msgstr ""
+msgstr "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/gda-sql.c:2426
 msgid ""
@@ -11123,28 +10942,33 @@ msgid ""
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
+"Arată atributele pentru intrarea identificată după DN. Dacă al doilea "
+"parametru „set” este trimis, atunci toate atributele stabilite sunt afișate, "
+"dacă al doilea parametru „all” este trimis, atunci atributele destabilite "
+"sunt afișate de asemenea, și dacă al doilea parametru „unset” este trimis, "
+"atunci doar atributele destabilite sunt afișate."
 
 #: ../tools/gda-sql.c:2437
 #, c-format
 msgid "%s <DN> <new DN>"
-msgstr ""
+msgstr "%s <DN> <DN nou>"
 
 #: ../tools/gda-sql.c:2438
-#, fuzzy
-#| msgid "Move to next LDAP entry"
 msgid "Renames an LDAP entry"
-msgstr "Trece la intrarea LDAP următoare"
+msgstr "Redenumește o intrare LDAP"
 
 #: ../tools/gda-sql.c:2445
 #, c-format
 msgid "%s <DN> <OPERATION> [<ATTR>[=<VALUE>]] [<ATTR>=<VALUE> ...]"
-msgstr ""
+msgstr "%s <DN> <OPERAȚIE> [<ATRIBUT>[=<VALOARE>]] [<ATRIBUT>=<VALOARE> ...]"
 
 #: ../tools/gda-sql.c:2446
 msgid ""
 "Modifies an LDAP entry's attributes; <OPERATION> may be DELETE, REPLACE or "
 "ADD"
 msgstr ""
+"Modifică atributele de intrare LDAP; <OPERAȚIE> poate fi DELETE, REPLACE sau "
+"ADD"
 
 #: ../tools/gda-sql.c:2492
 #, c-format
@@ -11192,10 +11016,9 @@ msgid "Missing required connection names"
 msgstr "Lipsesc numele de conexiune necesare"
 
 #: ../tools/gda-sql.c:3144
-#, fuzzy, c-format
-#| msgid "No connection named '%s' found"
+#, c-format
 msgid "No connection or dataset named '%s' found"
-msgstr "Nu s-a găsit o conexiune cu numele „%s”"
+msgstr "Nu s-a găsit o conexiune sau set de date cu numele „%s”"
 
 #. force create of meta store
 #. add existing connections to virtual connection
@@ -11206,24 +11029,21 @@ msgstr "Conexiunile legate sunt ca:"
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
 #: ../tools/gda-sql.c:3179
-#, fuzzy, c-format
-#| msgid "Views in the '%s' schema"
+#, c-format
 msgid "%s in the '%s' namespace"
-msgstr "Vizualizări în schema „%s”"
+msgstr "%s în spațiul de nume „%s”"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
 #: ../tools/gda-sql.c:3193
-#, fuzzy, c-format
-#| msgid "Columns for the '%s' table:"
+#, c-format
 msgid "%s mapped to the %s table"
-msgstr "Coloane pentru tabela „%s”:"
+msgstr "%s cartografiat la tabelul %s"
 
 #: ../tools/gda-sql.c:3268
-#, fuzzy, c-format
-#| msgid "No connection named '%s' found"
+#, c-format
 msgid "No option named '%s'"
-msgstr "Nu s-a găsit o conexiune cu numele „%s”"
+msgstr "Nicio opțiune cu numele „%s”"
 
 #: ../tools/gda-sql.c:3280
 msgid "List of options"
@@ -11270,8 +11090,6 @@ msgid "Missing FILE to write to"
 msgstr "Lipsește FILE în care se scrie"
 
 #: ../tools/gda-sql.c:3627
-#, fuzzy
-#| msgid "Favorite's name"
 msgid "Favorite name"
 msgstr "Denumirea favoritului"
 
@@ -11292,10 +11110,8 @@ msgid "Query buffer is empty"
 msgstr "Amortizorul de interogare este liber"
 
 #: ../tools/gda-sql.c:3813 ../tools/tools-favorites.c:1092
-#, fuzzy
-#| msgid "Could not add favorite: %s"
 msgid "Could not find favorite"
-msgstr "Nu s-a putut adăuga preferata: %s"
+msgstr "Nu s-a putut găsi favorit"
 
 #: ../tools/gda-sql.c:3985 ../tools/gda-sql.c:5571 ../tools/gda-sql.c:5649
 #, c-format
@@ -11308,7 +11124,7 @@ msgstr "Listă de parametri definiți"
 
 #: ../tools/gda-sql.c:4035
 msgid "dimensions (columns x rows)"
-msgstr ""
+msgstr "dimensiuni (coloane x rânduri)"
 
 #: ../tools/gda-sql.c:4036
 msgid "List of kept data"
@@ -11321,28 +11137,24 @@ msgstr "Lipsește un argument"
 
 #: ../tools/gda-sql.c:4091 ../tools/gda-sql.c:4209 ../tools/gda-sql.c:4275
 #: ../tools/gda-sql.c:4362
-#, fuzzy, c-format
-#| msgid "Could not find object named '%s'"
+#, c-format
 msgid "Could not find dataset named '%s'"
-msgstr "Nu s-a putut găsi obiectul cu numele „%s”"
+msgstr "Nu s-a putut găsi setul de date cu numele „%s”"
 
 #: ../tools/gda-sql.c:4230
-#, fuzzy, c-format
-#| msgid "Could not identify table for field '%s'"
+#, c-format
 msgid "Could not identify column '%s'"
-msgstr "Nu s-a putut identifica tabela pentru câmpul „%s”"
+msgstr "Nu s-a putut identifica coloana „%s”"
 
 #: ../tools/gda-sql.c:4300
-#, fuzzy, c-format
-#| msgid "Unknown provider '%s'"
+#, c-format
 msgid "Unknown import format '%s'"
-msgstr "Furnizor necunoscut „%s”"
+msgstr "Format de importare „%s” necunoscut"
 
 #: ../tools/gda-sql.c:4321
-#, fuzzy, c-format
-#| msgid "Could not load file '%s'"
+#, c-format
 msgid "Could not import file '%s'"
-msgstr "Nu s-a putut încărca fișierul „%s”"
+msgstr "Nu s-a putut importa fișierul „%s”"
 
 #: ../tools/gda-sql.c:4415
 msgid "Missing foreign key declaration specification"
@@ -11391,70 +11203,53 @@ msgstr "Argumentul câmpului de date este incorect"
 
 #: ../tools/gda-sql.c:5042 ../tools/gda-sql.c:5139 ../tools/gda-sql.c:5232
 #: ../tools/gda-sql.c:5327
-#, fuzzy
-#| msgid "Connection string for the internal connection to use"
 msgid "Connection is not an LDAP connection"
-msgstr "Șirul de conexiune utilizat de conexiunea internă"
+msgstr "Conexiunea nu este de tip LDAP"
 
 #: ../tools/gda-sql.c:5064
-#, fuzzy, c-format
-#| msgid "Unknown query '%s'"
+#, c-format
 msgid "Unknown search scope '%s'"
-msgstr "Interogare necunoscută „%s”"
+msgstr "Scop de căutare necunoscut „%s”"
 
 #: ../tools/gda-sql.c:5074
-#, fuzzy
-#| msgid "Missing data on which to operate"
 msgid "Missing filter which to operate"
-msgstr "Lipsesc datele pe care să se opereze"
+msgstr "Lipsește filtrul cu care să se opereze"
 
 #: ../tools/gda-sql.c:5154
-#, fuzzy
-#| msgid "Missing row fields specifications"
 msgid "Missing current DN or new DN specification"
-msgstr "Lipsesc specificațiile de câmpuri rând"
+msgstr "Lipsesc specificațiile curente de DN sau noile specificații DN"
 
 #: ../tools/gda-sql.c:5247
-#, fuzzy
-#| msgid "Missing DSN name"
 msgid "Missing DN of LDAP entry"
-msgstr "Lipsește numele DSN"
+msgstr "Lipsește DN-ul intrării LDAP"
 
 #: ../tools/gda-sql.c:5252
-#, fuzzy
-#| msgid "Fetching LDAP entry's attributes"
 msgid "Missing operation to perform on LDAP entry's attributes"
-msgstr "Se aduc atributele intrării LDAP"
+msgstr "Lipsește operația de executat pe atributele intrării LDAP"
 
 #: ../tools/gda-sql.c:5264
-#, fuzzy, c-format
-#| msgid "Fetching LDAP entry's attributes"
+#, c-format
 msgid "Unknown operation '%s' to perform on LDAP entry's attributes"
-msgstr "Se aduc atributele intrării LDAP"
+msgstr "Operație necunoscută „%s” pentru a executa atributele intrării LDAP"
 
 #: ../tools/gda-sql.c:5285
-#, fuzzy, c-format
-#| msgid "Malformed table name specification '%s'"
+#, c-format
 msgid "Wrong attribute value specification '%s'"
-msgstr "Specificația de nume de tabelă „%s” este greșită"
+msgstr "Specificația valorii atributului „%s” este greșită"
 
 #: ../tools/gda-sql.c:5341
-#, fuzzy
-#| msgid "Missing foreign key name argument"
 msgid "Missing DN (Distinguished name) argument"
-msgstr "Lipsește argumentul numele cheii străine"
+msgstr "Lipsește argumentul DN (Distinguished name)"
 
 #: ../tools/gda-sql.c:5354
-#, fuzzy, c-format
-#| msgid "Unknown statement"
+#, c-format
 msgid "Unknown '%s' argument"
-msgstr "Comandă necunoscută"
+msgstr "Argument „%s” necunoscut"
 
 #: ../tools/gda-sql.c:5365
-#, fuzzy, c-format
-#| msgid "Could not find LDAP entry whith DN '%s'"
+#, c-format
 msgid "Could not find entry with DN '%s'"
-msgstr "Nu s-a putut găsi o intrare LDAP cu DN-ul „%s”"
+msgstr "Nu s-a putut găsi o intrare cu DN-ul „%s”"
 
 #: ../tools/gda-sql.c:5374
 msgid "Required?"
@@ -11530,7 +11325,7 @@ msgstr "oprește cu eroare"
 
 #: ../tools/tool-utils.c:41
 msgid "stop with error, not deferrable"
-msgstr ""
+msgstr "oprește cu eroare, nu poate fi amânat"
 
 #: ../tools/tool-utils.c:43
 msgid "cascade changes"
