@@ -1040,6 +1040,7 @@ gda_postgres_provider_perform_operation (GdaServerProvider *provider, GdaConnect
 				return FALSE;
 			}
 
+			PQclear(pg_res);
 			PQfinish (pconn);
 			return TRUE;
 		}
