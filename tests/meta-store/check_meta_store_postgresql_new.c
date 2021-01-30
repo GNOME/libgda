@@ -137,7 +137,12 @@ check_meta_store_postgresql_new_finish (FixtureObject *self,
 	START_FUNCTION
 	/*g_object_unref (self->cnc);*/
 
-	g_object_unref (self->store);
+	if (self->store != NULL) {
+      if (G_IS_OBJECT (self->store)) {
+          g_object_unref (self->store);
+      }
+      self->store = NULL;
+  }
 
 	GError *error = NULL;
 
@@ -299,6 +304,17 @@ main (gint argc, gchar *argv[])
 	START_FUNCTION
 
 	setlocale (LC_ALL, "");
+
+  const gchar* cnc_string = g_getenv ("POSTGRESQL_META_CNC");
+	if (cnc_string == NULL) {
+		g_print ("PostgreSQL test not run, please set the POSTGRESQL_META_CNC environment "
+			 "variable \n"
+			 "For example "
+			 "'DB_NAME=$POSTGRES_DB;HOST=postgres;USERNAME=$POSTGRES_USER;PASSWORD=$"
+			 "POSTGRES_PASSWORD'\n");
+		return 0;
+	}
+
 	gda_init ();
 
 	g_test_init (&argc, &argv, NULL);
