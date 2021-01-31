@@ -7,7 +7,7 @@ option('json', type : 'boolean', value : true, description : 'Enable support for
 option('sqlcipher', type : 'boolean', value : true, description : 'Build SQLCipher database provider')
 option('libsoup', type : 'boolean', value : true, description : 'Enable libsoup support')
 option('libsecret', type : 'boolean', value : false, description : 'Enable libsecret support')
-option('with-gnome-keyring', type : 'boolean', value : false, description : 'Enable gnome-keyring support')
+#option('gnome-keyring', type : 'boolean', value : false, description : 'Enable gnome-keyring support')
 option('with-examples', type : 'boolean', value : false, description : 'Compile examples [default=false')
 option('tools', type : 'boolean', value : false, description : 'Enable build experimental GUI Tools')
 option('glade-catalog-dir', type : 'string', value : '', description : 'Use the given directory to install glade catalog files. If glade is not available this option is ignored. If it is not given the valaue from pkg-config will be used')
