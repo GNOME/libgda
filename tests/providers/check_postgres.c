@@ -28,6 +28,7 @@
 
 extern GdaProviderInfo *pinfo;
 extern GdaConnection   *cnc;
+extern gboolean         params_provided;
 extern gboolean         fork_tests;
 
 //static int test_timestamp_change_format (void);
