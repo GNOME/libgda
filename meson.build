@@ -371,7 +371,7 @@ if get_option('gtk_doc')
         subdir('doc')
 endif
 
-if libxslt_dep.found()
+if libxslt_dep.found() and get_option('experimental')
 	subdir('libgda-xslt')
 endif
 
