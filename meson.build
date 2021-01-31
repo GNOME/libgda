@@ -420,6 +420,6 @@ subdir('tools')
 endif
 subdir('tests')
 subdir('testing')
-if get_option('with-examples')
+if get_option('examples')
   subdir('examples')
 endif
