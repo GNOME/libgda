@@ -5,7 +5,7 @@ option('help', type : 'boolean', value : true, description : 'Enable building he
 option('graphviz', type : 'boolean', value : false, description : 'Enable using Graphviz')
 option('json', type : 'boolean', value : true, description : 'Enable support for JSON, disabled by default')
 option('sqlcipher', type : 'boolean', value : true, description : 'Build SQLCipher database provider')
-option('with-libsoup', type : 'boolean', value : true, description : 'Enable libsoup support')
+option('libsoup', type : 'boolean', value : true, description : 'Enable libsoup support')
 option('with-libsecret', type : 'boolean', value : false, description : 'Enable libsecret support')
 option('with-gnome-keyring', type : 'boolean', value : false, description : 'Enable gnome-keyring support')
 option('with-examples', type : 'boolean', value : false, description : 'Compile examples [default=false')

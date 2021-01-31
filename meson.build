@@ -254,7 +254,7 @@ endif
 libcrypto_dep = dependency('libcrypto', version : '>=1.1', required: false)
 
 soup_dep = dependency('libsoup-2.4', required: false)
-if soup_dep.found() and get_option('with-libsoup')
+if soup_dep.found() and get_option('libsoup')
   libgda_dep += [soup_dep]
 endif
 
