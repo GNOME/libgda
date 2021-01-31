@@ -260,7 +260,7 @@ endif
 
 
 libsecret_dep = dependency('libsecret-1', required: false)
-if libsecret_dep.found() and get_option('with-libsecret')
+if libsecret_dep.found() and get_option('libsecret')
   libgda_dep += [libsecret_dep]
   c_args += '-DHAVE_LIBSECRET'
 endif
