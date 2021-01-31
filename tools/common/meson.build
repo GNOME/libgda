@@ -36,7 +36,7 @@ tools_nonuisources_ui = files([
 	'web-server.h', 'web-server.c', 'html-doc.h', 'html-doc.c'
 	])
 
-if soup_dep.found() and get_option('with-libsoup')
+if soup_dep.found() and get_option('libsoup')
 tools_nonuisources += tools_nonuisources_ui
 endif
 

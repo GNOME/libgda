@@ -367,7 +367,7 @@ int main() {
 	subdir('control-center')
 endif
 
-if get_option('gtk_doc')
+if get_option('doc')
         subdir('doc')
 endif
 
