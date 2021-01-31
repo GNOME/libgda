@@ -2,7 +2,9 @@ raw_spec=find_program('raw_spec.py')
 
 subdir('reuseable')
 subdir('sqlite')
+if get_option('experimental')
 subdir('skel-implementation')
+endif
 
 if sqlcipher_dep.found() and get_option('sqlcipher')
 subdir('sqlcipher')

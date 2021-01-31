@@ -385,7 +385,7 @@ install_data(libgda_pc,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 
-if libxslt_dep.found()
+if libxslt_dep.found() and get_option('experimental')
 	libgda_xslt_pc = configure_file(
 		input: 'libgda-xslt-'+project_api_version+'.pc.in',
 		output: 'libgda-xslt-'+project_api_version+'.pc',
