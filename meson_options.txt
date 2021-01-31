@@ -15,6 +15,6 @@ option('glade-pixmap-dir', type : 'string', value : '', description : 'Use the g
 option('gtk_doc', type : 'boolean', value : false, description : 'Enable documentation generation [default = false]')
 option('experimental', type : 'boolean', value : false, description : 'Enable experimental features [default = false]')
 option('ldap', type : 'boolean', value : false, description : 'Enable experimental LDAP provider')
-option('enable-web', type : 'boolean', value : false, description : 'Enable experimental WEB provider')
+option('web', type : 'boolean', value : false, description : 'Enable experimental WEB provider')
 option('enable-test-flatpak', type : 'boolean', value : false, description : 'Enable Terminal Test Application ')
 
