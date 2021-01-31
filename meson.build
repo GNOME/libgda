@@ -319,7 +319,7 @@ subdir('libgda')
 subdir('providers')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
-enable_ui = get_option('with-ui') and gtk_dep.found() and get_option('experimental')
+enable_ui = get_option('ui') and gtk_dep.found() and get_option('experimental')
 if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : false)
