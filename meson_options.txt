@@ -16,5 +16,5 @@ option('gtk_doc', type : 'boolean', value : false, description : 'Enable documen
 option('experimental', type : 'boolean', value : false, description : 'Enable experimental features [default = false]')
 option('ldap', type : 'boolean', value : false, description : 'Enable experimental LDAP provider')
 option('web', type : 'boolean', value : false, description : 'Enable experimental WEB provider')
-option('enable-test-flatpak', type : 'boolean', value : false, description : 'Enable Terminal Test Application ')
+option('flatpak', type : 'boolean', value : false, description : 'Build Flatpak')
 

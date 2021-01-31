@@ -306,6 +306,7 @@ if enable_ui
 subdir('ui')
 endif
 
+if get_option('flatpak')
 gda_test_sources = [
 	'gda-test.c'
 	]
@@ -316,6 +317,7 @@ executable ('org.gnome.gda.Test', gda_test_sources,
 		inc_rooth_dep,
 		inc_sqliteh_dep
 		],
-	install: get_option('enable-test-flatpak'),
+	install: true,
 	link_with: libgda
 	)
+endif
