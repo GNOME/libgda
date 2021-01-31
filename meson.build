@@ -231,7 +231,7 @@ glade_pixmap = ''
 
 gnome_module = import('gnome')
 
-if get_option('enable-json')
+if get_option('json')
   jsonglib_dep = dependency('json-glib-1.0')
 endif
 
@@ -330,7 +330,7 @@ if enable_ui
 	gtksourceview_dep = dependency('gtksourceview-3.0')
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
-	if get_option('with-graphviz') and graphviz_dep.found()
+	if get_option('graphviz') and graphviz_dep.found()
 		graph_new_api_code = '''#include <gvc.h>
 int main() {
 	Agraph_t *graph;
