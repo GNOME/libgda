@@ -29,7 +29,7 @@ test('ProviderSQLite', tchksqlite,
 		]
 	)
 
-if sqlcipher_dep.found () and not get_option('disable-sqlcipher')
+if sqlcipher_dep.found () and get_option('sqlcipher')
 
 tchksqlcipher = executable('check_sqlcipher',
 	['check_sqlcipher.c']+providers_common_sources+common_sources+tests_sources,
