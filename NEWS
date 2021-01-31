@@ -18,10 +18,14 @@ libgda-6.0.0
  - Multiple code improvements, formation, and corrections
  - Batch parsing, should remove spacesa and enters before return next statement,
    fix #203
+ - Only PostgreSQL, MySQL and SQLite providers are supported
  - Updated translations:
+        - sr       Мирослав Николић <miroslavnikolic@rocketmail.com>
+        - uk       Yuri Chornoivan <yurchor@ukr.net>
+        - ca       Jordi Mas <jmas@softcatala.org>
+        - cs       Marek Černocký <marek.cernocky@advantech.com>
         - pt_BR    Rafael Fontenelle <rafaelff@gnome.org>
         - es       Daniel Mustieles <daniel.mustieles@gmail.com>
-        - cs       Marek Černocký <marek.cernocky@advantech.com>
         - hu       Balázs Úr <balazs@urbalazs.hu>
         - id       Andika Triwidada <atriwidada@gnome.org>
         - sv       Josef Andersson <l10nl18nsweja@gmail.com>
