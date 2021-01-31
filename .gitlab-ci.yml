@@ -27,7 +27,7 @@ variables:
                 meson ninja-build
                 libgtk-3-dev libxml2-dev gnome-common
                 libsqlite3-dev
-                gobject-introspection libssl-dev libmysqlclient-dev
+                gobject-introspection libssl-dev
                 libldap2-dev libpq-dev
                 libgtksourceview-3.0-dev
                 libgdk-pixbuf2.0-dev
@@ -68,6 +68,7 @@ before_script:
 library_build:
   stage: build
   script:
+  - apt -y install libmysqlclient-dev
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - meson --prefix=/usr --buildtype=debug -Dgtk_doc=true --werror _build
   - cd _build
@@ -86,9 +87,14 @@ library_build:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
-paralel_build:
+mariadb_build:
+  variables:
+    MYSQL_HOST: mariadb
+    MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_ROOT_PASSWORD"
+    MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_ROOT_PASSWORD"
   stage: build
   script:
+  - apt -y install libmariadbclient-dev
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   - meson --prefix=/usr --buildtype=debug -Dgtk_doc=true --werror _build
