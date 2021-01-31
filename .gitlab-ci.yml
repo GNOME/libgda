@@ -111,7 +111,7 @@ paralel_build:
 pages:
   stage: deploy_doc
   script:
-  - meson _build --prefix=/usr -Dgtk_doc=true -Dexperimental=true -Denable-tools=true -Denable-ldap=true
+  - meson _build --prefix=/usr -Dgtk_doc=true -Dexperimental=true -Dtools=true -Dldap=true
   - cd _build
   - ninja
   - ninja install

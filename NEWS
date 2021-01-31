@@ -19,6 +19,7 @@ libgda-6.0.0
  - Batch parsing, should remove spacesa and enters before return next statement,
    fix #203
  - Only PostgreSQL, MySQL and SQLite providers are supported
+ - Improved Meson options name and behavior
  - Updated translations:
         - sr       Мирослав Николић <miroslavnikolic@rocketmail.com>
         - uk       Yuri Chornoivan <yurchor@ukr.net>
