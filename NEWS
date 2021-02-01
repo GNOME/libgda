@@ -1,4 +1,11 @@
+--------------
+libgda-6.0.1
+--------------
+ - Fix meson build for examples
+ - Fix build experimental web provider
+--------------
 libgda-6.0.0
+--------------
  - MySQL: now supports version 8.0
  - PostgreSQL now support GdaText values, so take care because some SELECT operations
    concatenating strings return GdaText values instead of strings.

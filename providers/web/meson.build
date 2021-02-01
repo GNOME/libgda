@@ -100,6 +100,7 @@ libgda_web_provider = library ('gda-web-'+project_api_version,
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
+		general_cargs
 		],
 	link_args: [
 		'-Wl,--export-dynamic',
