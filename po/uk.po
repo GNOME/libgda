@@ -8,16 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-12 20:36+0000\n"
-"PO-Revision-Date: 2021-01-13 21:30+0200\n"
+"POT-Creation-Date: 2021-01-30 22:17+0000\n"
+"PO-Revision-Date: 2021-02-16 12:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 20.11.70\n"
 
 #: ../control-center/dsn-config.c:79
@@ -129,8 +128,8 @@ msgstr "Не вдалося зберегти визначення DSN: %s"
 #: ../providers/mysql/gda-mysql-provider.c:1964
 #: ../providers/mysql/gda-mysql-provider.c:1979
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1786
-#: ../providers/postgres/gda-postgres-provider.c:1801
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1802
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:194
@@ -2467,16 +2466,19 @@ msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_server_operation_prepare_create_database() ?"
 msgstr ""
+"Не вдалося знайти пов'язаного із дією надавача даних, чи скористалися ви gda_server_operation_prepare_create_database() ?"
 
 #: ../libgda/gda-server-provider.c:1021
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr ""
+"Надавач даних %s створив GdaServerOperation без вузла для «%s»"
 
 #: ../libgda/gda-server-provider.c:1025
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
+"Надавач даних %s створив GdaServerOperation із помилковим типом вузла для «%s»"
 
 #. CNC UNLOCK
 #: ../libgda/gda-server-provider.c:1508
@@ -2484,6 +2486,7 @@ msgid ""
 "Internal error: connection reported as opened, yet no provider's data has "
 "been setted"
 msgstr ""
+"Внутрішня помилка: про з'єднання повідомлено як про відкрите, але не встановлено параметрів надавача даних"
 
 #: ../libgda/gda-server-provider.c:2092
 #, c-format
@@ -2687,7 +2690,7 @@ msgstr "Пропущено параметр «%s»"
 #: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2239
-#: ../providers/postgres/gda-postgres-provider.c:2059
+#: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2704,6 +2707,7 @@ msgstr "Помилкове форматування назви таблиці"
 #: ../libgda/gda-statement.c:2188
 msgid "Join is not in a FROM statement"
 msgstr ""
+"Долучення поза інструкцією FROM"
 
 #: ../libgda/gda-statement.c:2195
 msgid "Could not find target the join is for"
@@ -2712,6 +2716,7 @@ msgstr "Не вдалося знайти цілі для об'єднання"
 #: ../libgda/gda-tree.c:172
 msgid "Tells if the GdaTree is a list or a tree"
 msgstr ""
+"Повідомляє, чим є GdaTree, списком чи ієрархією"
 
 #: ../libgda/gda-tree.c:716 ../libgda/gda-tree.c:724
 #, c-format
@@ -2842,7 +2847,7 @@ msgstr ""
 #: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2219
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -3162,8 +3167,8 @@ msgid "Missing database name or directory"
 msgstr "Пропущено назву бази даних або каталог"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1814
-#: ../providers/postgres/gda-postgres-provider.c:1083
 #: ../providers/postgres/gda-postgres-provider.c:1084
+#: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "У режимі лише-читання транзакції не підтримуються"
 
@@ -3178,6 +3183,7 @@ msgstr ""
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr ""
+"Підтримки з'єднання «%s» у SQLite не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2389
 msgid "ILIKE operation not supported"
@@ -3193,7 +3199,7 @@ msgstr "Підтримки типу оператора не передбачен
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2951
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1638
+#: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Не можна використовувати параметр без назви у приготованих інструкціях"
@@ -3201,7 +3207,7 @@ msgstr "Не можна використовувати параметр без �
 #: ../libgda/sqlite/gda-sqlite-provider.c:3068
 #: ../libgda/sqlite/gda-sqlite-provider.c:3080
 #: ../providers/mysql/gda-mysql-provider.c:1963
-#: ../providers/postgres/gda-postgres-provider.c:1785
+#: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -3210,7 +3216,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1991
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Інструкція SELECT для отримання останнього вставленого рядка не повернула "
@@ -3218,7 +3224,7 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1817
+#: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
@@ -3261,8 +3267,8 @@ msgstr "Порожня інструкція"
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2194
 #: ../providers/mysql/gda-mysql-provider.c:2197
-#: ../providers/postgres/gda-postgres-provider.c:2017
-#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
 #: ../providers/web/gda-web-provider.c:1427
 msgid "Missing parameter(s) to execute query"
@@ -3271,7 +3277,7 @@ msgstr "Пропущено параметри для виконання запи
 #: ../libgda/sqlite/gda-sqlite-provider.c:3491
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2258
-#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Не можна перезаписувати типові значення обробника інструкцій"
@@ -3359,12 +3365,14 @@ msgstr "Некоректна дата «%s» (дату має бути вказ�
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
 msgstr ""
+"Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс][+ГГ:хх])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:556
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
 msgstr ""
+"Некоректна часова позначка «%s» (слід використовувати формат РРРР-ММ-ДДTГГ:ХХ:СС[.мс])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:645
 msgid "SQLite provider fatal internal error"
@@ -3420,6 +3428,7 @@ msgstr "Ціле значення поза припустимим діапазо
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:634
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr ""
+"Обмеження на бінарні дані не обробляються в умові віртуальної таблиці"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:667
 #: ../providers/postgres/gda-postgres-recordset.c:625
@@ -3437,8 +3446,8 @@ msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
 msgstr ""
-"Внутрішня помилка: у віртуальному надавачі даних не реалізовано віртуальний"
-" метод create_operation()"
+"Внутрішня помилка: у віртуальному надавачі даних не реалізовано віртуальний "
+"метод create_operation()"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:159
 msgid "Internal error: invalid provider handle"
@@ -3658,7 +3667,8 @@ msgstr "Усі інструкції у COMPOUND повинні мати одна
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
 msgstr ""
-"Інструкція DELETE повинна містити дані щодо таблиці, з якої слід вилучити дані"
+"Інструкція DELETE повинна містити дані щодо таблиці, з якої слід вилучити "
+"дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:356
 msgid "INSERT statement needs a table to insert into"
@@ -3668,8 +3678,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:362
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
-"Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції"
-" INSERT"
+"Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції "
+"INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:383
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:409
@@ -3681,6 +3691,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:412
 msgid "VALUES lists must all be the same length in INSERT statement"
 msgstr ""
+"У інструкції INSERT списки VALUES мають бути однакової довжини"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:404
 msgid "SELECT does not contain any expression"
@@ -6340,7 +6351,7 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:1978
-#: ../providers/postgres/gda-postgres-provider.c:1800
+#: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -7171,20 +7182,20 @@ msgstr "Не вдалося встановити для search_path значен
 msgid "Search path %s is invalid"
 msgstr "Шлях пошуку %s є некоректним"
 
-#: ../providers/postgres/gda-postgres-provider.c:1094
-#: ../providers/postgres/gda-postgres-provider.c:1096
+#: ../providers/postgres/gda-postgres-provider.c:1095
+#: ../providers/postgres/gda-postgres-provider.c:1097
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Транзакції не підтримуються на рівні ізоляції незафіксованого читання"
 
-#: ../providers/postgres/gda-postgres-provider.c:1100
-#: ../providers/postgres/gda-postgres-provider.c:1102
+#: ../providers/postgres/gda-postgres-provider.c:1101
+#: ../providers/postgres/gda-postgres-provider.c:1103
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Транзакції не підтримуються на рівні ізоляції повторювального читання"
 
-#: ../providers/postgres/gda-postgres-provider.c:1119
-#: ../providers/postgres/gda-postgres-provider.c:1219
-#: ../providers/postgres/gda-postgres-provider.c:1269
-#: ../providers/postgres/gda-postgres-provider.c:1319
+#: ../providers/postgres/gda-postgres-provider.c:1120
+#: ../providers/postgres/gda-postgres-provider.c:1220
+#: ../providers/postgres/gda-postgres-provider.c:1270
+#: ../providers/postgres/gda-postgres-provider.c:1320
 #: ../providers/postgres/gda-postgres-recordset.c:424
 #: ../providers/postgres/gda-postgres-recordset.c:453
 #: ../providers/postgres/gda-postgres-recordset.c:617
@@ -7192,21 +7203,21 @@ msgstr "Транзакції не підтримуються на рівні і�
 msgid "Internal error"
 msgstr "Внутрішня помилка"
 
-#: ../providers/postgres/gda-postgres-provider.c:1225
-#: ../providers/postgres/gda-postgres-provider.c:1275
-#: ../providers/postgres/gda-postgres-provider.c:1325
+#: ../providers/postgres/gda-postgres-provider.c:1226
+#: ../providers/postgres/gda-postgres-provider.c:1276
+#: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr ""
 
-#: ../providers/postgres/gda-postgres-provider.c:2168
-#: ../providers/postgres/gda-postgres-provider.c:2170
+#: ../providers/postgres/gda-postgres-provider.c:2169
+#: ../providers/postgres/gda-postgres-provider.c:2171
 msgid "Cannot start transaction"
 msgstr "Не вдалося розпочати транзакцію"
 
-#: ../providers/postgres/gda-postgres-provider.c:2423
-#: ../providers/postgres/gda-postgres-provider.c:2460
-#: ../providers/postgres/gda-postgres-provider.c:2496
+#: ../providers/postgres/gda-postgres-provider.c:2424
+#: ../providers/postgres/gda-postgres-provider.c:2461
+#: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
 msgstr ""
 
