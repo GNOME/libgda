@@ -8,16 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-12 20:41+0000\n"
-"PO-Revision-Date: 2021-01-15 11:22+0200\n"
+"POT-Creation-Date: 2021-01-29 14:52+0000\n"
+"PO-Revision-Date: 2021-02-21 11:14+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
-"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 20.11.70\n"
 
 #. title
@@ -2176,11 +2175,14 @@ msgstr "На сервері бази даних не передбачено пі
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr ""
+"Надавач даних %s створив GdaServerOperation без вузла для «%s»"
 
 #: ../libgda/gda-server-provider.c:524
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
+"Надавач даних %s створив GdaServerOperation із помилковим типом вузла для "
+"«%s»"
 
 #: ../libgda/gda-server-provider.c:951 ../libgda/gda-server-provider.c:985
 #, c-format
@@ -2324,6 +2326,7 @@ msgstr "Помилкове форматування назви таблиці"
 #: ../libgda/gda-statement.c:2231
 msgid "Join is not in a FROM statement"
 msgstr ""
+"Долучення поза інструкцією FROM"
 
 #: ../libgda/gda-statement.c:2238
 msgid "Could not find target the join is for"
@@ -2332,6 +2335,7 @@ msgstr "Не вдалося знайти цілі для об'єднання"
 #: ../libgda/gda-tree.c:175
 msgid "Tells if the GdaTree is a list or a tree"
 msgstr ""
+"Повідомляє, чим є GdaTree, списком чи ієрархією"
 
 #: ../libgda/gda-tree.c:769 ../libgda/gda-tree.c:777
 #, c-format
@@ -2796,6 +2800,7 @@ msgstr ""
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr ""
+"Підтримки з'єднання «%s» у SQLite не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2042
 msgid "ILIKE operation not supported"
@@ -3057,6 +3062,7 @@ msgstr "Ціле значення поза припустимим діапазо
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:655
 msgid "Blob constraints are not handled in virtual table condition"
 msgstr ""
+"Обмеження на бінарні дані не обробляються в умові віртуальної таблиці"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:150
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:190
@@ -3064,8 +3070,8 @@ msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
 msgstr ""
-"Внутрішня помилка: у віртуальному надавачі даних не реалізовано віртуальний"
-" метод create_operation()"
+"Внутрішня помилка: у віртуальному надавачі даних не реалізовано віртуальний "
+"метод create_operation()"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:235
 msgid "Internal error: invalid provider handle"
@@ -3282,7 +3288,8 @@ msgstr "Усі інструкції у COMPOUND повинні мати одна
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
 msgstr ""
-"Інструкція DELETE повинна містити дані щодо таблиці, з якої слід вилучити дані"
+"Інструкція DELETE повинна містити дані щодо таблиці, з якої слід вилучити "
+"дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:358
 msgid "INSERT statement needs a table to insert into"
@@ -3292,8 +3299,8 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:364
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
-"Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції"
-" INSERT"
+"Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції "
+"INSERT"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:385
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:411
@@ -3305,6 +3312,7 @@ msgstr ""
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:414
 msgid "VALUES lists must all be the same length in INSERT statement"
 msgstr ""
+"У інструкції INSERT списки VALUES мають бути однакової довжини"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:407
 msgid "SELECT does not contain any expression"
@@ -5826,6 +5834,7 @@ msgstr ""
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr ""
+"Тип %s не пов'язано зі значенням %s"
 
 #: ../providers/mysql/libmain.c:75
 msgid "Provider for MySQL databases"
@@ -5886,6 +5895,7 @@ msgstr "Сокет UNIX"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:8
 msgid "Full path of the UNIX socket to use when connecting locally"
 msgstr ""
+"Повний шлях до сокета UNIX, яким слід користуватися для локальних з'єднань"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:10
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:12
@@ -5900,6 +5910,7 @@ msgstr "Користувач-адміністратор"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
 msgid "Login name (which has the rights to create databases)"
 msgstr ""
+"Назва облікового запису (який має право на створення баз даних)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
@@ -5927,6 +5938,7 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
 msgid "Create database only if it does not yet exist"
 msgstr ""
+"Створити базу даних, лише якщо її ще не існує"
 
 #. DSN parameters
 #. other table options
@@ -5940,6 +5952,7 @@ msgstr "Кодування символів"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "Character set encoding to use in the new database"
 msgstr ""
+"Кодування символів, яким слід скористатися у новій базі даних"
 
 #. DSN parameters
 #. other table options
@@ -5952,6 +5965,7 @@ msgstr "Об'єднання"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "Collation method to use in the new database"
 msgstr ""
+"Спосіб порівняння, яким слід скористатися у новій базі даних"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
@@ -5982,36 +5996,42 @@ msgstr "US ASCII"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 msgid "Big5 Traditional Chinese"
 msgstr ""
+"Big5, традиційна китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
 msgid "DEC West European"
 msgstr ""
+"DEC, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "DOS West European"
 msgstr ""
+"DOS, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "HP West European"
 msgstr ""
+"HP, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "KOI8-R Relcom Russian"
 msgstr ""
+"KOI8-R Relcom, російська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 msgid "7bit Swedish"
 msgstr ""
+"7-бітова, шведська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
@@ -6054,6 +6074,7 @@ msgstr "KOI8-U (Українська)"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:163
 msgid "GB2312 Simplified Chinese"
 msgstr ""
+"GB3212, спрощена китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
@@ -6072,6 +6093,7 @@ msgstr "Windows центральноєвропейська"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:169
 msgid "GBK Simplified Chinese"
 msgstr ""
+"GBK, спрощена китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
@@ -6084,12 +6106,14 @@ msgstr "ISO-8859-9 (Турецька)"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
 msgid "ARMSCII-8 Armenian"
 msgstr ""
+"ARMSCII-8, вірменська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
 msgid "UCS-2 Unicode"
 msgstr ""
+"UCS-2 Unicode"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
@@ -6102,12 +6126,14 @@ msgstr "DOS, російська"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:179
 msgid "DOS Kamenicky Czech-Slovak"
 msgstr ""
+"Чехословацька DOS, Каменіцькі"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:181
 msgid "Mac Central European"
 msgstr ""
+"Центральноєвропейська Mac"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
@@ -6150,18 +6176,21 @@ msgstr "Windows, балтійська"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:195
 msgid "Binary pseudo charset"
 msgstr ""
+"Двійковий псевдонабір символів"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:197
 msgid "GEOSTD8 Georgian"
 msgstr ""
+"GEOSTD8, грузинська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:104
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "SJIS for Windows Japanese"
 msgstr ""
+"SJIS для Windows, японська"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
@@ -6174,6 +6203,7 @@ msgstr "Автоматично"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid "TCP: TCP/IP connection to local or remote server."
 msgstr ""
+"TCP: з'єднання TCP/IP із локальним або віддаленим сервером."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
@@ -6181,6 +6211,7 @@ msgstr ""
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
+"Сокет: з'єднання файла сокета Unix із локальним сервером (лише для локального сервера Unix)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
@@ -6188,6 +6219,7 @@ msgstr ""
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
+"Канал: з'єднання іменованого каналу із локальним або віддаленим сервером (лише сервер Windows)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
@@ -6195,6 +6227,7 @@ msgstr ""
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
+"Пам'ять: з'єднання спільної пам'яті із локальним сервером (лише для локального сервера Windows)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6204,6 +6237,7 @@ msgstr "Метод"
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
 msgid "Index type (depending on table storage engine)"
 msgstr ""
+"Тип покажчика (залежний від рушія зберігання таблиці)"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:13
@@ -6215,6 +6249,7 @@ msgstr "Довжина"
 msgid ""
 "The number of characters the index is on for columns of type CHAR or VARCHAR"
 msgstr ""
+"Кількість символів для яких увімкнено формування покажчика для стовпчиків типів CHAR або VARCHAR"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:9
 msgid "Table's comment"
@@ -6297,11 +6332,13 @@ msgstr "Рушій"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:63
 msgid "Table's engine (or type)"
 msgstr ""
+"Рушій (або тип) таблиці"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:65
 msgid "Auto increment value"
 msgstr ""
+"Значення автозбільшення"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:67
@@ -6309,16 +6346,19 @@ msgid ""
 "Counter for auto incremented fields is incremented by this value + 1 "
 "(DEFAULT: 0)"
 msgstr ""
+"Лічильник для полів із автоматичним збільшенням буде збільшено на це значення + 1 (ТИПОВЕ ЗНАЧЕННЯ: 0)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
 msgid "Average row length"
 msgstr ""
+"Середня довжина рядка"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "An approximation of the average row length for your table"
 msgstr ""
+"Наближення середньої довжини рядка для вашої таблиці"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
@@ -6329,26 +6369,31 @@ msgstr "Контрольна сума"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
 msgid "Min rows"
 msgstr ""
+"Мін. рядків"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
 msgid "Max rows"
 msgstr ""
+"Макс. рядків"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 msgid "Pack keys"
 msgstr ""
+"Пакування ключів"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
 msgid "Delay key write"
 msgstr ""
+"Затримка запису ключів"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:89
 msgid "Row format"
 msgstr ""
+"Формат рядка"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
@@ -6385,15 +6430,18 @@ msgstr "Каталог покажчика"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 msgid "Match simple"
 msgstr ""
+"Проста відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
 msgid "Match partial"
 msgstr ""
+"Часткова відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match full"
 msgstr ""
+"Повна відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
@@ -6419,6 +6467,7 @@ msgstr "Встановити NULL"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
 msgid "Don't pack keys"
 msgstr ""
+"Не пакувати ключі"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:112
 msgid "Only pack long CHAR/VARCHAR columns"
@@ -6427,10 +6476,12 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
 msgid "MyISAM (default)"
 msgstr ""
+"MyISAM (типовий)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:114
 msgid "ISAM"
 msgstr ""
+"ISAM"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:115
 msgid "Archive"
@@ -6439,6 +6490,7 @@ msgstr "Архів"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
 msgid "Berkeley DB"
 msgstr ""
+"Berkeley DB"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
 msgid "Comma Separated Value (CSV)"
@@ -6452,6 +6504,7 @@ msgstr "Приклад"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
 msgid "Federated"
 msgstr ""
+"Інтегрований"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:120
 msgid "In Memory (MEMORY/HEAP)"
@@ -6485,6 +6538,7 @@ msgstr "Стиснений"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
 msgid "Redundant"
 msgstr ""
+"Із резервуванням"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
 msgid "Compact"
@@ -6498,6 +6552,7 @@ msgstr "Замінити, якщо вже існує"
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
 msgid "Replace view definition if it already exists"
 msgstr ""
+"Замінити визначення перегляду, якщо воно вже існує"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:9
@@ -6518,10 +6573,12 @@ msgstr "Лише якщо існує"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
 msgid "Drop database only if it exists"
 msgstr ""
+"Відкинути базу даних, лише якщо вона існує"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
 msgid "Drop table only if it is temporary"
 msgstr ""
+"Відкинути базу даних, лише якщо вона тимчасова"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
@@ -6542,6 +6599,7 @@ msgstr "Що робити із посиланнями"
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 msgid "Automatically drop objects that depend on the table (CASCADE)"
 msgstr ""
+"Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
@@ -6602,14 +6660,17 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "PostgresqlBin"
 msgstr ""
+"PostgresqlBin"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:120
 msgid "PostgreSQL binary representation"
 msgstr ""
+"Двійкове представлення PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:204
 msgid "Insufficient memory to convert binary buffer to string"
 msgstr ""
+"Недостатньо пам'яті для перетворення двійкового буфера на рядок"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:244
 msgid "Insufficient memory to convert string to binary buffer"
