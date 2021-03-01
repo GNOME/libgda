@@ -313,7 +313,7 @@ vala_sources += [
 endif
 
 vala_sourcesf = files(vala_sources)
-valac = find_program('valac')
+valac = meson.get_compiler('vala').cmd_array()
 valacs =[]
 foreach v : vala_sources
 	vcs = v.split('.')
