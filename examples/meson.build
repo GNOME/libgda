@@ -1,4 +1,4 @@
-example_inc_dir = [inc_rooth,inc_libgdah] 
+example_inc_dir = [libgda_inc_rooth,inc_libgdah]
 
 subdir('DDL')
 subdir('SimpleExample')
