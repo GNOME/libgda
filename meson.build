@@ -179,6 +179,7 @@ if ldap_lib_dep.found()
 			]
 	endif
 endif
+enable_ldap = get_option('ldap') and ldap_found and get_option('experimental')
 
 tconf = configuration_data() # Empty configuration
 

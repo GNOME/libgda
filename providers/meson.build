@@ -14,7 +14,7 @@ if postgres_dep.found()
 subdir('postgres')
 endif
 
-if ldap_found and get_option('ldap') and get_option('experimental')
+if enable_ldap
 subdir('ldap')
 endif
 

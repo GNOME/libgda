@@ -42,7 +42,7 @@ tools_cargs = [
 	'-DIS_BROWSER',
 	'-DHAVE_GTK_CLASSES'
 	]
-if ldap_found
+if enable_ldap
 tools_cargs += [
 	'-DHAVE_LDAP'
 	]
@@ -146,13 +146,18 @@ if windows
 	gda_browser_sources += win_res
 endif
 
+gda_browser_link_with = [
+		libgda,
+		libgdaui
+	]
+
+if enable_ldap
+	gda_browser_link_with += [ libldap_provider ]
+endif
+
 executable('org.gnome.gda.Browser',
 	gda_browser_sources,
-	link_with: [
-		libgda,
-		libldap_provider,
-		libgdaui
-		],
+	link_with: gda_browser_link_with,
 	dependencies: browser_deps,
 	c_args: tools_cargs,
 	link_args: gda_browser_link_args,
