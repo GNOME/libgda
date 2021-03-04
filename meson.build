@@ -1,4 +1,4 @@
-project('libgda', 'vala', 'c',
+project('libgda', 'c',
         license: 'LGPL2+',
         version : '6.0.0',
         meson_version: '>= 0.49',
@@ -7,6 +7,11 @@ project('libgda', 'vala', 'c',
                         'warning_level=2',
                         ],
 )
+
+enable_vala = get_option('vapi')
+if enable_vala
+	enable_vala = add_languages('vala')
+endif
 
 project_version = meson.project_version()
 version_split = project_version.split('.')

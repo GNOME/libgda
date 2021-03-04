@@ -8,7 +8,7 @@ configure_file(
 	configuration: pageconf
 	)
 
-if valadoc.found()
+if enable_vala and valadoc.found()
 	vala_doc = custom_target('vala_doc',
 		command: [ valadoc,
 			'--pkg=libxml-2.0',
