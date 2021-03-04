@@ -46,7 +46,20 @@ glib_mkenums = find_program('glib-mkenums', required : true)
 
 girscanner = find_program('g-ir-scanner', required:false)
 
-valadoc = find_program('valadoc', required: false)
+# Meson does not currently provide built-in support for valadoc [1],
+# we have to find the program, trying all possible names.
+# It also makes it impossible for us to use gnome.generate_vapi() because
+# the generated vapi files are inputs to valadoc, hence we need to find vapigen.
+# [1] https://github.com/mesonbuild/meson/issues/894
+valadoc = false
+vapigen = false
+if enable_vala
+	vala_version = meson.get_compiler('vala').version().split('.')
+	valadoc_versioned = 'valadoc-' + '.'.join([vala_version[0], vala_version[1]])
+	valadoc = find_program(valadoc_versioned, 'valadoc', required: false)
+	vapigen_versioned = 'vapigen-' + '.'.join([vala_version[0], vala_version[1]])
+	vapigen = find_program(vapigen_versioned, 'vapigen', required: true)
+endif
 
 libgda_inc_rooth = include_directories ('.')
 inc_rooth_dep = declare_dependency (include_directories : libgda_inc_rooth)
@@ -295,8 +308,6 @@ sqlite_xml_inf = files(sqlite_xml_fnamesext)
 
 
 intlmerge = find_program('intltool-merge')
-# Vala bindings
-vapigen = find_program('vapigen', required: false)
 
 found_jdbc = false
 
