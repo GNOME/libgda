@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-29 14:52+0000\n"
-"PO-Revision-Date: 2021-02-21 11:14+0200\n"
+"POT-Creation-Date: 2021-02-21 09:15+0000\n"
+"PO-Revision-Date: 2021-04-29 18:44+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 20.11.70\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
@@ -1502,6 +1502,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:1054
 msgid "Incorrect SQL expression"
 msgstr ""
+"Помилковий вираз SQL"
 
 #: ../libgda/gda-data-select.c:1079
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
@@ -1649,6 +1650,7 @@ msgstr "Не вказано інструкції INSERT"
 #: ../libgda/gda-data-select.c:3099
 msgid "Cannot add a row because the number of rows in unknown"
 msgstr ""
+"Не можна додати рядок, оскільки кількість рядків є невідомою"
 
 #: ../libgda/gda-data-select.c:3128
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:394
@@ -1801,6 +1803,7 @@ msgstr ""
 #: ../libgda/gda-meta-store.c:2349 ../libgda/gda-meta-store.c:2358
 msgid "Could not set the internal schema's version"
 msgstr ""
+"Не вдалося встановити версію внутрішньої схеми"
 
 #: ../libgda/gda-meta-store.c:1524
 msgid "Missing view name from <view> node"
@@ -2174,8 +2177,7 @@ msgstr "На сервері бази даних не передбачено пі
 #: ../libgda/gda-server-provider.c:520
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
-msgstr ""
-"Надавач даних %s створив GdaServerOperation без вузла для «%s»"
+msgstr "Надавач даних %s створив GdaServerOperation без вузла для «%s»"
 
 #: ../libgda/gda-server-provider.c:524
 #, c-format
@@ -2325,8 +2327,7 @@ msgstr "Помилкове форматування назви таблиці"
 
 #: ../libgda/gda-statement.c:2231
 msgid "Join is not in a FROM statement"
-msgstr ""
-"Долучення поза інструкцією FROM"
+msgstr "Долучення поза інструкцією FROM"
 
 #: ../libgda/gda-statement.c:2238
 msgid "Could not find target the join is for"
@@ -2334,8 +2335,7 @@ msgstr "Не вдалося знайти цілі для об'єднання"
 
 #: ../libgda/gda-tree.c:175
 msgid "Tells if the GdaTree is a list or a tree"
-msgstr ""
-"Повідомляє, чим є GdaTree, списком чи ієрархією"
+msgstr "Повідомляє, чим є GdaTree, списком чи ієрархією"
 
 #: ../libgda/gda-tree.c:769 ../libgda/gda-tree.c:777
 #, c-format
@@ -2542,6 +2542,7 @@ msgstr "Числове представлення"
 #: ../libgda/handlers/gda-handler-string.c:122
 msgid "InternalString"
 msgstr ""
+"InternalString"
 
 #: ../libgda/handlers/gda-handler-string.c:123
 msgid "Strings representation"
@@ -2738,6 +2739,7 @@ msgstr "Помилковий пароль шифрування"
 #: ../libgda/sqlite/gda-sqlite-provider.c:902
 msgid "Extension loading is not supported"
 msgstr ""
+"Підтримки завантаження розширень не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:921
 #, c-format
@@ -2799,8 +2801,7 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-provider.c:1944
 #, c-format
 msgid "'%s' compound not supported by SQLite"
-msgstr ""
-"Підтримки з'єднання «%s» у SQLite не передбачено"
+msgstr "Підтримки з'єднання «%s» у SQLite не передбачено"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2042
 msgid "ILIKE operation not supported"
@@ -3061,8 +3062,7 @@ msgstr "Ціле значення поза припустимим діапазо
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:655
 msgid "Blob constraints are not handled in virtual table condition"
-msgstr ""
-"Обмеження на бінарні дані не обробляються в умові віртуальної таблиці"
+msgstr "Обмеження на бінарні дані не обробляються в умові віртуальної таблиці"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:150
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:190
@@ -3311,8 +3311,7 @@ msgstr ""
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:414
 msgid "VALUES lists must all be the same length in INSERT statement"
-msgstr ""
-"У інструкції INSERT списки VALUES мають бути однакової довжини"
+msgstr "У інструкції INSERT списки VALUES мають бути однакової довжини"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:407
 msgid "SELECT does not contain any expression"
@@ -3482,6 +3481,7 @@ msgstr "Значення"
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:184
 msgid "GValue to render"
 msgstr ""
+"GValue для обробки"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-bin.c:172
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:168
@@ -3498,10 +3498,12 @@ msgstr "Кнопку-перемикач може бути активовано"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:161
 msgid "Values limited to PK fields"
 msgstr ""
+"Значення обмежено до полів PK"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:162
 msgid "GList of GValue to render, limited to PK fields"
 msgstr ""
+"GList з GValue для обробки, обмежено до полів PK"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:168
 msgid "Values"
@@ -3510,14 +3512,17 @@ msgstr "Значення"
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-combo.c:169
 msgid "GList of GValue to render, not limited to PK fields "
 msgstr ""
+"GList з GValue для обробки, не обмежено до полів PK "
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:160
 msgid "The information and status changer can be activated"
 msgstr ""
+"Може бути задіяно засіб зміни відомостей і стану"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:408
 msgid "string truncated because too long"
 msgstr ""
+"рядок обрізано через надмірну довжину"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:434
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:274
@@ -3554,10 +3559,12 @@ msgstr ""
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
 msgid "Use 1000s separators"
 msgstr ""
+"Використовувати роздільники тисяч"
 
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:2
 msgid "Use thousands separator as specified by current locale"
 msgstr ""
+"Використовувати роздільник тисяч, як їх визначено у поточній локалі"
 
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:3
 msgid "Decimals"
@@ -3634,11 +3641,13 @@ msgstr "Тип %s не є числовим"
 #, c-format
 msgid "Decimal separator cannot be the '%c' character"
 msgstr ""
+"Роздільником дробової частини не може бути символ «%c»"
 
 #: ../libgda-ui/data-entries/gdaui-numeric-entry.c:292
 #, c-format
 msgid "Decimal thousands cannot be the '%c' character"
 msgstr ""
+"Роздільником тисяч не може бути символ «%c»"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:106
 #: ../libgda-ui/data-entries/plugins/common-pict.c:121
@@ -3783,22 +3792,27 @@ msgstr "Модель вибору"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:2
 msgid "Specifies what the user will be allowed to select"
 msgstr ""
+"Визначає, що саме користувачу можна буде вибирати"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:3
 msgid "Only let the user pick an existing file"
 msgstr ""
+"Дозволити користувачу вибирати лише наявний файл"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:4
 msgid "Let the user pick an existing file, or type in a new filename"
 msgstr ""
+"Дозволити користувачу вибирати наявний файл або вводити назву нового файла"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:5
 msgid "Let the user pick an existing folder"
 msgstr ""
+"Дозволити користувачу вибирати наявну теку"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel-spec.xml.in.h:6
 msgid "Let the user name an existing or new folder"
 msgstr ""
+"Дозволити користувачу вказувати назву наявної або нової теки"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:1
 msgid "Format"
@@ -3846,6 +3860,7 @@ msgstr "Немає даних для показу"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:2
 msgid "Encoding used to convert binary data to the string"
 msgstr ""
+"Кодування, яке буде використано для перетворення двійкових даних на рядок"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:3
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec.xml.in.h:1
@@ -3865,10 +3880,12 @@ msgstr "Base 64"
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:1
 msgid "Lines wrapping"
 msgstr ""
+"Перенесення рядків"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:2
 msgid "Defines how long lines are wrapped"
 msgstr ""
+"Визначає, на якій позицій слід переносити рядки"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-text-spec.xml.in.h:3
 msgid "Programming language"
@@ -3959,6 +3976,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-basic-form.c:295
 msgid "List of parameters to show in the form"
 msgstr ""
+"Список параметрів, які слід показати у формі"
 
 #: ../libgda-ui/gdaui-basic-form.c:309
 msgid "Show Entry actions"
@@ -5833,8 +5851,7 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:1019
 #, c-format
 msgid "Type %s not mapped for value %s"
-msgstr ""
-"Тип %s не пов'язано зі значенням %s"
+msgstr "Тип %s не пов'язано зі значенням %s"
 
 #: ../providers/mysql/libmain.c:75
 msgid "Provider for MySQL databases"
@@ -5909,8 +5926,7 @@ msgstr "Користувач-адміністратор"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:11
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:11
 msgid "Login name (which has the rights to create databases)"
-msgstr ""
-"Назва облікового запису (який має право на створення баз даних)"
+msgstr "Назва облікового запису (який має право на створення баз даних)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:12
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:14
@@ -5937,8 +5953,7 @@ msgstr ""
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
 msgid "Create database only if it does not yet exist"
-msgstr ""
-"Створити базу даних, лише якщо її ще не існує"
+msgstr "Створити базу даних, лише якщо її ще не існує"
 
 #. DSN parameters
 #. other table options
@@ -5951,8 +5966,7 @@ msgstr "Кодування символів"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:21
 msgid "Character set encoding to use in the new database"
-msgstr ""
-"Кодування символів, яким слід скористатися у новій базі даних"
+msgstr "Кодування символів, яким слід скористатися у новій базі даних"
 
 #. DSN parameters
 #. other table options
@@ -5964,8 +5978,7 @@ msgstr "Об'єднання"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:34
 msgid "Collation method to use in the new database"
-msgstr ""
-"Спосіб порівняння, яким слід скористатися у новій базі даних"
+msgstr "Спосіб порівняння, яким слід скористатися у новій базі даних"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:36
@@ -5995,43 +6008,37 @@ msgstr "US ASCII"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:139
 msgid "Big5 Traditional Chinese"
-msgstr ""
-"Big5, традиційна китайська"
+msgstr "Big5, традиційна китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:141
 msgid "DEC West European"
-msgstr ""
-"DEC, західноєвропейська"
+msgstr "DEC, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:143
 msgid "DOS West European"
-msgstr ""
-"DOS, західноєвропейська"
+msgstr "DOS, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:145
 msgid "HP West European"
-msgstr ""
-"HP, західноєвропейська"
+msgstr "HP, західноєвропейська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:147
 msgid "KOI8-R Relcom Russian"
-msgstr ""
-"KOI8-R Relcom, російська"
+msgstr "KOI8-R Relcom, російська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:54
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:149
 msgid "7bit Swedish"
-msgstr ""
-"7-бітова, шведська"
+msgstr "7-бітова, шведська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:56
@@ -6073,8 +6080,7 @@ msgstr "KOI8-U (Українська)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:68
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:163
 msgid "GB2312 Simplified Chinese"
-msgstr ""
-"GB3212, спрощена китайська"
+msgstr "GB3212, спрощена китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:70
@@ -6092,8 +6098,7 @@ msgstr "Windows центральноєвропейська"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:74
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:169
 msgid "GBK Simplified Chinese"
-msgstr ""
-"GBK, спрощена китайська"
+msgstr "GBK, спрощена китайська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:76
@@ -6105,15 +6110,13 @@ msgstr "ISO-8859-9 (Турецька)"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:78
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:173
 msgid "ARMSCII-8 Armenian"
-msgstr ""
-"ARMSCII-8, вірменська"
+msgstr "ARMSCII-8, вірменська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:80
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:175
 msgid "UCS-2 Unicode"
-msgstr ""
-"UCS-2 Unicode"
+msgstr "UCS-2 Unicode"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:82
@@ -6125,15 +6128,13 @@ msgstr "DOS, російська"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:84
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:179
 msgid "DOS Kamenicky Czech-Slovak"
-msgstr ""
-"Чехословацька DOS, Каменіцькі"
+msgstr "Чехословацька DOS, Каменіцькі"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:86
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:181
 msgid "Mac Central European"
-msgstr ""
-"Центральноєвропейська Mac"
+msgstr "Центральноєвропейська Mac"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:88
@@ -6175,22 +6176,19 @@ msgstr "Windows, балтійська"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:100
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:195
 msgid "Binary pseudo charset"
-msgstr ""
-"Двійковий псевдонабір символів"
+msgstr "Двійковий псевдонабір символів"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:102
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:197
 msgid "GEOSTD8 Georgian"
-msgstr ""
-"GEOSTD8, грузинська"
+msgstr "GEOSTD8, грузинська"
 
 #. To translators: Charset name
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:104
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:199
 msgid "SJIS for Windows Japanese"
-msgstr ""
-"SJIS для Windows, японська"
+msgstr "SJIS для Windows, японська"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
@@ -6202,8 +6200,7 @@ msgstr "Автоматично"
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid "TCP: TCP/IP connection to local or remote server."
-msgstr ""
-"TCP: з'єднання TCP/IP із локальним або віддаленим сервером."
+msgstr "TCP: з'єднання TCP/IP із локальним або віддаленим сервером."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
@@ -6211,7 +6208,8 @@ msgstr ""
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
-"Сокет: з'єднання файла сокета Unix із локальним сервером (лише для локального сервера Unix)."
+"Сокет: з'єднання файла сокета Unix із локальним сервером (лише для "
+"локального сервера Unix)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
@@ -6219,7 +6217,8 @@ msgstr ""
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
-"Канал: з'єднання іменованого каналу із локальним або віддаленим сервером (лише сервер Windows)"
+"Канал: з'єднання іменованого каналу із локальним або віддаленим сервером "
+"(лише сервер Windows)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
@@ -6227,7 +6226,8 @@ msgstr ""
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
-"Пам'ять: з'єднання спільної пам'яті із локальним сервером (лише для локального сервера Windows)"
+"Пам'ять: з'єднання спільної пам'яті із локальним сервером (лише для "
+"локального сервера Windows)"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:6
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:6
@@ -6236,8 +6236,7 @@ msgstr "Метод"
 
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:7
 msgid "Index type (depending on table storage engine)"
-msgstr ""
-"Тип покажчика (залежний від рушія зберігання таблиці)"
+msgstr "Тип покажчика (залежний від рушія зберігання таблиці)"
 
 #. Index fields
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:13
@@ -6249,7 +6248,8 @@ msgstr "Довжина"
 msgid ""
 "The number of characters the index is on for columns of type CHAR or VARCHAR"
 msgstr ""
-"Кількість символів для яких увімкнено формування покажчика для стовпчиків типів CHAR або VARCHAR"
+"Кількість символів для яких увімкнено формування покажчика для стовпчиків "
+"типів CHAR або VARCHAR"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:9
 msgid "Table's comment"
@@ -6331,14 +6331,12 @@ msgstr "Рушій"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:63
 msgid "Table's engine (or type)"
-msgstr ""
-"Рушій (або тип) таблиці"
+msgstr "Рушій (або тип) таблиці"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:65
 msgid "Auto increment value"
-msgstr ""
-"Значення автозбільшення"
+msgstr "Значення автозбільшення"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:67
@@ -6346,19 +6344,18 @@ msgid ""
 "Counter for auto incremented fields is incremented by this value + 1 "
 "(DEFAULT: 0)"
 msgstr ""
-"Лічильник для полів із автоматичним збільшенням буде збільшено на це значення + 1 (ТИПОВЕ ЗНАЧЕННЯ: 0)"
+"Лічильник для полів із автоматичним збільшенням буде збільшено на це "
+"значення + 1 (ТИПОВЕ ЗНАЧЕННЯ: 0)"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:69
 msgid "Average row length"
-msgstr ""
-"Середня довжина рядка"
+msgstr "Середня довжина рядка"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:71
 msgid "An approximation of the average row length for your table"
-msgstr ""
-"Наближення середньої довжини рядка для вашої таблиці"
+msgstr "Наближення середньої довжини рядка для вашої таблиці"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:77
@@ -6368,32 +6365,27 @@ msgstr "Контрольна сума"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:79
 msgid "Min rows"
-msgstr ""
-"Мін. рядків"
+msgstr "Мін. рядків"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:81
 msgid "Max rows"
-msgstr ""
-"Макс. рядків"
+msgstr "Макс. рядків"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:83
 msgid "Pack keys"
-msgstr ""
-"Пакування ключів"
+msgstr "Пакування ключів"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:85
 msgid "Delay key write"
-msgstr ""
-"Затримка запису ключів"
+msgstr "Затримка запису ключів"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:89
 msgid "Row format"
-msgstr ""
-"Формат рядка"
+msgstr "Формат рядка"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:91
@@ -6429,19 +6421,16 @@ msgstr "Каталог покажчика"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 msgid "Match simple"
-msgstr ""
-"Проста відповідність"
+msgstr "Проста відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:104
 msgid "Match partial"
-msgstr ""
-"Часткова відповідність"
+msgstr "Часткова відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match full"
-msgstr ""
-"Повна відповідність"
+msgstr "Повна відповідність"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
@@ -6466,8 +6455,7 @@ msgstr "Встановити NULL"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:111
 msgid "Don't pack keys"
-msgstr ""
-"Не пакувати ключі"
+msgstr "Не пакувати ключі"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:112
 msgid "Only pack long CHAR/VARCHAR columns"
@@ -6475,13 +6463,11 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
 msgid "MyISAM (default)"
-msgstr ""
-"MyISAM (типовий)"
+msgstr "MyISAM (типовий)"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:114
 msgid "ISAM"
-msgstr ""
-"ISAM"
+msgstr "ISAM"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:115
 msgid "Archive"
@@ -6489,8 +6475,7 @@ msgstr "Архів"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:116
 msgid "Berkeley DB"
-msgstr ""
-"Berkeley DB"
+msgstr "Berkeley DB"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:117
 msgid "Comma Separated Value (CSV)"
@@ -6503,8 +6488,7 @@ msgstr "Приклад"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:119
 msgid "Federated"
-msgstr ""
-"Інтегрований"
+msgstr "Інтегрований"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:120
 msgid "In Memory (MEMORY/HEAP)"
@@ -6537,8 +6521,7 @@ msgstr "Стиснений"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
 msgid "Redundant"
-msgstr ""
-"Із резервуванням"
+msgstr "Із резервуванням"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:129
 msgid "Compact"
@@ -6551,8 +6534,7 @@ msgstr "Замінити, якщо вже існує"
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
 msgid "Replace view definition if it already exists"
-msgstr ""
-"Замінити визначення перегляду, якщо воно вже існує"
+msgstr "Замінити визначення перегляду, якщо воно вже існує"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:9
@@ -6572,13 +6554,11 @@ msgstr "Лише якщо існує"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
 msgid "Drop database only if it exists"
-msgstr ""
-"Відкинути базу даних, лише якщо вона існує"
+msgstr "Відкинути базу даних, лише якщо вона існує"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
 msgid "Drop table only if it is temporary"
-msgstr ""
-"Відкинути базу даних, лише якщо вона тимчасова"
+msgstr "Відкинути базу даних, лише якщо вона тимчасова"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:5
@@ -6598,8 +6578,7 @@ msgstr "Що робити із посиланнями"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr ""
-"Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
+msgstr "Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
@@ -6659,18 +6638,15 @@ msgstr ""
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:119
 msgid "PostgresqlBin"
-msgstr ""
-"PostgresqlBin"
+msgstr "PostgresqlBin"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:120
 msgid "PostgreSQL binary representation"
-msgstr ""
-"Двійкове представлення PostgreSQL"
+msgstr "Двійкове представлення PostgreSQL"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:204
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr ""
-"Недостатньо пам'яті для перетворення двійкового буфера на рядок"
+msgstr "Недостатньо пам'яті для перетворення двійкового буфера на рядок"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:244
 msgid "Insufficient memory to convert string to binary buffer"
@@ -7443,21 +7419,25 @@ msgstr "Немає підтримки"
 #: ../providers/web/gda-web-provider.c:668
 msgid "Server operations not yet implemented"
 msgstr ""
+"Операції на боці сервера ще не реалізовано"
 
 #: ../providers/web/gda-web-provider.c:719
 #: ../providers/web/gda-web-provider.c:784
 #: ../providers/web/gda-web-provider.c:844
 msgid "Named transaction is not supported"
 msgstr ""
+"Підтримки іменованих транзакцій не передбачено"
 
 #: ../providers/web/gda-web-provider.c:724
 msgid "Transaction level is not supported"
 msgstr ""
+"Підтримки рівня транзакцій не передбачено"
 
 #: ../providers/web/gda-web-provider.c:904
 #: ../providers/web/gda-web-provider.c:965
 msgid "Unnamed savepoint is not supported"
 msgstr ""
+"Підтримки точок збереження без назви не передбачено"
 
 #: ../providers/web/gda-web-util.c:148 ../providers/web/gda-web-util.c:162
 msgid "Could not parse server's reponse"
@@ -7470,19 +7450,23 @@ msgstr "Некоректний хеш відповіді"
 #: ../providers/web/gda-web-util.c:344
 msgid "Can't start new thread"
 msgstr ""
+"Не вдалося започаткувати новий потік обробки"
 
 #: ../providers/web/gda-web-util.c:398 ../providers/web/gda-web-util.c:438
 msgid "Could not run PHP script on the server"
 msgstr ""
+"Не вдалося запустити скрипт PHP на сервері"
 
 #: ../providers/web/gda-web-util.c:425
 msgid "The transaction has been automatically rolled back"
 msgstr ""
+"Транзакцію було автоматично відкочено"
 
 #: ../providers/web/gda-web-util.c:575
 #, c-format
 msgid "Error cleaning data on the server for session %s"
 msgstr ""
+"Помилка під час спроби вилучення даних на сервері для сеансу %s"
 
 #: ../providers/web/gda-web-util.c:607
 msgid "Non detailled error"
@@ -7491,10 +7475,12 @@ msgstr ""
 #: ../providers/web/libmain.c:75
 msgid "Provider for web server proxies"
 msgstr ""
+"Надавач даних для проксі-серверів"
 
 #: ../providers/web/web_specs_auth.xml.in.h:2
 msgid "Connection password as defined on the web server"
 msgstr ""
+"Пароль до з'єднання, як його визначено на вебсервері"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:1
 msgid "Web server name"
@@ -7503,23 +7489,28 @@ msgstr "Назва вебсервера"
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "The name of the web server which proxies connections"
 msgstr ""
+"Назва вебсервера, який є проксі-сервером з'єднань"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:4
 msgid "Web server port (leave this field empty for default)"
 msgstr ""
+"Порт вебсервера (не заповнюйте, якщо слід використовувати типовий)"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:5
 msgid "Path to PHP script"
 msgstr ""
+"Шлях до скрипту PHP"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:6
 msgid ""
 "The path of the script to use if service is not at the web server's root"
 msgstr ""
+"Шлях до скрипту, яким слід скористатися, якщо служба не перебуває у корені вебсервера"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
 msgid "Server secret"
 msgstr ""
+"Ключ сервера"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:9
 msgid "The name of a database to use"
@@ -7570,6 +7561,7 @@ msgstr ""
 #: ../tools/browser/browser-connection.c:494
 msgid "Analysing database schema"
 msgstr ""
+"Аналізуємо схему бази даних"
 
 #: ../tools/browser/browser-connection.c:496
 #: ../tools/browser/browser-connection.c:653
@@ -7578,6 +7570,7 @@ msgstr ""
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
 msgstr ""
+"Помилка під час отримання метаданих зі з'єднання: %s"
 
 #: ../tools/browser/browser-connection.c:855
 #: ../tools/browser/browser-connection.c:875
@@ -7601,6 +7594,7 @@ msgstr "джерело даних"
 #: ../tools/browser/browser-connection.c:1142
 msgid "Getting database schema information"
 msgstr ""
+"Отримання даних щодо схеми бази даних"
 
 #: ../tools/browser/browser-connection.c:1358
 msgid ""
@@ -7620,6 +7614,7 @@ msgstr "З'єднання ще не відкрито"
 #: ../tools/browser/browser-connection.c:1762
 msgid "Can't initialize dictionary to store table preferences"
 msgstr ""
+"Не вдалося ініціалізувати словник для зберігання налаштувань таблиці"
 
 #: ../tools/browser/browser-connection.c:1808
 #: ../tools/browser/browser-connection.c:1814
@@ -7628,11 +7623,13 @@ msgstr ""
 #: ../tools/tools-favorites.c:1069
 msgid "Can't initialize transaction to access favorites"
 msgstr ""
+"Не вдалося ініціалізувати транзакцію для доступу до вибраних записів"
 
 #: ../tools/browser/browser-connection.c:1895 ../tools/tools-favorites.c:808
 #: ../tools/tools-favorites.c:1137
 msgid "Can't commit transaction to access favorites"
 msgstr ""
+"Не вдалося внести транзакцію для доступу до вибраних записів"
 
 #: ../tools/browser/browser-connection.c:2458
 msgid "Could not execute LDAP search"
@@ -7756,6 +7753,7 @@ msgstr "Форма"
 #: ../tools/browser/browser-virtual-connection.c:91
 msgid "Bound connection is used"
 msgstr ""
+"Використано пов'язане з'єднання"
 
 #: ../tools/browser/browser-virtual-connection.c:115
 msgid "Virtual connection using this connection is busy"
@@ -7933,16 +7931,19 @@ msgstr ""
 #, c-format
 msgid "Error starting transaction: %s"
 msgstr ""
+"Помилка під час спроби розпочати транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:933
 #, c-format
 msgid "Error committing transaction: %s"
 msgstr ""
+"Помилка під час спроби внести транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:947
 #, c-format
 msgid "Error rolling back transaction: %s"
 msgstr ""
+"Помилка під час спроби відкотити транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:1027
 msgid "Hit the Escape key to leave the fullscreen mode"
@@ -7952,6 +7953,7 @@ msgstr ""
 #, c-format
 msgid "Error updating bound connection: %s"
 msgstr ""
+"Помилка під час спроби оновлення пов'язаного з'єднання: %s"
 
 #: ../tools/browser/browser-window.c:1213
 #, c-format
@@ -7962,6 +7964,7 @@ msgstr ""
 #: ../tools/browser/gda-browser-5.0.desktop.in.h:1
 msgid "Database browser"
 msgstr ""
+"Навігатор базою даних"
 
 #: ../tools/browser/browser-window.c:1589
 msgid "Don't show this message again"
@@ -7978,14 +7981,17 @@ msgstr ""
 #: ../tools/browser/canvas/browser-canvas.c:353
 msgid "Linear layout"
 msgstr ""
+"Лінійне компонування"
 
 #: ../tools/browser/canvas/browser-canvas.c:358
 msgid "Radial layout"
 msgstr ""
+"Радіальне компонування"
 
 #: ../tools/browser/canvas/browser-canvas.c:465
 msgid "Save diagram as"
 msgstr ""
+"Зберегти діаграму як"
 
 #: ../tools/browser/canvas/browser-canvas.c:473
 msgid "PNG Image"
@@ -7994,18 +8000,22 @@ msgstr "зображення PNG"
 #: ../tools/browser/canvas/browser-canvas.c:478
 msgid "SVG file"
 msgstr ""
+"файл SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:516
 msgid "Failed to create SVG file"
 msgstr ""
+"Не вдалося створити файл SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:524
 msgid "File format to save to is not recognized."
 msgstr ""
+"Не вдалося розпізнати формат файлів, який слід використати для збереження даних."
 
 #: ../tools/browser/canvas/browser-canvas.c:544
 msgid "Failed to create PNG file"
 msgstr ""
+"Не вдалося створити файл PNG"
 
 #: ../tools/browser/canvas/browser-canvas-column.c:169
 #, c-format
@@ -8015,24 +8025,29 @@ msgstr "Тип: %s"
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:380
 msgid "Remove from graph"
 msgstr ""
+"Вилучити з графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 msgid "Add referenced tables to graph"
 msgstr ""
+"Додати таблиці, на які посилається, до графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:388
 msgid "Add tables referencing this table to graph"
 msgstr ""
+"Додати таблиці, які посилаються на цю таблицю до графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:397
 msgid "Declare foreign key for this table"
 msgstr ""
+"Оголосити сторонній ключ для цієї таблиці"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
 #: ../tools/browser/schema-browser/table-info.c:972
 #, c-format
 msgid "Failed to declare foreign key: %s"
 msgstr ""
+"Не вдалося оголосити сторонній ключ: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:429
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:432
@@ -8040,6 +8055,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/table-info.c:982
 msgid "Successfully declared foreign key"
 msgstr ""
+"Успішно оголошено сторонній ключ"
 
 #. entry to display a window with tables in it
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:632
@@ -8058,15 +8074,18 @@ msgstr "Додати усі таблиці"
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:716
 msgid "Add all tables in schema"
 msgstr ""
+"Додати усі таблиці у схемі"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:830
 msgid "Select tables to add to diagram"
 msgstr ""
+"Виберіть таблиці для додавання до діаграми"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/command-exec.c:879
 msgid "Declared foreign key"
 msgstr ""
+"Оголошено сторонній ключ"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
@@ -8074,6 +8093,7 @@ msgstr ""
 #: ../tools/command-exec.c:911
 msgid "Policy on UPDATE"
 msgstr ""
+"Правила для UPDATE"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
@@ -8081,12 +8101,14 @@ msgstr ""
 #: ../tools/command-exec.c:915
 msgid "Policy on DELETE"
 msgstr ""
+"Правила для DELETE"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
 #: ../tools/browser/schema-browser/table-columns.c:951
 #, c-format
 msgid "Failed to undeclare foreign key: %s"
 msgstr ""
+"Не вдалося скасувати оголошення стороннього ключа: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
@@ -8094,6 +8116,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/table-columns.c:961
 msgid "Successfully undeclared foreign key"
 msgstr ""
+"Успішно скасовано оголошення стороннього ключа"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
 msgid "Remove this declared foreign key"
@@ -8102,15 +8125,18 @@ msgstr "Вилучити цей оголошений сторонній ключ
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
 msgstr ""
+"Розмір і масштаб сторінок"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:180
 #, c-format
 msgid "Page %d of %d horizontally and %d of %d vertically"
 msgstr ""
+"Сторінка %d з %d горизонтально і %d з %d вертикально"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:238
 msgid "Adjust page's size and orientation"
 msgstr ""
+"Скоригувати розмір і орієнтацію сторінок"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:244
 msgid "<b>Zoom</b>"
@@ -8119,6 +8145,7 @@ msgstr "<b>Масштаб</b>"
 #: ../tools/browser/canvas/browser-canvas-print.c:256
 msgid "Number of pages used:"
 msgstr ""
+"Кількість використаних сторінок:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:267
 msgid "horizontally"
@@ -8135,16 +8162,19 @@ msgstr "Коефіцієнт масштабування:"
 #: ../tools/browser/canvas/browser-canvas-print.c:295
 msgid "<b>Page numbers</b>"
 msgstr ""
+"<b>Номери сторінок</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:308
 msgid "Print page numbers"
 msgstr ""
+"Виводити номери сторінок"
 
 #: ../tools/browser/common/fk-declare.c:186
 #: ../tools/browser/common/fk-declare.c:398
 #, c-format
 msgid "Declare a foreign key for table '%s'"
 msgstr ""
+"Оголосити сторонній ключ для таблиці «%s»"
 
 #: ../tools/browser/common/fk-declare.c:189
 msgid ""
@@ -8168,6 +8198,7 @@ msgstr "Стовпчик посилання"
 #: ../tools/browser/common/fk-declare.c:560
 msgid "Missing information to declare foreign key"
 msgstr ""
+"Не вистачає відомостей для оголошення стороннього ключа"
 
 #: ../tools/browser/common/fk-declare.c:642
 msgid "Missing information to undeclare foreign key"
@@ -8758,6 +8789,9 @@ msgid ""
 "to select data\n"
 "Can't be changed if a table name is set"
 msgstr ""
+"Сам код SQL, який буде виконано\n"
+"для вибору даних\n"
+"Не може бути змінено, якщо встановлено назву таблиці"
 
 #: ../tools/browser/data-manager/data-source-editor.c:183
 msgid "Dependencies"
@@ -8795,6 +8829,7 @@ msgstr "Не визначено джерела даних"
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
 msgstr ""
+"Не вдалося пов'язати параметр «%s» типу «%s» із параметром типу «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:164
 #: ../tools/browser/schema-browser/table-columns.c:305
@@ -10436,24 +10471,29 @@ msgstr "%s [<DSN>]"
 #: ../tools/gda-sql.c:2128
 msgid "List all DSN (or named DSN's attributes)"
 msgstr ""
+"Вивести список усіх DSN (або атрибути вказаного DSN)"
 
 #: ../tools/gda-sql.c:2136
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
 msgstr ""
+"%s <НАЗВА_DSN> <ВИЗНАЧЕННЯ_DSN> [<ОПИС>]"
 
 #: ../tools/gda-sql.c:2137
 msgid "Create (or modify) a DSN"
 msgstr ""
+"Створити (або змінити) DSN"
 
 #: ../tools/gda-sql.c:2145
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
 msgstr ""
+"%s <НАЗВА_DSN> [<НАЗВА_DSN>...]"
 
 #: ../tools/gda-sql.c:2146
 msgid "Remove a DSN"
 msgstr ""
+"Вилучити DSN"
 
 #: ../tools/gda-sql.c:2154
 #, c-format
@@ -10463,6 +10503,7 @@ msgstr "%s [<НАДАВАЧ_ДАНИХ>]"
 #: ../tools/gda-sql.c:2155
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
+"Вивести список усіх встановлених засобів роботи із базами даних (або атрибути вказаного засобу)"
 
 #: ../tools/gda-sql.c:2161 ../tools/gda-sql.c:2169 ../tools/gda-sql.c:2177
 #: ../tools/gda-sql.c:2185 ../tools/gda-sql.c:2299
@@ -10477,10 +10518,12 @@ msgstr "%s <ФАЙЛ>"
 #: ../tools/gda-sql.c:2164
 msgid "Execute commands from file"
 msgstr ""
+"Виконати команду з файла"
 
 #: ../tools/gda-sql.c:2172
 msgid "Send output to a file or |pipe"
 msgstr ""
+"Надіслати виведені дані до файла або каналу обміну даними"
 
 #: ../tools/gda-sql.c:2179 ../tools/gda-sql.c:2187
 #, c-format
@@ -10490,10 +10533,12 @@ msgstr "%s [<ТЕКСТ>]"
 #: ../tools/gda-sql.c:2180
 msgid "Print TEXT or an empty line to standard output"
 msgstr ""
+"Вивести ТЕКСТ або порожній рядок до стандартного виведення"
 
 #: ../tools/gda-sql.c:2188
 msgid "Send TEXT or an empty line to current output stream"
 msgstr ""
+"Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
 
 #: ../tools/gda-sql.c:2203
 #, c-format
@@ -10503,6 +10548,7 @@ msgstr "%s [<КАТАЛОГ>]"
 #: ../tools/gda-sql.c:2204
 msgid "Change the current working directory"
 msgstr ""
+"Змінити поточний робочий каталог"
 
 #: ../tools/gda-sql.c:2212
 msgid "Show usage and distribution terms"
@@ -10616,6 +10662,7 @@ msgstr ""
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
 msgstr ""
+"%s <НАЗВА> [<ФАЙЛ>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_НА_РЯДКИ>]"
 
 #: ../tools/gda-sql.c:2346
 msgid ""
@@ -10642,6 +10689,7 @@ msgstr "Маніпуляції наборів даних"
 #: ../tools/gda-sql.c:2363
 msgid "Lists all the datasets kept in memory for reference"
 msgstr ""
+"Виводить список усіх наборів даних, які зберігаються у пам'яті із довідковою метою"
 
 #: ../tools/gda-sql.c:2371
 #, c-format
@@ -10651,11 +10699,13 @@ msgstr "%s <НАЗВА НАБОРУ ДАНИХ> <ВЗІРЕЦЬ>"
 #: ../tools/gda-sql.c:2372
 msgid "Show a dataset's contents where lines match a regular expression"
 msgstr ""
+"Показати вміст набору даних, де рядки відповідають формальному виразу"
 
 #: ../tools/gda-sql.c:2380
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
 msgstr ""
+"%s <НАЗВА НАБОРУ ДАНИХ> [<СТОВПЧИК> [<СТОВПЧИК> ...]]"
 
 #: ../tools/gda-sql.c:2381
 msgid ""
@@ -10685,6 +10735,7 @@ msgstr ""
 #, c-format
 msgid "%s CSV <FILE NAME>"
 msgstr ""
+"%s CSV <НАЗВА ФАЙЛА>"
 
 #: ../tools/gda-sql.c:2408
 msgid "Import a dataset from a file"
@@ -10703,6 +10754,7 @@ msgstr "Шукати записи LDAP"
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 msgstr ""
+"%s <DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/gda-sql.c:2426
 msgid ""
@@ -11039,6 +11091,10 @@ msgid ""
 "Note: set the GDA_SQL_VIEWER_PNG or GDA_SQL_VIEWER_PDF environment variables "
 "to view the graph\n"
 msgstr ""
+"Граф записано до «%s»\n"
+"Скористайтеся «dot» (з пакунка GraphViz) для створення зображення. Приклад:\n"
+"\tdot -Tpng -o graph.png %s\n"
+"Зауваження: встановіть змінну середовища GDA_SQL_VIEWER_PNG або GDA_SQL_VIEWER_PDF для перегляду графу\n"
 
 #: ../tools/gda-sql.c:5788
 msgid "HTTPD server stopped"
@@ -11105,6 +11161,7 @@ msgid ""
 "Enter authentification token as set from console, or leave empty if none "
 "required"
 msgstr ""
+"Введіть жетон розпізнавання, як встановлено з консолі, або не заповнюйте, якщо жетон не потрібен"
 
 #: ../tools/web-server.c:638
 msgid "Token:"
