@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-04-29 08:32+0000\n"
-"PO-Revision-Date: 2021-04-29 18:39+0300\n"
+"POT-Creation-Date: 2021-05-04 10:42+0000\n"
+"PO-Revision-Date: 2021-05-06 20:57+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -4429,12 +4429,19 @@ msgid ""
 "(which must never stop spinning), and a 1 second delay is added whenever the "
 "connection is used."
 msgstr ""
+"<b><big>Зауваження:\n"
+"</big></b>У багатьох продемонстрованих записах використано відкрите з'єднання із SQLite за допомогою файла «%s».\n"
+"\n"
+"У показаному тут початковому коді об'єкти <i>demo_cnc</i> і <i>demo_parser</i> створено оболонкою і зроблено доступними усім записам із демонстрації.\n"
+"\n"
+"Щоб продемонструвати те, що виклики виконуються без блокування, у верхній частині вікна показано обертальний індикатор (який не зупиняє оберти) і додано односекундну затримку при використанні з'єднання."
 
 #: ../libgda-ui/gdaui-basic-form.c:267
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
 msgstr ""
+"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол <gdaui_form>)"
 
 #: ../libgda-ui/gdaui-basic-form.c:271
 msgid "List of parameters to show in the form"
@@ -4443,10 +4450,12 @@ msgstr "Список параметрів, які слід показати у �
 #: ../libgda-ui/gdaui-basic-form.c:275
 msgid "Entries Auto-default"
 msgstr ""
+"Автотипові записи"
 
 #: ../libgda-ui/gdaui-basic-form.c:280
 msgid "TRUE if expanding the form vertically makes sense"
 msgstr ""
+"TRUE, якщо розгортання форми вертикально має сенс"
 
 #: ../libgda-ui/gdaui-basic-form.c:305
 msgid "Shown data entries"
@@ -4458,17 +4467,23 @@ msgstr "Показані записи даних"
 msgid "There are more entries than expected in group. Found %d"
 msgid_plural "There are more entries than expected in group. Found %d"
 msgstr[0] ""
+"У групі більше записів, ніж очікувалося. Знайдено %d"
 msgstr[1] ""
+"У групі більше записів, ніж очікувалося. Знайдено %d"
 msgstr[2] ""
+"У групі більше записів, ніж очікувалося. Знайдено %d"
 msgstr[3] ""
+"У групі більше записів, ніж очікувалося. Знайдено %d"
 
 #: ../libgda-ui/gdaui-basic-form.c:1843
 msgid "Can't find data entry for GdaHolder"
 msgstr ""
+"Не вдалося знайти запис для GdaHolder"
 
 #: ../libgda-ui/gdaui-basic-form.c:2112
 msgid "Values to be defined"
 msgstr ""
+"Значення, які слід визначити"
 
 #: ../libgda-ui/gdaui-basic-form.c:2117
 #: ../libgda-ui/gdaui-server-operation.c:1074
@@ -4486,11 +4501,13 @@ msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
 msgstr ""
+"розмір групи не було взято до уваги при використанні gdaui_basic_form_add_to_size_group()"
 
 #: ../libgda-ui/gdaui-cloud.c:209 ../libgda-ui/gdaui-cloud.c:956
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
 msgstr ""
+"Помилковий тип стовпчика для мітки: мав бути рядок, а маємо %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1050 ../tools/browser/objects-cloud.c:459
 msgid "Find:"
@@ -4523,6 +4540,8 @@ msgid ""
 "like 'doe%'</tt></b> to filter rows where the 2nd column starts with "
 "<tt>doe</tt>."
 msgstr ""
+"На стовпчики можна посилатися за назвою або, що простіше, за допомогою запису <b><tt>_&lt;номер стовпчика&gt;</tt></b>. Наприклад, коректним виразом може бути такий: <b><tt>_2 "
+"like 'doe%'</tt></b> для фільтрування рядків, де другий стовпчик починається з <tt>doe</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:203
 msgid "Set filter"
@@ -4535,6 +4554,7 @@ msgstr "Зняти фільтрування"
 #: ../libgda-ui/gdaui-data-proxy.c:155
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
 msgstr ""
+"Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:89
 msgid "Insert new data"
@@ -4611,6 +4631,7 @@ msgstr "Внутрішня модель даних GdaDataProxy"
 #: ../libgda-ui/gdaui-data-store.c:460 ../libgda-ui/gdaui-data-store.c:491
 msgid "Can't modify row while data model is being reset"
 msgstr ""
+"Не можна вносити зміни до рядка, доки виконується відновлення початкового стану моделі даних"
 
 #: ../libgda-ui/gdaui-data-store.c:375
 msgid "Trying to modify a read-only row"
@@ -4619,6 +4640,7 @@ msgstr "Спроба внесення змін до придатного лиш�
 #: ../libgda-ui/gdaui-data-store.c:577
 msgid "Can't access row while data model is being reset"
 msgstr ""
+"Не можна отримувати доступ до рядка, доки виконується відновлення початкового стану моделі даних"
 
 #: ../libgda-ui/gdaui-init.c:55
 #, c-format
@@ -4671,6 +4693,7 @@ msgstr "Джерела даних…"
 #: ../libgda-ui/gdaui-login.c:419
 msgid "Could not execute the Database access control center"
 msgstr ""
+"Не вдалося запустити центр керування доступом до бази даних"
 
 #: ../libgda-ui/gdaui-raw-form.c:142 ../libgda-ui/gdaui-raw-grid.c:244
 msgid "Data to display"
@@ -4686,10 +4709,12 @@ msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
 msgstr ""
+"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол <gdaui_grid>)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:252
 msgid "Info cell visible"
 msgstr ""
+"Видимість інформаційних комірок"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
 #: ../libgda-ui/gdaui-raw-grid.c:677 ../libgda-ui/gdaui-raw-grid.c:699
@@ -4788,10 +4813,12 @@ msgstr "Інші параметри"
 #: ../libgda-ui/gdaui-raw-grid.c:1841
 msgid "Empty string when NULL?"
 msgstr ""
+"Порожній рядок, якщо NULL?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1844 ../libgda-ui/gdaui-raw-grid.c:1849
 msgid "Export NULL values as an empty \"\" string"
 msgstr ""
+"Експортувати значення NULL як порожній рядок \"\""
 
 #: ../libgda-ui/gdaui-raw-grid.c:1851
 msgid "Invalid data as NULL?"
@@ -4802,14 +4829,18 @@ msgid ""
 "Don't export invalid data,\n"
 "but export a NULL value instead"
 msgstr ""
+"Не експортувати некоректні дані,\n"
+"замість них експортувати значення NULL"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1861
 msgid "Field names on first row?"
 msgstr ""
+"Назви полів у першому рядку?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1864 ../libgda-ui/gdaui-raw-grid.c:1869
 msgid "Add a row at beginning with columns names"
 msgstr ""
+"Додавати на початку рядок із назвами стовпчиків"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2047
 #, c-format
@@ -4819,10 +4850,12 @@ msgstr "Не вдалося зберегти файл %s"
 #: ../libgda-ui/gdaui-raw-grid.c:2055
 msgid "You must specify a file name"
 msgstr ""
+"Вам слід вказати назву файла"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2061
 msgid "Got empty file while converting the data"
 msgstr ""
+"При перетворенні даних отримано порожній файл"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2074
 #, c-format
@@ -4836,11 +4869,13 @@ msgstr ""
 #: ../libgda-ui/gdaui-raw-grid.c:2084
 msgid "If you choose yes, the contents will be lost."
 msgstr ""
+"Якщо ви виберете варіант «так», дані буде втрачено."
 
 #: ../libgda-ui/gdaui-raw-grid.c:2594 ../libgda-ui/gdaui-raw-grid.c:2649
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
 msgstr ""
+"Атрибутом «%s» має бути значення G_TYPE_STRING"
 
 #: ../libgda-ui/gdaui-rt-editor.c:102
 msgid ""
@@ -4896,18 +4931,22 @@ msgstr "Підкреслити текст"
 #: ../libgda-ui/gdaui-rt-editor.c:172
 msgid "_Strike through"
 msgstr ""
+"За_креслити"
 
 #: ../libgda-ui/gdaui-rt-editor.c:172
 msgid "Strike through text"
 msgstr ""
+"Закреслити текст"
 
 #: ../libgda-ui/gdaui-rt-editor.c:173
 msgid "_Syntax help"
 msgstr ""
+"Довідка щодо с_интаксису"
 
 #: ../libgda-ui/gdaui-rt-editor.c:173
 msgid "Show syntax help"
 msgstr ""
+"Показати довідку щодо синтаксису"
 
 #: ../libgda-ui/gdaui-rt-editor.c:177
 msgid "_Add image"
@@ -4920,18 +4959,22 @@ msgstr "Вставити зображення"
 #: ../libgda-ui/gdaui-rt-editor.c:178
 msgid "_Normal text"
 msgstr ""
+"Зви_чайний текст"
 
 #: ../libgda-ui/gdaui-rt-editor.c:178
 msgid "Reset to normal text"
 msgstr ""
+"Скинути параметри до звичайного тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:227
 msgid "Don't display a specific background for the text"
 msgstr ""
+"Не показувати специфічне тло для тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:237
 msgid "Display raw markup text instead of formatted text"
 msgstr ""
+"Показати простий текст розмітки замість форматованого тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:248
 msgid "The buffer which is displayed"
@@ -4940,6 +4983,7 @@ msgstr "Буфер, який показано"
 #: ../libgda-ui/gdaui-rt-editor.c:259
 msgid "Determines if the contents appears in a scrolled window"
 msgstr ""
+"Визначає, чи буде показано дані у вікні з гортанням"
 
 #: ../libgda-ui/gdaui-rt-editor.c:899
 msgid "Reset font size"
@@ -4960,15 +5004,18 @@ msgstr "Показати розмітку джерела"
 #: ../libgda-ui/gdaui-server-operation.c:170
 msgid "The specification of the operation to implement"
 msgstr ""
+"Специфікація операції для реалізації"
 
 #: ../libgda-ui/gdaui-server-operation.c:176
 msgid "Request section header to be hidden if there is only one section"
 msgstr ""
+"Вимагати приховування заголовка розділу, якщо існує лише один розділ"
 
 #: ../libgda-ui/gdaui-server-operation.c:369
 #, c-format
 msgid "Mal formed Server Operation. No Node at path: '%s'"
 msgstr ""
+"Помилкове форматування дій з сервером. Немає вузла з таким шляхом: «%s»"
 
 #: ../libgda-ui/gdaui-server-operation.c:442
 msgid "Add a new field"
@@ -4987,6 +5034,7 @@ msgstr "Додати"
 #: ../libgda-ui/gdaui-server-operation.c:1070
 msgid "Server operation specification"
 msgstr ""
+"Специфікація операцій із сервером"
 
 #: ../libgda-ui/gdaui-set.c:730
 msgid "No group exists for Set"
@@ -5005,10 +5053,12 @@ msgstr "Невідомий номер стовпчика %d"
 #, c-format
 msgid "Type mismatch: expected a value of type %s and got of type %s"
 msgstr ""
+"Невідповідність типів: мало бути значення типу %s, а отримано значення типу %s"
 
 #: ../libgda-ui/internal/gdaui-provider-auth-editor.c:426
 msgid "Can't set authentification string: no authentication is needed"
 msgstr ""
+"Не вдалося встановити рядок розпізнавання: немає потреби у розпізнаванні"
 
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:195
 #, c-format
@@ -5019,6 +5069,7 @@ msgstr "Невідомий постачальник «%s»"
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
 msgstr ""
+"Надавач даних «%s» не повідомляє потрібні параметри для DSN"
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:82
@@ -5038,6 +5089,7 @@ msgstr "Скинути до початкового значення"
 #: ../libgda-ui/internal/utility.c:375
 msgid "Current modified data is invalid"
 msgstr ""
+"Поточні змінені дані є некоректними"
 
 #: ../libgda-ui/internal/utility.c:377
 msgid ""
@@ -5045,14 +5097,19 @@ msgid ""
 "\n"
 "What do you want to do?"
 msgstr ""
+"Тепер ви можете виправити її або відкинути внесені зміни.\n"
+"\n"
+"Що ви хочете зробити?"
 
 #: ../libgda-ui/internal/utility.c:381
 msgid "please correct it and try again, or discard the modifications."
 msgstr ""
+"будь ласка, внесіть виправлення або відкиньте внесені зміни."
 
 #: ../libgda-ui/internal/utility.c:388
 msgid "Part of the current modified data was invalid"
 msgstr ""
+"Частина поточних змінених даних була некоректною"
 
 #: ../libgda-ui/internal/utility.c:389
 msgid ""
@@ -5079,6 +5136,7 @@ msgstr "Файл бази даних"
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
 msgid "Berkeley DB database filename to be used"
 msgstr ""
+"Назва файла бази даних Berkeley DB, яку слід використати"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
@@ -5104,6 +5162,7 @@ msgstr "Каталог"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
 msgid "Directory where the database file is stored"
 msgstr ""
+"Каталог, у якому зберігається файл бази даних"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:5
@@ -5137,15 +5196,18 @@ msgstr "Назва бази даних у файлі бази даних"
 #: ../providers/bdb/gda-bdb-provider.c:188
 msgid "The DB_NAME parameter is not defined in the connection string."
 msgstr ""
+"У рядку з'єднання не визначено параметр DB_NAME."
 
 #: ../providers/bdb/gda-bdb-provider.c:218
 msgid "An error occurred while accessing the BDB database"
 msgstr ""
+"Під час спроби доступу до бази даних BDB сталася помилка"
 
 #: ../providers/bdb/gda-bdb-provider.c:226
 #, c-format
 msgid "Could not add BDB data model to connection: %s"
 msgstr ""
+"Не вдалося додати модель даних BDB до з'єднання: %s"
 
 #: ../providers/bdb/gda-bdb-provider.c:237
 msgid "-"
@@ -5450,6 +5512,7 @@ msgstr "Навіть якщо його ще не існує"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
 msgstr ""
+"Створити покажчик, лише якщо його не існує"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
@@ -5491,6 +5554,7 @@ msgstr "Метод порівняння"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:36
 msgid "Collation name (BINARY|NOCASE)"
 msgstr ""
+"Назва злиття (BINARY|NOCASE)"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
@@ -5680,6 +5744,7 @@ msgstr "Тип відповідності"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
 msgstr ""
+"Спосіб встановлення відповідності, якщо стосується декількох полів"
 
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
@@ -5845,6 +5910,7 @@ msgstr "Дописати «.db»"
 msgid ""
 "Defines if the '.db' extension need to be appended to the DB_NAME argument"
 msgstr ""
+"Визначає, чи слід дописувати суфікс назви «.db» слід до аргументу DB_NAME"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:7
@@ -5881,6 +5947,7 @@ msgstr "Локалізовані порівняння"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:12
 msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
 msgstr ""
+"Увімкнути використання додаткових способів злиття (LOCALE і DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:13
@@ -5905,6 +5972,7 @@ msgstr "Дозволити суфікси назв"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:16
 msgid "Allow SQLite to load extensions using the load_extension() function"
 msgstr ""
+"Дозволити SQLite завантажувати розширення за допомогою функції load_extension()"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
@@ -5945,10 +6013,12 @@ msgstr "Назва бази даних, якою слід скористатис
 #: ../providers/firebird/libmain-client.c:69
 msgid "Provider for Firebird databases"
 msgstr ""
+"Надавач даних для баз даних Firebird"
 
 #: ../providers/firebird/libmain-embed.c:70
 msgid "Provider for embedded Firebird databases"
 msgstr ""
+"Надавач даних для вбудованих баз даних Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
@@ -5996,6 +6066,7 @@ msgid ""
 "The instance to connect to, if not specified, a connection to the default "
 "instance is made"
 msgstr ""
+"Екземпляр для з'єднання. Якщо не вказано, буде встановлено з'єднання із типовим екземпляром"
 
 #. Connection parameters
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:5
@@ -6012,6 +6083,7 @@ msgstr "Сервер бази даних"
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:6
 msgid "Host on which the database server is running or leave this field empty"
 msgstr ""
+"Вузол, на якому запущено сервер бази даних, можна не заповнювати"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:7
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
@@ -7968,26 +8040,22 @@ msgstr ""
 #: ../providers/web/gda-web-provider.c:601
 #: ../providers/web/gda-web-provider.c:630
 msgid "Server operations not yet implemented"
-msgstr ""
-"Операції на боці сервера ще не реалізовано"
+msgstr "Операції на боці сервера ще не реалізовано"
 
 #: ../providers/web/gda-web-provider.c:672
 #: ../providers/web/gda-web-provider.c:737
 #: ../providers/web/gda-web-provider.c:797
 msgid "Named transaction is not supported"
-msgstr ""
-"Підтримки іменованих транзакцій не передбачено"
+msgstr "Підтримки іменованих транзакцій не передбачено"
 
 #: ../providers/web/gda-web-provider.c:677
 msgid "Transaction level is not supported"
-msgstr ""
-"Підтримки рівня транзакцій не передбачено"
+msgstr "Підтримки рівня транзакцій не передбачено"
 
 #: ../providers/web/gda-web-provider.c:857
 #: ../providers/web/gda-web-provider.c:918
 msgid "Unnamed savepoint is not supported"
-msgstr ""
-"Підтримки точок збереження без назви не передбачено"
+msgstr "Підтримки точок збереження без назви не передбачено"
 
 #: ../providers/web/gda-web-util.c:74
 msgid "Could not parse server's response"
@@ -8003,24 +8071,20 @@ msgstr "Не вдалося обробити відповідь сервера"
 
 #: ../providers/web/gda-web-util.c:270
 msgid "Can't start new thread"
-msgstr ""
-"Не вдалося започаткувати новий потік обробки"
+msgstr "Не вдалося започаткувати новий потік обробки"
 
 #: ../providers/web/gda-web-util.c:324 ../providers/web/gda-web-util.c:364
 msgid "Could not run PHP script on the server"
-msgstr ""
-"Не вдалося запустити скрипт PHP на сервері"
+msgstr "Не вдалося запустити скрипт PHP на сервері"
 
 #: ../providers/web/gda-web-util.c:351
 msgid "The transaction has been automatically rolled back"
-msgstr ""
-"Транзакцію було автоматично відкочено"
+msgstr "Транзакцію було автоматично відкочено"
 
 #: ../providers/web/gda-web-util.c:492
 #, c-format
 msgid "Error cleaning data on the server for session %s"
-msgstr ""
-"Помилка під час спроби вилучення даних на сервері для сеансу %s"
+msgstr "Помилка під час спроби вилучення даних на сервері для сеансу %s"
 
 #: ../providers/web/gda-web-util.c:524
 msgid "Non detailed error"
@@ -8028,13 +8092,11 @@ msgstr "Недеталізована помилка"
 
 #: ../providers/web/libmain.c:75
 msgid "Provider for web server proxies"
-msgstr ""
-"Надавач даних для проксі-серверів"
+msgstr "Надавач даних для проксі-серверів"
 
 #: ../providers/web/web_specs_auth.xml.in.h:2
 msgid "Connection password as defined on the web server"
-msgstr ""
-"Пароль до з'єднання, як його визначено на вебсервері"
+msgstr "Пароль до з'єднання, як його визначено на вебсервері"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:1
 msgid "Web server name"
@@ -8042,29 +8104,26 @@ msgstr "Назва вебсервера"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:2
 msgid "The name of the web server which proxies connections"
-msgstr ""
-"Назва вебсервера, який є проксі-сервером з'єднань"
+msgstr "Назва вебсервера, який є проксі-сервером з'єднань"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:4
 msgid "Web server port (leave this field empty for default)"
-msgstr ""
-"Порт вебсервера (не заповнюйте, якщо слід використовувати типовий)"
+msgstr "Порт вебсервера (не заповнюйте, якщо слід використовувати типовий)"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:5
 msgid "Path to PHP script"
-msgstr ""
-"Шлях до скрипту PHP"
+msgstr "Шлях до скрипту PHP"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:6
 msgid ""
 "The path of the script to use if service is not at the web server's root"
 msgstr ""
-"Шлях до скрипту, яким слід скористатися, якщо служба не перебуває у корені вебсервера"
+"Шлях до скрипту, яким слід скористатися, якщо служба не перебуває у корені "
+"вебсервера"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:7
 msgid "Server secret"
-msgstr ""
-"Ключ сервера"
+msgstr "Ключ сервера"
 
 #: ../providers/web/web_specs_dsn.xml.in.h:9
 msgid "The name of a database to use"
@@ -8298,8 +8357,7 @@ msgstr "Перспективи"
 
 #: ../tools/browser/browser-window.c:513
 msgid "Hit the F11 key to leave the fullscreen mode"
-msgstr ""
-"Натисніть клавішу F11, щоб полишити повноекранний режим"
+msgstr "Натисніть клавішу F11, щоб полишити повноекранний режим"
 
 #: ../tools/browser/browser-window.c:570
 #, c-format
@@ -8309,38 +8367,32 @@ msgstr "Хочете закрити з'єднання «%s»?"
 #: ../tools/browser/browser-window.c:617
 #, c-format
 msgid "Error starting transaction: %s"
-msgstr ""
-"Помилка під час спроби розпочати транзакцію: %s"
+msgstr "Помилка під час спроби розпочати транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:632
 #, c-format
 msgid "Error committing transaction: %s"
-msgstr ""
-"Помилка під час спроби внести транзакцію: %s"
+msgstr "Помилка під час спроби внести транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:647
 #, c-format
 msgid "Error rolling back transaction: %s"
-msgstr ""
-"Помилка під час спроби відкотити транзакцію: %s"
+msgstr "Помилка під час спроби відкотити транзакцію: %s"
 
 #: ../tools/browser/browser-window.c:698
 #, c-format
 msgid "Error updating bound connection: %s"
-msgstr ""
-"Помилка під час спроби оновлення пов'язаного з'єднання: %s"
+msgstr "Помилка під час спроби оновлення пов'язаного з'єднання: %s"
 
 #: ../tools/browser/browser-window.c:707
 #, c-format
 msgid "Error updating meta data for connection: %s"
-msgstr ""
-"Помилка під час спроби оновлення метаданих для з'єднання: %s"
+msgstr "Помилка під час спроби оновлення метаданих для з'єднання: %s"
 
 #: ../tools/browser/browser-window.c:730
 #, c-format
 msgid "Error Updating Meta Data: %s"
-msgstr ""
-"Помилка під час спроби оновити метадані: %s"
+msgstr "Помилка під час спроби оновити метадані: %s"
 
 #: ../tools/browser/browser-window.c:1048
 msgid "Don't show this message again"
@@ -8368,18 +8420,15 @@ msgstr "Зменшити"
 
 #: ../tools/browser/canvas/browser-canvas.c:347
 msgid "Adjusted zoom"
-msgstr ""
-"Коригований масштаб"
+msgstr "Коригований масштаб"
 
 #: ../tools/browser/canvas/browser-canvas.c:357
 msgid "Linear layout"
-msgstr ""
-"Лінійне компонування"
+msgstr "Лінійне компонування"
 
 #: ../tools/browser/canvas/browser-canvas.c:362
 msgid "Radial layout"
-msgstr ""
-"Радіальне компонування"
+msgstr "Радіальне компонування"
 
 #: ../tools/browser/canvas/browser-canvas.c:372
 msgid "Save as"
@@ -8391,8 +8440,7 @@ msgstr "Надрукувати"
 
 #: ../tools/browser/canvas/browser-canvas.c:467
 msgid "Save diagram as"
-msgstr ""
-"Зберегти діаграму як"
+msgstr "Зберегти діаграму як"
 
 #: ../tools/browser/canvas/browser-canvas.c:475
 msgid "PNG Image"
@@ -8400,23 +8448,21 @@ msgstr "зображення PNG"
 
 #: ../tools/browser/canvas/browser-canvas.c:480
 msgid "SVG file"
-msgstr ""
-"файл SVG"
+msgstr "файл SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:518
 msgid "Failed to create SVG file"
-msgstr ""
-"Не вдалося створити файл SVG"
+msgstr "Не вдалося створити файл SVG"
 
 #: ../tools/browser/canvas/browser-canvas.c:526
 msgid "File format to save to is not recognized."
 msgstr ""
-"Не вдалося розпізнати формат файлів, який слід використати для збереження даних."
+"Не вдалося розпізнати формат файлів, який слід використати для збереження "
+"даних."
 
 #: ../tools/browser/canvas/browser-canvas.c:546
 msgid "Failed to create PNG file"
-msgstr ""
-"Не вдалося створити файл PNG"
+msgstr "Не вдалося створити файл PNG"
 
 #: ../tools/browser/canvas/browser-canvas-column.c:169
 #, c-format
@@ -8425,38 +8471,32 @@ msgstr "Тип: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:380
 msgid "Remove from graph"
-msgstr ""
-"Вилучити з графу"
+msgstr "Вилучити з графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 msgid "Add referenced tables to graph"
-msgstr ""
-"Додати таблиці, на які посилається, до графу"
+msgstr "Додати таблиці, на які посилається, до графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:388
 msgid "Add tables referencing this table to graph"
-msgstr ""
-"Додати таблиці, які посилаються на цю таблицю до графу"
+msgstr "Додати таблиці, які посилаються на цю таблицю до графу"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:397
 msgid "Declare foreign key for this table"
-msgstr ""
-"Оголосити сторонній ключ для цієї таблиці"
+msgstr "Оголосити сторонній ключ для цієї таблиці"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:422
 #: ../tools/browser/schema-browser/table-info.c:992
 #, c-format
 msgid "Failed to declare foreign key: %s"
-msgstr ""
-"Не вдалося оголосити сторонній ключ: %s"
+msgstr "Не вдалося оголосити сторонній ключ: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:429
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:432
 #: ../tools/browser/schema-browser/table-info.c:999
 #: ../tools/browser/schema-browser/table-info.c:1002
 msgid "Successfully declared foreign key"
-msgstr ""
-"Успішно оголошено сторонній ключ"
+msgstr "Успішно оголошено сторонній ключ"
 
 #. entry to display a window with tables in it
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:632
@@ -8474,50 +8514,43 @@ msgstr "Додати усі таблиці"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:709
 msgid "Add all tables in schema"
-msgstr ""
-"Додати усі таблиці у схемі"
+msgstr "Додати усі таблиці у схемі"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:823
 msgid "Select tables to add to diagram"
-msgstr ""
-"Виберіть таблиці для додавання до діаграми"
+msgstr "Виберіть таблиці для додавання до діаграми"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
 #: ../tools/common/t-app.c:2049
 msgid "Declared foreign key"
-msgstr ""
-"Оголошено сторонній ключ"
+msgstr "Оголошено сторонній ключ"
 
 #. To translators: the UPDATE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:424
 #: ../tools/browser/schema-browser/table-columns.c:359
 #: ../tools/common/t-app.c:2081
 msgid "Policy on UPDATE"
-msgstr ""
-"Правила для UPDATE"
+msgstr "Правила для UPDATE"
 
 #. To translators: the DELETE is an SQL operation type
 #: ../tools/browser/canvas/browser-canvas-fkey.c:426
 #: ../tools/browser/schema-browser/table-columns.c:369
 #: ../tools/common/t-app.c:2085
 msgid "Policy on DELETE"
-msgstr ""
-"Правила для DELETE"
+msgstr "Правила для DELETE"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:473
 #: ../tools/browser/schema-browser/table-columns.c:961
 #, c-format
 msgid "Failed to undeclare foreign key: %s"
-msgstr ""
-"Не вдалося скасувати оголошення стороннього ключа: %s"
+msgstr "Не вдалося скасувати оголошення стороннього ключа: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
 #: ../tools/browser/schema-browser/table-columns.c:968
 #: ../tools/browser/schema-browser/table-columns.c:971
 msgid "Successfully undeclared foreign key"
-msgstr ""
-"Успішно скасовано оголошення стороннього ключа"
+msgstr "Успішно скасовано оголошення стороннього ключа"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:495
 msgid "Remove this declared foreign key"
@@ -8525,19 +8558,16 @@ msgstr "Вилучити цей оголошений сторонній ключ
 
 #: ../tools/browser/canvas/browser-canvas-print.c:82
 msgid "Page size and zoom"
-msgstr ""
-"Розмір і масштаб сторінок"
+msgstr "Розмір і масштаб сторінок"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:180
 #, c-format
 msgid "Page %d of %d horizontally and %d of %d vertically"
-msgstr ""
-"Сторінка %d з %d горизонтально і %d з %d вертикально"
+msgstr "Сторінка %d з %d горизонтально і %d з %d вертикально"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:238
 msgid "Adjust page's size and orientation"
-msgstr ""
-"Скоригувати розмір і орієнтацію сторінок"
+msgstr "Скоригувати розмір і орієнтацію сторінок"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:244
 msgid "<b>Zoom</b>"
@@ -8545,8 +8575,7 @@ msgstr "<b>Масштаб</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:256
 msgid "Number of pages used:"
-msgstr ""
-"Кількість використаних сторінок:"
+msgstr "Кількість використаних сторінок:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:267
 msgid "horizontally"
@@ -8562,13 +8591,11 @@ msgstr "Коефіцієнт масштабування:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:295
 msgid "<b>Page numbers</b>"
-msgstr ""
-"<b>Номери сторінок</b>"
+msgstr "<b>Номери сторінок</b>"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:308
 msgid "Print page numbers"
-msgstr ""
-"Виводити номери сторінок"
+msgstr "Виводити номери сторінок"
 
 #: ../tools/browser/connection-binding-properties.c:165
 msgid "New virtual connection"
@@ -8643,8 +8670,7 @@ msgstr "З'єднання"
 
 #: ../tools/browser/connection-binding-properties.c:553
 msgid "Connection to get tables from in the schema"
-msgstr ""
-"З'єднання для отримання таблиць у схемі"
+msgstr "З'єднання для отримання таблиць у схемі"
 
 #: ../tools/browser/connection-binding-properties.c:565
 #: ../tools/common/t-app.c:1759
@@ -8662,8 +8688,7 @@ msgstr ""
 #: ../tools/browser/data-manager/analyser.c:193
 #, c-format
 msgid "Obtain referenced data in table %s from "
-msgstr ""
-"Отримати дані, на які посилається таблиці %s з "
+msgstr "Отримати дані, на які посилається таблиці %s з "
 
 #: ../tools/browser/data-manager/analyser.c:198
 #, c-format
@@ -8673,8 +8698,7 @@ msgstr "номер стовпчика %d ("
 #: ../tools/browser/data-manager/analyser.c:210
 #, c-format
 msgid "List referencing data in %s."
-msgstr ""
-"Вивести список посилань на дані у %s."
+msgstr "Вивести список посилань на дані у %s."
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -8859,8 +8883,7 @@ msgstr "Засіб керування даними без назви"
 #: ../tools/browser/query-exec/query-exec-perspective.c:331
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:342
 msgid "Show favorites"
-msgstr ""
-"Показати вибрані"
+msgstr "Показати вибрані"
 
 #: ../tools/browser/data-manager/data-manager-perspective.c:364
 msgid "New data manager tab"
@@ -9010,8 +9033,7 @@ msgstr "Не визначено джерела даних"
 #: ../tools/browser/data-manager/data-widget.c:885
 #, c-format
 msgid "Can't bind parameter '%s' of type '%s' to a parameter of type '%s'"
-msgstr ""
-"Не вдалося пов'язати параметр «%s» типу «%s» із параметром типу «%s»"
+msgstr "Не вдалося пов'язати параметр «%s» типу «%s» із параметром типу «%s»"
 
 #: ../tools/browser/data-manager/ui-spec-editor.c:162
 #: ../tools/browser/schema-browser/table-columns.c:307
@@ -9047,8 +9069,7 @@ msgstr "_Додати"
 #: ../tools/browser/fk-declare.c:183 ../tools/browser/fk-declare.c:393
 #, c-format
 msgid "Declare a foreign key for table '%s'"
-msgstr ""
-"Оголосити сторонній ключ для таблиці «%s»"
+msgstr "Оголосити сторонній ключ для таблиці «%s»"
 
 #: ../tools/browser/fk-declare.c:186
 msgid ""
@@ -9072,8 +9093,7 @@ msgstr "Стовпчик посилання"
 
 #: ../tools/browser/fk-declare.c:555
 msgid "Missing information to declare foreign key"
-msgstr ""
-"Не вистачає відомостей для оголошення стороннього ключа"
+msgstr "Не вистачає відомостей для оголошення стороннього ключа"
 
 #: ../tools/browser/fk-declare.c:637
 msgid "Missing information to undeclare foreign key"
@@ -9299,18 +9319,15 @@ msgstr "Не вдалося знайти запис LDAP із DN «%s»"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:366
 msgid "New LDAP entries tab"
-msgstr ""
-"Створити вкладку записів LDAP"
+msgstr "Створити вкладку записів LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:377
 msgid "New LDAP classes tab"
-msgstr ""
-"Створити вкладку класів LDAP"
+msgstr "Створити вкладку класів LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-browser-perspective.c:385
 msgid "New LDAP search tab"
-msgstr ""
-"Створити вкладку пошуку LDAP"
+msgstr "Створити вкладку пошуку LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:316
 msgid "LDAP classes browser"
@@ -9327,8 +9344,7 @@ msgstr "Властивості класу LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:531
 msgid "Add class to Favorites"
-msgstr ""
-"Додати клас до вибраних"
+msgstr "Додати клас до вибраних"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:539
 msgid "Move back to previous LDAP class"
@@ -9352,8 +9368,7 @@ msgstr "Подробиці щодо запису LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:537
 msgid "Add entry to Favorites"
-msgstr ""
-"Додати запис до вибраних"
+msgstr "Додати запис до вибраних"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:545
 msgid "Move back to previous LDAP entry"
@@ -9555,8 +9570,7 @@ msgstr "Немає"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:1
 msgid "View the schema and data of databases"
-msgstr ""
-"Перегляд схем і даних у базах даних"
+msgstr "Перегляд схем і даних у базах даних"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
@@ -9572,8 +9586,7 @@ msgstr ""
 
 #: ../tools/browser/org.gnome.gda.Browser.desktop.in.h:1
 msgid "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
-msgstr ""
-"SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
+msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;"
 
 #: ../tools/browser/query-exec/perspective-main.c:35
 msgid "Query execution (SQL)"
@@ -9720,8 +9733,8 @@ msgid ""
 "Internal error, please report error to http://gitlab.gnome.org/GNOME/libgda/"
 "issues"
 msgstr ""
-"Внутрішня помилка. Будь ласка, повідомте про неї за допомогою сторінки http://gitlab.gnome.org/GNOME/libgda/"
-"issues"
+"Внутрішня помилка. Будь ласка, повідомте про неї за допомогою сторінки "
+"http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../tools/browser/query-exec/query-console-page.c:1086
 msgid "Execute query"
@@ -9878,8 +9891,7 @@ msgstr "Пропущено атрибут таблиці у вмісті виб�
 
 #: ../tools/browser/schema-browser/relations-diagram.c:531
 msgid "Manage data in selected tables"
-msgstr ""
-"Керувати даними у вибраних таблицях"
+msgstr "Керувати даними у вибраних таблицях"
 
 #: ../tools/browser/schema-browser/schema-browser-perspective.c:351
 msgid "Create a new diagram"
@@ -10033,8 +10045,7 @@ msgstr "Вставити дані до таблиці"
 
 #: ../tools/browser/schema-browser/table-info.c:1053
 msgid "Declare Foreign Key"
-msgstr ""
-"Оголосити сторонній ключ"
+msgstr "Оголосити сторонній ключ"
 
 #: ../tools/browser/schema-browser/table-preferences.c:263
 msgid "default"
@@ -10375,30 +10386,25 @@ msgstr "%s [<DSN>]"
 
 #: ../tools/common/t-app.c:1068
 msgid "List all DSN (or specified DSN's attributes)"
-msgstr ""
-"Вивести список усіх DSN (або атрибути вказаного DSN)"
+msgstr "Вивести список усіх DSN (або атрибути вказаного DSN)"
 
 #: ../tools/common/t-app.c:1077
 #, c-format
 msgid "%s <DSN_NAME> <DSN_DEFINITION> [<DESCRIPTION>]"
-msgstr ""
-"%s <НАЗВА_DSN> <ВИЗНАЧЕННЯ_DSN> [<ОПИС>]"
+msgstr "%s <НАЗВА_DSN> <ВИЗНАЧЕННЯ_DSN> [<ОПИС>]"
 
 #: ../tools/common/t-app.c:1078
 msgid "Create (or modify) a DSN"
-msgstr ""
-"Створити (або змінити) DSN"
+msgstr "Створити (або змінити) DSN"
 
 #: ../tools/common/t-app.c:1087
 #, c-format
 msgid "%s <DSN_NAME> [<DSN_NAME>...]"
-msgstr ""
-"%s <НАЗВА_DSN> [<НАЗВА_DSN>...]"
+msgstr "%s <НАЗВА_DSN> [<НАЗВА_DSN>...]"
 
 #: ../tools/common/t-app.c:1088
 msgid "Remove a DSN"
-msgstr ""
-"Вилучити DSN"
+msgstr "Вилучити DSN"
 
 #: ../tools/common/t-app.c:1097
 #, c-format
@@ -10408,7 +10414,8 @@ msgstr "%s [<НАДАВАЧ_ДАНИХ>]"
 #: ../tools/common/t-app.c:1098
 msgid "List all installed database providers (or named one's attributes)"
 msgstr ""
-"Вивести список усіх встановлених засобів роботи із базами даних (або атрибути вказаного засобу)"
+"Вивести список усіх встановлених засобів роботи із базами даних (або "
+"атрибути вказаного засобу)"
 
 #: ../tools/common/t-app.c:1106 ../tools/common/t-app.c:1113
 #: ../tools/common/t-app.c:1120 ../tools/common/t-app.c:1127
@@ -10423,13 +10430,11 @@ msgstr "%s <ФАЙЛ>"
 
 #: ../tools/common/t-app.c:1108
 msgid "Execute commands from file"
-msgstr ""
-"Виконати команду з файла"
+msgstr "Виконати команду з файла"
 
 #: ../tools/common/t-app.c:1115
 msgid "Send output to a file or |pipe"
-msgstr ""
-"Надіслати виведені дані до файла або каналу обміну даними"
+msgstr "Надіслати виведені дані до файла або каналу обміну даними"
 
 #: ../tools/common/t-app.c:1121 ../tools/common/t-app.c:1128
 #, c-format
@@ -10438,13 +10443,11 @@ msgstr "%s [<ТЕКСТ>]"
 
 #: ../tools/common/t-app.c:1122
 msgid "Print TEXT or an empty line to standard output"
-msgstr ""
-"Вивести ТЕКСТ або порожній рядок до стандартного виведення"
+msgstr "Вивести ТЕКСТ або порожній рядок до стандартного виведення"
 
 #: ../tools/common/t-app.c:1129
 msgid "Send TEXT or an empty line to current output stream"
-msgstr ""
-"Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
+msgstr "Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
 
 #: ../tools/common/t-app.c:1142
 #, c-format
@@ -10453,8 +10456,7 @@ msgstr "%s [<КАТАЛОГ>]"
 
 #: ../tools/common/t-app.c:1143
 msgid "Change the current working directory"
-msgstr ""
-"Змінити поточний робочий каталог"
+msgstr "Змінити поточний робочий каталог"
 
 #: ../tools/common/t-app.c:1150
 msgid "Show usage and distribution terms"
@@ -10476,8 +10478,7 @@ msgstr "%s [<НАЗВА>]"
 
 #: ../tools/common/t-app.c:1170
 msgid "Show a piece of information, or all information about the connection"
-msgstr ""
-"Показати частину або усю інформацію щодо з'єднання"
+msgstr "Показати частину або усю інформацію щодо з'єднання"
 
 #: ../tools/common/t-app.c:1178 ../tools/common/t-app.c:1185
 #: ../tools/common/t-app.c:1192 ../tools/common/t-app.c:1199
@@ -10574,8 +10575,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1276
 #, c-format
 msgid "%s <NAME> [<FILE>|<TABLE> <COLUMN> <ROW_CONDITION>]"
-msgstr ""
-"%s <НАЗВА> [<ФАЙЛ>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_НА_РЯДКИ>]"
+msgstr "%s <НАЗВА> [<ФАЙЛ>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_НА_РЯДКИ>]"
 
 #: ../tools/common/t-app.c:1277
 msgid ""
@@ -10603,7 +10603,8 @@ msgstr "Маніпуляції наборів даних"
 #: ../tools/common/t-app.c:1293
 msgid "Lists all the datasets kept in memory for reference"
 msgstr ""
-"Виводить список усіх наборів даних, які зберігаються у пам'яті із довідковою метою"
+"Виводить список усіх наборів даних, які зберігаються у пам'яті із довідковою "
+"метою"
 
 #: ../tools/common/t-app.c:1303
 #, c-format
@@ -10612,14 +10613,12 @@ msgstr "%s <НАЗВА НАБОРУ ДАНИХ> <ВЗІРЕЦЬ>"
 
 #: ../tools/common/t-app.c:1304
 msgid "Show a dataset's contents where lines match a regular expression"
-msgstr ""
-"Показати вміст набору даних, де рядки відповідають формальному виразу"
+msgstr "Показати вміст набору даних, де рядки відповідають формальному виразу"
 
 #: ../tools/common/t-app.c:1314
 #, c-format
 msgid "%s <DATASET NAME> [<COLUMN> [<COLUMN> ...]]"
-msgstr ""
-"%s <НАЗВА НАБОРУ ДАНИХ> [<СТОВПЧИК> [<СТОВПЧИК> ...]]"
+msgstr "%s <НАЗВА НАБОРУ ДАНИХ> [<СТОВПЧИК> [<СТОВПЧИК> ...]]"
 
 #: ../tools/common/t-app.c:1315
 msgid ""
@@ -10648,8 +10647,7 @@ msgstr ""
 #: ../tools/common/t-app.c:1347
 #, c-format
 msgid "%s CSV <FILE NAME>"
-msgstr ""
-"%s CSV <НАЗВА ФАЙЛА>"
+msgstr "%s CSV <НАЗВА ФАЙЛА>"
 
 #: ../tools/common/t-app.c:1348
 msgid "Import a dataset from a file"
@@ -10672,8 +10670,7 @@ msgstr "Шукати записи LDAP"
 #: ../tools/common/t-app.c:1367
 #, c-format
 msgid "%s <DN> [\"all\"|\"set\"|\"unset\"]"
-msgstr ""
-"%s <DN> [\"all\"|\"set\"|\"unset\"]"
+msgstr "%s <DN> [\"all\"|\"set\"|\"unset\"]"
 
 #: ../tools/common/t-app.c:1368
 msgid ""
@@ -10889,8 +10886,7 @@ msgstr "Не знайдено з'єднання або набору даних �
 #. add existing connections to virtual connection
 #: ../tools/common/t-app.c:3062
 msgid "Connections were bound as:"
-msgstr ""
-"З'єднання прив'язано як:"
+msgstr "З'єднання прив'язано як:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
@@ -11020,7 +11016,8 @@ msgstr ""
 "Граф записано до «%s»\n"
 "Скористайтеся «dot» (з пакунка GraphViz) для створення зображення. Приклад:\n"
 "\tdot -Tpng -o graph.png %s\n"
-"Зауваження: встановіть змінну середовища GDA_SQL_VIEWER_PNG або GDA_SQL_VIEWER_PDF для перегляду графу\n"
+"Зауваження: встановіть змінну середовища GDA_SQL_VIEWER_PNG або "
+"GDA_SQL_VIEWER_PDF для перегляду графу\n"
 
 #: ../tools/common/t-app.c:4325
 msgid "Could not start HTTPD server"
@@ -11212,25 +11209,21 @@ msgstr ""
 #: ../tools/common/t-config-info.c:685
 #, c-format
 msgid "Was not possible to create configuration directory at: %s"
-msgstr ""
-"Не вдалося створити каталог налаштувань тут: %s"
+msgstr "Не вдалося створити каталог налаштувань тут: %s"
 
 #: ../tools/common/t-connection.c:270
 msgid "Analysing database schema"
-msgstr ""
-"Аналізуємо схему бази даних"
+msgstr "Аналізуємо схему бази даних"
 
 #: ../tools/common/t-connection.c:297 ../tools/common/t-connection.c:437
 #: ../tools/common/t-connection.c:1209 ../tools/common/t-connection.c:1211
 #, c-format
 msgid "Error while fetching meta data from the connection: %s"
-msgstr ""
-"Помилка під час отримання метаданих зі з'єднання: %s"
+msgstr "Помилка під час отримання метаданих зі з'єднання: %s"
 
 #: ../tools/common/t-connection.c:344
 msgid "File containing the meta data associated to the connection"
-msgstr ""
-"Файл, що містить метадані, пов'язані зі з'єднанням"
+msgstr "Файл, що містить метадані, пов'язані зі з'єднанням"
 
 #: ../tools/common/t-connection.c:803
 #, c-format
@@ -11258,15 +11251,16 @@ msgid ""
 "Date format for this connection will be: %s, where YYYY is the year, MM the "
 "month and DD the day\n"
 msgstr ""
-"Форматом дати для цього з'єднання буде такий: %s, де YYYY є роком, "
-"MM — місяцем, а DD — днем\n"
+"Форматом дати для цього з'єднання буде такий: %s, де YYYY є роком, MM — "
+"місяцем, а DD — днем\n"
 
 #: ../tools/common/t-connection.c:942
 msgid ""
 "Format of the date used for the connection, where YYYY is the year, MM the "
 "month and DD the day"
 msgstr ""
-"Формат дати, який буде використано для з'єднання, де YYYY — рік, MM — місяць і DD — день"
+"Формат дати, який буде використано для з'єднання, де YYYY — рік, MM — місяць "
+"і DD — день"
 
 #: ../tools/common/t-connection.c:1075
 msgid "Data source"
@@ -11282,8 +11276,7 @@ msgstr "джерело даних"
 
 #: ../tools/common/t-connection.c:1202
 msgid "Getting database schema information"
-msgstr ""
-"Отримання даних щодо схеми бази даних"
+msgstr "Отримання даних щодо схеми бази даних"
 
 #: ../tools/common/t-connection.c:1536
 msgid "Connection not yet opened"
@@ -11291,22 +11284,19 @@ msgstr "З'єднання ще не відкрито"
 
 #: ../tools/common/t-connection.c:1542
 msgid "Can't initialize dictionary to store table preferences"
-msgstr ""
-"Не вдалося ініціалізувати словник для зберігання налаштувань таблиці"
+msgstr "Не вдалося ініціалізувати словник для зберігання налаштувань таблиці"
 
 #: ../tools/common/t-connection.c:1588 ../tools/common/t-connection.c:1594
 #: ../tools/common/t-connection.c:1730 ../tools/common/t-favorites.c:628
 #: ../tools/common/t-favorites.c:634 ../tools/common/t-favorites.c:1061
 #: ../tools/common/t-favorites.c:1068
 msgid "Can't initialize transaction to access favorites"
-msgstr ""
-"Не вдалося ініціалізувати транзакцію для доступу до вибраних записів"
+msgstr "Не вдалося ініціалізувати транзакцію для доступу до вибраних записів"
 
 #: ../tools/common/t-connection.c:1675 ../tools/common/t-favorites.c:807
 #: ../tools/common/t-favorites.c:1136
 msgid "Can't commit transaction to access favorites"
-msgstr ""
-"Не вдалося внести транзакцію для доступу до вибраних записів"
+msgstr "Не вдалося внести транзакцію для доступу до вибраних записів"
 
 #: ../tools/common/t-connection.c:2234
 msgid "Could not execute LDAP search"
@@ -11381,8 +11371,7 @@ msgstr "Синтаксична помилка"
 
 #: ../tools/common/t-virtual-connection.c:91
 msgid "Bound connection is used"
-msgstr ""
-"Використано пов'язане з'єднання"
+msgstr "Використано пов'язане з'єднання"
 
 #: ../tools/common/t-virtual-connection.c:117
 msgid "Virtual connection using this connection is busy"
@@ -11397,7 +11386,8 @@ msgid ""
 "Enter authentification token as set from console, or leave empty if none "
 "required"
 msgstr ""
-"Введіть жетон розпізнавання, як встановлено з консолі, або не заповнюйте, якщо жетон не потрібен"
+"Введіть жетон розпізнавання, як встановлено з консолі, або не заповнюйте, "
+"якщо жетон не потрібен"
 
 #: ../tools/common/web-server.c:570
 msgid "Token:"
