@@ -1,11 +1,11 @@
-# Danish translation of libgda.
+# Danish translation for libgda.
 # Copyright (C) 2011, 2016 Free Software Foundation, Inc.
 # Birger Langkjer <birger.langkjer@image.dk>, 2000.
 # Keld Simonsen <keld@dkuug.dk>, 2000.
 # Ole Laursen <olau@hardworking.dk>, 2002.
 # Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011.
 # Ask Hjorth Larsen <asklarsen@gmail.com>, 2016.
-# scootergrisen, 2020.
+# scootergrisen, 2020-2021.
 #
 # Konventioner:
 #
@@ -108,8 +108,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-09-14 19:01+0000\n"
-"PO-Revision-Date: 2020-09-21 00:00+0200\n"
+"POT-Creation-Date: 2021-03-08 22:03+0000\n"
+"PO-Revision-Date: 2021-05-05 00:00+0200\n"
 "Last-Translator: scootergrisen\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -226,8 +226,8 @@ msgstr "Kunne ikke gemme DSN-definition: %s"
 #: ../providers/mysql/gda-mysql-provider.c:1964
 #: ../providers/mysql/gda-mysql-provider.c:1979
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1786
-#: ../providers/postgres/gda-postgres-provider.c:1801
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1802
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:194
@@ -857,16 +857,16 @@ msgstr "Leverandøren tilbyder ikke en GdaDataHandler for datoer"
 
 #: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
 #: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
-#: ../libgda/gda-connection.c:2557 ../libgda/gda-connection.c:3004
-#: ../libgda/gda-connection.c:3218 ../libgda/gda-connection.c:3577
-#: ../libgda/gda-connection.c:3598 ../libgda/gda-connection.c:3682
-#: ../libgda/gda-connection.c:3694 ../libgda/gda-connection.c:3769
-#: ../libgda/gda-connection.c:3784 ../libgda/gda-connection.c:3871
-#: ../libgda/gda-connection.c:3899 ../libgda/gda-connection.c:3928
-#: ../libgda/gda-connection.c:3954 ../libgda/gda-connection.c:3980
-#: ../libgda/gda-connection.c:4006 ../libgda/gda-connection.c:5045
-#: ../libgda/gda-connection.c:5290 ../libgda/gda-connection.c:5363
-#: ../libgda/gda-connection.c:6252
+#: ../libgda/gda-connection.c:2597 ../libgda/gda-connection.c:3044
+#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3617
+#: ../libgda/gda-connection.c:3638 ../libgda/gda-connection.c:3722
+#: ../libgda/gda-connection.c:3734 ../libgda/gda-connection.c:3809
+#: ../libgda/gda-connection.c:3824 ../libgda/gda-connection.c:3911
+#: ../libgda/gda-connection.c:3939 ../libgda/gda-connection.c:3968
+#: ../libgda/gda-connection.c:3994 ../libgda/gda-connection.c:4020
+#: ../libgda/gda-connection.c:4046 ../libgda/gda-connection.c:5085
+#: ../libgda/gda-connection.c:5330 ../libgda/gda-connection.c:5403
+#: ../libgda/gda-connection.c:6292
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
@@ -874,117 +874,117 @@ msgstr "Forbindelse er lukket"
 
 # bør nok være select-udtryk, evt. selektionsudtryk hvis vi vil bruge
 # noget pseudo-dansk
-#: ../libgda/gda-connection.c:3462 ../libgda/gda-connection.c:3477
+#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3517
 msgid "Statement is a selection statement"
 msgstr "Udtryk er et select-udtryk"
 
-#: ../libgda/gda-connection.c:3534 ../libgda/gda-connection.c:3634
-#: ../libgda/gda-connection.c:3723
+#: ../libgda/gda-connection.c:3574 ../libgda/gda-connection.c:3674
+#: ../libgda/gda-connection.c:3763
 msgid "Statement is not a selection statement"
 msgstr "Udtryk er ikke et select-udtryk"
 
-#: ../libgda/gda-connection.c:4183
+#: ../libgda/gda-connection.c:4223
 msgid "Invalid argument"
 msgstr "Ugyldig parameter"
 
-#: ../libgda/gda-connection.c:4193
+#: ../libgda/gda-connection.c:4233
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Manglende eller forkert parameter for tabel “%s”: %s"
 
-#: ../libgda/gda-connection.c:5313
+#: ../libgda/gda-connection.c:5353
 #, c-format
 msgid "While extracting data from Data Store: %s"
 msgstr "Ved udpakning af data fra datalager: %s"
 
-#: ../libgda/gda-connection.c:5371
+#: ../libgda/gda-connection.c:5411
 #, c-format
 msgid "Internal error: No meta store in connection"
 msgstr "Intern fejl: Intet metalager i forbindelse"
 
-#: ../libgda/gda-connection.c:5389
+#: ../libgda/gda-connection.c:5429
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr "Parameteren “name” kræves for at filtrere navnerum"
 
-#: ../libgda/gda-connection.c:5400
+#: ../libgda/gda-connection.c:5440
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr "Parameteren “name” kræves for at filtrere datatyper"
 
-#: ../libgda/gda-connection.c:5411
-#, fuzzy, c-format
+#: ../libgda/gda-connection.c:5451
+#, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr "Parameteren “name” kræves for at filtrere tabeller"
 
-#: ../libgda/gda-connection.c:5422
+#: ../libgda/gda-connection.c:5462
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr "Parameteren “name” kræves for at filtrere visninger"
 
-#: ../libgda/gda-connection.c:5432
-#, fuzzy, c-format
+#: ../libgda/gda-connection.c:5472
+#, c-format
 msgid "Parameter 'name' is required to filter fields"
 msgstr "Parameteren “name” kræves for at filtrere felter"
 
-#: ../libgda/gda-connection.c:5438
+#: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr "Parameteren “field_name” kræves for at filtrere felter"
 
-#: ../libgda/gda-connection.c:5445
+#: ../libgda/gda-connection.c:5485
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr "Parametre: “name” og/eller “field_name” kræves for at filtrere felter"
 
-#: ../libgda/gda-connection.c:5454 ../libgda/gda-connection.c:5475
+#: ../libgda/gda-connection.c:5494 ../libgda/gda-connection.c:5515
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr "Parameteren “name” kræves for at filtrere indekser"
 
-#: ../libgda/gda-connection.c:5460 ../libgda/gda-connection.c:5479
+#: ../libgda/gda-connection.c:5500 ../libgda/gda-connection.c:5519
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr "Parameteren “index_name” kræves for at filtrere indekser"
 
-#: ../libgda/gda-connection.c:5467
+#: ../libgda/gda-connection.c:5507
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 "Parametre: “name” og/eller “index_name” kræves for at filtrere indekser"
 
-#: ../libgda/gda-connection.c:5487
+#: ../libgda/gda-connection.c:5527
 #, c-format
 msgid "Invalid meta type to get data from store"
-msgstr ""
+msgstr "Ugyldig metatype til at hente data fra lageret"
 
-#: ../libgda/gda-connection.c:5498
+#: ../libgda/gda-connection.c:5538
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr "Intern fejl under oprettelse af udsagn til indhentelse af data: %s"
 
-#: ../libgda/gda-connection.c:5690 ../libgda/gda-connection.c:5744
-#: ../libgda/gda-connection.c:5789 ../libgda/gda-connection.c:5834
-#: ../libgda/gda-connection.c:5879
+#: ../libgda/gda-connection.c:5730 ../libgda/gda-connection.c:5784
+#: ../libgda/gda-connection.c:5829 ../libgda/gda-connection.c:5874
+#: ../libgda/gda-connection.c:5919
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 "Sporing af transaktionsstatus for forbindelse: Ingen transaktion findes for "
 "%s"
 
-#: ../libgda/gda-connection.c:7012
+#: ../libgda/gda-connection.c:7052
 msgid "Unspecified table name"
 msgstr "Uspecificeret tabelnavn"
 
-#: ../libgda/gda-connection.c:7054
+#: ../libgda/gda-connection.c:7094
 msgid "Invalid type"
 msgstr "Ugyldig type"
 
-#: ../libgda/gda-connection.c:7150
+#: ../libgda/gda-connection.c:7190
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Handlingen CREATE TABLE understøttes ikke af databaseserveren"
 
-#: ../libgda/gda-connection.c:7269 ../libgda/gda-connection.c:7279
+#: ../libgda/gda-connection.c:7309 ../libgda/gda-connection.c:7319
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Forkert værdi af SQL-identifikation"
@@ -1636,10 +1636,12 @@ msgid ""
 "INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
 "set number of columns before using with GdaDataSelect"
 msgstr ""
+"INTERN implementeringsfejl: ukendt antal kolonner i GdaPStmt, \n"
+"indstil antal kolonner før brug med GdaDataSelect"
 
 #: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
-msgstr ""
+msgstr "Ukorrekt SQL-udtryk — der accepteres kun ét ændringsudtryk"
 
 #: ../libgda/gda-data-select.c:1099
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
@@ -1732,7 +1734,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:2159
 #, c-format
 msgid "Can't calculate internal row number: %s"
-msgstr ""
+msgstr "Kan ikke udregne internt rækkenummer: %s"
 
 #: ../libgda/gda-data-select.c:2168
 #, c-format
@@ -1742,7 +1744,7 @@ msgstr "Kan ikke hente næste række: %s"
 #: ../libgda/gda-data-select.c:2220
 #, c-format
 msgid "Can't move back iter at row: %s"
-msgstr ""
+msgstr "Kan ikke flytte iter tilbage på række: %s"
 
 #: ../libgda/gda-data-select.c:2229
 msgid "Internal error: No fetch_prev() method implementation for data model"
@@ -1756,7 +1758,7 @@ msgstr "Kan ikke hente forrige række: %s"
 #: ../libgda/gda-data-select.c:2276
 #, fuzzy, c-format
 msgid "Can't move iter at row '%d': %s"
-msgstr "Kan ikke åbne datakanal “%s”: %s"
+msgstr "Kan ikke flytte iter på række “%d”: %s"
 
 #: ../libgda/gda-data-select.c:2295
 #, c-format
@@ -1818,7 +1820,6 @@ msgid "No INSERT statement provided"
 msgstr "Intet INSERT-udtryk"
 
 #: ../libgda/gda-data-select.c:3097
-#, fuzzy
 msgid "Cannot add a row because the number of rows is unknown"
 msgstr "Kan ikke tilføje en række da antallet af rækker er ukendt"
 
@@ -1838,6 +1839,8 @@ msgid ""
 "Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
 "expressions"
 msgstr ""
+"Intern fejl: GdaDataSelect har %d GdaColumn'er og SELECT-udtryk har %d "
+"udtryk"
 
 #: ../libgda/gda-data-select.c:3762
 #, c-format
@@ -1860,105 +1863,107 @@ msgstr "Datamodellen indeholder BLOB'er"
 msgid "Can't get the number of rows of data model"
 msgstr "Kan ikke hente antallet af rækker i datamodellen"
 
-#: ../libgda/gda-db-column.c:625
+#: ../libgda/gda-db-column.c:626
 #, c-format
 msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr ""
+msgstr "Ugyldig kolonnetype %s. Se API for gda_g_type_from_string ().\n"
 
-#: ../libgda/gda-db-column.c:1110 ../libgda/gda-db-column.c:1223
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
 #, fuzzy, c-format
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr "Intern fejl: Kan ikke indhente det forberedte udtryks faktiske udtryk"
 
-#: ../libgda/gda-db-column.c:1417 ../libgda/gda-db-view.c:734
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
 #: ../libgda/gda-db-index.c:516
 #, c-format
 msgid "Operation is not implemented for the used provider"
-msgstr ""
+msgstr "Handlingen er ikke implementeret for den anvendte leverandør"
 
-#: ../libgda/gda-db-catalog.c:235
-#, fuzzy, c-format
+#: ../libgda/gda-db-catalog.c:236
+#, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
 msgstr ""
-"Kunne ikke fortolke “%s”: Validering af XML-filer til serverhandlinger vil "
+"Kunne ikke fortolke “%s”: Validering af XML-filer til GdaDbCreator vil "
 "ikke blive udført (nogle mærkelige fejl kan opstå)"
 
-#: ../libgda/gda-db-catalog.c:259
+#: ../libgda/gda-db-catalog.c:260
 #, c-format
 msgid "Context to validate xml file can't be created."
-msgstr ""
+msgstr "Sammenhæng til at validere xml-fil kan ikke oprettes."
 
-#: ../libgda/gda-db-catalog.c:277
+#: ../libgda/gda-db-catalog.c:278
 #, c-format
 msgid "xml file is invalid"
 msgstr "xml-filen er ugyldig"
 
-#: ../libgda/gda-db-catalog.c:318
+#: ../libgda/gda-db-catalog.c:319
 #, c-format
 msgid "Root node should be <schema>."
 msgstr "Rodknude skal være <schema>."
 
-#: ../libgda/gda-db-catalog.c:451 ../libgda/gda-db-catalog.c:502
+# scootergrisen: fra gennemlæsning: jeg vil nok skrive: xmfil-navnet (som på engelsk)
+# scootergrisen: fra gennemlæsning: alternativt: xmfilens navn
+#: ../libgda/gda-db-catalog.c:452 ../libgda/gda-db-catalog.c:503
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
-msgstr ""
+msgstr "xmlDoc-objekt kan ikke oprettes fra xm-filnavnet “%s”"
 
-#: ../libgda/gda-db-catalog.c:460
+#: ../libgda/gda-db-catalog.c:461
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "xml-filen “%s” er ikke gyldig\n"
 
-#: ../libgda/gda-db-catalog.c:859 ../libgda/gda-db-table.c:739
+#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
 #, c-format
 msgid "Connection is not opened"
 msgstr "Forbindelsen er ikke åbnet"
 
-#: ../libgda/gda-db-catalog.c:1048
+#: ../libgda/gda-db-catalog.c:1044
 #, fuzzy, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Kan ikke åbne filen “%s” til læsning: %s\n"
 
-#: ../libgda/gda-db-catalog.c:1064
+#: ../libgda/gda-db-catalog.c:1060
 #, fuzzy, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Kan ikke oprette mappe “%s”"
 
-#: ../libgda/gda-db-catalog.c:1080
+#: ../libgda/gda-db-catalog.c:1076
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr ""
 
-#: ../libgda/gda-db-catalog.c:1097
+#: ../libgda/gda-db-catalog.c:1093
 #, fuzzy, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Kunne ikke erklære fremmed nøgle: %s"
 
-#: ../libgda/gda-db-catalog.c:1108
+#: ../libgda/gda-db-catalog.c:1104
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
-msgstr ""
+msgstr "XML-dokument kan ikke oprettes fra fil: “%s”"
 
-#: ../libgda/gda-db-catalog.c:1118
-#, fuzzy, c-format
+#: ../libgda/gda-db-catalog.c:1114
+#, c-format
 msgid "XML file is not valid\n"
-msgstr "Værdi er ugyldig"
+msgstr "XML-fil er ikke gyldig\n"
 
-#: ../libgda/gda-db-table.c:747
+#: ../libgda/gda-db-table.c:750
 #, c-format
 msgid "Empty column list"
-msgstr ""
+msgstr "Tom kolonneliste"
 
 #: ../libgda/gda-db-view.c:538
-#, fuzzy, c-format
+#, c-format
 msgid "View name is not set"
-msgstr "Vis tabels indhold"
+msgstr "Visningsnavn er ikke indstillet"
 
 #: ../libgda/gda-db-view.c:545
-#, fuzzy, c-format
+#, c-format
 msgid "View definition is not set"
-msgstr "Vis definition: %s"
+msgstr "Visningsdefinition er ikke indstillet"
 
 #: ../libgda/gda-holder.c:503 ../libgda/gda-set.c:1157
 #, c-format
@@ -2140,7 +2145,7 @@ msgstr "Kolonnen “%s” findes allerede og har anderledes karakteristika"
 #: ../libgda/gda-meta-store.c:2161
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
-msgstr "Mangler fremmed nøgles refererede tabelnavn (for tabellen “%s”)"
+msgstr "Mangler fremmed nøgles refererende tabelnavn (for tabellen “%s”)"
 
 #: ../libgda/gda-meta-store.c:2217
 #, c-format
@@ -2411,7 +2416,7 @@ msgstr "Mangler kolonnenavn for tabellen “%s”"
 #: ../libgda/gda-meta-struct-io.c:292
 #, c-format
 msgid "Missing foreign key's referenced table name for table '%s'"
-msgstr "Mangler fremmed nøgles refererede tabelnavn for tabellen “%s”"
+msgstr "Mangler fremmed nøgles refererende tabelnavn for tabellen “%s”"
 
 #: ../libgda/gda-meta-struct-io.c:304 ../libgda/gda-meta-struct-io.c:311
 #: ../libgda/gda-meta-struct-io.c:318
@@ -2768,7 +2773,7 @@ msgstr "Mangler parameter “%s”"
 #: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2239
-#: ../providers/postgres/gda-postgres-provider.c:2059
+#: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2924,7 +2929,7 @@ msgstr "Kan ikke omskrive udtryk, som ikke er INSERT eller UPDATE"
 #: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2219
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -3132,13 +3137,12 @@ msgid "This report document does not handle %s output"
 msgstr "Dette rapportdokument håndterer ikke uddata for %s"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:68
-#, fuzzy
 msgid "Internal error, creating table in SQLite provider"
-msgstr "Intern fejl: Ugyldigt leverandørhåndtag"
+msgstr "Intern fejl — opretter tabel i SQLite-leverandør"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:84
 msgid "No fields are defined for CREATE TABLE operation"
-msgstr ""
+msgstr "Ingen felter angivet for CREATE TABLE-handling"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:277
 #: ../providers/postgres/gda-postgres-ddl.c:305
@@ -3146,9 +3150,8 @@ msgid "No field specified in foreign key constraint"
 msgstr "Intet felt angivet i fremmed nøglebegrænsning"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:363
-#, fuzzy
 msgid "Table to create must have at least one field"
-msgstr "Tabel der skal oprettes skal have mindst en række"
+msgstr "Tabel, der skal oprettes, skal have mindst ét felt"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:77
 msgid "SQLite binary representation"
@@ -3159,7 +3162,7 @@ msgid "Sqlite boolean representation"
 msgstr "Boolesk repræsentation til Sqlite"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:124
-#, fuzzy, c-format
+#, c-format
 msgid "Parameter '%s' not found in statement"
 msgstr "Parameteren “%s” blev ikke fundet i udtryk"
 
@@ -3250,8 +3253,8 @@ msgid "Missing database name or directory"
 msgstr "Mangler databasenavn eller mappe"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1814
-#: ../providers/postgres/gda-postgres-provider.c:1083
 #: ../providers/postgres/gda-postgres-provider.c:1084
+#: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transaktioner er ikke understøttet i skrivebeskyttet tilstand"
 
@@ -3273,18 +3276,16 @@ msgid "ILIKE operation not supported"
 msgstr "ILIKE-handling ikke understøttet"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2421
-#, fuzzy
 msgid "SIMILAR operation not supported"
-msgstr "ILIKE-handling ikke understøttet"
+msgstr "SIMILAR-handling ikke understøttet"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2545
-#, fuzzy
 msgid "Operator type not supported"
-msgstr "Handling ikke understøttet\n"
+msgstr "Operatørtype ikke understøttet"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2951
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1638
+#: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Unavngivet parameter er ikke tilladt i forberedte udtryk"
@@ -3292,21 +3293,21 @@ msgstr "Unavngivet parameter er ikke tilladt i forberedte udtryk"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3068
 #: ../libgda/sqlite/gda-sqlite-provider.c:3080
 #: ../providers/mysql/gda-mysql-provider.c:1963
-#: ../providers/postgres/gda-postgres-provider.c:1785
+#: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr "Kan ikke bygge SELECT-udtryk for at indhente sidst indsatte række: %s"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1991
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "SELECT-udtryk der skal indhente sidst indsatte række returnerede ingen række"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1817
+#: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
@@ -3328,14 +3329,13 @@ msgid "Can't write to SQLite's BLOB"
 msgstr "Kan ikke skrive til SQLites BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3250
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
 "Kan ikke indhente håndtag til SQLite-BLOB (rapporteret type er “%s”). "
-"Rapportér venligst denne fejl til http://bugzilla.gnome.org/ for produktet "
-"“libgda”."
+"Rapportér venligst denne fejl til http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3275
 msgid "Can't identify the ROWID of the blob to fill"
@@ -3352,8 +3352,8 @@ msgstr "Tomt udtryk"
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2194
 #: ../providers/mysql/gda-mysql-provider.c:2197
-#: ../providers/postgres/gda-postgres-provider.c:2017
-#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
 #: ../providers/web/gda-web-provider.c:1427
 msgid "Missing parameter(s) to execute query"
@@ -3362,7 +3362,7 @@ msgstr "Mangler parametre til at køre forespørgsel"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3491
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2258
-#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Kan ikke genskrive udtryk til håndtering af standardværdier"
@@ -3488,6 +3488,7 @@ msgstr "Navnerum skal være angivet"
 #, c-format
 msgid "There is already a namespace named '%s' in use with another connection"
 msgstr ""
+"Der er allerede et navnerum i brug med navnet “%s” med en anden forbindelse"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:147
 #, fuzzy, c-format
@@ -3539,6 +3540,8 @@ msgstr "Intern fejl: Ugyldigt leverandørhåndtag"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
 msgstr ""
+"Intern implementeringsfejl: Der er ikke angivet nogen metode for luk "
+"forbindelse"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
@@ -3983,6 +3986,9 @@ msgid ""
 "Could not find icon file bin-attachment.png in resources please report error "
 "to https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"
 msgstr ""
+"Kunne ikke finde ikonfilen bin-attachment.png i ressourcerne. Rapportér "
+"venligst fejlen til https://gitlab.gnome.org/GNOME/libgda/issues. "
+"Fejlmeddelelse: %s"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:139
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
@@ -4568,8 +4574,8 @@ msgstr "Vis datapunkter"
 #, c-format
 msgid "There are more entries than expected in group. Found %d"
 msgid_plural "There are more entries than expected in group. Found %d"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Der er flere punkter end ventet i gruppen. Fandt %d"
+msgstr[1] "Der er flere punkter end ventet i gruppen. Fandt %d"
 
 #: ../libgda-ui/gdaui-basic-form.c:1843
 msgid "Can't find data entry for GdaHolder"
@@ -6122,7 +6128,7 @@ msgstr "Kan ikke læse BLOB"
 #: ../providers/postgres/gda-postgres-ddl.c:403
 #: ../providers/web/gda-web-ddl.c:155
 msgid "Table to create must have at least one row"
-msgstr "Tabel der skal oprettes skal have mindst en række"
+msgstr "Tabel, der skal oprettes, skal have mindst en række"
 
 #: ../providers/jdbc/gda-jdbc-provider.c:499
 msgid "Missing parameters to open database connection"
@@ -6556,7 +6562,7 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "Unavngivet udtryksparameter er ikke tilladt i forberedt udtryk."
 
 #: ../providers/mysql/gda-mysql-provider.c:1978
-#: ../providers/postgres/gda-postgres-provider.c:1800
+#: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Kan ikke udføre SELECT-udtryk for at indhente sidst indsatte række: %s"
@@ -6573,8 +6579,8 @@ msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 msgstr ""
-"Datatypen “%s” kan ikke håndteres. Rapportér venligst denne fejl til http://"
-"bugzilla.gnome.org/ for produktet “libgda”."
+"Datatypen “%s” kan ikke håndteres. Rapportér venligst denne fejl til "
+"http://bugzilla.gnome.org/ for produktet “libgda”."
 
 #: ../providers/mysql/gda-mysql-provider.c:2601
 msgid ""
@@ -7356,11 +7362,11 @@ msgstr "Kunne ikke kopier Lob-lokatorer"
 
 #: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
-msgstr ""
+msgstr "Dataholdertype er ukendt."
 
 #: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
-msgstr ""
+msgstr "Dataholdertype er ukendt. Rapportér det som en fejl."
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
@@ -7416,24 +7422,24 @@ msgstr "Søgesti %s er ugyldig"
 # uncommitted isolation"
 # (uden nærmere undersøgelse, tror jeg der er stor sandsynlighed for
 # misforståelser hvis det oversættes)
-#: ../providers/postgres/gda-postgres-provider.c:1094
-#: ../providers/postgres/gda-postgres-provider.c:1096
+#: ../providers/postgres/gda-postgres-provider.c:1095
+#: ../providers/postgres/gda-postgres-provider.c:1097
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr ""
 "Transaktioner er ikke understøttet i read uncommitted isolation level (læst "
 "ikkeintegreret isolationsniveau)"
 
-#: ../providers/postgres/gda-postgres-provider.c:1100
-#: ../providers/postgres/gda-postgres-provider.c:1102
+#: ../providers/postgres/gda-postgres-provider.c:1101
+#: ../providers/postgres/gda-postgres-provider.c:1103
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr ""
 "Transaktioner er ikke understøttet i repeatable read isolation level "
 "(gentagbar læst isolationsniveau)"
 
-#: ../providers/postgres/gda-postgres-provider.c:1119
-#: ../providers/postgres/gda-postgres-provider.c:1219
-#: ../providers/postgres/gda-postgres-provider.c:1269
-#: ../providers/postgres/gda-postgres-provider.c:1319
+#: ../providers/postgres/gda-postgres-provider.c:1120
+#: ../providers/postgres/gda-postgres-provider.c:1220
+#: ../providers/postgres/gda-postgres-provider.c:1270
+#: ../providers/postgres/gda-postgres-provider.c:1320
 #: ../providers/postgres/gda-postgres-recordset.c:424
 #: ../providers/postgres/gda-postgres-recordset.c:453
 #: ../providers/postgres/gda-postgres-recordset.c:617
@@ -7441,21 +7447,21 @@ msgstr ""
 msgid "Internal error"
 msgstr "Intern fejl"
 
-#: ../providers/postgres/gda-postgres-provider.c:1225
-#: ../providers/postgres/gda-postgres-provider.c:1275
-#: ../providers/postgres/gda-postgres-provider.c:1325
+#: ../providers/postgres/gda-postgres-provider.c:1226
+#: ../providers/postgres/gda-postgres-provider.c:1276
+#: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "Forkert gemningspunktnavn “%s”"
 
-#: ../providers/postgres/gda-postgres-provider.c:2168
-#: ../providers/postgres/gda-postgres-provider.c:2170
+#: ../providers/postgres/gda-postgres-provider.c:2169
+#: ../providers/postgres/gda-postgres-provider.c:2171
 msgid "Cannot start transaction"
 msgstr "Kan ikke starte transaktion"
 
-#: ../providers/postgres/gda-postgres-provider.c:2423
-#: ../providers/postgres/gda-postgres-provider.c:2460
-#: ../providers/postgres/gda-postgres-provider.c:2496
+#: ../providers/postgres/gda-postgres-provider.c:2424
+#: ../providers/postgres/gda-postgres-provider.c:2461
+#: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Kunne ikke angive id-parameteren for XA-transaktionen"
 
@@ -7741,9 +7747,8 @@ msgstr "Begrænsningsudtryk for et delvist indeks"
 
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
-#, fuzzy
 msgid "Collation name"
-msgstr "Kollation"
+msgstr "Kollationsnavn"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -8246,7 +8251,6 @@ msgid "Unnamed savepoint is not supported"
 msgstr "Unavngivet gemningspunkt er ikke understøttet"
 
 #: ../providers/web/gda-web-util.c:74
-#, fuzzy
 msgid "Could not parse server's response"
 msgstr "Kunne ikke fortolke serverens svar"
 
@@ -8513,29 +8517,24 @@ msgid "Fullscreen"
 msgstr "Fuldskærm"
 
 #: ../tools/browser/browser-window.c:414
-#, fuzzy
 msgid "Open Connection"
-msgstr "_Åbn forbindelse"
+msgstr "Åbn forbindelse"
 
 #: ../tools/browser/browser-window.c:417
-#, fuzzy
 msgid "Bind Connections"
 msgstr "Bind forbindelser"
 
 #: ../tools/browser/browser-window.c:420
-#, fuzzy
 msgid "Connections List"
-msgstr "_Forbindelsesliste"
+msgstr "Forbindelsesliste"
 
 #: ../tools/browser/browser-window.c:423
-#, fuzzy
 msgid "New Window"
-msgstr "_Nyt vindue"
+msgstr "Nyt vindue"
 
 #: ../tools/browser/browser-window.c:426
-#, fuzzy
 msgid "About"
-msgstr "_Om"
+msgstr "Om"
 
 #: ../tools/browser/browser-window.c:430
 #: ../tools/browser/data-manager/data-console.c:418
@@ -8581,14 +8580,14 @@ msgid "Error updating bound connection: %s"
 msgstr "Fejl ved opdatering af bundet forbindelse: %s"
 
 #: ../tools/browser/browser-window.c:707
-#, fuzzy, c-format
+#, c-format
 msgid "Error updating meta data for connection: %s"
-msgstr "Fejl ved opdatering af bundet forbindelse: %s"
+msgstr "Fejl ved opdatering af metadata for forbindelse: %s"
 
 #: ../tools/browser/browser-window.c:730
-#, fuzzy, c-format
+#, c-format
 msgid "Error Updating Meta Data: %s"
-msgstr "Fejl ved oprettelse af database: %s"
+msgstr "Fejl ved opdatering af metadata: %s"
 
 #: ../tools/browser/browser-window.c:1048
 msgid "Don't show this message again"
@@ -8674,7 +8673,7 @@ msgstr "Fjern fra graf"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:384
 msgid "Add referenced tables to graph"
-msgstr "Tilføj refererede tabeller til graf"
+msgstr "Tilføj refererende tabeller til graf"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:388
 msgid "Add tables referencing this table to graph"
@@ -8893,19 +8892,19 @@ msgstr ""
 "tabellerne vil være i"
 
 #: ../tools/browser/data-manager/analyser.c:193
-#, fuzzy, c-format
+#, c-format
 msgid "Obtain referenced data in table %s from "
-msgstr "Indhent refererede data i tabel"
+msgstr "Indhent refererende data i tabel %s fra "
 
 #: ../tools/browser/data-manager/analyser.c:198
-#, fuzzy, c-format
+#, c-format
 msgid "column number %d ("
-msgstr "Ugyldigt kolonnenummer %d"
+msgstr "kolonnenummer %d ("
 
 #: ../tools/browser/data-manager/analyser.c:210
-#, fuzzy, c-format
+#, c-format
 msgid "List referencing data in %s."
-msgstr "Vis refererede data i "
+msgstr "Vis refererende data i %s."
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -9545,7 +9544,6 @@ msgstr "Egenskaber for LDAP-klasse"
 
 # engelske fejl?  Senere findes Add entry to favorites
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:531
-#, fuzzy
 msgid "Add class to Favorites"
 msgstr "Tilføj klassen til favoritter"
 
@@ -9773,7 +9771,7 @@ msgstr "Ingen"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:1
 msgid "View the schema and data of databases"
-msgstr ""
+msgstr "Vis databasernes skema og data"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
@@ -9946,13 +9944,12 @@ msgstr ""
 "%s"
 
 #: ../tools/browser/query-exec/query-console-page.c:1031
-#, fuzzy
 msgid ""
 "Internal error, please report error to http://gitlab.gnome.org/GNOME/libgda/"
 "issues"
 msgstr ""
-"Intern fejl. Rapportér venligst fejlen til http://bugzilla.gnome.org/ for "
-"produktet “libgda”"
+"Intern fejl — Rapportér venligst fejlen til http://gitlab.gnome.org/GNOME/libgda/"
+"issues"
 
 #: ../tools/browser/query-exec/query-console-page.c:1086
 msgid "Execute query"
@@ -10133,7 +10130,7 @@ msgid ""
 "incompatible types: '%s' for the foreign key and '%s' for the referenced "
 "primary key"
 msgstr ""
-"inkompatible typer: “%s” for den fremmede nøgle og “%s” for den refererede "
+"inkompatible typer: “%s” for den fremmede nøgle og “%s” for den refererende "
 "primære nøgle"
 
 #: ../tools/browser/schema-browser/table-columns.c:389
@@ -10432,8 +10429,8 @@ msgstr ""
 "      definerer <b>age</b> som en streng\n"
 "\n"
 "Gyldige typer er: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
-"tt> og\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
+"<tt>blob</tt> og\n"
 "<tt>binary</tt></small>"
 
 #: ../tools/common/html-doc.c:86
@@ -11151,9 +11148,8 @@ msgstr "Ingen forbindelse eller datasæt ved navn “%s” fundet"
 #. force create of meta store
 #. add existing connections to virtual connection
 #: ../tools/common/t-app.c:3062
-#, fuzzy
 msgid "Connections were bound as:"
-msgstr "Bundne forbindelser er som:"
+msgstr "Forbindelserne blev bundet som:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
@@ -11470,7 +11466,7 @@ msgstr "Ukendt kriterium “%s”"
 
 #: ../tools/common/t-config-info.c:675
 msgid "No home directory exists. No configuration directory is in use"
-msgstr ""
+msgstr "Der findes ikke nogen hjemmemappe. Ingen konfigurationsmappe er i brug"
 
 #: ../tools/common/t-config-info.c:685
 #, fuzzy, c-format
