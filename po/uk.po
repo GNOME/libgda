@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-05-04 10:42+0000\n"
-"PO-Revision-Date: 2021-05-06 20:57+0300\n"
+"POT-Creation-Date: 2021-05-11 17:24+0000\n"
+"PO-Revision-Date: 2021-05-13 20:02+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3687,6 +3687,7 @@ msgid ""
 "INSERT statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
+"У інструкції INSERT немає тієї самої кількості стовпчиків і виразів призначення"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:412
 msgid "VALUES lists must all be the same length in INSERT statement"
@@ -3699,14 +3700,17 @@ msgstr "SELECT не містить жодного виразу"
 #: ../libgda/sql-parser/gda-statement-struct-select.c:410
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
 msgstr ""
+"SELECT не може містити виразу DISTINCT, якщо не встановлено DISTINCT"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:416
 msgid "SELECT can't have a HAVING without GROUP BY"
 msgstr ""
+"SELECT не може містити HAVING без GROUP BY"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:422
 msgid "SELECT can't have a limit offset without a limit"
 msgstr ""
+"SELECT не може містити відступу обмеження без обмеження"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:447
 #: ../libgda/sql-parser/gda-statement-struct-select.c:456
@@ -3723,10 +3727,12 @@ msgid ""
 "UPDATE statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
+"У інструкції UPDATE немає тієї самої кількості стовпчиків і виразів призначення"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:302
 msgid "UPDATE statement does not have any target columns to update"
 msgstr ""
+"У інструкції UPDATE немає жодного стовпчика призначення для оновлення"
 
 #: ../libgda/thread-wrapper/gda-connect.c:150
 msgid ""
@@ -3953,6 +3959,7 @@ msgstr ""
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
 msgstr ""
+"<непридатний-до-друку>"
 
 #: ../libgda-ui/data-entries/gdaui-entry-bin.c:138
 #: ../libgda-ui/data-entries/plugins/common-pict.c:46
@@ -4084,6 +4091,7 @@ msgstr "Багаторядковий"
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Display only one line, or a complete text editor"
 msgstr ""
+"Показати лише один рядок або повний текстовий редактор"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:5
 msgid "Hidden"
@@ -4094,6 +4102,7 @@ msgid ""
 "If set to TRUE, characters are all displayed using a single 'invisible' "
 "character, suitable to enter passwords"
 msgstr ""
+"Якщо встановлено значення TRUE, символи буде показано за допомогою єдиного «невидимого» символу, який пасує для введення паролів"
 
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:254
 #, c-format
@@ -4430,18 +4439,23 @@ msgid ""
 "connection is used."
 msgstr ""
 "<b><big>Зауваження:\n"
-"</big></b>У багатьох продемонстрованих записах використано відкрите з'єднання із SQLite за допомогою файла «%s».\n"
+"</big></b>У багатьох продемонстрованих записах використано відкрите "
+"з'єднання із SQLite за допомогою файла «%s».\n"
 "\n"
-"У показаному тут початковому коді об'єкти <i>demo_cnc</i> і <i>demo_parser</i> створено оболонкою і зроблено доступними усім записам із демонстрації.\n"
+"У показаному тут початковому коді об'єкти <i>demo_cnc</i> і <i>demo_parser</"
+"i> створено оболонкою і зроблено доступними усім записам із демонстрації.\n"
 "\n"
-"Щоб продемонструвати те, що виклики виконуються без блокування, у верхній частині вікна показано обертальний індикатор (який не зупиняє оберти) і додано односекундну затримку при використанні з'єднання."
+"Щоб продемонструвати те, що виклики виконуються без блокування, у верхній "
+"частині вікна показано обертальний індикатор (який не зупиняє оберти) і "
+"додано односекундну затримку при використанні з'єднання."
 
 #: ../libgda-ui/gdaui-basic-form.c:267
 msgid ""
 "Pointer to an XML layout specification  (as an xmlNodePtr to a <gdaui_form> "
 "node)"
 msgstr ""
-"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол <gdaui_form>)"
+"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол "
+"<gdaui_form>)"
 
 #: ../libgda-ui/gdaui-basic-form.c:271
 msgid "List of parameters to show in the form"
@@ -4449,13 +4463,11 @@ msgstr "Список параметрів, які слід показати у �
 
 #: ../libgda-ui/gdaui-basic-form.c:275
 msgid "Entries Auto-default"
-msgstr ""
-"Автотипові записи"
+msgstr "Автотипові записи"
 
 #: ../libgda-ui/gdaui-basic-form.c:280
 msgid "TRUE if expanding the form vertically makes sense"
-msgstr ""
-"TRUE, якщо розгортання форми вертикально має сенс"
+msgstr "TRUE, якщо розгортання форми вертикально має сенс"
 
 #: ../libgda-ui/gdaui-basic-form.c:305
 msgid "Shown data entries"
@@ -4466,24 +4478,18 @@ msgstr "Показані записи даних"
 #, c-format
 msgid "There are more entries than expected in group. Found %d"
 msgid_plural "There are more entries than expected in group. Found %d"
-msgstr[0] ""
-"У групі більше записів, ніж очікувалося. Знайдено %d"
-msgstr[1] ""
-"У групі більше записів, ніж очікувалося. Знайдено %d"
-msgstr[2] ""
-"У групі більше записів, ніж очікувалося. Знайдено %d"
-msgstr[3] ""
-"У групі більше записів, ніж очікувалося. Знайдено %d"
+msgstr[0] "У групі більше записів, ніж очікувалося. Знайдено %d"
+msgstr[1] "У групі більше записів, ніж очікувалося. Знайдено %d"
+msgstr[2] "У групі більше записів, ніж очікувалося. Знайдено %d"
+msgstr[3] "У групі більше записів, ніж очікувалося. Знайдено %d"
 
 #: ../libgda-ui/gdaui-basic-form.c:1843
 msgid "Can't find data entry for GdaHolder"
-msgstr ""
-"Не вдалося знайти запис для GdaHolder"
+msgstr "Не вдалося знайти запис для GdaHolder"
 
 #: ../libgda-ui/gdaui-basic-form.c:2112
 msgid "Values to be defined"
-msgstr ""
-"Значення, які слід визначити"
+msgstr "Значення, які слід визначити"
 
 #: ../libgda-ui/gdaui-basic-form.c:2117
 #: ../libgda-ui/gdaui-server-operation.c:1074
@@ -4501,13 +4507,13 @@ msgid ""
 "size group was not taken into account using "
 "gdaui_basic_form_add_to_size_group()"
 msgstr ""
-"розмір групи не було взято до уваги при використанні gdaui_basic_form_add_to_size_group()"
+"розмір групи не було взято до уваги при використанні "
+"gdaui_basic_form_add_to_size_group()"
 
 #: ../libgda-ui/gdaui-cloud.c:209 ../libgda-ui/gdaui-cloud.c:956
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
-msgstr ""
-"Помилковий тип стовпчика для мітки: мав бути рядок, а маємо %s"
+msgstr "Помилковий тип стовпчика для мітки: мав бути рядок, а маємо %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1050 ../tools/browser/objects-cloud.c:459
 msgid "Find:"
@@ -4540,8 +4546,10 @@ msgid ""
 "like 'doe%'</tt></b> to filter rows where the 2nd column starts with "
 "<tt>doe</tt>."
 msgstr ""
-"На стовпчики можна посилатися за назвою або, що простіше, за допомогою запису <b><tt>_&lt;номер стовпчика&gt;</tt></b>. Наприклад, коректним виразом може бути такий: <b><tt>_2 "
-"like 'doe%'</tt></b> для фільтрування рядків, де другий стовпчик починається з <tt>doe</tt>."
+"На стовпчики можна посилатися за назвою або, що простіше, за допомогою "
+"запису <b><tt>_&lt;номер стовпчика&gt;</tt></b>. Наприклад, коректним "
+"виразом може бути такий: <b><tt>_2 like 'doe%'</tt></b> для фільтрування "
+"рядків, де другий стовпчик починається з <tt>doe</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:203
 msgid "Set filter"
@@ -4553,8 +4561,7 @@ msgstr "Зняти фільтрування"
 
 #: ../libgda-ui/gdaui-data-proxy.c:155
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
-msgstr ""
-"Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
+msgstr "Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:89
 msgid "Insert new data"
@@ -4631,7 +4638,8 @@ msgstr "Внутрішня модель даних GdaDataProxy"
 #: ../libgda-ui/gdaui-data-store.c:460 ../libgda-ui/gdaui-data-store.c:491
 msgid "Can't modify row while data model is being reset"
 msgstr ""
-"Не можна вносити зміни до рядка, доки виконується відновлення початкового стану моделі даних"
+"Не можна вносити зміни до рядка, доки виконується відновлення початкового "
+"стану моделі даних"
 
 #: ../libgda-ui/gdaui-data-store.c:375
 msgid "Trying to modify a read-only row"
@@ -4640,7 +4648,8 @@ msgstr "Спроба внесення змін до придатного лиш�
 #: ../libgda-ui/gdaui-data-store.c:577
 msgid "Can't access row while data model is being reset"
 msgstr ""
-"Не можна отримувати доступ до рядка, доки виконується відновлення початкового стану моделі даних"
+"Не можна отримувати доступ до рядка, доки виконується відновлення "
+"початкового стану моделі даних"
 
 #: ../libgda-ui/gdaui-init.c:55
 #, c-format
@@ -4692,8 +4701,7 @@ msgstr "Джерела даних…"
 
 #: ../libgda-ui/gdaui-login.c:419
 msgid "Could not execute the Database access control center"
-msgstr ""
-"Не вдалося запустити центр керування доступом до бази даних"
+msgstr "Не вдалося запустити центр керування доступом до бази даних"
 
 #: ../libgda-ui/gdaui-raw-form.c:142 ../libgda-ui/gdaui-raw-grid.c:244
 msgid "Data to display"
@@ -4709,12 +4717,12 @@ msgid ""
 "Pointer to an XML layout specification (as an xmlNodePtr to a <gdaui_grid> "
 "node)"
 msgstr ""
-"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол <gdaui_grid>)"
+"Вказівник на специфікацію компонування XML (як xmlNodePtr на вузол "
+"<gdaui_grid>)"
 
 #: ../libgda-ui/gdaui-raw-grid.c:252
 msgid "Info cell visible"
-msgstr ""
-"Видимість інформаційних комірок"
+msgstr "Видимість інформаційних комірок"
 
 #. FIXME: if nullok is FALSE, then set the column title in bold
 #: ../libgda-ui/gdaui-raw-grid.c:677 ../libgda-ui/gdaui-raw-grid.c:699
@@ -4812,13 +4820,11 @@ msgstr "Інші параметри"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1841
 msgid "Empty string when NULL?"
-msgstr ""
-"Порожній рядок, якщо NULL?"
+msgstr "Порожній рядок, якщо NULL?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1844 ../libgda-ui/gdaui-raw-grid.c:1849
 msgid "Export NULL values as an empty \"\" string"
-msgstr ""
-"Експортувати значення NULL як порожній рядок \"\""
+msgstr "Експортувати значення NULL як порожній рядок \"\""
 
 #: ../libgda-ui/gdaui-raw-grid.c:1851
 msgid "Invalid data as NULL?"
@@ -4834,13 +4840,11 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-raw-grid.c:1861
 msgid "Field names on first row?"
-msgstr ""
-"Назви полів у першому рядку?"
+msgstr "Назви полів у першому рядку?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1864 ../libgda-ui/gdaui-raw-grid.c:1869
 msgid "Add a row at beginning with columns names"
-msgstr ""
-"Додавати на початку рядок із назвами стовпчиків"
+msgstr "Додавати на початку рядок із назвами стовпчиків"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2047
 #, c-format
@@ -4849,13 +4853,11 @@ msgstr "Не вдалося зберегти файл %s"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2055
 msgid "You must specify a file name"
-msgstr ""
-"Вам слід вказати назву файла"
+msgstr "Вам слід вказати назву файла"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2061
 msgid "Got empty file while converting the data"
-msgstr ""
-"При перетворенні даних отримано порожній файл"
+msgstr "При перетворенні даних отримано порожній файл"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2074
 #, c-format
@@ -4868,14 +4870,12 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-raw-grid.c:2084
 msgid "If you choose yes, the contents will be lost."
-msgstr ""
-"Якщо ви виберете варіант «так», дані буде втрачено."
+msgstr "Якщо ви виберете варіант «так», дані буде втрачено."
 
 #: ../libgda-ui/gdaui-raw-grid.c:2594 ../libgda-ui/gdaui-raw-grid.c:2649
 #, c-format
 msgid "The '%s' attribute should be a G_TYPE_STRING value"
-msgstr ""
-"Атрибутом «%s» має бути значення G_TYPE_STRING"
+msgstr "Атрибутом «%s» має бути значення G_TYPE_STRING"
 
 #: ../libgda-ui/gdaui-rt-editor.c:102
 msgid ""
@@ -4930,23 +4930,19 @@ msgstr "Підкреслити текст"
 
 #: ../libgda-ui/gdaui-rt-editor.c:172
 msgid "_Strike through"
-msgstr ""
-"За_креслити"
+msgstr "За_креслити"
 
 #: ../libgda-ui/gdaui-rt-editor.c:172
 msgid "Strike through text"
-msgstr ""
-"Закреслити текст"
+msgstr "Закреслити текст"
 
 #: ../libgda-ui/gdaui-rt-editor.c:173
 msgid "_Syntax help"
-msgstr ""
-"Довідка щодо с_интаксису"
+msgstr "Довідка щодо с_интаксису"
 
 #: ../libgda-ui/gdaui-rt-editor.c:173
 msgid "Show syntax help"
-msgstr ""
-"Показати довідку щодо синтаксису"
+msgstr "Показати довідку щодо синтаксису"
 
 #: ../libgda-ui/gdaui-rt-editor.c:177
 msgid "_Add image"
@@ -4958,23 +4954,19 @@ msgstr "Вставити зображення"
 
 #: ../libgda-ui/gdaui-rt-editor.c:178
 msgid "_Normal text"
-msgstr ""
-"Зви_чайний текст"
+msgstr "Зви_чайний текст"
 
 #: ../libgda-ui/gdaui-rt-editor.c:178
 msgid "Reset to normal text"
-msgstr ""
-"Скинути параметри до звичайного тексту"
+msgstr "Скинути параметри до звичайного тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:227
 msgid "Don't display a specific background for the text"
-msgstr ""
-"Не показувати специфічне тло для тексту"
+msgstr "Не показувати специфічне тло для тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:237
 msgid "Display raw markup text instead of formatted text"
-msgstr ""
-"Показати простий текст розмітки замість форматованого тексту"
+msgstr "Показати простий текст розмітки замість форматованого тексту"
 
 #: ../libgda-ui/gdaui-rt-editor.c:248
 msgid "The buffer which is displayed"
@@ -4982,8 +4974,7 @@ msgstr "Буфер, який показано"
 
 #: ../libgda-ui/gdaui-rt-editor.c:259
 msgid "Determines if the contents appears in a scrolled window"
-msgstr ""
-"Визначає, чи буде показано дані у вікні з гортанням"
+msgstr "Визначає, чи буде показано дані у вікні з гортанням"
 
 #: ../libgda-ui/gdaui-rt-editor.c:899
 msgid "Reset font size"
@@ -5003,13 +4994,11 @@ msgstr "Показати розмітку джерела"
 
 #: ../libgda-ui/gdaui-server-operation.c:170
 msgid "The specification of the operation to implement"
-msgstr ""
-"Специфікація операції для реалізації"
+msgstr "Специфікація операції для реалізації"
 
 #: ../libgda-ui/gdaui-server-operation.c:176
 msgid "Request section header to be hidden if there is only one section"
-msgstr ""
-"Вимагати приховування заголовка розділу, якщо існує лише один розділ"
+msgstr "Вимагати приховування заголовка розділу, якщо існує лише один розділ"
 
 #: ../libgda-ui/gdaui-server-operation.c:369
 #, c-format
@@ -5033,8 +5022,7 @@ msgstr "Додати"
 
 #: ../libgda-ui/gdaui-server-operation.c:1070
 msgid "Server operation specification"
-msgstr ""
-"Специфікація операцій із сервером"
+msgstr "Специфікація операцій із сервером"
 
 #: ../libgda-ui/gdaui-set.c:730
 msgid "No group exists for Set"
@@ -5053,7 +5041,8 @@ msgstr "Невідомий номер стовпчика %d"
 #, c-format
 msgid "Type mismatch: expected a value of type %s and got of type %s"
 msgstr ""
-"Невідповідність типів: мало бути значення типу %s, а отримано значення типу %s"
+"Невідповідність типів: мало бути значення типу %s, а отримано значення типу "
+"%s"
 
 #: ../libgda-ui/internal/gdaui-provider-auth-editor.c:426
 msgid "Can't set authentification string: no authentication is needed"
@@ -5068,8 +5057,7 @@ msgstr "Невідомий постачальник «%s»"
 #: ../libgda-ui/internal/gdaui-provider-spec-editor.c:199
 #, c-format
 msgid "Provider '%s' does not report the required parameters for DSN"
-msgstr ""
-"Надавач даних «%s» не повідомляє потрібні параметри для DSN"
+msgstr "Надавач даних «%s» не повідомляє потрібні параметри для DSN"
 
 #. set to NULL item
 #: ../libgda-ui/internal/utility.c:82
@@ -5088,8 +5076,7 @@ msgstr "Скинути до початкового значення"
 
 #: ../libgda-ui/internal/utility.c:375
 msgid "Current modified data is invalid"
-msgstr ""
-"Поточні змінені дані є некоректними"
+msgstr "Поточні змінені дані є некоректними"
 
 #: ../libgda-ui/internal/utility.c:377
 msgid ""
@@ -5103,13 +5090,11 @@ msgstr ""
 
 #: ../libgda-ui/internal/utility.c:381
 msgid "please correct it and try again, or discard the modifications."
-msgstr ""
-"будь ласка, внесіть виправлення або відкиньте внесені зміни."
+msgstr "будь ласка, внесіть виправлення або відкиньте внесені зміни."
 
 #: ../libgda-ui/internal/utility.c:388
 msgid "Part of the current modified data was invalid"
-msgstr ""
-"Частина поточних змінених даних була некоректною"
+msgstr "Частина поточних змінених даних була некоректною"
 
 #: ../libgda-ui/internal/utility.c:389
 msgid ""
@@ -5135,8 +5120,7 @@ msgstr "Файл бази даних"
 
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:2
 msgid "Berkeley DB database filename to be used"
-msgstr ""
-"Назва файла бази даних Berkeley DB, яку слід використати"
+msgstr "Назва файла бази даних Berkeley DB, яку слід використати"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:3
@@ -5161,8 +5145,7 @@ msgstr "Каталог"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:6
 msgid "Directory where the database file is stored"
-msgstr ""
-"Каталог, у якому зберігається файл бази даних"
+msgstr "Каталог, у якому зберігається файл бази даних"
 
 #. DSN parameters
 #: ../providers/bdb/bdb_specs_dsn.xml.in.h:5
@@ -5195,19 +5178,16 @@ msgstr "Назва бази даних у файлі бази даних"
 
 #: ../providers/bdb/gda-bdb-provider.c:188
 msgid "The DB_NAME parameter is not defined in the connection string."
-msgstr ""
-"У рядку з'єднання не визначено параметр DB_NAME."
+msgstr "У рядку з'єднання не визначено параметр DB_NAME."
 
 #: ../providers/bdb/gda-bdb-provider.c:218
 msgid "An error occurred while accessing the BDB database"
-msgstr ""
-"Під час спроби доступу до бази даних BDB сталася помилка"
+msgstr "Під час спроби доступу до бази даних BDB сталася помилка"
 
 #: ../providers/bdb/gda-bdb-provider.c:226
 #, c-format
 msgid "Could not add BDB data model to connection: %s"
-msgstr ""
-"Не вдалося додати модель даних BDB до з'єднання: %s"
+msgstr "Не вдалося додати модель даних BDB до з'єднання: %s"
 
 #: ../providers/bdb/gda-bdb-provider.c:237
 msgid "-"
@@ -5511,8 +5491,7 @@ msgstr "Навіть якщо його ще не існує"
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
-msgstr ""
-"Створити покажчик, лише якщо його не існує"
+msgstr "Створити покажчик, лише якщо його не існує"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
@@ -5553,8 +5532,7 @@ msgstr "Метод порівняння"
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:15
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:36
 msgid "Collation name (BINARY|NOCASE)"
-msgstr ""
-"Назва злиття (BINARY|NOCASE)"
+msgstr "Назва злиття (BINARY|NOCASE)"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
@@ -5743,8 +5721,7 @@ msgstr "Тип відповідності"
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:48
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
-msgstr ""
-"Спосіб встановлення відповідності, якщо стосується декількох полів"
+msgstr "Спосіб встановлення відповідності, якщо стосується декількох полів"
 
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
@@ -5946,8 +5923,7 @@ msgstr "Локалізовані порівняння"
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:12
 msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
-msgstr ""
-"Увімкнути використання додаткових способів злиття (LOCALE і DCASE)"
+msgstr "Увімкнути використання додаткових способів злиття (LOCALE і DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:13
@@ -5972,7 +5948,8 @@ msgstr "Дозволити суфікси назв"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:16
 msgid "Allow SQLite to load extensions using the load_extension() function"
 msgstr ""
-"Дозволити SQLite завантажувати розширення за допомогою функції load_extension()"
+"Дозволити SQLite завантажувати розширення за допомогою функції "
+"load_extension()"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:2
@@ -6012,13 +5989,11 @@ msgstr "Назва бази даних, якою слід скористатис
 
 #: ../providers/firebird/libmain-client.c:69
 msgid "Provider for Firebird databases"
-msgstr ""
-"Надавач даних для баз даних Firebird"
+msgstr "Надавач даних для баз даних Firebird"
 
 #: ../providers/firebird/libmain-embed.c:70
 msgid "Provider for embedded Firebird databases"
-msgstr ""
-"Надавач даних для вбудованих баз даних Firebird"
+msgstr "Надавач даних для вбудованих баз даних Firebird"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
@@ -6066,7 +6041,8 @@ msgid ""
 "The instance to connect to, if not specified, a connection to the default "
 "instance is made"
 msgstr ""
-"Екземпляр для з'єднання. Якщо не вказано, буде встановлено з'єднання із типовим екземпляром"
+"Екземпляр для з'єднання. Якщо не вказано, буде встановлено з'єднання із "
+"типовим екземпляром"
 
 #. Connection parameters
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:5
@@ -6082,8 +6058,7 @@ msgstr "Сервер бази даних"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:6
 msgid "Host on which the database server is running or leave this field empty"
-msgstr ""
-"Вузол, на якому запущено сервер бази даних, можна не заповнювати"
+msgstr "Вузол, на якому запущено сервер бази даних, можна не заповнювати"
 
 #: ../providers/jdbc/jdbc_specs_com.microsoft.sqlserver.jdbc.SQLServerDriver_dsn.xml.in.h:7
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:5
@@ -6115,22 +6090,26 @@ msgstr ""
 #, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
 msgstr ""
+"Не вдалося отримати список встановлених JDBC: %s"
 
 #: ../providers/jdbc/libmain.c:504
 msgid ""
 "Could not find Libgda's JAR (gdaprovider-6.0.jar), JDBC provider is "
 "unavailable."
 msgstr ""
+"Не вдалося знайти JAR Libgda (gdaprovider-6.0.jar), надавач даних JDBC є недоступним."
 
 #: ../providers/jdbc/libmain.c:513
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
 msgstr ""
+"Не вдалося створити віртуальну машину JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:523
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
+"Не вдалося знайти середовище виконання JVM (libjvm.so), надавач даних JDBC є недоступним."
 
 #. dummy setup to enable GIR compilation
 #: ../providers/ldap/gda-data-model-ldap.c:156
@@ -6144,23 +6123,28 @@ msgstr ""
 #, c-format
 msgid "Error storing list of created LDAP tables: %s"
 msgstr ""
+"Помилка під час спроби зберегти список створених таблиць LDAP: %s"
 
 #: ../providers/ldap/gda-ldap-connection.c:213
 msgid "File used to store startup data"
 msgstr ""
+"Файл, який використовують для зберігання даних для запуску"
 
 #: ../providers/ldap/gda-ldap-connection.c:260
 #, c-format
 msgid "Error recreating LDAP tables: %s"
 msgstr ""
+"Помилка під час спроби повторного створення таблиць LDAP: %s"
 
 #: ../providers/ldap/gda-ldap-connection.c:762
 msgid "Can't remove non LDAP virtual table"
 msgstr ""
+"Не можна вилучати віртуальні таблиці, які не є таблицями LDAP"
 
 #: ../providers/ldap/gda-ldap-connection.c:811
 msgid "Can't describe non LDAP virtual table"
 msgstr ""
+"Неможливо описати віртуальну таблицю, яка не є таблицею LDAP"
 
 #: ../providers/ldap/gda-ldap-connection.c:818
 msgid "Unknown LDAP virtual table"
@@ -6169,6 +6153,7 @@ msgstr "Невідома віртуальна таблиця LDAP"
 #: ../providers/ldap/gda-ldap-provider.c:371
 msgid "The connection string must contain the DB_NAME value"
 msgstr ""
+"Рядок з'єднання має містити значення DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:412
 msgid "Invalid value for 'TLS_REQCERT'"
@@ -6203,15 +6188,18 @@ msgstr "поряд із «%s»: синтаксична помилка"
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr ""
+"Сервером LDAP повернуто декілька записів із DN «%s»"
 
 #: ../providers/ldap/gda-ldap-util.c:1568
 msgid "Could not parse distinguished name returned by LDAP server"
 msgstr ""
+"Не вдалося обробити розпізнавану назву, яку було повернуто сервером LDAP"
 
 #: ../providers/ldap/gda-ldap-util.c:1862
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
 msgstr ""
+"Неочікуваний тип даних «%s» для атрибута objectClass!"
 
 #: ../providers/ldap/gda-tree-mgr-ldap.c:210
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:187
@@ -6235,11 +6223,13 @@ msgstr "Відносна розпізнавана назва"
 #, c-format
 msgid "Multiple value LDAP attribute does not fit into a single value"
 msgstr ""
+"Атрибут LDAP із декількох значень не вміщується до одного значення"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:931
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1312
 msgid "Truncated result because LDAP server limit encountered"
 msgstr ""
+"Обрізаний результат через перевищення обмежень сервера LDAP"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1925
 msgid "No GdaLdapEntry specified"
@@ -6249,20 +6239,24 @@ msgstr "Не вказано GdaLdapEntry"
 #, c-format
 msgid "Unknown GdaLdapModificationType %d"
 msgstr ""
+"Невідомий GdaLdapModificationType %d"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1943
 msgid "No GdaLdapEntry specified to compare attributes"
 msgstr ""
+"Не вказано GdaLdapEntry для порівняння атрибутів"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1947
 msgid "GdaLdapEntry specified to compare have different DN"
 msgstr ""
+"Вказаний GdaLdapEntry для порівняння має інший DN"
 
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:2
 msgid ""
 "User name, as a DN or simple user name, for Active Directory may be "
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
+"Ім'я користувача, як DN або просте ім'я користувача, для Active Directory може записуватися у формі користувач@ДОМЕН або ДОМЕН\\користувач"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -6271,10 +6265,12 @@ msgstr "Базова назва"
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 msgid "Base distinguished name, starting point for the searches"
 msgstr ""
+"Базова розпізнавана назва, початкова точка для пошуків"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 msgid "Host on which the LDAP server is running"
 msgstr ""
+"Вузол, на якому запущено сервер LDAP"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
