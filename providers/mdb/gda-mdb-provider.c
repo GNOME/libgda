@@ -288,6 +288,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 
 	cdata = g_new0 (MdbConnectionData, 1);
 	cdata->cnc = cnc;
+	cdata->filename = filename;
 	cdata->server_version = NULL;
 #ifdef MDB_WITH_WRITE_SUPPORT
 	cdata->mdb = mdb_open (filename, MDB_WRITABLE);
@@ -562,7 +563,7 @@ gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 	if (!cdata)
 		return NULL;
 
-	return (const gchar *) cdata->mdb->f->filename;
+	return cdata->filename;
 }
 
 /*
@@ -572,5 +573,6 @@ static void
 gda_mdb_free_cnc_data (MdbConnectionData *cdata)
 {
 	g_free (cdata->server_version);
+	g_free (cdata->filename);
 	g_free (cdata);
 }
