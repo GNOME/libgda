@@ -93,7 +93,6 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 static void
 gda_mdb_provider_init (GdaMdbProvider *myprv, GdaMdbProviderClass *klass)
 {
-	mdb_set_date_fmt ("%Y-%m-%d %H:%M:%S");
 }
 
 static void
@@ -300,6 +299,8 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 		gda_mdb_free_cnc_data (cdata);
 		return FALSE;
 	}
+
+	mdb_set_date_fmt (cdata->mdb, "%Y-%m-%d %H:%M:%S");
 
 	/* open virtual connection */
         if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
