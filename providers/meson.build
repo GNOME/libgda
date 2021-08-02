@@ -18,7 +18,7 @@ if enable_ldap
 subdir('ldap')
 endif
 
-if found_jdbc and get_option('experimental')
+if found_jdbc
 subdir('jdbc')
 endif
 
