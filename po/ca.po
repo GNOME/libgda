@@ -11642,7 +11642,7 @@ msgstr "Activador «%s» de la taula «%s.%s»:"
 #: ../tools/common/web-server.c:1287
 #, c-format
 msgid "Trigger fired for: %s"
-msgstr "Activador executat per: %s"
+msgstr "Activador executat per a: %s"
 
 #: ../tools/common/web-server.c:1291
 #, c-format
