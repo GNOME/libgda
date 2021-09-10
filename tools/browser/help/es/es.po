@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2019-09-26 14:21+0000\n"
+"POT-Creation-Date: 2021-07-26 09:34+0000\n"
 "PO-Revision-Date: 2013-09-17 11:09+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
@@ -1303,8 +1303,8 @@ msgid ""
 "execute SQL commands, see the <link xref=\"query-execution-perspective"
 "\">Query execution perspective</link>"
 msgstr ""
-"ejecutar comandos SQL, consulte la sección <link xref=\"query-execution-perspective"
-"\">perspectiva de ejecución de una consulta</link>"
+"ejecutar comandos SQL, consulte la sección <link xref=\"query-execution-"
+"perspective\">perspectiva de ejecución de una consulta</link>"
 
 #. (itstool) path: item/p
 #: C/features.page:40
@@ -1312,8 +1312,8 @@ msgid ""
 "analyse the table's contents, see the <link xref=\"data-manager-perspective"
 "\">Data manager perspective</link>"
 msgstr ""
-"analizar los contenidos de la tabla, consulte la sección <link xref=\"data-manager-"
-"perspective\">perspectiva del gestor de datos</link>"
+"analizar los contenidos de la tabla, consulte la sección <link xref=\"data-"
+"manager-perspective\">perspectiva del gestor de datos</link>"
 
 #. (itstool) path: item/p
 #: C/features.page:42
@@ -1323,8 +1323,8 @@ msgid ""
 "perspective\">LDAP browser perspective</link>"
 msgstr ""
 "para las <link xref=\"ldap-connection\">conexiones LDAP</link>, manejar los "
-"datos jerárquicos en el árbol LDAP, consulte la sección <link xref=\"ldap-browser-"
-"perspective\">perspectiva del visor LDAP</link>"
+"datos jerárquicos en el árbol LDAP, consulte la sección <link xref=\"ldap-"
+"browser-perspective\">perspectiva del visor LDAP</link>"
 
 #. (itstool) path: section/p
 #: C/features.page:45
@@ -3189,7 +3189,7 @@ msgstr ""
 #~ msgstr ""
 #~ "Este trabajo está licenciado bajo una <link href=\"http://creativecommons."
 #~ "org/licenses/by-sa/3.0/\">Licencia Creative Commons atribución - "
-#~ "compartir igual 3.0 sin soporte</link>."
+#~ "compartir igual 3.0 no portada</link>."
 
 #~ msgid "malerba@gnome-db.org"
 #~ msgstr "malerba@gnome-db.org"
