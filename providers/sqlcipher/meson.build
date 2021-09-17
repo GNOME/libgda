@@ -97,10 +97,14 @@ sqlcipher_cargs += [
 sqlcipher_cargs += c_args
 
 
-libgda_sqlcipher_providerpc = configure_file(output : 'libgda-sqlcipher-'+project_api_version+'.pc',
+libgda_sqlcipher_providerpc_name = 'libgda-sqlcipher-'+project_api_version+'.pc'
+libgda_sqlcipher_providerpc = configure_file(
+			input : libgda_sqlcipher_providerpc_name+'.in',
+			output : libgda_sqlcipher_providerpc_name,
 			configuration : conf,
 			install_dir: join_paths(get_option('libdir'),'pkgconfig')
 			)
+
 libgda_sqlcipher_provider = library ('gda-sqlcipher-'+project_api_version,
 	libgda_sqlcipher_sources,
 	dependencies: [
