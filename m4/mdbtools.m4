@@ -115,11 +115,7 @@ m4_define([_MDBTOOLS_CHECK_INTERNAL],
     # try with pkgconfig
     if test $try_mdb = true -a "x$mdb_test_dir" = x
     then
-	PKG_CHECK_MODULES(MDB, "libmdb",[pkgmdb=yes],[pkgmdb=no])
-	if test $pkgmdb = no
-	then
-	    mdb_test_dir="/usr /usr/local /opt/gnome"
-	fi
+	PKG_CHECK_MODULES(MDB, [libmdb >= 0.9],[pkgmdb=yes],[pkgmdb=no])
     fi
 
     # try to locate files if pkg-config did not already do its job

@@ -63,8 +63,6 @@ static const gchar *gda_mdb_provider_get_database (GdaServerProvider *provider,
 
 
 static GObjectClass *parent_class = NULL;
-static GMutex mdb_init_mutex;
-static gint loaded_providers = 0;
 char *g_input_ptr;
 
 /* 
@@ -95,7 +93,6 @@ gda_mdb_provider_class_init (GdaMdbProviderClass *klass)
 static void
 gda_mdb_provider_init (GdaMdbProvider *myprv, GdaMdbProviderClass *klass)
 {
-	mdb_set_date_fmt ("%Y-%m-%d %H:%M:%S");
 }
 
 static void
@@ -107,13 +104,6 @@ gda_mdb_provider_finalize (GObject *object)
 
 	/* chain to parent class */
 	parent_class->finalize (object);
-
-	/* call MDB exit function if there are no more providers */
-	g_mutex_lock (&mdb_init_mutex);
-	loaded_providers--;
-	if (loaded_providers == 0)
-		mdb_exit ();
-	g_mutex_unlock (&mdb_init_mutex);
 }
 
 GType
@@ -147,12 +137,6 @@ GdaServerProvider *
 gda_mdb_provider_new (void)
 {
 	GdaMdbProvider *provider;
-
-	g_mutex_lock (&mdb_init_mutex);
-	if (loaded_providers == 0) 
-		mdb_init ();
-	loaded_providers++;
-	g_mutex_unlock (&mdb_init_mutex);
 
 	provider = g_object_new (gda_mdb_provider_get_type (), NULL);
 	return GDA_SERVER_PROVIDER (provider);
@@ -303,6 +287,7 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 
 	cdata = g_new0 (MdbConnectionData, 1);
 	cdata->cnc = cnc;
+	cdata->filename = filename;
 	cdata->server_version = NULL;
 #ifdef MDB_WITH_WRITE_SUPPORT
 	cdata->mdb = mdb_open (filename, MDB_WRITABLE);
@@ -314,6 +299,8 @@ gda_mdb_provider_open_connection (GdaServerProvider *provider, GdaConnection *cn
 		gda_mdb_free_cnc_data (cdata);
 		return FALSE;
 	}
+
+	mdb_set_date_fmt (cdata->mdb, "%Y-%m-%d %H:%M:%S");
 
 	/* open virtual connection */
         if (! GDA_SERVER_PROVIDER_CLASS (parent_class)->open_connection (GDA_SERVER_PROVIDER (provider), cnc, params,
@@ -577,7 +564,7 @@ gda_mdb_provider_get_database (GdaServerProvider *provider, GdaConnection *cnc)
 	if (!cdata)
 		return NULL;
 
-	return (const gchar *) cdata->mdb->f->filename;
+	return cdata->filename;
 }
 
 /*
@@ -587,5 +574,6 @@ static void
 gda_mdb_free_cnc_data (MdbConnectionData *cdata)
 {
 	g_free (cdata->server_version);
+	g_free (cdata->filename);
 	g_free (cdata);
 }

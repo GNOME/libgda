@@ -38,6 +38,7 @@
 typedef struct {
 	GdaConnection  *cnc;
 	MdbHandle      *mdb;
+	gchar          *filename;
 	gchar          *server_version;
 } MdbConnectionData;
 
