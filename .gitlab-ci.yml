@@ -20,7 +20,6 @@ variables:
   POSTGRES_HOST: postgres
   MYSQL_DATABASE: test
   MYSQL_ROOT_PASSWORD: test1
-  MYSQL_USER: root
   MYSQL_HOST: mysql
   G_MESSAGES_DEBUG: all
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
