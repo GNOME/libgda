@@ -308,7 +308,7 @@ libgda_dep += sqlite_deps
 vala_sources = []
 if get_option('experimental')
 vala_sources += [
-	'gda-connection-model.vala'
+	#'gda-connection-model.vala'
 	]
 endif
 
