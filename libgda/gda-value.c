@@ -652,7 +652,11 @@ gda_binary_set_data (GdaBinary *binary, const guchar *val, glong size)
 	g_return_if_fail (val);
 	if (binary->data)
 		g_free (binary->data);
-	binary->data = g_memdup (val, size);
+#if GLIB_CHECK_VERSION(2,68,0)
+	binary->data = g_memdup2 (val, size);
+#else
+  binary->data = g_memdup (val, size);
+#endif
 	binary->binary_length = size;
 }
 
@@ -746,7 +750,11 @@ gda_binary_copy (GdaBinary *src)
 	g_return_val_if_fail (src, NULL);
 
 	copy = g_new0 (GdaBinary, 1);
-	copy->data = g_memdup (src->data, src->binary_length);
+#if GLIB_CHECK_VERSION(2,68,0)
+	copy->data = g_memdup2 (src->data, src->binary_length);
+#else
+  copy->data = g_memdup (src->data, src->binary_length);
+#endif
 	copy->binary_length = src->binary_length;
 
 	return copy;
@@ -1830,7 +1838,11 @@ gda_time_get_tz (const GdaTime* time)
 {
 	g_return_val_if_fail (time != NULL, 0);
 	const gchar *stz = g_date_time_get_timezone_abbreviation ((GDateTime*)time);
-	GTimeZone *tz = g_time_zone_new (stz);
+#if GLIB_CHECK_VERSION(2,68,0)
+  GTimeZone *tz = g_time_zone_new_identifier (stz);
+#else
+  GTimeZone *tz = g_time_zone_new (stz);
+#endif
 	return tz;
 }
 
@@ -1900,8 +1912,11 @@ gda_date_time_copy (GDateTime *ts)
 	g_return_val_if_fail(ts != NULL, NULL);
 
 	GTimeZone *tz;
-
-	tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (ts));
+#if GLIB_CHECK_VERSION(2,68,0)
+	tz = g_time_zone_new_identifier (g_date_time_get_timezone_abbreviation (ts));
+#else
+  tz = g_time_zone_new (g_date_time_get_timezone_abbreviation (ts));
+#endif
 
 	return g_date_time_new (tz,
 													g_date_time_get_year (ts),
