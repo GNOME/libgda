@@ -496,6 +496,7 @@ real_open_connection (const gchar  *host,
 		      const gchar  *password,
 		      gboolean      use_ssl,
 		      gboolean      compress,
+		      gboolean      interactive,
 		      const gchar  *proto,
 		      GError      **error)
 {
@@ -529,6 +530,8 @@ real_open_connection (const gchar  *host,
 		flags |= CLIENT_SSL;
 	if (compress)
 		flags |= CLIENT_COMPRESS;
+	if (interactive)
+		flags |= CLIENT_INTERACTIVE;
 	
 	MYSQL *mysql = NULL;
 	mysql = mysql_init (NULL);
@@ -664,11 +667,12 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 	if (!password)
 		password = gda_quark_list_find (params, "PASSWORD");
 
-	const gchar *port, *unix_socket, *use_ssl, *compress, *proto;
+	const gchar *port, *unix_socket, *use_ssl, *compress, *interactive, *proto;
 	port = gda_quark_list_find (params, "PORT");
 	unix_socket = gda_quark_list_find (params, "UNIX_SOCKET");
 	use_ssl = gda_quark_list_find (params, "USE_SSL");
 	compress = gda_quark_list_find (params, "COMPRESS");
+	interactive = gda_quark_list_find (params, "INTERACTIVE");
 	proto = gda_quark_list_find (params, "PROTOCOL");
 	
 	/* open the real connection to the database */
@@ -682,6 +686,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     user, password,
 					     (use_ssl && ((*use_ssl == 't') || (*use_ssl == 'T'))) ? TRUE : FALSE,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
+						 (interactive && ((*interactive == 't') || (*interactive == 'T'))) ? TRUE : FALSE,
 					     proto,
 					     &error);
 	if (!mysql) {
@@ -1024,6 +1029,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 		gint         port = -1;
 		const gchar *socket = NULL;
 		gboolean     usessl = FALSE;
+		gboolean     interactive = FALSE;
 		const gchar *proto = NULL;
 
 		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/HOST");
@@ -1041,6 +1047,10 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/USE_SSL");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
 			usessl = TRUE;
+		
+		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/INTERACTIVE");
+		if (value && G_VALUE_HOLDS (value, G_TYPE_BOOLEAN) && g_value_get_boolean (value))
+			interactive = TRUE;
 
 		value = gda_server_operation_get_value_at (op, "/SERVER_CNX_P/ADM_LOGIN");
 		if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string (value))
@@ -1055,7 +1065,7 @@ gda_mysql_provider_perform_operation (GdaServerProvider               *provider,
 			proto = g_value_get_string (value);
 
 		mysql = real_open_connection (host, port, socket,
-                                              "mysql", login, password, usessl, FALSE, proto, error);
+                                              "mysql", login, password, usessl, FALSE, interactive, proto, error);
                 if (!mysql)
                         return FALSE;
 		else {

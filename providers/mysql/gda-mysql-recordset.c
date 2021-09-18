@@ -664,6 +664,7 @@ gda_mysql_recordset_new (GdaConnection            *cnc,
 		case MYSQL_TYPE_LONG_BLOB:
 		case MYSQL_TYPE_DECIMAL:
 		case MYSQL_TYPE_NEWDECIMAL:
+		case MYSQL_TYPE_GEOMETRY:
 		case MYSQL_TYPE_BIT:
 			mysql_bind_result[i].buffer = g_malloc0 (field->max_length + 1);
 			mysql_bind_result[i].buffer_length = field->max_length + 1;
@@ -937,6 +938,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 		case MYSQL_TYPE_LONG_BLOB:
 		case MYSQL_TYPE_NEWDECIMAL:
 		case MYSQL_TYPE_DECIMAL:
+		case MYSQL_TYPE_GEOMETRY:
 		case MYSQL_TYPE_BIT: {
 			char *bvalue = NULL;
 			memmove (&length, mysql_bind_result[i].length, sizeof (unsigned long));
