@@ -23,15 +23,16 @@ jni_filenames = [
 jni_sources_fnamesext = []
 jni_headers_fnamesext = []
 jni_classes_fnamesext = []
+jni_classes_jar = []
 foreach fn : jni_filenames
 	jni_sources_fnamesext += [fn +'.c']
 	jni_headers_fnamesext += [fn +'.h']
 	jni_classes_fnamesext += [fn +'.class']
+	jni_classes_jar += ['-C', meson.current_build_dir(), fn +'.class']
 endforeach
 
 jni_headers = jni_headers_fnamesext
 jni_sources = files(jni_sources_fnamesext)
-jni_classes = jni_classes_fnamesext
 
 jdbc_xml_fnames = [
 	'jdbc_specs_dsn',
@@ -110,7 +111,6 @@ libgda_jdbc_sources = files([
 	'jni-wrapper.c'
 ])
 
-#libgda_jdbc_sources += jni_headers
 libgda_jdbc_sources += jni_sources
 libgda_jdbc_sources += resources
 
@@ -123,14 +123,47 @@ jdbcprov_sources = files([
 	'sqlserver.java'
 ])
 
+javac = find_program('javac')
+jni_jdbc_sources = custom_target('jni-sources',
+	command: [javac,
+		'-classpath', meson.current_build_dir(),
+		'-d', meson.current_build_dir(),
+		'@INPUT@'
+	],
+	input: jdbcprov_sources,
+	output: jni_classes_fnamesext,
+	install: false
+	)
+jni_jdbc_headers = custom_target('jni-headers',
+	command: [javac,
+		'-classpath', meson.current_build_dir(),
+		'-h', meson.current_build_dir(),
+		'-d', meson.current_build_dir(),
+		'@INPUT@'
+	],
+	input: jdbcprov_sources,
+	output: jni_headers_fnamesext,
+	install: false
+	)
+
+libgda_jdbc_sources += jni_jdbc_headers
+
 jdbc_manifest = files([
 	'MANIFEST.MF'
 ])
 
-libgda_jdbc_provider_jar = jar(
-	'gdaprovider-' + project_api_version, 
-	jdbcprov_sources,
-    main_class : 'GdaJConnection',
+jar = find_program('jar')
+
+libgda_jdbc_provider_jar = custom_target(
+	'gdaprovider-' + project_api_version + '.jar',
+	command: [jar,
+		'--create', '--file', '@OUTPUT@',
+		'--manifest=@INPUT@',
+		jni_classes_jar
+	],
+	input: jdbc_manifest,
+    	output: 'gdaprovider-'+project_api_version+'.jar',
+    	depends: jni_jdbc_headers,
 	install : true,
   	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 )
@@ -142,25 +175,25 @@ jdbc_args = [
 ]
 jdbc_args += c_args
 
-link_args  = [ '-Wl, --export-dynamic -module -avoid-version' ]
+link_args  = [ '-Wl', '--export-dynamic', '-module', '-avoid-version' ]
 host_os = host_machine.system().to_lower()
 if host_os.contains('darwin') or host_os.contains('machten') or host_os.contains('rhapsody')
-  link_args = [ '-Wl, -export_dynamic -module -avoid-version' ]
+  link_args = [ '-Wl', '-export_dynamic', '-module', '-avoid-version' ]
 endif
 
-libgda_jdbc_provider = library ('gda-jdbc-' + project_api_version,
-	libgda_jdbc_sources,
-	dependencies: [
-		libgda_dep,
-		inc_libgdah_dep,
-		inc_sqliteh_dep,
-	],
-	c_args: jdbc_args,
-	link_args: link_args,
-	link_with: libgda,
-	install: true,
-	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
-)
+# libgda_jdbc_provider = library ('gda-jdbc-' + project_api_version,
+# 	libgda_jdbc_sources,
+# 	dependencies: [
+# 		libgda_dep,
+# 		inc_libgdah_dep,
+# 		inc_sqliteh_dep,
+# 	],
+# 	c_args: jdbc_args,
+# 	link_args: link_args,
+# 	link_with: libgda,
+# 	install: true,
+# 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
+# )
 
 libgda_jdbc_provider_pc = configure_file(
 	input:  'libgda-jdbc-'+project_api_version+'.pc.in',
