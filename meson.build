@@ -316,12 +316,11 @@ sqlite_xml_inf = files(sqlite_xml_fnamesext)
 intlmerge = find_program('intltool-merge')
 
 # Jdbc dependencies
+found_jdbc = false
 java_dep = find_program('java')
-jdk_dep = dependency('jdk', version : '>=1.8')
-if jdk_dep.found() and java_dep.found()
+if java_dep.found()
+	add_languages('java')
 	found_jdbc = true
-else
-	found_jdbc = false
 endif
 
 dates = compiler.run('''

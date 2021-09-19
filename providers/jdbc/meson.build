@@ -29,9 +29,9 @@ foreach fn : jni_filenames
 	jni_classes_fnamesext += [fn +'.class']
 endforeach
 
-jni_headers = files(jni_headers_fnamesext)
+jni_headers = jni_headers_fnamesext
 jni_sources = files(jni_sources_fnamesext)
-jni_classes = files(jni_classes_fnamesext)
+jni_classes = jni_classes_fnamesext
 
 jdbc_xml_fnames = [
 	'jdbc_specs_dsn',
@@ -84,10 +84,9 @@ jdbc_resourcesh = custom_target('jdbc_resourcesh',
 	install: false
 	)
 
-resources = [
-	'jdbc-resources.h',
-	'jdbc-resources.c'
-]
+resources = []
+resources += jdbc_resourcesh
+resources += jdbc_resourcesc
 
 libgda_jdbc_sources = files([
 	'gda-jdbc-blob-op.c',
@@ -111,7 +110,7 @@ libgda_jdbc_sources = files([
 	'jni-wrapper.c'
 ])
 
-libgda_jdbc_sources += jni_headers
+#libgda_jdbc_sources += jni_headers
 libgda_jdbc_sources += jni_sources
 libgda_jdbc_sources += resources
 
@@ -121,7 +120,10 @@ jdbcprov_sources = files([
 	'meta.java',
 	'derby.java',
 	'h2.java',
-	'sqlserver.java',
+	'sqlserver.java'
+])
+
+jdbc_manifest = files([
 	'MANIFEST.MF'
 ])
 
@@ -133,7 +135,7 @@ libgda_jdbc_provider_jar = jar(
   	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
 )
 
-jdbc_args += [
+jdbc_args = [
 	'-include',
 	join_paths(gda_top_build, 'config.h'),
 	'-DCLASS_PREFIX="GdaJdbc"'
