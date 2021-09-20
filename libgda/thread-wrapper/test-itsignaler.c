@@ -203,6 +203,7 @@ test2 (void)
 	CbData cbdata;
 	cbdata.counter = 0;
 	cbdata.loop = loop;
+	cbdata.its = its;
 	itsignaler_add (its, NULL, (ITSignalerFunc) source_callback, &cbdata, NULL);
 	itsignaler_unref (its);
   g_mutex_unlock (&mutex);
