@@ -25,6 +25,9 @@
 #include <libgda/libgda.h>
 #include "../test-cnc-utils.h"
 
+#define PROVIDER_DB_CREATE_PARAMS "POSTGRESQL_DBCREATE_PARAMS"
+#define PROVIDER_CNC_PARAMS "POSTGRESQL_CNC_PARAMS"
+
 typedef struct {
   GdaDbCatalog *catalog;
   GdaConnection *cnc;
@@ -358,6 +361,19 @@ main (gint   argc,
       gchar *argv[])
 {
   setlocale (LC_ALL,"");
+
+  const gchar *db_create_str;
+  const gchar *cnc_params;
+
+  db_create_str = g_getenv (PROVIDER_DB_CREATE_PARAMS);
+  cnc_params = g_getenv (PROVIDER_CNC_PARAMS);
+
+  if (!db_create_str || !cnc_params) {
+      g_print ("Please set POSTGRESQL_DBCREATE_PARAMS and POSTGRESQL_CNC_PARAMS variable"
+	      "with dbname, host, user and port (usually 5432)\n");
+      g_print ("Test will not be performed\n");
+      return EXIT_SUCCESS;
+  }
 
   g_test_init (&argc,&argv,NULL);
 
