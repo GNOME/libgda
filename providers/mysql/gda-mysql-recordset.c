@@ -972,12 +972,20 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 			}
 			
 			if (type == G_TYPE_STRING) {
+				if (length == 0) {
+					bvalue = "\0";
+				}
 				g_value_set_string (value, bvalue);
+				bvalue = NULL;
 			}
 			else if (type == GDA_TYPE_TEXT) {
+				if (length == 0) {
+					bvalue = "\0";
+				}
 				GdaText *text = gda_text_new ();
 				gda_text_set_string (text, bvalue);
 				g_value_take_boxed (value, text);
+				bvalue = NULL;
 			}
 			else if (type == GDA_TYPE_BINARY) {
 				GdaBinary *bin;
