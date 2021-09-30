@@ -3324,13 +3324,6 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
 
 	while (isspace (*sql))
 		sql++;
-	g_return_val_if_fail (((sql[0] == 'S') || (sql[0] == 's')) &&
-			      ((sql[1] == 'E') || (sql[1] == 'e')) &&
-			      ((sql[2] == 'L') || (sql[2] == 'l')) &&
-			      ((sql[3] == 'E') || (sql[3] == 'e')) &&
-			      ((sql[4] == 'C') || (sql[4] == 'c')) &&
-			      ((sql[5] == 'T') || (sql[5] == 't')) &&
-			      isspace (sql[6]), NULL);
 
 	g_mutex_lock (&global_mutex);
 	if (!internal_parser)
