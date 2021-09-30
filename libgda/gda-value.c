@@ -194,12 +194,15 @@ set_from_string (GValue *value, const gchar *as_string)
 	}
 	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
 		GdaGeometricPoint* point = gda_geometric_point_new ();
-		as_string++;
-		gda_geometric_point_set_x (point, g_ascii_strtod (as_string, NULL));
-		as_string = strchr (as_string, ',');
-		as_string++;
-		gda_geometric_point_set_y (point, g_ascii_strtod (as_string, NULL));
-		
+		double x = 0, y = 0;
+		gchar * as_start = strchr (as_string, '(');
+		if (NULL != as_start) {
+			sscanf (as_start, "(%lf,%lf)", &x, &y);
+		} else {
+			sscanf (as_string, "%lf,%lf", &x, &y);
+		}
+		gda_geometric_point_set_x (point, x);
+		gda_geometric_point_set_y (point, y);
 		gda_value_set_geometric_point (value, point);
 		gda_geometric_point_free (point);
 		retval = TRUE;
