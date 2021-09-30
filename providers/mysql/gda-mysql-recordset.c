@@ -278,6 +278,60 @@ gda_mysql_recordset_dispose (GObject  *object)
 	G_OBJECT_CLASS (gda_mysql_recordset_parent_class)->dispose (object);
 }
 
+/**
+ * Read a long from a byte buffer in big endian format.
+ * @param buf must be 8 bytes
+ */
+static gint64 read_long_from_bytes_big_endian(const guchar* buf) {
+	return  (gint64) (buf[0] & 0xff) << 56
+			| (gint64) (buf[1] & 0xff) << 48
+			| (gint64) (buf[2] & 0xff) << 40
+			| (gint64) (buf[3] & 0xff) << 32
+			| (gint64) (buf[4] & 0xff) << 24
+			| (gint64) (buf[5] & 0xff) << 16
+			| (gint64) (buf[6] & 0xff) <<  8
+			| (gint64) (buf[7] & 0xff);
+}
+/**
+ * Read a long from a byte buffer in little endian format.
+ * @param buf must be 8 bytes
+ */
+static gint64 read_long_from_bytes_little_endian(const guchar* buf) {
+	return  (gint64) (buf[7] & 0xff) << 56
+			| (gint64) (buf[6] & 0xff) << 48
+			| (gint64) (buf[5] & 0xff) << 40
+			| (gint64) (buf[4] & 0xff) << 32
+			| (gint64) (buf[3] & 0xff) << 24
+			| (gint64) (buf[2] & 0xff) << 16
+			| (gint64) (buf[1] & 0xff) <<  8
+			| (gint64) (buf[0] & 0xff);
+}
+/**
+ * Read a long from a byte buffer in big or little endian format.
+ * @param bigEndian true for big endian, false for little endian
+ * @param buf must be 8 bytes
+ */
+static gdouble read_double_from_bytes(const guchar* buf, gboolean big_endian) {
+    gint64 long_val =  big_endian ? read_long_from_bytes_big_endian (buf)
+            : read_long_from_bytes_little_endian (buf);
+	union {
+        gint64 val_long;
+        gdouble val_double;
+    } val_union;
+    val_union.val_long = long_val;
+
+    return (gdouble)val_union.val_double;
+}
+
+/**
+* Read a long from a byte buffer in big or little endian format.
+* @param bigEndian true for big endian, false for little endian
+* @param buf must be 8 bytes length after offset
+*/
+static double read_double_from_bytes_offset(const guchar* buf, gint offset, gboolean big_endian) {
+	return read_double_from_bytes(buf + offset, big_endian);
+}
+
 /*
  * Public functions
  */
@@ -305,6 +359,9 @@ _gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
 	case MYSQL_TYPE_NEWDECIMAL:
 		gtype = GDA_TYPE_NUMERIC;
 		break;
+	case MYSQL_TYPE_GEOMETRY:
+		gtype = GDA_TYPE_GEOMETRIC_POINT;
+		break;
 	case MYSQL_TYPE_DOUBLE:
 		gtype = G_TYPE_DOUBLE;
 		break;
@@ -325,7 +382,6 @@ _gda_mysql_type_to_gda (G_GNUC_UNUSED MysqlConnectionData *cdata,
 	case MYSQL_TYPE_VAR_STRING:
 	case MYSQL_TYPE_SET:
 	case MYSQL_TYPE_ENUM:
-	case MYSQL_TYPE_GEOMETRY:
 	case MYSQL_TYPE_BIT:
 	case MYSQL_TYPE_BLOB:
 	default:
@@ -947,6 +1003,21 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 					gda_numeric_set_width (numeric, length);
 					gda_value_set_numeric (value, numeric);
 					gda_numeric_free (numeric);
+				}
+			}
+			else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+				if (length > 0) {
+					GdaGeometricPoint* point = gda_geometric_point_new ();
+
+					guchar bytes = (guchar)(*(bvalue + 4));
+					gboolean is_big_endian = (0 == bytes);
+					gdouble x = read_double_from_bytes_offset(bvalue, 9, is_big_endian);
+					gdouble y = read_double_from_bytes_offset(bvalue, 17, is_big_endian);
+					gda_geometric_point_set_x (point, x);
+					gda_geometric_point_set_y (point, y);
+					gda_value_set_geometric_point (value, point);
+					// g_warning("Point: %s", gda_value_stringify(value));
+					gda_geometric_point_free (point);
 				}
 			}
 			else if (type == G_TYPE_DOUBLE) {
