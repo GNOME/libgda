@@ -107,6 +107,12 @@ libgda_postgres_cargs = [
 
 libgda_postgres_cargs += c_args
 
+link_args = [ '-Wl,--export-dynamic' ]
+host_os = host_machine.system().to_lower()
+if host_os.contains('darwin') or host_os.contains('machten') or host_os.contains('rhapsody')
+  link_args = [ '-Wl,-export_dynamic' ]
+endif
+
 libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 	libgda_postgres_sources,
 	dependencies: [
@@ -116,9 +122,7 @@ libgda_postgres_provider = library ('gda-postgres-'+project_api_version,
 		inc_postgresh_dep
 		],
 	c_args: libgda_postgres_cargs,
-	link_args: [
-		'-Wl,--export-dynamic',
-		],
+	link_args: link_args,
 	link_with: libgda,
 	install: true,
 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')

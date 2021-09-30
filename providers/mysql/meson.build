@@ -132,6 +132,12 @@ mysql_args += [
 
 mysql_args += c_args
 
+link_args = [ '-Wl,--export-dynamic' ]
+host_os = host_machine.system().to_lower()
+if host_os.contains('darwin') or host_os.contains('machten') or host_os.contains('rhapsody')
+  link_args = [ '-Wl,-export_dynamic' ]
+endif
+
 libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 	libgda_mysql_sources,
 	dependencies: [
@@ -144,9 +150,7 @@ libgda_mysql_provider = library ('gda-mysql-'+project_api_version,
 		inc_mysqlh_dep
 		],
 	c_args: mysql_args,
-	link_args: [
-		'-Wl,--export-dynamic',
-		],
+	link_args:link_args,
 	link_with: libgda,
 	install: true,
 	install_dir: join_paths(get_option('libdir'), project_package, 'providers')
