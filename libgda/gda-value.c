@@ -192,6 +192,21 @@ set_from_string (GValue *value, const gchar *as_string)
 			retval = TRUE;
 		}
 	}
+	else if (type == GDA_TYPE_GEOMETRIC_POINT) {
+		GdaGeometricPoint* point = gda_geometric_point_new ();
+		double x = 0, y = 0;
+		gchar * as_start = strchr (as_string, '(');
+		if (NULL != as_start) {
+			sscanf (as_start, "(%lf,%lf)", &x, &y);
+		} else {
+			sscanf (as_string, "%lf,%lf", &x, &y);
+		}
+		gda_geometric_point_set_x (point, x);
+		gda_geometric_point_set_y (point, y);
+		gda_value_set_geometric_point (value, point);
+		gda_geometric_point_free (point);
+		retval = TRUE;
+	}
 	else if (type == GDA_TYPE_NUMERIC) {
 		GdaNumeric *numeric = gda_numeric_new ();
 		gda_numeric_set_from_string (numeric, as_string);
@@ -2747,6 +2762,15 @@ gda_value_stringify (const GValue *value)
 		}
 		else
 			return g_strdup ("NULL");
+	}
+	else if (g_type_is_a (type, GDA_TYPE_GEOMETRIC_POINT)) {
+		GdaGeometricPoint* point;
+		point = (GdaGeometricPoint*) g_value_get_boxed (value);
+		if (point != NULL) {
+			return g_strdup_printf ("(%.*g,%.*g)", DBL_DIG, point->x, DBL_DIG, point->y);
+		} else {
+			return "NULL";
+		}
 	}
   else if (g_type_is_a (type, GDA_TYPE_TIME)) {
 		GdaTime *gts;
