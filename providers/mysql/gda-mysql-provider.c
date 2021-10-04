@@ -437,7 +437,7 @@ real_open_connection (const gchar  *host,
 		      const gchar  *password,
 		      gboolean      use_ssl,
 		      gboolean      compress,
-			  gboolean      interactive,
+		      gboolean      interactive,
 		      const gchar  *proto,
 		      GError      **error)
 {
@@ -613,7 +613,7 @@ gda_mysql_provider_open_connection (GdaServerProvider               *provider,
 					     user, password,
 					     (use_ssl && ((*use_ssl == 't') || (*use_ssl == 'T'))) ? TRUE : FALSE,
 					     (compress && ((*compress == 't') || (*compress == 'T'))) ? TRUE : FALSE,
-						 (interactive && ((*interactive == 't') || (*interactive == 'T'))) ? TRUE : FALSE,
+					     (interactive && ((*interactive == 't') || (*interactive == 'T'))) ? TRUE : FALSE,
 					     proto,
 					     &error);
 	if (!mysql) {
@@ -769,8 +769,8 @@ gda_mysql_provider_supports_operation (GdaServerProvider       *provider,
         case GDA_SERVER_OPERATION_RENAME_TABLE:
         case GDA_SERVER_OPERATION_COMMENT_TABLE:
         case GDA_SERVER_OPERATION_ADD_COLUMN:
-		case GDA_SERVER_OPERATION_DROP_COLUMN:
-		case GDA_SERVER_OPERATION_COMMENT_COLUMN:
+        case GDA_SERVER_OPERATION_DROP_COLUMN:
+        case GDA_SERVER_OPERATION_COMMENT_COLUMN:
         case GDA_SERVER_OPERATION_CREATE_INDEX:
         case GDA_SERVER_OPERATION_DROP_INDEX:
         case GDA_SERVER_OPERATION_CREATE_VIEW:
