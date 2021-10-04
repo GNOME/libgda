@@ -60,6 +60,10 @@
 #include <io.h>
 #endif
 
+#if defined(__APPLE__)
+#define G_MODULE_SUFFIX "dylib"
+#endif
+
 #ifdef HAVE_LIBSECRET
   #include <libsecret/secret.h>
   const SecretSchema *_gda_secret_get_schema (void) G_GNUC_CONST;
