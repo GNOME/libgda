@@ -7,6 +7,7 @@
     <parameter id="UNIX_SOCKET" _name="UNIX Socket" _descr="Full path of the UNIX socket to use when connecting locally" gdatype="gchararray" nullok="TRUE"/>
     <parameter id="USE_SSL" _name="Require SSL" _descr="Whether or not to use SSL to establish the connection" gdatype="gboolean" nullok="TRUE"/>
     <parameter id="COMPRESS" _name="Compress" _descr="Use compression protocol" gdatype="gboolean" nullok="TRUE"/>
+    <parameter id="INTERACTIVE" _name="Interactive" _descr=" The client's session wait timeout set to the value of the session interactive_timeout variable." gdatype="gboolean" nullok="TRUE"/>
     <parameter id="PROTOCOL" _name="Connection protocol" _descr="Explicitly specifies a connection protocol to use. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want" gdatype="string" source="proto:0" nullok="TRUE"/>
   </parameters>
   <sources>
