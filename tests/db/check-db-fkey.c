@@ -43,6 +43,10 @@ typedef struct {
     xmlTextWriterPtr writer;
 } CheckDbObject;
 
+typedef struct {
+    GdaConnection *cnc;
+} CheckCNCObject;
+
 static void
 test_db_fkey_run2 (CheckDbObject *self,
                     G_GNUC_UNUSED gconstpointer user_data)
@@ -169,6 +173,120 @@ test_db_fkey_start (CheckDbObject *self,
 }
 
 static void
+test_db_fkey_start_sqlite3 (CheckCNCObject *self, G_GNUC_UNUSED gconstpointer user_data)
+{
+    const int ncharacters = 5;
+    GString *buffer = g_string_new ("db-fkey-sqlite3");
+
+    for (int i = 0; i < ncharacters; ++i) {
+	gint32 character = g_random_int_range (97, 123);
+	buffer = g_string_append_c (buffer, character);
+    }
+
+    GString *cnc_string = g_string_new (NULL);
+    g_string_printf (cnc_string, "DB_DIR=.;DB_NAME=%s", buffer->str);
+    g_string_free (buffer, TRUE);
+
+    GError *error = NULL;
+    self->cnc = gda_connection_new_from_string ("SQLite", cnc_string->str, NULL, GDA_CONNECTION_OPTIONS_NONE, &error);
+    g_string_free (cnc_string, TRUE);
+}
+
+static void
+test_db_fkey_run_sqlite3 (CheckCNCObject *self, G_GNUC_UNUSED gconstpointer user_data)
+{
+    GError *error = NULL;
+
+    gboolean res = gda_connection_open (self->cnc, &error);
+
+    g_assert_true (res);
+
+    GdaDbTable *table = gda_db_table_new ();
+
+    gda_db_base_set_name (GDA_DB_BASE(table), "tableone");
+
+    GdaDbColumn *column_id = gda_db_column_new ();
+
+    gda_db_column_set_name (column_id, "id");
+    gda_db_column_set_type (column_id, G_TYPE_INT);
+    gda_db_column_set_pkey (column_id, TRUE);
+
+    gda_db_table_append_column (table, column_id);
+
+    g_object_unref (column_id);
+
+    GdaDbColumn *column_name = gda_db_column_new ();
+    gda_db_column_set_name (column_name, "cname");
+    gda_db_column_set_type (column_name, G_TYPE_STRING);
+
+    gda_db_table_append_column (table, column_name);
+
+    g_object_unref (column_name);
+
+    res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE(table), self->cnc, NULL, &error);
+
+    g_assert_true (res);
+
+    g_object_unref (table);
+
+    table = gda_db_table_new ();
+    gda_db_base_set_name (GDA_DB_BASE(table), "tabletwo");
+
+    column_id = gda_db_column_new ();
+    gda_db_column_set_name (column_id, "id");
+    gda_db_column_set_type (column_id, G_TYPE_INT);
+    gda_db_column_set_pkey (column_id, TRUE);
+
+    gda_db_table_append_column (table, column_id);
+
+    g_object_unref (column_id);
+
+    column_name = gda_db_column_new ();
+    gda_db_column_set_name (column_name, "cname");
+    gda_db_column_set_type (column_name, G_TYPE_STRING);
+
+    gda_db_table_append_column (table, column_name);
+
+    g_object_unref (column_name);
+
+    GdaDbColumn *column_fkey = gda_db_column_new ();
+
+    gda_db_column_set_name (column_fkey, "one_fkey");
+    gda_db_column_set_type (column_fkey, G_TYPE_INT);
+
+    gda_db_table_append_column (table, column_fkey);
+
+    g_object_unref (column_fkey);
+
+    GdaDbFkey *fkey = gda_db_fkey_new ();
+
+    gda_db_fkey_set_ref_table (fkey, "tableone");
+
+    GString *refcolumn = g_string_new ("id");
+
+    gda_db_fkey_set_field (fkey, "one_fkey", refcolumn->str);
+
+    gda_db_table_append_fkey (table, fkey);
+
+    g_object_unref (fkey);
+
+    g_string_free (refcolumn, TRUE);
+
+    res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE(table), self->cnc, NULL, &error);
+
+    g_assert_true (res);
+
+    g_object_unref (table);
+}
+
+static void
+test_db_fkey_finish_sqlite3 (CheckCNCObject *self, G_GNUC_UNUSED gconstpointer user_data)
+{
+    gda_connection_close (self->cnc, NULL);
+    g_object_unref (self->cnc);
+}
+
+static void
 test_db_fkey_finish (CheckDbObject *self,
                       G_GNUC_UNUSED gconstpointer user_data)
 {
@@ -206,6 +324,14 @@ main (gint   argc,
               test_db_fkey_start,
               test_db_fkey_run3,
               test_db_fkey_finish);
+
+  g_test_add ("/test-db/fkey-sqlite3",
+              CheckCNCObject,
+              NULL,
+              test_db_fkey_start_sqlite3,
+              test_db_fkey_run_sqlite3,
+              test_db_fkey_finish_sqlite3);
+
 
   return g_test_run();
 }
