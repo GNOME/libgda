@@ -232,7 +232,7 @@ browser_canvas_text_set_property (GObject *object,
 	const gchar *cstr = NULL;
 	gchar *str;
 	gdouble size = 0;
-	gboolean bool = FALSE;
+	gboolean bool_value = FALSE;
 
 	ct = BROWSER_CANVAS_TEXT (object);
 
@@ -270,11 +270,11 @@ browser_canvas_text_set_property (GObject *object,
 			ct->priv->highlight_color = g_strdup (BROWSER_CANVAS_ENTITY_COLOR);
 		break;
 	case PROP_UNDERLINE:
-		bool = g_value_get_boolean (value);
-		ct->priv->underline = bool;
+		bool_value = g_value_get_boolean (value);
+		ct->priv->underline = bool_value;
 		adjust_text_pango_attributes (ct);
 		if (ct->priv->text_item) {
-			if (bool) {
+			if (bool_value) {
 				str = g_strdup_printf ("<u>%s</u>", ct->priv->text);
 				g_object_set (G_OBJECT (ct->priv->text_item), 
 					      "text", str,
@@ -288,8 +288,8 @@ browser_canvas_text_set_property (GObject *object,
 		}
 		break;
 	case PROP_BOLD:
-		bool = g_value_get_boolean (value);
-		ct->priv->bold = bool;
+		bool_value = g_value_get_boolean (value);
+		ct->priv->bold = bool_value;
 		adjust_text_pango_attributes (ct);
 		break;
 	default:

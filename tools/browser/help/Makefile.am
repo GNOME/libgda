@@ -53,4 +53,4 @@ HELP_FILES = \
 	ldap-browser-perspective.page \
 	ldap-connections.page
 
-HELP_LINGUAS = cs de el es gl id pt_BR sl zh_CN
+HELP_LINGUAS = cs de el es gl id pt_BR sl sv zh_CN

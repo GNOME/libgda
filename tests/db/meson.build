@@ -150,7 +150,10 @@ test('dbcreate', dbcreate,
 	)
 
 db_catalog_pg_sources = files([
-	'check-db-catalog-postgresql.c'
+	'check-db-catalog-postgresql.c',
+	'../test-cnc-utils.c',
+	'../test-errors.c',
+	'../raw-ddl-creator.c'
 	])
 
 tcpg = executable('check-db-catalog-postgresql',

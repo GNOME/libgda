@@ -620,8 +620,8 @@ gda_db_fkey_set_field (GdaDbFkey  *self,
 
   GdaDbFkeyPrivate *priv = gda_db_fkey_get_instance_private (self);
 
-  priv->mp_field = g_list_append (priv->mp_field, (gpointer)field);
-  priv->mp_ref_field = g_list_append(priv->mp_ref_field, (gpointer)reffield);
+  priv->mp_field = g_list_append (priv->mp_field, (gpointer) g_strdup (field));
+  priv->mp_ref_field = g_list_append(priv->mp_ref_field, (gpointer) g_strdup (reffield));
 }
 
 /**

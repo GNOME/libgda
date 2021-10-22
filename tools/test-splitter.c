@@ -29,7 +29,7 @@ TestData td0 = {
 };
 TestData td1 = {
 	".d\nSELECT * from table;\n.cmd \"arg\narg more\"",
-	{".d", "SELECT * from table;", ".cmd \"arg\narg more\"", NULL}
+	{".d", "SELECT * from table;\n", ".cmd \"arg\narg more\"", NULL}
 };
 TestData td2 = {
 	".cmde and arg",

@@ -1,12 +1,17 @@
-project('libgda', 'vala', 'c',
+project('libgda', 'c',
         license: 'LGPL2+',
-        version : '5.91.0',
+        version : '6.0.0',
         meson_version: '>= 0.49',
         default_options: [
                         'c_std=gnu11',
                         'warning_level=2',
                         ],
 )
+
+enable_vala = get_option('vapi')
+if enable_vala
+	enable_vala = add_languages('vala')
+endif
 
 project_version = meson.project_version()
 version_split = project_version.split('.')
@@ -46,7 +51,20 @@ glib_mkenums = find_program('glib-mkenums', required : true)
 
 girscanner = find_program('g-ir-scanner', required:false)
 
-valadoc = find_program('valadoc', required: false)
+# Meson does not currently provide built-in support for valadoc [1],
+# we have to find the program, trying all possible names.
+# It also makes it impossible for us to use gnome.generate_vapi() because
+# the generated vapi files are inputs to valadoc, hence we need to find vapigen.
+# [1] https://github.com/mesonbuild/meson/issues/894
+valadoc = false
+vapigen = false
+if enable_vala
+	vala_version = meson.get_compiler('vala').version().split('.')
+	valadoc_versioned = 'valadoc-' + '.'.join([vala_version[0], vala_version[1]])
+	valadoc = find_program(valadoc_versioned, 'valadoc', required: false)
+	vapigen_versioned = 'vapigen-' + '.'.join([vala_version[0], vala_version[1]])
+	vapigen = find_program(vapigen_versioned, 'vapigen', required: true)
+endif
 
 libgda_inc_rooth = include_directories ('.')
 inc_rooth_dep = declare_dependency (include_directories : libgda_inc_rooth)
@@ -120,7 +138,7 @@ if sqlite_dep.found()
 endif
 
 sqlcipher_dep = dependency ('sqlcipher', version: '>= 3.4', required: false)
-if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
+if sqlcipher_dep.found() and not get_option('sqlcipher')
 	sqlcipher_table_column_metadata = compiler.has_function('sqlite3_table_column_metadata',
 								dependencies: sqlcipher_dep)
 endif
@@ -161,6 +179,7 @@ if ldap_lib_dep.found()
 			]
 	endif
 endif
+enable_ldap = get_option('ldap') and ldap_found and get_option('experimental')
 
 tconf = configuration_data() # Empty configuration
 
@@ -231,7 +250,7 @@ glade_pixmap = ''
 
 gnome_module = import('gnome')
 
-if get_option('enable-json')
+if get_option('json')
   jsonglib_dep = dependency('json-glib-1.0')
 endif
 
@@ -254,13 +273,13 @@ endif
 libcrypto_dep = dependency('libcrypto', version : '>=1.1', required: false)
 
 soup_dep = dependency('libsoup-2.4', required: false)
-if soup_dep.found() and get_option('with-libsoup')
+if soup_dep.found() and get_option('libsoup')
   libgda_dep += [soup_dep]
 endif
 
 
 libsecret_dep = dependency('libsecret-1', required: false)
-if libsecret_dep.found() and get_option('with-libsecret')
+if libsecret_dep.found() and get_option('libsecret')
   libgda_dep += [libsecret_dep]
   c_args += '-DHAVE_LIBSECRET'
 endif
@@ -295,8 +314,6 @@ sqlite_xml_inf = files(sqlite_xml_fnamesext)
 
 
 intlmerge = find_program('intltool-merge')
-# Vala bindings
-vapigen = find_program('vapigen', required: false)
 
 found_jdbc = false
 
@@ -319,7 +336,7 @@ subdir('libgda')
 subdir('providers')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
-enable_ui = get_option('with-ui') and gtk_dep.found() and get_option('experimental')
+enable_ui = get_option('ui') and gtk_dep.found() and get_option('experimental')
 if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : false)
@@ -330,7 +347,7 @@ if enable_ui
 	gtksourceview_dep = dependency('gtksourceview-3.0')
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
-	if get_option('with-graphviz') and graphviz_dep.found()
+	if get_option('graphviz') and graphviz_dep.found()
 		graph_new_api_code = '''#include <gvc.h>
 int main() {
 	Agraph_t *graph;
@@ -367,11 +384,11 @@ int main() {
 	subdir('control-center')
 endif
 
-if get_option('gtk_doc')
+if get_option('doc')
         subdir('doc')
 endif
 
-if libxslt_dep.found()
+if libxslt_dep.found() and get_option('experimental')
 	subdir('libgda-xslt')
 endif
 
@@ -385,7 +402,7 @@ install_data(libgda_pc,
 	install_dir: join_paths(get_option('libdir'),'pkgconfig')
 	)
 
-if libxslt_dep.found()
+if libxslt_dep.found() and get_option('experimental')
 	libgda_xslt_pc = configure_file(
 		input: 'libgda-xslt-'+project_api_version+'.pc.in',
 		output: 'libgda-xslt-'+project_api_version+'.pc',
@@ -415,11 +432,11 @@ install_data(libgda_report_pc,
 	)
 endif
 
-if get_option('enable-tools')
+if get_option('experimental') and  get_option('tools')
 subdir('tools')
 endif
 subdir('tests')
 subdir('testing')
-if get_option('with-examples')
+if get_option('examples')
   subdir('examples')
 endif

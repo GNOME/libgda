@@ -120,7 +120,7 @@ gda_db_catalog_dispose (GObject *object)
   if (priv->cnc)
     g_object_unref (priv->cnc);
 
-  G_OBJECT_CLASS (gda_db_catalog_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gda_db_catalog_parent_class)->dispose (object);
 }
 
 static void
@@ -220,10 +220,11 @@ _gda_db_catalog_get_dtd ()
 	if (g_file_test (file, G_FILE_TEST_EXISTS)) {
 		_gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
   } else {
-	    if (g_getenv ("GDA_TOP_SRC_DIR"))
+      const gchar *gdatopsrcdir = g_getenv ("GDA_TOP_SRC_DIR");
+	    if (gdatopsrcdir)
         {
           g_free (file);
-          file = g_build_filename (g_getenv ("GDA_TOP_SRC_DIR"), "libgda",
+          file = g_build_filename (gdatopsrcdir, "libgda",
                                    "libgda-db-catalog.dtd", NULL);
           _gda_db_catalog_dtd = xmlParseDTD (NULL, (xmlChar*)file);
 		    }
@@ -721,9 +722,6 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
   if (!obj)
     return gda_db_table_new ();
 
-  if (obj->obj_type != GDA_META_DB_TABLE)
-    return NULL;
-
   GdaMetaTable *metatable = GDA_META_TABLE(obj);
   GdaDbTable *table = gda_db_table_new ();
 
@@ -738,9 +736,9 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
       GdaDbColumn *column = gda_db_column_new_from_meta (GDA_META_TABLE_COLUMN(it->data));
 
       gda_db_table_append_column (table, column);
+      g_object_unref (column);
     }
 
-  it = NULL;
   for (it = metatable->fk_list;it;it = it->next)
     {
       if (!GDA_META_TABLE_FOREIGN_KEY_IS_DECLARED(GDA_META_TABLE_FOREIGN_KEY(it->data)))
@@ -749,6 +747,7 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
       GdaDbFkey *fkey = gda_db_fkey_new_from_meta (GDA_META_TABLE_FOREIGN_KEY(it->data));
 
       gda_db_table_append_fkey (table, fkey);
+      g_object_unref (fkey);
 
     }
 

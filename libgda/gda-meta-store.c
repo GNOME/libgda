@@ -1771,7 +1771,7 @@ create_view_object (GdaMetaStorePrivate *priv, GdaMetaStore *store, xmlNodePtr n
 	if (!view_name) {
 		g_set_error (error, GDA_META_STORE_ERROR, GDA_META_STORE_META_CONTEXT_ERROR,
 			     "%s", _("Missing view name from <view> node"));
-		goto onerror;
+		return NULL;
 	}
 
 	/* determine object's complete name */

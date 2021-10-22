@@ -106,7 +106,9 @@ test_db_catalog_start (CheckDbObject *self,
   g_assert_nonnull (self->catalog);
 
   self->file = g_file_new_for_path (self->xmlfile);
-  g_print ("GFile is %s\n",g_file_get_path(self->file));
+  gchar *strpath = g_file_get_path (self->file);
+  g_print ("GFile is %s\n", strpath);
+  g_free (strpath);
 }
 
 static void
@@ -149,6 +151,7 @@ test_db_catalog_start_db (DbCatalogCnc *self,
   gda_db_column_set_pkey (self->column_id, TRUE);
 
   gda_db_table_append_column (self->table,self->column_id);
+  g_object_unref (self->column_id);
 
   self->column_name = gda_db_column_new ();
   gda_db_column_set_name (self->column_name,"name");
@@ -156,26 +159,31 @@ test_db_catalog_start_db (DbCatalogCnc *self,
   gda_db_column_set_size (self->column_name, 50);
 
   gda_db_table_append_column (self->table,self->column_name);
+  g_object_unref (self->column_name);
 
   self->column_ctime = gda_db_column_new ();
   gda_db_column_set_name (self->column_ctime,"create_time");
   gda_db_column_set_type (self->column_ctime, GDA_TYPE_TIME);
 
   gda_db_table_append_column (self->table,self->column_ctime);
+  g_object_unref (self->column_ctime);
 
   self->column_state = gda_db_column_new ();
   gda_db_column_set_name (self->column_state,"state");
   gda_db_column_set_type (self->column_state, G_TYPE_BOOLEAN);
 
   gda_db_table_append_column (self->table,self->column_state);
+  g_object_unref (self->column_state);
 
   self->column_ts = gda_db_column_new ();
   gda_db_column_set_name (self->column_ts,"mytimestamp");
   gda_db_column_set_type (self->column_ts, G_TYPE_DATE_TIME);
 
   gda_db_table_append_column (self->table,self->column_ts);
+  g_object_unref (self->column_ts);
 
   gda_db_catalog_append_table (self->catalog, self->table);
+  g_object_unref (self->table);
 
   open_res = gda_db_catalog_perform_operation (self->catalog,NULL);
 
@@ -208,8 +216,8 @@ static void
 test_db_catalog_finish_db (DbCatalogCnc *self,
                             G_GNUC_UNUSED gconstpointer user_data)
 {
-  gda_connection_close(self->cnc,NULL);
   g_object_unref (self->cnc);
+<<<<<<< HEAD
   g_object_unref (self->catalog);
   g_object_unref (self->column_id);
   g_object_unref (self->column_name);
@@ -217,6 +225,8 @@ test_db_catalog_finish_db (DbCatalogCnc *self,
   g_object_unref (self->column_ts);
   g_object_unref (self->table);
   g_object_unref (self->view);
+=======
+>>>>>>> master
 }
 
 static void
@@ -470,6 +480,7 @@ test_db_catalog_constraint_start (DbCheckCatallog *self,
   gda_db_column_set_pkey (self->column_a, TRUE);
 
   gda_db_table_append_column (self->table,self->column_a);
+  g_object_unref (self->column_a);
 
   self->column_b = gda_db_column_new ();
   gda_db_column_set_name (self->column_b, "columnb");
@@ -478,14 +489,18 @@ test_db_catalog_constraint_start (DbCheckCatallog *self,
   gda_db_column_set_pkey (self->column_b, FALSE);
 
   gda_db_table_append_column (self->table, self->column_b);
+  g_object_unref (self->column_b);
 
   gda_db_table_append_constraint (self->table, "CHECK (columna = columnb)");
 
   gda_db_catalog_append_table (self->catalog, self->table);
+  g_object_unref (self->table);
 
   open_res = gda_db_catalog_perform_operation (self->catalog,NULL);
 
   g_assert_true (open_res);
+
+  g_object_unref (self->catalog);
 }
 
 static void
@@ -542,7 +557,6 @@ static void
 test_db_catalog_constraint_finish (DbCheckCatallog *self,
                                    G_GNUC_UNUSED gconstpointer user_data)
 {
-  g_object_unref (self->catalog);
   gda_connection_close (self->cnc, NULL);
 }
 

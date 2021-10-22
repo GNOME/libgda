@@ -7,7 +7,7 @@ subdir('schema-browser')
 subdir('query-exec')
 subdir('data-manager')
 
-if ldap_found
+if enable_ldap
 subdir('ldap-browser')
 gda_browser_sources += ldap_perspective_sources
 browser_deps += inc_ldapbrowserdir_dep

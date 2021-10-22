@@ -55,14 +55,10 @@ prov_test_common_setup (void)
 	 * testXXXXX where XXXXX is a string generated from the random int32 numbers
 	 * that correspond to ASCII codes for characters a-z
 	 */
-	GString *buffer = g_string_new ("test");
+	gchar *dbname = test_random_string ("test", 5);
 
-	for (int i = 0; i < 5; ++i) {
-	    gint32 character = g_random_int_range (97, 123);
-	    buffer = g_string_append_c (buffer, character);
-	}
-	cnc = test_cnc_setup_connection (pinfo->id, buffer->str, &error);
-	g_string_free (buffer, TRUE);
+	cnc = test_cnc_setup_connection (pinfo->id, dbname, &error);
+	g_free (dbname);
 	if (!cnc) {
 		if (error) {
 			if (error->domain != TEST_ERROR) {
@@ -1068,7 +1064,7 @@ prov_test_common_check_timestamp (void)
 	str = gda_data_handler_get_str_from_value (dh, cvalue);
 	g_object_unref (model);
 
-	stmt = gda_sql_parser_parse_string (parser, "SELECT ts || 'asstring' FROM tstest", NULL, &error); /* retreive timestamp as string */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT CAST(ts AS TEXT) FROM tstest", NULL, &error); /* retreive timestamp as string */
 	if (!stmt) {
 		g_free (str);
 		number_failed ++;
@@ -1229,7 +1225,7 @@ prov_test_common_check_date (void)
 	str = gda_data_handler_get_str_from_value (dh, cvalue);
 	g_object_unref (model);
 
-	stmt = gda_sql_parser_parse_string (parser, "SELECT thedate || 'asstring' FROM datetest", NULL, &error); /* retreive date as string */
+	stmt = gda_sql_parser_parse_string (parser, "SELECT CAST(thedate AS TEXT) FROM datetest", NULL, &error); /* retreive date as string */
 	if (!stmt) {
 		g_free (str);
 		number_failed ++;

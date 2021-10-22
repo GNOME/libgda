@@ -306,15 +306,16 @@ libgda_cargs += c_args
 libgda_dep += sqlite_deps
 
 vala_sources = []
-if get_option('experimental')
+if enable_vala and get_option('experimental')
 vala_sources += [
-	'gda-connection-model.vala'
+	#'gda-connection-model.vala'
 	]
 endif
 
-vala_sourcesf = files(vala_sources)
-valac = find_program('valac')
 valacs =[]
+if enable_vala
+vala_sourcesf = files(vala_sources)
+valac = meson.get_compiler('vala').cmd_array()
 foreach v : vala_sources
 	vcs = v.split('.')
 valacs += custom_target('vala-lib',
@@ -328,6 +329,7 @@ valacs += custom_target('vala-lib',
 	build_by_default: true
 	)
 endforeach
+endif
 
 libgda_deps = [
 	libgda_dep,
@@ -390,7 +392,7 @@ libgda_gir = gnome_module.generate_gir(libgda,
 	install_dir_gir: join_paths(get_option('datadir'), 'gir-1.0'),
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0'),
 	)
-	if vapigen.found()
+	if enable_vala
 	libgda_vala_deps = configure_file(
 		input: 'libgda.deps.in',
 		output: 'libgda-'+project_api_version+'.deps',

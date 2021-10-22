@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <glib/gi18n-lib.h>
+#include "gda-server-operation.h"
 #include "raw-ddl-creator.h"
 #include <libgda/gda-connection.h>
 #include <libgda/gda-server-provider.h>
@@ -586,7 +587,7 @@ create_server_operation_for_view (G_GNUC_UNUSED RawDDLCreator *ddlc, GdaServerPr
 {
 	GdaServerOperation *op;
 
-	op = gda_server_provider_create_operation (prov, cnc, dbobj->obj_type, NULL, error);
+	op = gda_server_provider_create_operation (prov, cnc, GDA_SERVER_OPERATION_CREATE_VIEW, NULL, error);
 	if (!op)
 		return NULL;
 	if (! gda_server_operation_set_value_at (op, dbobj->obj_name, error, "/VIEW_DEF_P/VIEW_NAME"))

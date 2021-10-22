@@ -2,7 +2,7 @@
 # use the official gcc image, based on debian
 # can use verions as well, like gcc:5.2
 # see https://hub.docker.com/_/gcc/
-image: ubuntu:devel
+image: ubuntu:latest
 
 services:
   - postgres:11
@@ -15,13 +15,11 @@ stages:
   - deploy_doc
 
 variables:
-  POSTGRES_DB: test
   POSTGRES_USER: test
   POSTGRES_PASSWORD: test1
   POSTGRES_HOST: postgres
   MYSQL_DATABASE: test
   MYSQL_ROOT_PASSWORD: test1
-  MYSQL_USER: root
   MYSQL_HOST: mysql
   G_MESSAGES_DEBUG: all
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
@@ -56,10 +54,10 @@ variables:
   SQLITE_DBCREATE_PARAMS: "DB_DIR=."
   SQLITE_CNC_PARAMS: "DB_DIR=."
   POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
-  POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD;DB_NAME=$POSTGRES_DB"
-  POSTGRESQL_META_CNC: "DB_NAME=$POSTGRES_DB;HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
-  MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_ROOT_PASSWORD"
-  MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=$MYSQL_USER;PASSWORD=$MYSQL_ROOT_PASSWORD"
+  POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+  POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+  MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
+  MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
   SQLITE_SO_DDL: "DB_DIR=.;DB_NAME=ci_test_db.db"
 
 before_script:
@@ -70,8 +68,29 @@ library_build:
   stage: build
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
+  - meson --prefix=/usr --buildtype=debug -Ddoc=true --werror _build
+  - cd _build
+  - ninja
+  - broadwayd &
+  - GDK_BACKEND=broadway ninja test
+  - ninja install
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
+    - _build/doc/C/libgda/html
+    - _build/doc/C/libgdaui/html
+    - _build/doc/Gda-6.0
+    - _build/doc/Gdaui-6.0
+    expire_in: 1 week
+
+paralel_build:
+  stage: build
+  script:
+  - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson --prefix=/usr --buildtype=debug -Dgtk_doc=true --werror _build
+  - meson --prefix=/usr --buildtype=debug -Ddoc=true --werror _build
   - cd _build
   - ninja
   - broadwayd &
@@ -91,7 +110,7 @@ library_build:
 pages:
   stage: deploy_doc
   script:
-  - meson _build --prefix=/usr -Dgtk_doc=true -Dexperimental=true -Denable-tools=true -Denable-ldap=true
+  - meson _build --prefix=/usr -Ddoc=true -Dexperimental=true -Dtools=true -Dldap=true
   - cd _build
   - ninja
   - ninja install

@@ -69,6 +69,11 @@
 #include <libgda/gda-provider.h>
 #include <libgda/gda-server-provider.h>
 
+#if defined(__APPLE__)
+#include <dlfcn.h>
+#define G_MODULE_SUFFIX "dylib"
+#endif
+
 #define FILE_EXTENSION ".db"
 static gchar *get_table_nth_column_name (GdaServerProvider *prov, GdaConnection *cnc, const gchar *table_name, gint pos);
 
@@ -5168,6 +5173,17 @@ gda_sqlite_find_library (const gchar *name_part)
 {
 	GModule *handle = NULL;
 	const gchar *env;
+
+#if defined(__APPLE__)
+	/* try to load from dir with libgda on runtime */
+	Dl_info dlinfo;
+	if (dladdr(gda_sqlite_find_library, &dlinfo)) {
+		gchar *libgda_dir = g_path_get_dirname( dlinfo.dli_fname );
+		handle = find_sqlite_in_dir (libgda_dir, name_part);
+		if (handle)
+			return handle;
+	}
+#endif
 
 	/* first use the compile time SEARCH_LIB_PATH */
 	if (SEARCH_LIB_PATH) {

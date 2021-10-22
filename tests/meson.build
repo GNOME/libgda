@@ -226,7 +226,14 @@ test('SqlRenderer', tsqlr,
 	)
 
 tsop = executable('test-server-operation-postgresql',
-	['test-server-operation-postgresql.c'] ,
+	['test-server-operation-postgresql.c',
+	'test-cnc-utils.h',
+	'test-cnc-utils.c',
+	'test-errors.h',
+	'test-errors.c',
+	'raw-ddl-creator.h',
+	'raw-ddl-creator.c'
+	] ,
 	c_args: [
 		'-include',
 		gda_top_build + '/config.h',
@@ -299,6 +306,7 @@ if enable_ui
 subdir('ui')
 endif
 
+if get_option('flatpak')
 gda_test_sources = [
 	'gda-test.c'
 	]
@@ -309,6 +317,7 @@ executable ('org.gnome.gda.Test', gda_test_sources,
 		inc_rooth_dep,
 		inc_sqliteh_dep
 		],
-	install: get_option('enable-test-flatpak'),
+	install: true,
 	link_with: libgda
 	)
+endif

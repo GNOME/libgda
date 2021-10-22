@@ -31,5 +31,16 @@ gboolean       test_cnc_clean_connection (GdaConnection *cnc, GError **error);
 gboolean       test_cnc_load_data_from_file (GdaConnection *cnc, const gchar *table, const gchar *full_file, GError **error);
 
 gchar         *test_prov_name_upcase (const gchar *prov_name);
+gchar         *test_random_string(const gchar *prefix, gint ncharacters);
+
+typedef struct {
+    GdaQuarkList *quark_list;
+    gchar *dbname;
+} CreateDBObject;
+
+void test_create_db_object_free (CreateDBObject *obj);
+CreateDBObject *test_create_db_object_new ();
+
+CreateDBObject * test_create_database (const gchar *prov_id);
 
 #endif

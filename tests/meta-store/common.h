@@ -47,7 +47,7 @@ void     test_parameters (GdaMetaStore *store);
 void     tests_group_1 (GdaMetaStore *store);
 void     tests_group_2 (GdaMetaStore *store);
 
-gboolean test_setup (const gchar *prov_id);
+gboolean test_setup (const gchar *prov_id, const gchar *dbcreate_str);
 gboolean test_finish (GdaConnection *cnc);
 
 #endif

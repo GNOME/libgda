@@ -2063,7 +2063,7 @@ gda_connection_get_date_format (GdaConnection *cnc, GDateDMY *out_first,
  *
  * A simple example to add a row in database
  * 
- * |[<!-- languede="C" -->
+ * |[<!-- language="C" -->
  * 
  * GdaConnection *cnc;
  * // Open connection here
@@ -2278,7 +2278,7 @@ gda_connection_insert_row_into_table_v (GdaConnection *cnc, const gchar *table,
  *
  * A simple example for updating a specific row in the table
  * 
- * |[<!-- languede="C" -->
+ * |[<!-- language="C" -->
  * 
  * GdaConnection *cnc;
  * //Open connection here
@@ -2532,6 +2532,46 @@ gda_connection_update_row_in_table_v (GdaConnection *cnc, const gchar *table,
  * provided. It internally relies on variables which makes it immune to SQL injection problems.
  *
  * The equivalent SQL command is: DELETE FROM &lt;table&gt; WHERE &lt;condition_column_name&gt; = &lt;condition_value&gt;.
+ *
+ * A simple example to remove a row in database.
+ *
+ * |[<!-- language="C" -->
+ *
+ * GdaConnection *cnc;
+ * //Open connection here
+ *
+ * GError *error = NULL;
+ *
+ * GValue *v_id = gda_value_new (G_TYPE_INT);
+ * GValue *v_name = gda_value_new_from_string ("Aldibino Refinino", G_TYPE_STRING);
+ *
+ * //The number 10 represents a primary key record in the table
+ * g_value_set_int (v_id, 10);
+ *
+ * //Delete a record with a specific ID in the col_id column
+ * if (!gda_connection_delete_row_from_table (cnc, "TABLE_CONTACTS",
+ *                                            "col_id", v_id,
+ *                                            &error))
+ * {
+ *   g_error ("Could not delete row in table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ *
+ * //Delete a record with a specific NAME in the col_name column
+ * if (!gda_connection_delete_row_from_table (cnc, "TABLE_CONTACTS",
+ *                                            "col_name", v_name,
+ *                                            &error))
+ * {
+ *   g_error ("Could not delete row in table: %s\n",
+ *            error && error->message ? error->message : "No detail");
+ * }
+ *
+ * gda_value_free (v_id);
+ * gda_value_free (v_name);
+ *
+ * g_error_free (error);
+ *
+ * ]|
  *
  * Returns: TRUE if no error occurred, FALSE otherwise
  *
@@ -3284,13 +3324,6 @@ gda_connection_execute_select_command (GdaConnection *cnc, const gchar *sql, GEr
 
 	while (isspace (*sql))
 		sql++;
-	g_return_val_if_fail (((sql[0] == 'S') || (sql[0] == 's')) &&
-			      ((sql[1] == 'E') || (sql[1] == 'e')) &&
-			      ((sql[2] == 'L') || (sql[2] == 'l')) &&
-			      ((sql[3] == 'E') || (sql[3] == 'e')) &&
-			      ((sql[4] == 'C') || (sql[4] == 'c')) &&
-			      ((sql[5] == 'T') || (sql[5] == 't')) &&
-			      isspace (sql[6]), NULL);
 
 	g_mutex_lock (&global_mutex);
 	if (!internal_parser)

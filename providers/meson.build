@@ -2,9 +2,11 @@ raw_spec=find_program('raw_spec.py')
 
 subdir('reuseable')
 subdir('sqlite')
+if get_option('experimental')
 subdir('skel-implementation')
+endif
 
-if sqlcipher_dep.found() and not get_option('disable-sqlcipher')
+if sqlcipher_dep.found() and get_option('sqlcipher')
 subdir('sqlcipher')
 endif
 
@@ -12,7 +14,7 @@ if postgres_dep.found()
 subdir('postgres')
 endif
 
-if ldap_found and get_option('enable-ldap') and get_option('experimental')
+if enable_ldap
 subdir('ldap')
 endif
 
@@ -28,6 +30,6 @@ if mysql_dep.found()
 subdir('mysql')
 endif
 
-if soup_dep.found() and get_option('with-libsoup') and mysql_dep.found() and postgres_dep.found() and get_option('enable-web') and get_option('experimental')
+if soup_dep.found() and get_option('libsoup') and mysql_dep.found() and postgres_dep.found() and get_option('web') and get_option('experimental')
 subdir('web')
 endif

@@ -38,21 +38,37 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <libgda/libgda.h>
+/*#include <stdlib.h>*/
+#include "test-cnc-utils.h"
 
 #define PROVIDER_NAME "PostgreSQL"
+#define PROVIDER_DB_CREATE_PARAMS "POSTGRESQL_DBCREATE_PARAMS"
+#define PROVIDER_CNC_PARAMS "POSTGRESQL_CNC_PARAMS"
 
 #define GDA_PGSQL_ERROR_HANDLE(e) (g_print("Error: %s: %s\n", G_STRLOC, e && e->message ? e->message : "No default"));
 
 typedef struct
 {
   GdaConnection *cnc;
+  GdaServerProvider *provider;
+  gchar *dbname;
+  GdaQuarkList *quark_list;
 } TestObjectFixture;
 
 static void
 test_server_operation_start (TestObjectFixture *fixture,
                              G_GNUC_UNUSED gconstpointer user_data)
 {
+  GError *error = NULL;
+
   fixture->cnc = NULL;
+
+  CreateDBObject *crdbobj = test_create_database (PROVIDER_NAME);
+
+  g_assert_nonnull (crdbobj);
+
+  fixture->dbname = crdbobj->dbname;
+  fixture->quark_list = crdbobj->quark_list;
 
   const gchar *db_string = g_getenv("POSTGRESQL_CNC_PARAMS");
 
@@ -64,13 +80,16 @@ test_server_operation_start (TestObjectFixture *fixture,
       return;
     }
 
-  GError *error = NULL;
+  GString *new_cnc_string = g_string_new (db_string);
+  g_string_append_printf (new_cnc_string, ";DB_NAME=%s", fixture->dbname);
 
   fixture->cnc = gda_connection_open_from_string (PROVIDER_NAME,
-                                                  db_string,
+                                                  new_cnc_string->str,
                                                   NULL,
                                                   GDA_CONNECTION_OPTIONS_NONE,
                                                   &error);
+
+  g_string_free (new_cnc_string, TRUE);
 
   if (!fixture->cnc)
     GDA_PGSQL_ERROR_HANDLE (error);
@@ -90,6 +109,9 @@ test_server_operation_finish (TestObjectFixture *fixture,
   gboolean res = gda_connection_close (fixture->cnc, NULL);
 
   g_assert_true (res);
+
+  gda_quark_list_free (fixture->quark_list);
+  g_free (fixture->dbname);
 }
 
 static void
@@ -1315,6 +1337,19 @@ gint
 main(gint argc, gchar *argv[])
 {
   setlocale (LC_ALL,"");
+
+  const gchar *db_create_str;
+  const gchar *cnc_params;
+
+  db_create_str = g_getenv (PROVIDER_DB_CREATE_PARAMS);
+  cnc_params = g_getenv (PROVIDER_CNC_PARAMS);
+
+  if (!db_create_str || !cnc_params) {
+      g_print ("Please set POSTGRESQL_DBCREATE_PARAMS and POSTGRESQL_CNC_PARAMS variable"
+	      "with dbname, host, user and port (usually 5432)\n");
+      g_print ("Test will not be performed\n");
+      return EXIT_SUCCESS;
+  }
 
   g_test_init (&argc,&argv,NULL);
 

@@ -189,7 +189,7 @@ libgdaui_gir = gnome_module.generate_gir(libgdaui,
 	install_dir_typelib: join_paths(get_option('libdir'), 'girepository-1.0')
 	)
 
-if vapigen.found()
+if enable_vala
 libgdaui_vapi = custom_target('gdaui'+project_api_version+'_vapi',
 	command: [vapigen,
 		'--girdir='+join_paths(meson.build_root(),'libgda'),
