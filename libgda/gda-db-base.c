@@ -349,31 +349,35 @@ gda_db_base_compare (GdaDbBase *a,
   const gchar *a_name = gda_db_base_get_name (a);
   const gchar *b_name = gda_db_base_get_name (b);
 
-  gint res;
+  gint res_name;
+  gint res_schema;
+  gint res_catalog;
 
-  res = g_strcmp0 (a_name, b_name);
-  if (a_name && b_name)
+  res_name = g_strcmp0 (a_name, b_name);
+  res_schema = g_strcmp0 (a_schema, b_schema);
+  res_catalog = g_strcmp0 (a_catalog, b_catalog);
+
+  if (!res_name)
     {
-      if (a_schema && b_schema)
+      if (!res_schema)
         {
-          res = g_strcmp0 (a_schema, b_schema);
-          if (a_catalog && b_catalog)
+          if (!res_catalog)
             {
-              return g_strcmp0 (a_catalog, b_catalog);
+              return res_catalog;
             }
-          else
+          else /* catalogs are different */
             {
-              return res;
+              return res_catalog;
             }
         }
-      else
+      else /* Schemas are different */
         {
-          return res;
+          return res_schema;
         }
     }
-  else
+  else /* names are different */
     {
-      return res;
+      return res_name;
     }
 
   return -1;
