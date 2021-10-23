@@ -217,16 +217,12 @@ test_db_catalog_finish_db (DbCatalogCnc *self,
                             G_GNUC_UNUSED gconstpointer user_data)
 {
   g_object_unref (self->cnc);
-<<<<<<< HEAD
   g_object_unref (self->catalog);
   g_object_unref (self->column_id);
   g_object_unref (self->column_name);
   g_object_unref (self->column_ctime);
   g_object_unref (self->column_ts);
-  g_object_unref (self->table);
   g_object_unref (self->view);
-=======
->>>>>>> master
 }
 
 static void
