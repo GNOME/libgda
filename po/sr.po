@@ -1,17 +1,17 @@
 # Serbian translation of libgda.
-# Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003—2021.
+# Courtesy of Prevod.org team (http://www.prevod.org/) -- 2003–2021.
 # This file is distributed under the same license as the libgda package.
 # Translators:
 # Дејан Матијевић <dejan@ns.sympatico.ca>
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2021.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013–2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-01-13 19:32+0000\n"
-"PO-Revision-Date: 2021-01-23 23:02+0200\n"
+"POT-Creation-Date: 2021-10-16 20:37+0000\n"
+"PO-Revision-Date: 2021-12-30 14:16+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
-"Language-Team: српски <gnome-sr@googlegroups.org>\n"
+"Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +57,7 @@ msgstr "Одредница"
 msgid "Parameters"
 msgstr "Параметри"
 
-#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1764
+#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1768
 #: ../tools/browser/auth-dialog.c:266 ../tools/common/t-config-info.c:207
 #: ../tools/common/t-config-info.c:367
 msgid "Authentication"
@@ -74,10 +74,10 @@ msgstr "Не могу да сачувам ДСН одредницу: %s"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-config.c:367 ../control-center/gdaui-dsn-editor.c:354
-#: ../libgda/gda-config.c:521 ../libgda/gda-config.c:672
-#: ../libgda/gda-config.c:1181 ../libgda/gda-config.c:1293
-#: ../libgda/gda-config.c:1351 ../libgda/gda-config.c:1428
-#: ../libgda/gda-config.c:1866 ../libgda/gda-connection.c:1546
+#: ../libgda/gda-config.c:525 ../libgda/gda-config.c:676
+#: ../libgda/gda-config.c:1185 ../libgda/gda-config.c:1297
+#: ../libgda/gda-config.c:1355 ../libgda/gda-config.c:1432
+#: ../libgda/gda-config.c:1870 ../libgda/gda-connection.c:1546
 #: ../libgda/gda-data-model.c:2295 ../libgda/gda-data-model.c:2303
 #: ../libgda/gda-data-model-dir.c:339 ../libgda/gda-data-model-import.c:1705
 #: ../libgda/gda-data-pivot.c:1219 ../libgda/gda-data-pivot.c:1249
@@ -92,12 +92,12 @@ msgstr "Не могу да сачувам ДСН одредницу: %s"
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3069
-#: ../libgda/sqlite/gda-sqlite-provider.c:3081
-#: ../libgda/sqlite/gda-sqlite-provider.c:3292
-#: ../libgda/sqlite/gda-sqlite-provider.c:3630
-#: ../libgda/sqlite/gda-sqlite-provider.c:3642
-#: ../libgda/sqlite/gda-sqlite-provider.c:3744
+#: ../libgda/sqlite/gda-sqlite-provider.c:3074
+#: ../libgda/sqlite/gda-sqlite-provider.c:3086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3297
+#: ../libgda/sqlite/gda-sqlite-provider.c:3635
+#: ../libgda/sqlite/gda-sqlite-provider.c:3647
+#: ../libgda/sqlite/gda-sqlite-provider.c:3749
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -125,11 +125,11 @@ msgstr "Не могу да сачувам ДСН одредницу: %s"
 #: ../providers/ldap/gda-ldap-provider.c:957
 #: ../providers/ldap/gda-ldap-provider.c:1018
 #: ../providers/mdb/gda-mdb-provider.c:374
-#: ../providers/mysql/gda-mysql-provider.c:1964
-#: ../providers/mysql/gda-mysql-provider.c:1979
+#: ../providers/mysql/gda-mysql-provider.c:1974
+#: ../providers/mysql/gda-mysql-provider.c:1989
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1786
-#: ../providers/postgres/gda-postgres-provider.c:1801
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1802
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:194
@@ -222,7 +222,6 @@ msgstr "СГБП;ПостгреСКуЛ;МајСКуЛ;СКуЛајт;ЈДБЦ;�
 
 #: ../control-center/gdaui-dsn-assistant.c:121
 #, c-format
-#| msgid "Missing mandatory information, to create database"
 msgid "Missing mandatory information, to create database: '%s'"
 msgstr "Недостају обавезни подаци, за стварање базе података: %s"
 
@@ -237,17 +236,14 @@ msgid "Unknown error"
 msgstr "Непозната грешка"
 
 #: ../control-center/gdaui-dsn-assistant.c:283
-#| msgid "No provider specified"
 msgid "No provider exists"
 msgstr "Не постоји достављач"
 
 #: ../control-center/gdaui-dsn-assistant.c:410
-#| msgid "No provider '%s' installed"
 msgid "No providers exists"
 msgstr "Не постоје достављачи"
 
 #: ../control-center/gdaui-dsn-assistant.c:425
-#| msgid "No provider '%s' installed"
 msgid "No provider's information exists"
 msgstr "Не постоје информације о достављачу"
 
@@ -526,77 +522,77 @@ msgstr "Не могу да пронађем тврдњу у тврдњама г�
 msgid "Conflicting parameter '%s'"
 msgstr "Сукобљавајући параметар „%s“"
 
-#: ../libgda/gda-config.c:520 ../libgda/gda-config.c:546
-#: ../libgda/gda-config.c:671 ../libgda/gda-config.c:696
+#: ../libgda/gda-config.c:524 ../libgda/gda-config.c:550
+#: ../libgda/gda-config.c:675 ../libgda/gda-config.c:700
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "Грешка учитавања података за потврђивање идентитета за „%s“ ДСН: %s"
 
-#: ../libgda/gda-config.c:859
+#: ../libgda/gda-config.c:863
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr "Грешка стварања директоријума корисничких посебних подешавања „%s“"
 
-#: ../libgda/gda-config.c:908 ../libgda/gda-config.c:921
+#: ../libgda/gda-config.c:912 ../libgda/gda-config.c:925
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 "Директоријум корисничких посебних подешавања „%s“ постоји и није директоријум"
 
-#: ../libgda/gda-config.c:1154
+#: ../libgda/gda-config.c:1158
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Лош назив извора података „%s“"
 
-#: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
-#: ../libgda/gda-config.c:1291
+#: ../libgda/gda-config.c:1184 ../libgda/gda-config.c:1196
+#: ../libgda/gda-config.c:1295
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr "Не могу да сачувам податке за потврђивање идентитета за ДСН „%s“: %s"
 
-#: ../libgda/gda-config.c:1226 ../libgda/gda-config.c:1402
+#: ../libgda/gda-config.c:1230 ../libgda/gda-config.c:1406
 msgid "Can't manage system-wide configuration"
 msgstr "Не могу да управљам свеопште системским подешавањима"
 
-#: ../libgda/gda-config.c:1281 ../libgda/gda-config.c:1313
+#: ../libgda/gda-config.c:1285 ../libgda/gda-config.c:1317
 #, c-format
 msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Гномова база података: потврђивање идентитета за „%s“ ДСН"
 
-#: ../libgda/gda-config.c:1350 ../libgda/gda-config.c:1362
-#: ../libgda/gda-config.c:1426
+#: ../libgda/gda-config.c:1354 ../libgda/gda-config.c:1366
+#: ../libgda/gda-config.c:1430
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Не могу да обришем податке за потврђивање идентитета за ДСН „%s“: %s"
 
-#: ../libgda/gda-config.c:1396 ../libgda-ui/gdaui-login.c:640
+#: ../libgda/gda-config.c:1400 ../libgda-ui/gdaui-login.c:640
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Непознат ДСН „%s“"
 
-#: ../libgda/gda-config.c:1491
+#: ../libgda/gda-config.c:1495
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "Нисам нашао достављача „%s“"
 
-#: ../libgda/gda-config.c:1681 ../libgda/gda-connection.c:988
+#: ../libgda/gda-config.c:1685 ../libgda/gda-connection.c:988
 #: ../libgda/gda-connection.c:1060 ../libgda/gda-connection.c:1241
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Нема инсталираних достављача „%s“"
 
-#: ../libgda/gda-config.c:1695
+#: ../libgda/gda-config.c:1699
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "Не могу да учитам достављача: %s"
 
-#: ../libgda/gda-config.c:1716
+#: ../libgda/gda-config.c:1720
 #, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Не могу да покренем достављача „%s“"
 
-#: ../libgda/gda-config.c:1761 ../libgda/gda-data-model-dsn-list.c:105
+#: ../libgda/gda-config.c:1765 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
 #: ../tools/common/t-app.c:2902 ../tools/common/t-config-info.c:71
 #: ../tools/common/t-config-info.c:132 ../tools/common/t-config-info.c:315
@@ -604,7 +600,7 @@ msgstr "Не могу да покренем достављача „%s“"
 msgid "Provider"
 msgstr "Достављач"
 
-#: ../libgda/gda-config.c:1762 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-config.c:1766 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/browser/data-manager/data-source-editor.c:167
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:304
@@ -614,25 +610,25 @@ msgstr "Достављач"
 msgid "Description"
 msgstr "Опис"
 
-#: ../libgda/gda-config.c:1763 ../tools/common/t-config-info.c:160
+#: ../libgda/gda-config.c:1767 ../tools/common/t-config-info.c:160
 msgid "DSN parameters"
 msgstr "Параметри ДСН-а"
 
-#: ../libgda/gda-config.c:1765 ../tools/common/t-config-info.c:246
+#: ../libgda/gda-config.c:1769 ../tools/common/t-config-info.c:246
 msgid "File"
 msgstr "Датотека"
 
-#: ../libgda/gda-config.c:1766
+#: ../libgda/gda-config.c:1770
 msgid "List of installed providers"
 msgstr "Списак инсталираних достављача"
 
-#: ../libgda/gda-config.c:1865
+#: ../libgda/gda-config.c:1869
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr ""
 "Нема основног СКуЛајт достављач при покушају стварања једног. Грешка је: %s"
 
-#: ../libgda/gda-config.c:1949 ../libgda/gda-data-model-dsn-list.c:125
+#: ../libgda/gda-config.c:1953 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2904
 msgid "Username"
@@ -643,7 +639,7 @@ msgstr "Корисничко име"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1951 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1955 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -651,7 +647,7 @@ msgstr "Корисничко име"
 msgid "Password"
 msgstr "Лозинка"
 
-#: ../libgda/gda-config.c:2031
+#: ../libgda/gda-config.c:2035
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Грешка учитавања достављача „%s“: %s"
@@ -762,135 +758,129 @@ msgstr "Достављач не доставља Гда руковаоца по�
 #: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
 #: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
 #: ../libgda/gda-connection.c:2597 ../libgda/gda-connection.c:3044
-#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3617
-#: ../libgda/gda-connection.c:3638 ../libgda/gda-connection.c:3722
-#: ../libgda/gda-connection.c:3734 ../libgda/gda-connection.c:3809
-#: ../libgda/gda-connection.c:3824 ../libgda/gda-connection.c:3911
-#: ../libgda/gda-connection.c:3939 ../libgda/gda-connection.c:3968
-#: ../libgda/gda-connection.c:3994 ../libgda/gda-connection.c:4020
-#: ../libgda/gda-connection.c:4046 ../libgda/gda-connection.c:5085
-#: ../libgda/gda-connection.c:5330 ../libgda/gda-connection.c:5403
-#: ../libgda/gda-connection.c:6292
+#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3610
+#: ../libgda/gda-connection.c:3631 ../libgda/gda-connection.c:3715
+#: ../libgda/gda-connection.c:3727 ../libgda/gda-connection.c:3802
+#: ../libgda/gda-connection.c:3817 ../libgda/gda-connection.c:3904
+#: ../libgda/gda-connection.c:3932 ../libgda/gda-connection.c:3961
+#: ../libgda/gda-connection.c:3987 ../libgda/gda-connection.c:4013
+#: ../libgda/gda-connection.c:4039 ../libgda/gda-connection.c:5078
+#: ../libgda/gda-connection.c:5323 ../libgda/gda-connection.c:5396
+#: ../libgda/gda-connection.c:6285
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
 msgstr "Веза је затворена"
 
-#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3517
+#: ../libgda/gda-connection.c:3495 ../libgda/gda-connection.c:3510
 msgid "Statement is a selection statement"
 msgstr "Тврдња јесте тврдња избора"
 
-#: ../libgda/gda-connection.c:3574 ../libgda/gda-connection.c:3674
-#: ../libgda/gda-connection.c:3763
+#: ../libgda/gda-connection.c:3567 ../libgda/gda-connection.c:3667
+#: ../libgda/gda-connection.c:3756
 msgid "Statement is not a selection statement"
 msgstr "Тврдња није тврдња избора"
 
-#: ../libgda/gda-connection.c:4223
+#: ../libgda/gda-connection.c:4216
 msgid "Invalid argument"
 msgstr "Погрешан агргумент"
 
-#: ../libgda/gda-connection.c:4233
+#: ../libgda/gda-connection.c:4226
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Недостају или су погрешне особине за табелу „%s“: %s"
 
-#: ../libgda/gda-connection.c:5353
+#: ../libgda/gda-connection.c:5346
 #, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from Data Store: %s"
 msgstr "Приликом извлачења података из смештаја података: %s"
 
-#: ../libgda/gda-connection.c:5411
+#: ../libgda/gda-connection.c:5404
 #, c-format
-#| msgid "Internal SQLite error: no data to iterate on"
 msgid "Internal error: No meta store in connection"
 msgstr "Унутрашња грешка: нема мета смештаја у вези"
 
-#: ../libgda/gda-connection.c:5429
+#: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr "Параметар „назив“ се захтева за филтрирање називних простора"
 
-#: ../libgda/gda-connection.c:5440
+#: ../libgda/gda-connection.c:5433
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr "Параметар „назив“ се захтева за филтрирање врста података"
 
-#: ../libgda/gda-connection.c:5451
+#: ../libgda/gda-connection.c:5444
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr "Параметар „назив“ се захтева за филтрирање табела"
 
-#: ../libgda/gda-connection.c:5462
+#: ../libgda/gda-connection.c:5455
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr "Параметар „назив“ се захтева за филтрирање прегледа"
 
-#: ../libgda/gda-connection.c:5472
+#: ../libgda/gda-connection.c:5465
 #, c-format
-#| msgid "Parameter name not specified"
 msgid "Parameter 'name' is required to filter fields"
 msgstr "Параметар „назив“ се захтева за филтрирање поља"
 
-#: ../libgda/gda-connection.c:5478
+#: ../libgda/gda-connection.c:5471
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr "Параметар „назив_поља“ се захтева за филтрирање поља"
 
-#: ../libgda/gda-connection.c:5485
+#: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr "Параметри: „назив“ и/или „назив_поља“ се захтевају за филтрирање поља"
 
-#: ../libgda/gda-connection.c:5494 ../libgda/gda-connection.c:5515
+#: ../libgda/gda-connection.c:5487 ../libgda/gda-connection.c:5508
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr "Параметар „назив“ се захтева за филтрирање индекса"
 
-#: ../libgda/gda-connection.c:5500 ../libgda/gda-connection.c:5519
+#: ../libgda/gda-connection.c:5493 ../libgda/gda-connection.c:5512
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr "Параметар „назив_индекса“ се захтева за филтрирање индекса"
 
-#: ../libgda/gda-connection.c:5507
+#: ../libgda/gda-connection.c:5500
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 "Параметри: „назив“ и/или „назив_индекса“ се захтевају за филтрирање индекса"
 
-#: ../libgda/gda-connection.c:5527
+#: ../libgda/gda-connection.c:5520
 #, c-format
 msgid "Invalid meta type to get data from store"
 msgstr "Неисправна мета врста за добављање података из смештаја"
 
-#: ../libgda/gda-connection.c:5538
+#: ../libgda/gda-connection.c:5531
 #, c-format
-#| msgid ""
-#| "Internal error while building INSERT statement:\n"
-#| "%s"
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr "Унутрашња грешка приликом изградње тврдње за довлачење података: %s"
 
-#: ../libgda/gda-connection.c:5730 ../libgda/gda-connection.c:5784
-#: ../libgda/gda-connection.c:5829 ../libgda/gda-connection.c:5874
-#: ../libgda/gda-connection.c:5919
+#: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
+#: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
+#: ../libgda/gda-connection.c:5912
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Праћење стања преноса везе: не постоји пренос за %s"
 
-#: ../libgda/gda-connection.c:7052
+#: ../libgda/gda-connection.c:7045
 msgid "Unspecified table name"
 msgstr "Неодређени назив табеле"
 
-#: ../libgda/gda-connection.c:7094
+#: ../libgda/gda-connection.c:7087
 msgid "Invalid type"
 msgstr "Неисправна врста"
 
-#: ../libgda/gda-connection.c:7190
+#: ../libgda/gda-connection.c:7183
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Радњу НАПРАВИ ТАБЕЛУ не подржава сервер базе података"
 
-#: ../libgda/gda-connection.c:7309 ../libgda/gda-connection.c:7319
+#: ../libgda/gda-connection.c:7302 ../libgda/gda-connection.c:7312
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Погрешна вредност СКуЛ препознавача"
@@ -1263,7 +1253,6 @@ msgstr "Својство „options“ није објекат Гда подеш
 
 #: ../libgda/gda-data-model-import.c:698
 #, c-format
-#| msgid "The '%s' option must hold a string value, ignored."
 msgid "The %s option must hold a string value, ignored."
 msgstr "Опција „%s“ мора да садржи вредност ниске, занемарујем."
 
@@ -1283,7 +1272,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Претварање знакова у %d. реду, грешка: %s"
 
 #: ../libgda/gda-data-model-import.c:1026
-#: ../libgda/sqlite/gda-sqlite-provider.c:1299
+#: ../libgda/sqlite/gda-sqlite-provider.c:1304
 #: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:607
 #: ../tools/browser/gdaui-data-import.c:177
@@ -1628,7 +1617,6 @@ msgstr "Не могу да израчунам унутрашњи број ред
 
 #: ../libgda/gda-data-select.c:2168
 #, c-format
-#| msgid "Could not fetch next row"
 msgid "Can't fetch next row: %s"
 msgstr "Не могу да довучем наредни ред: %s"
 
@@ -1644,19 +1632,16 @@ msgstr ""
 
 #: ../libgda/gda-data-select.c:2234
 #, c-format
-#| msgid "Can't load provider: %s"
 msgid "Can't fetch previous row: %s"
 msgstr "Не могу да довучем претходни ред: %s"
 
 #: ../libgda/gda-data-select.c:2276
 #, c-format
-#| msgid "Can't open pipe '%s': %s"
 msgid "Can't move iter at row '%d': %s"
 msgstr "Не могу да преместим приступника на %d. ред: %s"
 
 #: ../libgda/gda-data-select.c:2295
 #, c-format
-#| msgid "Can't open pipe '%s': %s"
 msgid "Can't fetch row '%d': %s"
 msgstr "Не могу да довучем ред %d: %s"
 
@@ -1714,7 +1699,6 @@ msgid "No INSERT statement provided"
 msgstr "Није достављена тврдња УМЕТНИ"
 
 #: ../libgda/gda-data-select.c:3097
-#| msgid "Cannot add a row because the number of rows in unknown"
 msgid "Cannot add a row because the number of rows is unknown"
 msgstr "Не могу да додам ред зато што је непознат број редова"
 
@@ -1766,7 +1750,6 @@ msgstr ""
 
 #: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
 #, c-format
-#| msgid "Internal error: can't get the prepared statement's actual statement"
 msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr "Унутрашња грешка: Радња треба бити припремљена, постављам податке везе"
 
@@ -1778,9 +1761,6 @@ msgstr "Радња није примењена за коришћеног дос�
 
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
-#| msgid ""
-#| "Could not parse '%s': Validation for XML files for server operations will "
-#| "not be performed (some weird errors may occur)"
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
@@ -1795,13 +1775,11 @@ msgstr "Контекст за проверу „xml“ датотеке се н�
 
 #: ../libgda/gda-db-catalog.c:278
 #, c-format
-#| msgid "Value is invalid"
 msgid "xml file is invalid"
 msgstr "„xml“ датотека је неисправна"
 
 #: ../libgda/gda-db-catalog.c:319
 #, c-format
-#| msgid "Root node of file '%s' should be <schema>."
 msgid "Root node should be <schema>."
 msgstr "Корени чвор треба да буде <шема>."
 
@@ -1812,25 +1790,21 @@ msgstr "„xmlDoc“ објекат се не може направити из �
 
 #: ../libgda/gda-db-catalog.c:461
 #, c-format
-#| msgid "Parameter '%s' is invalid"
 msgid "xml file '%s' is not valid\n"
 msgstr "„xml“ датотека „%s“ није исправна\n"
 
 #: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
 #, c-format
-#| msgid "Connection not yet opened"
 msgid "Connection is not opened"
 msgstr "Веза није отворена"
 
 #: ../libgda/gda-db-catalog.c:1044
 #, c-format
-#| msgid "Can't open file '%s' for reading: %s\n"
 msgid "Can't open stream for reading file '%s'"
 msgstr "Не могу да отворим ток за читање датотеке „%s“"
 
 #: ../libgda/gda-db-catalog.c:1060
 #, c-format
-#| msgid "Cannot create directory '%s'"
 msgid "Can't create parse context for '%s'"
 msgstr "Не могу да направим контекст обраде за „%s“"
 
@@ -1841,7 +1815,6 @@ msgstr "Грешка за време обраде са грешком %d"
 
 #: ../libgda/gda-db-catalog.c:1093
 #, c-format
-#| msgid "Failed to declare foreign key: %s"
 msgid "Failed to parse file: '%s'"
 msgstr "Нисам успео да обрадим датотеку: %s"
 
@@ -1852,7 +1825,6 @@ msgstr "ХМЛ документ се не може направити из да�
 
 #: ../libgda/gda-db-catalog.c:1114
 #, c-format
-#| msgid "Value is invalid"
 msgid "XML file is not valid\n"
 msgstr "ХМЛ датотека није исправна\n"
 
@@ -1863,13 +1835,11 @@ msgstr "Празан списак колона"
 
 #: ../libgda/gda-db-view.c:538
 #, c-format
-#| msgid "View table's contents"
 msgid "View name is not set"
 msgstr "Назив прегледа није постављен"
 
 #: ../libgda/gda-db-view.c:545
 #, c-format
-#| msgid "View definition: %s"
 msgid "View definition is not set"
 msgstr "Дефиниција прегледа није постављена"
 
@@ -1977,13 +1947,11 @@ msgstr "Не могу да добијем закључавање везе"
 
 #: ../libgda/gda-meta-store.c:1208
 #, c-format
-#| msgid "Could not open binding connection: %s"
 msgid "Could not open internal GdaMetaStore connection: %s"
 msgstr "Не могу да отворим унутрашњу везу Гда_мета_смештаја: %s"
 
 #: ../libgda/gda-meta-store.c:1214
 #, c-format
-#| msgid "Could not create virtual connection"
 msgid "Could not create internal GdaMetaStore connection: %s"
 msgstr "Не могу да направим унутрашњу везу Гда_мета_смештаја: %s"
 
@@ -2006,7 +1974,6 @@ msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
 msgstr "Унутрашња грешка. Не могу да направим табелу мета_смештаја „%s“: %s"
 
 #: ../libgda/gda-meta-store.c:1378
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not set the internal schema's version. No prepared statement's "
 "parameters were found"
@@ -2015,9 +1982,9 @@ msgstr ""
 "тврдње"
 
 #: ../libgda/gda-meta-store.c:1387
-#| msgid "Could not set the internal schema's version"
 msgid "Could not set the internal schema's version. Statement execution fails"
-msgstr "Не могу да подесим издање унутрашње шеме. Извршавање тврдње није успело"
+msgstr ""
+"Не могу да подесим издање унутрашње шеме. Извршавање тврдње није успело"
 
 #: ../libgda/gda-meta-store.c:1591
 #, c-format
@@ -2026,7 +1993,6 @@ msgstr "Унутрашња грешка: нисам нашао шему инфо
 
 #: ../libgda/gda-meta-store.c:1599
 #, c-format
-#| msgid "Internal error: can't get the prepared statement's actual statement"
 msgid "Internal error: can't read information schema: %s"
 msgstr "Унутрашња грешка: не могу да прочитам шему информација: %s"
 
@@ -2078,7 +2044,6 @@ msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Нисам пронашао колону „%s“ страног кључа у табели „%s“"
 
 #: ../libgda/gda-meta-store.c:2613
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not update the internal schema's version. No prepared statement's "
 "parameters were found"
@@ -2087,10 +2052,10 @@ msgstr ""
 "тврдње"
 
 #: ../libgda/gda-meta-store.c:2622
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not update the internal schema's version. Statement execution fails"
-msgstr "Не могу да освежим издање унутрашње шеме. Извршавање тврдње није успело"
+msgstr ""
+"Не могу да освежим издање унутрашње шеме. Извршавање тврдње није успело"
 
 #: ../libgda/gda-meta-store.c:2669 ../libgda/gda-meta-store.c:2700
 #, c-format
@@ -2119,7 +2084,6 @@ msgstr "Параметар „%s“ није присутан у тврдњи"
 
 #: ../libgda/gda-meta-store.c:3068
 #, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from Meta Store: %s"
 msgstr "Приликом извлачења података из мета смештаја: %s"
 
@@ -2130,7 +2094,6 @@ msgstr "Није подешена вредност за параметар „%s
 
 #: ../libgda/gda-meta-store.c:3188
 #, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from store: %s"
 msgstr "Приликом извлачења података из смештаја: %s"
 
@@ -2350,13 +2313,11 @@ msgstr "Недостаје назив колоне страног кључа з�
 
 #: ../libgda/gda-provider-meta.c:83
 #, c-format
-#| msgid "No connection to use"
 msgid "No connection is set"
 msgstr "Није постављена веза"
 
 #: ../libgda/gda-provider-meta.c:88
 #, c-format
-#| msgid "Connection not yet opened"
 msgid "Connection is no opened"
 msgstr "Веза није отворена"
 
@@ -2366,7 +2327,6 @@ msgid "No rows or more than one row was returned from query"
 msgstr "Ниједан или више од једног реда није резултирало из упита"
 
 #: ../libgda/gda-row.c:162
-#| msgid "Can't get the number of rows of data model"
 msgid "Can't set a number of values, because a data model is in use"
 msgstr "Не могу да поставим број вредности, јер је у употреби модел података"
 
@@ -2376,7 +2336,6 @@ msgid "No value can be retrieved from data model's row: %s"
 msgstr "Ниједна вредност се не може довући из реда модела података: %s"
 
 #: ../libgda/gda-row.c:276
-#| msgid "No detail"
 msgid "No Detail"
 msgstr "Нема детаља"
 
@@ -2440,15 +2399,12 @@ msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr "Одредба радње Гда сервера није саобразна са ДТД-ом\n"
 
 #: ../libgda/gda-server-operation.c:1347
-#| msgid ""
-#| "Non handled GdaServerOperationType, please report error to http://"
-#| "bugzilla.gnome.org/ for the \"libgda\" product"
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://gitlab."
 "gnome.org/GNOME/libgda/issues"
 msgstr ""
-"Не управљана врста радње Гда сервера, пријавите грешку на "
-"„http://gitlab.gnome.org/GNOME/libgda/issues“"
+"Не управљана врста радње Гда сервера, пријавите грешку на „http://gitlab."
+"gnome.org/GNOME/libgda/issues“"
 
 #: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
@@ -2492,7 +2448,6 @@ msgstr ""
 
 #. CNC UNLOCK
 #: ../libgda/gda-server-provider.c:1508
-#| msgid "Internal error: the \"prepared-stmt\" property has not been set"
 msgid ""
 "Internal error: connection reported as opened, yet no provider's data has "
 "been setted"
@@ -2532,9 +2487,6 @@ msgstr "Није подржано"
 
 #: ../libgda/gda-server-provider.c:2980
 #, c-format
-#| msgid ""
-#| "Internal error please report bug to http://bugzilla.gnome.org/ for the "
-#| "\"libgda\" product. Reported error is: %s"
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues Reported error is: %s"
@@ -2544,9 +2496,6 @@ msgstr ""
 
 #: ../libgda/gda-server-provider.c:2984
 #, c-format
-#| msgid ""
-#| "Internal error please report bug to http://bugzilla.gnome.org/ for the "
-#| "\"libgda\" product"
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues No error was reported"
@@ -2705,10 +2654,10 @@ msgstr ""
 msgid "Missing parameter '%s'"
 msgstr "Недостаје параметар „%s“"
 
-#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3477
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
-#: ../providers/mysql/gda-mysql-provider.c:2239
-#: ../providers/postgres/gda-postgres-provider.c:2059
+#: ../providers/mysql/gda-mysql-provider.c:2249
+#: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2859,10 +2808,10 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Не могу да препишем тврдњу која није УМЕТНИ или ОСВЕЖИ"
 
 #: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
-#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3458
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
-#: ../providers/mysql/gda-mysql-provider.c:2219
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../providers/mysql/gda-mysql-provider.c:2229
+#: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -2926,7 +2875,6 @@ msgid "Strings representation"
 msgstr "Представљање ниски"
 
 #: ../libgda/handlers/gda-handler-text.c:207
-#| msgid "Strings representation"
 msgid "Large String representation"
 msgstr "Представљање велике ниске"
 
@@ -3072,7 +3020,6 @@ msgid "This report document does not handle %s output"
 msgstr "Овај документ извештаја не управља „%s“ излазом"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:68
-#| msgid "Internal error: invalid provider handle"
 msgid "Internal error, creating table in SQLite provider"
 msgstr "Унутрашња грешка, при прављењу табеле у СКуЛајт достављачу"
 
@@ -3086,7 +3033,6 @@ msgid "No field specified in foreign key constraint"
 msgstr "Није наведено поље у ограничењу страног кључа"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:363
-#| msgid "Table to create must have at least one row"
 msgid "Table to create must have at least one field"
 msgstr "Табела за стварање мора да има барем једно поље"
 
@@ -3098,47 +3044,45 @@ msgstr "Бинарно представљање СКуЛајта"
 msgid "Sqlite boolean representation"
 msgstr "Логичко представљање Скулајта"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:124
+#: ../libgda/sqlite/gda-sqlite-provider.c:129
 #, c-format
-#| msgid "Parameter '%s' not found is statement"
 msgid "Parameter '%s' not found in statement"
 msgstr "Нисам нашао параметар „%s“ у тврдњи"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:138
-#: ../libgda/sqlite/gda-sqlite-provider.c:154
-#: ../libgda/sqlite/gda-sqlite-provider.c:196
-#: ../libgda/sqlite/gda-sqlite-provider.c:212
+#: ../libgda/sqlite/gda-sqlite-provider.c:143
+#: ../libgda/sqlite/gda-sqlite-provider.c:159
+#: ../libgda/sqlite/gda-sqlite-provider.c:201
+#: ../libgda/sqlite/gda-sqlite-provider.c:217
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "Нема назива колоне за придруживање параметру „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:182
+#: ../libgda/sqlite/gda-sqlite-provider.c:187
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "Нисам пронашао параметар „%s“ у тврдњи"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:222
+#: ../libgda/sqlite/gda-sqlite-provider.c:227
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "Повезивање БЛОБА за ову врсту тврдње није подржано"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:952
-#| msgid "Set to TRUE if the role is allowed to create databases"
+#: ../libgda/sqlite/gda-sqlite-provider.c:957
 msgid "Set to TRUE if the provider is the internal default"
 msgstr "Поставите на изабрано ако је достављач унутрашњи основни"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:974
+#: ../libgda/sqlite/gda-sqlite-provider.c:979
 msgid "Can't find libsqlite3."
 msgstr "Не могу да пронађем либскулајт3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1128
+#: ../libgda/sqlite/gda-sqlite-provider.c:1133
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr ""
 "Ниска везе мора да садржи вредности „DB_DIR“ (директоријум базе података) и "
 "„DB_NAME“ (назив базе података)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1154
-#: ../libgda/sqlite/gda-sqlite-provider.c:1161
+#: ../libgda/sqlite/gda-sqlite-provider.c:1159
+#: ../libgda/sqlite/gda-sqlite-provider.c:1166
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -3149,17 +3093,17 @@ msgstr ""
 "датотеке базе података) и са „DB_NAME“ (датотеком базе података без „%s“ на "
 "крају)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1176
+#: ../libgda/sqlite/gda-sqlite-provider.c:1181
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Део „DB_DIR“ ниске везе мора да указује на исправан директоријум"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1236
+#: ../libgda/sqlite/gda-sqlite-provider.c:1241
 msgid "Wrong encryption passphrase"
 msgstr "Погрешна лозинка шифровања"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1279
+#: ../libgda/sqlite/gda-sqlite-provider.c:1284
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
@@ -3167,115 +3111,110 @@ msgstr ""
 "УПОЗОРЕЊЕ БЕЗБЕДНОСТИ: учитавање проширења је укључено за СКуЛ наредбе, што "
 "значи да нападач може да приступи могућностима учитавања проширења"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1298
+#: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Не могу да подесим опцију СКуЛајта „empty_result_callbacks“: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1386
-#: ../libgda/sqlite/gda-sqlite-provider.c:1406
+#: ../libgda/sqlite/gda-sqlite-provider.c:1391
+#: ../libgda/sqlite/gda-sqlite-provider.c:1411
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "Не могу да забележим функцију „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1424
+#: ../libgda/sqlite/gda-sqlite-provider.c:1429
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "Не могу да одредим сравњивање „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1708
-#: ../libgda/sqlite/gda-sqlite-provider.c:1719
-#: ../libgda/sqlite/gda-sqlite-provider.c:1733
-#: ../libgda/sqlite/gda-sqlite-provider.c:1744
+#: ../libgda/sqlite/gda-sqlite-provider.c:1713
+#: ../libgda/sqlite/gda-sqlite-provider.c:1724
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../libgda/sqlite/gda-sqlite-provider.c:1749
 msgid "Error initializing database with passphrase"
 msgstr "Грешка покретања базе података са лозинком"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1786
+#: ../libgda/sqlite/gda-sqlite-provider.c:1791
 msgid "Missing database name or directory"
 msgstr "Недостаје назив или директоријум базе података"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1814
-#: ../providers/postgres/gda-postgres-provider.c:1083
+#: ../libgda/sqlite/gda-sqlite-provider.c:1819
 #: ../providers/postgres/gda-postgres-provider.c:1084
+#: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Преноси нису подржани у режиму само за читање"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2230
+#: ../libgda/sqlite/gda-sqlite-provider.c:2235
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
 "СКуЛајт не подржава навођење поља на која се примењује правило РАЗЛИКУЈ"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2277
-#: ../libgda/sqlite/gda-sqlite-provider.c:2287
+#: ../libgda/sqlite/gda-sqlite-provider.c:2282
+#: ../libgda/sqlite/gda-sqlite-provider.c:2292
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "СКуЛајт не подржава „%s“ једињење"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2389
+#: ../libgda/sqlite/gda-sqlite-provider.c:2394
 msgid "ILIKE operation not supported"
 msgstr "Није подржана радња „ILIKE“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2421
-#| msgid "ILIKE operation not supported"
+#: ../libgda/sqlite/gda-sqlite-provider.c:2426
 msgid "SIMILAR operation not supported"
 msgstr "Није подржана радња „SIMILAR“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2545
-#| msgid "Operation not supported\n"
+#: ../libgda/sqlite/gda-sqlite-provider.c:2550
 msgid "Operator type not supported"
 msgstr "Врста оператера није подржана"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2951
+#: ../libgda/sqlite/gda-sqlite-provider.c:2956
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1638
+#: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Неименовани параметар није дозвољен у припремљеним тврдњама"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3068
-#: ../libgda/sqlite/gda-sqlite-provider.c:3080
-#: ../providers/mysql/gda-mysql-provider.c:1963
-#: ../providers/postgres/gda-postgres-provider.c:1785
+#: ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/sqlite/gda-sqlite-provider.c:3085
+#: ../providers/mysql/gda-mysql-provider.c:1973
+#: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
 "Не могу да изградим тврдњу ИЗАБЕРИ да бих добавио последњи уметнути ред: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3114
-#: ../providers/mysql/gda-mysql-provider.c:1991
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../libgda/sqlite/gda-sqlite-provider.c:3119
+#: ../providers/mysql/gda-mysql-provider.c:2001
+#: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Тврдња ИЗАБЕРИ за добављање последњег уметнутог реда није вратила ниједан ред"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3118
-#: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1817
+#: ../libgda/sqlite/gda-sqlite-provider.c:3123
+#: ../providers/mysql/gda-mysql-provider.c:2005
+#: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 "Тврдња ИЗАБЕРИ за добављање последњег уметнутог реда је вратила превише "
 "редова (%d)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3182
+#: ../libgda/sqlite/gda-sqlite-provider.c:3187
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Припремљена тврдња нема придружену Гда тврдњу"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3223
-#: ../libgda/sqlite/gda-sqlite-provider.c:3260
+#: ../libgda/sqlite/gda-sqlite-provider.c:3228
+#: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't create SQLite BLOB handle"
 msgstr "Не могу да направим ручку БЛОБ-а СКуЛајта"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3227
-#: ../libgda/sqlite/gda-sqlite-provider.c:3265
+#: ../libgda/sqlite/gda-sqlite-provider.c:3232
+#: ../libgda/sqlite/gda-sqlite-provider.c:3270
 msgid "Can't write to SQLite's BLOB"
 msgstr "Не могу да пишем у БЛОБ СКуЛајта"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3250
+#: ../libgda/sqlite/gda-sqlite-provider.c:3255
 #, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
@@ -3283,90 +3222,90 @@ msgstr ""
 "Не могу да добијем ручку БЛОБ-а СКуЛајта (пријављена врста је „%s“), "
 "пријавите грешку на „http://gitlab.gnome.org/GNOME/libgda/issues“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3275
+#: ../libgda/sqlite/gda-sqlite-provider.c:3280
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Не могу да одредим ИБРЕДА блоба за попуну"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3386
+#: ../libgda/sqlite/gda-sqlite-provider.c:3391
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Празна тврдња"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3428
-#: ../libgda/sqlite/gda-sqlite-provider.c:3431
+#: ../libgda/sqlite/gda-sqlite-provider.c:3433
+#: ../libgda/sqlite/gda-sqlite-provider.c:3436
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
-#: ../providers/mysql/gda-mysql-provider.c:2194
-#: ../providers/mysql/gda-mysql-provider.c:2197
-#: ../providers/postgres/gda-postgres-provider.c:2017
-#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/mysql/gda-mysql-provider.c:2204
+#: ../providers/mysql/gda-mysql-provider.c:2207
+#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
 #: ../providers/web/gda-web-provider.c:1427
 msgid "Missing parameter(s) to execute query"
 msgstr "Недостаје параметар за извршавање упита"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3491
+#: ../libgda/sqlite/gda-sqlite-provider.c:3496
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
-#: ../providers/mysql/gda-mysql-provider.c:2258
-#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/mysql/gda-mysql-provider.c:2268
+#: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Не могу да препишем основне врености ручице тврдње"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3612
-#: ../providers/mysql/gda-mysql-provider.c:2514
+#: ../libgda/sqlite/gda-sqlite-provider.c:3617
+#: ../providers/mysql/gda-mysql-provider.c:2524
 msgid "Can't get BLOB's length"
 msgstr "Не могу да добавим дужину БЛОБ-а"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3614
-#: ../providers/mysql/gda-mysql-provider.c:2516
+#: ../libgda/sqlite/gda-sqlite-provider.c:3619
+#: ../providers/mysql/gda-mysql-provider.c:2526
 msgid "BLOB is too big"
 msgstr "БЛОБ је превелик"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3699
+#: ../libgda/sqlite/gda-sqlite-provider.c:3704
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Неуправљана врста података „%s“"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3766
+#: ../libgda/sqlite/gda-sqlite-provider.c:3771
 msgid "Could not start transaction to create BLOB"
 msgstr "Не могу да започнем пренос за стварање БЛОБ-а"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3941
-#: ../libgda/sqlite/gda-sqlite-provider.c:3962
-#: ../libgda/sqlite/gda-sqlite-provider.c:4054
-#: ../libgda/sqlite/gda-sqlite-provider.c:4074
-#: ../libgda/sqlite/gda-sqlite-provider.c:4097
+#: ../libgda/sqlite/gda-sqlite-provider.c:3946
+#: ../libgda/sqlite/gda-sqlite-provider.c:3967
+#: ../libgda/sqlite/gda-sqlite-provider.c:4059
+#: ../libgda/sqlite/gda-sqlite-provider.c:4079
+#: ../libgda/sqlite/gda-sqlite-provider.c:4102
 msgid "Function requires one argument"
 msgstr "Функција захтева један аргумент"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3995
-#: ../libgda/sqlite/gda-sqlite-provider.c:4129
+#: ../libgda/sqlite/gda-sqlite-provider.c:4000
+#: ../libgda/sqlite/gda-sqlite-provider.c:4134
 msgid "Function requires two arguments"
 msgstr "Функција захтева два аргумент"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4034
+#: ../libgda/sqlite/gda-sqlite-provider.c:4039
 msgid "Function requires one or two arguments"
 msgstr "Функција захтева један или два аргумента"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4169
-#: ../libgda/sqlite/gda-sqlite-provider.c:4276
+#: ../libgda/sqlite/gda-sqlite-provider.c:4174
+#: ../libgda/sqlite/gda-sqlite-provider.c:4281
 msgid "Function requires two or three arguments"
 msgstr "Функција захтева два или три аргумента"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4223
+#: ../libgda/sqlite/gda-sqlite-provider.c:4228
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "Грешка регуларног израза „%s“ СКуЛајта:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4224
+#: ../libgda/sqlite/gda-sqlite-provider.c:4229
 msgid "Invalid regular expression"
 msgstr "Неисправан регуларан израз"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:233
 #: ../providers/jdbc/gda-jdbc-recordset.c:297
-#: ../providers/mysql/gda-mysql-recordset.c:416
-#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:472
+#: ../providers/mysql/gda-mysql-recordset.c:608
 #: ../providers/postgres/gda-postgres-recordset.c:265
 #: ../providers/web/gda-web-recordset.c:156
 #, c-format
@@ -3394,7 +3333,6 @@ msgstr "Неисправан датум „%s“ (запис датума тре
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:538
 #, c-format
-#| msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
 msgstr ""
 "Неисправно време „%s“ (запис времена треба да буде ЧЧ:ММ:СС[.ms][+ЧЧ:мм)"
@@ -3402,11 +3340,10 @@ msgstr ""
 #: ../libgda/sqlite/gda-sqlite-recordset.c:556
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
 #, c-format
-#| msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
 msgstr ""
-"Неисправна временска ознака „%s“ (запис треба да буде "
-"ГГГГ-ММ-ДДТЧЧ:ММ:СС[.ms])"
+"Неисправна временска ознака „%s“ (запис треба да буде ГГГГ-ММ-ДДТЧЧ:ММ:СС[."
+"ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:645
 msgid "SQLite provider fatal internal error"
@@ -3437,11 +3374,11 @@ msgstr "Простор назива мора бити наведен"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:137
 #, c-format
 msgid "There is already a namespace named '%s' in use with another connection"
-msgstr "Већ постоји називни простор под називом „%s“ у употреби са другом везом"
+msgstr ""
+"Већ постоји називни простор под називом „%s“ у употреби са другом везом"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:147
 #, c-format
-#| msgid "Connection string for the internal connection to use"
 msgid "Connection was not added to virtual connection because it is closed"
 msgstr "Веза није додата виртуелној вези јер је затворена"
 
@@ -3470,7 +3407,6 @@ msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Неисправно време „%s“ (запис времена треба да буде ЧЧ:ММ:СС[.ms])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
-#| msgid "Could not create virtual connection"
 msgid "Provider did not clean its connection data"
 msgstr "Достављач није очистио своје податке повезивања"
 
@@ -4690,7 +4626,6 @@ msgstr "Не могу да приступим реду када је образ�
 
 #: ../libgda-ui/gdaui-init.c:55
 #, c-format
-#| msgid "Error while parsing CSV file: %s"
 msgid "Error parsing CSS: %s"
 msgstr "Грешка обраде ЦСС-a: %s"
 
@@ -6227,8 +6162,8 @@ msgid "Too many arguments"
 msgstr "Превише аргумената"
 
 #: ../providers/ldap/gda-ldap-provider.c:1073
-#: ../providers/mysql/gda-mysql-provider.c:616
-#: ../providers/mysql/gda-mysql-provider.c:670
+#: ../providers/mysql/gda-mysql-provider.c:621
+#: ../providers/mysql/gda-mysql-provider.c:675
 #: ../providers/mysql/gda-mysql-util.c:63
 #: ../tools/browser/ldap-browser/entry-properties.c:587
 #: ../tools/browser/schema-browser/table-columns.c:519
@@ -6464,22 +6399,22 @@ msgstr "Назив базе података за коришћење (назив
 msgid "MySQL boolean representation"
 msgstr "Логичко представљање МајСКуЛ-а"
 
-#: ../providers/mysql/gda-mysql-provider.c:449
+#: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr ""
 "Не могу да дам ЈУНИКС ПРИКЉУЧНИЦУ ако ви такође доставите или ДОМАЋИНА или "
 "ПРИКЉУЧНИК"
 
-#: ../providers/mysql/gda-mysql-provider.c:457
+#: ../providers/mysql/gda-mysql-provider.c:458
 msgid "Invalid port number"
 msgstr "Неисправан број прикључника"
 
-#: ../providers/mysql/gda-mysql-provider.c:493
+#: ../providers/mysql/gda-mysql-provider.c:496
 #, c-format
 msgid "Unknown MySQL protocol '%s'"
 msgstr "Непознат протокол МајСКуЛ-а „%s“"
 
-#: ../providers/mysql/gda-mysql-provider.c:538
+#: ../providers/mysql/gda-mysql-provider.c:541
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
@@ -6488,38 +6423,35 @@ msgstr ""
 "Не могу да подесим скуп знакова клијента на УТФ8. Користим „%s“. Биће "
 "проблема са знаковима који не припадају УТФ-8."
 
-#: ../providers/mysql/gda-mysql-provider.c:584
+#: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
 msgstr "Ниска везе мора да садржи вредности БП_НАЗИВА"
 
-#: ../providers/mysql/gda-mysql-provider.c:619
-#: ../providers/mysql/gda-mysql-provider.c:673
+#: ../providers/mysql/gda-mysql-provider.c:624
+#: ../providers/mysql/gda-mysql-provider.c:678
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Нема описа"
 
-#: ../providers/mysql/gda-mysql-provider.c:1757
+#: ../providers/mysql/gda-mysql-provider.c:1767
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "Неименовани параметар није дозвољен у припремљеној тврдњи."
 
-#: ../providers/mysql/gda-mysql-provider.c:1978
-#: ../providers/postgres/gda-postgres-provider.c:1800
+#: ../providers/mysql/gda-mysql-provider.c:1988
+#: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
 "Не могу да извршим тврдњу ИЗАБЕРИ да бих добавио последњи уметнути ред: %s"
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2508
+#: ../providers/mysql/gda-mysql-provider.c:2518
 msgid "Can't read whole BLOB into memory"
 msgstr "Не могу да читам читав БЛОБ у меморији"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2555
+#: ../providers/mysql/gda-mysql-provider.c:2565
 #, c-format
-#| msgid ""
-#| "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
-#| "org/ for the \"libgda\" product."
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
@@ -6527,7 +6459,7 @@ msgstr ""
 "Не управљана врста података „%s“, пријавите грешку на „http://gitlab.gnome."
 "org/GNOME/libgda/issues“."
 
-#: ../providers/mysql/gda-mysql-provider.c:2601
+#: ../providers/mysql/gda-mysql-provider.c:2611
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -6552,37 +6484,37 @@ msgstr "Број редова је довучен на време"
 msgid "Number of row chunks read since the object creation"
 msgstr "Број делова реда је прочитан још од стварања предмета"
 
-#: ../providers/mysql/gda-mysql-recordset.c:638
-#: ../providers/mysql/gda-mysql-recordset.c:958
-#: ../providers/mysql/gda-mysql-recordset.c:971
-#: ../providers/mysql/gda-mysql-recordset.c:984
-#: ../providers/mysql/gda-mysql-recordset.c:1003
+#: ../providers/mysql/gda-mysql-recordset.c:695
+#: ../providers/mysql/gda-mysql-recordset.c:1039
+#: ../providers/mysql/gda-mysql-recordset.c:1052
+#: ../providers/mysql/gda-mysql-recordset.c:1065
+#: ../providers/mysql/gda-mysql-recordset.c:1084
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Неисправна врста података свезе колоне. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "Врста „%s“ није мапирана за вредност %d"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:872
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "Врста „%s“ није мапирана за вредност %lld"
 
-#: ../providers/mysql/gda-mysql-recordset.c:862
+#: ../providers/mysql/gda-mysql-recordset.c:919
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Врста „%s“ није мапирана за вредност %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:879
-#: ../providers/mysql/gda-mysql-recordset.c:894
+#: ../providers/mysql/gda-mysql-recordset.c:936
+#: ../providers/mysql/gda-mysql-recordset.c:951
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "Врста „%s“ није мапирана за вредност %f"
 
-#: ../providers/mysql/gda-mysql-recordset.c:993
+#: ../providers/mysql/gda-mysql-recordset.c:1074
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "Врста „%s“ није мапирана за вредност %s"
@@ -6670,13 +6602,13 @@ msgstr "Лозинка администратора"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
 msgid "Connection protocol"
 msgstr "Протокол повезивања"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid ""
 "Explicitly specifies a connection protocol to use. It is useful when the "
 "other connection parameters normally would cause a protocol to be used other "
@@ -6928,19 +6860,19 @@ msgstr "СЈИС за Виндоуз јапански"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid "Automatic"
 msgstr "Самостално"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
 msgid "TCP: TCP/IP connection to local or remote server."
 msgstr "ТЦП:ТЦО/ИП веза на месни или удаљени сервер."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
@@ -6949,7 +6881,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:20
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
@@ -6958,7 +6890,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:21
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
@@ -7264,6 +7196,19 @@ msgstr "Сажми"
 msgid "Use compression protocol"
 msgstr "Користи протокол сажимања"
 
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#| msgid "InternalString"
+msgid "Interactive"
+msgstr "Међудејствено"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+" The client's session wait timeout set to the value of the session "
+"interactive_timeout variable."
+msgstr ""
+" Сесија клијента чека поставку временског истека на вредност променљиве "
+"сесије „interactive_timeout“."
+
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
 msgstr "Не могу да дохватим наредни ред"
@@ -7356,20 +7301,20 @@ msgstr "Не могу да поставим путању претраге за %
 msgid "Search path %s is invalid"
 msgstr "Путања претраге „%s“ је неисправна"
 
-#: ../providers/postgres/gda-postgres-provider.c:1094
-#: ../providers/postgres/gda-postgres-provider.c:1096
+#: ../providers/postgres/gda-postgres-provider.c:1095
+#: ../providers/postgres/gda-postgres-provider.c:1097
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Преноси нису подржани у читању непредатог нивоа одвајања"
 
-#: ../providers/postgres/gda-postgres-provider.c:1100
-#: ../providers/postgres/gda-postgres-provider.c:1102
+#: ../providers/postgres/gda-postgres-provider.c:1101
+#: ../providers/postgres/gda-postgres-provider.c:1103
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Преноси нису подржани у поновљивом читању нивоа одвајања"
 
-#: ../providers/postgres/gda-postgres-provider.c:1119
-#: ../providers/postgres/gda-postgres-provider.c:1219
-#: ../providers/postgres/gda-postgres-provider.c:1269
-#: ../providers/postgres/gda-postgres-provider.c:1319
+#: ../providers/postgres/gda-postgres-provider.c:1120
+#: ../providers/postgres/gda-postgres-provider.c:1220
+#: ../providers/postgres/gda-postgres-provider.c:1270
+#: ../providers/postgres/gda-postgres-provider.c:1320
 #: ../providers/postgres/gda-postgres-recordset.c:424
 #: ../providers/postgres/gda-postgres-recordset.c:453
 #: ../providers/postgres/gda-postgres-recordset.c:617
@@ -7377,21 +7322,21 @@ msgstr "Преноси нису подржани у поновљивом чит�
 msgid "Internal error"
 msgstr "Унутрашња грешка"
 
-#: ../providers/postgres/gda-postgres-provider.c:1225
-#: ../providers/postgres/gda-postgres-provider.c:1275
-#: ../providers/postgres/gda-postgres-provider.c:1325
+#: ../providers/postgres/gda-postgres-provider.c:1226
+#: ../providers/postgres/gda-postgres-provider.c:1276
+#: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "Погрешан назив безбедне тачке „%s“"
 
-#: ../providers/postgres/gda-postgres-provider.c:2168
-#: ../providers/postgres/gda-postgres-provider.c:2170
+#: ../providers/postgres/gda-postgres-provider.c:2169
+#: ../providers/postgres/gda-postgres-provider.c:2171
 msgid "Cannot start transaction"
 msgstr "Не могу да отпочнем пренос"
 
-#: ../providers/postgres/gda-postgres-provider.c:2423
-#: ../providers/postgres/gda-postgres-provider.c:2460
-#: ../providers/postgres/gda-postgres-provider.c:2496
+#: ../providers/postgres/gda-postgres-provider.c:2424
+#: ../providers/postgres/gda-postgres-provider.c:2461
+#: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Не могу да поставим ИБ параметар ИксА преноса"
 
@@ -7427,17 +7372,14 @@ msgid "Don't add the column to descendants of the table"
 msgstr "Не додај колону наследницима табеле"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
-#| msgid "Only if existing"
 msgid "Only if it exist"
 msgstr "Само ако постоји"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
-#| msgid "Drop role only if it exists"
 msgid "Add column only if it exist"
 msgstr "Додаје колону само ако постоји"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
-#| msgid "Only if it does not yet exist"
 msgid "Add column only if it does not yet exist"
 msgstr "Додајте колону само ако још увек не постоји"
 
@@ -7682,7 +7624,6 @@ msgstr "Израз ограничења за делимичан попис"
 
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
-#| msgid "Collation"
 msgid "Collation name"
 msgstr "Назив сравњивања"
 
@@ -8011,7 +7952,6 @@ msgid "Existing user"
 msgstr "Постојећи корисник"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
-#| msgid "Replace it already exists"
 msgid "Replace if already exists"
 msgstr "Замени ако већ постоји"
 
@@ -8100,7 +8040,6 @@ msgstr "не могу да одредим пописане колоне за п�
 
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:193
 #, c-format
-#| msgid "Can't import data from web server"
 msgid "Can't get version data from server: %s"
 msgstr "Не могу да добавим податке издања са сервера: %s"
 
@@ -8110,7 +8049,6 @@ msgid "Internal Error: Can't calculate PostgreSQL version: %s"
 msgstr "Унутрашња грешка: Не могу да израчунам издање ПостгреСКуЛ-а: %s"
 
 #: ../providers/sqlcipher/gda-sqlcipher-provider.c:47
-#| msgid "Can't find libsqlite3."
 msgid "Can't find sqlcipher."
 msgstr "Не могу да нађем скул шифрера."
 
@@ -8169,7 +8107,6 @@ msgid "Unnamed savepoint is not supported"
 msgstr "Неименобана тачка чувања није подржана"
 
 #: ../providers/web/gda-web-util.c:74
-#| msgid "Could not parse server's reponse"
 msgid "Could not parse server's response"
 msgstr "Не могу да обрадим одговор сервера"
 
@@ -8434,22 +8371,18 @@ msgid "Fullscreen"
 msgstr "Преко целог екрана"
 
 #: ../tools/browser/browser-window.c:414
-#| msgid "_Open Connection"
 msgid "Open Connection"
 msgstr "Отвори везу"
 
 #: ../tools/browser/browser-window.c:417
-#| msgid "_Bind Connection"
 msgid "Bind Connections"
 msgstr "Свежи везе"
 
 #: ../tools/browser/browser-window.c:420
-#| msgid "_Connections List"
 msgid "Connections List"
 msgstr "Списак веза"
 
 #: ../tools/browser/browser-window.c:423
-#| msgid "_New Window"
 msgid "New Window"
 msgstr "Нови прозор"
 
@@ -8502,13 +8435,11 @@ msgstr "Грешка освежавања свезе везе: %s"
 
 #: ../tools/browser/browser-window.c:707
 #, c-format
-#| msgid "Error updating bound connection: %s"
 msgid "Error updating meta data for connection: %s"
 msgstr "Грешка освежавања мета података за везу: %s"
 
 #: ../tools/browser/browser-window.c:730
 #, c-format
-#| msgid "Error creating database: %s"
 msgid "Error Updating Meta Data: %s"
 msgstr "Грешка освежавања мета података: %s"
 
@@ -8732,7 +8663,6 @@ msgid "Virtual connection's properties"
 msgstr "Својства виртуелне везе"
 
 #: ../tools/browser/connection-binding-properties.c:222
-#| msgid "Virtual connection's properties"
 msgid "Virtual connection's properties."
 msgstr "Својства виртуелне везе."
 
@@ -8811,19 +8741,16 @@ msgstr ""
 
 #: ../tools/browser/data-manager/analyser.c:193
 #, c-format
-#| msgid "Obtain referenced data in table "
 msgid "Obtain referenced data in table %s from "
 msgstr "Набави упутне податке у табели „%s“ из "
 
 #: ../tools/browser/data-manager/analyser.c:198
 #, c-format
-#| msgid "Invalid column number %d"
 msgid "column number %d ("
 msgstr "колоне број %d ("
 
 #: ../tools/browser/data-manager/analyser.c:210
 #, c-format
-#| msgid "List referencing data in "
 msgid "List referencing data in %s."
 msgstr "Испиши упутне податаке у „%s“."
 
@@ -9472,7 +9399,6 @@ msgid "LDAP class's properties"
 msgstr "Својства ЛДАП разреда"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:531
-#| msgid "Add class Favorites"
 msgid "Add class to Favorites"
 msgstr "Додајте класу у омиљене"
 
@@ -9872,9 +9798,6 @@ msgstr ""
 "%s"
 
 #: ../tools/browser/query-exec/query-console-page.c:1031
-#| msgid ""
-#| "Internal error, please report error to http://bugzilla.gnome.org/ for the "
-#| "\"libgda\" product"
 msgid ""
 "Internal error, please report error to http://gitlab.gnome.org/GNOME/libgda/"
 "issues"
@@ -10371,8 +10294,8 @@ msgstr ""
 "      дефинише <b>age</b> као ниску\n"
 "\n"
 "Исправне врсте су: <tt>string</tt>, <tt>boolean</tt>, <tt>int</tt>,\n"
-"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, "
-"<tt>blob</tt> и\n"
+"<tt>date</tt>, <tt>time</tt>, <tt>timestamp</tt>, <tt>guint</tt>, <tt>blob</"
+"tt> и\n"
 "<tt>binary</tt></small>"
 
 #: ../tools/common/html-doc.c:86
@@ -11076,7 +10999,6 @@ msgstr "Нисам пронашао везу или скуп података п
 #. force create of meta store
 #. add existing connections to virtual connection
 #: ../tools/common/t-app.c:3062
-#| msgid "Bound connections are as:"
 msgid "Connections were bound as:"
 msgstr "Везе где је свеза:"
 
@@ -11401,7 +11323,6 @@ msgstr ""
 
 #: ../tools/common/t-config-info.c:685
 #, c-format
-#| msgid "Error creating user specific configuration directory '%s'"
 msgid "Was not possible to create configuration directory at: %s"
 msgstr "Нисам могао да направим директоријум подешавања у: %s"
 
@@ -11523,7 +11444,6 @@ msgstr "Не могу да покренем речник да ускладишт
 
 #: ../tools/common/t-favorites.c:185
 #, c-format
-#| msgid "Can't initialize dictionary to store favorites"
 msgid "Can't initialize dictionary to store favorites :%s"
 msgstr "Не могу да покренем речник да ускладиштим омиљене: %s"
 
@@ -11769,9 +11689,6 @@ msgstr "Не могу да обрадим датотеку „%s“, занем�
 
 #~ msgid "Incorrect SQL expression"
 #~ msgstr "Нетачан израз СКуЛ-а"
-
-#~ msgid "InternalString"
-#~ msgstr "Унутрашња ниска"
 
 #~ msgid "Extension loading is not supported"
 #~ msgstr "Није подржано учитавање проширења"
