@@ -321,9 +321,11 @@ gda_db_base_set_name (GdaDbBase  *self,
  * @a: first #GdaDbBase object
  * @b: second #GdaDbBase object
  *
- * Compares two objects similar to g_strcmp().
+ * Compares two objects similar to g_strcmp(). In general, catalog and schema can be %NULL. In this case
+ * those pairs are ignored. If we represent a full name as catalog.schema.name then two objects
+ * null.null.customer and main.main.customer are identical.
  *
- * Returns: 0 if catalog, schema and name are the same
+ * Returns: 0 if two objects are identical or -1 or 1 otherwise.
  *
  * Since: 6.0
  */
@@ -338,17 +340,45 @@ gda_db_base_compare (GdaDbBase *a,
   else if (a && !b)
     return 1;
 
-  gint res = g_strcmp0 (gda_db_base_get_name(a), gda_db_base_get_name(b));
+  const gchar *a_catalog = gda_db_base_get_catalog (a);
+  const gchar *b_catalog = gda_db_base_get_catalog (b);
 
-  if (!res)
+  const gchar *a_schema = gda_db_base_get_schema (a);
+  const gchar *b_schema = gda_db_base_get_schema (b);
+
+  const gchar *a_name = gda_db_base_get_name (a);
+  const gchar *b_name = gda_db_base_get_name (b);
+
+  gint res_name;
+  gint res_schema;
+  gint res_catalog;
+
+  res_name = g_strcmp0 (a_name, b_name);
+  res_schema = g_strcmp0 (a_schema, b_schema);
+  res_catalog = g_strcmp0 (a_catalog, b_catalog);
+
+  if (!res_name)
     {
-      res = g_strcmp0 (gda_db_base_get_catalog(a), gda_db_base_get_catalog(b));
-
-      if (!res)
-        return g_strcmp0(gda_db_base_get_schema(a), gda_db_base_get_schema(b));
-      else
-        return res;
+      if (!res_schema)
+        {
+          if (!res_catalog)
+            {
+              return res_catalog;
+            }
+          else /* catalogs are different */
+            {
+              return res_catalog;
+            }
+        }
+      else /* Schemas are different */
+        {
+          return res_schema;
+        }
     }
-  else
-    return res;
+  else /* names are different */
+    {
+      return res_name;
+    }
+
+  return -1;
 }

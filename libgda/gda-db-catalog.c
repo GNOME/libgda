@@ -553,14 +553,20 @@ gda_db_catalog_get_views (GdaDbCatalog *self)
 /**
  * gda_db_catalog_get_table:
  * @self: a #GdaDbCatalog object
+ * @catalog (nullable): catalog name or %NULL
+ * @schema (nullable): schema name or %NULL
  * @name: table name
  *
- * Convenient function to return a table based on name
+ * Convenient function to get a table based on @name. The coller is responsible
+ * for calling gda_db_catalog_parse_cnc() before calling this function.
  *
- * Returns: table as #GdaDbTable or %NULL
+ * Returns: (transfer none): table as #GdaDbTable or %NULL if the table is not found. The
+ * returned pointer should not be freed and belongs to the @self.
+ *
+ * Since: 6.2
  *
  */
-const GdaDbTable*
+GdaDbTable *
 gda_db_catalog_get_table (GdaDbCatalog *self,
                           const gchar *catalog,
                           const gchar *schema,
@@ -569,55 +575,132 @@ gda_db_catalog_get_table (GdaDbCatalog *self,
   g_return_val_if_fail (self, NULL);
   g_return_val_if_fail (name, NULL);
 
+  GdaDbBase *iobj;
+  GList *it;
+
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
-  GdaDbBase *iobj = gda_db_base_new ();
+  iobj = gda_db_base_new ();
   gda_db_base_set_names (iobj, catalog, schema, name);
 
-  GList *it = NULL;
-
   for (it = priv->mp_tables; it; it = it->next)
-      if (!gda_db_base_compare (iobj,GDA_DB_BASE(it->data)))
-        {
-          g_object_unref (iobj);
-          return GDA_DB_TABLE(it->data);
-        }
+    {
+	  if (!gda_db_base_compare (GDA_DB_BASE (it->data), iobj)) {
+		  if (iobj)
+			  g_object_unref (iobj);
 
-  g_object_unref (iobj);
+		  return GDA_DB_TABLE (it->data);
+	  }
+    }
+
+  if (iobj)
+    g_object_unref (iobj);
+
   return NULL;
 }
 
 /**
  * gda_db_catalog_get_view:
  * @self: a #GdaDbCatalog object
- * @name: view name
+ * @catalog: a catalog name or %NULL
+ * @schema: a schema name or %NULL
+ * @name: view name. Can't be %NULL
  *
- * Convenient function to return a view based on name.
+ * Convenient function to get a view based on name. The coller is responsible
+ * for calling gda_db_catalog_parse_cnc() before calling this function. This
+ * code is equivalent to the following code:
  *
- * Returns: table as #GdaDbView or %NULL if the view is not found.
+ * |[<!-- language="C" -->
+ *  GdaDbBase *iobj;
+ *  GList *it;
+ *
+ *  GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
+ *
+ *  if (gda_db_catalog_parse_cnc (self, error))
+ *    return NULL;
+ *
+ *  iobj = gda_db_base_new ();
+ *  gda_db_base_set_names (iobj, catalog, schema, name);
+ *
+ *  for (it = priv->mp_views; it; it = it->next)
+ *    {
+ *      if (!gda_db_base_compare (iobj, GDA_DB_BASE (it->data)))
+ *        {
+ *          if (iobj)
+ *            g_object_unref (iobj);
+ *
+ *          return GDA_DB_VIEW (it->data);
+ *        }
+ *    }
+ *
+ *  if (iobj)
+ *    g_object_unref (iobj);
+ *
+ *  return NULL;
+ * ]|
+ * Returns: (transfer none): View as #GdaDbView or %NULL if the view is not found. The returned
+ * pointer should not be freed and belongs to @self
+ *
+ * Since: 6.0
  *
  */
-const GdaDbView*
+GdaDbView*
 gda_db_catalog_get_view (GdaDbCatalog *self,
                          const gchar *catalog,
                          const gchar *schema,
                          const gchar *name)
 {
+  g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (name, NULL);
+
+  GdaDbBase *iobj;
+  GList *it;
+
   GdaDbCatalogPrivate *priv = gda_db_catalog_get_instance_private (self);
 
-  GList *it = NULL;
-
-  GdaDbBase *iobj = gda_db_base_new ();
-  gda_db_base_set_names (iobj,catalog,schema,name);
+  iobj = gda_db_base_new ();
+  gda_db_base_set_names (iobj, catalog, schema, name);
 
   for (it = priv->mp_views; it; it = it->next)
-    if (!gda_db_base_compare (iobj, GDA_DB_BASE(it)))
-      {
-        g_object_unref (iobj);
-        return GDA_DB_VIEW(it);
-      }
+    {
+      if (schema && catalog)
+        {
+          if (!gda_db_base_compare (iobj, GDA_DB_BASE (it->data)))
+            {
+              if (iobj)
+                g_object_unref (iobj);
 
-  g_object_unref (iobj);
+              return GDA_DB_VIEW (it->data);
+            }
+        }
+      else if (schema && !catalog)
+        {
+          if (!g_strcmp0 (schema,
+                          gda_db_base_get_schema (GDA_DB_BASE (it->data)))
+              && !g_strcmp0 (name,
+                             gda_db_base_get_name (GDA_DB_BASE (it->data))))
+            {
+              if (iobj)
+                g_object_unref (iobj);
+
+              return GDA_DB_VIEW (it->data);
+            }
+        }
+      else if (!schema && !catalog)
+        {
+          if (!g_strcmp0 (name, gda_db_base_get_name (GDA_DB_BASE (it->data))))
+            {
+              if (iobj)
+                g_object_unref (iobj);
+
+              return GDA_DB_VIEW (it->data);
+            }
+        }
+    }
+
+  if (iobj)
+    g_object_unref (iobj);
+
   return NULL;
 }
 
@@ -682,15 +765,18 @@ _gda_db_table_new_from_meta (GdaMetaDbObject *obj)
  * Returns: New instance of #GdaDbView
  */
 static GdaDbView*
-_gda_db_view_new_from_meta (GdaMetaView *view)
+_gda_db_view_new_from_meta (GdaMetaDbObject *obj)
 {
-  if (!view)
+  if (!obj)
     return gda_db_view_new ();
 
   GdaDbView *dbview = gda_db_view_new ();
 
-  gda_db_view_set_defstring (dbview,view->view_def);
-  gda_db_view_set_replace (dbview,view->is_updatable);
+  gda_db_base_set_names (GDA_DB_BASE (dbview), obj->obj_catalog,
+                         obj->obj_schema, obj->obj_name);
+
+  gda_db_view_set_defstring (dbview, obj->extra.meta_view.view_def);
+  gda_db_view_set_replace (dbview, obj->extra.meta_view.is_updatable);
 
   return dbview;
 }
@@ -743,23 +829,39 @@ gda_db_catalog_parse_cnc (GdaDbCatalog *self,
 
   GSList *it = NULL;
 
+  gint ntables = 0;
+  gint nviews = 0;
+
   for (it=dblist; it; it = it->next)
     {
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_TABLE)
         {
           GdaDbTable *table = _gda_db_table_new_from_meta (it->data);
-	  priv->mp_tables = g_list_append (priv->mp_tables,table);
+          if (!table)
+            continue;
+
+          priv->mp_tables = g_list_append (priv->mp_tables,table);
+	  ntables++;
           continue;
         }
 
       if(GDA_META_DB_OBJECT(it->data)->obj_type == GDA_META_DB_VIEW)
         {
           GdaDbView *view = _gda_db_view_new_from_meta (it->data);
+
+          if (!view)
+            continue;
+
+	  g_print ("%s:%d Found %s view\n", __FILE__, __LINE__, gda_db_base_get_full_name(GDA_DB_BASE (view)));
           priv->mp_views = g_list_append (priv->mp_views, view);
+	  nviews++;
           continue;
         }
     }
 
+#ifdef GDA_DEBUG
+  g_print ("Tables: %d total, Views: %d total\n", ntables, nviews);
+#endif
   g_slist_free (dblist);
   g_object_unref (mstruct);
   return TRUE;

@@ -30,6 +30,11 @@ typedef struct {
 	GdaDbBase *obj;
 }BaseFixture;
 
+typedef struct {
+	GdaDbBase *obja;
+	GdaDbBase *objb;
+} TestBaseCompare;
+
 static void
 test_db_base_start (BaseFixture *self,
 		     G_GNUC_UNUSED gconstpointer user_data)
@@ -39,11 +44,141 @@ test_db_base_start (BaseFixture *self,
 }
 
 static void
+test_db_base_compare_start (TestBaseCompare *self,
+		     G_GNUC_UNUSED gconstpointer user_data)
+{
+	self->obja = gda_db_base_new ();
+	self->objb = gda_db_base_new();
+}
+
+static void
+test_db_base_compare_finish (TestBaseCompare *self,
+		      G_GNUC_UNUSED gconstpointer user_data)
+{
+	if (self->obja)
+		g_object_unref (self->obja);
+
+	if (self->objb)
+		g_object_unref (self->objb);
+}
+
+static void
 test_db_base_finish (BaseFixture *self,
 		      G_GNUC_UNUSED gconstpointer user_data)
 {
 	if (self->obj)
 		g_object_unref (self->obj);
+}
+
+static void
+test_db_base_compare_same_names (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    const gchar *name = "name_a";
+    gda_db_base_set_name (self->obja, name);
+    gda_db_base_set_name (self->objb, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
+
+    gda_db_base_set_name (self->objb, "other");
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+}
+
+static void
+test_db_base_compare_different_names (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    gda_db_base_set_name (self->obja, "name_a");
+    gda_db_base_set_name (self->objb, "name_b");
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+}
+
+static void
+test_db_base_compare_schema_name (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    const gchar *name = "name";
+
+    gda_db_base_set_name (self->obja, name);
+    gda_db_base_set_schema (self->obja, "schema_a");
+
+    gda_db_base_set_name (self->objb, name);
+/* one schema is NULL */
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_schema (self->objb, "schema_b");
+    gda_db_base_set_schema (self->obja, NULL);
+
+/* one schema is NULL */
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_schema (self->obja, name);
+    gda_db_base_set_schema (self->objb, name);
+
+/* same schema */
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
+}
+
+static void
+test_db_base_compare_catalog_name (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    const gchar *name = "name";
+    const gchar *catalog = "catalog";
+
+    gda_db_base_set_name (self->obja, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_catalog (self->obja, catalog);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_name (self->objb, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_catalog (self->objb, catalog);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
+
+    gda_db_base_set_catalog (self->obja, NULL);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_catalog (self->obja, "catalog_a");
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+}
+
+static void
+test_db_base_compare_catalog_schema_name (TestBaseCompare *self,
+		   G_GNUC_UNUSED gconstpointer user_data)
+{
+    const gchar *name = "name";
+
+    gda_db_base_set_catalog (self->obja, name);
+    gda_db_base_set_catalog (self->objb, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
+
+    gda_db_base_set_schema (self->obja, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_schema (self->objb, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
+
+    gda_db_base_set_name (self->obja, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), !=, 0);
+
+    gda_db_base_set_name (self->objb, name);
+
+    g_assert_cmpint (gda_db_base_compare (self->obja, self->objb), ==, 0);
 }
 
 static void
@@ -225,5 +360,39 @@ main (gint   argc,
 		    test_db_base_run5,
 		    test_db_base_finish);
 
+	g_test_add ("/test-db/base-compare-same-name",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_same_names,
+		    test_db_base_compare_finish);
+
+	g_test_add ("/test-db/base-compare-different-name",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_different_names,
+		    test_db_base_compare_finish);
+
+	g_test_add ("/test-db/base-compare-schema-name",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_schema_name,
+		    test_db_base_compare_finish);
+
+	g_test_add ("/test-db/base-compare-catalog-name",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_catalog_name,
+		    test_db_base_compare_finish);
+
+	g_test_add ("/test-db/base-compare-catalog-schema-name",
+		    TestBaseCompare,
+		    NULL,
+		    test_db_base_compare_start,
+		    test_db_base_compare_catalog_schema_name,
+		    test_db_base_compare_finish);
 	return g_test_run();
 }

@@ -54,6 +54,7 @@ typedef struct {
     GdaDbColumn *column_ts;
     GdaDbColumn *column_state;
     GdaDbTable *table;
+    GdaDbView  *view;
 } DbCatalogCnc;
 
 typedef struct {
@@ -121,6 +122,8 @@ test_db_catalog_start_db (DbCatalogCnc *self,
 
   gchar* dbname = g_strdup_printf ("DB_DIR=.;DB_NAME=db_types_%d", g_random_int ());
 
+  g_print ("Will use DB: %s\n", dbname);
+
   self->cnc = gda_connection_new_from_string ("SQLite",
                                               dbname,
                                               NULL,
@@ -186,7 +189,16 @@ test_db_catalog_start_db (DbCatalogCnc *self,
 
   g_assert_true (open_res);
 
-  g_object_unref (self->catalog);
+  self->view = gda_db_view_new ();
+
+  gda_db_base_set_name (GDA_DB_BASE (self->view), "myview");
+  gda_db_view_set_defstring (self->view, "SELECT name FROM dntypes");
+  gda_db_view_set_istemp (self->view, FALSE);
+
+  open_res = gda_ddl_modifiable_create (GDA_DDL_MODIFIABLE (self->view),
+                                        self->cnc, NULL, NULL);
+
+  g_assert_true (open_res);
 }
 
 static void
@@ -205,6 +217,12 @@ test_db_catalog_finish_db (DbCatalogCnc *self,
                             G_GNUC_UNUSED gconstpointer user_data)
 {
   g_object_unref (self->cnc);
+  g_object_unref (self->catalog);
+  g_object_unref (self->column_id);
+  g_object_unref (self->column_name);
+  g_object_unref (self->column_ctime);
+  g_object_unref (self->column_ts);
+  g_object_unref (self->view);
 }
 
 static void
@@ -538,6 +556,47 @@ test_db_catalog_constraint_finish (DbCheckCatallog *self,
   gda_connection_close (self->cnc, NULL);
 }
 
+static void
+test_db_catalog_get_objects (DbCatalogCnc *self,
+                             G_GNUC_UNUSED gconstpointer user_data)
+{
+  GdaDbTable *copy_table;
+  GdaDbView *copy_view;
+  GError *error = NULL;
+  gboolean res;
+  const gchar *name1;
+  const gchar *name2;
+  /* Creating a view to work with */
+
+  /* view has been created */
+
+  res = gda_db_catalog_parse_cnc (self->catalog, &error);
+
+  g_assert_true (res);
+  g_assert_null (error);
+
+  copy_table = gda_db_catalog_get_table (self->catalog, NULL, NULL,
+	  gda_db_base_get_name (GDA_DB_BASE (self->table)));
+
+  g_assert_nonnull (copy_table);
+
+  name1 = gda_db_base_get_name (GDA_DB_BASE (copy_table));
+  name2 = gda_db_base_get_name (GDA_DB_BASE (self->table));
+
+  g_assert_cmpstr (name1, ==, name2);
+
+  const gchar *view_name = gda_db_base_get_name (GDA_DB_BASE (self->view));
+
+  copy_view = gda_db_catalog_get_view (self->catalog, NULL, NULL, view_name);
+
+  g_assert_nonnull (copy_view);
+
+  name1 = gda_db_base_get_name (GDA_DB_BASE (copy_view));
+  name2 = gda_db_base_get_name (GDA_DB_BASE (self->view));
+
+  g_assert_cmpstr (name1, ==, name2);
+}
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -586,6 +645,13 @@ main (gint   argc,
               test_db_catalog_constraint_start,
               test_db_catalog_constraint_run,
               test_db_catalog_constraint_finish);
+
+  g_test_add ("/test-db/catalog-get-objects",
+              DbCatalogCnc,
+              NULL,
+              test_db_catalog_start_db,
+              test_db_catalog_get_objects,
+              test_db_catalog_finish_db);
 
   return g_test_run();
 }
