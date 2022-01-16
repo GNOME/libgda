@@ -5,7 +5,7 @@ libgda_typesdoc = configure_file(
 		output : 'libgda.types',
 		configuration : conf)
 
-gda_html_images = files([
+gda_html_images = [
 	'DataModels.png',
 	'architecture.png',
 	'parts.png',
