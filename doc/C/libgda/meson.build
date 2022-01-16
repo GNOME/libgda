@@ -39,7 +39,7 @@ gda_html_images = [
 	'SqlIdentifiers.png',
 	'thread-wrapper.png',
 	'connection-status.png'
-	])
+	]
 
 doc_conf = configuration_data()
 doc_conf.set('GDA_VERSION', project_version)
