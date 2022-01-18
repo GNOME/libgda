@@ -89,10 +89,13 @@ namespace Gda {
 		public abstract void* _gda_reserved3 ();
 		public abstract void* _gda_reserved4 ();
 	}
+
+#if VALA_0_54
+#else
 	[CCode (cheader_filename = "libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_sql_statement_get_type ()")]
 	[Compact]
 	public class SqlStatement {
 		public static Gda.SqlStatementContentsInfo get_contents_infos (Gda.SqlStatementType type);
 	}
-
+#endif
 }
