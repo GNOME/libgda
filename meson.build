@@ -321,10 +321,18 @@ found_jdbc = false
 dates = compiler.run('''
 #include<glib.h>
 #include <glib/gprintf.h>
+#include <stdlib.h>
 
 void main (void) {
   GDateTime *dt;
-  dt = g_date_time_new_now_local ();
+  char *source_date_epoch;
+  gint64 epoch;
+  /* This assumes that the SOURCE_DATE_EPOCH environment variable will contain
+     a correct, positive integer */
+  if ((source_date_epoch = getenv("SOURCE_DATE_EPOCH")) == NULL ||
+    (epoch = (time_t)strtoll(source_date_epoch, NULL, 10)) <= 0 ||
+    (dt = g_date_time_new_from_unix_utc(epoch)) == NULL)
+       dt = g_date_time_new_now_utc ();
   g_print (g_date_time_format(dt, "%F"));
 }
 ''',
