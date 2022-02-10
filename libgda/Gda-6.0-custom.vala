@@ -92,7 +92,10 @@ namespace Gda {
 	[CCode (cheader_filename = "libgda.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gda_sql_statement_get_type ()")]
 	[Compact]
 	public class SqlStatement {
+		#if VALA_0_50
+		#else
 		public static Gda.SqlStatementContentsInfo get_contents_infos (Gda.SqlStatementType type);
+		#endif
 	}
 
 }
