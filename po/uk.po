@@ -3,13 +3,13 @@
 #
 # Yuri Syrota <rasta@renome.rovno.ua>, 1999.
 # Maxim Dziumanenko <mvd@mylinux.com.ua>, 2004.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-10-16 20:37+0000\n"
-"PO-Revision-Date: 2021-10-17 12:21+0300\n"
+"POT-Creation-Date: 2021-10-17 09:22+0000\n"
+"PO-Revision-Date: 2022-02-20 00:32+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -2940,6 +2940,7 @@ msgid ""
 "Time data handler can create an SQL representation of a value not holding "
 "time type."
 msgstr ""
+"Обробник даних часу може створювати SQL-представлення значення, яке не містить типу часу."
 
 #: ../libgda/handlers/gda-handler-time.c:1064
 msgid "Time, Date and TimeStamp representation"
@@ -6447,13 +6448,11 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:240
 #: ../providers/postgres/gda-postgres-recordset.c:147
 msgid "Number of rows fetched at a time"
-msgstr ""
-"Кількість отриманих рядків"
+msgstr "Кількість отриманих рядків"
 
 #: ../providers/mysql/gda-mysql-recordset.c:248
 msgid "Number of row chunks read since the object creation"
-msgstr ""
-"Кількість прочитаних фрагментів рядка з моменту створення об'єкта"
+msgstr "Кількість прочитаних фрагментів рядка з моменту створення об'єкта"
 
 #: ../providers/mysql/gda-mysql-recordset.c:695
 #: ../providers/mysql/gda-mysql-recordset.c:1039
@@ -6462,8 +6461,7 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:1084
 #, c-format
 msgid "Invalid column bind data type. %d\n"
-msgstr ""
-"Некоректний тип даних прив'язки стовпчика. %d\n"
+msgstr "Некоректний тип даних прив'язки стовпчика. %d\n"
 
 #: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
@@ -7160,7 +7158,8 @@ msgstr "Автоматично відкидати об'єкти, які зале
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
 msgstr ""
-"Відмовляти у викиданні таблиці, якщо від неї залежить якісь об'єкти (RESTRICT)"
+"Відмовляти у викиданні таблиці, якщо від неї залежить якісь об'єкти "
+"(RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:11
 msgid "Compress"
@@ -7224,13 +7223,11 @@ msgstr ""
 
 #: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
-msgstr ""
-"Невідомий тип утримувача даних."
+msgstr "Невідомий тип утримувача даних."
 
 #: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
-msgstr ""
-"Невідомий тип утримувача даних. Повідомте розробникам про цю ваду."
+msgstr "Невідомий тип утримувача даних. Повідомте розробникам про цю ваду."
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
@@ -7246,8 +7243,7 @@ msgstr "Недостатньо пам'яті для перетворення д�
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:206
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr ""
-"Недостатньо пам'яті для перетворення рядка на двійковий буфер"
+msgstr "Недостатньо пам'яті для перетворення рядка на двійковий буфер"
 
 #: ../providers/postgres/gda-postgres-provider.c:483
 msgid "Could not determine the default date format"
@@ -7255,8 +7251,7 @@ msgstr "Не вдалося визначити формат типової да�
 
 #: ../providers/postgres/gda-postgres-provider.c:530
 msgid "The connection string must contain a DB_NAME value"
-msgstr ""
-"Рядок з'єднання має містити значення DB_NAME"
+msgstr "Рядок з'єднання має містити значення DB_NAME"
 
 #: ../providers/postgres/gda-postgres-provider.c:534
 msgid ""
@@ -7300,8 +7295,7 @@ msgstr "Внутрішня помилка"
 #: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
-msgstr ""
-"Помилкова назва точки збереження, «%s»"
+msgstr "Помилкова назва точки збереження, «%s»"
 
 #: ../providers/postgres/gda-postgres-provider.c:2169
 #: ../providers/postgres/gda-postgres-provider.c:2171
@@ -7312,13 +7306,11 @@ msgstr "Не вдалося розпочати транзакцію"
 #: ../providers/postgres/gda-postgres-provider.c:2461
 #: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
-msgstr ""
-"Не вдалося встановити параметр ідентифікатор операції XA"
+msgstr "Не вдалося встановити параметр ідентифікатор операції XA"
 
 #: ../providers/postgres/gda-postgres-recordset.c:152
 msgid "Number of rows chunks read since the object creation"
-msgstr ""
-"Кількість прочитаних фрагментів рядків з моменту створення об'єкта"
+msgstr "Кількість прочитаних фрагментів рядків з моменту створення об'єкта"
 
 #: ../providers/postgres/gda-postgres-recordset.c:611
 #, c-format
@@ -7334,6 +7326,7 @@ msgstr "Некоректне значення часової позначки «
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
 msgstr ""
+"Некоректне представлення двійкового рядка «%s ...»"
 
 #: ../providers/postgres/libmain.c:69
 msgid "Provider for PostgreSQL databases"
@@ -7342,22 +7335,27 @@ msgstr "Постачальник для баз даних PostgreSQL"
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
 msgid "Ignore descendants"
 msgstr ""
+"Ігнорувати похідні"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
 msgid "Don't add the column to descendants of the table"
 msgstr ""
+"Не додавати стовпчик до похідних таблиці"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:6
 msgid "Only if it exist"
 msgstr ""
+"Лише якщо він існує"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Add column only if it exist"
 msgstr ""
+"Додати стовпчик, лише якщо він існує"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 msgid "Add column only if it does not yet exist"
 msgstr ""
+"Додати стовпчик, навіть якщо його ще не існує"
 
 #. Connection parameters
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
@@ -7396,6 +7394,7 @@ msgstr "Власник"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
 msgid "The name of the database user who will own the new database"
 msgstr ""
+"Ім'я користувача-власника нової бази даних"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
 msgid "Template"
@@ -7404,12 +7403,14 @@ msgstr "Шаблон"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
 msgid "The name of the template from which to create the new database"
 msgstr ""
+"Назва шаблона, на основі якого слід створити базу даних"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:4
 msgid "Tablespace"
 msgstr ""
+"Простір таблиці"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
 msgid ""
@@ -7433,30 +7434,35 @@ msgstr "ASCII"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
 msgid "Japanese EUC"
 msgstr ""
+"Японське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
 msgid "Chinese EUC"
 msgstr ""
+"Китайське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
 msgid "Korean EUC"
 msgstr ""
+"Корейське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
 msgid "Korean EUC (Hangle base)"
 msgstr ""
+"Корейське (EUC, основа хангиля)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
 msgid "Taiwan EUC"
 msgstr ""
+"Тайванське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
@@ -7523,24 +7529,28 @@ msgstr "ISO 8859-1/ECMA 94 (латинська абетка №10)"
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
 msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
 msgstr ""
+"ISO 8859-5/ECMA 113 (латиниця/кирилиця)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:65
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
 msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
 msgstr ""
+"ISO 8859-6/ECMA 114 (латиниця/арабська)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:67
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:39
 msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
 msgstr ""
+"ISO 8859-7/ECMA 118 (латиниця/грецька)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:69
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
 msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
 msgstr ""
+"ISO 8859-8/ECMA 121 (латиниця/іврит)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:71
@@ -7596,6 +7606,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
 msgid "Collation name"
 msgstr ""
+"Назва злиття"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7734,6 +7745,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:90
 msgid "Login limit"
 msgstr ""
+"Обмеження входу"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7784,10 +7796,12 @@ msgstr "Роль"
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:109
 msgid "Existing role"
 msgstr ""
+"Наявна роль"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:110
 msgid "Role's members"
 msgstr ""
+"Учасники ролі"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:111
 msgid ""
@@ -7798,6 +7812,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:112
 msgid "Role's admins"
 msgstr ""
+"Адміністратори ролі"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:113
 msgid ""
@@ -7809,6 +7824,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Parent table(s)"
 msgstr ""
+"Батьківські таблиці"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Inheritance"
@@ -7817,6 +7833,7 @@ msgstr "Успадкування"
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Parent table"
 msgstr ""
+"Батьківська таблиця"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Keep coupled"
@@ -7829,10 +7846,12 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
 msgstr ""
+"Копіювати типове"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
 msgid "Copy default expressions"
 msgstr ""
+"Копіювати типові вирази"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
@@ -7903,6 +7922,7 @@ msgstr "Користувач"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:19
 msgid "Existing user"
 msgstr ""
+"Наявний користувач"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
 msgid "Replace if already exists"
@@ -7911,6 +7931,7 @@ msgstr "Замінити, якщо вже існує"
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 msgid "What to do with references on the column to delete"
 msgstr ""
+"Що робити із посиланнями на стовпчик, який має бути вилучено"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
 msgid "Automatically drop objects that depend on the column (CASCADE)"
