@@ -260,7 +260,7 @@ postgres_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 	else if (!strcmp (name, "point"))
 		return GDA_TYPE_GEOMETRIC_POINT;
 	else if (!strcmp (name, "oid"))
-		return GDA_TYPE_BLOB;
+		return G_TYPE_UINT;
 	else if (!strcmp (name, "bytea"))
 		return GDA_TYPE_BINARY;
 	else if (!strcmp (name, "text"))
@@ -289,7 +289,7 @@ postgres_name_to_g_type (const gchar *name, const gchar *conv_func_name)
 	if (!strncmp (conv_func_name, "bool", 4))
 		return G_TYPE_BOOLEAN;
 	if (!strncmp (conv_func_name, "oid", 3))
-		return GDA_TYPE_BLOB;
+		return G_TYPE_UINT;
 	if (!strncmp (conv_func_name, "bytea", 5))
 		return GDA_TYPE_BINARY;
 	return G_TYPE_STRING;

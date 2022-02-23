@@ -1460,7 +1460,7 @@ gda_postgres_provider_get_default_dbms_type (GdaServerProvider *provider, GdaCon
         if (type == GDA_TYPE_BINARY)
                 return "bytea";
         if (type == GDA_TYPE_BLOB)
-                return "oid";
+                return "bytea";
         if (type == G_TYPE_BOOLEAN)
                 return "bool";
         if (type == G_TYPE_DATE)
