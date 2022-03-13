@@ -1,17 +1,17 @@
 # Hungarian translation for libgda.
-# Copyright (C) 1999, 2000, 2016, 2017, 2018, 2019, 2020, 2021 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 #
 # Szabolcs Bán <shooby at gnome dot hu>, 1999, 2000.
 # Gabor Kelemen <kelemeng at ubuntu dot com>, 2016, 2018.
 # Balázs Meskó <mesko.balazs at fsf dot hu>, 2018, 2019.
-# Balázs Úr <ur.balazs at fsf dot hu>, 2017, 2018, 2019, 2020, 2021.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2017, 2018, 2019, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-03-08 22:03+0000\n"
-"PO-Revision-Date: 2021-03-18 01:33+0100\n"
+"POT-Creation-Date: 2021-10-16 20:37+0000\n"
+"PO-Revision-Date: 2022-03-13 01:53+0100\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -58,7 +58,7 @@ msgstr "Definíció"
 msgid "Parameters"
 msgstr "Paraméterek"
 
-#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1764
+#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1768
 #: ../tools/browser/auth-dialog.c:266 ../tools/common/t-config-info.c:207
 #: ../tools/common/t-config-info.c:367
 msgid "Authentication"
@@ -75,10 +75,10 @@ msgstr "Nem sikerült a DSN definíció mentése: %s"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-config.c:367 ../control-center/gdaui-dsn-editor.c:354
-#: ../libgda/gda-config.c:521 ../libgda/gda-config.c:672
-#: ../libgda/gda-config.c:1181 ../libgda/gda-config.c:1293
-#: ../libgda/gda-config.c:1351 ../libgda/gda-config.c:1428
-#: ../libgda/gda-config.c:1866 ../libgda/gda-connection.c:1546
+#: ../libgda/gda-config.c:525 ../libgda/gda-config.c:676
+#: ../libgda/gda-config.c:1185 ../libgda/gda-config.c:1297
+#: ../libgda/gda-config.c:1355 ../libgda/gda-config.c:1432
+#: ../libgda/gda-config.c:1870 ../libgda/gda-connection.c:1546
 #: ../libgda/gda-data-model.c:2295 ../libgda/gda-data-model.c:2303
 #: ../libgda/gda-data-model-dir.c:339 ../libgda/gda-data-model-import.c:1705
 #: ../libgda/gda-data-pivot.c:1219 ../libgda/gda-data-pivot.c:1249
@@ -93,12 +93,12 @@ msgstr "Nem sikerült a DSN definíció mentése: %s"
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3069
-#: ../libgda/sqlite/gda-sqlite-provider.c:3081
-#: ../libgda/sqlite/gda-sqlite-provider.c:3292
-#: ../libgda/sqlite/gda-sqlite-provider.c:3630
-#: ../libgda/sqlite/gda-sqlite-provider.c:3642
-#: ../libgda/sqlite/gda-sqlite-provider.c:3744
+#: ../libgda/sqlite/gda-sqlite-provider.c:3074
+#: ../libgda/sqlite/gda-sqlite-provider.c:3086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3297
+#: ../libgda/sqlite/gda-sqlite-provider.c:3635
+#: ../libgda/sqlite/gda-sqlite-provider.c:3647
+#: ../libgda/sqlite/gda-sqlite-provider.c:3749
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -126,8 +126,8 @@ msgstr "Nem sikerült a DSN definíció mentése: %s"
 #: ../providers/ldap/gda-ldap-provider.c:957
 #: ../providers/ldap/gda-ldap-provider.c:1018
 #: ../providers/mdb/gda-mdb-provider.c:374
-#: ../providers/mysql/gda-mysql-provider.c:1964
-#: ../providers/mysql/gda-mysql-provider.c:1979
+#: ../providers/mysql/gda-mysql-provider.c:1974
+#: ../providers/mysql/gda-mysql-provider.c:1989
 #: ../providers/mysql/gda-mysql-util.c:69
 #: ../providers/postgres/gda-postgres-provider.c:1787
 #: ../providers/postgres/gda-postgres-provider.c:1802
@@ -524,77 +524,77 @@ msgstr "Az utasítás nem található a köteg utasításai között"
 msgid "Conflicting parameter '%s'"
 msgstr "Ütköző „%s” paraméter"
 
-#: ../libgda/gda-config.c:520 ../libgda/gda-config.c:546
-#: ../libgda/gda-config.c:671 ../libgda/gda-config.c:696
+#: ../libgda/gda-config.c:524 ../libgda/gda-config.c:550
+#: ../libgda/gda-config.c:675 ../libgda/gda-config.c:700
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "Hiba a hitelesítési információk betöltése közben ehhez: „%s” DSN: %s"
 
-#: ../libgda/gda-config.c:859
+#: ../libgda/gda-config.c:863
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr "Hiba a(z) „%s” felhasználói konfigurációs könyvtár létrehozása során"
 
-#: ../libgda/gda-config.c:908 ../libgda/gda-config.c:921
+#: ../libgda/gda-config.c:912 ../libgda/gda-config.c:925
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr ""
 "A(z) „%s” felhasználói konfigurációs könyvtár már létezik, de nem könyvtár"
 
-#: ../libgda/gda-config.c:1154
+#: ../libgda/gda-config.c:1158
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Rosszul formázott adatforrás-név: „%s”"
 
-#: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
-#: ../libgda/gda-config.c:1291
+#: ../libgda/gda-config.c:1184 ../libgda/gda-config.c:1196
+#: ../libgda/gda-config.c:1295
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr "Nem menthető a hitelesítési információ a(z) „%s” DSN-hez: %s"
 
-#: ../libgda/gda-config.c:1226 ../libgda/gda-config.c:1402
+#: ../libgda/gda-config.c:1230 ../libgda/gda-config.c:1406
 msgid "Can't manage system-wide configuration"
 msgstr "A rendszerszintű konfiguráció nem kezelhető"
 
-#: ../libgda/gda-config.c:1281 ../libgda/gda-config.c:1313
+#: ../libgda/gda-config.c:1285 ../libgda/gda-config.c:1317
 #, c-format
 msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Gnome-DB hitelesítés a(z) „%s” DSN-hez"
 
-#: ../libgda/gda-config.c:1350 ../libgda/gda-config.c:1362
-#: ../libgda/gda-config.c:1426
+#: ../libgda/gda-config.c:1354 ../libgda/gda-config.c:1366
+#: ../libgda/gda-config.c:1430
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Nem törölhető a hitelesítési információ a(z) „%s” DSN-től: %s"
 
-#: ../libgda/gda-config.c:1396 ../libgda-ui/gdaui-login.c:640
+#: ../libgda/gda-config.c:1400 ../libgda-ui/gdaui-login.c:640
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Ismeretlen „%s” DSN"
 
-#: ../libgda/gda-config.c:1491
+#: ../libgda/gda-config.c:1495
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "A(z) „%s” szolgáltató nem található"
 
-#: ../libgda/gda-config.c:1681 ../libgda/gda-connection.c:988
+#: ../libgda/gda-config.c:1685 ../libgda/gda-connection.c:988
 #: ../libgda/gda-connection.c:1060 ../libgda/gda-connection.c:1241
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Nincs „%s” kiszolgáló telepítve"
 
-#: ../libgda/gda-config.c:1695
+#: ../libgda/gda-config.c:1699
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "A szolgáltató nem tölthető be: %s"
 
-#: ../libgda/gda-config.c:1716
+#: ../libgda/gda-config.c:1720
 #, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "A(z) „%s” szolgáltató nem példányosítható"
 
-#: ../libgda/gda-config.c:1761 ../libgda/gda-data-model-dsn-list.c:105
+#: ../libgda/gda-config.c:1765 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
 #: ../tools/common/t-app.c:2902 ../tools/common/t-config-info.c:71
 #: ../tools/common/t-config-info.c:132 ../tools/common/t-config-info.c:315
@@ -602,7 +602,7 @@ msgstr "A(z) „%s” szolgáltató nem példányosítható"
 msgid "Provider"
 msgstr "Szolgáltató"
 
-#: ../libgda/gda-config.c:1762 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-config.c:1766 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/browser/data-manager/data-source-editor.c:167
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:304
@@ -612,26 +612,26 @@ msgstr "Szolgáltató"
 msgid "Description"
 msgstr "Leírás"
 
-#: ../libgda/gda-config.c:1763 ../tools/common/t-config-info.c:160
+#: ../libgda/gda-config.c:1767 ../tools/common/t-config-info.c:160
 msgid "DSN parameters"
 msgstr "DSN paraméterek"
 
-#: ../libgda/gda-config.c:1765 ../tools/common/t-config-info.c:246
+#: ../libgda/gda-config.c:1769 ../tools/common/t-config-info.c:246
 msgid "File"
 msgstr "Fájl"
 
-#: ../libgda/gda-config.c:1766
+#: ../libgda/gda-config.c:1770
 msgid "List of installed providers"
 msgstr "A telepített szolgáltatók listája"
 
-#: ../libgda/gda-config.c:1865
+#: ../libgda/gda-config.c:1869
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr ""
 "Nincs alapértelmezett SQLite szolgáltató. Kísérlet egy új létrehozására. A "
 "hiba ez volt: %s"
 
-#: ../libgda/gda-config.c:1949 ../libgda/gda-data-model-dsn-list.c:125
+#: ../libgda/gda-config.c:1953 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2904
 msgid "Username"
@@ -642,7 +642,7 @@ msgstr "Felhasználónév"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1951 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1955 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -650,7 +650,7 @@ msgstr "Felhasználónév"
 msgid "Password"
 msgstr "Jelszó"
 
-#: ../libgda/gda-config.c:2031
+#: ../libgda/gda-config.c:2035
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Hiba a(z) „%s” szolgáltató betöltése során: %s"
@@ -763,129 +763,129 @@ msgstr "A szolgáltató nem biztosít GdaDataHandler-tt a dátumokhoz"
 #: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
 #: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
 #: ../libgda/gda-connection.c:2597 ../libgda/gda-connection.c:3044
-#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3617
-#: ../libgda/gda-connection.c:3638 ../libgda/gda-connection.c:3722
-#: ../libgda/gda-connection.c:3734 ../libgda/gda-connection.c:3809
-#: ../libgda/gda-connection.c:3824 ../libgda/gda-connection.c:3911
-#: ../libgda/gda-connection.c:3939 ../libgda/gda-connection.c:3968
-#: ../libgda/gda-connection.c:3994 ../libgda/gda-connection.c:4020
-#: ../libgda/gda-connection.c:4046 ../libgda/gda-connection.c:5085
-#: ../libgda/gda-connection.c:5330 ../libgda/gda-connection.c:5403
-#: ../libgda/gda-connection.c:6292
+#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3610
+#: ../libgda/gda-connection.c:3631 ../libgda/gda-connection.c:3715
+#: ../libgda/gda-connection.c:3727 ../libgda/gda-connection.c:3802
+#: ../libgda/gda-connection.c:3817 ../libgda/gda-connection.c:3904
+#: ../libgda/gda-connection.c:3932 ../libgda/gda-connection.c:3961
+#: ../libgda/gda-connection.c:3987 ../libgda/gda-connection.c:4013
+#: ../libgda/gda-connection.c:4039 ../libgda/gda-connection.c:5078
+#: ../libgda/gda-connection.c:5323 ../libgda/gda-connection.c:5396
+#: ../libgda/gda-connection.c:6285
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
 msgstr "A kapcsolat lezárt"
 
-#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3517
+#: ../libgda/gda-connection.c:3495 ../libgda/gda-connection.c:3510
 msgid "Statement is a selection statement"
 msgstr "Az utasítás egy lekérdezési utasítás"
 
-#: ../libgda/gda-connection.c:3574 ../libgda/gda-connection.c:3674
-#: ../libgda/gda-connection.c:3763
+#: ../libgda/gda-connection.c:3567 ../libgda/gda-connection.c:3667
+#: ../libgda/gda-connection.c:3756
 msgid "Statement is not a selection statement"
 msgstr "Az utasítás nem lekérdezési utasítás"
 
-#: ../libgda/gda-connection.c:4223
+#: ../libgda/gda-connection.c:4216
 msgid "Invalid argument"
 msgstr "Érvénytelen argumentum"
 
-#: ../libgda/gda-connection.c:4233
+#: ../libgda/gda-connection.c:4226
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "Hiányzó vagy hibás argumentumok a(z) „%s” táblához: %s"
 
-#: ../libgda/gda-connection.c:5353
+#: ../libgda/gda-connection.c:5346
 #, c-format
 msgid "While extracting data from Data Store: %s"
 msgstr "Az adatforrásból történő adatkinyerése közben: %s"
 
-#: ../libgda/gda-connection.c:5411
+#: ../libgda/gda-connection.c:5404
 #, c-format
 msgid "Internal error: No meta store in connection"
 msgstr "Belső hiba: nincs metatároló a kapcsolatban"
 
-#: ../libgda/gda-connection.c:5429
+#: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr "A „name” paraméter szükséges a névterek szűréséhez"
 
-#: ../libgda/gda-connection.c:5440
+#: ../libgda/gda-connection.c:5433
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr "A „name” paraméter szükséges az adattípusok szűréséhez"
 
-#: ../libgda/gda-connection.c:5451
+#: ../libgda/gda-connection.c:5444
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr "A „name” paraméter szükséges a táblák szűréséhez"
 
-#: ../libgda/gda-connection.c:5462
+#: ../libgda/gda-connection.c:5455
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr "A „name” paraméter szükséges a nézetek szűréséhez"
 
-#: ../libgda/gda-connection.c:5472
+#: ../libgda/gda-connection.c:5465
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
 msgstr "A „name” paraméter szükséges a mezők szűréséhez"
 
-#: ../libgda/gda-connection.c:5478
+#: ../libgda/gda-connection.c:5471
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr "A „field_name” paraméter szükséges a mezők szűréséhez"
 
-#: ../libgda/gda-connection.c:5485
+#: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr "A „name” vagy „field_name” paraméter szükséges a mezők szűréséhez"
 
-#: ../libgda/gda-connection.c:5494 ../libgda/gda-connection.c:5515
+#: ../libgda/gda-connection.c:5487 ../libgda/gda-connection.c:5508
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr "A „name” paraméter szükséges az indexek szűréséhez"
 
-#: ../libgda/gda-connection.c:5500 ../libgda/gda-connection.c:5519
+#: ../libgda/gda-connection.c:5493 ../libgda/gda-connection.c:5512
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr "Az „index_name” paraméter szükséges az indexek szűréséhez"
 
-#: ../libgda/gda-connection.c:5507
+#: ../libgda/gda-connection.c:5500
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr "A „name” vagy „field_name” paraméter szükséges az indexek szűréséhez"
 
-#: ../libgda/gda-connection.c:5527
+#: ../libgda/gda-connection.c:5520
 #, c-format
 msgid "Invalid meta type to get data from store"
 msgstr "Érvénytelen metatípus a tárolóból történő adatlekéréshez"
 
-#: ../libgda/gda-connection.c:5538
+#: ../libgda/gda-connection.c:5531
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr "Belső hiba az adatlekérési utasítás létrehozása során: %s"
 
-#: ../libgda/gda-connection.c:5730 ../libgda/gda-connection.c:5784
-#: ../libgda/gda-connection.c:5829 ../libgda/gda-connection.c:5874
-#: ../libgda/gda-connection.c:5919
+#: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
+#: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
+#: ../libgda/gda-connection.c:5912
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr ""
 "Kapcsolat tranzakciós állapotának követése: nem létezik tranzakció ehhez: %s"
 
-#: ../libgda/gda-connection.c:7052
+#: ../libgda/gda-connection.c:7045
 msgid "Unspecified table name"
 msgstr "Nincs megadva táblanév"
 
-#: ../libgda/gda-connection.c:7094
+#: ../libgda/gda-connection.c:7087
 msgid "Invalid type"
 msgstr "Érvénytelen típus"
 
-#: ../libgda/gda-connection.c:7190
+#: ../libgda/gda-connection.c:7183
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "A CREATE TABLE utasítás nem támogatott az adatbázis szerveren"
 
-#: ../libgda/gda-connection.c:7309 ../libgda/gda-connection.c:7319
+#: ../libgda/gda-connection.c:7302 ../libgda/gda-connection.c:7312
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Hibás SQL azonosító érték"
@@ -1286,7 +1286,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Karakterkonverzió a(z) %d. sorban, hiba: %s"
 
 #: ../libgda/gda-data-model-import.c:1026
-#: ../libgda/sqlite/gda-sqlite-provider.c:1299
+#: ../libgda/sqlite/gda-sqlite-provider.c:1304
 #: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:607
 #: ../tools/browser/gdaui-data-import.c:177
@@ -1863,13 +1863,11 @@ msgstr "Üres oszloplista"
 
 #: ../libgda/gda-db-view.c:538
 #, c-format
-#| msgid "View table's contents"
 msgid "View name is not set"
 msgstr "A nézet neve nincs beállítva"
 
 #: ../libgda/gda-db-view.c:545
 #, c-format
-#| msgid "View definition: %s"
 msgid "View definition is not set"
 msgstr "A nézet definíciója nincs beállítva"
 
@@ -2694,9 +2692,9 @@ msgstr "Hibás paramétertípus ehhez: „%s”, vár típus: „%s”, kapott: 
 msgid "Missing parameter '%s'"
 msgstr "Hiányzó paraméter: „%s”"
 
-#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3477
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
-#: ../providers/mysql/gda-mysql-provider.c:2239
+#: ../providers/mysql/gda-mysql-provider.c:2249
 #: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
@@ -2848,9 +2846,9 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "A nem INSERT vagy UPDATE utasítások nem írhatóak át"
 
 #: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
-#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3458
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
-#: ../providers/mysql/gda-mysql-provider.c:2219
+#: ../providers/mysql/gda-mysql-provider.c:2229
 #: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
@@ -3087,45 +3085,45 @@ msgstr "SQLite bináris ábrázolás"
 msgid "Sqlite boolean representation"
 msgstr "SQLite logikai ábrázolás"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:124
+#: ../libgda/sqlite/gda-sqlite-provider.c:129
 #, c-format
 msgid "Parameter '%s' not found in statement"
 msgstr "A(z) „%s” paraméter nem található az utasításban"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:138
-#: ../libgda/sqlite/gda-sqlite-provider.c:154
-#: ../libgda/sqlite/gda-sqlite-provider.c:196
-#: ../libgda/sqlite/gda-sqlite-provider.c:212
+#: ../libgda/sqlite/gda-sqlite-provider.c:143
+#: ../libgda/sqlite/gda-sqlite-provider.c:159
+#: ../libgda/sqlite/gda-sqlite-provider.c:201
+#: ../libgda/sqlite/gda-sqlite-provider.c:217
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "Nem tartozik oszlopnév a(z) „%s” paraméterhez"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:182
+#: ../libgda/sqlite/gda-sqlite-provider.c:187
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "A(z) „%s” paraméter nem található az utasításban"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:222
+#: ../libgda/sqlite/gda-sqlite-provider.c:227
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "BLOB kötése ehhez a típusú utasításhoz nem támogatott"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:952
+#: ../libgda/sqlite/gda-sqlite-provider.c:957
 msgid "Set to TRUE if the provider is the internal default"
 msgstr "Állítsa igazra, ha a szolgáltató a belső alapértelmezés"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:974
+#: ../libgda/sqlite/gda-sqlite-provider.c:979
 msgid "Can't find libsqlite3."
 msgstr "Nem található a libsqlite3."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1128
+#: ../libgda/sqlite/gda-sqlite-provider.c:1133
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr ""
 "A kapcsolódási karakterláncnak tartalmaznia kell a DB_DIR és DB_NAME "
 "értékeket"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1154
-#: ../libgda/sqlite/gda-sqlite-provider.c:1161
+#: ../libgda/sqlite/gda-sqlite-provider.c:1159
+#: ../libgda/sqlite/gda-sqlite-provider.c:1166
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -3136,7 +3134,7 @@ msgstr ""
 "DB_DIR-re (az adatbázis fájl útvonala) és DB_NAME-re (az adatbázis fájl neve "
 "a(z) „%s” nélkül a végén)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1176
+#: ../libgda/sqlite/gda-sqlite-provider.c:1181
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
@@ -3144,11 +3142,11 @@ msgstr ""
 "A kapcsolódási karakterlánc DB_DIR részének egy érvényes mappára kell "
 "mutatnia"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1236
+#: ../libgda/sqlite/gda-sqlite-provider.c:1241
 msgid "Wrong encryption passphrase"
 msgstr "Rossz titkosítási jelmondat"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1279
+#: ../libgda/sqlite/gda-sqlite-provider.c:1284
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
@@ -3157,86 +3155,86 @@ msgstr ""
 "parancsokban, ez azt jelenti, hogy egy támadó hozzáférhet a "
 "kiterjesztésbetöltési funkciókhoz"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1298
+#: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Nem sikerült megadni az empty_result_callbacks SQLite beállítást: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1386
-#: ../libgda/sqlite/gda-sqlite-provider.c:1406
+#: ../libgda/sqlite/gda-sqlite-provider.c:1391
+#: ../libgda/sqlite/gda-sqlite-provider.c:1411
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "Nem sikerült a(z) „%s” függvényt regisztrálni"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1424
+#: ../libgda/sqlite/gda-sqlite-provider.c:1429
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "Nem sikerült a(z) %s egybevetés definiálása"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1708
-#: ../libgda/sqlite/gda-sqlite-provider.c:1719
-#: ../libgda/sqlite/gda-sqlite-provider.c:1733
-#: ../libgda/sqlite/gda-sqlite-provider.c:1744
+#: ../libgda/sqlite/gda-sqlite-provider.c:1713
+#: ../libgda/sqlite/gda-sqlite-provider.c:1724
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../libgda/sqlite/gda-sqlite-provider.c:1749
 msgid "Error initializing database with passphrase"
 msgstr "Hiba az adatbázis jelmondatot használó előkészítése során"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1786
+#: ../libgda/sqlite/gda-sqlite-provider.c:1791
 msgid "Missing database name or directory"
 msgstr "Hiányzó adatbázisnév vagy mappa"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1814
+#: ../libgda/sqlite/gda-sqlite-provider.c:1819
 #: ../providers/postgres/gda-postgres-provider.c:1084
 #: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Csak olvasható módban a tranzakciók nem támogatottak"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2230
+#: ../libgda/sqlite/gda-sqlite-provider.c:2235
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr "Az SQLite nem támogatja a mezők megadását a DISTINCT tagmondatban"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2277
-#: ../libgda/sqlite/gda-sqlite-provider.c:2287
+#: ../libgda/sqlite/gda-sqlite-provider.c:2282
+#: ../libgda/sqlite/gda-sqlite-provider.c:2292
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "Az SQLite nem támogatja a(z) „%s” összetételt"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2389
+#: ../libgda/sqlite/gda-sqlite-provider.c:2394
 msgid "ILIKE operation not supported"
 msgstr "Az ILIKE művelet nem támogatott"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2421
+#: ../libgda/sqlite/gda-sqlite-provider.c:2426
 msgid "SIMILAR operation not supported"
 msgstr "A SIMILAR művelet nem támogatott"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2545
+#: ../libgda/sqlite/gda-sqlite-provider.c:2550
 msgid "Operator type not supported"
 msgstr "Az operátortípus nem támogatott"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2951
+#: ../libgda/sqlite/gda-sqlite-provider.c:2956
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "A névtelen paraméterek nem támogatottak az előkészített utasításokban"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3068
-#: ../libgda/sqlite/gda-sqlite-provider.c:3080
-#: ../providers/mysql/gda-mysql-provider.c:1963
+#: ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/sqlite/gda-sqlite-provider.c:3085
+#: ../providers/mysql/gda-mysql-provider.c:1973
 #: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr "Nem készíthető SELECT utasítás az utolsó beszúrt sor lekérdezésére: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3114
-#: ../providers/mysql/gda-mysql-provider.c:1991
+#: ../libgda/sqlite/gda-sqlite-provider.c:3119
+#: ../providers/mysql/gda-mysql-provider.c:2001
 #: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Az utolsó beszúrt sor lekérdezésére szolgáló SELECT utasítás nem adott "
 "vissza egy sort sem"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3118
-#: ../providers/mysql/gda-mysql-provider.c:1995
+#: ../libgda/sqlite/gda-sqlite-provider.c:3123
+#: ../providers/mysql/gda-mysql-provider.c:2005
 #: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
@@ -3244,21 +3242,21 @@ msgstr ""
 "Az utolsó beszúrt sor lekérdezésére szolgáló SELECT utasítás túl sok sort "
 "(%d) adott vissza"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3182
+#: ../libgda/sqlite/gda-sqlite-provider.c:3187
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Az előkészített utasításhoz nem tartozik GdaStatement"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3223
-#: ../libgda/sqlite/gda-sqlite-provider.c:3260
+#: ../libgda/sqlite/gda-sqlite-provider.c:3228
+#: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't create SQLite BLOB handle"
 msgstr "Nem hozható létre SQLite BLOB kezelő"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3227
-#: ../libgda/sqlite/gda-sqlite-provider.c:3265
+#: ../libgda/sqlite/gda-sqlite-provider.c:3232
+#: ../libgda/sqlite/gda-sqlite-provider.c:3270
 msgid "Can't write to SQLite's BLOB"
 msgstr "Nem lehet írni az SQLite BLOB-jába"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3250
+#: ../libgda/sqlite/gda-sqlite-provider.c:3255
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -3267,21 +3265,21 @@ msgstr ""
 "Nem kérhető el az SQLite BLOB kezelő (a jelentett típus „%s”), jelentse a "
 "hibát itt: http://gitlab.gnome.org/GNOME/libgda/issues"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3275
+#: ../libgda/sqlite/gda-sqlite-provider.c:3280
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Nem azonosítható a feltöltendő blob ROWID-ja"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3386
+#: ../libgda/sqlite/gda-sqlite-provider.c:3391
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Üres utasítás"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3428
-#: ../libgda/sqlite/gda-sqlite-provider.c:3431
+#: ../libgda/sqlite/gda-sqlite-provider.c:3433
+#: ../libgda/sqlite/gda-sqlite-provider.c:3436
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
-#: ../providers/mysql/gda-mysql-provider.c:2194
-#: ../providers/mysql/gda-mysql-provider.c:2197
+#: ../providers/mysql/gda-mysql-provider.c:2204
+#: ../providers/mysql/gda-mysql-provider.c:2207
 #: ../providers/postgres/gda-postgres-provider.c:2018
 #: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
@@ -3289,68 +3287,68 @@ msgstr "Üres utasítás"
 msgid "Missing parameter(s) to execute query"
 msgstr "Paraméterek hiányoznak a lekérdezés futtatásához"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3491
+#: ../libgda/sqlite/gda-sqlite-provider.c:3496
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
-#: ../providers/mysql/gda-mysql-provider.c:2258
+#: ../providers/mysql/gda-mysql-provider.c:2268
 #: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Az utasítás nem írható át hogy kezelje az alapértelmezett értékeket"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3612
-#: ../providers/mysql/gda-mysql-provider.c:2514
+#: ../libgda/sqlite/gda-sqlite-provider.c:3617
+#: ../providers/mysql/gda-mysql-provider.c:2524
 msgid "Can't get BLOB's length"
 msgstr "Nem lehet lekérni a BLOB hosszát"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3614
-#: ../providers/mysql/gda-mysql-provider.c:2516
+#: ../libgda/sqlite/gda-sqlite-provider.c:3619
+#: ../providers/mysql/gda-mysql-provider.c:2526
 msgid "BLOB is too big"
 msgstr "A BLOB túl nagy"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3699
+#: ../libgda/sqlite/gda-sqlite-provider.c:3704
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Nem kezelt adattípus „%s”"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3766
+#: ../libgda/sqlite/gda-sqlite-provider.c:3771
 msgid "Could not start transaction to create BLOB"
 msgstr "Nem sikerült a BLOB létrehozásához tranzakciót indítani"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3941
-#: ../libgda/sqlite/gda-sqlite-provider.c:3962
-#: ../libgda/sqlite/gda-sqlite-provider.c:4054
-#: ../libgda/sqlite/gda-sqlite-provider.c:4074
-#: ../libgda/sqlite/gda-sqlite-provider.c:4097
+#: ../libgda/sqlite/gda-sqlite-provider.c:3946
+#: ../libgda/sqlite/gda-sqlite-provider.c:3967
+#: ../libgda/sqlite/gda-sqlite-provider.c:4059
+#: ../libgda/sqlite/gda-sqlite-provider.c:4079
+#: ../libgda/sqlite/gda-sqlite-provider.c:4102
 msgid "Function requires one argument"
 msgstr "A függvény egy argumentumot vár"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3995
-#: ../libgda/sqlite/gda-sqlite-provider.c:4129
+#: ../libgda/sqlite/gda-sqlite-provider.c:4000
+#: ../libgda/sqlite/gda-sqlite-provider.c:4134
 msgid "Function requires two arguments"
 msgstr "A függvény két argumentumot vár"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4034
+#: ../libgda/sqlite/gda-sqlite-provider.c:4039
 msgid "Function requires one or two arguments"
 msgstr "A függvény egy vagy két argumentumot vár"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4169
-#: ../libgda/sqlite/gda-sqlite-provider.c:4276
+#: ../libgda/sqlite/gda-sqlite-provider.c:4174
+#: ../libgda/sqlite/gda-sqlite-provider.c:4281
 msgid "Function requires two or three arguments"
 msgstr "A függvény kettő vagy három argumentumot vár"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4223
+#: ../libgda/sqlite/gda-sqlite-provider.c:4228
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "SQLite reguláris kifejezés „%s” hiba:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4224
+#: ../libgda/sqlite/gda-sqlite-provider.c:4229
 msgid "Invalid regular expression"
 msgstr "Érvénytelen reguláris kifejezés"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:233
 #: ../providers/jdbc/gda-jdbc-recordset.c:297
-#: ../providers/mysql/gda-mysql-recordset.c:416
-#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:472
+#: ../providers/mysql/gda-mysql-recordset.c:608
 #: ../providers/postgres/gda-postgres-recordset.c:265
 #: ../providers/web/gda-web-recordset.c:156
 #, c-format
@@ -6209,8 +6207,8 @@ msgid "Too many arguments"
 msgstr "Túl sok argumentum"
 
 #: ../providers/ldap/gda-ldap-provider.c:1073
-#: ../providers/mysql/gda-mysql-provider.c:616
-#: ../providers/mysql/gda-mysql-provider.c:670
+#: ../providers/mysql/gda-mysql-provider.c:621
+#: ../providers/mysql/gda-mysql-provider.c:675
 #: ../providers/mysql/gda-mysql-util.c:63
 #: ../tools/browser/ldap-browser/entry-properties.c:587
 #: ../tools/browser/schema-browser/table-columns.c:519
@@ -6450,20 +6448,20 @@ msgstr "A használandó adatbázis neve (a fájlnév .mdb nélkül)"
 msgid "MySQL boolean representation"
 msgstr "MySQL logikai ábrázolás"
 
-#: ../providers/mysql/gda-mysql-provider.c:449
+#: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr "Nem adható meg UNIX FOGLALAT, ha HOST vagy PORT is meg van adva"
 
-#: ../providers/mysql/gda-mysql-provider.c:457
+#: ../providers/mysql/gda-mysql-provider.c:458
 msgid "Invalid port number"
 msgstr "Érvénytelen portszám"
 
-#: ../providers/mysql/gda-mysql-provider.c:493
+#: ../providers/mysql/gda-mysql-provider.c:496
 #, c-format
 msgid "Unknown MySQL protocol '%s'"
 msgstr "Ismeretlen MySQL protokoll: „%s”"
 
-#: ../providers/mysql/gda-mysql-provider.c:538
+#: ../providers/mysql/gda-mysql-provider.c:541
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
@@ -6472,21 +6470,21 @@ msgstr ""
 "A kliens karakterkódolása nem állítható be UTF-8 kódolásra. „%s” használata. "
 "Ez problémákat fog okozni a nem UTF-8 karakterekkel"
 
-#: ../providers/mysql/gda-mysql-provider.c:584
+#: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
 msgstr "A kapcsolódási karakterláncnak tartalmazni kell a DB_NAME értékeket"
 
-#: ../providers/mysql/gda-mysql-provider.c:619
-#: ../providers/mysql/gda-mysql-provider.c:673
+#: ../providers/mysql/gda-mysql-provider.c:624
+#: ../providers/mysql/gda-mysql-provider.c:678
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Nincs leírás"
 
-#: ../providers/mysql/gda-mysql-provider.c:1757
+#: ../providers/mysql/gda-mysql-provider.c:1767
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "A névtelen paraméterek nem támogatottak az előkészített utasításokban."
 
-#: ../providers/mysql/gda-mysql-provider.c:1978
+#: ../providers/mysql/gda-mysql-provider.c:1988
 #: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
@@ -6494,12 +6492,12 @@ msgstr ""
 "Nem hajtható végre a SELECT utasítás az utolsó beszúrt sort lekérdezésére: %s"
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2508
+#: ../providers/mysql/gda-mysql-provider.c:2518
 msgid "Can't read whole BLOB into memory"
 msgstr "Nem olvasható fel az egész BLOB a memóriába"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2555
+#: ../providers/mysql/gda-mysql-provider.c:2565
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
@@ -6508,7 +6506,7 @@ msgstr ""
 "Kezeletlen „%s” adattípus, jelentse ezt a hibát itt: http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 
-#: ../providers/mysql/gda-mysql-provider.c:2601
+#: ../providers/mysql/gda-mysql-provider.c:2611
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -6533,38 +6531,38 @@ msgstr "Az egyszerre lekért sorok száma"
 msgid "Number of row chunks read since the object creation"
 msgstr "A beolvasott sordarabok száma az objektum létrehozása óta"
 
-#: ../providers/mysql/gda-mysql-recordset.c:638
-#: ../providers/mysql/gda-mysql-recordset.c:958
-#: ../providers/mysql/gda-mysql-recordset.c:971
-#: ../providers/mysql/gda-mysql-recordset.c:984
-#: ../providers/mysql/gda-mysql-recordset.c:1003
+#: ../providers/mysql/gda-mysql-recordset.c:695
+#: ../providers/mysql/gda-mysql-recordset.c:1039
+#: ../providers/mysql/gda-mysql-recordset.c:1052
+#: ../providers/mysql/gda-mysql-recordset.c:1065
+#: ../providers/mysql/gda-mysql-recordset.c:1084
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Érvénytelen oszlophoz kötött adattípus. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "A(z) „%s” típus nincs hozzárendelve a(z) %d értékhez"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:872
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "A(z) „%s” típus nincs hozzárendelve a(z) %lld értékhez"
 
-#: ../providers/mysql/gda-mysql-recordset.c:862
+#: ../providers/mysql/gda-mysql-recordset.c:919
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr ""
 "A(z) „%s” típus nincs hozzárendelve a(z) %d/%d/%d %d:%d:%d.%lu értékhez"
 
-#: ../providers/mysql/gda-mysql-recordset.c:879
-#: ../providers/mysql/gda-mysql-recordset.c:894
+#: ../providers/mysql/gda-mysql-recordset.c:936
+#: ../providers/mysql/gda-mysql-recordset.c:951
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "A(z) „%s” típus nincs hozzárendelve a(z) %f értékhez"
 
-#: ../providers/mysql/gda-mysql-recordset.c:993
+#: ../providers/mysql/gda-mysql-recordset.c:1074
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "A(z) „%s” típus nincs hozzárendelve a(z) „%s” értékhez"
@@ -6652,13 +6650,13 @@ msgstr "Adminisztrátori jelszó"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
 msgid "Connection protocol"
 msgstr "Kapcsolódási protokoll"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid ""
 "Explicitly specifies a connection protocol to use. It is useful when the "
 "other connection parameters normally would cause a protocol to be used other "
@@ -6910,19 +6908,19 @@ msgstr "Japán (SJIS Windows-hoz)"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid "Automatic"
 msgstr "Automatikus"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
 msgid "TCP: TCP/IP connection to local or remote server."
 msgstr "TCP: TCP/IP kapcsolat egy helyi vagy távoli kiszolgálóhoz."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
@@ -6931,7 +6929,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:20
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
@@ -6940,7 +6938,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:21
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
@@ -7248,6 +7246,19 @@ msgstr "Tömörítés"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:12
 msgid "Use compression protocol"
 msgstr "Tömörítési protokoll használata"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#| msgid "Perspectives"
+msgid "Interactive"
+msgstr "Interaktív"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+" The client's session wait timeout set to the value of the session "
+"interactive_timeout variable."
+msgstr ""
+" A kliens munkamenetének várakozási időkorlátja beállítva a munkamenet"
+" interactive_timeout változójának értékére."
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -7667,7 +7678,6 @@ msgstr "Megszorítási kifejezés részleges indexhez"
 
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
-#| msgid "Collation"
 msgid "Collation name"
 msgstr "Egybevetés neve"
 
