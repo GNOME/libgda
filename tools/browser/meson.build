@@ -84,7 +84,7 @@ gda_browser_sources += gda_browser_sourcesf
 
 subdir('data')
 
-i18n.merge_file('browser_desktop',
+i18n.merge_file(
 	po_dir: join_paths(meson.source_root(),'po'),
 	type: 'desktop',
 	input: 'org.gnome.gda.Browser.desktop.in',
