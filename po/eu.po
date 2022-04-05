@@ -5,12 +5,13 @@
 # Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>, 2005.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2006, 2007, 2008, 2009, 2010.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2011, 2012, 2013, 2014, 2015.
+# Asier Sarasua Garmendia  <asiersarasua@ni.eus>, 2021, 2022.
 #
 msgid ""
 msgstr "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-05-04 10:42+0000\n"
-"PO-Revision-Date: 2021-05-05 10:00+0100\n"
+"POT-Creation-Date: 2021-10-16 20:37+0000\n"
+"PO-Revision-Date: 2022-04-03 10:00+0100\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -53,7 +54,7 @@ msgstr "Definizioa"
 msgid "Parameters"
 msgstr "Parametroak"
 
-#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1764
+#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1768
 #: ../tools/browser/auth-dialog.c:266 ../tools/common/t-config-info.c:207
 #: ../tools/common/t-config-info.c:367
 msgid "Authentication"
@@ -70,10 +71,10 @@ msgstr "Ezin izan da DNS definizioa gorde: %s"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-config.c:367 ../control-center/gdaui-dsn-editor.c:354
-#: ../libgda/gda-config.c:521 ../libgda/gda-config.c:672
-#: ../libgda/gda-config.c:1181 ../libgda/gda-config.c:1293
-#: ../libgda/gda-config.c:1351 ../libgda/gda-config.c:1428
-#: ../libgda/gda-config.c:1866 ../libgda/gda-connection.c:1546
+#: ../libgda/gda-config.c:525 ../libgda/gda-config.c:676
+#: ../libgda/gda-config.c:1185 ../libgda/gda-config.c:1297
+#: ../libgda/gda-config.c:1355 ../libgda/gda-config.c:1432
+#: ../libgda/gda-config.c:1870 ../libgda/gda-connection.c:1546
 #: ../libgda/gda-data-model.c:2295 ../libgda/gda-data-model.c:2303
 #: ../libgda/gda-data-model-dir.c:339 ../libgda/gda-data-model-import.c:1705
 #: ../libgda/gda-data-pivot.c:1219 ../libgda/gda-data-pivot.c:1249
@@ -88,12 +89,12 @@ msgstr "Ezin izan da DNS definizioa gorde: %s"
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3069
-#: ../libgda/sqlite/gda-sqlite-provider.c:3081
-#: ../libgda/sqlite/gda-sqlite-provider.c:3292
-#: ../libgda/sqlite/gda-sqlite-provider.c:3630
-#: ../libgda/sqlite/gda-sqlite-provider.c:3642
-#: ../libgda/sqlite/gda-sqlite-provider.c:3744
+#: ../libgda/sqlite/gda-sqlite-provider.c:3074
+#: ../libgda/sqlite/gda-sqlite-provider.c:3086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3297
+#: ../libgda/sqlite/gda-sqlite-provider.c:3635
+#: ../libgda/sqlite/gda-sqlite-provider.c:3647
+#: ../libgda/sqlite/gda-sqlite-provider.c:3749
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -121,8 +122,8 @@ msgstr "Ezin izan da DNS definizioa gorde: %s"
 #: ../providers/ldap/gda-ldap-provider.c:957
 #: ../providers/ldap/gda-ldap-provider.c:1018
 #: ../providers/mdb/gda-mdb-provider.c:374
-#: ../providers/mysql/gda-mysql-provider.c:1964
-#: ../providers/mysql/gda-mysql-provider.c:1979
+#: ../providers/mysql/gda-mysql-provider.c:1974
+#: ../providers/mysql/gda-mysql-provider.c:1989
 #: ../providers/mysql/gda-mysql-util.c:69
 #: ../providers/postgres/gda-postgres-provider.c:1787
 #: ../providers/postgres/gda-postgres-provider.c:1802
@@ -493,76 +494,76 @@ msgstr "Instrukzioa ez da aurkitu batch-eko instrukzioetan"
 msgid "Conflicting parameter '%s'"
 msgstr "'%s'(r)en parametroa gatazkan"
 
-#: ../libgda/gda-config.c:520 ../libgda/gda-config.c:546
-#: ../libgda/gda-config.c:671 ../libgda/gda-config.c:696
+#: ../libgda/gda-config.c:524 ../libgda/gda-config.c:550
+#: ../libgda/gda-config.c:675 ../libgda/gda-config.c:700
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "Errorea '%s' DSNaren autentifikazioaren informazioa kargatzean: %s"
 
-#: ../libgda/gda-config.c:859
+#: ../libgda/gda-config.c:863
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr "Errorea erabiltzailearen '%s' konfigurazio-direktorio zehatza sortzean"
 
-#: ../libgda/gda-config.c:908 ../libgda/gda-config.c:921
+#: ../libgda/gda-config.c:912 ../libgda/gda-config.c:925
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
 msgstr "Erabiltzailearen '%s' konfigurazio-direktorio zehatza badago lehendik ere, eta ez da direktorio bat"
 
-#: ../libgda/gda-config.c:1154
+#: ../libgda/gda-config.c:1158
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Gaizki osatutako datu-iturburuaren '%s' izena"
 
-#: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
-#: ../libgda/gda-config.c:1291
+#: ../libgda/gda-config.c:1184 ../libgda/gda-config.c:1196
+#: ../libgda/gda-config.c:1295
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr "Ezin izan da '%s' DSNaren autentifikazioaren informazioa gorde: %s"
 
-#: ../libgda/gda-config.c:1226 ../libgda/gda-config.c:1402
+#: ../libgda/gda-config.c:1230 ../libgda/gda-config.c:1406
 msgid "Can't manage system-wide configuration"
 msgstr "Ezin da sistema osoaren konfigurazioa kudeatu"
 
-#: ../libgda/gda-config.c:1281 ../libgda/gda-config.c:1313
+#: ../libgda/gda-config.c:1285 ../libgda/gda-config.c:1317
 #, c-format
 msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Gnome-DB: '%s' DSNaren autentifikazioa"
 
-#: ../libgda/gda-config.c:1350 ../libgda/gda-config.c:1362
-#: ../libgda/gda-config.c:1426
+#: ../libgda/gda-config.c:1354 ../libgda/gda-config.c:1366
+#: ../libgda/gda-config.c:1430
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Ezin izan da '%s' DSNaren autentifikazioaren informazioa ezabatu: %s"
 
-#: ../libgda/gda-config.c:1396 ../libgda-ui/gdaui-login.c:640
+#: ../libgda/gda-config.c:1400 ../libgda-ui/gdaui-login.c:640
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "'%s' DSN ezezaguna"
 
-#: ../libgda/gda-config.c:1491
+#: ../libgda/gda-config.c:1495
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "'%s' hornitzailea ez da aurkitu"
 
-#: ../libgda/gda-config.c:1681 ../libgda/gda-connection.c:988
+#: ../libgda/gda-config.c:1685 ../libgda/gda-connection.c:988
 #: ../libgda/gda-connection.c:1060 ../libgda/gda-connection.c:1241
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "Ez da '%s' hornitzailerik instalatu"
 
-#: ../libgda/gda-config.c:1695
+#: ../libgda/gda-config.c:1699
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "Ezin da '%s' hornitzailea kargatu"
 
-#: ../libgda/gda-config.c:1716
+#: ../libgda/gda-config.c:1720
 #, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "Ezin da '%s' hornitzailea instantziatu"
 
-#: ../libgda/gda-config.c:1761 ../libgda/gda-data-model-dsn-list.c:105
+#: ../libgda/gda-config.c:1765 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
 #: ../tools/common/t-app.c:2902 ../tools/common/t-config-info.c:71
 #: ../tools/common/t-config-info.c:132 ../tools/common/t-config-info.c:315
@@ -570,7 +571,7 @@ msgstr "Ezin da '%s' hornitzailea instantziatu"
 msgid "Provider"
 msgstr "Hornitzailea"
 
-#: ../libgda/gda-config.c:1762 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-config.c:1766 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/browser/data-manager/data-source-editor.c:167
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:304
@@ -580,24 +581,24 @@ msgstr "Hornitzailea"
 msgid "Description"
 msgstr "Azalpena"
 
-#: ../libgda/gda-config.c:1763 ../tools/common/t-config-info.c:160
+#: ../libgda/gda-config.c:1767 ../tools/common/t-config-info.c:160
 msgid "DSN parameters"
 msgstr "DSNren parametroak"
 
-#: ../libgda/gda-config.c:1765 ../tools/common/t-config-info.c:246
+#: ../libgda/gda-config.c:1769 ../tools/common/t-config-info.c:246
 msgid "File"
 msgstr "Fitxategia"
 
-#: ../libgda/gda-config.c:1766
+#: ../libgda/gda-config.c:1770
 msgid "List of installed providers"
 msgstr "Instalatutako hornitzaileen zerrenda"
 
-#: ../libgda/gda-config.c:1865
+#: ../libgda/gda-config.c:1869
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr "Ez dago SQLite hornitzaile lehenetsirik. Berria sortzen saiatzen. Errorea: %s"
 
-#: ../libgda/gda-config.c:1949 ../libgda/gda-data-model-dsn-list.c:125
+#: ../libgda/gda-config.c:1953 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2904
 msgid "Username"
@@ -608,7 +609,7 @@ msgstr "Erabiltzaile-izena"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1951 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1955 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -616,7 +617,7 @@ msgstr "Erabiltzaile-izena"
 msgid "Password"
 msgstr "Pasahitza"
 
-#: ../libgda/gda-config.c:2031
+#: ../libgda/gda-config.c:2035
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "Errorea '%s' hornitzailea kargatzean: %s"
@@ -727,128 +728,128 @@ msgstr "Hornitzaileak ez du GdaDataHandler bat eman datentzako"
 #: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
 #: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
 #: ../libgda/gda-connection.c:2597 ../libgda/gda-connection.c:3044
-#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3617
-#: ../libgda/gda-connection.c:3638 ../libgda/gda-connection.c:3722
-#: ../libgda/gda-connection.c:3734 ../libgda/gda-connection.c:3809
-#: ../libgda/gda-connection.c:3824 ../libgda/gda-connection.c:3911
-#: ../libgda/gda-connection.c:3939 ../libgda/gda-connection.c:3968
-#: ../libgda/gda-connection.c:3994 ../libgda/gda-connection.c:4020
-#: ../libgda/gda-connection.c:4046 ../libgda/gda-connection.c:5085
-#: ../libgda/gda-connection.c:5330 ../libgda/gda-connection.c:5403
-#: ../libgda/gda-connection.c:6292
+#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3610
+#: ../libgda/gda-connection.c:3631 ../libgda/gda-connection.c:3715
+#: ../libgda/gda-connection.c:3727 ../libgda/gda-connection.c:3802
+#: ../libgda/gda-connection.c:3817 ../libgda/gda-connection.c:3904
+#: ../libgda/gda-connection.c:3932 ../libgda/gda-connection.c:3961
+#: ../libgda/gda-connection.c:3987 ../libgda/gda-connection.c:4013
+#: ../libgda/gda-connection.c:4039 ../libgda/gda-connection.c:5078
+#: ../libgda/gda-connection.c:5323 ../libgda/gda-connection.c:5396
+#: ../libgda/gda-connection.c:6285
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
 msgstr "Konexioa itxi egin da"
 
-#: ../libgda/gda-connection.c:3502 ../libgda/gda-connection.c:3517
+#: ../libgda/gda-connection.c:3495 ../libgda/gda-connection.c:3510
 msgid "Statement is a selection statement"
 msgstr "Instrukzioa hautapen-instrukzio bat da"
 
-#: ../libgda/gda-connection.c:3574 ../libgda/gda-connection.c:3674
-#: ../libgda/gda-connection.c:3763
+#: ../libgda/gda-connection.c:3567 ../libgda/gda-connection.c:3667
+#: ../libgda/gda-connection.c:3756
 msgid "Statement is not a selection statement"
 msgstr "Instrukzioa ez da hautapen-instrukzio bat"
 
-#: ../libgda/gda-connection.c:4223
+#: ../libgda/gda-connection.c:4216
 msgid "Invalid argument"
 msgstr "Argumentu baliogabea"
 
-#: ../libgda/gda-connection.c:4233
+#: ../libgda/gda-connection.c:4226
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "'%s' taularen argumentuak falta dira, edo okerra dira: %s"
 
-#: ../libgda/gda-connection.c:5353
+#: ../libgda/gda-connection.c:5346
 #, c-format
 msgid "While extracting data from Data Store: %s"
 msgstr "Datuak datu-biltegitik erauztean: %s"
 
-#: ../libgda/gda-connection.c:5411
+#: ../libgda/gda-connection.c:5404
 #, c-format
 msgid "Internal error: No meta store in connection"
 msgstr "Barneko errorea: Ez dago meta biltegirik konexioan"
 
-#: ../libgda/gda-connection.c:5429
+#: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5440
+#: ../libgda/gda-connection.c:5433
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5451
+#: ../libgda/gda-connection.c:5444
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5462
+#: ../libgda/gda-connection.c:5455
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5472
+#: ../libgda/gda-connection.c:5465
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5478
+#: ../libgda/gda-connection.c:5471
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5485
+#: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5494 ../libgda/gda-connection.c:5515
+#: ../libgda/gda-connection.c:5487 ../libgda/gda-connection.c:5508
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5500 ../libgda/gda-connection.c:5519
+#: ../libgda/gda-connection.c:5493 ../libgda/gda-connection.c:5512
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5507
+#: ../libgda/gda-connection.c:5500
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 
-#: ../libgda/gda-connection.c:5527
+#: ../libgda/gda-connection.c:5520
 #, c-format
 msgid "Invalid meta type to get data from store"
 msgstr "Meta mota baliogabea datuak biltegitik eskuratzeko"
 
-#: ../libgda/gda-connection.c:5538
+#: ../libgda/gda-connection.c:5531
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr "Barneko errorea datuak atzitzeko instrukzioa sortzean: %s"
 
-#: ../libgda/gda-connection.c:5730 ../libgda/gda-connection.c:5784
-#: ../libgda/gda-connection.c:5829 ../libgda/gda-connection.c:5874
-#: ../libgda/gda-connection.c:5919
+#: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
+#: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
+#: ../libgda/gda-connection.c:5912
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Konexioko transakzioaren egoeraren jarraipena: ez dago '%s'(r)en transakziorik"
 
-#: ../libgda/gda-connection.c:7052
+#: ../libgda/gda-connection.c:7045
 msgid "Unspecified table name"
 msgstr "Taularen izena zehaztu gabe"
 
-#: ../libgda/gda-connection.c:7094
+#: ../libgda/gda-connection.c:7087
 msgid "Invalid type"
 msgstr "Mota baliogabea"
 
-#: ../libgda/gda-connection.c:7190
+#: ../libgda/gda-connection.c:7183
 msgid "CREATE TABLE operation is not supported by the database server"
 msgstr "Datu-basearen zerbitzariak ez du CREATE TABLE eragiketa onartzen"
 
-#: ../libgda/gda-connection.c:7309 ../libgda/gda-connection.c:7319
+#: ../libgda/gda-connection.c:7302 ../libgda/gda-connection.c:7312
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Okerreko SQL identifikatzailearen balioa"
@@ -1232,7 +1233,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "Karaktere-bihurketa %d. lerroan, errorea: %s"
 
 #: ../libgda/gda-data-model-import.c:1026
-#: ../libgda/sqlite/gda-sqlite-provider.c:1299
+#: ../libgda/sqlite/gda-sqlite-provider.c:1304
 #: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:607
 #: ../tools/browser/gdaui-data-import.c:177
@@ -2533,9 +2534,9 @@ msgstr "'%s'(r)en okerreko parametro mota: '%s' mota espero zen, baina '%s' esku
 msgid "Missing parameter '%s'"
 msgstr "'%s' parametroa falta da"
 
-#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3477
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
-#: ../providers/mysql/gda-mysql-provider.c:2239
+#: ../providers/mysql/gda-mysql-provider.c:2249
 #: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
@@ -2685,9 +2686,9 @@ msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "Ezin da INSERT edo UPDATE ez den instrukziorik berridatzi"
 
 #: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
-#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3458
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
-#: ../providers/mysql/gda-mysql-provider.c:2219
+#: ../providers/mysql/gda-mysql-provider.c:2229
 #: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
@@ -2918,43 +2919,43 @@ msgstr "SQLite-ren adierazpen bitarra"
 msgid "Sqlite boolean representation"
 msgstr "Sqlite-ren adierazpen boolearra"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:124
+#: ../libgda/sqlite/gda-sqlite-provider.c:129
 #, c-format
 msgid "Parameter '%s' not found in statement"
 msgstr "Ez da aurkitu '%s' parametroa instrukzioan"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:138
-#: ../libgda/sqlite/gda-sqlite-provider.c:154
-#: ../libgda/sqlite/gda-sqlite-provider.c:196
-#: ../libgda/sqlite/gda-sqlite-provider.c:212
+#: ../libgda/sqlite/gda-sqlite-provider.c:143
+#: ../libgda/sqlite/gda-sqlite-provider.c:159
+#: ../libgda/sqlite/gda-sqlite-provider.c:201
+#: ../libgda/sqlite/gda-sqlite-provider.c:217
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "Ez dago zutabe-izenik '%s' parametroarekin esleitzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:182
+#: ../libgda/sqlite/gda-sqlite-provider.c:187
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "Aurkitu ez de '%s' parametroa instrukzioa da"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:222
+#: ../libgda/sqlite/gda-sqlite-provider.c:227
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "BLOBa lotzea instrukzio mota honentzako ez dago onartuta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:952
+#: ../libgda/sqlite/gda-sqlite-provider.c:957
 msgid "Set to TRUE if the provider is the internal default"
 msgstr "Ezarri TRUE (egia) hornitzailea barneko hornitzaile lehenetsia bada"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:974
+#: ../libgda/sqlite/gda-sqlite-provider.c:979
 msgid "Can't find libsqlite3."
 msgstr "Ezin da libsqlite3 aurkitu."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1128
+#: ../libgda/sqlite/gda-sqlite-provider.c:1133
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "Konexioko kateak DB_DIR eta DB_NAME balioak eduki behar ditu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1154
-#: ../libgda/sqlite/gda-sqlite-provider.c:1161
+#: ../libgda/sqlite/gda-sqlite-provider.c:1159
+#: ../libgda/sqlite/gda-sqlite-provider.c:1166
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -2962,143 +2963,143 @@ msgid ""
 "end)."
 msgstr "Konexioko katearen formatua aldatu egin da. Ordeztu URIa honakoekin: DB_DIR (datu-basearen fitxategiaren bide-izena) eta DB_NAME (datu-basearen fitxategia '%s' luzapenik gabe)."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1176
+#: ../libgda/sqlite/gda-sqlite-provider.c:1181
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr "Konexioko katearen DB_DIR zatiak baliozko direktorioa eduki behar du"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1236
+#: ../libgda/sqlite/gda-sqlite-provider.c:1241
 msgid "Wrong encryption passphrase"
-msgstr "Enkriptazio okerreko pasaesaldia"
+msgstr "Zifratze okerreko pasaesaldia"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1279
+#: ../libgda/sqlite/gda-sqlite-provider.c:1284
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1298
+#: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "Ezin izan da ezarri empty_result_callbacks SQLite aukera: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1386
-#: ../libgda/sqlite/gda-sqlite-provider.c:1406
+#: ../libgda/sqlite/gda-sqlite-provider.c:1391
+#: ../libgda/sqlite/gda-sqlite-provider.c:1411
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "Ezin izan da '%s' funtzioa erregistratu"
 
 # dooteo: A collation is a set of rules for comparing characters in a character set.
 # collate == alderatu
-#: ../libgda/sqlite/gda-sqlite-provider.c:1424
+#: ../libgda/sqlite/gda-sqlite-provider.c:1429
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "Ezin izan da '%s' alderatzea definitu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1708
-#: ../libgda/sqlite/gda-sqlite-provider.c:1719
-#: ../libgda/sqlite/gda-sqlite-provider.c:1733
-#: ../libgda/sqlite/gda-sqlite-provider.c:1744
+#: ../libgda/sqlite/gda-sqlite-provider.c:1713
+#: ../libgda/sqlite/gda-sqlite-provider.c:1724
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../libgda/sqlite/gda-sqlite-provider.c:1749
 msgid "Error initializing database with passphrase"
 msgstr "Errorea datu-basea pasaesaldiarekin hasieratzean"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1786
+#: ../libgda/sqlite/gda-sqlite-provider.c:1791
 msgid "Missing database name or directory"
 msgstr "Datu-basearen izena edo direktorioa falta da"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1814
+#: ../libgda/sqlite/gda-sqlite-provider.c:1819
 #: ../providers/postgres/gda-postgres-provider.c:1084
 #: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakziorik ez da onartzen irakurtzeko soilik moduan"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2230
+#: ../libgda/sqlite/gda-sqlite-provider.c:2235
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr "SQLite-k ez du eremuak zehaztea onartzen DISTINCT klausula aplikatzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2277
-#: ../libgda/sqlite/gda-sqlite-provider.c:2287
+#: ../libgda/sqlite/gda-sqlite-provider.c:2282
+#: ../libgda/sqlite/gda-sqlite-provider.c:2292
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "SQLite-k ez du '%s' konposatua onartzen"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2389
+#: ../libgda/sqlite/gda-sqlite-provider.c:2394
 msgid "ILIKE operation not supported"
 msgstr "ILIKE eragiketa ez dago onartuta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2421
+#: ../libgda/sqlite/gda-sqlite-provider.c:2426
 msgid "SIMILAR operation not supported"
 msgstr "SIMILAR eragiketa ez dago onartuta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2545
+#: ../libgda/sqlite/gda-sqlite-provider.c:2550
 msgid "Operator type not supported"
 msgstr "Eragile mota ez dago onartuta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2951
+#: ../libgda/sqlite/gda-sqlite-provider.c:2956
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
 #: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Izenik gabeko parametroa ez da onartzen prestatutako instrukzioetan"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3068
-#: ../libgda/sqlite/gda-sqlite-provider.c:3080
-#: ../providers/mysql/gda-mysql-provider.c:1963
+#: ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/sqlite/gda-sqlite-provider.c:3085
+#: ../providers/mysql/gda-mysql-provider.c:1973
 #: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr "Ezin da SELECT instrukzioa eraiki txertatutako azken errenkada lortzeko: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3114
-#: ../providers/mysql/gda-mysql-provider.c:1991
+#: ../libgda/sqlite/gda-sqlite-provider.c:3119
+#: ../providers/mysql/gda-mysql-provider.c:2001
 #: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr "SELECT instrukzioak ez du errenkadarik itzuli (txertatutako azken errenkada lortzeko)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3118
-#: ../providers/mysql/gda-mysql-provider.c:1995
+#: ../libgda/sqlite/gda-sqlite-provider.c:3123
+#: ../providers/mysql/gda-mysql-provider.c:2005
 #: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr "SELECT instrukzioak errenkada gehiegi (%d) itzuli ditu (txertatutako azken errenkada lortzeko)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3182
+#: ../libgda/sqlite/gda-sqlite-provider.c:3187
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Prestatutako instrukzioa ez dauka GdaStatement-rik atxikituta"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3223
-#: ../libgda/sqlite/gda-sqlite-provider.c:3260
+#: ../libgda/sqlite/gda-sqlite-provider.c:3228
+#: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't create SQLite BLOB handle"
 msgstr "Ezin da SQLite BLOB kudeaketa sortu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3227
-#: ../libgda/sqlite/gda-sqlite-provider.c:3265
+#: ../libgda/sqlite/gda-sqlite-provider.c:3232
+#: ../libgda/sqlite/gda-sqlite-provider.c:3270
 msgid "Can't write to SQLite's BLOB"
 msgstr "Ezin da SQLite-ren BLOBean idatzi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3250
+#: ../libgda/sqlite/gda-sqlite-provider.c:3255
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3275
+#: ../libgda/sqlite/gda-sqlite-provider.c:3280
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Ezin da BLOBaren ROWIDa identifikatu betetzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3386
+#: ../libgda/sqlite/gda-sqlite-provider.c:3391
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Instrukzioa hutsik"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3428
-#: ../libgda/sqlite/gda-sqlite-provider.c:3431
+#: ../libgda/sqlite/gda-sqlite-provider.c:3433
+#: ../libgda/sqlite/gda-sqlite-provider.c:3436
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
-#: ../providers/mysql/gda-mysql-provider.c:2194
-#: ../providers/mysql/gda-mysql-provider.c:2197
+#: ../providers/mysql/gda-mysql-provider.c:2204
+#: ../providers/mysql/gda-mysql-provider.c:2207
 #: ../providers/postgres/gda-postgres-provider.c:2018
 #: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
@@ -3106,68 +3107,68 @@ msgstr "Instrukzioa hutsik"
 msgid "Missing parameter(s) to execute query"
 msgstr "Parametroa(k) falta da kontsulta exekutatzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3491
+#: ../libgda/sqlite/gda-sqlite-provider.c:3496
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
-#: ../providers/mysql/gda-mysql-provider.c:2258
+#: ../providers/mysql/gda-mysql-provider.c:2268
 #: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Ezin da instrukzioa berridatzi balio lehenetsiak kudeatzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3612
-#: ../providers/mysql/gda-mysql-provider.c:2514
+#: ../libgda/sqlite/gda-sqlite-provider.c:3617
+#: ../providers/mysql/gda-mysql-provider.c:2524
 msgid "Can't get BLOB's length"
 msgstr "Ezin da BLOBren luzera lortu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3614
-#: ../providers/mysql/gda-mysql-provider.c:2516
+#: ../libgda/sqlite/gda-sqlite-provider.c:3619
+#: ../providers/mysql/gda-mysql-provider.c:2526
 msgid "BLOB is too big"
 msgstr "BLOB handiegia da"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3699
+#: ../libgda/sqlite/gda-sqlite-provider.c:3704
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "Kudeatu gabeko '%s' datu mota"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3766
+#: ../libgda/sqlite/gda-sqlite-provider.c:3771
 msgid "Could not start transaction to create BLOB"
 msgstr "Ezin izan da transakzioa abiarazi BLOB sortzeko"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3941
-#: ../libgda/sqlite/gda-sqlite-provider.c:3962
-#: ../libgda/sqlite/gda-sqlite-provider.c:4054
-#: ../libgda/sqlite/gda-sqlite-provider.c:4074
-#: ../libgda/sqlite/gda-sqlite-provider.c:4097
+#: ../libgda/sqlite/gda-sqlite-provider.c:3946
+#: ../libgda/sqlite/gda-sqlite-provider.c:3967
+#: ../libgda/sqlite/gda-sqlite-provider.c:4059
+#: ../libgda/sqlite/gda-sqlite-provider.c:4079
+#: ../libgda/sqlite/gda-sqlite-provider.c:4102
 msgid "Function requires one argument"
 msgstr "Funtzioak argumentu bat eduki behar du"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3995
-#: ../libgda/sqlite/gda-sqlite-provider.c:4129
+#: ../libgda/sqlite/gda-sqlite-provider.c:4000
+#: ../libgda/sqlite/gda-sqlite-provider.c:4134
 msgid "Function requires two arguments"
 msgstr "Funtzioak bi argumentu eduki behar ditu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4034
+#: ../libgda/sqlite/gda-sqlite-provider.c:4039
 msgid "Function requires one or two arguments"
 msgstr "Funtzioak argumentu bat edo bi eduki behar ditu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4169
-#: ../libgda/sqlite/gda-sqlite-provider.c:4276
+#: ../libgda/sqlite/gda-sqlite-provider.c:4174
+#: ../libgda/sqlite/gda-sqlite-provider.c:4281
 msgid "Function requires two or three arguments"
 msgstr "Funtzioak bi edo hiru argumentu eduki behar ditu"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4223
+#: ../libgda/sqlite/gda-sqlite-provider.c:4228
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "SQLite-ko '%s' adierazpen erregularraren errorea:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4224
+#: ../libgda/sqlite/gda-sqlite-provider.c:4229
 msgid "Invalid regular expression"
 msgstr "Adierazpen erregular baliogabea"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:233
 #: ../providers/jdbc/gda-jdbc-recordset.c:297
-#: ../providers/mysql/gda-mysql-recordset.c:416
-#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:472
+#: ../providers/mysql/gda-mysql-recordset.c:608
 #: ../providers/postgres/gda-postgres-recordset.c:265
 #: ../providers/web/gda-web-recordset.c:156
 #, c-format
@@ -5928,8 +5929,8 @@ msgid "Too many arguments"
 msgstr "Argumentu gehiegi"
 
 #: ../providers/ldap/gda-ldap-provider.c:1073
-#: ../providers/mysql/gda-mysql-provider.c:616
-#: ../providers/mysql/gda-mysql-provider.c:670
+#: ../providers/mysql/gda-mysql-provider.c:621
+#: ../providers/mysql/gda-mysql-provider.c:675
 #: ../providers/mysql/gda-mysql-util.c:63
 #: ../tools/browser/ldap-browser/entry-properties.c:587
 #: ../tools/browser/schema-browser/table-columns.c:519
@@ -6147,60 +6148,60 @@ msgstr "Datu-basearen izena (fitxategi-izena, '.mdb' luzapenik gabe)"
 msgid "MySQL boolean representation"
 msgstr "MySQL adierazpen boolearra"
 
-#: ../providers/mysql/gda-mysql-provider.c:449
+#: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr "Ezin duzu UNIX SOCKET bat eman, OSTALARI edo ATAKA bat ere eman baduzu"
 
-#: ../providers/mysql/gda-mysql-provider.c:457
+#: ../providers/mysql/gda-mysql-provider.c:458
 msgid "Invalid port number"
 msgstr "Ataka-zenbaki baliogabea"
 
-#: ../providers/mysql/gda-mysql-provider.c:493
+#: ../providers/mysql/gda-mysql-provider.c:496
 #, c-format
 msgid "Unknown MySQL protocol '%s'"
 msgstr "'%s' MySQL protokolo ezezaguna"
 
-#: ../providers/mysql/gda-mysql-provider.c:538
+#: ../providers/mysql/gda-mysql-provider.c:541
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr "Ezin izan da bezeroaren karaktere-jokoa UTF8 gisa ezarri. %s erabiltzen. Arazoak egon daitezke UTF-8 ez diren karaktereekin"
 
-#: ../providers/mysql/gda-mysql-provider.c:584
+#: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
 msgstr "Konexioko kateak DB_NAME balioa eduki behar du"
 
-#: ../providers/mysql/gda-mysql-provider.c:619
-#: ../providers/mysql/gda-mysql-provider.c:673
+#: ../providers/mysql/gda-mysql-provider.c:624
+#: ../providers/mysql/gda-mysql-provider.c:678
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Azalpenik ez"
 
-#: ../providers/mysql/gda-mysql-provider.c:1757
+#: ../providers/mysql/gda-mysql-provider.c:1767
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "Instrukzioaren izenik gabeko parametroa ez da onartzen prestatutako instrukzioetan."
 
-#: ../providers/mysql/gda-mysql-provider.c:1978
+#: ../providers/mysql/gda-mysql-provider.c:1988
 #: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Ezin da SELECT instrukzioa exekutatu txertatutako azken errenkada eskuratzeko: %s"
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2508
+#: ../providers/mysql/gda-mysql-provider.c:2518
 msgid "Can't read whole BLOB into memory"
 msgstr "Ezin da BLOB osoa irakurri memorian"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2555
+#: ../providers/mysql/gda-mysql-provider.c:2565
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 msgstr ""
 
-#: ../providers/mysql/gda-mysql-provider.c:2601
+#: ../providers/mysql/gda-mysql-provider.c:2611
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -6221,37 +6222,37 @@ msgstr "Aldi batean eskuratutako errenkada kopurua"
 msgid "Number of row chunks read since the object creation"
 msgstr "Irakurritako errenkada pusken kopurua objektua sortu zenetik"
 
-#: ../providers/mysql/gda-mysql-recordset.c:638
-#: ../providers/mysql/gda-mysql-recordset.c:958
-#: ../providers/mysql/gda-mysql-recordset.c:971
-#: ../providers/mysql/gda-mysql-recordset.c:984
-#: ../providers/mysql/gda-mysql-recordset.c:1003
+#: ../providers/mysql/gda-mysql-recordset.c:695
+#: ../providers/mysql/gda-mysql-recordset.c:1039
+#: ../providers/mysql/gda-mysql-recordset.c:1052
+#: ../providers/mysql/gda-mysql-recordset.c:1065
+#: ../providers/mysql/gda-mysql-recordset.c:1084
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Lotura zutabearen datu mota baliogabea. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "'%s' mota ez da mapatu %d balioarentzako"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:872
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "'%s' mota ez da mapatu %lld balioarentzako"
 
-#: ../providers/mysql/gda-mysql-recordset.c:862
+#: ../providers/mysql/gda-mysql-recordset.c:919
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "'%s' mota ez da mapatu honako balioarentzako: %d/%d/%d %d:%d:%d.%lu"
 
-#: ../providers/mysql/gda-mysql-recordset.c:879
-#: ../providers/mysql/gda-mysql-recordset.c:894
+#: ../providers/mysql/gda-mysql-recordset.c:936
+#: ../providers/mysql/gda-mysql-recordset.c:951
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "'%s' mota ez da mapatu %f balioarentzako"
 
-#: ../providers/mysql/gda-mysql-recordset.c:993
+#: ../providers/mysql/gda-mysql-recordset.c:1074
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "'%s' mota ez da mapatu %s balioarentzako"
@@ -6339,13 +6340,13 @@ msgstr "Administratzailearen pasahitza"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
 msgid "Connection protocol"
 msgstr "Konexioaren protokoloa"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid ""
 "Explicitly specifies a connection protocol to use. It is useful when the "
 "other connection parameters normally would cause a protocol to be used other "
@@ -6594,33 +6595,33 @@ msgstr "SJIS Windows Japoniera"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid "Automatic"
 msgstr "Automatikoa"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
 msgid "TCP: TCP/IP connection to local or remote server."
 msgstr "TCP: TCP/IP konexioa lokaleko edo urruneko zerbitzarirako."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr "Socket: Unix socket fitxategiaren konexioa lokaleko zerbitzarirako (lokaleko Unix zerbitzaria soilik)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:20
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr "Kanalizazioa: kanalizazioa izeneko konexioa lokaleko edo urruneko zerbitzarirako (Windows zerbitzaria soilik)."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:21
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr "Memoria: partekatutako memoriaren konexioa lokaleko zerbitzarirako (lokaleko Windows zerbitzariak soilik)."
@@ -6922,6 +6923,16 @@ msgstr "Konprimitu"
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:12
 msgid "Use compression protocol"
 msgstr "Erabili konpresio protokoloa"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+msgid "Interactive"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+" The client's session wait timeout set to the value of the session "
+"interactive_timeout variable."
+msgstr ""
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -7366,7 +7377,7 @@ msgstr "Rolaren pasahitza"
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:30
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:6
 msgid "Encrypt password"
-msgstr "Enkriptatu pasahitza"
+msgstr "Zifratu pasahitza"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7378,7 +7389,7 @@ msgid ""
 "Controls whether the password is stored encrypted in the system catalogs. If "
 "the presented password string is already in MD5-encrypted format, then it is "
 "stored encrypted as-is."
-msgstr "Sistemako katalogoetan pasahitza enkriptatuta gordetzen den edo ez kontrolatzen du. Aurkeztutako pasahitzaren katea MD5 formatuan enkriptatuta egonez gero, dagoen bezala gordeko da."
+msgstr "Sistemako katalogoetan pasahitza zifratuta gordetzen den edo ez kontrolatzen du. Aurkeztutako pasahitzaren katea MD5 formatuan zifratuta egonez gero, dagoen bezala gordeko da."
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7753,7 +7764,7 @@ msgstr "Pasaesaldia"
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:14
 msgid "Encryption passphrase"
-msgstr "Enkriptazioaren pasaesaldia"
+msgstr "Zifratzearen pasaesaldia"
 
 #: ../providers/sqlite/libmain.c:70
 msgid "Provider for SQLite databases"
@@ -11283,9 +11294,6 @@ msgstr "Ezin da '%s' fitxategia analizatu, ez ikusi egingo zaio"
 
 #~ msgid "Incorrect SQL expression"
 #~ msgstr "SQL adierazpena ez da zuzena"
-
-#~ msgid "InternalString"
-#~ msgstr "Barneko katea"
 
 #~ msgid "Extension loading is not supported"
 #~ msgstr "Hedapena kargatzea ez dago onartuta"
