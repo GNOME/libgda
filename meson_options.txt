@@ -1,7 +1,7 @@
 option('ui', type : 'boolean', value : true, description : 'Enable GTK+ extension and tools')
 #option('gtksourceview', type : 'boolean', value : false, description : 'Enable using GtkSourceView')
 option('help', type : 'boolean', value : true, description : 'Enable building help (GdaBrowser)')
-#option('goocanvas', type : 'boolean', value : false, description : 'Enable using GooCanvas')
+option('goocanvas', type : 'boolean', value : false, description : 'Enable using GooCanvas')
 option('graphviz', type : 'boolean', value : false, description : 'Enable using Graphviz')
 option('json', type : 'boolean', value : true, description : 'Enable support for JSON, disabled by default')
 option('sqlcipher', type : 'boolean', value : true, description : 'Build SQLCipher database provider')
