@@ -351,7 +351,7 @@ if enable_ui
 	if goocanvas_dep.found()
 		math_dep = compiler.find_library('m')
 	endif
-	gtksourceview_dep = dependency('gtksourceview-3.0')
+	gtksourceview_dep = dependency('gtksourceview-3.0', required: get_option('gtksourceview'))
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
 	if get_option('graphviz') and graphviz_dep.found()
