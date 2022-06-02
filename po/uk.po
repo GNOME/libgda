@@ -3,20 +3,21 @@
 #
 # Yuri Syrota <rasta@renome.rovno.ua>, 1999.
 # Maxim Dziumanenko <mvd@mylinux.com.ua>, 2004.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-05-06 18:15+0000\n"
-"PO-Revision-Date: 2021-05-14 15:17+0300\n"
+"POT-Creation-Date: 2021-05-14 12:19+0000\n"
+"PO-Revision-Date: 2022-06-02 21:31+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 20.12.0\n"
 
 #. title
@@ -1349,8 +1350,7 @@ msgstr "У рядку рядка %d недостатньо значень (як�
 
 #: ../libgda/gda-data-model-iter.c:408 ../libgda/gda-data-model-iter.c:415
 msgid "GdaDataModel refused value change"
-msgstr ""
-"GdaDataModel відмовлено у зміні значення"
+msgstr "GdaDataModel відмовлено у зміні значення"
 
 #. dummy setup to enable GIR compilation
 #: ../libgda/gda-data-model-ldap.c:137
@@ -1498,8 +1498,7 @@ msgstr "Невідповідність типів значень — %s замі
 #: ../libgda/gda-data-select.c:399
 #, c-format
 msgid "Could not re-run SELECT statement: %s"
-msgstr ""
-"Не вдалося повторно запустити інструкцію SELECT: %s"
+msgstr "Не вдалося повторно запустити інструкцію SELECT: %s"
 
 #: ../libgda/gda-data-select.c:1054
 msgid "Incorrect SQL expression"
@@ -3012,29 +3011,24 @@ msgstr "Не вдалося встановити ітератор на запи�
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:127
 #, c-format
 msgid "Error storing list of created LDAP tables: %s"
-msgstr ""
-"Помилка під час спроби зберегти список створених таблиць LDAP: %s"
+msgstr "Помилка під час спроби зберегти список створених таблиць LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:204
 msgid "File used to store startup data"
-msgstr ""
-"Файл, який використовують для зберігання даних для запуску"
+msgstr "Файл, який використовують для зберігання даних для запуску"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:249
 #, c-format
 msgid "Error recreating LDAP tables: %s"
-msgstr ""
-"Помилка під час спроби повторного створення таблиць LDAP: %s"
+msgstr "Помилка під час спроби повторного створення таблиць LDAP: %s"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:774
 msgid "Can't remove non LDAP virtual table"
-msgstr ""
-"Не можна вилучати віртуальні таблиці, які не є таблицями LDAP"
+msgstr "Не можна вилучати віртуальні таблиці, які не є таблицями LDAP"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:822
 msgid "Can't describe non LDAP virtual table"
-msgstr ""
-"Неможливо описати віртуальну таблицю, яка не є таблицею LDAP"
+msgstr "Неможливо описати віртуальну таблицю, яка не є таблицею LDAP"
 
 #: ../libgda/sqlite/virtual/gda-ldap-connection.c:829
 msgid "Unknown LDAP virtual table"
@@ -3310,7 +3304,8 @@ msgid ""
 "INSERT statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
-"У інструкції INSERT немає тієї самої кількості стовпчиків і виразів призначення"
+"У інструкції INSERT немає тієї самої кількості стовпчиків і виразів "
+"призначення"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:414
 msgid "VALUES lists must all be the same length in INSERT statement"
@@ -3322,18 +3317,15 @@ msgstr "SELECT не містить жодного виразу"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:413
 msgid "SELECT can't have a DISTINCT expression if DISTINCT is not set"
-msgstr ""
-"SELECT не може містити виразу DISTINCT, якщо не встановлено DISTINCT"
+msgstr "SELECT не може містити виразу DISTINCT, якщо не встановлено DISTINCT"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:419
 msgid "SELECT can't have a HAVING without GROUP BY"
-msgstr ""
-"SELECT не може містити HAVING без GROUP BY"
+msgstr "SELECT не може містити HAVING без GROUP BY"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:425
 msgid "SELECT can't have a limit offset without a limit"
-msgstr ""
-"SELECT не може містити відступу обмеження без обмеження"
+msgstr "SELECT не може містити відступу обмеження без обмеження"
 
 #: ../libgda/sql-parser/gda-statement-struct-select.c:450
 #: ../libgda/sql-parser/gda-statement-struct-select.c:459
@@ -3350,12 +3342,12 @@ msgid ""
 "UPDATE statement does not have the same number of target columns and "
 "expressions"
 msgstr ""
-"У інструкції UPDATE немає тієї самої кількості стовпчиків і виразів призначення"
+"У інструкції UPDATE немає тієї самої кількості стовпчиків і виразів "
+"призначення"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:302
 msgid "UPDATE statement does not have any target columns to update"
-msgstr ""
-"У інструкції UPDATE немає жодного стовпчика призначення для оновлення"
+msgstr "У інструкції UPDATE немає жодного стовпчика призначення для оновлення"
 
 #: ../libgda/thread-wrapper/gda-thread-provider.c:877
 #: ../libgda/thread-wrapper/gda-thread-provider.c:932
@@ -3547,8 +3539,7 @@ msgstr ""
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:507
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
-msgstr ""
-"<непридатний-до-друку>"
+msgstr "<непридатний-до-друку>"
 
 #: ../libgda-ui/data-entries/gdaui-entry.c:202
 #: ../libgda-ui/data-entries/gdaui-entry.c:221
@@ -3618,8 +3609,7 @@ msgstr "Багаторядковий"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:4
 msgid "Display only one line, or a complete text editor"
-msgstr ""
-"Показати лише один рядок або повний текстовий редактор"
+msgstr "Показати лише один рядок або повний текстовий редактор"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:5
 msgid "Hidden"
@@ -3630,7 +3620,8 @@ msgid ""
 "If set to TRUE, characters are all displayed using a single 'invisible' "
 "character, suitable to enter passwords"
 msgstr ""
-"Якщо встановлено значення TRUE, символи буде показано за допомогою єдиного «невидимого» символу, який пасує для введення паролів"
+"Якщо встановлено значення TRUE, символи буде показано за допомогою єдиного "
+"«невидимого» символу, який пасує для введення паролів"
 
 #: ../libgda-ui/data-entries/gdaui-formatted-entry.c:278
 #, c-format
@@ -5507,25 +5498,23 @@ msgstr ""
 #: ../providers/jdbc/libmain.c:153 ../providers/jdbc/libmain.c:163
 #, c-format
 msgid "Can't get list of installed JDBC drivers: %s"
-msgstr ""
-"Не вдалося отримати список встановлених JDBC: %s"
+msgstr "Не вдалося отримати список встановлених JDBC: %s"
 
 #: ../providers/jdbc/libmain.c:479
 #, c-format
 msgid "Can't create JAVA virtual machine: %s"
-msgstr ""
-"Не вдалося створити віртуальну машину JAVA: %s"
+msgstr "Не вдалося створити віртуальну машину JAVA: %s"
 
 #: ../providers/jdbc/libmain.c:487
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
 msgstr ""
-"Не вдалося знайти середовище виконання JVM (libjvm.so), надавач даних JDBC є недоступним."
+"Не вдалося знайти середовище виконання JVM (libjvm.so), надавач даних JDBC є "
+"недоступним."
 
 #: ../providers/ldap/gda-ldap-provider.c:376
 msgid "The connection string must contain the DB_NAME value"
-msgstr ""
-"Рядок з'єднання має містити значення DB_NAME"
+msgstr "Рядок з'єднання має містити значення DB_NAME"
 
 #: ../providers/ldap/gda-ldap-provider.c:417
 msgid "Invalid value for 'TLS_REQCERT'"
@@ -5549,8 +5538,7 @@ msgstr "поряд із «%s»: синтаксична помилка"
 #: ../providers/ldap/gda-ldap-util.c:1255
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
-msgstr ""
-"Сервером LDAP повернуто декілька записів із DN «%s»"
+msgstr "Сервером LDAP повернуто декілька записів із DN «%s»"
 
 #: ../providers/ldap/gda-ldap-util.c:1397
 msgid "Could not parse distinguished name returned by LDAP server"
@@ -5560,8 +5548,7 @@ msgstr ""
 #: ../providers/ldap/gda-ldap-util.c:1639
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
-msgstr ""
-"Неочікуваний тип даних «%s» для атрибута objectClass!"
+msgstr "Неочікуваний тип даних «%s» для атрибута objectClass!"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:218
 #: ../providers/ldap/gdaprov-data-model-ldap.c:419
@@ -5577,14 +5564,12 @@ msgstr "Відносна розпізнавана назва"
 #: ../providers/ldap/gdaprov-data-model-ldap.c:902
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1199
 msgid "Truncated result because LDAP server limit encountered"
-msgstr ""
-"Обрізаний результат через перевищення обмежень сервера LDAP"
+msgstr "Обрізаний результат через перевищення обмежень сервера LDAP"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1583
 #, c-format
 msgid "Unknown GdaLdapModificationType %d"
-msgstr ""
-"Невідомий GdaLdapModificationType %d"
+msgstr "Невідомий GdaLdapModificationType %d"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1590
 msgid "No GdaLdapEntry specified"
@@ -5604,20 +5589,19 @@ msgstr ""
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1614
 msgid "No GdaLdapEntry specified to compare attributes"
-msgstr ""
-"Не вказано GdaLdapEntry для порівняння атрибутів"
+msgstr "Не вказано GdaLdapEntry для порівняння атрибутів"
 
 #: ../providers/ldap/gdaprov-data-model-ldap.c:1619
 msgid "GdaLdapEntry specified to compare have different DN"
-msgstr ""
-"Вказаний GdaLdapEntry для порівняння має інший DN"
+msgstr "Вказаний GdaLdapEntry для порівняння має інший DN"
 
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:2
 msgid ""
 "User name, as a DN or simple user name, for Active Directory may be "
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
-"Ім'я користувача, як DN або просте ім'я користувача, для Active Directory може записуватися у формі користувач@ДОМЕН або ДОМЕН\\користувач"
+"Ім'я користувача, як DN або просте ім'я користувача, для Active Directory "
+"може записуватися у формі користувач@ДОМЕН або ДОМЕН\\користувач"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -5625,13 +5609,11 @@ msgstr "Базова назва"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:2
 msgid "Base distinguished name, starting point for the searches"
-msgstr ""
-"Базова розпізнавана назва, початкова точка для пошуків"
+msgstr "Базова розпізнавана назва, початкова точка для пошуків"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:4
 msgid "Host on which the LDAP server is running"
-msgstr ""
-"Вузол, на якому запущено сервер LDAP"
+msgstr "Вузол, на якому запущено сервер LDAP"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
@@ -5849,11 +5831,11 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:239
 #: ../providers/postgres/gda-postgres-recordset.c:149
 msgid "Number of rows fetched at a time"
-msgstr ""
+msgstr "Кількість отриманих рядків"
 
 #: ../providers/mysql/gda-mysql-recordset.c:247
 msgid "Number of row chunks read since the object creation"
-msgstr ""
+msgstr "Кількість прочитаних фрагментів рядка з моменту створення об'єкта"
 
 #: ../providers/mysql/gda-mysql-recordset.c:673
 #: ../providers/mysql/gda-mysql-recordset.c:984
@@ -5862,7 +5844,7 @@ msgstr ""
 #: ../providers/mysql/gda-mysql-recordset.c:1029
 #, c-format
 msgid "Invalid column bind data type. %d\n"
-msgstr ""
+msgstr "Некоректний тип даних прив'язки стовпчика. %d\n"
 
 #: ../providers/mysql/gda-mysql-recordset.c:827
 #, c-format
@@ -6622,6 +6604,8 @@ msgstr "Автоматично відкидати об'єкти, які зале
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
 msgstr ""
+"Відмовляти у викиданні таблиці, якщо від неї залежить якісь об'єкти "
+"(RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:11
 msgid "Compress"
@@ -6687,7 +6671,7 @@ msgstr "Недостатньо пам'яті для перетворення д�
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:244
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr ""
+msgstr "Недостатньо пам'яті для перетворення рядка на двійковий буфер"
 
 #: ../providers/postgres/gda-postgres-provider.c:524
 msgid "Could not determine the default date format"
@@ -6695,7 +6679,7 @@ msgstr "Не вдалося визначити формат типової да�
 
 #: ../providers/postgres/gda-postgres-provider.c:580
 msgid "The connection string must contain a DB_NAME value"
-msgstr ""
+msgstr "Рядок з'єднання має містити значення DB_NAME"
 
 #: ../providers/postgres/gda-postgres-provider.c:584
 msgid ""
@@ -6739,7 +6723,7 @@ msgstr "Внутрішня помилка"
 #: ../providers/postgres/gda-postgres-provider.c:1403
 #, c-format
 msgid "Wrong savepoint name '%s'"
-msgstr ""
+msgstr "Помилкова назва точки збереження, «%s»"
 
 #: ../providers/postgres/gda-postgres-provider.c:2263
 #: ../providers/postgres/gda-postgres-provider.c:2265
@@ -6750,11 +6734,11 @@ msgstr "Не вдалося розпочати транзакцію"
 #: ../providers/postgres/gda-postgres-provider.c:2560
 #: ../providers/postgres/gda-postgres-provider.c:2595
 msgid "Could not set the XA transaction ID parameter"
-msgstr ""
+msgstr "Не вдалося встановити параметр ідентифікатор операції XA"
 
 #: ../providers/postgres/gda-postgres-recordset.c:154
 msgid "Number of rows chunks read since the object creation"
-msgstr ""
+msgstr "Кількість прочитаних фрагментів рядків з моменту створення об'єкта"
 
 #: ../providers/postgres/gda-postgres-recordset.c:624
 #, c-format
@@ -6769,7 +6753,7 @@ msgstr "Некоректне значення часової позначки «
 #: ../providers/postgres/gda-postgres-recordset.c:766
 #, c-format
 msgid "Invalid binary string representation '%s ...'"
-msgstr ""
+msgstr "Некоректне представлення двійкового рядка «%s ...»"
 
 #: ../providers/postgres/libmain.c:82
 msgid "Provider for PostgreSQL databases"
@@ -6777,11 +6761,11 @@ msgstr "Постачальник для баз даних PostgreSQL"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
 msgid "Ignore descendants"
-msgstr ""
+msgstr "Ігнорувати похідні"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:5
 msgid "Don't add the column to descendants of the table"
-msgstr ""
+msgstr "Не додавати стовпчик до похідних таблиці"
 
 #. Connection parameters
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
@@ -6819,7 +6803,7 @@ msgstr "Власник"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:23
 msgid "The name of the database user who will own the new database"
-msgstr ""
+msgstr "Ім'я користувача-власника нової бази даних"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:24
 msgid "Template"
@@ -6827,13 +6811,13 @@ msgstr "Шаблон"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:25
 msgid "The name of the template from which to create the new database"
-msgstr ""
+msgstr "Назва шаблона, на основі якого слід створити базу даних"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:26
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:7
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:4
 msgid "Tablespace"
-msgstr ""
+msgstr "Простір таблиці"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
 msgid ""
@@ -6856,31 +6840,31 @@ msgstr "ASCII"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:33
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:22
 msgid "Japanese EUC"
-msgstr ""
+msgstr "Японське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:35
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:23
 msgid "Chinese EUC"
-msgstr ""
+msgstr "Китайське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:37
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:24
 msgid "Korean EUC"
-msgstr ""
+msgstr "Корейське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:39
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:25
 msgid "Korean EUC (Hangle base)"
-msgstr ""
+msgstr "Корейське (EUC, основа хангиля)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
 msgid "Taiwan EUC"
-msgstr ""
+msgstr "Тайванське (EUC)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
@@ -6946,25 +6930,25 @@ msgstr "ISO 8859-1/ECMA 94 (латинська абетка №10)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:63
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:37
 msgid "ISO 8859-5/ECMA 113 (Latin/Cyrillic)"
-msgstr ""
+msgstr "ISO 8859-5/ECMA 113 (латиниця/кирилиця)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:65
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:38
 msgid "ISO 8859-6/ECMA 114 (Latin/Arabic)"
-msgstr ""
+msgstr "ISO 8859-6/ECMA 114 (латиниця/арабська)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:67
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:39
 msgid "ISO 8859-7/ECMA 118 (Latin/Greek)"
-msgstr ""
+msgstr "ISO 8859-7/ECMA 118 (латиниця/грецька)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:69
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:40
 msgid "ISO 8859-8/ECMA 121 (Latin/Hebrew)"
-msgstr ""
+msgstr "ISO 8859-8/ECMA 121 (латиниця/іврит)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:71
@@ -7152,7 +7136,7 @@ msgstr ""
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:90
 msgid "Login limit"
-msgstr ""
+msgstr "Обмеження входу"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7202,11 +7186,11 @@ msgstr "Роль"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:109
 msgid "Existing role"
-msgstr ""
+msgstr "Наявна роль"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:110
 msgid "Role's members"
-msgstr ""
+msgstr "Учасники ролі"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:111
 msgid ""
@@ -7216,7 +7200,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:112
 msgid "Role's admins"
-msgstr ""
+msgstr "Адміністратори ролі"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:113
 msgid ""
@@ -7231,7 +7215,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 msgid "Parent table(s)"
-msgstr ""
+msgstr "Батьківські таблиці"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Inheritance"
@@ -7239,7 +7223,7 @@ msgstr "Успадкування"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Parent table"
-msgstr ""
+msgstr "Батьківська таблиця"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Keep coupled"
@@ -7251,11 +7235,11 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Copy defaults"
-msgstr ""
+msgstr "Копіювати типове"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy default expressions"
-msgstr ""
+msgstr "Копіювати типові вирази"
 
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
@@ -7325,7 +7309,7 @@ msgstr "Користувач"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:19
 msgid "Existing user"
-msgstr ""
+msgstr "Наявний користувач"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
 msgid "Replace it already exists"
@@ -7333,7 +7317,7 @@ msgstr "Замінити, якщо вже існує"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 msgid "What to do with references on the column to delete"
-msgstr ""
+msgstr "Що робити із посиланнями на стовпчик, який має бути вилучено"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:7
 msgid "Automatically drop objects that depend on the column (CASCADE)"
