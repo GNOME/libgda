@@ -476,35 +476,19 @@ AC_SUBST(JSON_GLIB_LIBS)
 dnl *********************************
 dnl Check for GObject Introspection
 dnl *********************************
-GOBJECT_INTROSPECTION_CHECK([1.30.0])
-
-AC_ARG_ENABLE([gdaui-gi],
-    AS_HELP_STRING([--disable-gdaui-gi[=@<:@yes/no@:>@]], [Disable GObject Introspection for libgda-ui [default=no]]),
-    [
-      if test x$enableval = xyes
-      then
-        disable_gdaui_gi=no
-      else
-        disable_gdaui_gi=yes
-      fi
-    ],[
-      disable_gdaui_gi=no
-    ])
-
-if test x$found_introspection != xyes
+m4_ifdef([GOBJECT_INTROSPECTION_CHECK], [GOBJECT_INTROSPECTION_CHECK([1.30.0])])
+if test "x$found_introspection" != "xyes"
 then
-  disable_gda_gi=yes
-  disable_gdaui_gi=yes
-fi
-
-AM_CONDITIONAL(ENABLE_GDA_GI, [test x$disable_gda_gi != xyes])
-
-if test x$have_ui != xyes
-then
+	disable_gda_gi=yes
 	disable_gdaui_gi=yes
 fi
 
-AM_CONDITIONAL(ENABLE_GDAUI_GI, [test x$disable_gdaui_gi != xyes])
+if test "x$have_ui" != "xyes"
+then
+	disable_gdaui_gi=yes
+fi
+AM_CONDITIONAL(ENABLE_GDA_GI, [test "$disable_gda_gi" != "yes"])
+AM_CONDITIONAL(ENABLE_GDAUI_GI, [test "$disable_gdaui_gi" != "yes"])
 
 dnl ******************************
 dnl Check for Vala Compiler
