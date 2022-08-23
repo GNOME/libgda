@@ -16,7 +16,7 @@ data_entries_plugins_cargs += c_args
 
 gcrypt_headers= []
 gcrypt_sources= []
-if libcryp_config.found()
+if libgcrypt_config.found()
 gcrypt_headers += files([
 	'gdaui-entry-password.h',
 	'gdaui-data-cell-renderer-password.h'
