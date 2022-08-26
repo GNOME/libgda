@@ -24,7 +24,7 @@ import io
 import xml.dom.minidom
 import copy
 
-from . import utils
+import utils
 
 class _flowable(object):
 	def __init__(self, template, doc):

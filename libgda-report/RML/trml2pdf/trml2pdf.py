@@ -30,8 +30,8 @@ import reportlab
 from reportlab.pdfgen import canvas
 from reportlab import platypus
 
-from . import utils
-from . import color
+import utils
+import color
 
 #
 # Change this to UTF-8 if you plan tu use Reportlab's UTF-8 support
