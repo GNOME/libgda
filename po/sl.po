@@ -4,13 +4,14 @@
 #
 # Andraž Tori <andraz.tori1@guest.arnes.si>, 2000.
 # Matej Urbančič <mateju@svn.gnome.org>, 2006-2015.
+# Martin Srebotnjak <miles@filmsi.net>, 2022-.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-10-16 20:37+0000\n"
-"PO-Revision-Date: 2022-03-22 15:51+0100\n"
+"POT-Creation-Date: 2022-06-11 08:35+0000\n"
+"PO-Revision-Date: 2022-09-21 17:43+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -189,7 +190,7 @@ msgstr "Brez podrobnosti"
 #: ../control-center/dsn-config.c:415
 #, c-format
 msgid "Are you sure you want to remove the data source '%s'?"
-msgstr "Ali zares želite odstraniti vir podatkov '%s'?"
+msgstr "Ali zares želite odstraniti vir podatkov »%s«?"
 
 #: ../control-center/dsn-config.c:420
 msgid "Data source removal confirmation"
@@ -220,7 +221,7 @@ msgstr "Nadzorno središče GDA"
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:3
 msgid "Configure your database access environment"
-msgstr "Nastavitev okoljskih značilnosti dostopa do podatkovne zbirke."
+msgstr "Nastavitev okoljskih značilnosti dostopa do zbirke podatkov."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:4
 msgid "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
@@ -400,16 +401,12 @@ msgid "Could not open connection"
 msgstr "Ni mogoče odpreti povezave"
 
 #: ../control-center/gdaui-dsn-editor.c:404
-#, fuzzy
-#| msgid "Data source"
 msgid "Data source copy"
-msgstr "Podatkovni vir"
+msgstr "Kopija vira podatkov"
 
 #: ../control-center/gdaui-dsn-editor.c:406
-#, fuzzy
-#| msgid "Create new data source"
 msgid "Create data source"
-msgstr "Ni mogoče ustvariti podatkovnega vira za %s"
+msgstr "Ustvari vir podatkov"
 
 #: ../control-center/gdaui-dsn-editor.c:407
 #: ../control-center/gdaui-login-dialog.c:105
@@ -441,10 +438,9 @@ msgid ""
 msgstr ""
 
 #: ../control-center/gdaui-dsn-editor.c:472
-#, fuzzy, c-format
-#| msgid "Could not declare new data source"
+#, c-format
 msgid "Could not create data source: %s"
-msgstr "Ni mogoče najti podatkovnega vira '%s'"
+msgstr "Vira podatkov ni bilo mogoče ustvariti: %s"
 
 #: ../control-center/gdaui-login-dialog.c:76
 #: ../control-center/gdaui-login-dialog.c:84 ../tools/browser/auth-dialog.c:214
@@ -487,7 +483,7 @@ msgstr "Nadzorno središče za dostop do podatkovne zbirke"
 
 #: ../control-center/main.c:164
 msgid "Database access services for the GNOME Desktop"
-msgstr "Storitev dostopa do podatkovnih zbirk za GNOME namizje."
+msgstr "Storitev dostopa do podatkovnih zbirk za namizje GNOME."
 
 #: ../control-center/main.c:232
 msgid "Datasource access control center"
@@ -528,13 +524,13 @@ msgstr "Izjave ni mogoče najti v seznamu izjav"
 #: ../libgda/gda-batch.c:396
 #, c-format
 msgid "Conflicting parameter '%s'"
-msgstr "Parameter '%s' je v sporu"
+msgstr "Parameter »%s« je v sporu"
 
 #: ../libgda/gda-config.c:524 ../libgda/gda-config.c:550
 #: ../libgda/gda-config.c:675 ../libgda/gda-config.c:700
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
-msgstr "Napaka med nalaganjem podrobnosti overitve za DNS '%s': %s"
+msgstr "Napaka med nalaganjem podrobnosti overitve za DNS »%s«: %s"
 
 #: ../libgda/gda-config.c:863
 #, c-format
@@ -798,15 +794,13 @@ msgstr "Manjkajo ali pa so napačno navedeni argumenti razpredelnice '%s': %s"
 
 #: ../libgda/gda-connection.c:5346
 #, fuzzy, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from Data Store: %s"
-msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
+msgstr "Pri pridobivanju podatkov iz podatkovne shrambe: %s"
 
 #: ../libgda/gda-connection.c:5404
 #, fuzzy, c-format
-#| msgid "Internal SQLite error: no data to iterate on"
 msgid "Internal error: No meta store in connection"
-msgstr "Notranja napaka SQLite: ni podatkov za uporabo"
+msgstr "Notranja napaka: v povezavi ni meta shrambe"
 
 #: ../libgda/gda-connection.c:5422
 #, c-format
@@ -829,10 +823,9 @@ msgid "Parameter 'name' is required to filter views"
 msgstr ""
 
 #: ../libgda/gda-connection.c:5465
-#, fuzzy, c-format
-#| msgid "Parameter name not specified"
+#, c-format
 msgid "Parameter 'name' is required to filter fields"
-msgstr "Ime parametra ni navedeno"
+msgstr "Parameter »name« je potreben za filtriranje polj"
 
 #: ../libgda/gda-connection.c:5471
 #, c-format
@@ -860,19 +853,14 @@ msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 
 #: ../libgda/gda-connection.c:5520
-#, c-format
+#, fuzzy, c-format
 msgid "Invalid meta type to get data from store"
-msgstr ""
+msgstr "Neveljavna meta vrsta za pridobivanje podatkov iz shrambe"
 
 #: ../libgda/gda-connection.c:5531
-#, fuzzy, c-format
-#| msgid ""
-#| "Internal error while building INSERT statement:\n"
-#| "%s"
+#, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
-msgstr ""
-"Notranja napaka med izgradnjo stavka INSERT:\n"
-"%s"
+msgstr "Notranja napaka med izgradnjo stavka za pridobivanje podatkov: %s"
 
 #: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
 #: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
@@ -1272,10 +1260,9 @@ msgid "\"options\" property is not a GdaSet object"
 msgstr "Lastnost \"možnosti\" ni GdaSet predmet"
 
 #: ../libgda/gda-data-model-import.c:698
-#, fuzzy, c-format
-#| msgid "The '%s' option must hold a string value, ignored."
+#, c-format
 msgid "The %s option must hold a string value, ignored."
-msgstr "Možnost '%s' mora vsebovati vrednost niza, zato je opravilo prezrto."
+msgstr "Možnost %s mora imeti vrednost niza, prezrto."
 
 #: ../libgda/gda-data-model-import.c:714
 #, c-format
@@ -1396,13 +1383,13 @@ msgid "Referenced data model in iterator doesn't belong to given data model"
 msgstr ""
 
 #: ../libgda/gda-data-model-iter.c:396
-#, c-format
+#, fuzzy, c-format
 msgid "Invalid data model. Can't validate holder"
-msgstr ""
+msgstr "Neveljaven podatkovni model. Imetnika ni mogoče potrditi"
 
 #: ../libgda/gda-data-model-iter.c:539
 msgid "Invalid data model object. Can't set property"
-msgstr ""
+msgstr "Neveljaven predmet podatkovnega modela. Lastnosti ni mogoče nastaviti"
 
 #: ../libgda/gda-data-pivot.c:428
 msgid "Pivot model not populated"
@@ -1638,10 +1625,9 @@ msgid "Can't calculate internal row number: %s"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2168
-#, fuzzy, c-format
-#| msgid "Could not fetch next row"
+#, c-format
 msgid "Can't fetch next row: %s"
-msgstr "Ni mogoče pridobiti naslednje vrstice"
+msgstr "Ni mogoče pridobiti naslednje vrstice: %s"
 
 #: ../libgda/gda-data-select.c:2220
 #, c-format
@@ -1724,8 +1710,6 @@ msgid "No INSERT statement provided"
 msgstr "Ni podane izjave INSERT"
 
 #: ../libgda/gda-data-select.c:3097
-#, fuzzy
-#| msgid "Cannot add a row because the number of rows in unknown"
 msgid "Cannot add a row because the number of rows is unknown"
 msgstr "Ni mogoče dodati vrstice, ker število vrstic ni znano"
 
@@ -1785,16 +1769,13 @@ msgid "Operation is not implemented for the used provider"
 msgstr "Napaka ponudnika: %s metoda ni podprta za ponudnika %s"
 
 #: ../libgda/gda-db-catalog.c:236
-#, fuzzy, c-format
-#| msgid ""
-#| "Could not parse '%s': Validation for XML files for server operations will "
-#| "not be performed (some weird errors may occur)"
+#, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
 msgstr ""
-"Ni mogoče razčleniti '%s': preverjanje veljavnosti za datoteke XML za "
-"strežniška opravila ne bo izvedeno (lahko se pojavijo nenavadne napake)"
+"Ni mogoče razčleniti »%s«: preverjanje veljavnosti za datoteke XML za "
+"GdaDbCreator ne bo izvedeno (lahko se pojavijo nenavadne napake)"
 
 #: ../libgda/gda-db-catalog.c:260
 #, c-format
@@ -1807,10 +1788,9 @@ msgid "xml file is invalid"
 msgstr "datoteka xml ni veljavna"
 
 #: ../libgda/gda-db-catalog.c:319
-#, fuzzy, c-format
-#| msgid "Root node of file '%s' should be <schema>."
+#, c-format
 msgid "Root node should be <schema>."
-msgstr "Korensko vozlišče datoteke '%s' mora biti <shema>."
+msgstr "Korensko vozliščemora biti <shema>."
 
 #: ../libgda/gda-db-catalog.c:452 ../libgda/gda-db-catalog.c:503
 #, c-format
@@ -1822,41 +1802,39 @@ msgstr ""
 msgid "xml file '%s' is not valid\n"
 msgstr "datoteka xml »%s« ni veljavna\n"
 
-#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
-#, fuzzy, c-format
-#| msgid "Connection not yet opened"
+#: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#, c-format
 msgid "Connection is not opened"
-msgstr "Povezava še ni odprta"
+msgstr "Povezava ni odprta"
 
-#: ../libgda/gda-db-catalog.c:1044
-#, fuzzy, c-format
-#| msgid "Can't open file '%s' for reading: %s\n"
+#: ../libgda/gda-db-catalog.c:1146
+#, c-format
 msgid "Can't open stream for reading file '%s'"
-msgstr "Ni mogoče odpreti datoteke '%s' za branje: %s\n"
+msgstr "Ni mogoče odpreti toka za branje datoteke »%s«"
 
-#: ../libgda/gda-db-catalog.c:1060
+#: ../libgda/gda-db-catalog.c:1162
 #, fuzzy, c-format
 #| msgid "Cannot create directory '%s'"
 msgid "Can't create parse context for '%s'"
 msgstr "Ni mogoče ustvariti mape '%s'"
 
-#: ../libgda/gda-db-catalog.c:1076
+#: ../libgda/gda-db-catalog.c:1178
 #, c-format
 msgid "Error during parsing with error '%d'"
-msgstr ""
+msgstr "Napaka pri razčlenjevanju z napako »%d«"
 
-#: ../libgda/gda-db-catalog.c:1093
+#: ../libgda/gda-db-catalog.c:1195
 #, fuzzy, c-format
 #| msgid "Failed to declare foreign key: %s"
 msgid "Failed to parse file: '%s'"
 msgstr "Napoved tujega ključa je spodletela: %s"
 
-#: ../libgda/gda-db-catalog.c:1104
+#: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr ""
 
-#: ../libgda/gda-db-catalog.c:1114
+#: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "Datoteka XML ni veljavna\n"
@@ -1864,7 +1842,7 @@ msgstr "Datoteka XML ni veljavna\n"
 #: ../libgda/gda-db-table.c:750
 #, c-format
 msgid "Empty column list"
-msgstr ""
+msgstr "Prazen seznam stolpcev"
 
 #: ../libgda/gda-db-view.c:538
 #, fuzzy, c-format
@@ -1983,9 +1961,8 @@ msgstr "Ni mogoče pridobiti zaklepa povezave"
 
 #: ../libgda/gda-meta-store.c:1208
 #, fuzzy, c-format
-#| msgid "Could not open binding connection: %s"
 msgid "Could not open internal GdaMetaStore connection: %s"
-msgstr "Ni mogoče odpreti povezave: %s"
+msgstr "Ni mogoče odpreti notranje povezave GdaMetaStore: %s"
 
 #: ../libgda/gda-meta-store.c:1214
 #, fuzzy, c-format
@@ -2123,9 +2100,8 @@ msgstr "Parametra '%s' v izjavi ni mogoče najti"
 
 #: ../libgda/gda-meta-store.c:3068
 #, fuzzy, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from Meta Store: %s"
-msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
+msgstr "Pri pridobivanju metapodatkov iz meta shrambe: %s"
 
 #: ../libgda/gda-meta-store.c:3080 ../libgda/gda-meta-store.c:3200
 #, c-format
@@ -2134,9 +2110,8 @@ msgstr "Ni vrednosti za parameter '%s'"
 
 #: ../libgda/gda-meta-store.c:3188
 #, fuzzy, c-format
-#| msgid "Error while fetching meta data from the connection: %s"
 msgid "While extracting data from store: %s"
-msgstr "Napaka med pridobivanjem metapodatkov preko povezave: %s"
+msgstr "Pri pridobivanju metapodatkov iz shrambe: %s"
 
 #: ../libgda/gda-meta-store.c:3523
 #, c-format
@@ -2350,16 +2325,14 @@ msgid "Missing foreign key's column name for table '%s'"
 msgstr "Manjka ime stolpca tujega ključa za razpredelnico '%s'"
 
 #: ../libgda/gda-provider-meta.c:83
-#, fuzzy, c-format
-#| msgid "No connection to use"
+#, c-format
 msgid "No connection is set"
-msgstr "Ni povezave za uporabo"
+msgstr "Povezava ni nastavljena"
 
 #: ../libgda/gda-provider-meta.c:88
-#, fuzzy, c-format
-#| msgid "Connection not yet opened"
+#, c-format
 msgid "Connection is no opened"
-msgstr "Povezava še ni odprta"
+msgstr "Povezava ni odprta"
 
 #: ../libgda/gda-provider-meta.c:126
 #, c-format
@@ -2925,10 +2898,8 @@ msgid "Strings representation"
 msgstr "Predstavitev niza"
 
 #: ../libgda/handlers/gda-handler-text.c:207
-#, fuzzy
-#| msgid "Strings representation"
 msgid "Large String representation"
-msgstr "Predstavitev niza"
+msgstr "Prikaz velikega niza"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
 #: ../libgda/handlers/gda-handler-time.c:475
@@ -3070,10 +3041,8 @@ msgid "This report document does not handle %s output"
 msgstr "Dokument poročila ne upravlja z odvodom %s"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:68
-#, fuzzy
-#| msgid "Internal error: invalid provider handle"
 msgid "Internal error, creating table in SQLite provider"
-msgstr "Notranja napaka: neveljaven upravljalnik ponudnika"
+msgstr "Notranja napaka, ustvarjanje tabele v ponudniku SQLite"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:84
 msgid "No fields are defined for CREATE TABLE operation"
@@ -3085,10 +3054,8 @@ msgid "No field specified in foreign key constraint"
 msgstr "Ni določenega polja omejitev tujega ključa"
 
 #: ../libgda/sqlite/gda-sqlite-ddl.c:363
-#, fuzzy
-#| msgid "Table to create must have at least one row"
 msgid "Table to create must have at least one field"
-msgstr "Razpredelnica mora imeti vsaj eno vrstico"
+msgstr "Tabela, ki jo želite ustvariti, mora imeti vsaj eno polje"
 
 #: ../libgda/sqlite/gda-sqlite-handler-bin.c:77
 msgid "SQLite binary representation"
@@ -3099,10 +3066,9 @@ msgid "Sqlite boolean representation"
 msgstr "Sqlite logično prikazovanje"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:129
-#, fuzzy, c-format
-#| msgid "Parameter '%s' not found is statement"
+#, c-format
 msgid "Parameter '%s' not found in statement"
-msgstr "Parametra '%s' znotraj izjave ni mogoče najti"
+msgstr "Parametra »%s« znotraj izjave ni mogoče najti"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:143
 #: ../libgda/sqlite/gda-sqlite-provider.c:159
@@ -3467,10 +3433,8 @@ msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
 msgstr "Neveljaven zapis časa '%s' (zapis mora biti v obliki HH:MM:SS[.ms])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
-#, fuzzy
-#| msgid "Provider does not support asynchronous connection open"
 msgid "Provider did not clean its connection data"
-msgstr "Ponudnik ne podpira asinhronega odpiranja povezave"
+msgstr "Ponudnik ni očistil podatkov o povezavi"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:115
 #, c-format
@@ -3856,16 +3820,12 @@ msgid "Could not save data to '%s'"
 msgstr "Ni mogoče shraniti podatkov v '%s'"
 
 #: ../libgda-ui/data-entries/common-bin.c:234
-#, fuzzy
-#| msgid "_Load image from file"
 msgid "Load data from file"
-msgstr "Ni mogoče naložiti podatkov datoteke ključa: %s"
+msgstr "Naloži podatke iz datoteke"
 
 #: ../libgda-ui/data-entries/common-bin.c:241
-#, fuzzy
-#| msgid "Saving data to a file"
 msgid "Save data to file"
-msgstr "Shranjevanje podatkov nastavitev v datoteko »%s« je spodletelo: %s"
+msgstr "Shrani podatke v datoteko"
 
 #: ../libgda-ui/data-entries/common-bin.c:248
 msgid "Clear data"
@@ -3889,16 +3849,12 @@ msgid "Unknown size"
 msgstr "Neznana velikost"
 
 #: ../libgda-ui/data-entries/common-bin.c:420
-#, fuzzy
-#| msgid "Could not create directory '%s'"
 msgid "Could not create temporary directory"
-msgstr "Ni mogoče ustvariti začasne mape v »%s«."
+msgstr "Ni mogoče ustvariti začasne mape"
 
 #: ../libgda-ui/data-entries/common-bin.c:457
-#, fuzzy
-#| msgid "Could not open connection"
 msgid "Could not run selected application"
-msgstr "Zaženi program ..."
+msgstr "Izbranega programa ni bilo mogoče zagnati"
 
 #: ../libgda-ui/data-entries/common-bin.c:464
 msgid "Could not export data"
@@ -8026,10 +7982,8 @@ msgid "Existing user"
 msgstr "Obstoječi uporabnik"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
-#, fuzzy
-#| msgid "Replace it already exists"
 msgid "Replace if already exists"
-msgstr "Zamenjaj v kolikor že obstaja."
+msgstr "Zamenjaj, če že obstaja"
 
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:6
 msgid "What to do with references on the column to delete"
@@ -8526,10 +8480,9 @@ msgid "Error updating meta data for connection: %s"
 msgstr "Napaka med posodabljanjem povezave: %s"
 
 #: ../tools/browser/browser-window.c:730
-#, fuzzy, c-format
-#| msgid "Error creating database: %s"
+#, c-format
 msgid "Error Updating Meta Data: %s"
-msgstr "Napaka med ustvarjanjem podatkovne zbirke: %s"
+msgstr "Napaka pri posodabljanju metapodatkov: %s"
 
 #: ../tools/browser/browser-window.c:1048
 msgid "Don't show this message again"
@@ -9494,8 +9447,6 @@ msgid "LDAP class's properties"
 msgstr "Lastnosti razreda LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:531
-#, fuzzy
-#| msgid "Add class to favorites"
 msgid "Add class to Favorites"
 msgstr "Dodaj razred med priljubljene"
 
@@ -9520,8 +9471,6 @@ msgid "LDAP entry's details"
 msgstr "Podrobnosti vnosa LDAP"
 
 #: ../tools/browser/ldap-browser/ldap-entries-page.c:537
-#, fuzzy
-#| msgid "Add entry to favorites"
 msgid "Add entry to Favorites"
 msgstr "Dodaj vnos med priljubljene"
 
