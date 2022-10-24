@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2022-04-04 23:30+0000\n"
-"PO-Revision-Date: 2022-06-11 11:34+0300\n"
+"POT-Creation-Date: 2022-09-21 15:45+0000\n"
+"PO-Revision-Date: 2022-10-24 23:52+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -864,7 +864,8 @@ msgstr "Некоректний метатип для отримання дани
 #: ../libgda/gda-connection.c:5531
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
-msgstr "Внутрішня помилка під час створення інструкції для отримання даних: %s"
+msgstr ""
+"Внутрішня помилка під час створення інструкції для отримання даних: %s"
 
 #: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
 #: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
@@ -1464,7 +1465,8 @@ msgstr ""
 
 #: ../libgda/gda-data-proxy.c:967
 msgid "GdaDataProxy can't handle non random access data models"
-msgstr "GdaDataProxy не може обробляти моделі без випадкового доступу до даних"
+msgstr ""
+"GdaDataProxy не може обробляти моделі без випадкового доступу до даних"
 
 #: ../libgda/gda-data-proxy.c:1644 ../libgda/gda-data-proxy.c:4051
 msgid ""
@@ -1577,7 +1579,8 @@ msgstr "Інструкція з внесення змін використову
 
 #: ../libgda/gda-data-select.c:1353
 #, c-format
-msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
+msgid ""
+"Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 "Параметр «%s» інструкція із внесення змін має значення %s, але він повинен "
 "мати значення %s"
@@ -1771,7 +1774,8 @@ msgstr ""
 
 #: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
 #, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
+msgid ""
+"Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Внутрішня помилка: має бути приготовано дію, встановлення даних з'єднання"
 
@@ -1930,7 +1934,8 @@ msgstr "Не можна пов'язати утримувачі, якщо вон�
 
 #: ../libgda/gda-holder.c:1974
 #, c-format
-msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
+msgid ""
+"Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
 "Не вдалося змінити GdaHolder так, щоб він відповідав зміні у межах "
 "GdaHolder: %s"
@@ -2088,7 +2093,8 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:2669 ../libgda/gda-meta-store.c:2700
 #, c-format
-msgid "Schema description does not contain the object '%s', check installation"
+msgid ""
+"Schema description does not contain the object '%s', check installation"
 msgstr ""
 "У описі схеми не міститься об'єкта «%s», перевірте, чи встановлено потрібні "
 "компоненти"
@@ -2966,7 +2972,8 @@ msgstr "Не вдалося знайти таблицю стилів XSL DocBook
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:350
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr "Не вдалося знайти таблицю стилів XSL DocBook для об'єктів форматування"
+msgstr ""
+"Не вдалося знайти таблицю стилів XSL DocBook для об'єктів форматування"
 
 #: ../libgda-report/engine/gda-report-engine.c:314
 #, c-format
@@ -3204,7 +3211,8 @@ msgstr "Підтримки типу оператора не передбачен
 #: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
-msgstr "Не можна використовувати параметр без назви у приготованих інструкціях"
+msgstr ""
+"Не можна використовувати параметр без назви у приготованих інструкціях"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3073
 #: ../libgda/sqlite/gda-sqlite-provider.c:3085
@@ -3437,7 +3445,8 @@ msgstr "Обмеження на бінарні дані не обробляют�
 #: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
-msgstr "Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс])"
+msgstr ""
+"Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
 msgid "Provider did not clean its connection data"
@@ -3458,7 +3467,8 @@ msgstr "Внутрішня помилка: некоректний обробни
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
-msgstr "Помилка внутрішньої реалізації: не визначено спосіб закриття з'єднання"
+msgstr ""
+"Помилка внутрішньої реалізації: не визначено спосіб закриття з'єднання"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
@@ -3679,7 +3689,8 @@ msgstr ""
 "У інструкції INSERT має бути вказано таблицю, до якої слід вставити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:362
-msgid "Can't specify values to insert and SELECT statement in INSERT statement"
+msgid ""
+"Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
 "Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції "
 "INSERT"
@@ -3721,7 +3732,8 @@ msgstr "Декілька цілей із назвою або альтернат�
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:290
 msgid "UPDATE statement needs a table to update data"
-msgstr "В інструкції UPDATE має бути вказано таблицю, у якій слід оновити дані"
+msgstr ""
+"В інструкції UPDATE має бути вказано таблицю, у якій слід оновити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:296
 msgid ""
@@ -4561,7 +4573,8 @@ msgstr "Зняти фільтрування"
 
 #: ../libgda-ui/gdaui-data-proxy.c:155
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
-msgstr "Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
+msgstr ""
+"Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:89
 msgid "Insert new data"
@@ -6085,8 +6098,8 @@ msgid ""
 "Connection string required by the JDBC driver, refer to the used JDBC driver "
 "for its contents and format"
 msgstr ""
-"Для драйвера JDBC потрібен рядок з'єднання, ознайомтеся із документацією до"
-" використаного драйвера JDBC щодо його даних та формату"
+"Для драйвера JDBC потрібен рядок з'єднання, ознайомтеся із документацією до "
+"використаного драйвера JDBC щодо його даних та формату"
 
 #: ../providers/jdbc/libmain.c:154 ../providers/jdbc/libmain.c:164
 #, c-format
@@ -6263,8 +6276,8 @@ msgstr "Вузол, на якому запущено сервер LDAP"
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
 msgstr ""
-"Порт сервера бази даних (не заповнюйте, якщо слід використовувати типовий"
-" порт)"
+"Порт сервера бази даних (не заповнюйте, якщо слід використовувати типовий "
+"порт)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:13
@@ -6306,8 +6319,8 @@ msgid ""
 "Specifies the file that contains certificates for all of the recognized "
 "Certificate Authorities, in a SSL/TLS session"
 msgstr ""
-"Визначає файл, який містить сертифікати для всіх розпізнаних служб"
-" сертифікації у сеансі SSL/TLS"
+"Визначає файл, який містить сертифікати для всіх розпізнаних служб "
+"сертифікації у сеансі SSL/TLS"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:13
 msgid "Cache server data"
@@ -6434,7 +6447,7 @@ msgstr ""
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2518
 msgid "Can't read whole BLOB into memory"
-msgstr ""
+msgstr "Не вдалося повністю прочитати BLOB до пам'яті"
 
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2565
@@ -6477,23 +6490,23 @@ msgstr "Некоректний тип даних прив'язки стовпч�
 #: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
 msgid "Type %s not mapped for value %d"
-msgstr ""
+msgstr "Тип %s не пов'язано зі значенням %d"
 
 #: ../providers/mysql/gda-mysql-recordset.c:872
 #, c-format
 msgid "Type %s not mapped for value %lld"
-msgstr ""
+msgstr "Тип %s не пов'язано зі значенням %lld"
 
 #: ../providers/mysql/gda-mysql-recordset.c:919
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
-msgstr ""
+msgstr "Тип %s не пов'язано зі значенням %d/%d/%d %d:%d:%d.%lu"
 
 #: ../providers/mysql/gda-mysql-recordset.c:936
 #: ../providers/mysql/gda-mysql-recordset.c:951
 #, c-format
 msgid "Type %s not mapped for value %f"
-msgstr ""
+msgstr "Тип %s не пов'язано зі значенням %f"
 
 #: ../providers/mysql/gda-mysql-recordset.c:1074
 #, c-format
@@ -6989,7 +7002,7 @@ msgstr "Метод вставлення"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:97
 msgid "FIRST, LAST or NO: only with MERGE engine"
-msgstr ""
+msgstr "FIRST, LAST або NO: лише з рушієм MERGE"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:99
@@ -7043,7 +7056,7 @@ msgstr "Не пакувати ключі"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:112
 msgid "Only pack long CHAR/VARCHAR columns"
-msgstr ""
+msgstr "Пакувати лише довгі стовпчики CHAR/VARCHAR"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:113
 msgid "MyISAM (default)"
@@ -7088,7 +7101,7 @@ msgstr "Об'єднати"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:123
 msgid "Clustered, fault-tolerant, memory-based"
-msgstr ""
+msgstr "Із поділом на кластери, стійкістю до помилок, на основі пам'яті"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:124
 msgid "Dynamic"
@@ -7162,7 +7175,8 @@ msgstr "Що робити із посиланнями"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr "Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
+msgstr ""
+"Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
@@ -7226,11 +7240,11 @@ msgstr "Неправильний логічний номер Oracle"
 
 #: ../providers/oracle/gda-oracle-util.c:633
 msgid "Could not allocate Lob locator"
-msgstr ""
+msgstr "Не вдалося розмістити у пам'яті локатор Lob"
 
 #: ../providers/oracle/gda-oracle-util.c:640
 msgid "Could not copy Lob locator"
-msgstr ""
+msgstr "Не вдалося скопіювати локатор Lob"
 
 #: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
@@ -7593,7 +7607,7 @@ msgstr "Предикат"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 msgid "Constraint expression for a partial index"
-msgstr ""
+msgstr "Вираз обмеження для часткового покажчика"
 
 #. Index fields
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
@@ -7661,7 +7675,7 @@ msgstr "Надкористувач бази даних"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:45
 msgid "Set to TRUE if the role is a database superuser"
-msgstr ""
+msgstr "Встановіть значення TRUE, якщо роллю є «надкористувач бази даних»"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -10450,7 +10464,8 @@ msgstr "Вивести ТЕКСТ або порожній рядок до ста
 
 #: ../tools/common/t-app.c:1129
 msgid "Send TEXT or an empty line to current output stream"
-msgstr "Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
+msgstr ""
+"Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
 
 #: ../tools/common/t-app.c:1142
 #, c-format
@@ -10493,7 +10508,8 @@ msgstr "Буфер запитів і вибрані записи запитів"
 
 #: ../tools/common/t-app.c:1180
 msgid "Edit the query buffer (or file) with external editor"
-msgstr "Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
+msgstr ""
+"Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
 
 #: ../tools/common/t-app.c:1187
 msgid "Reset the query buffer (or load file into query buffer)"
@@ -10555,7 +10571,8 @@ msgstr "%s [<НАЗВА>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_РЯД�
 
 #: ../tools/common/t-app.c:1250
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr "Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
+msgstr ""
+"Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
 
 #: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1265
 #: ../tools/common/t-app.c:1275 ../tools/common/t-app.c:1282
