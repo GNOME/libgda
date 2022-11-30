@@ -1,27 +1,27 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Ekaterine Papava <papava.e@gtu.ge>, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2022-06-11 08:31+0000\n"
-"PO-Revision-Date: 2022-07-29 07:23+0200\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"POT-Creation-Date: 2022-07-29 05:23+0000\n"
+"PO-Revision-Date: 2022-11-30 11:04+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: \n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #. title
 #: ../control-center/dsn-config.c:136 ../control-center/main.c:380
 msgid "Data Sources"
-msgstr ""
+msgstr "მონაცემთა წყაროები"
 
 #: ../control-center/dsn-config.c:137
 msgid "Configured data sources in the system"
@@ -459,7 +459,7 @@ msgstr ""
 #. title
 #: ../control-center/main.c:390 ../control-center/provider-config.c:60
 msgid "Providers"
-msgstr ""
+msgstr "მომწოდებლები"
 
 #: ../control-center/provider-config.c:61
 msgid "Installed providers"
@@ -1013,7 +1013,7 @@ msgstr ""
 #: ../libgda/gda-data-model.c:1644
 #, c-format
 msgid "File '%s' already exists"
-msgstr ""
+msgstr "ფაილი უკვე არსებობს: %s"
 
 #: ../libgda/gda-data-model.c:1821
 msgid "Exported Data"
@@ -1307,7 +1307,7 @@ msgstr ""
 #: ../libgda/gda-data-pivot.c:1080 ../libgda/gda-data-pivot.c:1092
 #: ../libgda/gda-data-pivot.c:1150
 msgid "Integer overflow"
-msgstr ""
+msgstr "მთელი რიცხვის მაქსიმალური მნიშვნელობის გადაცილება"
 
 #: ../libgda/gda-data-pivot.c:772 ../libgda/gda-data-pivot.c:783
 msgid "Float value overflow"
@@ -2036,7 +2036,7 @@ msgstr ""
 
 #: ../libgda/gda-server-operation.c:2729
 msgid "Invalid type"
-msgstr ""
+msgstr "არასწორი ტიპი"
 
 #: ../libgda/gda-server-operation.c:2834
 msgid "CREATE TABLE operation is not supported by the database server"
@@ -3326,7 +3326,7 @@ msgstr ""
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-info.c:159
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
 msgid "Editable"
-msgstr ""
+msgstr "ჩასწორებადი"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:169
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:197
@@ -3581,7 +3581,7 @@ msgstr "ათობითი"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:9
 msgid "Data Type"
-msgstr ""
+msgstr "მონაცემების ტიპი"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:10
 msgid "Variable"
@@ -3606,7 +3606,7 @@ msgstr "ფაილის არჩევა"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:196
 msgid "Choose a directory"
-msgstr ""
+msgstr "აირჩიეთ საქაღალდე"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-filesel.c:235
 msgid "Choose"
@@ -3753,7 +3753,7 @@ msgstr ""
 
 #: ../libgda-ui/data/server_operation.glade.h:5
 msgid "Constraints"
-msgstr ""
+msgstr "შეზღუდვები"
 
 #: ../libgda-ui/demos/main.c:762
 #, c-format
@@ -4049,7 +4049,7 @@ msgstr ""
 
 #: ../libgda-ui/gdaui-raw-grid.c:819
 msgid "No title"
-msgstr ""
+msgstr "სათაურის გარეშე"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1916
 msgid "Shown columns"
@@ -4766,7 +4766,7 @@ msgstr ""
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:4
 msgid "Index name"
-msgstr ""
+msgstr "ინდექსის სახელი"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:5
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:5
@@ -6091,7 +6091,7 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
 msgid "Field"
-msgstr ""
+msgstr "ველი"
 
 #. foreign key spec
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:47
@@ -6320,7 +6320,7 @@ msgstr "ფიქსირებული"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:127
 msgid "Compressed"
-msgstr ""
+msgstr "შეკუმშული"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:128
 msgid "Redundant"
@@ -6610,7 +6610,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:20
 msgid "Unicode (UTF-8)"
-msgstr ""
+msgstr "Unicode (UTF-8)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
@@ -6937,7 +6937,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:100
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:14
 msgid "Valid until"
-msgstr ""
+msgstr "ვადა"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7031,7 +7031,7 @@ msgstr ""
 #. To translators: Action of setting a value to its default value
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:72
 msgid "Set to default"
-msgstr ""
+msgstr "ნაგულისხმები მნიშვნელობების დაყენება"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 msgid "Not deferrable"
@@ -7193,7 +7193,7 @@ msgstr "კოდური ფრაზა"
 #: ../providers/sqlcipher/sqlcipher_specs_auth.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_create_db.xml.in.h:14
 msgid "Encryption passphrase"
-msgstr ""
+msgstr "შიფრაციის პაროლი"
 
 #: ../providers/sqlite/libmain.c:75
 msgid "Provider for SQLite databases"
@@ -7664,7 +7664,7 @@ msgstr "დახმარება"
 
 #: ../tools/browser/browser-window.c:300
 msgid "_Manual"
-msgstr ""
+msgstr "_ხელით"
 
 #: ../tools/browser/browser-window.c:300
 msgid "Manual"
@@ -8097,7 +8097,7 @@ msgstr ""
 #: ../tools/browser/common/ui-formgrid.c:579
 #: ../tools/browser/data-manager/data-source-editor.c:112
 msgid "Zoom..."
-msgstr ""
+msgstr "გადიდება..."
 
 #: ../tools/browser/common/ui-formgrid.c:656
 #: ../tools/browser/data-manager/data-source.c:812
@@ -8270,7 +8270,7 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-console.c:412
 msgid "View XML"
-msgstr ""
+msgstr "XML-ის ნახვა"
 
 #: ../tools/browser/data-manager/data-console.c:412
 msgid ""
@@ -8280,7 +8280,7 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-console.c:433
 msgid "BBB:"
-msgstr ""
+msgstr "BBB:"
 
 #: ../tools/browser/data-manager/data-console.c:505
 #, c-format
@@ -8377,7 +8377,7 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:311
 msgid "Specifications"
-msgstr ""
+msgstr "მონაცემები"
 
 #: ../tools/browser/data-manager/data-favorite-selector.c:482
 msgid "Saved"
@@ -8426,7 +8426,7 @@ msgstr ""
 #: ../tools/browser/data-manager/data-source.c:438
 #: ../tools/browser/schema-browser/mgr-columns.c:278
 msgid "Not ready"
-msgstr ""
+msgstr "მზად არაა"
 
 #: ../tools/browser/data-manager/data-source.c:445
 #, c-format
@@ -8676,7 +8676,7 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/filter-editor.c:152
 msgid "Base DN:"
-msgstr ""
+msgstr "საბაზისო DN:"
 
 #: ../tools/browser/ldap-browser/filter-editor.c:156
 msgid "Filter expression:"
@@ -8741,7 +8741,7 @@ msgstr ""
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:337
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:573
 msgid "LDAP classes"
-msgstr ""
+msgstr "LDAP კლასები"
 
 #: ../tools/browser/ldap-browser/ldap-classes-page.c:364
 msgid "LDAP class's properties"
@@ -8880,7 +8880,7 @@ msgstr ""
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:139
 msgid "Table name:"
-msgstr ""
+msgstr "ცხრილის სახელი:"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:147
 msgid "Replace if exists:"
@@ -9277,7 +9277,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/relations-diagram.c:232
 #: ../tools/browser/schema-browser/relations-diagram.c:566
 msgid "Diagram"
-msgstr ""
+msgstr "დიაგრამა"
 
 #: ../tools/browser/schema-browser/relations-diagram.c:242
 msgid "Could not save diagram"
@@ -9404,7 +9404,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-info.c:389
 msgid "Relations"
-msgstr ""
+msgstr "კავშირები"
 
 #: ../tools/browser/schema-browser/table-info.c:399
 msgid "Preferences"
@@ -9450,7 +9450,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-info.c:989
 msgid "_Table"
-msgstr ""
+msgstr "_ცხრილი"
 
 #: ../tools/browser/schema-browser/table-info.c:990
 msgid "Add table to favorites"
@@ -9478,7 +9478,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-preferences.c:263
 msgid "default"
-msgstr ""
+msgstr "ნაგულისხმევი"
 
 #: ../tools/browser/schema-browser/table-preferences.c:340
 msgid "Table's fields"
@@ -9502,7 +9502,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/table-preferences.c:470
 #: ../tools/browser/schema-browser/table-preferences.c:481
 msgid "none"
-msgstr ""
+msgstr "არა"
 
 #: ../tools/browser/schema-browser/table-preferences.c:474
 msgid "Options:"
@@ -9530,7 +9530,7 @@ msgstr ""
 
 #: ../tools/browser/support.c:264
 msgid "Unable to open help file"
-msgstr ""
+msgstr "დახმარების ფაილის გახსნის შეცდომა"
 
 #: ../tools/browser/support.c:274 ../tools/browser/support.c:276
 msgid "Help is being loaded, please wait..."
@@ -9542,7 +9542,7 @@ msgstr "ჩანართის დ_ახურვა"
 
 #: ../tools/browser/support.c:440
 msgid "Abstract"
-msgstr ""
+msgstr "ანოტაცია"
 
 #: ../tools/browser/support.c:442
 msgid "Structural"
@@ -9967,7 +9967,7 @@ msgstr ""
 #: ../tools/gda-sql.c:1468 ../tools/gda-sql.c:1621 ../tools/gda-sql.c:2917
 #, c-format
 msgid "error: %s\n"
-msgstr ""
+msgstr "შეცდომა: %s\n"
 
 #: ../tools/gda-sql.c:1475 ../tools/gda-sql.c:1628 ../tools/gda-sql.c:2924
 #, c-format
@@ -10087,7 +10087,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2109
 #, c-format
 msgid "%s [<CNC_NAME>]"
-msgstr ""
+msgstr "%s [<CNC_NAME>]"
 
 #: ../tools/gda-sql.c:2110
 msgid "Close a connection"
@@ -10112,7 +10112,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2127
 #, c-format
 msgid "%s [<DSN>]"
-msgstr ""
+msgstr "%s [<DSN>]"
 
 #: ../tools/gda-sql.c:2128
 msgid "List all DSN (or named DSN's attributes)"
@@ -10153,7 +10153,7 @@ msgstr "შეტანა/გამოტანა"
 #: ../tools/gda-sql.c:2163 ../tools/gda-sql.c:2261
 #, c-format
 msgid "%s <FILE>"
-msgstr ""
+msgstr "%s <FILE>"
 
 #: ../tools/gda-sql.c:2164
 msgid "Execute commands from file"
@@ -10166,7 +10166,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2179 ../tools/gda-sql.c:2187
 #, c-format
 msgid "%s [<TEXT>]"
-msgstr ""
+msgstr "%s [<TEXT>]"
 
 #: ../tools/gda-sql.c:2180
 msgid "Print TEXT or an empty line to standard output"
@@ -10179,7 +10179,7 @@ msgstr ""
 #: ../tools/gda-sql.c:2203
 #, c-format
 msgid "%s [<DIR>]"
-msgstr ""
+msgstr "%s [<DIR>]"
 
 #: ../tools/gda-sql.c:2204
 msgid "Change the current working directory"
@@ -10786,7 +10786,7 @@ msgstr ""
 
 #: ../tools/web-server.c:638
 msgid "Token:"
-msgstr ""
+msgstr "კოდი:"
 
 #: ../tools/web-server.c:779
 msgid "SQL console:"
