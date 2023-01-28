@@ -2,21 +2,22 @@
 # Copyright (C) 2022 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
 # NorwayFun <temuri.doghonadze@gmail.com>, 2022.
+# Ekaterine Papava <papava.e@gtu.ge>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2022-11-05 03:44+0000\n"
-"PO-Revision-Date: 2022-11-15 18:50+0100\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"POT-Creation-Date: 2023-01-28 13:12+0000\n"
+"PO-Revision-Date: 2023-01-28 20:51+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
 "Language-Team: Georgian <ka@li.org>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -281,7 +282,7 @@ msgstr ""
 
 #: ../control-center/gdaui-dsn-assistant.c:552
 msgid "General Information"
-msgstr ""
+msgstr "ზოგადი ინფორმაცია"
 
 #: ../control-center/gdaui-dsn-assistant.c:567
 msgid ""
@@ -1671,22 +1672,6 @@ msgstr ""
 msgid "Can't get the number of rows of data model"
 msgstr ""
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr ""
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr ""
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr ""
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1720,6 +1705,8 @@ msgid "xml file '%s' is not valid\n"
 msgstr ""
 
 #: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr ""
@@ -1752,6 +1739,22 @@ msgstr ""
 #: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
+msgstr ""
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr ""
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr ""
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
 msgstr ""
 
 #: ../libgda/gda-db-table.c:750
@@ -2855,7 +2858,7 @@ msgstr ""
 
 #: ../libgda-report/engine/gda-report-engine.c:1194
 msgid "Binary data"
-msgstr ""
+msgstr "ბინარული მონაცემები"
 
 #: ../libgda-report/engine/rt-parser.c:1235
 #: ../libgda-report/engine/rt-parser.c:1449
@@ -3943,7 +3946,7 @@ msgstr ""
 #. determine writable formats
 #: ../libgda-ui/data-entries/plugins/common-pict.c:415
 msgid "Image format"
-msgstr ""
+msgstr "გამოსახულების ფორმატი"
 
 #: ../libgda-ui/data-entries/plugins/common-pict.c:419
 msgid "Format image as:"
@@ -4257,7 +4260,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-server-operation.c:1074
 #: ../tools/browser/ldap-browser/vtable-dialog.c:157
 msgid "_Ok"
-msgstr ""
+msgstr "_დიახ"
 
 #: ../libgda-ui/gdaui-basic-form.c:2184 ../libgda-ui/gdaui-raw-grid.c:2300
 #, c-format
@@ -4672,7 +4675,7 @@ msgstr "_ხაზგასმული"
 
 #: ../libgda-ui/gdaui-rt-editor.c:171
 msgid "Underline text"
-msgstr ""
+msgstr "ტექსტის ხაზგასმა"
 
 #: ../libgda-ui/gdaui-rt-editor.c:172
 msgid "_Strike through"
@@ -4955,16 +4958,19 @@ msgstr ""
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5696,9 +5702,12 @@ msgid "Table to rename"
 msgstr ""
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "ახალი სახელი"
@@ -6731,7 +6740,7 @@ msgstr "მოქმედების გარეშე"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 msgid "Restrict"
-msgstr ""
+msgstr "შეზღუდვა"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
@@ -6894,6 +6903,31 @@ msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
 msgstr ""
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+msgid "Table to ALTER"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "სვეტი"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr ""
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "ახალი სვეტის სახელი"
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -7128,7 +7162,7 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:20
 msgid "Unicode (UTF-8)"
-msgstr ""
+msgstr "Unicode (UTF-8)"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:31
@@ -7294,7 +7328,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:8
 msgid "Predicate"
-msgstr ""
+msgstr "პრედიკატი"
 
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:9
 msgid "Constraint expression for a partial index"
@@ -7655,7 +7689,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:3
 msgid "Search Path"
-msgstr ""
+msgstr "ძებნის ბილიკი"
 
 #: ../providers/postgres/postgres_specs_dsn.xml.in.h:4
 msgid "Search path among database's schemas ('search_path' variable)"
@@ -8004,7 +8038,7 @@ msgstr ""
 
 #: ../tools/browser/browser-window.c:336
 msgid "Display options"
-msgstr ""
+msgstr "ეკრანის მორგება"
 
 #: ../tools/browser/browser-window.c:351
 msgid "Rollback transaction"
@@ -8286,7 +8320,7 @@ msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas-print.c:282
 msgid "Zoom factor:"
-msgstr ""
+msgstr "გადიდების კოეფიციენტი:"
 
 #: ../tools/browser/canvas/browser-canvas-print.c:295
 msgid "<b>Page numbers</b>"
@@ -8302,7 +8336,7 @@ msgstr ""
 
 #: ../tools/browser/connection-binding-properties.c:170
 msgid "Create connection"
-msgstr ""
+msgstr "შეერთების შექმნა"
 
 #: ../tools/browser/connection-binding-properties.c:174
 msgid "_Help"
@@ -8411,7 +8445,7 @@ msgstr ""
 #: ../tools/browser/schema-browser/relations-diagram.c:330
 #: ../tools/browser/schema-browser/relations-diagram.c:474
 msgid "Unsaved"
-msgstr ""
+msgstr "შეუნახავი"
 
 #: ../tools/browser/data-manager/data-console.c:326
 #: ../tools/browser/query-exec/query-console-page.c:270
@@ -8688,7 +8722,7 @@ msgstr ""
 
 #: ../tools/browser/data-manager/data-source-editor.c:250
 msgid "Requires:"
-msgstr ""
+msgstr "მოითხოვს:"
 
 #: ../tools/browser/data-manager/data-source-editor.c:262
 msgid "Exports:"
@@ -8884,7 +8918,7 @@ msgstr "შემოტანა"
 #: ../tools/browser/gdaui-entry-import.c:223
 #: ../tools/browser/gdaui-entry-import.c:245
 msgid "No data set"
-msgstr ""
+msgstr "მონაცემები მითითებული არაა"
 
 #: ../tools/browser/ldap-browser/class-properties.c:408
 msgid "Could not get information about LDAP class"
@@ -9180,7 +9214,7 @@ msgstr ""
 
 #: ../tools/browser/mgr-favorites.c:288
 msgid "Unknown statement"
-msgstr ""
+msgstr "უცნობი ოპერატორი"
 
 #: ../tools/browser/mgr-favorites.c:757
 msgid ""
@@ -9453,7 +9487,7 @@ msgstr ""
 
 #: ../tools/browser/query-exec/query-result.c:355
 msgid "No result selected"
-msgstr ""
+msgstr "შედეგი მონიშნული არაა"
 
 #: ../tools/browser/query-exec/query-result.c:475
 msgid "Execution error:\n"
@@ -9461,7 +9495,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/mgr-columns.c:296
 msgid "Table not found"
-msgstr ""
+msgstr "ცხრილი ვერ ვიპოვე"
 
 #: ../tools/browser/schema-browser/mgr-columns.c:303
 msgid "Requested object is not a table or view"
@@ -9557,7 +9591,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-columns.c:632
 msgid "Column Name"
-msgstr ""
+msgstr "სვეტისსახელი"
 
 #. To translators: "Not NULL?" is a table's column's attribute. The NULL term should not be translated as it refers to the SQL NULL value
 #: ../tools/browser/schema-browser/table-columns.c:654
@@ -9669,7 +9703,7 @@ msgstr ""
 
 #: ../tools/browser/schema-browser/table-preferences.c:263
 msgid "default"
-msgstr ""
+msgstr "ნაგულისხმევი"
 
 #: ../tools/browser/schema-browser/table-preferences.c:333
 msgid "Table's fields"
@@ -9833,8 +9867,8 @@ msgstr ""
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 
 #: ../tools/common/t-app.c:282
@@ -9872,8 +9906,8 @@ msgstr ""
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
 
 #: ../tools/common/t-app.c:958
@@ -10327,10 +10361,6 @@ msgstr "სქემების სია"
 #: ../tools/common/t-app.c:1683 ../tools/common/t-app.c:1806
 msgid "No object found"
 msgstr ""
-
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "სვეტი"
 
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
