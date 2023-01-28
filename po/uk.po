@@ -3,13 +3,13 @@
 #
 # Yuri Syrota <rasta@renome.rovno.ua>, 1999.
 # Maxim Dziumanenko <mvd@mylinux.com.ua>, 2004.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2022-09-21 15:45+0000\n"
-"PO-Revision-Date: 2022-10-24 23:52+0300\n"
+"POT-Creation-Date: 2023-01-28 13:12+0000\n"
+"PO-Revision-Date: 2023-01-28 20:39+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -1765,26 +1765,6 @@ msgstr "У моделі даних містяться BLOB-и"
 msgid "Can't get the number of rows of data model"
 msgstr "Не вдалося отримати кількість рядків у моделі даних"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr ""
-"Некоректний тип стовпчика %s. Див. програмний інтерфейс "
-"gda_g_type_from_string ().\n"
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid ""
-"Internal error: Operation should be prepared, setting a connection data"
-msgstr ""
-"Внутрішня помилка: має бути приготовано дію, встановлення даних з'єднання"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr "Дію для використаного надавача даних не реалізовано"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1820,6 +1800,8 @@ msgid "xml file '%s' is not valid\n"
 msgstr "Файл xml «%s» є некоректним\n"
 
 #: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "З'єднання не відкрито"
@@ -1853,6 +1835,26 @@ msgstr "Не вдалося створити документ XML з файла:
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "Файл XML є некоректним\n"
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr ""
+"Некоректний тип стовпчика %s. Див. програмний інтерфейс "
+"gda_g_type_from_string ().\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid ""
+"Internal error: Operation should be prepared, setting a connection data"
+msgstr ""
+"Внутрішня помилка: має бути приготовано дію, встановлення даних з'єднання"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "Дію для використаного надавача даних не реалізовано"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -5229,16 +5231,19 @@ msgstr "Опис ствопчика"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5973,9 +5978,12 @@ msgid "Table to rename"
 msgstr "Таблиця для перейменування"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Нова назва"
@@ -7203,6 +7211,34 @@ msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
 msgstr ""
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+#| msgid "Table to delete"
+msgid "Table to ALTER"
+msgstr "Таблиця для ALTER"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Стовпчик"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+#| msgid "Column out of range"
+msgid "Column to rename"
+msgstr "Стовпчик для перейменування"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+#| msgid "column name"
+msgid "New column name"
+msgstr "Нова назва стовпчика"
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -10383,7 +10419,7 @@ msgstr "Закрити з'єднання"
 #: ../tools/common/t-app.c:1057
 #, c-format
 msgid "%s <CNC NAME> <OBJ NAME> [<OBJ NAME> ...]"
-msgstr ""
+msgstr "%s <НАЗВА CNC> <НАЗВА OBJ> [<НАЗВА OBJ> ...]"
 
 #: ../tools/common/t-app.c:1058
 msgid ""
@@ -10681,7 +10717,7 @@ msgstr "LDAP"
 #: ../tools/common/t-app.c:1359
 #, c-format
 msgid "%s <filter> [<base|onelevel|subtree> [<base DN>]]"
-msgstr ""
+msgstr "%s <фільтр> [<base|onelevel|subtree> [<базова НД>]]"
 
 #: ../tools/common/t-app.c:1360
 msgid "Search LDAP entries"
@@ -10748,10 +10784,6 @@ msgstr "Список структур"
 #: ../tools/common/t-app.c:1683 ../tools/common/t-app.c:1806
 msgid "No object found"
 msgstr "Не знайдено об'єкта"
-
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Стовпчик"
 
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
@@ -12387,9 +12419,6 @@ msgstr "Не вдалося обробити файл «%s», ігноруємо
 
 #~ msgid "Could not get the parameter defined size"
 #~ msgstr "Не вдається отримати визначений розмір параметра"
-
-#~ msgid "Column out of range"
-#~ msgstr "Стовпчик поза межами діапазону"
 
 #~ msgid "Could not get the Oracle column data type"
 #~ msgstr "Не вдається отримати тип даних стовпчика Oracle"
