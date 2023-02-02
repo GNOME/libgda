@@ -15,16 +15,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2019-08-20 14:27+0000\n"
-"PO-Revision-Date: 2019-08-23 19:21+0300\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"POT-Creation-Date: 2023-01-28 13:12+0000\n"
+"PO-Revision-Date: 2023-02-02 23:12+0300\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-POOTLE-MTIME: 1423921335.000000\n"
 
 #: ../control-center/dsn-config.c:79
@@ -44,7 +44,7 @@ msgid ""
 "'provider' is referenced using a unique name."
 msgstr ""
 "Veri kaynakları, veri tabanı bağlantılarının tanımlandığı araçlardır: tüm "
-"bilgi, 'sağlayıcı' olarak benzersiz bir isim kullanılarak, belirli bir veri "
+"bilgi, 'sağlayıcı' olarak benzersiz bir ad kullanılarak, belirli bir veri "
 "tabanına bağlantı için gereklidir."
 
 #: ../control-center/dsn-config.c:256
@@ -64,7 +64,7 @@ msgstr "Tanımlama"
 msgid "Parameters"
 msgstr "Parametreler"
 
-#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1765
+#: ../control-center/dsn-config.c:293 ../libgda/gda-config.c:1768
 #: ../tools/browser/auth-dialog.c:266 ../tools/common/t-config-info.c:207
 #: ../tools/common/t-config-info.c:367
 msgid "Authentication"
@@ -81,30 +81,30 @@ msgstr "DSN tanımı kaydedilemedi: %s"
 
 #. FIXME: add a notice somewhere in the UI
 #: ../control-center/dsn-config.c:367 ../control-center/gdaui-dsn-editor.c:354
-#: ../libgda/gda-config.c:522 ../libgda/gda-config.c:673
-#: ../libgda/gda-config.c:1182 ../libgda/gda-config.c:1294
-#: ../libgda/gda-config.c:1352 ../libgda/gda-config.c:1429
-#: ../libgda/gda-config.c:1867 ../libgda/gda-connection.c:1546
+#: ../libgda/gda-config.c:525 ../libgda/gda-config.c:676
+#: ../libgda/gda-config.c:1185 ../libgda/gda-config.c:1297
+#: ../libgda/gda-config.c:1355 ../libgda/gda-config.c:1432
+#: ../libgda/gda-config.c:1870 ../libgda/gda-connection.c:1546
 #: ../libgda/gda-data-model.c:2295 ../libgda/gda-data-model.c:2303
 #: ../libgda/gda-data-model-dir.c:339 ../libgda/gda-data-model-import.c:1705
-#: ../libgda/gda-data-pivot.c:1226 ../libgda/gda-data-pivot.c:1256
-#: ../libgda/gda-data-pivot.c:1357 ../libgda/gda-data-pivot.c:1471
-#: ../libgda/gda-data-proxy.c:3099 ../libgda/gda-data-select.c:2384
-#: ../libgda/gda-data-select.c:2394 ../libgda/gda-data-select.c:3777
-#: ../libgda/gda-holder.c:504 ../libgda/gda-holder.c:1966
-#: ../libgda/gda-meta-store.c:1211 ../libgda/gda-meta-store.c:1217
+#: ../libgda/gda-data-pivot.c:1219 ../libgda/gda-data-pivot.c:1249
+#: ../libgda/gda-data-pivot.c:1350 ../libgda/gda-data-pivot.c:1464
+#: ../libgda/gda-data-proxy.c:3099 ../libgda/gda-data-select.c:2371
+#: ../libgda/gda-data-select.c:2381 ../libgda/gda-data-select.c:3764
+#: ../libgda/gda-holder.c:504 ../libgda/gda-holder.c:1975
+#: ../libgda/gda-meta-store.c:1209 ../libgda/gda-meta-store.c:1215
 #: ../libgda/gda-server-operation.c:656 ../libgda/gda-server-operation.c:1111
 #: ../libgda/gda-set.c:1158 ../libgda/gda-tree-mgr-select.c:142
 #: ../libgda/gda-tree-mgr-select.c:176 ../libgda-report/engine/rt-parser.c:1197
 #: ../libgda-report/engine/rt-parser.c:1198
 #: ../libgda-report/engine/rt-parser.c:1417
 #: ../libgda-report/engine/rt-parser.c:1418
-#: ../libgda/sqlite/gda-sqlite-provider.c:3060
-#: ../libgda/sqlite/gda-sqlite-provider.c:3072
-#: ../libgda/sqlite/gda-sqlite-provider.c:3283
-#: ../libgda/sqlite/gda-sqlite-provider.c:3621
-#: ../libgda/sqlite/gda-sqlite-provider.c:3633
-#: ../libgda/sqlite/gda-sqlite-provider.c:3735
+#: ../libgda/sqlite/gda-sqlite-provider.c:3074
+#: ../libgda/sqlite/gda-sqlite-provider.c:3086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3297
+#: ../libgda/sqlite/gda-sqlite-provider.c:3635
+#: ../libgda/sqlite/gda-sqlite-provider.c:3647
+#: ../libgda/sqlite/gda-sqlite-provider.c:3749
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:422
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:834
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1007
@@ -132,11 +132,11 @@ msgstr "DSN tanımı kaydedilemedi: %s"
 #: ../providers/ldap/gda-ldap-provider.c:957
 #: ../providers/ldap/gda-ldap-provider.c:1018
 #: ../providers/mdb/gda-mdb-provider.c:374
-#: ../providers/mysql/gda-mysql-provider.c:1960
-#: ../providers/mysql/gda-mysql-provider.c:1975
+#: ../providers/mysql/gda-mysql-provider.c:1974
+#: ../providers/mysql/gda-mysql-provider.c:1989
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1786
-#: ../providers/postgres/gda-postgres-provider.c:1801
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1802
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:194
@@ -185,7 +185,7 @@ msgstr "DSN tanımı kaydedilemedi: %s"
 #: ../tools/browser/ui-formgrid.c:725 ../tools/common/t-app.c:2838
 #: ../tools/common/t-connection.c:298 ../tools/common/t-connection.c:438
 #: ../tools/common/t-connection.c:1210 ../tools/common/t-connection.c:1212
-#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1979
+#: ../tools/common/t-term-context.c:340 ../tools/common/web-server.c:1981
 #: ../tools/misc/gda-list-server-op.c:68 ../tools/misc/gda-list-server-op.c:126
 #, c-format
 msgid "No detail"
@@ -206,9 +206,9 @@ msgid ""
 "(database connections), and check which database providers are installed "
 "(and usable to connect to different databases)."
 msgstr ""
-"Veri tabanı kontrol merkezinden, tanımlanmış veri kaynaklarını (veri tabanı "
+"Veri tabanı denetim merkezinden, tanımlanmış veri kaynaklarını (veri tabanı "
 "bağlantıları) yönetebilir ve hangi veri tabanı sağlayıcılarının kurulu "
-"olduğunu kontrol edebilirsiniz (ve farklı veri tabanlarına bağlanmak için "
+"olduğunu denetleyebilirsiniz (ve başka veri tabanlarına bağlanmak için "
 "kullanılabilir)."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
@@ -230,7 +230,7 @@ msgstr "SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;"
 #: ../control-center/gdaui-dsn-assistant.c:121
 #, c-format
 msgid "Missing mandatory information, to create database: '%s'"
-msgstr "Veritabanını oluşturmak için zorunlu bilgi eksik: '%s'"
+msgstr "Veri tabanını oluşturmak için zorunlu bilgi eksik: '%s'"
 
 #: ../control-center/gdaui-dsn-assistant.c:135
 #, c-format
@@ -311,7 +311,7 @@ msgid ""
 "This page lets you choose between using an existing database or to create a "
 "new database to use with this new data source"
 msgstr ""
-"Bu sayfa, yeni veri kaynağı ile kullanmak için mevcut bir veri tabanı "
+"Bu sayfa, yeni veri kaynağı ile kullanmak için var olan bir veri tabanı "
 "kullanmanız veya yenisini oluşturmanız için seçenek sunar"
 
 #: ../control-center/gdaui-dsn-assistant.c:572
@@ -383,8 +383,8 @@ msgid ""
 "available,\n"
 "editing the data source's attributes is disabled</span>"
 msgstr ""
-"<span foreground='red'>Bu veri kaynağı tarafından kullanılan veri tabanı "
-"sağlayıcı kullanılabilir değil,\n"
+"<span foreground='red'>Bu veri kaynağınca kullanılan veri tabanı sağlayıcı "
+"kullanılabilir değil,\n"
 "veri kaynağının özniteliklerini değiştirme kapalı</span>"
 
 #: ../control-center/gdaui-dsn-editor.c:320
@@ -515,88 +515,88 @@ msgid ""
 "Providers are addons that actually implement the access to each database "
 "using the means provided by each database vendor."
 msgstr ""
-"Sağlayıcılar, her bir veri tabanı sağlayıcısı tarafından sağlanan araçlar "
+"Sağlayıcılar, her bir veri tabanı sağlayıcısınca sağlanan araçlar "
 "kullanılarak veri tabanına erişim sağlamak için gerçeklenmiş eklentilerdir."
 
-#: ../libgda/gda-batch.c:269
+#: ../libgda/gda-batch.c:270
 msgid "Statement could not be found in batch's statements"
 msgstr "Komut, toplu komutlarda bulunamadı"
 
-#: ../libgda/gda-batch.c:395
+#: ../libgda/gda-batch.c:396
 #, c-format
 msgid "Conflicting parameter '%s'"
 msgstr "'%s' parametresinde çakışma var"
 
-#: ../libgda/gda-config.c:521 ../libgda/gda-config.c:547
-#: ../libgda/gda-config.c:672 ../libgda/gda-config.c:697
+#: ../libgda/gda-config.c:524 ../libgda/gda-config.c:550
+#: ../libgda/gda-config.c:675 ../libgda/gda-config.c:700
 #, c-format
 msgid "Error loading authentication information for '%s' DSN: %s"
 msgstr "Kimlik doğrulama bilgisi yükleme hatası: '%s' DSN: %s"
 
-#: ../libgda/gda-config.c:860
+#: ../libgda/gda-config.c:863
 #, c-format
 msgid "Error creating user specific configuration directory '%s'"
 msgstr "Kullanıcıya özel yapılandırma dizin '%s' için oluşturma hatası"
 
-#: ../libgda/gda-config.c:909 ../libgda/gda-config.c:922
+#: ../libgda/gda-config.c:912 ../libgda/gda-config.c:925
 #, c-format
 msgid ""
 "User specific configuration directory '%s' exists and is not a directory"
-msgstr "Kullanıcıya özel yapılandırma dizini '%s' mevcut ve bu bir dizin değil"
+msgstr "Kullanıcıya özel yapılandırma dizini '%s' var ve bu bir dizin değil"
 
-#: ../libgda/gda-config.c:1155
+#: ../libgda/gda-config.c:1158
 #, c-format
 msgid "Malformed data source name '%s'"
 msgstr "Kusurlu veri kaynağı adı '%s'"
 
-#: ../libgda/gda-config.c:1181 ../libgda/gda-config.c:1193
-#: ../libgda/gda-config.c:1292
+#: ../libgda/gda-config.c:1184 ../libgda/gda-config.c:1196
+#: ../libgda/gda-config.c:1295
 #, c-format
 msgid "Couldn't save authentication information for DSN '%s': %s"
 msgstr "Kimlik doğrulama bilgisi kaydedilemedi: DSN '%s': %s"
 
-#: ../libgda/gda-config.c:1227 ../libgda/gda-config.c:1403
+#: ../libgda/gda-config.c:1230 ../libgda/gda-config.c:1406
 msgid "Can't manage system-wide configuration"
 msgstr "Sistem genelindeki yapılandırma yönetilemez"
 
-#: ../libgda/gda-config.c:1282 ../libgda/gda-config.c:1314
+#: ../libgda/gda-config.c:1285 ../libgda/gda-config.c:1317
 #, c-format
 msgid "Gnome-DB: authentication for the '%s' DSN"
 msgstr "Gnome-DB: '%s' DSN için kimlik doğrulama"
 
-#: ../libgda/gda-config.c:1351 ../libgda/gda-config.c:1363
-#: ../libgda/gda-config.c:1427
+#: ../libgda/gda-config.c:1354 ../libgda/gda-config.c:1366
+#: ../libgda/gda-config.c:1430
 #, c-format
 msgid "Couldn't delete authentication information for DSN '%s': %s"
 msgstr "Kimlik doğrulama bilgisi silinemedi: DSN '%s': %s"
 
-#: ../libgda/gda-config.c:1397 ../libgda-ui/gdaui-login.c:640
+#: ../libgda/gda-config.c:1400 ../libgda-ui/gdaui-login.c:640
 #, c-format
 msgid "Unknown DSN '%s'"
 msgstr "Bilinmeyen DSN '%s'"
 
-#: ../libgda/gda-config.c:1492
+#: ../libgda/gda-config.c:1495
 #, c-format
 msgid "Provider '%s' not found"
 msgstr "'%s' sağlayıcısı bulunamadı"
 
-#: ../libgda/gda-config.c:1682 ../libgda/gda-connection.c:988
+#: ../libgda/gda-config.c:1685 ../libgda/gda-connection.c:988
 #: ../libgda/gda-connection.c:1060 ../libgda/gda-connection.c:1241
 #, c-format
 msgid "No provider '%s' installed"
 msgstr "'%s' sağlayıcısı yüklü değil"
 
-#: ../libgda/gda-config.c:1696
+#: ../libgda/gda-config.c:1699
 #, c-format
 msgid "Can't load provider: %s"
 msgstr "Sağlayıcı yüklenemiyor: %s"
 
-#: ../libgda/gda-config.c:1717
+#: ../libgda/gda-config.c:1720
 #, c-format
 msgid "Can't instantiate provider '%s'"
 msgstr "'%s' sağlayıcısı yaratılamıyor"
 
-#: ../libgda/gda-config.c:1762 ../libgda/gda-data-model-dsn-list.c:105
+#: ../libgda/gda-config.c:1765 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
 #: ../tools/common/t-app.c:2902 ../tools/common/t-config-info.c:71
 #: ../tools/common/t-config-info.c:132 ../tools/common/t-config-info.c:315
@@ -604,7 +604,7 @@ msgstr "'%s' sağlayıcısı yaratılamıyor"
 msgid "Provider"
 msgstr "Sağlayıcı"
 
-#: ../libgda/gda-config.c:1763 ../libgda/gda-data-model-dsn-list.c:111
+#: ../libgda/gda-config.c:1766 ../libgda/gda-data-model-dsn-list.c:111
 #: ../libgda/gda-data-model-dsn-list.c:112
 #: ../tools/browser/data-manager/data-source-editor.c:167
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:304
@@ -614,26 +614,26 @@ msgstr "Sağlayıcı"
 msgid "Description"
 msgstr "Açıklama"
 
-#: ../libgda/gda-config.c:1764 ../tools/common/t-config-info.c:160
+#: ../libgda/gda-config.c:1767 ../tools/common/t-config-info.c:160
 msgid "DSN parameters"
 msgstr "DSN parametreleri"
 
-#: ../libgda/gda-config.c:1766 ../tools/common/t-config-info.c:246
+#: ../libgda/gda-config.c:1769 ../tools/common/t-config-info.c:246
 msgid "File"
 msgstr "Dosya"
 
-#: ../libgda/gda-config.c:1767
+#: ../libgda/gda-config.c:1770
 msgid "List of installed providers"
 msgstr "Yüklü sağlayıcıların listesi"
 
-#: ../libgda/gda-config.c:1866
+#: ../libgda/gda-config.c:1869
 #, c-format
 msgid "No default SQLite Provider Trying to create a new one. Error was: %s"
 msgstr ""
 "Öntanımlı SQLite Sağlayıcısı Yok. Yeni bir tane oluşturulmaya çalışılıyor. "
 "Hata şuydu: %s"
 
-#: ../libgda/gda-config.c:1950 ../libgda/gda-data-model-dsn-list.c:125
+#: ../libgda/gda-config.c:1953 ../libgda/gda-data-model-dsn-list.c:125
 #: ../libgda/gda-data-model-dsn-list.c:126
 #: ../providers/ldap/ldap_specs_auth.xml.in.h:1 ../tools/common/t-app.c:2904
 msgid "Username"
@@ -644,7 +644,7 @@ msgstr "Kullanıcı adı"
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
 #.
-#: ../libgda/gda-config.c:1952 ../providers/ldap/ldap_specs_auth.xml.in.h:3
+#: ../libgda/gda-config.c:1955 ../providers/ldap/ldap_specs_auth.xml.in.h:3
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:87
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:20
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:4
@@ -652,7 +652,7 @@ msgstr "Kullanıcı adı"
 msgid "Password"
 msgstr "Parola"
 
-#: ../libgda/gda-config.c:2032
+#: ../libgda/gda-config.c:2035
 #, c-format
 msgid "Error loading provider '%s': %s"
 msgstr "'%s' sağlayıcı yükleme hatası: %s"
@@ -684,7 +684,7 @@ msgstr "Seçenekler"
 #. To translators: Don't translate "GdaMetaStore", it's a class name
 #: ../libgda/gda-connection.c:345
 msgid "GdaMetaStore used by the connection"
-msgstr "Bağlantı tarafından kullanılan GdaMetaStore"
+msgstr "Bağlantıca kullanılan GdaMetaStore"
 
 #: ../libgda/gda-connection.c:359
 msgid "Number of history events to keep in memory"
@@ -760,135 +760,135 @@ msgstr "Üst veri güncellemesi sürdürülürken hata: %s"
 msgid "Provider does not provide a GdaDataHandler for dates"
 msgstr "Sağlayıcı, tarihler için bir GdaDataHandler sağlamıyor"
 
-#: ../libgda/gda-connection.c:2083 ../libgda/gda-connection.c:2153
-#: ../libgda/gda-connection.c:2264 ../libgda/gda-connection.c:2338
-#: ../libgda/gda-connection.c:2481 ../libgda/gda-connection.c:2928
-#: ../libgda/gda-connection.c:3142 ../libgda/gda-connection.c:3501
-#: ../libgda/gda-connection.c:3522 ../libgda/gda-connection.c:3606
-#: ../libgda/gda-connection.c:3618 ../libgda/gda-connection.c:3693
-#: ../libgda/gda-connection.c:3708 ../libgda/gda-connection.c:3795
-#: ../libgda/gda-connection.c:3823 ../libgda/gda-connection.c:3852
-#: ../libgda/gda-connection.c:3878 ../libgda/gda-connection.c:3904
-#: ../libgda/gda-connection.c:3930 ../libgda/gda-connection.c:4969
-#: ../libgda/gda-connection.c:5214 ../libgda/gda-connection.c:5287
-#: ../libgda/gda-connection.c:6176
+#: ../libgda/gda-connection.c:2119 ../libgda/gda-connection.c:2189
+#: ../libgda/gda-connection.c:2340 ../libgda/gda-connection.c:2414
+#: ../libgda/gda-connection.c:2597 ../libgda/gda-connection.c:3044
+#: ../libgda/gda-connection.c:3258 ../libgda/gda-connection.c:3610
+#: ../libgda/gda-connection.c:3631 ../libgda/gda-connection.c:3715
+#: ../libgda/gda-connection.c:3727 ../libgda/gda-connection.c:3802
+#: ../libgda/gda-connection.c:3817 ../libgda/gda-connection.c:3904
+#: ../libgda/gda-connection.c:3932 ../libgda/gda-connection.c:3961
+#: ../libgda/gda-connection.c:3987 ../libgda/gda-connection.c:4013
+#: ../libgda/gda-connection.c:4039 ../libgda/gda-connection.c:5078
+#: ../libgda/gda-connection.c:5323 ../libgda/gda-connection.c:5396
+#: ../libgda/gda-connection.c:6285
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:383
 #, c-format
 msgid "Connection is closed"
 msgstr "Bağlantı kapalı"
 
-#: ../libgda/gda-connection.c:3386 ../libgda/gda-connection.c:3401
+#: ../libgda/gda-connection.c:3495 ../libgda/gda-connection.c:3510
 msgid "Statement is a selection statement"
 msgstr "İfade bir seçim komutu"
 
-#: ../libgda/gda-connection.c:3458 ../libgda/gda-connection.c:3558
-#: ../libgda/gda-connection.c:3647
+#: ../libgda/gda-connection.c:3567 ../libgda/gda-connection.c:3667
+#: ../libgda/gda-connection.c:3756
 msgid "Statement is not a selection statement"
 msgstr "İfadece bir seçim komutu değil"
 
-#: ../libgda/gda-connection.c:4107
+#: ../libgda/gda-connection.c:4216
 msgid "Invalid argument"
 msgstr "Geçersiz değişken"
 
-#: ../libgda/gda-connection.c:4117
+#: ../libgda/gda-connection.c:4226
 #, c-format
 msgid "Missing or wrong arguments for table '%s': %s"
 msgstr "'%s' tablosu için eksik veya yanlış değişkenler: %s"
 
-#: ../libgda/gda-connection.c:5237
+#: ../libgda/gda-connection.c:5346
 #, c-format
 msgid "While extracting data from Data Store: %s"
 msgstr "Veri Deposundan veri ayıklanırken: %s"
 
-#: ../libgda/gda-connection.c:5295
+#: ../libgda/gda-connection.c:5404
 #, c-format
 msgid "Internal error: No meta store in connection"
-msgstr "Dahili hata: Bağlantıda meta deposu yok"
+msgstr "İç hata: Bağlantıda meta deposu yok"
 
-#: ../libgda/gda-connection.c:5313
+#: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
 msgstr "Ad alanlarını filtrelemek için 'name' parametresi gerekiyor"
 
-#: ../libgda/gda-connection.c:5324
+#: ../libgda/gda-connection.c:5433
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
 msgstr "Veri tiplerini filtrelemek için 'name' parametresi gereklidir"
 
-#: ../libgda/gda-connection.c:5335
+#: ../libgda/gda-connection.c:5444
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
 msgstr "Tabloları filtrelemek için 'name' parametresi gereklidir"
 
-#: ../libgda/gda-connection.c:5346
+#: ../libgda/gda-connection.c:5455
 #, c-format
 msgid "Parameter 'name' is required to filter views"
 msgstr "Görünümleri filtrelemek için 'name' parametresi gerekiyor"
 
-#: ../libgda/gda-connection.c:5356
+#: ../libgda/gda-connection.c:5465
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
 msgstr "Alanları filtrelemek için 'name' parametresi gereklidir"
 
-#: ../libgda/gda-connection.c:5362
+#: ../libgda/gda-connection.c:5471
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
 msgstr "'field_name' parametresi alanları filtrelemek için gereklidir"
 
-#: ../libgda/gda-connection.c:5369
+#: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
 msgstr ""
 "Parametreler: 'name' ve/veya 'field_name' alanları filtrelemek için "
 "gereklidir"
 
-#: ../libgda/gda-connection.c:5378 ../libgda/gda-connection.c:5399
+#: ../libgda/gda-connection.c:5487 ../libgda/gda-connection.c:5508
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
 msgstr "İndeksleri filtrelemek için 'name' parametresi gereklidir"
 
-#: ../libgda/gda-connection.c:5384 ../libgda/gda-connection.c:5403
+#: ../libgda/gda-connection.c:5493 ../libgda/gda-connection.c:5512
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
 msgstr "Dizinleri filtrelemek için 'index_name' parametresi gerekiyor"
 
-#: ../libgda/gda-connection.c:5391
+#: ../libgda/gda-connection.c:5500
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
 msgstr ""
 "Parametreler: 'name' ve/veya 'index_name' dizinleri filtrelemek için "
 "gereklidir"
 
-#: ../libgda/gda-connection.c:5411
+#: ../libgda/gda-connection.c:5520
 #, c-format
 msgid "Invalid meta type to get data from store"
 msgstr "Mağazadan veri almak için geçersiz meta türü"
 
-#: ../libgda/gda-connection.c:5422
+#: ../libgda/gda-connection.c:5531
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
 msgstr "Veri almak için ifade oluştururken iç hata: %s"
 
-#: ../libgda/gda-connection.c:5614 ../libgda/gda-connection.c:5668
-#: ../libgda/gda-connection.c:5713 ../libgda/gda-connection.c:5758
-#: ../libgda/gda-connection.c:5803
+#: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
+#: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
+#: ../libgda/gda-connection.c:5912
 #, c-format
 msgid "Connection transaction status tracking: no transaction exists for %s"
 msgstr "Bağlantı işlemi durumu izleme:  %s için bir işlem yok"
 
-#: ../libgda/gda-connection.c:6936
+#: ../libgda/gda-connection.c:7045
 msgid "Unspecified table name"
 msgstr "Belirtilmemiş tablo adı"
 
-#: ../libgda/gda-connection.c:6978
+#: ../libgda/gda-connection.c:7087
 msgid "Invalid type"
 msgstr "Geçersiz tür"
 
-#: ../libgda/gda-connection.c:7074
+#: ../libgda/gda-connection.c:7183
 msgid "CREATE TABLE operation is not supported by the database server"
-msgstr "CREATE TABLE işlemi, veri tabanı sunucusu tarafından desteklenmiyor"
+msgstr "CREATE TABLE işlemi, veri tabanı sunucusunca desteklenmiyor"
 
-#: ../libgda/gda-connection.c:7193 ../libgda/gda-connection.c:7203
+#: ../libgda/gda-connection.c:7302 ../libgda/gda-connection.c:7312
 #, c-format
 msgid "Wrong SQL identifier value"
 msgstr "Yanlış SQL tanımlayıcı değeri"
@@ -901,8 +901,8 @@ msgstr "Yanlış SQL tanımlayıcı değeri"
 #: ../libgda/gda-data-model-dir.c:857 ../libgda/gda-data-model-dsn-list.c:269
 #: ../libgda/gda-data-model-iter.c:414 ../libgda/gda-data-model-iter.c:1133
 #: ../libgda/gda-data-proxy.c:3538 ../libgda/gda-data-proxy.c:3662
-#: ../libgda/gda-data-select.c:1354 ../libgda/gda-data-select.c:1934
-#: ../libgda/gda-data-select.c:2936
+#: ../libgda/gda-data-select.c:1341 ../libgda/gda-data-select.c:1921
+#: ../libgda/gda-data-select.c:2923
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:931
 #: ../libgda-ui/gdaui-combo.c:777
 #, c-format
@@ -966,8 +966,8 @@ msgstr "Veri modeli değiştirilebilir olduğunda"
 #: ../libgda/gda-data-model-array.c:717 ../libgda/gda-data-model-dir.c:730
 #: ../libgda/gda-data-model-dir.c:901 ../libgda/gda-data-model-dir.c:1267
 #: ../libgda/gda-data-model-dsn-list.c:277 ../libgda/gda-data-proxy.c:3611
-#: ../libgda/gda-data-proxy.c:3649 ../libgda/gda-data-select.c:1881
-#: ../libgda/gda-data-select.c:1944
+#: ../libgda/gda-data-proxy.c:3649 ../libgda/gda-data-select.c:1868
+#: ../libgda/gda-data-select.c:1931
 #, c-format
 msgid "Row %d out of range (0-%d)"
 msgstr "%d satırı sınırın dışında (0-%d)"
@@ -976,8 +976,8 @@ msgstr "%d satırı sınırın dışında (0-%d)"
 #: ../libgda/gda-data-model-array.c:720 ../libgda/gda-data-model-dir.c:733
 #: ../libgda/gda-data-model-dir.c:904 ../libgda/gda-data-model-dir.c:1270
 #: ../libgda/gda-data-model-dsn-list.c:280 ../libgda/gda-data-proxy.c:3614
-#: ../libgda/gda-data-proxy.c:3652 ../libgda/gda-data-select.c:1884
-#: ../libgda/gda-data-select.c:1947
+#: ../libgda/gda-data-proxy.c:3652 ../libgda/gda-data-select.c:1871
+#: ../libgda/gda-data-select.c:1934
 #, c-format
 msgid "Row %d not found (empty data model)"
 msgstr "%d satırı bulunamadı (boş veri modeli)"
@@ -1100,7 +1100,7 @@ msgstr "Bilinmeyen GdaDataModelIOFormat değeri %d"
 #: ../libgda/gda-data-model.c:1472
 #, c-format
 msgid "File '%s' already exists"
-msgstr "'%s' dosyası zaten mevcut"
+msgstr "'%s' dosyası zaten var"
 
 #: ../libgda/gda-data-model.c:1649
 msgid "Exported Data"
@@ -1122,7 +1122,7 @@ msgstr "Kaynak veri modeli için bir yineleyici alınamadı"
 #: ../libgda/gda-data-model.c:1972
 #, c-format
 msgid "Inexistent column in source data model: %d"
-msgstr "Kaynak veri modelinde mevcut olmayan sütun: %d"
+msgstr "Kaynak veri modelinde var olmayan sütun: %d"
 
 #: ../libgda/gda-data-model.c:1986
 #, c-format
@@ -1160,14 +1160,14 @@ msgstr "Veri modelinin içeriklerinin dökümü alınamadı: %s"
 msgid "Data model does not support backward cursor move"
 msgstr "Veri modeli geri imleç haraketini desteklemiyor"
 
-#: ../libgda/gda-data-model.c:2822 ../tools/browser/gdaui-entry-import.c:212
+#: ../libgda/gda-data-model.c:2832 ../tools/browser/gdaui-entry-import.c:212
 #: ../tools/browser/query-exec/query-result.c:229
 #, c-format
 msgid "%d row"
 msgid_plural "%d rows"
 msgstr[0] "%d satır"
 
-#: ../libgda/gda-data-model.c:2824
+#: ../libgda/gda-data-model.c:2834
 #, c-format
 msgid "0 row"
 msgstr "0 satır"
@@ -1274,7 +1274,7 @@ msgid "Character conversion at line %d, error: %s"
 msgstr "%d staırında karakter dönüştürme, hata: %s"
 
 #: ../libgda/gda-data-model-import.c:1026
-#: ../libgda/sqlite/gda-sqlite-provider.c:1299
+#: ../libgda/sqlite/gda-sqlite-provider.c:1304
 #: ../providers/bdb/gda-bdb-provider.c:227
 #: ../tools/browser/data-manager/data-widget.c:607
 #: ../tools/browser/gdaui-data-import.c:177
@@ -1346,7 +1346,7 @@ msgstr "Beklenen <gda_array> düğümü ancak alınan <%s>"
 msgid "No <gda_array_field> specified in <gda_array>"
 msgstr "<gda_array> içinde belirtilmiş bir <gda_array_field> yok"
 
-#: ../libgda/gda-data-model-import.c:1842 ../libgda/gda-data-select.c:3826
+#: ../libgda/gda-data-model-import.c:1842 ../libgda/gda-data-select.c:3813
 msgid "Data model does not support random access"
 msgstr "Veri modeli rastgele erişimi desteklemiyor"
 
@@ -1385,69 +1385,69 @@ msgstr "Geçersiz veri modeli. Tutucu doğrulanamıyor"
 msgid "Invalid data model object. Can't set property"
 msgstr "Geçersiz veri modeli nesnesi. Özellik ayarlanamıyor"
 
-#: ../libgda/gda-data-pivot.c:435
+#: ../libgda/gda-data-pivot.c:428
 msgid "Pivot model not populated"
 msgstr "Pivot modeli yerleşik değil"
 
-#: ../libgda/gda-data-pivot.c:483 ../libgda/gda-data-pivot.c:495
-#: ../libgda/gda-data-pivot.c:547 ../libgda/gda-data-pivot.c:559
-#: ../libgda/gda-data-pivot.c:613 ../libgda/gda-data-pivot.c:664
-#: ../libgda/gda-data-pivot.c:829 ../libgda/gda-data-pivot.c:841
-#: ../libgda/gda-data-pivot.c:893 ../libgda/gda-data-pivot.c:905
-#: ../libgda/gda-data-pivot.c:957 ../libgda/gda-data-pivot.c:969
-#: ../libgda/gda-data-pivot.c:1021 ../libgda/gda-data-pivot.c:1033
-#: ../libgda/gda-data-pivot.c:1091
+#: ../libgda/gda-data-pivot.c:476 ../libgda/gda-data-pivot.c:488
+#: ../libgda/gda-data-pivot.c:540 ../libgda/gda-data-pivot.c:552
+#: ../libgda/gda-data-pivot.c:606 ../libgda/gda-data-pivot.c:657
+#: ../libgda/gda-data-pivot.c:822 ../libgda/gda-data-pivot.c:834
+#: ../libgda/gda-data-pivot.c:886 ../libgda/gda-data-pivot.c:898
+#: ../libgda/gda-data-pivot.c:950 ../libgda/gda-data-pivot.c:962
+#: ../libgda/gda-data-pivot.c:1014 ../libgda/gda-data-pivot.c:1026
+#: ../libgda/gda-data-pivot.c:1084
 msgid "Integer overflow"
 msgstr "Tamsayı taşması"
 
-#: ../libgda/gda-data-pivot.c:713 ../libgda/gda-data-pivot.c:724
+#: ../libgda/gda-data-pivot.c:706 ../libgda/gda-data-pivot.c:717
 msgid "Float value overflow"
 msgstr "Kayan noktalı sayı taşması"
 
-#: ../libgda/gda-data-pivot.c:778
+#: ../libgda/gda-data-pivot.c:771
 msgid "Double value overflow"
 msgstr "Double değeri taşması"
 
-#: ../libgda/gda-data-pivot.c:1080
+#: ../libgda/gda-data-pivot.c:1073
 msgid "Inconsistent data type"
 msgstr "Aykırı veri türü"
 
-#: ../libgda/gda-data-pivot.c:1126
+#: ../libgda/gda-data-pivot.c:1119
 msgid "Data type does not support requested computation"
 msgstr "Veri türü istenilen hesaplamayı desteklemiyor"
 
-#: ../libgda/gda-data-pivot.c:1225 ../libgda/gda-data-pivot.c:1255
-#: ../libgda/gda-data-pivot.c:1356 ../libgda/gda-data-pivot.c:1470
+#: ../libgda/gda-data-pivot.c:1218 ../libgda/gda-data-pivot.c:1248
+#: ../libgda/gda-data-pivot.c:1349 ../libgda/gda-data-pivot.c:1463
 #, c-format
 msgid "Wrong field format error: %s"
 msgstr "Yanlış alan biçimi hatası: %s"
 
-#: ../libgda/gda-data-pivot.c:1239 ../libgda/gda-data-pivot.c:1343
-#: ../libgda/gda-data-pivot.c:1366 ../libgda/gda-data-pivot.c:1457
-#: ../libgda/gda-data-pivot.c:1480 ../libgda/gda-sql-builder.c:696
+#: ../libgda/gda-data-pivot.c:1232 ../libgda/gda-data-pivot.c:1336
+#: ../libgda/gda-data-pivot.c:1359 ../libgda/gda-data-pivot.c:1450
+#: ../libgda/gda-data-pivot.c:1473 ../libgda/gda-sql-builder.c:696
 #, c-format
 msgid "Wrong field format"
 msgstr "Yanlış alan biçimi"
 
-#: ../libgda/gda-data-pivot.c:1527
+#: ../libgda/gda-data-pivot.c:1520
 msgid "No row field defined"
 msgstr "Tanımlanmış bir satır alanı yok"
 
-#: ../libgda/gda-data-pivot.c:1574 ../libgda/gda-data-pivot.c:1586
-#: ../libgda/gda-data-pivot.c:1602
+#: ../libgda/gda-data-pivot.c:1567 ../libgda/gda-data-pivot.c:1579
+#: ../libgda/gda-data-pivot.c:1595
 msgid "Could not get information from source data model"
 msgstr "Kaynak veri modelinden bilgi alınamadı"
 
-#: ../libgda/gda-data-pivot.c:2067 ../libgda/gda-data-proxy.c:3053
+#: ../libgda/gda-data-pivot.c:2062 ../libgda/gda-data-proxy.c:3053
 #: ../tools/common/t-app.c:3055
 msgid "Could not create virtual connection"
 msgstr "Sanal bağlantı oluşturulamadı"
 
-#: ../libgda/gda-data-pivot.c:2084
+#: ../libgda/gda-data-pivot.c:2079
 msgid "No source defined"
 msgstr "Kaynak tanımlanmamış"
 
-#: ../libgda/gda-data-pivot.c:2102
+#: ../libgda/gda-data-pivot.c:2097
 msgid "Invalid source data model (may have incompatible column names)"
 msgstr "Geçersiz kaynak veri modeli (uyumsuz sütun adları olabilir)"
 
@@ -1491,7 +1491,7 @@ msgstr "Süzgeç ifadesinde hata: %s"
 msgid "Error in filter expression"
 msgstr "Süzgeç ifadesinde hata"
 
-#: ../libgda/gda-data-proxy.c:3231 ../libgda/gda-data-select.c:1684
+#: ../libgda/gda-data-proxy.c:3231 ../libgda/gda-data-select.c:1671
 msgid "Incorrect filter expression"
 msgstr "Yanlış süzgeç ifadesi"
 
@@ -1516,7 +1516,7 @@ msgstr "Salt okunur sütun değiştirilmeye çalışılıyor: %d"
 msgid "Value type mismatch %s instead of %s"
 msgstr "%s değer türü eşleşmiyor, %s yerine"
 
-#: ../libgda/gda-data-select.c:677
+#: ../libgda/gda-data-select.c:664
 msgid ""
 "INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
 "set number of columns before using with GdaDataSelect"
@@ -1524,87 +1524,87 @@ msgstr ""
 "İÇ uygulama hatası: GdaPStmt'deki bilinmeyen sütun sayısı, \n"
 "GdaDataSelect ile kullanmadan önce sütun sayısını ayarla"
 
-#: ../libgda/gda-data-select.c:1086
+#: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
 msgstr "Yanlış SQL ifadesi, yalnızca bir değişiklik ifadesi kabul edilir"
 
-#: ../libgda/gda-data-select.c:1112
+#: ../libgda/gda-data-select.c:1099
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
-msgstr "Dahili hata: \"prepared-stmt\" özelliği ayarlanmamış"
+msgstr "İç hata: \"prepared-stmt\" özelliği ayarlanmamış"
 
-#: ../libgda/gda-data-select.c:1119
+#: ../libgda/gda-data-select.c:1106
 msgid "Can't get the prepared statement's actual statement"
 msgstr "Hazırlanmış ifadenin gerçek ifadesi alınamıyor"
 
-#: ../libgda/gda-data-select.c:1125
+#: ../libgda/gda-data-select.c:1112
 msgid "Unsupported type of SELECT statement"
 msgstr "SELECT ifadesinin desteklenmeyen türü"
 
-#: ../libgda/gda-data-select.c:1217
+#: ../libgda/gda-data-select.c:1204
 msgid "INSERT statement must contain values to insert"
 msgstr "INSERT ifadesi eklenecek değerler içermelidir"
 
-#: ../libgda/gda-data-select.c:1223
+#: ../libgda/gda-data-select.c:1210
 msgid "INSERT statement must insert only one row"
 msgstr "INSERT ifadesi yalnızca bir satır eklemelidir"
 
-#: ../libgda/gda-data-select.c:1250
+#: ../libgda/gda-data-select.c:1237
 msgid "DELETE statement must have a WHERE part"
 msgstr "DELETE ifadesinin bir WHERE kısmı olmalıdır"
 
-#: ../libgda/gda-data-select.c:1290
+#: ../libgda/gda-data-select.c:1277
 msgid "UPDATE statement must have a WHERE part"
 msgstr "UPDATE ifadesinin bir WHERE kısmı olmalıdır"
 
-#: ../libgda/gda-data-select.c:1344
+#: ../libgda/gda-data-select.c:1331
 #, c-format
 msgid "Modification statement uses an unknown '%s' parameter"
 msgstr "Değişiklik ifadesi, bilinmeyen bir '%s' parametresi kullanıyor"
 
-#: ../libgda/gda-data-select.c:1366
+#: ../libgda/gda-data-select.c:1353
 #, c-format
 msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr "Değişiklik ifadesinin  '%s' parametresi bir %s, %s olması gerektiğinde"
 
-#: ../libgda/gda-data-select.c:1432
+#: ../libgda/gda-data-select.c:1419
 msgid "Modification statement must be an INSERT, UPDATE or DELETE statement"
 msgstr ""
 "Değişiklik ifadesi, INSERT, UPDATE, veya DELETE ifadelerinden birine sahip "
 "olmalıdır"
 
-#: ../libgda/gda-data-select.c:1517 ../libgda/gda-data-select.c:1739
-#: ../libgda/gda-data-select.c:3651
+#: ../libgda/gda-data-select.c:1504 ../libgda/gda-data-select.c:1726
+#: ../libgda/gda-data-select.c:3638
 msgid "No connection to use"
 msgstr "Kullanılacak bağlantı yok"
 
-#: ../libgda/gda-data-select.c:1579
+#: ../libgda/gda-data-select.c:1566
 msgid "Invalid unique row condition (only equal operators are allowed)"
 msgstr "Geçersiz eşsiz satır durumu (yalnızca eşit operatörlere izin verilir)"
 
-#: ../libgda/gda-data-select.c:1611 ../libgda/gda-data-select.c:1666
+#: ../libgda/gda-data-select.c:1598 ../libgda/gda-data-select.c:1653
 msgid "Unique row condition has already been specified"
 msgstr "Eşsiz satır durumu zaten belirtilmiş"
 
-#: ../libgda/gda-data-select.c:1748 ../libgda/gda-data-select.c:1759
+#: ../libgda/gda-data-select.c:1735 ../libgda/gda-data-select.c:1746
 msgid "No table to select from in SELECT statement"
 msgstr "SELECT ifadesi ile seçilecek bir tablo yok"
 
-#: ../libgda/gda-data-select.c:1753
+#: ../libgda/gda-data-select.c:1740
 msgid "SELECT statement uses more than one table to select from"
 msgstr "SELECT ifadesi bir yerden seçmek için birden fazla tablo kullanır"
 
-#: ../libgda/gda-data-select.c:1927 ../libgda/gda-data-select.c:2759
-#: ../libgda/gda-data-select.c:2975 ../libgda/gda-data-select.c:3018
-#: ../libgda/gda-data-select.c:3100 ../libgda/gda-data-select.c:3295
+#: ../libgda/gda-data-select.c:1914 ../libgda/gda-data-select.c:2746
+#: ../libgda/gda-data-select.c:2962 ../libgda/gda-data-select.c:3005
+#: ../libgda/gda-data-select.c:3087 ../libgda/gda-data-select.c:3282
 msgid "Data model does only support random access"
 msgstr "Veri modeli yalnızca rastgeler erişimi destekliyor"
 
-#: ../libgda/gda-data-select.c:1968
+#: ../libgda/gda-data-select.c:1955
 msgid "Unable to retrieve data after modifications"
 msgstr "Değişikliklerden sonra veri alınamıyor"
 
-#: ../libgda/gda-data-select.c:1992 ../libgda/gda-data-select.c:2003
-#: ../libgda/gda-data-select.c:2033
+#: ../libgda/gda-data-select.c:1979 ../libgda/gda-data-select.c:1990
+#: ../libgda/gda-data-select.c:2020
 msgid ""
 "Unable to retrieve data after modifications, no further modification will be "
 "allowed"
@@ -1612,117 +1612,117 @@ msgstr ""
 "Değişikliklerden sonra veri alınamıyor, başka bir değişikliğe izin "
 "verilmeyecek"
 
-#: ../libgda/gda-data-select.c:2172
+#: ../libgda/gda-data-select.c:2159
 #, c-format
 msgid "Can't calculate internal row number: %s"
-msgstr "Dahili satır numarası hesaplanamıyor: %s"
+msgstr "İç satır numarası hesaplanamıyor: %s"
 
-#: ../libgda/gda-data-select.c:2181
+#: ../libgda/gda-data-select.c:2168
 #, c-format
 msgid "Can't fetch next row: %s"
 msgstr "Bir sonraki satır alınamıyor: %s"
 
-#: ../libgda/gda-data-select.c:2233
+#: ../libgda/gda-data-select.c:2220
 #, c-format
 msgid "Can't move back iter at row: %s"
 msgstr "Satırdaki iter geri alınamıyor:% s"
 
-#: ../libgda/gda-data-select.c:2242
+#: ../libgda/gda-data-select.c:2229
 msgid "Internal error: No fetch_prev() method implementation for data model"
-msgstr "Dahili hata: Veri modeli için fetch_prev () yöntem uygulaması yok"
+msgstr "İç hata: Veri modeli için fetch_prev () yöntem uygulaması yok"
 
-#: ../libgda/gda-data-select.c:2247
+#: ../libgda/gda-data-select.c:2234
 #, c-format
 msgid "Can't fetch previous row: %s"
 msgstr "Önceki satır alınamıyor: %s"
 
-#: ../libgda/gda-data-select.c:2289
+#: ../libgda/gda-data-select.c:2276
 #, c-format
 msgid "Can't move iter at row '%d': %s"
 msgstr "'%d' satırında iter taşınamıyor:%s"
 
-#: ../libgda/gda-data-select.c:2308
+#: ../libgda/gda-data-select.c:2295
 #, c-format
 msgid "Can't fetch row '%d': %s"
 msgstr "'%d' satırı alınamıyor: %s"
 
-#: ../libgda/gda-data-select.c:2383 ../libgda/gda-data-select.c:2393
+#: ../libgda/gda-data-select.c:2370 ../libgda/gda-data-select.c:2380
 #, c-format
 msgid "Could not change iter's value for column %d: %s"
 msgstr "Sütun %d için iter değeri değiştirilemedi: %s"
 
-#: ../libgda/gda-data-select.c:2388
+#: ../libgda/gda-data-select.c:2375
 msgid "Allowed GdaHolder's value to be NULL for the iterator to be updated"
 msgstr ""
 "Yineleyicinin güncellenmesi için geçerli GdaHolder değeri NULL olmalıdır"
 
-#: ../libgda/gda-data-select.c:2476 ../libgda/gda-data-select.c:2570
+#: ../libgda/gda-data-select.c:2463 ../libgda/gda-data-select.c:2557
 msgid "Some columns can't be modified"
 msgstr "Bazı sütunlar değiştirilemiyor"
 
-#: ../libgda/gda-data-select.c:2625
+#: ../libgda/gda-data-select.c:2612
 msgid "Internal error: can't get the prepared statement's actual statement"
-msgstr "Dahili hata: hazırlanmış ifadenin güncel ifadesi alınamıyor"
+msgstr "İç hata: hazırlanmış ifadenin güncel ifadesi alınamıyor"
 
-#: ../libgda/gda-data-select.c:2665
+#: ../libgda/gda-data-select.c:2652
 msgid "Unable to identify a way to fetch a single row"
 msgstr "Tek bir satır çekmenin bir youlu tanımlanamadı"
 
-#: ../libgda/gda-data-select.c:2672
+#: ../libgda/gda-data-select.c:2659
 msgid "Can only operate on non compound SELECT statements"
 msgstr "Yalnızca birleşik olmayan SELECT ifadelerinde kullanılabilir"
 
-#: ../libgda/gda-data-select.c:2754 ../libgda/gda-data-select.c:2924
-#: ../libgda/gda-data-select.c:3095 ../libgda/gda-data-select.c:3290
+#: ../libgda/gda-data-select.c:2741 ../libgda/gda-data-select.c:2911
+#: ../libgda/gda-data-select.c:3082 ../libgda/gda-data-select.c:3277
 msgid "Modifications are not allowed anymore"
 msgstr "Artık değişikliklere izin verilmeyecek"
 
-#: ../libgda/gda-data-select.c:2764 ../libgda/gda-data-select.c:2929
+#: ../libgda/gda-data-select.c:2751 ../libgda/gda-data-select.c:2916
 msgid "No UPDATE statement provided"
 msgstr "Sağlanan bir UPDATE ifadesi yok"
 
-#: ../libgda/gda-data-select.c:2804
+#: ../libgda/gda-data-select.c:2791
 msgid "Could not get iterator's value"
 msgstr "Yineleyicinin değeri alınamadı"
 
-#: ../libgda/gda-data-select.c:2953
+#: ../libgda/gda-data-select.c:2940
 #, c-format
 msgid "Column %d can't be modified"
 msgstr "%d sütunu değiştirilemiyor"
 
-#: ../libgda/gda-data-select.c:3026
+#: ../libgda/gda-data-select.c:3013
 #, c-format
 msgid "Too many values (%d as maximum)"
 msgstr "Çok fazla değer var (en fazla %d)"
 
-#: ../libgda/gda-data-select.c:3105
+#: ../libgda/gda-data-select.c:3092
 msgid "No INSERT statement provided"
 msgstr "Sağlanan bir INSERT ifadesi yok"
 
-#: ../libgda/gda-data-select.c:3110
+#: ../libgda/gda-data-select.c:3097
 msgid "Cannot add a row because the number of rows is unknown"
 msgstr "Satır eklenemiyor çünkü satır sayısı bilinmiyor"
 
-#: ../libgda/gda-data-select.c:3139
+#: ../libgda/gda-data-select.c:3126
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:392
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:401
 msgid "Missing values to insert in INSERT statement"
 msgstr "INSERT ifadesine eklenecek değerler eksik"
 
-#: ../libgda/gda-data-select.c:3300
+#: ../libgda/gda-data-select.c:3287
 msgid "No DELETE statement provided"
 msgstr "Sağlanan bir DELETE ifadesi yok"
 
-#: ../libgda/gda-data-select.c:3619
+#: ../libgda/gda-data-select.c:3606
 #, c-format
 msgid ""
 "Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
 "expressions"
 msgstr ""
-"Dahili hata: GdaDataSelect %d GdaColumns'a ve SELECT ifadesi %d ifadelerine "
+"İç hata: GdaDataSelect %d GdaColumns'a ve SELECT ifadesi %d ifadelerine "
 "sahiptir"
 
-#: ../libgda/gda-data-select.c:3775
+#: ../libgda/gda-data-select.c:3762
 #, c-format
 msgid ""
 "An error has occurred, the value returned by the \"exec-params\" property "
@@ -1730,29 +1730,19 @@ msgid ""
 msgstr ""
 "Bir hata oluştu, \"exec-params\" özelliğinden dönen değer yanlış olacak: %s"
 
-#: ../libgda/gda-data-select.c:3831
+#: ../libgda/gda-data-select.c:3818
 msgid "Data model has been modified"
 msgstr "Veri modeli değiştirilmiş"
 
-#: ../libgda/gda-data-select.c:3840
+#: ../libgda/gda-data-select.c:3827
 msgid "Data model contains BLOBs"
 msgstr "Veri modeli BLOB içeriyor"
 
-#: ../libgda/gda-data-select.c:3851
+#: ../libgda/gda-data-select.c:3838
 msgid "Can't get the number of rows of data model"
 msgstr "Veri modelinin satırlarının sayısı alınamıyor"
 
-#: ../libgda/gda-db-column.c:558
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr "Geçersiz sütun türü %s. Gda_g_type_from_string () için API'ye bakın.\n"
-
-#: ../libgda/gda-db-column.c:1013
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr "Dahili hata: Bir bağlantı verisi ayarlayarak işlem hazırlanmalı"
-
-#: ../libgda/gda-db-catalog.c:232
+#: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
@@ -1761,70 +1751,98 @@ msgstr ""
 "'%s' ayrıştırılamadı: GdaDbCreator için XML dosyaları için doğrulama "
 "yapılmayacak (bazı garip hatalar oluşabilir)"
 
-#: ../libgda/gda-db-catalog.c:256
+#: ../libgda/gda-db-catalog.c:260
 #, c-format
 msgid "Context to validate xml file can't be created."
 msgstr "Xml dosyasını doğrulamak için içerik oluşturulamıyor."
 
-#: ../libgda/gda-db-catalog.c:274
+#: ../libgda/gda-db-catalog.c:278
 #, c-format
 msgid "xml file is invalid"
 msgstr "xml dosyası geçersiz"
 
-#: ../libgda/gda-db-catalog.c:315
+#: ../libgda/gda-db-catalog.c:319
 #, c-format
 msgid "Root node should be <schema>."
 msgstr "Kök düğüm <schema> olmalıdır."
 
-#: ../libgda/gda-db-catalog.c:447 ../libgda/gda-db-catalog.c:498
+#: ../libgda/gda-db-catalog.c:452 ../libgda/gda-db-catalog.c:503
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
 msgstr "xmlDoc nesnesi '%s' xmfile adından oluşturulamıyor"
 
-#: ../libgda/gda-db-catalog.c:456
+#: ../libgda/gda-db-catalog.c:461
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "'%s' xml dosyası geçerli değil\n"
 
-#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:691
+#: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "Bağlantı açılmadı"
 
-#: ../libgda/gda-db-catalog.c:1044
+#: ../libgda/gda-db-catalog.c:1146
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "'%s' dosyasını okumak için akış açılamıyor"
 
-#: ../libgda/gda-db-catalog.c:1060
+#: ../libgda/gda-db-catalog.c:1162
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "'%s' için ayrıştırma bağlamı oluşturulamıyor"
 
-#: ../libgda/gda-db-catalog.c:1076
+#: ../libgda/gda-db-catalog.c:1178
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Ayrıştırma sırasında hata '%d' hatasıyla"
 
-#: ../libgda/gda-db-catalog.c:1093
+#: ../libgda/gda-db-catalog.c:1195
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Dosyası ayrıştırılamadı: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1104
+#: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "XML Belgesi dosyadan oluşturulamıyor: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1114
+#: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "XML dosyası geçerli değil\n"
 
-#: ../libgda/gda-db-table.c:599
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr "Geçersiz sütun türü %s. Gda_g_type_from_string () için API'ye bakın.\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr "İç hata: Bir bağlantı verisi ayarlayarak işlem hazırlanmalı"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "İşlem, kullanılan sağlayıcı için gerçeklenmedi"
+
+#: ../libgda/gda-db-table.c:750
 #, c-format
 msgid "Empty column list"
 msgstr "Boş sütun listesi"
+
+#: ../libgda/gda-db-view.c:538
+#, c-format
+msgid "View name is not set"
+msgstr "Görünüm adı belirli değil"
+
+#: ../libgda/gda-db-view.c:545
+#, c-format
+msgid "View definition is not set"
+msgstr "Görünüm tanımı belirli değil"
 
 #: ../libgda/gda-holder.c:503 ../libgda/gda-set.c:1157
 #, c-format
@@ -1835,56 +1853,56 @@ msgstr "Tutucunun değer ayarlanamıyor: %s"
 msgid "The 'g-type' property cannot be changed"
 msgstr "'g-type' özelliği değiştirilmiş olamaz"
 
-#: ../libgda/gda-holder.c:936
+#: ../libgda/gda-holder.c:945
 #, c-format
 msgid "Unable to convert string to '%s' type"
 msgstr "Karakter dizisi '%s' türüne dönüştürülemiyor"
 
-#: ../libgda/gda-holder.c:1004
+#: ../libgda/gda-holder.c:1013
 #, c-format
 msgid ""
 "Can't use this method to set value because there is already a static value"
 msgstr ""
 "Bu metod değer ayarlamak için kullanılamıyor çünkü zaten statik bir değer"
 
-#: ../libgda/gda-holder.c:1035 ../libgda/gda-holder.c:1181
+#: ../libgda/gda-holder.c:1044 ../libgda/gda-holder.c:1190
 #, c-format
 msgid "(%s): Holder does not allow NULL values"
 msgstr "(%s): Tutucu NULL değerlerine izin vermez"
 
-#: ../libgda/gda-holder.c:1042
+#: ../libgda/gda-holder.c:1051
 #, c-format
 msgid ""
 "(%s): Wrong Holder value type, expected type '%s' when value's type is '%s'"
 msgstr ""
 "(%s): Yanlış Tutucu değeri türü, beklenen tür '%s', değer türü '%s' olduğunda"
 
-#: ../libgda/gda-holder.c:1188
+#: ../libgda/gda-holder.c:1197
 #, c-format
 msgid "(%s): Wrong value type: expected type '%s' when value's type is '%s'"
 msgstr "(%s): Yanlış değer türü: beklenen tür '%s', değer türü '%s' olduğunda"
 
-#: ../libgda/gda-holder.c:1656
+#: ../libgda/gda-holder.c:1665
 #, c-format
 msgid ""
 "GdaHolder has a gda type (%s) incompatible with source column %d type (%s)"
 msgstr "GdaHolder, gda türü (%s) ile uyumsuz %d kaynak sütununa sahip (%s)"
 
 #. break holder's binding because type differ
-#: ../libgda/gda-holder.c:1746
+#: ../libgda/gda-holder.c:1755
 #, c-format
 msgid ""
 "Cannot bind holders if their type is not the same, breaking existing bind "
 "where '%s' was bound to '%s'"
 msgstr ""
-"Tutucular, kendi türü aynı değilse bağlanamazlar, mevcut bağ '%s' bağlı "
-"olduğu '%s' kırılır"
+"Tutucular, kendi türü aynı değilse bağlanamazlar, var olan bağ '%s' bağlı "
+"olduğu '%s' yerinde kırılır"
 
-#: ../libgda/gda-holder.c:1799
+#: ../libgda/gda-holder.c:1808
 msgid "Cannot bind holders if their type is not the same"
 msgstr "Tutucular, kendi türleri aynı değilse bağlanamazlar"
 
-#: ../libgda/gda-holder.c:1965
+#: ../libgda/gda-holder.c:1974
 #, c-format
 msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr "Bağlı GdaHolder da eşleşen değer değişimi için GdaHolder değişemez: %s"
@@ -1897,232 +1915,232 @@ msgstr "GDA kütüphanesini yeniden başlatacak girişim yok sayılıyor."
 msgid "libgda needs GModule. Finishing..."
 msgstr "libgda için GModule gerekir. Sonlandırılıyor..."
 
-#: ../libgda/gda-meta-store.c:827
+#: ../libgda/gda-meta-store.c:824
 msgid "Connection string for the internal connection to use"
-msgstr "Kullanılacak dahili bağlantı için bağlantı dizgesi"
+msgstr "Kullanılacak iç bağlantı için bağlantı dizgesi"
+
+#: ../libgda/gda-meta-store.c:827
+msgid "Connection object internally used"
+msgstr "Bağlantı nesnesi içsel kullanım"
 
 #: ../libgda/gda-meta-store.c:830
-msgid "Connection object internally used"
-msgstr "Bağlantı nesnesi dahili kullanım"
-
-#: ../libgda/gda-meta-store.c:833
 msgid "Catalog in which the database objects will be created"
 msgstr "Veri tabanı nesnelerinin oluşturulacağı katalog"
 
-#: ../libgda/gda-meta-store.c:836
+#: ../libgda/gda-meta-store.c:833
 msgid "Schema in which the database objects will be created"
 msgstr "Veri tabanı nesnelerinin oluşturulacağı şema"
 
-#: ../libgda/gda-meta-store.c:994
+#: ../libgda/gda-meta-store.c:992
 msgid "Catalog specified but no schema specified, store will not be usable"
 msgstr ""
 "Katalog belirtilmiş ancak bir şema belirtilmemiş, bellek kullanılabilir "
 "olmayacak"
 
-#: ../libgda/gda-meta-store.c:1083
+#: ../libgda/gda-meta-store.c:1081
 msgid "Can't obtain connection lock"
 msgstr "Bağlantı kilidi alınamıyor"
 
-#: ../libgda/gda-meta-store.c:1210
+#: ../libgda/gda-meta-store.c:1208
 #, c-format
 msgid "Could not open internal GdaMetaStore connection: %s"
-msgstr "Dahili GdaMetaStore bağlantısı açılamadı: %s"
+msgstr "İç GdaMetaStore bağlantısı açılamadı: %s"
 
-#: ../libgda/gda-meta-store.c:1216
+#: ../libgda/gda-meta-store.c:1214
 #, c-format
 msgid "Could not create internal GdaMetaStore connection: %s"
-msgstr "Dahili GdaMetaStore bağlantısı oluşturulamadı: %s"
+msgstr "İç GdaMetaStore bağlantısı oluşturulamadı: %s"
 
-#: ../libgda/gda-meta-store.c:1356
+#: ../libgda/gda-meta-store.c:1354
 #, c-format
 msgid ""
 "Internal error while trying to render operation in MetaStore creation: %s"
 msgstr "MetaStore oluşturma işleminde işlem oluşturmaya çalışırken iç hata: %s"
 
-#: ../libgda/gda-meta-store.c:1357 ../libgda/gda-meta-store.c:1365
+#: ../libgda/gda-meta-store.c:1355 ../libgda/gda-meta-store.c:1363
 #: ../libgda/gda-row.c:276
 msgid "No error was set"
 msgstr "Hata ayarlanmadı"
 
-#: ../libgda/gda-meta-store.c:1363
+#: ../libgda/gda-meta-store.c:1361
 #, c-format
 msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
 msgstr "İç hata. '%s' MetaStore tablosu oluşturulamadı: %s"
 
-#: ../libgda/gda-meta-store.c:1380
+#: ../libgda/gda-meta-store.c:1378
 msgid ""
 "Could not set the internal schema's version. No prepared statement's "
 "parameters were found"
 msgstr ""
-"Dahili şemanın sürümü ayarlanamadı. Hazırlanan hiçbir deyimin parametresi "
+"İç şemanın sürümü ayarlanamadı. Hazırlanan hiçbir deyimin parametresi "
 "bulunamadı"
 
-#: ../libgda/gda-meta-store.c:1389
+#: ../libgda/gda-meta-store.c:1387
 msgid "Could not set the internal schema's version. Statement execution fails"
-msgstr "Dahili şemanın sürümü ayarlanamadı. İfade yürütme başarısız"
+msgstr "İç şemanın sürümü ayarlanamadı. İfade yürütme başarısız"
 
-#: ../libgda/gda-meta-store.c:1593
+#: ../libgda/gda-meta-store.c:1591
 #, c-format
 msgid "Internal error: no information schema was found: %s"
-msgstr "Dahili hata: bilgi şeması bulunamadı: %s"
+msgstr "İç hata: bilgi şeması bulunamadı: %s"
 
-#: ../libgda/gda-meta-store.c:1601
+#: ../libgda/gda-meta-store.c:1599
 #, c-format
 msgid "Internal error: can't read information schema: %s"
-msgstr "Dahili hata: bilgi şeması okunamıyor: %s"
+msgstr "İç hata: bilgi şeması okunamıyor: %s"
 
-#: ../libgda/gda-meta-store.c:1775
+#: ../libgda/gda-meta-store.c:1773
 msgid "Missing view name from <view> node"
 msgstr "<view> düğümünde görünüm adı eksik"
 
-#: ../libgda/gda-meta-store.c:1817
+#: ../libgda/gda-meta-store.c:1815
 msgid "Missing view definition from <view> node"
 msgstr "<view> düğümünde görünüm tanımı eksi"
 
-#: ../libgda/gda-meta-store.c:1831
+#: ../libgda/gda-meta-store.c:1829
 #, c-format
 msgid "View definition contains more than one statement (for view '%s')"
 msgstr "Görünüm tanımı birden fazla ifade içeriyor ('%s' görünümü için)"
 
-#: ../libgda/gda-meta-store.c:1858
+#: ../libgda/gda-meta-store.c:1856
 #, c-format
 msgid "View definition is not a selection statement (for view '%s')"
 msgstr "Görünüm tanımı bir seçim ifadesi değil ('%s' görünümü için)"
 
-#: ../libgda/gda-meta-store.c:1885 ../libgda/gda-meta-struct-io.c:179
+#: ../libgda/gda-meta-store.c:1883 ../libgda/gda-meta-struct-io.c:179
 msgid "Missing table name from <table> node"
 msgstr "<table> düğümünde tablo adı eksik"
 
-#: ../libgda/gda-meta-store.c:2128
+#: ../libgda/gda-meta-store.c:2126
 #, c-format
 msgid "Column '%s' already exists and has different characteristics"
-msgstr "'%s' sütunu zaten mevcut ve farklı özelliklere sahip"
+msgstr "'%s' sütunu zaten var ve başka özelliklere sahip"
 
-#: ../libgda/gda-meta-store.c:2163
+#: ../libgda/gda-meta-store.c:2161
 #, c-format
 msgid "Missing foreign key's referenced table name (for table '%s')"
 msgstr "Eksik yabancı anahtarın başvuru tablosu adı ('%s' tablosu için)"
 
-#: ../libgda/gda-meta-store.c:2219
+#: ../libgda/gda-meta-store.c:2217
 #, c-format
 msgid "Missing foreign key's column name (for table '%s')"
 msgstr "Eksik yabancı anahtarın sütun adı ('%s' tablosu için)"
 
-#: ../libgda/gda-meta-store.c:2231
+#: ../libgda/gda-meta-store.c:2229
 #, c-format
 msgid "Column '%s' not found in table '%s'"
 msgstr "'%s' sütunu '%s' tablosunda bulunamadı"
 
-#: ../libgda/gda-meta-store.c:2490 ../libgda/gda-meta-struct.c:1277
+#: ../libgda/gda-meta-store.c:2488 ../libgda/gda-meta-struct.c:1277
 #, c-format
 msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "'%s' yabancı anahtar sütunu '%s' tablosunda bulunamadı"
 
-#: ../libgda/gda-meta-store.c:2615
+#: ../libgda/gda-meta-store.c:2613
 msgid ""
 "Could not update the internal schema's version. No prepared statement's "
 "parameters were found"
 msgstr ""
-"Dahili şemanın sürümü güncellenemedi. Hazırlanan hiçbir deyimin parametresi "
+"İç şemanın sürümü güncellenemedi. Hazırlanan hiçbir deyimin parametresi "
 "bulunamadı"
 
-#: ../libgda/gda-meta-store.c:2624
+#: ../libgda/gda-meta-store.c:2622
 msgid ""
 "Could not update the internal schema's version. Statement execution fails"
-msgstr "Dahili şemanın sürümü güncellenemedi. İfade yürütme başarısız"
+msgstr "İç şemanın sürümü güncellenemedi. İfade yürütme başarısız"
 
-#: ../libgda/gda-meta-store.c:2671 ../libgda/gda-meta-store.c:2702
+#: ../libgda/gda-meta-store.c:2669 ../libgda/gda-meta-store.c:2700
 #, c-format
 msgid "Schema description does not contain the object '%s', check installation"
 msgstr "Şema tanımlaması '%s' nesnesini içermiyor, kurulumu denetleyin"
 
-#: ../libgda/gda-meta-store.c:2741
+#: ../libgda/gda-meta-store.c:2739
 #, c-format
 msgid "Could not find description for column named '%s'"
 msgstr "'%s' sütunu için tanımlama bulunamadı"
 
-#: ../libgda/gda-meta-store.c:2860 ../libgda/gda-meta-store.c:2871
-#: ../libgda/gda-meta-store.c:2908
+#: ../libgda/gda-meta-store.c:2858 ../libgda/gda-meta-store.c:2869
+#: ../libgda/gda-meta-store.c:2906
 msgid "Could not get the internal schema's version"
-msgstr "Dahili şema sürümü alınamadı"
+msgstr "İç şema sürümü alınamadı"
 
-#: ../libgda/gda-meta-store.c:3031 ../libgda/gda-meta-store.c:3155
-#: ../tools/common/t-context.c:287
+#: ../libgda/gda-meta-store.c:3029 ../libgda/gda-meta-store.c:3153
+#: ../tools/common/t-context.c:289
 msgid "More than one SQL statement"
 msgstr "Birden fazla SQL ifadesi"
 
-#: ../libgda/gda-meta-store.c:3060 ../libgda/gda-meta-store.c:3183
+#: ../libgda/gda-meta-store.c:3058 ../libgda/gda-meta-store.c:3181
 #, c-format
 msgid "Parameter '%s' is not present in statement"
-msgstr "İfade için '%s' parametresi mevcut değil"
+msgstr "İfade için '%s' parametresi yok"
 
-#: ../libgda/gda-meta-store.c:3070
+#: ../libgda/gda-meta-store.c:3068
 #, c-format
 msgid "While extracting data from Meta Store: %s"
 msgstr "Meta Mağazasından veri çıkartırken: %s"
 
-#: ../libgda/gda-meta-store.c:3082 ../libgda/gda-meta-store.c:3202
+#: ../libgda/gda-meta-store.c:3080 ../libgda/gda-meta-store.c:3200
 #, c-format
 msgid "No value set for parameter '%s'"
 msgstr "'%s' parametresi için ayarlanacak değer yok"
 
-#: ../libgda/gda-meta-store.c:3190
+#: ../libgda/gda-meta-store.c:3188
 #, c-format
 msgid "While extracting data from store: %s"
 msgstr "Mağazadan veri çıkarırken: %s"
 
-#: ../libgda/gda-meta-store.c:3525
+#: ../libgda/gda-meta-store.c:3523
 #, c-format
 msgid ""
 "Internal error, while updating internal meta store table '%s': Parameter "
 "value type error: %s"
 msgstr ""
-"Dahili meta depo tablosu güncellenirken iç hata '%s': Parametre değer tipi "
+"İç meta depo tablosu güncellenirken iç hata '%s': Parametre değer tipi "
 "hatası: %s"
 
-#: ../libgda/gda-meta-store.c:3788
+#: ../libgda/gda-meta-store.c:3786
 msgid "Data models should have the same number of columns"
 msgstr "Veri modeli aynı sayıda sütuna sahip olmalıdır"
 
-#: ../libgda/gda-meta-store.c:3852 ../libgda/gda-meta-store.c:4890
-#: ../libgda/gda-meta-store.c:4994
+#: ../libgda/gda-meta-store.c:3850 ../libgda/gda-meta-store.c:4888
+#: ../libgda/gda-meta-store.c:4992
 #, c-format
 msgid "Unknown database object '%s'"
 msgstr "Bilinmeyen veri tabanı nesnesi '%s'"
 
-#: ../libgda/gda-meta-store.c:3868
+#: ../libgda/gda-meta-store.c:3866
 #, c-format
 msgid "Could not set value for parameter '%s'"
 msgstr "'%s' parametresi için değer ayarlanamadı"
 
-#: ../libgda/gda-meta-store.c:3897
+#: ../libgda/gda-meta-store.c:3895
 msgid "Could not create SELECT statement"
 msgstr "SELECT ifadesi oluşturulamadı"
 
-#: ../libgda/gda-meta-store.c:3912
+#: ../libgda/gda-meta-store.c:3910
 msgid "Could not create DELETE statement"
 msgstr "DELETE ifadesi oluşturulamadı"
 
-#: ../libgda/gda-meta-store.c:3963
+#: ../libgda/gda-meta-store.c:3961
 msgid "A transaction has already been started"
 msgstr "Bir işlem zaten başlatılmış"
 
-#: ../libgda/gda-meta-store.c:4339
+#: ../libgda/gda-meta-store.c:4337
 #, c-format
 msgid "Attribute '%s' not found"
 msgstr "'%s' özniteliği bulunamadı"
 
-#: ../libgda/gda-meta-store.c:4342
+#: ../libgda/gda-meta-store.c:4340
 #, c-format
 msgid "Attribute '%s' has %d value"
 msgid_plural "Attribute '%s' has %d values"
 msgstr[0] "'%s' özniteliği %d değerine sahip"
 
-#: ../libgda/gda-meta-store.c:4387
+#: ../libgda/gda-meta-store.c:4385
 msgid "Attributes names starting with a '_' are reserved for internal usage"
-msgstr "Öznitelik isimleri '_' ile başlar, bu dahili kullanım için ayrılmıştır"
+msgstr "'_' ile başlayan öznitelik adları iç kullanım için ayrılmıştır"
 
-#: ../libgda/gda-meta-store.c:4413
+#: ../libgda/gda-meta-store.c:4411
 msgid ""
 "Could not start a transaction because one already started, this could lead "
 "to GdaMetaStore attributes problems"
@@ -2130,62 +2148,62 @@ msgstr ""
 "İşlem başlatılamadı çünkü başka bir tanesi zaten başlatılmış, bu "
 "GdaMetaStore öznitelik sorunlarına neden olabilir"
 
-#: ../libgda/gda-meta-store.c:4530
+#: ../libgda/gda-meta-store.c:4528
 msgid "Could not parse XML description of custom database object to add"
 msgstr "Eklenecek veritanı nesnesinin XML tanımlaması ayrıştırılamadı"
 
-#: ../libgda/gda-meta-store.c:4543
+#: ../libgda/gda-meta-store.c:4541
 msgid "Missing custom database object name"
 msgstr "Eksiz özek veri tabanı nesne adı"
 
-#: ../libgda/gda-meta-store.c:4548
+#: ../libgda/gda-meta-store.c:4546
 msgid ""
 "Custom database object names starting with a '_' are reserved for internal "
 "usage"
 msgstr ""
-"Özel veri tabanı nesne isimlerinin '_' ile başlayanları, dahili kullanım "
-"için ayrılmışlardır"
+"Özel veri tabanı nesne adlarının '_' ile başlayanları, iç kullanım için "
+"ayrılmışlardır"
 
-#: ../libgda/gda-meta-store.c:4646
+#: ../libgda/gda-meta-store.c:4644
 msgid "Another object with the same name already exists"
-msgstr "Aynı adlı başka bir nesne zaten mevcut"
+msgstr "Aynı adlı başka bir nesne zaten var"
 
-#: ../libgda/gda-meta-store.c:4753
+#: ../libgda/gda-meta-store.c:4751
 msgid "Missing table name in meta data context"
 msgstr "Meta veri içeriğinde eksik tablo adı"
 
-#: ../libgda/gda-meta-store.c:4778
+#: ../libgda/gda-meta-store.c:4776
 msgid "Missing column name in meta data context"
 msgstr "Üst veri içeriğinde sütun adı eksik"
 
-#: ../libgda/gda-meta-store.c:4794
+#: ../libgda/gda-meta-store.c:4792
 #, c-format
 msgid "Missing condition in meta data context"
 msgstr "Üst veri içeriğinde durum eksik"
 
-#: ../libgda/gda-meta-store.c:4819
+#: ../libgda/gda-meta-store.c:4817
 #, c-format
 msgid "Malformed condition in meta data context"
 msgstr "Üst veri içeriğinde kusurlu durum eksik"
 
-#: ../libgda/gda-meta-store.c:4836
+#: ../libgda/gda-meta-store.c:4834
 #, c-format
 msgid "Unknown column name '%s' in meta data context"
 msgstr "Üst veri içeriğinde '%s' bilinmeyen sütun adı"
 
-#: ../libgda/gda-meta-store.c:4858
+#: ../libgda/gda-meta-store.c:4856
 msgid "Unknown table in meta data context"
 msgstr "Üst veri içerğinde bilinmeyen tablo"
 
-#: ../libgda/gda-meta-store.c:5133 ../libgda/gda-meta-store.c:5163
-#: ../libgda/gda-meta-store.c:5352 ../libgda/gda-meta-store.c:5381
+#: ../libgda/gda-meta-store.c:5131 ../libgda/gda-meta-store.c:5161
+#: ../libgda/gda-meta-store.c:5350 ../libgda/gda-meta-store.c:5379
 #: ../libgda/gda-meta-struct.c:453 ../libgda/gda-meta-struct.c:468
 #: ../libgda/gda-meta-struct.c:485
 #, c-format
 msgid "Could not find object named '%s'"
 msgstr "'%s' nesne adı bulunamadı"
 
-#: ../libgda/gda-meta-store.c:5231 ../libgda/gda-meta-store.c:5250
+#: ../libgda/gda-meta-store.c:5229 ../libgda/gda-meta-store.c:5248
 #, c-format
 msgid "Could not find column '%s' in table '%s'"
 msgstr "'%s' tablosunda '%s' sütunu bulunamadı"
@@ -2209,8 +2227,8 @@ msgid ""
 "Object %s.%s.%s already exists in GdaMetaStruct and has a different object "
 "type"
 msgstr ""
-"%s.%s.%s nesnesi, GdaMetaStruct içinde zaten mevcut ve farklı bir nesne "
-"türüne sahip"
+"%s.%s.%s nesnesi, GdaMetaStruct içinde zaten var ve başka bir nesne türüne "
+"sahip"
 
 #: ../libgda/gda-meta-struct.c:819
 #, c-format
@@ -2225,7 +2243,7 @@ msgstr "%s.%s.%s tablosu bulunamadı (ya da eksik sütun bilgisi)"
 #: ../libgda/gda-meta-struct.c:1040
 #, c-format
 msgid "Internal GdaMetaStore error: column %s not found"
-msgstr "Dahili GdaMetaStore hatası: %s sütunu bulunamadı"
+msgstr "İç GdaMetaStore hatası: %s sütunu bulunamadı"
 
 #: ../libgda/gda-meta-struct.c:1192
 #, c-format
@@ -2368,7 +2386,7 @@ msgstr "GdaServerOperation: '%s' dosyası, DTD ile uyumlu değil"
 msgid "GdaServerOperation specification does not conform to DTD\n"
 msgstr "GdaServerOperation tanımlanamsı, DTD ile uyumlu değil\n"
 
-#: ../libgda/gda-server-operation.c:1343
+#: ../libgda/gda-server-operation.c:1347
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://gitlab."
 "gnome.org/GNOME/libgda/issues"
@@ -2376,27 +2394,27 @@ msgstr ""
 "İşlenmemiş GdaServerOperationType, lütfen bu hatayı şuraya raporlayın http://"
 "gitlab.gnome.org/GNOME/libgda/issues"
 
-#: ../libgda/gda-server-operation.c:1606 ../libgda/gda-server-operation.c:1621
+#: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
 msgid "Expected tag <%s>, got <%s>"
 msgstr "Beklenen etiket <%s>, alınan <%s>"
 
-#: ../libgda/gda-server-operation.c:1655 ../libgda/gda-server-operation.c:2277
+#: ../libgda/gda-server-operation.c:1661 ../libgda/gda-server-operation.c:2283
 msgid ""
 "Parameterlist values can only be set for individual parameters within it"
 msgstr ""
 "Parametre listesi değerleri yalnızca tekil parametrele ile ayarlanabilirler"
 
-#: ../libgda/gda-server-operation.c:1713
+#: ../libgda/gda-server-operation.c:1719
 msgid "Missing attribute named 'path'"
 msgstr "'path' adlı öznitelik eksik"
 
-#: ../libgda/gda-server-operation.c:2474
+#: ../libgda/gda-server-operation.c:2480
 #, c-format
 msgid "Missing required value for '%s'"
 msgstr "'%s' için istenen değer eksik"
 
-#: ../libgda/gda-server-operation.c:2623
+#: ../libgda/gda-server-operation.c:2629
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_server_operation_prepare_create_database() ?"
@@ -2404,99 +2422,99 @@ msgstr ""
 "İşlemin ilişkili sağlayıcısı bulunamadı, "
 "gda_server_operation_prepare_create_database () kullandınız mı?"
 
-#: ../libgda/gda-server-provider.c:1004
+#: ../libgda/gda-server-provider.c:1021
 #, c-format
 msgid "Provider %s created a GdaServerOperation without node for '%s'"
 msgstr ""
 "%s sağlayıcısı, '%s' için bir düğüm olmadan GdaServerOperation oluşturdu"
 
-#: ../libgda/gda-server-provider.c:1008
+#: ../libgda/gda-server-provider.c:1025
 #, c-format
 msgid "Provider %s created a GdaServerOperation with wrong node type for '%s'"
 msgstr ""
 "%s sağlayıcısı, '%s' için yanlış düğüm türü ile GdaServerOperation oluşturdu"
 
 #. CNC UNLOCK
-#: ../libgda/gda-server-provider.c:1491
+#: ../libgda/gda-server-provider.c:1508
 msgid ""
 "Internal error: connection reported as opened, yet no provider's data has "
 "been setted"
 msgstr ""
-"Dahili hata: bağlantı açık olarak bildirildi, ancak hiçbir sağlayıcı verisi "
+"İç hata: bağlantı açık olarak bildirildi, ancak hiçbir sağlayıcı verisi "
 "belirlenmedi"
 
-#: ../libgda/gda-server-provider.c:2075
+#: ../libgda/gda-server-provider.c:2092
 #, c-format
 msgid "Delaying opening connection for %u ms\n"
 msgstr "Bağlantı açma gecikmesi %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2189
+#: ../libgda/gda-server-provider.c:2206
 msgid ""
 "You need to define a GMainContext using gda_connection_set_main_context()"
 msgstr ""
 "gda_connection_set_main_context() kullanarak bir GMainContext "
 "tanımlamalısınız"
 
-#: ../libgda/gda-server-provider.c:2301
+#: ../libgda/gda-server-provider.c:2318
 #, c-format
 msgid "Delaying closing connection for %u ms\n"
 msgstr "Bağlantı kapatma gecikmesi %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2504
+#: ../libgda/gda-server-provider.c:2521
 #, c-format
 msgid "Delaying statement execution for %u ms\n"
 msgstr "Komut çalıştırma gecikmesi %u ms\n"
 
-#: ../libgda/gda-server-provider.c:2812 ../libgda/gda-server-provider.c:2824
-#: ../libgda/gda-server-provider.c:2836 ../libgda/gda-server-provider.c:2848
-#: ../libgda/gda-server-provider.c:2860 ../libgda/gda-server-provider.c:2872
+#: ../libgda/gda-server-provider.c:2829 ../libgda/gda-server-provider.c:2841
+#: ../libgda/gda-server-provider.c:2853 ../libgda/gda-server-provider.c:2865
+#: ../libgda/gda-server-provider.c:2877 ../libgda/gda-server-provider.c:2889
 #: ../providers/web/gda-web-provider.c:594
 #: ../providers/web/gda-web-provider.c:623
 msgid "Not supported"
 msgstr "Desteklenmiyor"
 
-#: ../libgda/gda-server-provider.c:2963
+#: ../libgda/gda-server-provider.c:2980
 #, c-format
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues Reported error is: %s"
 msgstr ""
-"Dahili hata, lütfen hatayı https://gitlab.gnome.org/GNOME/libgda/issues "
-"adresine bildirin. Rapor edilen hata: %s"
+"İç hata, lütfen hatayı https://gitlab.gnome.org/GNOME/libgda/issues adresine "
+"bildirin. Rapor edilen hata: %s"
 
-#: ../libgda/gda-server-provider.c:2967
+#: ../libgda/gda-server-provider.c:2984
 #, c-format
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues No error was reported"
 msgstr ""
-"Dahili hata, lütfen hatayı https://gitlab.gnome.org/GNOME/libgda/issues "
-"adresine bildirin. Hata bildirilmedi"
+"İç hata, lütfen hatayı https://gitlab.gnome.org/GNOME/libgda/issues adresine "
+"bildirin. Hata bildirilmedi"
 
-#: ../libgda/gda-server-provider.c:3392 ../libgda/gda-server-provider.c:3462
-#: ../libgda/gda-server-provider.c:3531
+#: ../libgda/gda-server-provider.c:3409 ../libgda/gda-server-provider.c:3479
+#: ../libgda/gda-server-provider.c:3548
 #, c-format
 msgid "Delaying transaction for %u ms\n"
 msgstr "İşlem gecikmesi %u ms\n"
 
-#: ../libgda/gda-server-provider.c:3401 ../libgda/gda-server-provider.c:3471
-#: ../libgda/gda-server-provider.c:3540
+#: ../libgda/gda-server-provider.c:3418 ../libgda/gda-server-provider.c:3488
+#: ../libgda/gda-server-provider.c:3557
 msgid "Database provider does not support transactions"
 msgstr "Veri tabanı sağlayıcısı toplu işlem yapmayı desteklemiyor"
 
-#: ../libgda/gda-server-provider.c:3602 ../libgda/gda-server-provider.c:3663
-#: ../libgda/gda-server-provider.c:3724
+#: ../libgda/gda-server-provider.c:3619 ../libgda/gda-server-provider.c:3680
+#: ../libgda/gda-server-provider.c:3741
 msgid "Database provider does not support savepoints"
 msgstr "Veri tabanı sağlayıcısı kaydetme noktası özelliğini desteklemiyor"
 
-#: ../libgda/gda-server-provider.c:3802
+#: ../libgda/gda-server-provider.c:3819
 #, c-format
 msgid "Delaying distributed transaction for %u ms\n"
 msgstr "Dağıtık işlem gecikmesi %u ms\n"
 
-#: ../libgda/gda-server-provider.c:3813 ../libgda/gda-server-provider.c:3824
-#: ../libgda/gda-server-provider.c:3835 ../libgda/gda-server-provider.c:3846
-#: ../libgda/gda-server-provider.c:3857 ../libgda/gda-server-provider.c:3868
+#: ../libgda/gda-server-provider.c:3830 ../libgda/gda-server-provider.c:3841
+#: ../libgda/gda-server-provider.c:3852 ../libgda/gda-server-provider.c:3863
+#: ../libgda/gda-server-provider.c:3874 ../libgda/gda-server-provider.c:3885
 msgid "Database provider does not support distributed transactions"
 msgstr "Veri tabanı sağlayıcısı dağıtık işlemleri desteklemiyor"
 
@@ -2549,7 +2567,7 @@ msgstr ""
 "Veri modeli değiştirme, değişeceği veri modeli ile aynı karaktere sahip "
 "olmak zorundadır"
 
-#: ../libgda/gda-sql-builder.c:241 ../libgda/gda-sql-builder.c:1400
+#: ../libgda/gda-sql-builder.c:241 ../libgda/gda-sql-builder.c:1401
 #, c-format
 msgid "Unknown part ID %u"
 msgstr "Bilinmeyen ID kısmı %u"
@@ -2565,13 +2583,13 @@ msgstr "SqlBuilde boş"
 #: ../libgda/gda-sql-builder.c:377 ../libgda/gda-sql-builder.c:440
 #: ../libgda/gda-sql-builder.c:471 ../libgda/gda-sql-builder.c:598
 #: ../libgda/gda-sql-builder.c:641 ../libgda/gda-sql-builder.c:705
-#: ../libgda/gda-sql-builder.c:776 ../libgda/gda-sql-builder.c:1156
-#: ../libgda/gda-sql-builder.c:1245 ../libgda/gda-sql-builder.c:1292
-#: ../libgda/gda-sql-builder.c:1382 ../libgda/gda-sql-builder.c:1434
-#: ../libgda/gda-sql-builder.c:1477 ../libgda/gda-sql-builder.c:1528
-#: ../libgda/gda-sql-builder.c:1583 ../libgda/gda-sql-builder.c:1620
-#: ../libgda/gda-sql-builder.c:1798 ../libgda/gda-sql-builder.c:1825
-#: ../libgda/gda-sql-builder.c:1861
+#: ../libgda/gda-sql-builder.c:776 ../libgda/gda-sql-builder.c:1157
+#: ../libgda/gda-sql-builder.c:1246 ../libgda/gda-sql-builder.c:1293
+#: ../libgda/gda-sql-builder.c:1383 ../libgda/gda-sql-builder.c:1435
+#: ../libgda/gda-sql-builder.c:1478 ../libgda/gda-sql-builder.c:1529
+#: ../libgda/gda-sql-builder.c:1584 ../libgda/gda-sql-builder.c:1621
+#: ../libgda/gda-sql-builder.c:1799 ../libgda/gda-sql-builder.c:1826
+#: ../libgda/gda-sql-builder.c:1862
 msgid "Wrong statement type"
 msgstr "Yanlış ifade türü"
 
@@ -2580,12 +2598,12 @@ msgstr "Yanlış ifade türü"
 msgid "Could not convert value to type '%s', value not defined"
 msgstr "Değer, '%s' türüne dönüştürülemedi, değer tanımlı değil"
 
-#: ../libgda/gda-sql-builder.c:1313
+#: ../libgda/gda-sql-builder.c:1314
 #, c-format
 msgid "Unknown left part target ID %u"
 msgstr "Bilinmeyen sol kısım hedef ID %u"
 
-#: ../libgda/gda-sql-builder.c:1318
+#: ../libgda/gda-sql-builder.c:1319
 #, c-format
 msgid "Unknown right part target ID %u"
 msgstr "Bilinmeyen sağ kısım hedef ID %u"
@@ -2604,47 +2622,47 @@ msgstr "Adlandırılmamış"
 msgid "Can't handle default value of type '%s'"
 msgstr "'%s' türünün öntanımlı değeri işlenemez"
 
-#: ../libgda/gda-statement.c:732
+#: ../libgda/gda-statement.c:734
 msgid "Missing SQL code"
 msgstr "SQL kodu eksik"
 
-#: ../libgda/gda-statement.c:752
+#: ../libgda/gda-statement.c:756
 #, c-format
 msgid "No data handler for type '%s'"
 msgstr "'%s' türü için veri işleyicisi yok"
 
-#: ../libgda/gda-statement.c:1330
+#: ../libgda/gda-statement.c:1339
 #, c-format
 msgid "Wrong parameter type for '%s': expected type '%s' and got '%s'"
 msgstr "'%s' için yanlış parametre türü: beklenen tür '%s' ve alınan '%s'"
 
-#: ../libgda/gda-statement.c:1342
+#: ../libgda/gda-statement.c:1351
 #, c-format
 msgid "Missing parameter '%s'"
 msgstr "'%s' parametresi eksik"
 
-#: ../libgda/gda-statement.c:1354 ../libgda/sqlite/gda-sqlite-provider.c:3463
+#: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3477
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
-#: ../providers/mysql/gda-mysql-provider.c:2235
-#: ../providers/postgres/gda-postgres-provider.c:2059
+#: ../providers/mysql/gda-mysql-provider.c:2249
+#: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
 msgstr "'%s' parametresi geçersiz"
 
-#: ../libgda/gda-statement.c:1400
+#: ../libgda/gda-statement.c:1409
 msgid "Unnamed parameter"
 msgstr "Adlandırılmamış parametre"
 
-#: ../libgda/gda-statement.c:1676
+#: ../libgda/gda-statement.c:1690
 msgid "Malformed table name"
 msgstr "Kusurlu tablo adı"
 
-#: ../libgda/gda-statement.c:2174
+#: ../libgda/gda-statement.c:2188
 msgid "Join is not in a FROM statement"
 msgstr "Birleştirme, FROM ifadesi içinde değil"
 
-#: ../libgda/gda-statement.c:2181
+#: ../libgda/gda-statement.c:2195
 msgid "Could not find target the join is for"
 msgstr "Birleştirilecek hedef bulunamadı"
 
@@ -2677,7 +2695,7 @@ msgstr "Sütun adı alınamadı"
 #: ../libgda/gda-tree-mgr-label.c:177
 #: ../tools/browser/canvas/browser-canvas-table.c:315
 msgid "No name"
-msgstr "İsimsiz"
+msgstr "Adsız"
 
 #: ../libgda/gda-tree-mgr-schemas.c:268
 msgid "Unable to get schema name"
@@ -2700,8 +2718,8 @@ msgstr ""
 #: ../libgda-report/engine/gda-report-engine.c:619 ../tools/common/t-app.c:2976
 #: ../tools/common/t-app.c:4669 ../tools/common/t-app.c:5186
 #: ../tools/common/t-app.c:5287 ../tools/common/t-app.c:5384
-#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:267
-#: ../tools/common/t-context.c:419
+#: ../tools/common/t-app.c:5482 ../tools/common/t-context.c:269
+#: ../tools/common/t-context.c:421
 #, c-format
 msgid "No connection specified"
 msgstr "Bağlantı belirtilmemiş"
@@ -2723,83 +2741,83 @@ msgstr "Yineleyicinin değeri alınamıyor"
 msgid "Unable to get table name"
 msgstr "Tablo adı alınamıyor"
 
-#: ../libgda/gda-util.c:699
+#: ../libgda/gda-util.c:707
 #, c-format
 msgid "Field number %d not found in source named '%s'"
 msgstr "%d adlandırılmış kaynakta '%s' alan numarasın bulunamadı"
 
-#: ../libgda/gda-util.c:877
+#: ../libgda/gda-util.c:882
 msgid "SELECT statement has no FROM part"
 msgstr "SELECT ifades FROM kısmına sahip değil"
 
-#: ../libgda/gda-util.c:882 ../libgda/gda-util.c:889
+#: ../libgda/gda-util.c:887 ../libgda/gda-util.c:894
 msgid "SELECT statement involves more than one table or expression"
 msgstr "SELECT ifadesi bir tablo ya da ifadeden fazlasını içerir"
 
-#: ../libgda/gda-util.c:899
+#: ../libgda/gda-util.c:904
 msgid "Can only build modification statement for tables"
 msgstr "Yalnızca tablolar için değişim ifadesi oluşturulabilir"
 
-#: ../libgda/gda-util.c:939
+#: ../libgda/gda-util.c:944
 msgid "Table does not have any primary key"
 msgstr "Tablo, herhangi bir birincil anahtara sahip değil"
 
-#: ../libgda/gda-util.c:968
+#: ../libgda/gda-util.c:973
 msgid "Table's primary key is not part of SELECT"
 msgstr "Tablonun birincil anahtarı SELECT ifadesinin bir parçası değil"
 
-#: ../libgda/gda-util.c:1019
+#: ../libgda/gda-util.c:1024
 msgid "Table does not have any column"
 msgstr "Tabla her hangi bir sütuna sahip değil"
 
-#: ../libgda/gda-util.c:1045
+#: ../libgda/gda-util.c:1050
 #, c-format
 msgid "Table's column '%s' is not part of SELECT"
 msgstr "Tablonun sütunu '%s' SELECT ifadesinin bir parçası değil"
 
 #. To translators: this error message occurs when no "INSERT INTO <table> (field1, ...)..."
 #. * SQL statement can be computed because no table field can be used
-#: ../libgda/gda-util.c:1301
+#: ../libgda/gda-util.c:1306
 msgid "Could not compute any field to insert into"
 msgstr "Eklenecek bir alan hesaplanamadı"
 
-#: ../libgda/gda-util.c:1364
+#: ../libgda/gda-util.c:1369
 msgid "Missing table name in UPDATE statement"
 msgstr "UPDATE ifadesinde tablo adı eksik"
 
-#: ../libgda/gda-util.c:1718
+#: ../libgda/gda-util.c:1723
 msgid "Can't rewrite UPDATE statement to handle default values"
 msgstr "Öntanımlı değerleri işlemek için UPDATE ifadesi yeniden yazılamaz"
 
-#: ../libgda/gda-util.c:1726
+#: ../libgda/gda-util.c:1731
 msgid "Can't rewrite statement which is not INSERT or UPDATE"
 msgstr "INSERT ya da UPDATE olmayan bir ifade yeniden yazılamıyor"
 
-#: ../libgda/gda-util.c:1770 ../libgda/gda-util.c:1827
-#: ../libgda/gda-util.c:1867 ../libgda/sqlite/gda-sqlite-provider.c:3444
+#: ../libgda/gda-util.c:1775 ../libgda/gda-util.c:1832
+#: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3458
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
-#: ../providers/mysql/gda-mysql-provider.c:2215
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../providers/mysql/gda-mysql-provider.c:2229
+#: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
 msgstr "Sorgu çalıştırmak için '%s' parametresi eksik"
 
-#: ../libgda/gda-util.c:3034
+#: ../libgda/gda-util.c:3040
 msgid "The 'first', 'second' and 'third' arguments must be different"
 msgstr "'Birinci', 'ikinci' ve 'üçüncü' değişkenler farklı olmalıdır"
 
-#: ../libgda/gda-util.c:3039
+#: ../libgda/gda-util.c:3045
 #, c-format
 msgid "Invalid separator '%c'"
 msgstr "Geçersiz ayırıcı '%c'"
 
-#: ../libgda/gda-util.c:3041
+#: ../libgda/gda-util.c:3047
 msgid "Invalid null separator"
 msgstr "Geçersiz boş ayırıcı"
 
-#: ../libgda/gda-util.c:3079 ../libgda/gda-util.c:3094
-#: ../libgda/gda-util.c:3109
+#: ../libgda/gda-util.c:3085 ../libgda/gda-util.c:3100
+#: ../libgda/gda-util.c:3115
 #, c-format
 msgid "Unknown GDateDMY value %u"
 msgstr "Bilinmeye GDateDMY değeri %u"
@@ -2986,20 +3004,20 @@ msgstr "%s programının çalışması başarısız: %s"
 msgid "This report document does not handle %s output"
 msgstr "Bu rapor belgesi %s çıktısını işleyemez"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:67
+#: ../libgda/sqlite/gda-sqlite-ddl.c:68
 msgid "Internal error, creating table in SQLite provider"
 msgstr "SQLite sağlayıcısında tablo oluşturma iç hatası"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:83
+#: ../libgda/sqlite/gda-sqlite-ddl.c:84
 msgid "No fields are defined for CREATE TABLE operation"
 msgstr "CREATE TABLE işlemi için tanımlanmış alan yok"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:266 ../providers/mysql/gda-mysql-ddl.c:295
+#: ../libgda/sqlite/gda-sqlite-ddl.c:274 ../providers/mysql/gda-mysql-ddl.c:277
 #: ../providers/postgres/gda-postgres-ddl.c:305
 msgid "No field specified in foreign key constraint"
 msgstr "Yabancı anahtar kısıtında alan belirtilmemiş"
 
-#: ../libgda/sqlite/gda-sqlite-ddl.c:334
+#: ../libgda/sqlite/gda-sqlite-ddl.c:363
 msgid "Table to create must have at least one field"
 msgstr "Oluşturulacak tablonun en az bir alanı olmalı"
 
@@ -3011,43 +3029,43 @@ msgstr "SQLite ikili gösterim"
 msgid "Sqlite boolean representation"
 msgstr "Sqlite boole gösterimi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:124
+#: ../libgda/sqlite/gda-sqlite-provider.c:129
 #, c-format
 msgid "Parameter '%s' not found in statement"
 msgstr "'%s' parametresi ifade içinde bulunamadı"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:138
-#: ../libgda/sqlite/gda-sqlite-provider.c:154
-#: ../libgda/sqlite/gda-sqlite-provider.c:196
-#: ../libgda/sqlite/gda-sqlite-provider.c:212
+#: ../libgda/sqlite/gda-sqlite-provider.c:143
+#: ../libgda/sqlite/gda-sqlite-provider.c:159
+#: ../libgda/sqlite/gda-sqlite-provider.c:201
+#: ../libgda/sqlite/gda-sqlite-provider.c:217
 #, c-format
 msgid "No column name to associate to parameter '%s'"
 msgstr "'%s' parametresine bağlı bir sütun yok"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:182
+#: ../libgda/sqlite/gda-sqlite-provider.c:187
 #, c-format
 msgid "Parameter '%s' not found is statement"
 msgstr "'%s' parametresi, ifade içinde bulunamadı"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:222
+#: ../libgda/sqlite/gda-sqlite-provider.c:227
 msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "İfadenin bu türü için bir BLOB bağlama desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:952
+#: ../libgda/sqlite/gda-sqlite-provider.c:957
 msgid "Set to TRUE if the provider is the internal default"
-msgstr "Sağlayıcı dahili öntanımlı ise TRUE olarak ayarla"
+msgstr "Sağlayıcı iç öntanımlı ise TRUE olarak ayarla"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:974
+#: ../libgda/sqlite/gda-sqlite-provider.c:979
 msgid "Can't find libsqlite3."
 msgstr "libsqlite3 bulunamıyor."
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1128
+#: ../libgda/sqlite/gda-sqlite-provider.c:1133
 #: ../providers/mdb/gda-mdb-provider.c:275
 msgid "The connection string must contain DB_DIR and DB_NAME values"
 msgstr "Bağlantı dizgesi DB_DIR ve DB_NAME değerleri içermelidir"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1154
-#: ../libgda/sqlite/gda-sqlite-provider.c:1161
+#: ../libgda/sqlite/gda-sqlite-provider.c:1159
+#: ../libgda/sqlite/gda-sqlite-provider.c:1166
 #, c-format
 msgid ""
 "The connection string format has changed: replace URI with DB_DIR (the path "
@@ -3057,18 +3075,18 @@ msgstr ""
 "Bağlantı dizge biçimi değişti: URI, DB_DIR (veri tabanı dosyası yolu) ve "
 "DB_NAME ile değişmeli (sonunda '%s' olmayan veri tabanı dosyası)"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1176
+#: ../libgda/sqlite/gda-sqlite-provider.c:1181
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
 "Bağlantı dizge sinin DB_DIR kısmı, geçerli bir dizini göstermek zorundadır"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1236
+#: ../libgda/sqlite/gda-sqlite-provider.c:1241
 msgid "Wrong encryption passphrase"
 msgstr "Yanlış şifreleme parola cümlesi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1279
+#: ../libgda/sqlite/gda-sqlite-provider.c:1284
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
@@ -3076,109 +3094,109 @@ msgstr ""
 "GÜVENLİK UYARI: Yük Uzatma SQL komutları için etkindir, bu bir saldırganın "
 "uzatma yük yeteneklerine erişebileceği anlamına gelir"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1298
+#: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
 msgid "Could not set empty_result_callbacks SQLite option: %s"
 msgstr "SQLite seçeneği empty_result_callbacks ayarlanamadı: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1386
-#: ../libgda/sqlite/gda-sqlite-provider.c:1406
+#: ../libgda/sqlite/gda-sqlite-provider.c:1391
+#: ../libgda/sqlite/gda-sqlite-provider.c:1411
 #, c-format
 msgid "Could not register function '%s'"
 msgstr "'%s' fonksiyonu kaydedilemedi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1424
+#: ../libgda/sqlite/gda-sqlite-provider.c:1429
 #, c-format
 msgid "Could not define the %s collation"
 msgstr "%s karşılaştırması tanımlanamadı"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1704
-#: ../libgda/sqlite/gda-sqlite-provider.c:1715
-#: ../libgda/sqlite/gda-sqlite-provider.c:1729
-#: ../libgda/sqlite/gda-sqlite-provider.c:1740
+#: ../libgda/sqlite/gda-sqlite-provider.c:1713
+#: ../libgda/sqlite/gda-sqlite-provider.c:1724
+#: ../libgda/sqlite/gda-sqlite-provider.c:1738
+#: ../libgda/sqlite/gda-sqlite-provider.c:1749
 msgid "Error initializing database with passphrase"
 msgstr "Parola cümlesi ile veri tabanı başlatma hatası"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1782
+#: ../libgda/sqlite/gda-sqlite-provider.c:1791
 msgid "Missing database name or directory"
 msgstr "Veri tabanı adı veya dizini eksik"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:1810
-#: ../providers/postgres/gda-postgres-provider.c:1083
+#: ../libgda/sqlite/gda-sqlite-provider.c:1819
 #: ../providers/postgres/gda-postgres-provider.c:1084
+#: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Toplu işlemler, salt okunur kipinde desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2226
+#: ../libgda/sqlite/gda-sqlite-provider.c:2235
 msgid "SQLite does not support specifying fields to apply DISTINCT clause on"
 msgstr ""
 "SQLite, DISTINCT cümlesine eklenmesi için belirtilen alanları desteklemiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2273
-#: ../libgda/sqlite/gda-sqlite-provider.c:2283
+#: ../libgda/sqlite/gda-sqlite-provider.c:2282
+#: ../libgda/sqlite/gda-sqlite-provider.c:2292
 #, c-format
 msgid "'%s' compound not supported by SQLite"
 msgstr "'%s' birleştirme SQLite tarafından desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2385
+#: ../libgda/sqlite/gda-sqlite-provider.c:2394
 msgid "ILIKE operation not supported"
 msgstr "ILIKE işlemi desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2417
+#: ../libgda/sqlite/gda-sqlite-provider.c:2426
 msgid "SIMILAR operation not supported"
 msgstr "SIMILAR işlemi desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2541
+#: ../libgda/sqlite/gda-sqlite-provider.c:2550
 msgid "Operator type not supported"
 msgstr "Operatör tipi desteklenmiyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:2942
+#: ../libgda/sqlite/gda-sqlite-provider.c:2956
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1638
+#: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Adlandırılmamış parametre, hazırlanmış ifadelerde izinli değil"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3059
-#: ../libgda/sqlite/gda-sqlite-provider.c:3071
-#: ../providers/mysql/gda-mysql-provider.c:1959
-#: ../providers/postgres/gda-postgres-provider.c:1785
+#: ../libgda/sqlite/gda-sqlite-provider.c:3073
+#: ../libgda/sqlite/gda-sqlite-provider.c:3085
+#: ../providers/mysql/gda-mysql-provider.c:1973
+#: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr "Son eklenmiş satır için SELECT ifadesi oluşturulamıyor: %s"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3105
-#: ../providers/mysql/gda-mysql-provider.c:1987
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../libgda/sqlite/gda-sqlite-provider.c:3119
+#: ../providers/mysql/gda-mysql-provider.c:2001
+#: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Son eklenmiş satırı almak için çalışan SELECT ifadesi herhangi bir satır "
 "döndürmedi"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3109
-#: ../providers/mysql/gda-mysql-provider.c:1991
-#: ../providers/postgres/gda-postgres-provider.c:1817
+#: ../libgda/sqlite/gda-sqlite-provider.c:3123
+#: ../providers/mysql/gda-mysql-provider.c:2005
+#: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
 "Son eklenmiş satırı almak için çalışan SELECT ifadesi çok fazla (%d) satır "
 "döndürdü"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3173
+#: ../libgda/sqlite/gda-sqlite-provider.c:3187
 msgid "Prepared statement has no associated GdaStatement"
 msgstr "Hazırlanmış ifade ilişkili bir GdaStatement sahibi değil"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3214
-#: ../libgda/sqlite/gda-sqlite-provider.c:3251
+#: ../libgda/sqlite/gda-sqlite-provider.c:3228
+#: ../libgda/sqlite/gda-sqlite-provider.c:3265
 msgid "Can't create SQLite BLOB handle"
 msgstr "SQLite BLOB işlemi oluşturulamıyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3218
-#: ../libgda/sqlite/gda-sqlite-provider.c:3256
+#: ../libgda/sqlite/gda-sqlite-provider.c:3232
+#: ../libgda/sqlite/gda-sqlite-provider.c:3270
 msgid "Can't write to SQLite's BLOB"
 msgstr "SQLite BLOB ifadesine yazılamıyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3241
+#: ../libgda/sqlite/gda-sqlite-provider.c:3255
 #, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
@@ -3187,90 +3205,90 @@ msgstr ""
 "SQLite BLOB tanıtıcısı alınamıyor (bildirilen tür '%s'), lütfen bu hatayı "
 "http://gitlab.gnome.org/GNOME/libgda/issues'e bildirin"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3266
+#: ../libgda/sqlite/gda-sqlite-provider.c:3280
 msgid "Can't identify the ROWID of the blob to fill"
 msgstr "Doldurmak için blob un ROWID değeri tanımlanamıyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3377
+#: ../libgda/sqlite/gda-sqlite-provider.c:3391
 #: ../tools/browser/mgr-favorites.c:249 ../tools/browser/mgr-favorites.c:291
 msgid "Empty statement"
 msgstr "Boş ifade"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3419
-#: ../libgda/sqlite/gda-sqlite-provider.c:3422
+#: ../libgda/sqlite/gda-sqlite-provider.c:3433
+#: ../libgda/sqlite/gda-sqlite-provider.c:3436
 #: ../providers/jdbc/gda-jdbc-provider.c:1430
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
-#: ../providers/mysql/gda-mysql-provider.c:2190
-#: ../providers/mysql/gda-mysql-provider.c:2193
-#: ../providers/postgres/gda-postgres-provider.c:2017
-#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/mysql/gda-mysql-provider.c:2204
+#: ../providers/mysql/gda-mysql-provider.c:2207
+#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
 #: ../providers/web/gda-web-provider.c:1427
 msgid "Missing parameter(s) to execute query"
 msgstr "Sorgu çalıştırmak için parametre(ler) eksik"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3482
+#: ../libgda/sqlite/gda-sqlite-provider.c:3496
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
-#: ../providers/mysql/gda-mysql-provider.c:2254
-#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/mysql/gda-mysql-provider.c:2268
+#: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "İfade işlemi öntanımlı değerleri yeniden yazılamaz"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3603
-#: ../providers/mysql/gda-mysql-provider.c:2510
+#: ../libgda/sqlite/gda-sqlite-provider.c:3617
+#: ../providers/mysql/gda-mysql-provider.c:2524
 msgid "Can't get BLOB's length"
 msgstr "BLOB uzunluğu alınamıyor"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3605
-#: ../providers/mysql/gda-mysql-provider.c:2512
+#: ../libgda/sqlite/gda-sqlite-provider.c:3619
+#: ../providers/mysql/gda-mysql-provider.c:2526
 msgid "BLOB is too big"
 msgstr "BLOB çok büyük"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3690
+#: ../libgda/sqlite/gda-sqlite-provider.c:3704
 #, c-format
 msgid "Non handled data type '%s'"
 msgstr "İşlenmeyen veri türü '%s'"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3757
+#: ../libgda/sqlite/gda-sqlite-provider.c:3771
 msgid "Could not start transaction to create BLOB"
 msgstr "BLOB oluşturmak için toplu işlem başlatılamadı"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3932
-#: ../libgda/sqlite/gda-sqlite-provider.c:3953
-#: ../libgda/sqlite/gda-sqlite-provider.c:4043
-#: ../libgda/sqlite/gda-sqlite-provider.c:4063
-#: ../libgda/sqlite/gda-sqlite-provider.c:4086
+#: ../libgda/sqlite/gda-sqlite-provider.c:3946
+#: ../libgda/sqlite/gda-sqlite-provider.c:3967
+#: ../libgda/sqlite/gda-sqlite-provider.c:4059
+#: ../libgda/sqlite/gda-sqlite-provider.c:4079
+#: ../libgda/sqlite/gda-sqlite-provider.c:4102
 msgid "Function requires one argument"
 msgstr "Fonksiyon için bir değişken gerekli"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:3985
-#: ../libgda/sqlite/gda-sqlite-provider.c:4118
+#: ../libgda/sqlite/gda-sqlite-provider.c:4000
+#: ../libgda/sqlite/gda-sqlite-provider.c:4134
 msgid "Function requires two arguments"
 msgstr "Fonksiyon için iki değişken gerekli"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4023
+#: ../libgda/sqlite/gda-sqlite-provider.c:4039
 msgid "Function requires one or two arguments"
 msgstr "Fonksiyon için bir ya da iki değişken gerekli"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4158
-#: ../libgda/sqlite/gda-sqlite-provider.c:4265
+#: ../libgda/sqlite/gda-sqlite-provider.c:4174
+#: ../libgda/sqlite/gda-sqlite-provider.c:4281
 msgid "Function requires two or three arguments"
 msgstr "Fonksiyon için iki ya da üç değişken gerekli"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4212
+#: ../libgda/sqlite/gda-sqlite-provider.c:4228
 #, c-format
 msgid "SQLite regexp '%s' error:"
 msgstr "SQLite regexp '%s' hatası:"
 
-#: ../libgda/sqlite/gda-sqlite-provider.c:4213
+#: ../libgda/sqlite/gda-sqlite-provider.c:4229
 msgid "Invalid regular expression"
 msgstr "Geçersiz düzenli ifade"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:233
 #: ../providers/jdbc/gda-jdbc-recordset.c:297
-#: ../providers/mysql/gda-mysql-recordset.c:416
-#: ../providers/mysql/gda-mysql-recordset.c:552
+#: ../providers/mysql/gda-mysql-recordset.c:472
+#: ../providers/mysql/gda-mysql-recordset.c:608
 #: ../providers/postgres/gda-postgres-recordset.c:265
 #: ../providers/web/gda-web-recordset.c:156
 #, c-format
@@ -3279,10 +3297,10 @@ msgstr "%d sütunu sınırın dışında (0-%d), belirtilen tür yoksayılıyor"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:420
 #: ../libgda/sqlite/gda-sqlite-recordset.c:433
-#: ../libgda/sqlite/gda-sqlite-recordset.c:569
-#: ../libgda/sqlite/gda-sqlite-recordset.c:582
-#: ../libgda/sqlite/gda-sqlite-recordset.c:595
-#: ../libgda/sqlite/gda-sqlite-recordset.c:608
+#: ../libgda/sqlite/gda-sqlite-recordset.c:571
+#: ../libgda/sqlite/gda-sqlite-recordset.c:584
+#: ../libgda/sqlite/gda-sqlite-recordset.c:597
+#: ../libgda/sqlite/gda-sqlite-recordset.c:610
 msgid "Integer value is too big"
 msgstr "Tam sayı değeri çok büyük"
 
@@ -3302,46 +3320,38 @@ msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
 msgstr ""
 "Geçersiz saat '%s' (saat biçimi şu şekilde olmalı: HH:MM:SS[.ms][+HH:mm])"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:554
-#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:684
+#: ../libgda/sqlite/gda-sqlite-recordset.c:556
+#: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
 #, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
 msgstr ""
 "Geçersiz zaman damgası '%s' (biçim YYYY-AA-GGDH: AA: SS [.ms] olmalıdır)"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:643
+#: ../libgda/sqlite/gda-sqlite-recordset.c:645
 msgid "SQLite provider fatal internal error"
-msgstr "SQLite sağlayıcı ölümcül dahili hata"
+msgstr "SQLite sağlayıcı ölümcül iç hata"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:651
+#: ../libgda/sqlite/gda-sqlite-recordset.c:653
 msgid "Truncated data"
 msgstr "Kırpılmış veri"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:707
+#: ../libgda/sqlite/gda-sqlite-recordset.c:709
 #: ../providers/jdbc/gda-jdbc-recordset.c:508
 msgid "Requested row could not be found"
 msgstr "İstenilen satır bulunamadı"
 
-#: ../libgda/sqlite/gda-sqlite-recordset.c:739
+#: ../libgda/sqlite/gda-sqlite-recordset.c:741
 #: ../providers/jdbc/gda-jdbc-recordset.c:546
 msgid "Can't set iterator on requested row"
 msgstr "İstenilen satırda yineleyici ayarlanamıyor"
 
-#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:309
-#, c-format
-msgid ""
-"Internal Error: when trying to add data model spec for virtual connetion: %s"
-msgstr ""
-"Dahili Hata: sanal bağlantı için veri model özelliği eklemeye çalışırken "
-"hata: %s"
-
-#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:388
+#: ../libgda/sqlite/virtual/gda-vconnection-data-model.c:386
 msgid "Table to remove not found"
 msgstr "Silinecek tablo bulunamadı"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:128
 msgid "Namespace must be specified"
-msgstr "İsim alanı belirtilmek zorunda"
+msgstr "Ad alanı belirtilmek zorunda"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:137
 #, c-format
@@ -3387,15 +3397,15 @@ msgid ""
 "Internal error: virtual provider does not implement the create_operation() "
 "virtual method"
 msgstr ""
-"Dahili hata: sanal sağlayıcı, create_operation() sanal metodunu uygulayamadı"
+"İç hata: sanal sağlayıcı, create_operation() sanal metodunu uygulayamadı"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:159
 msgid "Internal error: invalid provider handle"
-msgstr "Dahili hata: geçersiz sağlayıcı işleme"
+msgstr "İç hata: geçersiz sağlayıcı işleme"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
-msgstr "Dahili Uygulama hatası: Hiçbir yakın bağlantı yöntemi tanımlanmadı"
+msgstr "İç Uygulama hatası: Hiçbir yakın bağlantı yöntemi tanımlanmadı"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
@@ -3427,7 +3437,7 @@ msgstr "Sanal tablo (\"%s\") tanımlanamıyor: %s"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:856
 msgid "Internal SQLite error: no data to iterate on"
-msgstr "Dahili SQLite hatası: yinelenecek veri yok"
+msgstr "İç SQLite hatası: yinelenecek veri yok"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:962
 #, c-format
@@ -3461,21 +3471,17 @@ msgstr "Veri değiştirme başarısız: %s"
 msgid "Data model representing the table is read only"
 msgstr "Veri modelinin gösterdiği tablo yalnızca salt okunur"
 
-#: ../libgda/sqlite/virtual/gda-vprovider-hub.c:135
-msgid "Internal GdaVproviderHub error"
-msgstr "Dahili GdaVproviderHub hatası"
-
-#: ../libgda/sql-parser/gda-sql-parser.c:614
-#: ../libgda/sql-parser/gda-sql-parser.c:705
+#: ../libgda/sql-parser/gda-sql-parser.c:617
+#: ../libgda/sql-parser/gda-sql-parser.c:708
 msgid "SQL code does not contain any statement"
 msgstr "SQL kodu herhangi bir ifade içermiyor"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:789
+#: ../libgda/sql-parser/gda-sql-parser.c:792
 #, c-format
 msgid "Syntax error at line %d, column %d"
 msgstr "%d satırında sözdizimi hatası, sütun %d"
 
-#: ../libgda/sql-parser/gda-sql-parser.c:803
+#: ../libgda/sql-parser/gda-sql-parser.c:806
 #, c-format
 msgid "Overflow error at line %d, column %d"
 msgstr "%d satırında taşma, sütun %d"
@@ -3614,11 +3620,11 @@ msgstr "COMPOUND içindeki tüm ifadeler aynı sayıda sütuna sahip olmalıdır
 
 #: ../libgda/sql-parser/gda-statement-struct-delete.c:167
 msgid "DELETE statement needs a table to delete from"
-msgstr "DELETE ifadesi, içinden silinecek bir tabloya ihtiyaç duyar"
+msgstr "DELETE ifadesi, içinden silinecek bir tabloya gereksinir"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:356
 msgid "INSERT statement needs a table to insert into"
-msgstr "INSERT ifadesi, içine eklenecek bir tabloya ihtiyaç duyar"
+msgstr "INSERT ifadesi, içine eklenecek bir tabloya gereksinir"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:362
 msgid "Can't specify values to insert and SELECT statement in INSERT statement"
@@ -3661,7 +3667,7 @@ msgstr "Birden çok hedef adlandırılmış veya takma ad konulmuş '%s'"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:290
 msgid "UPDATE statement needs a table to update data"
-msgstr "UPDATE ifadesi veri güncelleyecek tabloya ihtiyaç duyuyor"
+msgstr "UPDATE ifadesi veri güncelleyecek tabloya gereksiniyor"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:296
 msgid ""
@@ -3679,9 +3685,9 @@ msgid ""
 "any thread, you may expect some undesired behaviours, use "
 "g_main_context_acquire()"
 msgstr ""
-"GMainContext, da_signal_connect() kendinin olmayan başka bir iş parçacığı "
-"tarafından çağrıldığında geçilmiş olur, bazı istenmeyen davranışlar "
-"görülebilir, g_main_context_acquire() kullanın"
+"GMainContext, da_signal_connect() kendinin olmayan başka bir iş parçacığınca "
+"çağrıldığında geçilmiş olur, bazı istenmeyen davranışlar görülebilir, "
+"g_main_context_acquire() kullanın"
 
 #: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
@@ -3693,8 +3699,8 @@ msgid ""
 "Possible memory leak as no destroy function provided to free value returned "
 "by the worker thread"
 msgstr ""
-"İş parçacığı tarafından döndürülen boşaltma değeri ile yoketme fonksiyonu "
-"olası bir bellek taşması belirtiyor"
+"İş parçacığınca döndürülen boşaltma değeri ile yoketme fonksiyonu olası bir "
+"bellek taşması belirtiyor"
 
 #: ../libgda/thread-wrapper/gda-worker.c:594
 #: ../libgda/thread-wrapper/gda-worker.c:660
@@ -3731,7 +3737,7 @@ msgstr "İş parçacıkları arası iletişim aygıtı oluşturulamıyor"
 #: ../libgda/thread-wrapper/gda-worker.c:818
 #, c-format
 msgid "GdaWorker internal error"
-msgstr "GdaWorker dahili hatası"
+msgstr "GdaWorker iç hatası"
 
 #: ../libgda-ui/data-entries/common-bin.c:46
 #: ../libgda-ui/data-entries/common-bin.c:182
@@ -3885,8 +3891,8 @@ msgid ""
 "Data cell renderer's specified type (%s) differs from actual value to "
 "display type (%s)"
 msgstr ""
-"Veri hücresi gerçekleyicinin belirtilen türü (%s) mevcut gösterilcek değerin "
-"türünden (%s) farklıdır"
+"Veri hücresi gerçekleyicinin belirtilen türü (%s) geçerli gösterilecek "
+"değerin türünden (%s) başkadır"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:409
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
@@ -3925,12 +3931,12 @@ msgstr ""
 "%s, umulan biçimdir\n"
 "Saat, yerel saate bağlıdır (%s)"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:572
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Girdiye değer ayarlanamıyor: Giriş Sarmalayıcı Süresi için Geçersiz Veri Türü"
 
-#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:661
+#: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Girişten değer alınamıyor: Giriş Sarmalayıcı Süresi için Geçersiz Veri Türü"
@@ -3976,7 +3982,7 @@ msgstr "Belirtilmemiş"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:29
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:17
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:35
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:34
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:9
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:26
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:9
@@ -4391,8 +4397,8 @@ msgstr ""
 "açılmış bağlantı kullanır.\n"
 "\n"
 "Şurada gösterilen kaynak kodda, <i>demo_cnc</i> ve <i>demo_parser</i> "
-"nesneleri çatı tarafından oluşturulmuş ve tüm gösterilen ögeler "
-"kullanılabilir yapılmıştır.\n"
+"nesneleri çatıca oluşturulmuş ve tüm gösterilen ögeler kullanılabilir "
+"yapılmıştır.\n"
 "\n"
 "Aramaların engellenmediğini göstermek için, yukarıda bir döndürücü olur (bu "
 "döndürücüyü asla durdurmaz) ve her bağlantı kullanıldığında 1 saniye gecikme "
@@ -4506,7 +4512,7 @@ msgstr "Süzgeçi temizle"
 
 #: ../libgda-ui/gdaui-data-proxy.c:155
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
-msgstr "GdauiAction, bu GdauiDataProxy arayüzü tarafından desteklenmiyor"
+msgstr "GdauiAction, bu GdauiDataProxy arayüzünce desteklenmiyor"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:89
 msgid "Insert new data"
@@ -4577,7 +4583,7 @@ msgstr "Veri modeli"
 
 #: ../libgda-ui/gdaui-data-store.c:113
 msgid "Internal GdaDataProxy data model"
-msgstr "Dahili GdaDataProxy veri modeli"
+msgstr "İç GdaDataProxy veri modeli"
 
 #: ../libgda-ui/gdaui-data-store.c:361 ../libgda-ui/gdaui-data-store.c:429
 #: ../libgda-ui/gdaui-data-store.c:460 ../libgda-ui/gdaui-data-store.c:491
@@ -4611,7 +4617,7 @@ msgstr "Eklenti dizini açılamadı, yüklenmiş eklenti yok."
 #: ../tools/browser/data-manager/data-widget.c:386
 #: ../tools/browser/data-manager/xml-spec-editor.c:225
 #: ../tools/browser/query-exec/query-result.c:284
-#: ../tools/common/web-server.c:1978
+#: ../tools/common/web-server.c:1980
 #, c-format
 msgid "Error: %s"
 msgstr "Hata: %s"
@@ -4805,7 +4811,7 @@ msgid ""
 "File '%s' already exists.\n"
 "Do you want to overwrite it?"
 msgstr ""
-"'%s' dosyası zaten mevcut.\n"
+"'%s' dosyası zaten var.\n"
 "Üzerine yazmak istiyor musunuz?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2084
@@ -5034,7 +5040,7 @@ msgstr "Özgün değere sıfırla"
 
 #: ../libgda-ui/internal/utility.c:375
 msgid "Current modified data is invalid"
-msgstr "Mevcut değiştirilmiş veri geçersiz"
+msgstr "Şu anki değiştirilmiş veri geçersiz"
 
 #: ../libgda-ui/internal/utility.c:377
 msgid ""
@@ -5052,7 +5058,7 @@ msgstr "lütfen onu düzeltin ve tekrar deneyin ya da değişiklikleri iptal edi
 
 #: ../libgda-ui/internal/utility.c:388
 msgid "Part of the current modified data was invalid"
-msgstr "Mevcut değiştirilmiş verinin parçası geçersiz"
+msgstr "Şu anki değiştirilmiş verinin parçası geçersiz"
 
 #: ../libgda-ui/internal/utility.c:389
 msgid ""
@@ -5176,16 +5182,19 @@ msgstr "Sütunun açıklaması"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5219,7 +5228,7 @@ msgstr "Tablo adı"
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:4
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:7
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:8
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:19
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:18
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:10
@@ -5235,7 +5244,7 @@ msgstr "Alan adı"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:15
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:9
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:21
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:20
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:12
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:5
@@ -5249,7 +5258,7 @@ msgstr "Veri türü"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:10
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:17
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:12
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:23
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:22
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:14
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:6
@@ -5263,7 +5272,7 @@ msgstr "Boyut"
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:13
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:25
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:24
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:16
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:7
@@ -5278,7 +5287,7 @@ msgstr "Ölçekle"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:21
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:11
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:14
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:27
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:26
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:8
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:18
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:8
@@ -5299,7 +5308,7 @@ msgstr "Öntanımlı değer, sütun NOT NULL değilse zorunludur"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:33
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:21
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:19
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:39
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:38
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:30
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:11
@@ -5314,7 +5323,7 @@ msgstr "Denetle"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:35
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:23
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:20
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:41
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:40
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:12
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:32
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:12
@@ -5409,7 +5418,7 @@ msgstr "Tür"
 #: ../tools/common/t-app.c:2326 ../tools/common/t-app.c:2901
 #: ../tools/common/t-app.c:3733 ../tools/common/t-app.c:3815
 msgid "Name"
-msgstr "İsim"
+msgstr "Ad"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:4
@@ -5435,7 +5444,8 @@ msgstr "Tabloda"
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:24
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:5
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:10
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:6
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:5
@@ -5443,18 +5453,19 @@ msgstr "Tabloda"
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:5
 msgid "Only if it does not yet exist"
-msgstr "Yalnızca henüz mevcut değilse"
+msgstr "Yalnızca henüz yoksa"
 
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:7
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:7
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:7
 msgid "Create index only if it does not yet exist"
-msgstr "Yalnızca henüz mevcut değilse oluştur"
+msgstr "Yalnızca henüz yoksa oluştur"
 
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:9
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:9
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:9
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:9
 msgid "Indexed field(s)"
@@ -5463,15 +5474,18 @@ msgstr "İndekslenmiş alan(lar)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:11
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:11
-#: ../providers/postgres/postgres_specs_create_index.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:15
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:11
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:11
 msgid "Indexed field or expression"
 msgstr "İndekslenmiş alan ya da ifade"
 
 #. To translators: "Compare method" refers to the method SQLite has to compare values
+#. Index fields
+#. To translators: "Compare method" refers to the method SQLite has to compare values
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:13
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:34
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:17
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:34
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:13
@@ -5492,6 +5506,7 @@ msgstr "Karşılaştırma adı (BINARY|NOCASE)"
 #. Index fields
 #: ../providers/bdbsql/bdbsql_specs_create_index.xml.in.h:17
 #: ../providers/mysql/mysql_specs_create_index.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:21
 #: ../providers/sqlcipher/sqlcipher_specs_create_index.xml.in.h:17
 #: ../providers/sqlite/sqlite_specs_create_index.xml.in.h:17
 msgid "Sort type"
@@ -5510,7 +5525,7 @@ msgstr "Tablonun tanımlaması"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:4
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:3
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:6
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:4
 msgid "Temporary table"
@@ -5518,17 +5533,17 @@ msgstr "Geçici tablo"
 
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:6
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:6
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:7
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:6
 msgid "Create table only if it does not yet exist"
-msgstr "Yalnızca henüz mevcut değilse tablo oluştur"
+msgstr "Yalnızca henüz yoksa tablo oluştur"
 
 #. list of fields
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:11
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:5
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:17
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:16
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:8
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:8
 msgid "Table's columns"
@@ -5538,7 +5553,7 @@ msgstr "Tablonun sütunları"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:20
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:13
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:23
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:29
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:28
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:20
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:20
 #: ../tools/common/t-app.c:1864 ../tools/common/web-server.c:867
@@ -5552,7 +5567,7 @@ msgstr "Otomatik artış"
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:13
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:15
 #: ../providers/postgres/postgres_specs_create_index.xml.in.h:4
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:31
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:30
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:22
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:22
 #: ../tools/common/t-app.c:1991
@@ -5565,7 +5580,7 @@ msgstr "Eşsiz"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:27
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:15
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:16
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:33
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:32
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:24
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:24
 #: ../tools/browser/schema-browser/mgr-columns.c:379
@@ -5581,7 +5596,7 @@ msgstr "Birincil anahtar"
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:31
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:19
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:18
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:37
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:36
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:28
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:28
 #: ../tools/browser/schema-browser/table-columns.c:661
@@ -5605,7 +5620,7 @@ msgstr "Çakışma çözme yöntemi (ROLLBACK|ABORT|FAIL|IGNORE|REPLACE)"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:41
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:37
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:43
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:42
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:41
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:41
 #: ../tools/browser/canvas/browser-canvas-fkey.c:422
@@ -5617,7 +5632,7 @@ msgstr "Yabancı anahtar"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:42
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:39
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:45
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:44
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:42
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:42
 msgid "Referenced table"
@@ -5626,7 +5641,7 @@ msgstr "Başvurulan tablo"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:43
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:41
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:47
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:46
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:43
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:43
 msgid "Fields"
@@ -5635,7 +5650,7 @@ msgstr "Alanlar"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:44
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:43
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:49
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:48
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:44
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:44
 msgid "Fields in the foreign key"
@@ -5644,7 +5659,7 @@ msgstr "Yabancı anahtardaki alanlar"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:45
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:45
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:51
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:50
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:45
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:45
 msgid "Field"
@@ -5653,7 +5668,7 @@ msgstr "Alan"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:46
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:47
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:53
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:52
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:46
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:46
 msgid "Referenced field"
@@ -5662,7 +5677,7 @@ msgstr "Başvurulan alan"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:47
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:49
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:55
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:54
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:47
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:47
 msgid "Match type"
@@ -5671,7 +5686,7 @@ msgstr "Eşleştirme türü"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:48
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:51
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:57
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:56
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:48
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:48
 msgid "Matching method if more than one field involved"
@@ -5680,7 +5695,7 @@ msgstr "Birden fazla alanla ilişkili ise eşleştirme yöntemi"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:49
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:53
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:59
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:58
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:49
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:49
 msgid "On update action"
@@ -5689,7 +5704,7 @@ msgstr "Hareket güncellemede"
 #. foreign key spec
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:50
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:55
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:61
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:60
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:50
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:50
 msgid "On delete action"
@@ -5699,7 +5714,7 @@ msgstr "Silme hareketinde"
 #: ../providers/bdbsql/bdbsql_specs_create_table.xml.in.h:52
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:57
 #: ../providers/oracle/oracle_specs_create_table.xml.in.h:25
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:64
 #: ../providers/sqlcipher/sqlcipher_specs_create_table.xml.in.h:52
 #: ../providers/sqlite/sqlite_specs_create_table.xml.in.h:52
 msgid "Global constraints"
@@ -5732,7 +5747,7 @@ msgstr "Geçici görünüm"
 #: ../providers/sqlcipher/sqlcipher_specs_create_view.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_create_view.xml.in.h:6
 msgid "Create view only if it does not yet exist"
-msgstr "Yalnızca henüz mevcut değilse görünüm oluştur"
+msgstr "Yalnızca henüz yoksa görünüm oluştur"
 
 #: ../providers/bdbsql/bdbsql_specs_create_view.xml.in.h:8
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:7
@@ -5775,13 +5790,13 @@ msgstr "Silinecek indeks"
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:3
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:3
 msgid "If exists"
-msgstr "Mevcut ise"
+msgstr "Varsa"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_index.xml.in.h:4
 #: ../providers/sqlcipher/sqlcipher_specs_drop_index.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_index.xml.in.h:4
 msgid "Drop index only if it exists"
-msgstr "Yalnızca mevcut ise indeksi sil"
+msgstr "Yalnızca varsa indeksi sil"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:2
@@ -5796,7 +5811,7 @@ msgstr "Silinecek tablo"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:4
 msgid "Drop table only if it exists"
-msgstr "Yalnızca mevcut ise tabloyu sil"
+msgstr "Yalnızca varsa tabloyu sil"
 
 #: ../providers/bdbsql/bdbsql_specs_drop_view.xml.in.h:1
 #: ../providers/mysql/mysql_specs_drop_view.xml.in.h:1
@@ -5821,7 +5836,7 @@ msgstr "Silinecek görünüm"
 #: ../providers/sqlcipher/sqlcipher_specs_drop_view.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_drop_view.xml.in.h:4
 msgid "Drop view only if it exists"
-msgstr "Yalnızca mevcut ise görünümü sil"
+msgstr "Yalnızca varsa görünümü sil"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:2
@@ -5877,7 +5892,8 @@ msgstr "Yerel karşılaştırmalar"
 #: ../providers/sqlite/sqlite_specs_dsn.xml.in.h:12
 msgid "Enable usage of extra collation methods (LOCALE and DCASE)"
 msgstr ""
-"Fazladan tanımlama yöntemlerinin kullanımını etkinleştir (LOCALE ve DCASE)"
+"Fazladan karşılaştırma yöntemlerinin kullanımını etkinleştir (LOCALE ve "
+"DCASE)"
 
 #: ../providers/bdbsql/bdbsql_specs_dsn.xml.in.h:13
 #: ../providers/sqlcipher/sqlcipher_specs_dsn.xml.in.h:13
@@ -5914,9 +5930,12 @@ msgid "Table to rename"
 msgstr "Yeniden adlandırılacak tablo"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Yeni ad"
@@ -5960,7 +5979,7 @@ msgstr "Geçersiz değişken: NULL"
 msgid "Can't read BLOB"
 msgstr "BLOB okunamıyor"
 
-#: ../providers/jdbc/gda-jdbc-ddl.c:157 ../providers/mysql/gda-mysql-ddl.c:361
+#: ../providers/jdbc/gda-jdbc-ddl.c:157 ../providers/mysql/gda-mysql-ddl.c:343
 #: ../providers/oracle/gda-oracle-ddl.c:157
 #: ../providers/postgres/gda-postgres-ddl.c:403
 #: ../providers/web/gda-web-ddl.c:155
@@ -6052,8 +6071,7 @@ msgid ""
 "Could not find Libgda's JAR (gdaprovider-6.0.jar), JDBC provider is "
 "unavailable."
 msgstr ""
-"Libgda JAR dosyası (gdaprovider-6.0.jar) bulunamadı, JDBC sağlayıcısı mevcut "
-"değil."
+"Libgda JAR dosyası (gdaprovider-6.0.jar) bulunamadı, JDBC sağlayıcısı yok."
 
 #: ../providers/jdbc/libmain.c:513
 #, c-format
@@ -6063,8 +6081,7 @@ msgstr "JAVA sanal makinası oluşturulamıyor: %s"
 #: ../providers/jdbc/libmain.c:523
 msgid ""
 "Could not find the JVM runtime (libjvm.so), JDBC provider is unavailable."
-msgstr ""
-"JVM çalışma zamanı (libjvm.so) bulunamadı, JDBC sağlayıcı mevcut değil."
+msgstr "JVM çalışma zamanı (libjvm.so) bulunamadı, JDBC sağlayıcı yok."
 
 #. dummy setup to enable GIR compilation
 #: ../providers/ldap/gda-data-model-ldap.c:156
@@ -6118,8 +6135,8 @@ msgid "Too many arguments"
 msgstr "Çok fazla değişken"
 
 #: ../providers/ldap/gda-ldap-provider.c:1073
-#: ../providers/mysql/gda-mysql-provider.c:612
-#: ../providers/mysql/gda-mysql-provider.c:666
+#: ../providers/mysql/gda-mysql-provider.c:621
+#: ../providers/mysql/gda-mysql-provider.c:675
 #: ../providers/mysql/gda-mysql-util.c:63
 #: ../tools/browser/ldap-browser/entry-properties.c:587
 #: ../tools/browser/schema-browser/table-columns.c:519
@@ -6136,19 +6153,19 @@ msgstr "Parametre"
 msgid "near \"%s\": syntax error"
 msgstr "\"%s\" yakınlarında: sözdizimi hatası"
 
-#: ../providers/ldap/gda-ldap-util.c:1421
+#: ../providers/ldap/gda-ldap-util.c:1381
 #, c-format
 msgid "LDAP server returned more than one entry with DN '%s'"
 msgstr "LDAP sunucusu, DN '%s' ile birden fazla girdi döndürdü"
 
-#: ../providers/ldap/gda-ldap-util.c:1608
+#: ../providers/ldap/gda-ldap-util.c:1568
 msgid "Could not parse distinguished name returned by LDAP server"
-msgstr "LDAP sunucusu tarafından döndürülen eşsiz ad ayrıştırılamadı"
+msgstr "LDAP sunucusunca döndürülen eşsiz ad ayrıştırılamadı"
 
-#: ../providers/ldap/gda-ldap-util.c:1902
+#: ../providers/ldap/gda-ldap-util.c:1862
 #, c-format
 msgid "Unexpected data type '%s' for objectClass attribute!"
-msgstr "objectClass özniteliği için beklenmedik veri türü '%s'"
+msgstr "objectClass özniteliği için beklenmedik veri türü '%s'!"
 
 #: ../providers/ldap/gda-tree-mgr-ldap.c:210
 #: ../tools/browser/ldap-browser/mgr-ldap-classes.c:187
@@ -6284,8 +6301,8 @@ msgid ""
 "Time limit after which a search operation should be terminated by the server "
 "(leave undefined or 0 for unlimited)"
 msgstr ""
-"Sunucu tarafından kesilmesi gerek arama işleminin zaman sınır (tanımsız veya "
-"0 ise sınırsızdır)"
+"Sunucu tarafından kesilmesi gerek arama işleminin zaman sınırı (tanımsız "
+"veya 0 ise sınırsızdır)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
@@ -6352,20 +6369,20 @@ msgstr "Kullanılacak veri tabanının adı (.mdb olmadan dosya adı)"
 msgid "MySQL boolean representation"
 msgstr "MySQL boole gösterimi"
 
-#: ../providers/mysql/gda-mysql-provider.c:445
+#: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
 msgstr "Hem HOST hem de POST belirttiyseniz bir UNIX SOCKET alamazsınız"
 
-#: ../providers/mysql/gda-mysql-provider.c:453
+#: ../providers/mysql/gda-mysql-provider.c:458
 msgid "Invalid port number"
 msgstr "Geçersiz bağlantı noktası numarası"
 
-#: ../providers/mysql/gda-mysql-provider.c:489
+#: ../providers/mysql/gda-mysql-provider.c:496
 #, c-format
 msgid "Unknown MySQL protocol '%s'"
-msgstr "Bilinmeye MySQL protokolü '%s'"
+msgstr "Bilinmeyen MySQL iletişim kuralı '%s'"
 
-#: ../providers/mysql/gda-mysql-provider.c:534
+#: ../providers/mysql/gda-mysql-provider.c:541
 #, c-format
 msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
@@ -6374,33 +6391,33 @@ msgstr ""
 "İstemci karakter kümesi UTF8 olarak ayarlanamadı. %s kullanılıyor. Bu UTF-8 "
 "olmayan karakterlerde problem yaratabilir"
 
-#: ../providers/mysql/gda-mysql-provider.c:580
+#: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
 msgstr "Bağlantı dizgesi DB_NAME değeri içermek zorundadır"
 
-#: ../providers/mysql/gda-mysql-provider.c:615
-#: ../providers/mysql/gda-mysql-provider.c:669
+#: ../providers/mysql/gda-mysql-provider.c:624
+#: ../providers/mysql/gda-mysql-provider.c:678
 #: ../providers/mysql/gda-mysql-util.c:65
 msgid "No description"
 msgstr "Açıklama yok"
 
-#: ../providers/mysql/gda-mysql-provider.c:1753
+#: ../providers/mysql/gda-mysql-provider.c:1767
 msgid "Unnamed statement parameter is not allowed in prepared statement."
-msgstr "İsimsiz ifade parametresi, hazırlanmış ifadede kullanılamaz."
+msgstr "Adsız ifade parametresi, hazırlanmış ifadede kullanılamaz."
 
-#: ../providers/mysql/gda-mysql-provider.c:1974
-#: ../providers/postgres/gda-postgres-provider.c:1800
+#: ../providers/mysql/gda-mysql-provider.c:1988
+#: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Son eklenmiş satırı almak için SELECT ifadesi çalıştırılamadı: %s"
 
 #. force reading the complete BLOB into memory
-#: ../providers/mysql/gda-mysql-provider.c:2504
+#: ../providers/mysql/gda-mysql-provider.c:2518
 msgid "Can't read whole BLOB into memory"
 msgstr "Tüm BLOB bellek içinde okunamaz"
 
 #. there is an error here
-#: ../providers/mysql/gda-mysql-provider.c:2551
+#: ../providers/mysql/gda-mysql-provider.c:2565
 #, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
@@ -6409,7 +6426,7 @@ msgstr ""
 "İşlenmeyen veri türü '%s', lütfen bu hatayı http://gitlab.gnome.org/GNOME/"
 "libgda/issues'e bildirin"
 
-#: ../providers/mysql/gda-mysql-provider.c:2597
+#: ../providers/mysql/gda-mysql-provider.c:2611
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
@@ -6433,37 +6450,37 @@ msgstr "Bir andaki çekilen satırların sayısı"
 msgid "Number of row chunks read since the object creation"
 msgstr "Nesne yaratılana kadar okunan satır parçalarının sayısı"
 
-#: ../providers/mysql/gda-mysql-recordset.c:638
-#: ../providers/mysql/gda-mysql-recordset.c:958
-#: ../providers/mysql/gda-mysql-recordset.c:971
-#: ../providers/mysql/gda-mysql-recordset.c:984
-#: ../providers/mysql/gda-mysql-recordset.c:1003
+#: ../providers/mysql/gda-mysql-recordset.c:695
+#: ../providers/mysql/gda-mysql-recordset.c:1039
+#: ../providers/mysql/gda-mysql-recordset.c:1052
+#: ../providers/mysql/gda-mysql-recordset.c:1065
+#: ../providers/mysql/gda-mysql-recordset.c:1084
 #, c-format
 msgid "Invalid column bind data type. %d\n"
 msgstr "Geçersiz sütun bağlama veri türü. %d\n"
 
-#: ../providers/mysql/gda-mysql-recordset.c:796
+#: ../providers/mysql/gda-mysql-recordset.c:853
 #, c-format
 msgid "Type %s not mapped for value %d"
 msgstr "%s türü %d değeri ile eşleşmiyor"
 
-#: ../providers/mysql/gda-mysql-recordset.c:815
+#: ../providers/mysql/gda-mysql-recordset.c:872
 #, c-format
 msgid "Type %s not mapped for value %lld"
 msgstr "%s türü %lld değeri ile eşleşmiyor"
 
-#: ../providers/mysql/gda-mysql-recordset.c:862
+#: ../providers/mysql/gda-mysql-recordset.c:919
 #, c-format
 msgid "Type %s not mapped for value %d/%d/%d %d:%d:%d.%lu"
 msgstr "Tür %s eşleşmiyor, %d/%d/%d %d:%d:%d.%lu değeri için"
 
-#: ../providers/mysql/gda-mysql-recordset.c:879
-#: ../providers/mysql/gda-mysql-recordset.c:894
+#: ../providers/mysql/gda-mysql-recordset.c:936
+#: ../providers/mysql/gda-mysql-recordset.c:951
 #, c-format
 msgid "Type %s not mapped for value %f"
 msgstr "%s eşleşmiyor, %f değeri için"
 
-#: ../providers/mysql/gda-mysql-recordset.c:993
+#: ../providers/mysql/gda-mysql-recordset.c:1074
 #, c-format
 msgid "Type %s not mapped for value %s"
 msgstr "%s eşleşmiyor, %s değeri için"
@@ -6551,26 +6568,26 @@ msgstr "Yönetici parolası"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:15
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:15
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
 msgid "Connection protocol"
-msgstr "Bağlantı protokolü"
+msgstr "Bağlantı iletişim kuralı"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:16
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:16
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
 msgid ""
 "Explicitly specifies a connection protocol to use. It is useful when the "
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
-"Kullanılan bağlantı protokolü açıkça belirtilir. Diğer bağlantı "
-"parametreleri istediğinizden başka normal olarak kullanılacak protokol "
-"belirleneceğinde yardımcı olur"
+"Kullanılan bağlantı iletişim kuralı açıkça belirtilir. Diğer bağlantı "
+"parametreleri istediğinizden başka normal olarak kullanılacak iletişim "
+"kuralı belirleneceğinde yardımcı olur"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
 msgid "Create database only if it does not yet exist"
-msgstr "Henüz mevcut değilse veri tabanı oluştur"
+msgstr "Henüz yoksa veri tabanı oluştur"
 
 #. DSN parameters
 #. other table options
@@ -6809,19 +6826,19 @@ msgstr "Windows Japonca için SJIS"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:105
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:27
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:15
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
 msgid "Automatic"
 msgstr "Otomatik"
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:106
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:28
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:16
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
 msgid "TCP: TCP/IP connection to local or remote server."
 msgstr "TCP: Yerel ya da uzak sunucu için TCP/IP bağlantısı."
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:107
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:29
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:17
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
 msgid ""
 "Socket: Unix socket file connection to local server (Local Unix server only)."
 msgstr ""
@@ -6830,7 +6847,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:108
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:30
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:18
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:20
 msgid ""
 "Pipe: Named-pipe connection to local or remote server (Windows server only)"
 msgstr ""
@@ -6839,7 +6856,7 @@ msgstr ""
 
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:109
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:31
-#: ../providers/mysql/mysql_specs_dsn.xml.in.h:19
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:21
 msgid ""
 "Memory: Shared-memory connection to local server (Local Windows server only)"
 msgstr ""
@@ -6970,7 +6987,7 @@ msgid "Index directory"
 msgstr "İndeks dizini"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:103
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:65
 msgid "Match simple"
 msgstr "Basit eşleştirme"
 
@@ -6979,28 +6996,28 @@ msgid "Match partial"
 msgstr "Kısmi eşleştirme"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:105
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:66
 msgid "Match full"
 msgstr "Tam eşleştirme"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:106
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:67
 msgid "No action"
 msgstr "Eylem yok"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:107
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:68
 msgid "Restrict"
 msgstr "Kısıtla"
 
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:108
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:70
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:69
 msgid "Cascade"
 msgstr "Kadameli"
 
 #. To translators: Action of setting a value to NULL
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:110
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:72
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:71
 msgid "Set to NULL"
 msgstr "NULL ayarla"
 
@@ -7080,12 +7097,12 @@ msgstr "Sıkıştır"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:4
 msgid "Replace if it already exists"
-msgstr "Zaten mevcut ise yer değiştir"
+msgstr "Zaten varsa yer değiştir"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:5
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:5
 msgid "Replace view definition if it already exists"
-msgstr "Zaten mevcut ise görünüm tanımı değiştir"
+msgstr "Zaten varsa görünüm tanımı değiştir"
 
 #: ../providers/mysql/mysql_specs_create_view.xml.in.h:8
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:9
@@ -7100,12 +7117,12 @@ msgstr "sütun adı"
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:24
 msgid "Only if existing"
-msgstr "Yalnızca mevcut ise"
+msgstr "Yalnızca varsa"
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_drop_db.xml.in.h:26
 msgid "Drop database only if it exists"
-msgstr "Yalnızca mevcut ise veri tabanını sil"
+msgstr "Yalnızca varsa veri tabanını sil"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:4
 msgid "Drop table only if it is temporary"
@@ -7143,7 +7160,44 @@ msgstr "Sıkıştır"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:12
 msgid "Use compression protocol"
-msgstr "Sıkıştırma protokolü kullan"
+msgstr "Sıkıştırma iletişim kuralı kullan"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
+msgid "Interactive"
+msgstr "Etkileşimli"
+
+#: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
+msgid ""
+" The client's session wait timeout set to the value of the session "
+"interactive_timeout variable."
+msgstr ""
+" İstemcinin oturum bekleme zaman aşımı,oturumun interactive_timeout değişken "
+"değerine ayarlandı."
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+msgid "Table to ALTER"
+msgstr "ALTER edilecek tablo"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Sütun"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr "Yeniden adlandırılacak sütun"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "Yeni sütun adı"
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -7187,6 +7241,14 @@ msgstr "Lob konumlandırıcı ayrılamadı"
 msgid "Could not copy Lob locator"
 msgstr "Lob konumlandırıcısı kopyalanamadı"
 
+#: ../providers/postgres/gda-postgres-ddl.c:927
+msgid "Dataholder type is unknown."
+msgstr "Veri tutucu türü bilinmiyor."
+
+#: ../providers/postgres/gda-postgres-ddl.c:1100
+msgid "Dataholder type is unknown. Report this as a bug."
+msgstr "Veri tutucu türü bilinmiyor. Bunu hata olarak bildir."
+
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
 msgstr "PostgresqlBin"
@@ -7222,49 +7284,49 @@ msgstr ""
 #: ../providers/postgres/gda-postgres-provider.c:683
 #, c-format
 msgid "Could not set search_path to %s"
-msgstr "arama_yolu %s olarak ayarlanamadı"
+msgstr "search_path (arama yolu) %s olarak ayarlanamadı"
 
 #: ../providers/postgres/gda-postgres-provider.c:691
 #, c-format
 msgid "Search path %s is invalid"
 msgstr "Arama yolu %s geçersiz"
 
-#: ../providers/postgres/gda-postgres-provider.c:1094
-#: ../providers/postgres/gda-postgres-provider.c:1096
+#: ../providers/postgres/gda-postgres-provider.c:1095
+#: ../providers/postgres/gda-postgres-provider.c:1097
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Toplu işlemler, okuma kaydedilmemiş yalıtım düzeyinde desteklenmiyor"
 
-#: ../providers/postgres/gda-postgres-provider.c:1100
-#: ../providers/postgres/gda-postgres-provider.c:1102
+#: ../providers/postgres/gda-postgres-provider.c:1101
+#: ../providers/postgres/gda-postgres-provider.c:1103
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Toplu işlemler, tekrarlanabilir okuma yalıtım düzeyinde desteklenmiyor"
 
-#: ../providers/postgres/gda-postgres-provider.c:1119
-#: ../providers/postgres/gda-postgres-provider.c:1219
-#: ../providers/postgres/gda-postgres-provider.c:1269
-#: ../providers/postgres/gda-postgres-provider.c:1319
+#: ../providers/postgres/gda-postgres-provider.c:1120
+#: ../providers/postgres/gda-postgres-provider.c:1220
+#: ../providers/postgres/gda-postgres-provider.c:1270
+#: ../providers/postgres/gda-postgres-provider.c:1320
 #: ../providers/postgres/gda-postgres-recordset.c:424
 #: ../providers/postgres/gda-postgres-recordset.c:453
 #: ../providers/postgres/gda-postgres-recordset.c:617
 #: ../providers/postgres/gda-postgres-recordset.c:679
 msgid "Internal error"
-msgstr "Dahili hata"
+msgstr "İç hata"
 
-#: ../providers/postgres/gda-postgres-provider.c:1225
-#: ../providers/postgres/gda-postgres-provider.c:1275
-#: ../providers/postgres/gda-postgres-provider.c:1325
+#: ../providers/postgres/gda-postgres-provider.c:1226
+#: ../providers/postgres/gda-postgres-provider.c:1276
+#: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "Yanlış kaydetme noktası adı '%s'"
 
-#: ../providers/postgres/gda-postgres-provider.c:2168
-#: ../providers/postgres/gda-postgres-provider.c:2170
+#: ../providers/postgres/gda-postgres-provider.c:2169
+#: ../providers/postgres/gda-postgres-provider.c:2171
 msgid "Cannot start transaction"
 msgstr "Toplu işlem başlatılamıyor"
 
-#: ../providers/postgres/gda-postgres-provider.c:2423
-#: ../providers/postgres/gda-postgres-provider.c:2460
-#: ../providers/postgres/gda-postgres-provider.c:2496
+#: ../providers/postgres/gda-postgres-provider.c:2424
+#: ../providers/postgres/gda-postgres-provider.c:2461
+#: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
 msgstr "XA toplu işlemi ID parametresi kaydedilemedi"
 
@@ -7305,11 +7367,11 @@ msgstr "Sadece varsa"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:7
 msgid "Add column only if it exist"
-msgstr "Yalnızca mevcutsa sütun ekle"
+msgstr "Yalnızca varsa sütun ekle"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:11
 msgid "Add column only if it does not yet exist"
-msgstr "Yalnızca henüz mevcut değilse, sütun ekle"
+msgstr "Yalnızca henüz yoksa, sütun ekle"
 
 #. Connection parameters
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:5
@@ -7549,6 +7611,11 @@ msgstr "Predicate"
 msgid "Constraint expression for a partial index"
 msgstr "Kısmi index için kısıtlama ifadesi"
 
+#. Index fields
+#: ../providers/postgres/postgres_specs_create_index.xml.in.h:19
+msgid "Collation name"
+msgstr "Karşılaştırma adı"
+
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
 #. available since PostgreSQL 8.1
@@ -7735,7 +7802,7 @@ msgstr "Üyesi"
 msgid ""
 "Existing roles to which the new role will be immediately added as a new "
 "member"
-msgstr "Yeni bir üye olarak henüz eklenmiş rol için mevcut roller"
+msgstr "Yeni bir üye olarak henüz eklenmiş rol için var olan roller"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:108
 msgid "Role"
@@ -7767,60 +7834,56 @@ msgid ""
 "the new role, giving them the right to grant membership in this role to "
 "others"
 msgstr ""
-"Yeni rolün üyeleri olarak kendiliğinden eklenmiş, bir veya daha çok mevcut "
+"Yeni rolün üyeleri olarak kendiliğinden eklenmiş, bir veya daha çok var olan "
 "rollerin listesi, diğer rollerde tüm hakları verin"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:5
-msgid "With OIDs"
-msgstr "OID ile"
-
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:8
 msgid "Parent table(s)"
 msgstr "Üst tablo(lar)"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:9
 msgid "Inheritance"
 msgstr "Miras"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:10
 msgid "Parent table"
 msgstr "Üst tablo"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:11
 msgid "Keep coupled"
 msgstr "Birleşik tut"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
 msgstr "LIKE yerine INHERIT kullan"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
 msgstr "Öntanımlı değerleri kopyala"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:15
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:14
 msgid "Copy default expressions"
 msgstr "Varsayıla ifadeleri kopyala"
 
 #. foreign key spec
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:63
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Deferrable"
 msgstr "Ertelenebilir"
 
 #. To translators: Action of setting a value to its default value
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
 msgid "Set to default"
 msgstr "Öntanımlı olarak ayarla"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Not deferrable"
 msgstr "Ertelenemez"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "Deferrable initially immediate"
 msgstr "Hemen başlangıçta ertelenebilir"
 
-#: ../providers/postgres/postgres_specs_create_table.xml.in.h:77
+#: ../providers/postgres/postgres_specs_create_table.xml.in.h:76
 msgid "Deferrable initially deferred"
 msgstr "Ertelenebilir başlangıçta ertelenmiş"
 
@@ -7863,7 +7926,7 @@ msgstr "Kullanıcının kullanıcı oluşturma izni varsa TRUE olarak ayarla"
 msgid ""
 "Existing groups to which the new user will be immediately added as a new "
 "member"
-msgstr "Yeni kullanıcının, yeni bir üye olarak ekleneceği mevcut gruplar"
+msgstr "Yeni kullanıcının, yeni bir üye olarak ekleneceği var olan gruplar"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:18
 msgid "User"
@@ -7871,7 +7934,7 @@ msgstr "Kullanıcı"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:19
 msgid "Existing user"
-msgstr "Mevcut kullanıcı"
+msgstr "Var olan kullanıcı"
 
 #: ../providers/postgres/postgres_specs_create_view.xml.in.h:4
 msgid "Replace if already exists"
@@ -7896,11 +7959,11 @@ msgstr "Silinecek veri tabanının adı"
 
 #: ../providers/postgres/postgres_specs_drop_role.xml.in.h:5
 msgid "Drop role only if it exists"
-msgstr "Mevcut ise rolü sil"
+msgstr "Varsa rolü sil"
 
 #: ../providers/postgres/postgres_specs_drop_user.xml.in.h:5
 msgid "Drop user only if it exists"
-msgstr "Yalnızca mevcut ise kullanıcıyı sil"
+msgstr "Yalnızca varsa kullanıcıyı sil"
 
 #: ../providers/postgres/postgres_specs_drop_view.xml.in.h:6
 msgid "What to do with objects referencing the view"
@@ -7969,7 +8032,7 @@ msgstr "Sunucudan sürüm verileri alınamıyor: %s"
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:317
 #, c-format
 msgid "Internal Error: Can't calculate PostgreSQL version: %s"
-msgstr "Dahili Hata: PostgreSQL sürümünü hesaplayamıyor: %s"
+msgstr "İç Hata: PostgreSQL sürümünü hesaplayamıyor: %s"
 
 #: ../providers/sqlcipher/gda-sqlcipher-provider.c:47
 msgid "Can't find sqlcipher."
@@ -8060,7 +8123,7 @@ msgstr "%s oturumu için sunucuda veri temizleme hatası"
 
 #: ../providers/web/gda-web-util.c:524
 msgid "Non detailed error"
-msgstr "Detaylandırılmamış hata"
+msgstr "Ayrıntılandırılmamış hata"
 
 #: ../providers/web/libmain.c:75
 msgid "Provider for web server proxies"
@@ -8379,7 +8442,7 @@ msgid ""
 "back to previous perspective through the 'Perspective/%s' menu, or using the "
 "'%s' shortcut"
 msgstr ""
-"Mevcut persfektif, '%s' persfektifi ile değişti, 'Perspektif/%s' menüsünü "
+"Geçerli persfektif, '%s' persfektifi ile değişti, 'Perspektif/%s' menüsünü "
 "veya '%s' kısayolunu kullanarak önceki perfektife geri dönebilirsiniz"
 
 #: ../tools/browser/canvas/browser-canvas.c:339
@@ -8593,7 +8656,7 @@ msgid ""
 "existing connection as well as bind a data set which will appear as a table "
 "(importing CSV data for example). You can add as many binds as needed"
 msgstr ""
-"Tanımladığınız sanal bağlantı, tabloları mevcut bağlantı ile tablo olarak "
+"Tanımladığınız sanal bağlantı, tabloları var olan bağlantı ile tablo olarak "
 "görünen veri kümesi kadar iyi bir şekilde bağlayabilir (Örneğin: CSV "
 "verisinin içeri aktarılması). Gerektiği kadar bir bağ ekleyebilirsiniz"
 
@@ -8968,7 +9031,7 @@ msgid ""
 "to select data\n"
 "Can't be changed if a table name is set"
 msgstr ""
-"Mevcut SQL veriyi\n"
+"Var olan SQL, veriyi\n"
 "seçmek için çalıştırıldı\n"
 "Tablo adı ayarlandı ise değiştirilemez"
 
@@ -9412,7 +9475,7 @@ msgstr "Tablo adı:"
 
 #: ../tools/browser/ldap-browser/vtable-dialog.c:147
 msgid "Replace if exists:"
-msgstr "Mevcut ise değiştir:"
+msgstr "Varsa değiştir:"
 
 #: ../tools/browser/login-dialog.c:133
 msgid "Connection opening:"
@@ -9429,7 +9492,7 @@ msgstr ""
 
 #: ../tools/browser/login-dialog.c:243
 msgid "Cancelled by the user"
-msgstr "Kullanıcı tarafından iptal edildi"
+msgstr "Kullanıcıca iptal edildi"
 
 #: ../tools/browser/mgr-favorites.c:251
 msgid "Multiple statements"
@@ -9505,11 +9568,11 @@ msgstr ""
 #, c-format
 msgid "%d table in current schema:"
 msgid_plural "%d tables in current schema:"
-msgstr[0] "Mevcut şema için %d tablo var:"
+msgstr[0] "Geçerli şema için %d tablo var:"
 
 #: ../tools/browser/objects-cloud.c:255
 msgid "Tables in current schema:"
-msgstr "Mevcut şema içindeki tablolar:"
+msgstr "Geçerli şema içindeki tablolar:"
 
 #: ../tools/browser/objects-cloud.c:258
 #, c-format
@@ -9699,8 +9762,8 @@ msgid ""
 "Internal error, please report error to http://gitlab.gnome.org/GNOME/libgda/"
 "issues"
 msgstr ""
-"Dahili hata, lütfen hatayı http://gitlab.gnome.org/GNOME/libgda/issues "
-"adresine bildirin"
+"İç hata, lütfen hatayı http://gitlab.gnome.org/GNOME/libgda/issues adresine "
+"bildirin"
 
 #: ../tools/browser/query-exec/query-console-page.c:1086
 msgid "Execute query"
@@ -9751,8 +9814,8 @@ msgid ""
 "   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
 msgstr ""
 "Yürütülecek SQL kodunu girin\n"
-"(değişken tanımı hariç, bağlantının açıldığı\n"
-"veritabanı tarafından anlaşılmalıdır)\n"
+"(değişken tanımı dışında, bağlantının açıldığı\n"
+"veri tabanınca anlaşılmalıdır)\n"
 "Aşağıdaki kısayollara izin verilir:\n"
 "   <small><b>CTRL - l</b></small> editörü temizlemek için\n"
 "   <small><b>CTRL - ENTER</b></small> SQL yürütmek için\n"
@@ -9980,7 +10043,7 @@ msgid ""
 "Internal error while building INSERT statement:\n"
 "%s"
 msgstr ""
-"INSERT ifadesi oluşturulurken dahili hata:\n"
+"INSERT ifadesi oluşturulurken iç hata:\n"
 "%s"
 
 #: ../tools/browser/schema-browser/table-info.c:802
@@ -10100,7 +10163,7 @@ msgstr "Eylemi çalıştır"
 
 #: ../tools/browser/ui-formgrid.c:517
 msgid "View LDAP entry's details"
-msgstr "LDAP girdilerinin detaylarını görüntüle"
+msgstr "LDAP girdilerinin ayrıntılarını görüntüle"
 
 #: ../tools/browser/ui-formgrid.c:634
 #, c-format
@@ -10173,7 +10236,7 @@ msgstr ""
 "<small>Bu alan, SQL kodunda tanımlanan\n"
 "değişkenlere değer verilmesine izin verir.\n"
 "aşağıdaki sözdizimini kullanarak:\n"
-"<b><tt>##&lt;değişken ismi&gt;::&lt;tür&gt;[::null]</tt></b>\n"
+"<b><tt>##&lt;değişken adı&gt;::&lt;tür&gt;[::null]</tt></b>\n"
 "Örneğin:\n"
 "<span foreground=\"#4e9a06\"><b><tt>##id::int</tt></b></span>\n"
 "      tanımlar <b>id</b> NULL olmayan bir tam sayı\n"
@@ -10187,7 +10250,7 @@ msgstr ""
 
 #: ../tools/common/html-doc.c:86
 msgid "Generated by the GDA SQL console"
-msgstr "GDA SQL konsolu tarafından oluşturulmuştur"
+msgstr "GDA SQL konsolunca oluşturulmuştur"
 
 #: ../tools/common/html-doc.c:108
 msgid "Console"
@@ -10196,7 +10259,7 @@ msgstr "Konsol"
 #: ../tools/common/t-app.c:259
 msgid "Set to TRUE when the 1st line of a CSV file holds column names"
 msgstr ""
-"CSV dosyasının ilk satırı sütun isimlerinden olduğunda TRUE olarak ayarla"
+"CSV dosyasının ilk satırı sütun adlarından olduğunda TRUE olarak ayarla"
 
 #: ../tools/common/t-app.c:264
 msgid "Quote character for CSV format"
@@ -10440,7 +10503,7 @@ msgstr "METİN i veya boş bir satırı standart çıktıya yaz"
 
 #: ../tools/common/t-app.c:1129
 msgid "Send TEXT or an empty line to current output stream"
-msgstr "METİNİ veya boş bir satırı mevcut çıktı akışına yaz"
+msgstr "METİNİ veya boş bir satırı geçerli çıktı akışına yaz"
 
 #: ../tools/common/t-app.c:1142
 #, c-format
@@ -10449,7 +10512,7 @@ msgstr "%s [<DİZİN>]"
 
 #: ../tools/common/t-app.c:1143
 msgid "Change the current working directory"
-msgstr "Mevcut çalışma dizinini değiştir"
+msgstr "Geçerli çalışma dizinini değiştir"
 
 #: ../tools/common/t-app.c:1150
 msgid "Show usage and distribution terms"
@@ -10544,7 +10607,7 @@ msgstr "%s [<AD>|<TABLO> <SÜTUN> <SATIR_DURUMU>] <DOSYA>"
 
 #: ../tools/common/t-app.c:1250
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr "Dahili parametreleri ya da tablonun değerlerinin DOSYA dosyasına aktar"
+msgstr "İç parametreleri ya da tablonun değerlerinin DOSYA dosyasına aktar"
 
 #: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1265
 #: ../tools/common/t-app.c:1275 ../tools/common/t-app.c:1282
@@ -10559,12 +10622,11 @@ msgstr "%s [<AD> [<DEĞER>|_null_]]"
 #: ../tools/common/t-app.c:1257
 msgid "Set or show internal parameter, or list all if no parameter specified "
 msgstr ""
-"Dahili parametreyi ayarla ya da göster, parametre belirtilmemişse tümünü "
-"listele "
+"İç parametreyi ayarla ya da göster, parametre belirtilmemişse tümünü listele "
 
 #: ../tools/common/t-app.c:1267
 msgid "Unset (delete) internal named parameter (or all parameters)"
-msgstr "Dahili adlandırılmış parametreyi sil (veya tüm parametreleri)"
+msgstr "İç adlandırılmış parametreyi sil (veya tüm parametreleri)"
 
 #: ../tools/common/t-app.c:1276
 #, c-format
@@ -10576,7 +10638,7 @@ msgid ""
 "Set internal parameter as the contents of the FILE file or from an existing "
 "table's value"
 msgstr ""
-"DOSYA dosyasının içeriği olarak dahili parametre veya var olan bir tablonun "
+"DOSYA dosyasının içeriği olarak iç parametre veya var olan bir tablonun "
 "değerinden ayarla"
 
 #: ../tools/common/t-app.c:1283
@@ -10735,10 +10797,6 @@ msgstr "Şemaların listesi"
 msgid "No object found"
 msgstr "Nesne bulunamadı"
 
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Sütun"
-
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
 msgstr "Null olabilir"
@@ -10812,7 +10870,7 @@ msgstr "Seçeneklerin listesi"
 
 #: ../tools/common/t-app.c:2329
 msgid "Current connection's information"
-msgstr "Mevcut bağlantının bilgisi"
+msgstr "Geçerli bağlantının bilgisi"
 
 #: ../tools/common/t-app.c:2408
 #, c-format
@@ -10898,7 +10956,7 @@ msgstr "Bağlantılar şöyle bağlandı:"
 #: ../tools/common/t-app.c:3075
 #, c-format
 msgid "%s in the '%s' namespace"
-msgstr "%s, '%s' isim alanı içinde"
+msgstr "%s, '%s' ad alanı içinde"
 
 #. Translators: this string indicates that the dataset named in the 1st "%s"
 #. * will appear as the table named as the 2nd "%s"
@@ -11106,7 +11164,7 @@ msgstr "İşlenecek süzgeç eksik"
 
 #: ../tools/common/t-app.c:5308
 msgid "Missing current DN or new DN specification"
-msgstr "Mevcut DN ya da yeni DN tanımlaması eksik"
+msgstr "Geçerli DN ya da yeni DN tanımlaması eksik"
 
 #: ../tools/common/t-app.c:5405
 msgid "Missing DN of LDAP entry"
@@ -11308,26 +11366,26 @@ msgstr "Favorilere erişim için toplu işlem kaydedilemez"
 msgid "Could not execute LDAP search"
 msgstr "LDAP araması çalıştırılamadı"
 
-#: ../tools/common/t-context.c:325
+#: ../tools/common/t-context.c:327
 #, c-format
 msgid "Could not interpret the '%s' parameter's value"
 msgstr "'%s' parametre değeri işlenemedi"
 
-#: ../tools/common/t-context.c:341
+#: ../tools/common/t-context.c:343
 #, c-format
 msgid "No internal parameter named '%s' required by query"
-msgstr "Sorgu tarafından ihtiyaç duyulan '%s' adlı dahili parametre yok"
+msgstr "Sorguca gereksinilen '%s' adlı iç parametre yok"
 
-#: ../tools/common/t-context.c:424
+#: ../tools/common/t-context.c:426
 msgid "Connection closed"
 msgstr "Bağlantı kapatıldı"
 
-#: ../tools/common/t-context.c:555
+#: ../tools/common/t-context.c:557
 #, c-format
 msgid "Can't open file '%s' for writing: %s\n"
 msgstr "Yazma için '%s' dosyası açılamıyor: %s\n"
 
-#: ../tools/common/t-context.c:569 ../tools/common/t-context.c:578
+#: ../tools/common/t-context.c:571 ../tools/common/t-context.c:580
 #, c-format
 msgid "Can't open pipe '%s': %s"
 msgstr "'%s' borusu açılamıyor: %s"
@@ -11496,7 +11554,7 @@ msgstr "Nesneler"
 msgid "Triggers"
 msgstr "Tetikleyiciler"
 
-#: ../tools/common/web-server.c:1871
+#: ../tools/common/web-server.c:1873
 msgid "Command is incomplete"
 msgstr "Komut tamamlanmadı"
 
@@ -11543,6 +11601,20 @@ msgstr "Hata: %s\n"
 #, c-format
 msgid "Can't parse file '%s', ignoring it"
 msgstr "'%s' dosyası ayrıştırılamıyor, gözardı ediliyor"
+
+#, c-format
+#~ msgid ""
+#~ "Internal Error: when trying to add data model spec for virtual connetion: "
+#~ "%s"
+#~ msgstr ""
+#~ "Dahili Hata: sanal bağlantı için veri model özelliği eklemeye çalışırken "
+#~ "hata: %s"
+
+#~ msgid "Internal GdaVproviderHub error"
+#~ msgstr "Dahili GdaVproviderHub hatası"
+
+#~ msgid "With OIDs"
+#~ msgstr "OID ile"
 
 #~ msgid "xmlDoc object can't be created from xmfile name"
 #~ msgstr "xmlDoc nesnesi xmfile adından oluşturulamıyor"
@@ -12072,10 +12144,6 @@ msgstr "'%s' dosyası ayrıştırılamıyor, gözardı ediliyor"
 #, fuzzy
 #~ msgid "Could not parse date '%s', assuming 01/01/0001"
 #~ msgstr "%s adresindeki dosya ayrıştırılamadı"
-
-#, fuzzy
-#~ msgid "InternalTime"
-#~ msgstr "Kullanıcı adı"
 
 #, fuzzy
 #~ msgid "InternalType"
