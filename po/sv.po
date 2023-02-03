@@ -1,17 +1,17 @@
 # Swedish translation of libgda.
-# Copyright © 1999-2020 Free Software Foundation, Inc.
+# Copyright © 1999-2023 Free Software Foundation, Inc.
 # Andreas Hyden <a.hyden@cyberpoint.se>, 2000.
 # Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003, 2004.
 # Daniel Nylander <po@danielnylander.se>, 2007, 2008, 2009.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2016, 2017, 2019, 2020.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2016, 2017, 2019, 2020, 2023.
 # Josef Andersson <l10nl18nsweja@gmail.com>, 2017, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-10-16 20:37+0000\n"
-"PO-Revision-Date: 2021-10-17 12:41+0200\n"
+"POT-Creation-Date: 2023-01-28 13:12+0000\n"
+"PO-Revision-Date: 2023-01-28 14:51+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -1352,18 +1352,17 @@ msgstr "Datamodellen stöder inte slumpmässig åtkomst"
 #: ../libgda/gda-data-model-import.c:1902
 #, c-format
 msgid "Row at line %d does not have enough values"
-msgstr "Raden på rad %d har inte nog många värden"
+msgstr "Raden på rad %d har för få värden"
 
 #: ../libgda/gda-data-model-import.c:1907
 #, c-format
 msgid "Row at line %d does not have enough values, completed with NULL values"
-msgstr ""
-"Raden på rad %d har inte nog många värden, kompletterad med NULL-värden"
+msgstr "Raden på rad %d har för få värden, kompletterad med NULL-värden"
 
 #: ../libgda/gda-data-model-import.c:1933
 #, c-format
 msgid "Row at line %d does not have enough values (which are thus ignored)"
-msgstr "Raden på rad %d har inte nog många värden (vilka därför ignoreras)"
+msgstr "Raden på rad %d har för få värden (vilka därför ignoreras)"
 
 #: ../libgda/gda-data-model-iter.c:194
 msgid "Iter has an invalid/non-existent reference to a data model"
@@ -1516,7 +1515,7 @@ msgstr "Försöker ändra skrivskyddad kolumn: %d"
 #: ../libgda/gda-data-proxy.c:3951
 #, c-format
 msgid "Value type mismatch %s instead of %s"
-msgstr "Typen stämmer inte, %s istället för %s"
+msgstr "Typen stämmer inte, %s i stället för %s"
 
 #: ../libgda/gda-data-select.c:664
 msgid ""
@@ -1742,24 +1741,6 @@ msgstr "Datamodell innehåller BLOB-objekt"
 msgid "Can't get the number of rows of data model"
 msgstr "Det går inte att hämta antalet rader i datamodellen"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr "Ogiltig kolumntyp %s. Se API för gda_g_type from_string().\n"
-
-# Wording not entirely clear in original, but looks like this is the intended meaning
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr ""
-"Internt fel: Åtgärd ska vara förberedd vid inställning av anslutningsdata"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr "Åtgärden är inte implementerad för den använda leverantören"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1795,40 +1776,60 @@ msgstr "Det går inte att skapa xmlDoc-objektet från xmlfil-namnet ”%s”"
 msgid "xml file '%s' is not valid\n"
 msgstr "xmlfilen ”%s” är ogiltig\n"
 
-#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "Anslutning inte öppnad"
 
-#: ../libgda/gda-db-catalog.c:1044
+#: ../libgda/gda-db-catalog.c:1146
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Det går inte att öppna strömmen för läsning av filen ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1060
+#: ../libgda/gda-db-catalog.c:1162
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Det går inte att skapa tolkningskontext för ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1076
+#: ../libgda/gda-db-catalog.c:1178
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Fel under tolkning med fel ”%d”"
 
-#: ../libgda/gda-db-catalog.c:1093
+#: ../libgda/gda-db-catalog.c:1195
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "Misslyckades med att tolka fil: ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1104
+#: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "Det går inte att skapa XML-dokument från fil: ”%s”"
 
-#: ../libgda/gda-db-catalog.c:1114
+#: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "XML-filen är inte giltig\n"
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr "Ogiltig kolumntyp %s. Se API för gda_g_type from_string().\n"
+
+# Wording not entirely clear in original, but looks like this is the intended meaning
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr ""
+"Internt fel: Åtgärd ska vara förberedd vid inställning av anslutningsdata"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "Åtgärden är inte implementerad för den använda leverantören"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -4795,7 +4796,7 @@ msgid ""
 "but export a NULL value instead"
 msgstr ""
 "Exportera inte ogiltiga data,\n"
-"men exportera ett NULL-värde istället"
+"men exportera ett NULL-värde i stället"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1861
 msgid "Field names on first row?"
@@ -4949,7 +4950,7 @@ msgstr "Visa inte en speciell bakgrund för texten"
 
 #: ../libgda-ui/gdaui-rt-editor.c:237
 msgid "Display raw markup text instead of formatted text"
-msgstr "Visa obehandlad märkspråkstext istället för formaterad text"
+msgstr "Visa obehandlad märkspråkstext i stället för formaterad text"
 
 #: ../libgda-ui/gdaui-rt-editor.c:248
 msgid "The buffer which is displayed"
@@ -5199,16 +5200,19 @@ msgstr "Kolumnens beskrivning"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5941,9 +5945,12 @@ msgid "Table to rename"
 msgstr "Tabell att byta namn på"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Nytt namn"
@@ -7190,6 +7197,31 @@ msgstr ""
 " Klientens tidsgräns för sessionsväntan sätts till värdet för sessionens "
 "variabel interactive_timeout."
 
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+msgid "Table to ALTER"
+msgstr "Tabell att köra ALTER på"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Kolumn"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr "Kolumn att byta namn på"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "Nytt kolumnnamn"
+
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
 msgstr "Kunde inte hämta nästa rad"
@@ -7851,7 +7883,7 @@ msgstr "Behåll ihopparad"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
-msgstr "Använd INHERIT istället för LIKE"
+msgstr "Använd INHERIT i stället för LIKE"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
@@ -9020,7 +9052,7 @@ msgid ""
 "to specify a SELECT statement instead"
 msgstr ""
 "Tabell att visa data från, lämna tom\n"
-"för att ange en SELECT-sats istället"
+"för att ange en SELECT-sats i stället"
 
 #: ../tools/browser/data-manager/data-source-editor.c:181
 msgid ""
@@ -10294,8 +10326,8 @@ msgstr "Avgränsningstecken för CSV-format"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "Definierar hur DN-kolumnen hanteras för LDAP som söks (bland \"dn\", \"rdn\" "
 "och \"none\")"
@@ -10335,11 +10367,11 @@ msgstr "%s [<METADATATYP>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
-"Tvinga läsning av metadata för databas (eller del av metadata, t.ex.:\"tables"
-"\")"
+"Tvinga läsning av metadata för databas (eller del av metadata, t.ex.:"
+"\"tables\")"
 
 #: ../tools/common/t-app.c:958
 #, c-format
@@ -10759,10 +10791,10 @@ msgid ""
 "parameter is passed, then the unset attributes are also shown, and if the "
 "\"unset\" 2nd parameter is passed, then only non set attributes are shown."
 msgstr ""
-"Visar attribut för posten identifierad av dess DN. Om andraparametern \"set"
-"\" skickas, visas alla set-attribut, om andraparametern \"all\" skickas, "
-"visas även inte inställda attribut, och om andraparametern \"unset\" skickas "
-"visas bara inte inställda attribut."
+"Visar attribut för posten identifierad av dess DN. Om andraparametern "
+"\"set\" skickas, visas alla set-attribut, om andraparametern \"all\" "
+"skickas, visas även inte inställda attribut, och om andraparametern "
+"\"unset\" skickas visas bara inte inställda attribut."
 
 #: ../tools/common/t-app.c:1379
 #, c-format
@@ -10813,10 +10845,6 @@ msgstr "Lista över scheman"
 #: ../tools/common/t-app.c:1683 ../tools/common/t-app.c:1806
 msgid "No object found"
 msgstr "Inget objekt hittades"
-
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Kolumn"
 
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
@@ -12044,9 +12072,6 @@ msgstr "Det går inte att tolka filen ”%s”, ignorerar den"
 #~ msgid "Could not get the parameter defined size"
 #~ msgstr "Kunde inte få tag i definierad storlek för parametrar"
 
-#~ msgid "Column out of range"
-#~ msgstr "Kolumn utanför intervallet"
-
 #~ msgid "Could not get the Oracle column name"
 #~ msgstr "Kunde inte få tag i Oracle-kolumnnamnet"
 
@@ -12598,9 +12623,6 @@ msgstr "Det går inte att tolka filen ”%s”, ignorerar den"
 
 #~ msgid "GDA Type"
 #~ msgstr "GDA-typ"
-
-#~ msgid "FIXME"
-#~ msgstr "FIXME"
 
 #~ msgid "mSQL allows database creation only through the msqladmin tool."
 #~ msgstr ""
@@ -13486,9 +13508,6 @@ msgstr "Det går inte att tolka filen ”%s”, ignorerar den"
 
 #~ msgid "%s: length = %d"
 #~ msgstr "%s: längd = %d"
-
-#~ msgid "An error occured."
-#~ msgstr "Ett fel inträffade."
 
 #~ msgid "Fetchong %d cslib message"
 #~ msgstr "Hämtar %d cslib-meddelande"
