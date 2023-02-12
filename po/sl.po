@@ -10,18 +10,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2022-06-11 08:35+0000\n"
-"PO-Revision-Date: 2022-09-21 17:43+0200\n"
+"POT-Creation-Date: 2023-02-09 11:39+0000\n"
+"PO-Revision-Date: 2023-02-12 22:43+0100\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
+"n%100==4 ? 3 : 0);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -198,18 +198,15 @@ msgstr "Potrditev odstranjevanja virov podatkov"
 
 #: ../control-center/gda-control-center-6.0.appdata.xml.in.h:1
 #, fuzzy
-#| msgid ""
-#| "From the database control center, you can manage the defined named data "
-#| "sources (database connections), and check which database providers are "
-#| "installed (and useable to connect to different databases)."
 msgid ""
 "From the database control center, you can manage the defined data sources "
 "(database connections), and check which database providers are installed "
 "(and usable to connect to different databases)."
 msgstr ""
-"Nadzorno središče omogoča upravljanje podatkovnih povezav in preverjanje "
-"nameščenih ponudnikov različnih podatkovnih programnikov (in možnost "
-"povezovanja  z različnimi podatkovnimi zbirkami)."
+"Nadzorno središče zbirke podatkov omogoča upravljanje definiranih virov "
+"podatkov (povezav z zbirkami podatkov) in preverjanje nameščenih ponudnikov "
+"različnih podatkovnih programnikov (in možnost povezovanja  z različnimi "
+"zbirkami podatkov)."
 
 #: ../control-center/gda-control-center-6.0.desktop.in.in.h:1
 msgid "Database access control center"
@@ -1534,8 +1531,9 @@ msgid ""
 msgstr ""
 
 #: ../libgda/gda-data-select.c:1073
+#, fuzzy
 msgid "Incorrect SQL expression, only one modification statement is accepted"
-msgstr ""
+msgstr "Nepravilen izraz SQL, sprejeta je le ena izjava o spremembi"
 
 #: ../libgda/gda-data-select.c:1099
 msgid "Internal error: the \"prepared-stmt\" property has not been set"
@@ -1622,7 +1620,7 @@ msgstr ""
 #: ../libgda/gda-data-select.c:2159
 #, c-format
 msgid "Can't calculate internal row number: %s"
-msgstr ""
+msgstr "Notranje številke vrstice ni mogoče izračunati: %s"
 
 #: ../libgda/gda-data-select.c:2168
 #, c-format
@@ -1635,8 +1633,10 @@ msgid "Can't move back iter at row: %s"
 msgstr ""
 
 #: ../libgda/gda-data-select.c:2229
+#, fuzzy
 msgid "Internal error: No fetch_prev() method implementation for data model"
 msgstr ""
+"Notranja napaka: metoda fetch_prev() nima implementacije za podatkovni model"
 
 #: ../libgda/gda-data-select.c:2234
 #, fuzzy, c-format
@@ -1750,24 +1750,6 @@ msgstr "Podatkovni model vsebuje predmete BLOB"
 msgid "Can't get the number of rows of data model"
 msgstr "Ni mogoče pridobiti števila vrstic podatkovnega modela"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr ""
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, fuzzy, c-format
-#| msgid "Internal error: can't get the prepared statement's actual statement"
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr "Notranja napaka: ni mogoče pridobiti pripravljene dejanske izjave"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, fuzzy, c-format
-#| msgid "Provider error: %s method not implemented for provider %s"
-msgid "Operation is not implemented for the used provider"
-msgstr "Napaka ponudnika: %s metoda ni podprta za ponudnika %s"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1780,7 +1762,7 @@ msgstr ""
 #: ../libgda/gda-db-catalog.c:260
 #, c-format
 msgid "Context to validate xml file can't be created."
-msgstr ""
+msgstr "Konteksta za preverjanje veljavnosti datoteke XML ni mogoče ustvariti."
 
 #: ../libgda/gda-db-catalog.c:278
 #, c-format
@@ -1795,7 +1777,7 @@ msgstr "Korensko vozliščemora biti <shema>."
 #: ../libgda/gda-db-catalog.c:452 ../libgda/gda-db-catalog.c:503
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
-msgstr ""
+msgstr "Predmeta xmlDoc ni mogoče ustvariti iz imena xmfile »%s«"
 
 #: ../libgda/gda-db-catalog.c:461
 #, c-format
@@ -1803,6 +1785,8 @@ msgid "xml file '%s' is not valid\n"
 msgstr "datoteka xml »%s« ni veljavna\n"
 
 #: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "Povezava ni odprta"
@@ -1824,20 +1808,38 @@ msgid "Error during parsing with error '%d'"
 msgstr "Napaka pri razčlenjevanju z napako »%d«"
 
 #: ../libgda/gda-db-catalog.c:1195
-#, fuzzy, c-format
-#| msgid "Failed to declare foreign key: %s"
+#, c-format
 msgid "Failed to parse file: '%s'"
-msgstr "Napoved tujega ključa je spodletela: %s"
+msgstr "Razčlenjevanje datoteke ni uspelo: »%s«"
 
 #: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
-msgstr ""
+msgstr "Dokumenta XML ni mogoče ustvariti iz datoteke: »%s«"
 
 #: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "Datoteka XML ni veljavna\n"
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr ""
+"Neveljavna vrsta stolpca %s. Glejte API za gda_g_type_from_string ().\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, fuzzy, c-format
+#| msgid "Internal error: can't get the prepared statement's actual statement"
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr "Notranja napaka: ni mogoče pridobiti pripravljene dejanske izjave"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, fuzzy, c-format
+#| msgid "Provider error: %s method not implemented for provider %s"
+msgid "Operation is not implemented for the used provider"
+msgstr "Napaka ponudnika: %s metoda ni podprta za ponudnika %s"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -3357,18 +3359,17 @@ msgid "Invalid date '%s' (date format should be YYYY-MM-DD)"
 msgstr "Neveljaven zapis datuma '%s' (zapis mora biti v obliki YYYY-MM-DD)"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:538
-#, fuzzy, c-format
-#| msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
+#, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms][+HH:mm])"
-msgstr "Neveljaven zapis časa '%s' (zapis mora biti v obliki HH:MM:SS[.ms])"
+msgstr ""
+"Neveljaven zapis časa »%s« (zapis mora biti v obliki UU:MM:SS[.ms][+UU:mm])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:556
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:686
-#, fuzzy, c-format
-#| msgid "Invalid timestamp '%s' (format should be YYYY-MM-DD HH:MM:SS[.ms])"
+#, c-format
 msgid "Invalid timestamp '%s' (format should be YYYY-MM-DDTHH:MM:SS[.ms])"
 msgstr ""
-"Neveljaven zapis časovnega žiga '%s' (zapis mora biti v obliki YYYY-MM-DD HH:"
+"Neveljaven zapis časovnega žiga »%s« (zapis mora biti v obliki LLLL-MM-DDČUU:"
 "MM:SS[.ms])"
 
 #: ../libgda/sqlite/gda-sqlite-recordset.c:645
@@ -3967,11 +3968,13 @@ msgid "Invalid UTF-8 format!"
 msgstr "neveljaven zapis UTF-8!"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:439
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "Expected format is %s\n"
 "Time is relative to local time (%s)"
 msgstr ""
+"Pričakovana oblika je %s\n"
+"Čas je relativen glede na krajevni čas (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
@@ -4553,8 +4556,8 @@ msgid ""
 "<tt>doe</tt>."
 msgstr ""
 "Stolpce je mogoče sklicevati po imenu ali z uporabo <b><tt>_&lt;številke "
-"stolpca&gt;</tt></b>. Veljaven izraz je lahko na primer: <b><tt>_2 kot 'cena"
-"%'</tt></b> za filtriranje vrstic v katerih se drugi stolpec začne s "
+"stolpca&gt;</tt></b>. Veljaven izraz je lahko na primer: <b><tt>_2 kot "
+"'cena%'</tt></b> za filtriranje vrstic v katerih se drugi stolpec začne s "
 "<tt>cena</tt>."
 
 #: ../libgda-ui/gdaui-data-filter.c:203
@@ -5242,16 +5245,19 @@ msgstr "Opis stolpca"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5985,9 +5991,12 @@ msgid "Table to rename"
 msgstr "Razpredelnica za preimenovanje"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Novo ime"
@@ -6274,8 +6283,8 @@ msgid ""
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
 "Uporabniško ime, kot je razločno ime (DN), ali pa enostavno uporabniško ime "
-"za Dejavne mape v zapisu uporabniško_ime@DOMENA ali pa DOMENA"
-"\\uporabniško_ime"
+"za Dejavne mape v zapisu uporabniško_ime@DOMENA ali pa "
+"DOMENA\\uporabniško_ime"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -7239,6 +7248,33 @@ msgid ""
 "interactive_timeout variable."
 msgstr ""
 
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+#, fuzzy
+#| msgid "Table to delete"
+msgid "Table to ALTER"
+msgstr "Razpredelnica za brisanje"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Stolpec"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr "Stolpec, ki ga želite preimenovati"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "Novo ime stolpca"
+
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
 msgstr "Ni mogoče pridobiti naslednje vrstice"
@@ -8075,14 +8111,13 @@ msgstr "ni mogoče določiti indeksiranega stolpca kazala"
 
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:193
 #, fuzzy, c-format
-#| msgid "Can't import data from web server"
 msgid "Can't get version data from server: %s"
-msgstr "Ni mogoče uvoziti podatkov iz spletnega strežnika"
+msgstr "Ni mogoče pridobiti podatkov o različici s strežnika: %s"
 
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:317
 #, c-format
 msgid "Internal Error: Can't calculate PostgreSQL version: %s"
-msgstr ""
+msgstr "Notranja napaka: različice PostgreSQL ni mogoče izračunati: %s"
 
 #: ../providers/sqlcipher/gda-sqlcipher-provider.c:47
 msgid "Can't find sqlcipher."
@@ -8143,10 +8178,8 @@ msgid "Unnamed savepoint is not supported"
 msgstr "Neimenovane točke shranjevanja niso podprte"
 
 #: ../providers/web/gda-web-util.c:74
-#, fuzzy
-#| msgid "Could not parse server's reponse"
 msgid "Could not parse server's response"
-msgstr "Ni mogoče razčleniti strežniških sporočil"
+msgstr "Ni mogoče razčleniti odziva strežnika"
 
 #: ../providers/web/gda-web-util.c:82
 msgid "Invalid response hash"
@@ -8788,9 +8821,9 @@ msgid "Obtain referenced data in table %s from "
 msgstr "Pridobi sklicne podatke v razpredelnici %s iz"
 
 #: ../tools/browser/data-manager/analyser.c:198
-#, fuzzy, c-format
+#, c-format
 msgid "column number %d ("
-msgstr "stolpca tevilka %d ("
+msgstr "številka stolpca %d ("
 
 #: ../tools/browser/data-manager/analyser.c:210
 #, fuzzy, c-format
@@ -10367,8 +10400,8 @@ msgstr "Ločilni znak zapisa CSV"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "Določa, kako je obravnavan stolpec razločnega imena (DN) za preiskani LDAP "
 "(med \"dn\", \"rdn\" in \"none\")"
@@ -10408,8 +10441,8 @@ msgstr "%s [<metapodatkovna vrsta>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
 "Vsili branje metapodatkov podatkovne zbirke (ali njihov del, npr:\"tables\")"
 
@@ -10900,10 +10933,6 @@ msgstr "Seznam shem"
 msgid "No object found"
 msgstr "Ni najdenih predmetov"
 
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Stolpec"
-
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
 msgstr "Poničeno"
@@ -11376,8 +11405,9 @@ msgid "Unknown criteria '%s'"
 msgstr "Neznan kriterij '%s'"
 
 #: ../tools/common/t-config-info.c:675
+#, fuzzy
 msgid "No home directory exists. No configuration directory is in use"
-msgstr ""
+msgstr "Domača mapa ne obstaja. Nobena prilagoditvena mapa ni v uporabi"
 
 #: ../tools/common/t-config-info.c:685
 #, fuzzy, c-format
