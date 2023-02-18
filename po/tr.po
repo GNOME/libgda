@@ -1,30 +1,30 @@
 # Turkish translation of libgda.
 # Copyright (C) 2001 Free Software Foundation, Inc.
-# Copyright (C) 2002-2019 libgda'S COPYRIGHT HOLDER
+# Copyright (C) 2002-2023 libgda'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
 #
 # Görkem Çetin <gorkem@gelecek.com.tr>, 2001.
 # Necdet Yücel <necdetyucel@gmail.com>, 2015.
 # Kaan Özdinçer <kaanozdincer@gmail.com>, 2015.
 # Muhammet Kara <muhammetk@gmail.com>, 2014, 2015, 2016.
-# Emin Tufan Çetin <etcetin@gmail.com>, 2017.
 # Serdar Sağlam <teknomobil@yandex.com>, 2019.
-# Sabri Ünal <libreajans@gmail.com>, 2019.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2017, 2023.
+# Sabri Ünal <libreajans@gmail.com>, 2019, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2023-01-28 13:12+0000\n"
-"PO-Revision-Date: 2023-02-02 23:12+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"POT-Creation-Date: 2023-02-09 11:39+0000\n"
+"PO-Revision-Date: 2023-02-12 22:28+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-POOTLE-MTIME: 1423921335.000000\n"
 
 #: ../control-center/dsn-config.c:79
@@ -8447,7 +8447,7 @@ msgstr ""
 
 #: ../tools/browser/canvas/browser-canvas.c:339
 msgid "Zoom in"
-msgstr "Yankınlaştır"
+msgstr "Yakınlaştır"
 
 #: ../tools/browser/canvas/browser-canvas.c:343
 msgid "Zoom out"
@@ -8991,7 +8991,7 @@ msgstr "Çoklu ifade algılandı, yalnızca birincisi kullanılacak"
 #: ../tools/browser/data-manager/data-source-editor.c:112
 #: ../tools/browser/ui-formgrid.c:532 ../tools/browser/ui-formgrid.c:543
 msgid "Zoom..."
-msgstr "Yakınlaştır..."
+msgstr "Yakınlaştırma..."
 
 #: ../tools/browser/data-manager/data-source-editor.c:159
 msgid "Id"
@@ -10271,8 +10271,8 @@ msgstr "CSV biçimi için ayırıcı karakter"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "LDAP aramalarında, DNS sütunun nasıl işleneceğini tanımlar (\"dn\", \"rdn\" "
 "ve \"none\" arasında)"
@@ -10314,8 +10314,8 @@ msgstr "%s [<ÜST VERİ TÜRÜ>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
 "Veri tabanı üst verisini okumaya zorla (veya üst verinin bir parçası olmaya, "
 "örn:\"tablolar\")"
