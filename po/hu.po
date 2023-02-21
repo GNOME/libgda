@@ -1,17 +1,17 @@
 # Hungarian translation for libgda.
-# Copyright (C) 1999, 2000, 2016, 2017, 2018, 2019, 2020, 2021, 2022 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgda package.
 #
 # Szabolcs Bán <shooby at gnome dot hu>, 1999, 2000.
 # Gabor Kelemen <kelemeng at ubuntu dot com>, 2016, 2018.
 # Balázs Meskó <mesko.balazs at fsf dot hu>, 2018, 2019.
-# Balázs Úr <ur.balazs at fsf dot hu>, 2017, 2018, 2019, 2020, 2021, 2022.
+# Balázs Úr <ur.balazs at fsf dot hu>, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-10-16 20:37+0000\n"
-"PO-Revision-Date: 2022-03-13 01:53+0100\n"
+"POT-Creation-Date: 2023-02-18 09:56+0000\n"
+"PO-Revision-Date: 2023-02-21 01:31+0100\n"
 "Last-Translator: Balázs Úr <ur.balazs at fsf dot hu>\n"
 "Language-Team: Hungarian <gnome-hu-list at gnome dot org>\n"
 "Language: hu\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 19.12.3\n"
+"X-Generator: Lokalize 22.08.2\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -1767,26 +1767,6 @@ msgstr "Az adatmodell BLOB-okat tartalmaz"
 msgid "Can't get the number of rows of data model"
 msgstr "Nem tudtam megkapni az adatmodell sorainak számát"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr ""
-"Érvénytelen %s oszloptípus. Nézze meg az API-t ehhez: gda_g_type_from_string "
-"().\n"
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr ""
-"Belső hiba: Az utasításnak előkészítettnek kellene lennie, kapcsolati adatok "
-"beállítása"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr "A művelet nincs megvalósítva a használt szolgáltatóhoz"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1821,40 +1801,62 @@ msgstr "az xmlDoc objektum nem hozható létre a(z) „%s” xmfile nevéből"
 msgid "xml file '%s' is not valid\n"
 msgstr "a(z) „%s” XML-fájl érvénytelen\n"
 
-#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "A kapcsolat nincs megnyitva"
 
-#: ../libgda/gda-db-catalog.c:1044
+#: ../libgda/gda-db-catalog.c:1146
 #, c-format
 msgid "Can't open stream for reading file '%s'"
 msgstr "Nem nyitható meg adatfolyam a(z) „%s” fájl olvasásához"
 
-#: ../libgda/gda-db-catalog.c:1060
+#: ../libgda/gda-db-catalog.c:1162
 #, c-format
 msgid "Can't create parse context for '%s'"
 msgstr "Nem dolgozható fel a(z) „%s” környezete"
 
-#: ../libgda/gda-db-catalog.c:1076
+#: ../libgda/gda-db-catalog.c:1178
 #, c-format
 msgid "Error during parsing with error '%d'"
 msgstr "Hiba a feldolgozás közben: „%d” hiba"
 
-#: ../libgda/gda-db-catalog.c:1093
+#: ../libgda/gda-db-catalog.c:1195
 #, c-format
 msgid "Failed to parse file: '%s'"
 msgstr "A fájl feldolgozása sikertelen: „%s”"
 
-#: ../libgda/gda-db-catalog.c:1104
+#: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
 msgstr "Az XML-dokumentum nem hozható létre a fájlból: „%s”"
 
-#: ../libgda/gda-db-catalog.c:1114
+#: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "Az XML-fájl érvénytelen\n"
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr ""
+"Érvénytelen %s oszloptípus. Nézze meg az API-t ehhez: gda_g_type_from_string "
+"().\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr ""
+"Belső hiba: Az utasításnak előkészítettnek kellene lennie, kapcsolati adatok "
+"beállítása"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "A művelet nincs megvalósítva a használt szolgáltatóhoz"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -5254,16 +5256,19 @@ msgstr "Oszlop leírása"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -6000,9 +6005,12 @@ msgid "Table to rename"
 msgstr "Átnevezendő tábla"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Új név"
@@ -7248,7 +7256,6 @@ msgid "Use compression protocol"
 msgstr "Tömörítési protokoll használata"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
-#| msgid "Perspectives"
 msgid "Interactive"
 msgstr "Interaktív"
 
@@ -7257,8 +7264,36 @@ msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
 msgstr ""
-" A kliens munkamenetének várakozási időkorlátja beállítva a munkamenet"
-" interactive_timeout változójának értékére."
+" A kliens munkamenetének várakozási időkorlátja beállítva a munkamenet "
+"interactive_timeout változójának értékére."
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+#| msgid "Table to delete"
+msgid "Table to ALTER"
+msgstr "Módosítandó tábla"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Oszlop"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+#| msgid "column name"
+msgid "Column to rename"
+msgstr "Átnevezendő oszlop"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+#| msgid "column name"
+msgid "New column name"
+msgstr "Új oszlopnév"
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -10363,8 +10398,8 @@ msgstr "Elválasztó karakter a CSV formátumhoz"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "Meghatározza a DN oszlop kezelését LDAP keresésnél (ezek közül: „dn”, „rdn”, "
 "„nincs”)"
@@ -10406,8 +10441,8 @@ msgstr "%s [<METAADAT TÍPUS>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
 "Az adatbázis metaadatainak olvasásának erőltetése (vagy a metaadatok egy "
 "részének, pl. „táblák”)"
@@ -10895,10 +10930,6 @@ msgstr "Sémák listája"
 #: ../tools/common/t-app.c:1683 ../tools/common/t-app.c:1806
 msgid "No object found"
 msgstr "Nem található objektum"
-
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Oszlop"
 
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
