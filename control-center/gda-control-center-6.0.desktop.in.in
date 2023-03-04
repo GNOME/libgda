@@ -9,7 +9,3 @@ Type=Application
 Categories=Settings;DesktopSettings;
 StartupNotify=true
 _Keywords=SGBD;PostgreSQL;MySQL;SQLite;JDBC;LDAP;DSN;
-X-GNOME-Bugzilla-Bugzilla=GNOME
-X-GNOME-Bugzilla-Product=Libgda
-X-GNOME-Bugzilla-Component=ControlCenter
-X-GNOME-Bugzilla-Version=@GDA_VERSION@
