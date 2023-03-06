@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2023-02-09 11:39+0000\n"
-"PO-Revision-Date: 2023-02-12 22:28+0300\n"
+"POT-Creation-Date: 2023-02-21 00:32+0000\n"
+"PO-Revision-Date: 2023-03-06 17:36+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -594,7 +594,7 @@ msgstr "Sağlayıcı yüklenemiyor: %s"
 #: ../libgda/gda-config.c:1720
 #, c-format
 msgid "Can't instantiate provider '%s'"
-msgstr "'%s' sağlayıcısı yaratılamıyor"
+msgstr "'%s' sağlayıcısı başlatılamıyor"
 
 #: ../libgda/gda-config.c:1765 ../libgda/gda-data-model-dsn-list.c:105
 #: ../libgda/gda-data-model-dsn-list.c:106 ../tools/common/t-app.c:2534
@@ -1294,7 +1294,7 @@ msgstr "CSV dosyası ayrıştırılırken hata: %s"
 #. error
 #: ../libgda/gda-data-model-import.c:1225
 msgid "Failed to read node in XML file"
-msgstr "XML dosyası ayrıştırılırken hata: %s"
+msgstr "XML dosyasındaki düğüm okunamadı"
 
 #: ../libgda/gda-data-model-import.c:1244
 #, c-format
@@ -1801,7 +1801,7 @@ msgstr "Ayrıştırma sırasında hata '%d' hatasıyla"
 #: ../libgda/gda-db-catalog.c:1195
 #, c-format
 msgid "Failed to parse file: '%s'"
-msgstr "Dosyası ayrıştırılamadı: '%s'"
+msgstr "Dosya ayrıştırılamadı: '%s'"
 
 #: ../libgda/gda-db-catalog.c:1206
 #, c-format
@@ -2996,7 +2996,7 @@ msgstr "Geçici dosya oluşturulamıyor"
 #: ../libgda-report/gda-report-document.c:282
 #, c-format
 msgid "Execution of the %s program failed: %s"
-msgstr "%s programının çalışması başarısız: %s"
+msgstr "%s programı çalıştırılamadı: %s"
 
 #: ../libgda-report/gda-report-document.c:320
 #: ../libgda-report/gda-report-document.c:344
@@ -3465,7 +3465,7 @@ msgstr "Veriyi değiştirmek için kullanılan ifadenin parametresi geçersiz"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1575
 #, c-format
 msgid "Failed to modify data: %s"
-msgstr "Veri değiştirme başarısız: %s"
+msgstr "Veri değiştirilemedi: %s"
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:1658
 msgid "Data model representing the table is read only"
@@ -6389,7 +6389,7 @@ msgid ""
 "UTF-8 characters"
 msgstr ""
 "İstemci karakter kümesi UTF8 olarak ayarlanamadı. %s kullanılıyor. Bu UTF-8 "
-"olmayan karakterlerde problem yaratabilir"
+"olmayan karakterlerde problem oluşturabilir"
 
 #: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
@@ -6448,7 +6448,7 @@ msgstr "Bir andaki çekilen satırların sayısı"
 
 #: ../providers/mysql/gda-mysql-recordset.c:248
 msgid "Number of row chunks read since the object creation"
-msgstr "Nesne yaratılana kadar okunan satır parçalarının sayısı"
+msgstr "Nesne oluşturulana kadar okunan satır parçalarının sayısı"
 
 #: ../providers/mysql/gda-mysql-recordset.c:695
 #: ../providers/mysql/gda-mysql-recordset.c:1039
@@ -7705,7 +7705,7 @@ msgstr "Veri tabanı oluşturabilen bir rol ise TRUE olarak ayarla"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:60
 msgid "Can create roles"
-msgstr "Rol yaratabilir"
+msgstr "Rol oluşturabilir"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7713,7 +7713,7 @@ msgstr "Rol yaratabilir"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:65
 msgid "Set to TRUE if the role is allowed to create roles"
-msgstr "Rolün role yaratma izni varsa, TRUE olarak ayarla"
+msgstr "Rolün rol oluşturma izni varsa, TRUE olarak ayarla"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7916,7 +7916,7 @@ msgstr "Kullanıcının veri tabanı oluşturma izni varsa TRUE olarak ayarla"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:12
 msgid "Can create users"
-msgstr "Kullanıcı yaratabilir"
+msgstr "Kullanıcı oluşturabilir"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:13
 msgid "Set to TRUE if the user is allowed to create users"
@@ -8522,7 +8522,7 @@ msgstr "Bu tablo için yabancı anahtar belirt"
 #: ../tools/browser/schema-browser/table-info.c:992
 #, c-format
 msgid "Failed to declare foreign key: %s"
-msgstr "Yabancı anahtar belirtimi başarısız: %s"
+msgstr "Yabancı anahtar belirtilemedi: %s"
 
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:429
 #: ../tools/browser/canvas/browser-canvas-db-relations.c:432
@@ -8576,7 +8576,7 @@ msgstr "DELETE politikası"
 #: ../tools/browser/schema-browser/table-columns.c:961
 #, c-format
 msgid "Failed to undeclare foreign key: %s"
-msgstr "Yabancı anahtar kaldır başarısız: %s"
+msgstr "Yabancı anahtarın belirtmesi kaldırılamadı: %s"
 
 #: ../tools/browser/canvas/browser-canvas-fkey.c:480
 #: ../tools/browser/canvas/browser-canvas-fkey.c:483
@@ -8791,7 +8791,7 @@ msgid ""
 "data manager"
 msgstr ""
 "Belirtilen veri\n"
-"yöneticisini yürüt"
+"yöneticisini çalıştır"
 
 #: ../tools/browser/data-manager/data-console.c:410
 msgid "View XML"
@@ -9658,7 +9658,7 @@ msgstr "SQL i favorilere ekle"
 
 #: ../tools/browser/query-exec/query-console-page.c:350
 msgid "Execution history:"
-msgstr "Yürütme geçmişi:"
+msgstr "Çalışma geçmişi:"
 
 #: ../tools/browser/query-exec/query-console-page.c:369
 msgid ""
@@ -10486,7 +10486,7 @@ msgstr "%s <DOSYA>"
 
 #: ../tools/common/t-app.c:1108
 msgid "Execute commands from file"
-msgstr "Dosyadan komutları yürütür"
+msgstr "Dosyadan komutları çalıştır"
 
 #: ../tools/common/t-app.c:1115
 msgid "Send output to a file or |pipe"
