@@ -5,13 +5,13 @@
 # Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>, 2005.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2006, 2007, 2008, 2009, 2010.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2011, 2012, 2013, 2014, 2015.
-# Asier Sarasua Garmendia  <asiersarasua@ni.eus>, 2021, 2022.
+# Asier Sarasua Garmendia  <asiersarasua@ni.eus>, 2021, 2022, 2023.
 #
 msgid ""
 msgstr "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2021-10-16 20:37+0000\n"
-"PO-Revision-Date: 2022-04-03 10:00+0100\n"
+"POT-Creation-Date: 2023-03-04 16:11+0000\n"
+"PO-Revision-Date: 2023-04-03 10:00+0100\n"
 "Last-Translator: Asier Sarasua Garmendia <asiersarasua@ni.eus>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
@@ -773,52 +773,52 @@ msgstr "Barneko errorea: Ez dago meta biltegirik konexioan"
 #: ../libgda/gda-connection.c:5422
 #, c-format
 msgid "Parameter 'name' is required to filter namespaces"
-msgstr ""
+msgstr "'name' parametroa behar da izen-espazioak iragazteko"
 
 #: ../libgda/gda-connection.c:5433
 #, c-format
 msgid "Parameter 'name' is required to filter data types"
-msgstr ""
+msgstr "'name' parametroa behar da datu motak iragazteko"
 
 #: ../libgda/gda-connection.c:5444
 #, c-format
 msgid "Parameter 'name' is required to filter tables"
-msgstr ""
+msgstr "'name' parametroa behar da taulak iragazteko"
 
 #: ../libgda/gda-connection.c:5455
 #, c-format
 msgid "Parameter 'name' is required to filter views"
-msgstr ""
+msgstr "'name' parametroa behar da ikuspegiak iragazteko"
 
 #: ../libgda/gda-connection.c:5465
 #, c-format
 msgid "Parameter 'name' is required to filter fields"
-msgstr ""
+msgstr "'name' parametroa behar da eremuak iragazteko"
 
 #: ../libgda/gda-connection.c:5471
 #, c-format
 msgid "Parameter 'field_name' is required to filter fields"
-msgstr ""
+msgstr "'field_name' parametroa behar da eremuak iragazteko"
 
 #: ../libgda/gda-connection.c:5478
 #, c-format
 msgid "Parameters: 'name' and/or 'field_name' are required to filter fields"
-msgstr ""
+msgstr "Parametroak: 'name eta/edo 'field_name' behar dira eremuak iragazteko"
 
 #: ../libgda/gda-connection.c:5487 ../libgda/gda-connection.c:5508
 #, c-format
 msgid "Parameter 'name' is required to filter indexes"
-msgstr ""
+msgstr "'name' parametroa behar da indizeak iragazteko"
 
 #: ../libgda/gda-connection.c:5493 ../libgda/gda-connection.c:5512
 #, c-format
 msgid "Parameter 'index_name' is required to filter indexes"
-msgstr ""
+msgstr "'index_name' parametroa behar da indizeak iragazteko"
 
 #: ../libgda/gda-connection.c:5500
 #, c-format
 msgid "Parameters: 'name' and/or 'index_name' are required to filter indexes"
-msgstr ""
+msgstr "Parametroak: 'name eta/edo 'index_name' behar dira indizeak iragazteko"
 
 #: ../libgda/gda-connection.c:5520
 #, c-format
@@ -1469,7 +1469,8 @@ msgstr "Balio mota ez dator bat %s (%s ordez)"
 msgid ""
 "INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
 "set number of columns before using with GdaDataSelect"
-msgstr ""
+msgstr "BARNEKO inplementazioaren errorea: zutabe kopuru ezezaguna GdaPStmt-n,\n"
+"ezarri zutabe kopurua GdaDataSelect erabili baino lehen"
 
 #: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
@@ -1681,28 +1682,12 @@ msgstr "Datu-ereduak BLOBak ditu"
 msgid "Can't get the number of rows of data model"
 msgstr "Ezin da datu-ereduko errenkaden kopurua lortu"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr "Baliogabeko %s zutabe mota. Ikusi APIa gda_g_type_from_string () funtziorako.\n"
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr "Barneko errorea: Eragiketak prestatua egon behar du, konexio-datuak ezartzen"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr "Eragiketa ez dago inplementatuta erabilitako hornitzailerako"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
 "Could not parse '%s': Validation for XML files for GdaDbCreator will not be "
 "performed (some weird errors may occur)"
-msgstr ""
+msgstr "Ezin izan da '%s' analizatu: ez da GdaDbCreator-erako XML fitxategien balioztatzerik egingo (zenbait errore bitxi gerta daitezke)"
 
 #: ../libgda/gda-db-catalog.c:260
 #, c-format
@@ -1722,47 +1707,65 @@ msgstr "Erroko nodoak <schema> izan behar du."
 #: ../libgda/gda-db-catalog.c:452 ../libgda/gda-db-catalog.c:503
 #, c-format
 msgid "xmlDoc object can't be created from xmfile name '%s'"
-msgstr ""
+msgstr "xmlDoc objektua ezin da sortu '%s' xmfile izenetik"
 
 #: ../libgda/gda-db-catalog.c:461
 #, c-format
 msgid "xml file '%s' is not valid\n"
 msgstr "'%s' XML fitxategia ez da baliozkoa\n"
 
-#: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-db-catalog.c:957 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "Konexioa ez dago irekita"
 
-#: ../libgda/gda-db-catalog.c:1044
+#: ../libgda/gda-db-catalog.c:1146
 #, c-format
 msgid "Can't open stream for reading file '%s'"
-msgstr ""
+msgstr "Ezin da korrontea ireki '%s' fitxategia irakurtzeko."
 
-#: ../libgda/gda-db-catalog.c:1060
+#: ../libgda/gda-db-catalog.c:1162
 #, c-format
 msgid "Can't create parse context for '%s'"
-msgstr ""
+msgstr "Ezin da '%s' fitxategirako testuingurua analizatu"
 
-#: ../libgda/gda-db-catalog.c:1076
+#: ../libgda/gda-db-catalog.c:1178
 #, c-format
 msgid "Error during parsing with error '%d'"
-msgstr ""
+msgstr "Errorea analizatzean, '%d' errorea"
 
-#: ../libgda/gda-db-catalog.c:1093
+#: ../libgda/gda-db-catalog.c:1195
 #, c-format
 msgid "Failed to parse file: '%s'"
-msgstr ""
+msgstr "Huts egin du fitxategiaren analisiak: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1104
+#: ../libgda/gda-db-catalog.c:1206
 #, c-format
 msgid "XML Document can't be created from file: '%s'"
-msgstr ""
+msgstr "XML dokumentua ezin da sortu honako fitxategitik: '%s'"
 
-#: ../libgda/gda-db-catalog.c:1114
+#: ../libgda/gda-db-catalog.c:1216
 #, c-format
 msgid "XML file is not valid\n"
 msgstr "XML fitxategia ez da baliozkoa\n"
+
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr "Baliogabeko %s zutabe mota. Ikusi APIa gda_g_type_from_string () funtziorako.\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr "Barneko errorea: Eragiketak prestatua egon behar du, konexio-datuak ezartzen"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "Eragiketa ez dago inplementatuta erabilitako hornitzailerako"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -1884,7 +1887,7 @@ msgstr "Ezin da sortu barneko GdaMetaStore konexioa: %s"
 #, c-format
 msgid ""
 "Internal error while trying to render operation in MetaStore creation: %s"
-msgstr ""
+msgstr "Barneko errorea MetaStore sorreran eragiketa errendatzen saiatzean: %s"
 
 #: ../libgda/gda-meta-store.c:1355 ../libgda/gda-meta-store.c:1363
 #: ../libgda/gda-row.c:276
@@ -1894,27 +1897,27 @@ msgstr "Ez da errorerik ezarri"
 #: ../libgda/gda-meta-store.c:1361
 #, c-format
 msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
-msgstr ""
+msgstr "Barneko errorea. Ezin da '%s' MetaStore taula sortu: %s"
 
 #: ../libgda/gda-meta-store.c:1378
 msgid ""
 "Could not set the internal schema's version. No prepared statement's "
 "parameters were found"
-msgstr ""
+msgstr "Ezin da ezarri barneko eskemaren bertsioa. Ez da aurkitu prestatutako instrukzioaren parametrorik"
 
 #: ../libgda/gda-meta-store.c:1387
 msgid "Could not set the internal schema's version. Statement execution fails"
-msgstr ""
+msgstr "Ezin da ezarri barneko eskemaren bertsioa. Instrukzioaren exekuzioak huts egin du"
 
 #: ../libgda/gda-meta-store.c:1591
 #, c-format
 msgid "Internal error: no information schema was found: %s"
-msgstr ""
+msgstr "Barneko errorea: ez da aurkitu informazio-eskemarik: %s"
 
 #: ../libgda/gda-meta-store.c:1599
 #, c-format
 msgid "Internal error: can't read information schema: %s"
-msgstr ""
+msgstr "Barneko errorea: ezin da informazio-eskema irakurri: %s"
 
 #: ../libgda/gda-meta-store.c:1773
 msgid "Missing view name from <view> node"
@@ -1967,7 +1970,7 @@ msgstr "Kanpoko gakoaren '%s' zutabea ez da '%s' taulan aurkitu"
 msgid ""
 "Could not update the internal schema's version. No prepared statement's "
 "parameters were found"
-msgstr ""
+msgstr "Ezin da eguneratu barneko eskemaren bertsioa. Ez da aurkitu prestatutako instrukzioaren parametrorik"
 
 #: ../libgda/gda-meta-store.c:2622
 msgid ""
@@ -2019,7 +2022,7 @@ msgstr "Datuak biltegitik erauztean: %s"
 msgid ""
 "Internal error, while updating internal meta store table '%s': Parameter "
 "value type error: %s"
-msgstr ""
+msgstr "Barneko errorea barneko '%s' meta biltegi-taula eguneratzean: parametro-balioaren mota errorea: %s"
 
 #: ../libgda/gda-meta-store.c:3786
 msgid "Data models should have the same number of columns"
@@ -2173,7 +2176,7 @@ msgstr "Meta-datuen inkoherentzia %s.%s.%s taularen kanpoko gakoaren murriztapen
 #: ../libgda/gda-meta-struct.c:1724
 #, c-format
 msgid "No meta struct was provided for object sorting"
-msgstr ""
+msgstr "Ez da meta struct-ik hornitu objektuak ordenatzeko"
 
 #: ../libgda/gda-meta-struct.c:2530
 msgid "Missing object name in GdaMetaDbObject structure"
@@ -2302,7 +2305,7 @@ msgstr "GdaServerOperation: zehaztapenak ez du DTDa betetzen\n"
 msgid ""
 "Non handled GdaServerOperationType, please report error to http://gitlab."
 "gnome.org/GNOME/libgda/issues"
-msgstr ""
+msgstr "Ez dago maneiatutako GdaServerOperationType-rik, jakinarazi errorea hemen: http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
@@ -2327,7 +2330,8 @@ msgstr "'%s'(r)en beharrezko atributua falta da"
 msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_server_operation_prepare_create_database() ?"
-msgstr ""
+msgstr "Ezin izan da eragiketari lotutako hornitzailea aurkitu,\n"
+"gda_server_operation_prepare_create_database() erabili al duzu?"
 
 #: ../libgda/gda-server-provider.c:1021
 #, c-format
@@ -2379,14 +2383,14 @@ msgstr "Ez dago onartuta"
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues Reported error is: %s"
-msgstr ""
+msgstr "Barneko errorea, jakinarazi errorea hemen: https://gitlab.gnome.org/GNOME/libgda/issues Errorea honakoa da: %s"
 
 #: ../libgda/gda-server-provider.c:2984
 #, c-format
 msgid ""
 "Internal error please report bug to https://gitlab.gnome.org/GNOME/libgda/"
 "issues No error was reported"
-msgstr ""
+msgstr "Barneko errorea, jakinarazi errorea hemen: https://gitlab.gnome.org/GNOME/libgda/issues Ez da errorerik jakinarazi"
 
 #: ../libgda/gda-server-provider.c:3409 ../libgda/gda-server-provider.c:3479
 #: ../libgda/gda-server-provider.c:3548
@@ -2977,7 +2981,7 @@ msgstr "Zifratze okerreko pasaesaldia"
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
-msgstr ""
+msgstr "SEGURTASUN-ABISUA: Hedapenak kargatzeko gaituta dago SQL komandoetarako, horrek esan nahi du erasotzaile batek hedapenak kargatzeko gaitasunak erabili ditzakeela"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
@@ -3083,7 +3087,7 @@ msgstr "Ezin da SQLite-ren BLOBean idatzi"
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
-msgstr ""
+msgstr "Ezin da SQLite BLOB kudeaketa lortu (emandako mota '%s' da), mesedez bidali erroreari buruzko mezua http://gitlab.gnome.org/GNOME/libgda/issues helbidera"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3280
 msgid "Can't identify the ROWID of the blob to fill"
@@ -3234,7 +3238,7 @@ msgstr "Izen-lekua zehaztu behar da"
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:137
 #, c-format
 msgid "There is already a namespace named '%s' in use with another connection"
-msgstr ""
+msgstr "'%s' izeneko izen-espazio bat badago lehendik ere, beste konexio batean ari da erabiltzen"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:147
 #, c-format
@@ -3716,7 +3720,7 @@ msgstr "Editagarria"
 msgid ""
 "Could not find icon file bin-attachment.png in resources please report error "
 "to https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"
-msgstr ""
+msgstr "Ezin da aurkitu bin-attachment.png fitxategia baliabideetan, jakinarazi errorea hemen: https://gitlab.gnome.org/GNOME/libgda/issues Errore-mezua: %s"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:139
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
@@ -3785,15 +3789,16 @@ msgstr "Baliogabeko UTF-8 formatua"
 msgid ""
 "Expected format is %s\n"
 "Time is relative to local time (%s)"
-msgstr ""
+msgstr "Espero zen formatua %s da\n"
+"Ordua tokiko orduarekiko (%s) erlatiboa da"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
-msgstr ""
+msgstr "Ezin zaio ezarri balioa sarrerari: datu mota baliogabea denborako sarrerako bilgailurako"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
-msgstr ""
+msgstr "Ezin da balioa eskuratu sarreratik: datu mota baliogabea denborako sarrerako bilgailurako"
 
 #: ../libgda-ui/data-entries/gdaui-entry-integer.xml.in.h:1
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
@@ -4232,7 +4237,12 @@ msgid ""
 "To illustrate that calls are non blocking, there is a spinner at the top "
 "(which must never stop spinning), and a 1 second delay is added whenever the "
 "connection is used."
-msgstr ""
+msgstr "<b><big>Oharra:\n"
+"</big></b>Probako elementu askok aurrez irekitako SQLite-ren konexioak darabilte '%s' fitxategia erabiliz.\n"
+"\n"
+"Hemen erakutsitako iturburu-kodean, <i>demo_cnc</i> eta<i>demo_parser</i> objektuak lan-markoan sortuak izan dira, eta probako elementu guztietan erabilgarri daude.\n"
+"\n"
+"Deiak ez direla blokeatzen ari irudikatzeko, goian birakari bat dago (ez dio biratzeari uzten) eta segundo 1eko atzerapena gehitu da konexioa erabiltzen ari denean."
 
 #: ../libgda-ui/gdaui-basic-form.c:267
 msgid ""
@@ -4785,7 +4795,7 @@ msgstr "Eskatu goiburuko sekzioa ezkutatzeko sekzio bakarra balego"
 #: ../libgda-ui/gdaui-server-operation.c:369
 #, c-format
 msgid "Mal formed Server Operation. No Node at path: '%s'"
-msgstr ""
+msgstr "Gaizki osatutako zerbitzari-eragiketa. Ez dago nodorik honako bidean: '%s'"
 
 #: ../libgda-ui/gdaui-server-operation.c:442
 msgid "Add a new field"
@@ -4807,7 +4817,7 @@ msgstr "Zerbitzariko eragiketaren zehaztapenak"
 
 #: ../libgda-ui/gdaui-set.c:730
 msgid "No group exists for Set"
-msgstr ""
+msgstr "Ez dago talderik Set eragiketarako"
 
 #: ../libgda-ui/gdaui-tree-store.c:223
 msgid "GdaTree to use"
@@ -4994,16 +5004,19 @@ msgstr "Zutabearen azalpena"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5735,9 +5748,12 @@ msgid "Table to rename"
 msgstr "Taula izenez aldatzeko"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Izen berria"
@@ -6199,7 +6215,7 @@ msgstr "Ezin da BLOB osoa irakurri memorian"
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
-msgstr ""
+msgstr "Kudeatu gabeko '%s' datu mota. Mesedez, bidali erroreari buruzko mezua http://gitlab.gnome.org/GNOME/libgda/issues helbidera"
 
 #: ../providers/mysql/gda-mysql-provider.c:2611
 msgid ""
@@ -6926,13 +6942,38 @@ msgstr "Erabili konpresio protokoloa"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:13
 msgid "Interactive"
-msgstr ""
+msgstr "Interaktiboa"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
 msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
-msgstr ""
+msgstr " Bezero-saioaren itxaroteko denbora-mugarako, saioaren interactibe_timeout aldagaiaren balioa jarri da"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+msgid "Table to ALTER"
+msgstr "ALDATUKO den taula"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Zutabea"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr "Izena aldatuko zaion zutabea"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "Zutabe-izen berria"
 
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
@@ -6978,11 +7019,11 @@ msgstr "Ezin izan da LOB lokalizatzailea kopiatu"
 
 #: ../providers/postgres/gda-postgres-ddl.c:927
 msgid "Dataholder type is unknown."
-msgstr ""
+msgstr "Datu-euskarriaren mota ezezaguna da."
 
 #: ../providers/postgres/gda-postgres-ddl.c:1100
 msgid "Dataholder type is unknown. Report this as a bug."
-msgstr ""
+msgstr "Datu-euskarriaren mota ezezaguna da. Eman akats honen berri."
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:84
 msgid "PostgresqlBin"
@@ -8130,12 +8171,12 @@ msgstr "Errorea konexioaren lotura eguneratzean: %s"
 #: ../tools/browser/browser-window.c:707
 #, c-format
 msgid "Error updating meta data for connection: %s"
-msgstr ""
+msgstr "Errorea %s konexioaren metadatuak eguneratzean"
 
 #: ../tools/browser/browser-window.c:730
 #, c-format
 msgid "Error Updating Meta Data: %s"
-msgstr ""
+msgstr "Erorrea metadatuak eguneratzean: %s"
 
 #: ../tools/browser/browser-window.c:1048
 msgid "Don't show this message again"
@@ -8411,7 +8452,7 @@ msgstr "Konexioa"
 
 #: ../tools/browser/connection-binding-properties.c:553
 msgid "Connection to get tables from in the schema"
-msgstr ""
+msgstr "Eskematik taulak eskuratzeko erabiliko den konexioa"
 
 #: ../tools/browser/connection-binding-properties.c:565
 #: ../tools/common/t-app.c:1759
@@ -8428,17 +8469,17 @@ msgstr "Taulak egongo diren\n"
 #: ../tools/browser/data-manager/analyser.c:193
 #, c-format
 msgid "Obtain referenced data in table %s from "
-msgstr ""
+msgstr "Eskuratu erreferentziatutako datuak %s taulan hemendik: "
 
 #: ../tools/browser/data-manager/analyser.c:198
 #, c-format
 msgid "column number %d ("
-msgstr ""
+msgstr "%d zutabe-zenbakia ("
 
 #: ../tools/browser/data-manager/analyser.c:210
 #, c-format
 msgid "List referencing data in %s."
-msgstr ""
+msgstr "Zerrendatu erreferentziatutako datuak hemen: %s."
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -8806,7 +8847,7 @@ msgstr "Ezarri '%s' taularen kanpoko gako bat"
 msgid ""
 "define which table is referenced, which columns are part of the foreign key, "
 "and which column each one references"
-msgstr ""
+msgstr "definitu zer taula erreferentziatzen den, zein zutabe diren kanpoko gakoaren zati, eta zein zutabe erreferentziatzen duen bakoitzak"
 
 #. FK name
 #: ../tools/browser/fk-declare.c:205
@@ -9282,7 +9323,7 @@ msgstr "Bat ere ez"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:1
 msgid "View the schema and data of databases"
-msgstr ""
+msgstr "Bistaratu datu-baseen eskema eta datuak"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
@@ -9494,7 +9535,15 @@ msgid ""
 "   <small><b>CTRL - Down</b></small> to move to next executed SQL in "
 "history\n"
 "   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
-msgstr ""
+msgstr "Sartu exekutatuko den SQL kodea\n"
+"(konektatu den datu-baseak ulertu behar du,\n"
+"aldagaien definizioa salbu)\n"
+"Honako lasterbideak onartzen dira:\n"
+"   <small><b>CTRL - l</b></small> editorea garbitzeko\n"
+"   <small><b>CTRL - ENTER</b></small> SQLa exekutatzeko\n"
+"   <small><b>CTRL - Up</b></small> historian lehenago exekutatutako SQLra joateko\n"
+"   <small><b>CTRL - Down</b></small> historian geroago exekutatutako SQLra joateko\n"
+"   <small><b>CTRL - SPACE</b></small> osatze-zerrenda bat eskuratzeko"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:339
 msgid "New query execution tab"
@@ -9935,8 +9984,8 @@ msgstr "Karakterea CSV formatuko datuak bereizteko"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr "LDAPeko bilaketan DN zutabea nola kudeatzen den definitzen du ('dn', 'rdn' eta 'none' gainean)"
 
 #: ../tools/common/t-app.c:282
@@ -9974,8 +10023,8 @@ msgstr "%s [<METADATU MOTA>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr "Derrigortu datu-baseko metadatuak irakurtzea (edo metadatuen zati bat, adib: \"taulak\")"
 
 #: ../tools/common/t-app.c:958
@@ -10430,10 +10479,6 @@ msgstr "Eskemen zerrenda"
 msgid "No object found"
 msgstr "Ez da objekturik aurkitu"
 
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Zutabea"
-
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
 msgstr "Null gisa jar daiteke"
@@ -10586,7 +10631,7 @@ msgstr "Ez da '%s' izeneko kontsulta edo datu-multzoa aurkitu"
 #. add existing connections to virtual connection
 #: ../tools/common/t-app.c:3062
 msgid "Connections were bound as:"
-msgstr ""
+msgstr "Konexioak honela daude lotuta:"
 
 #. Translators: this string indicates that all the tables in connection named in the
 #. * 1st "%s" will appear in the SQL namespace named as the 2nd "%s"
@@ -10901,12 +10946,12 @@ msgstr "'%s' irizpide ezezaguna"
 
 #: ../tools/common/t-config-info.c:675
 msgid "No home directory exists. No configuration directory is in use"
-msgstr ""
+msgstr "Ez dago direktorio nagusirik. Ez da konfigurazio-direktoriorik erabili"
 
 #: ../tools/common/t-config-info.c:685
 #, c-format
 msgid "Was not possible to create configuration directory at: %s"
-msgstr ""
+msgstr "Ezin izan da konfigurazio-direktoriorik sortu hemen: %s"
 
 #: ../tools/common/t-connection.c:270
 msgid "Analysing database schema"
@@ -10953,7 +10998,7 @@ msgstr "Konexio honen dataren formatua hau izango da: %s (YYYY urtea, MM hila et
 msgid ""
 "Format of the date used for the connection, where YYYY is the year, MM the "
 "month and DD the day"
-msgstr ""
+msgstr "Konexioak darabilen dataren formatua: UUUU urtea, HH hila eta EE eguna"
 
 #: ../tools/common/t-connection.c:1075
 msgid "Data source"
