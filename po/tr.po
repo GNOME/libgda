@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2023-02-21 00:32+0000\n"
-"PO-Revision-Date: 2023-03-06 17:36+0300\n"
+"POT-Creation-Date: 2023-03-06 18:36+0000\n"
+"PO-Revision-Date: 2023-04-17 19:20+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-POOTLE-MTIME: 1423921335.000000\n"
 
 #: ../control-center/dsn-config.c:79
@@ -663,7 +663,7 @@ msgstr "Kullanılacak DSN"
 
 #: ../libgda/gda-connection.c:328
 msgid "Connection string to use"
-msgstr "Kullanılacak bağlantı karakter dizisi"
+msgstr "Kullanılacak bağlantı dizgesi"
 
 #: ../libgda/gda-connection.c:331
 msgid "Provider to use"
@@ -671,7 +671,7 @@ msgstr "Kullanılacak sağlayıcı"
 
 #: ../libgda/gda-connection.c:336
 msgid "Authentication string to use"
-msgstr "Kullanılacak kimlik doğrulama karakter dizisi"
+msgstr "Kullanılacak kimlik doğrulama dizgesi"
 
 #: ../libgda/gda-connection.c:340 ../libgda-ui/data/server_operation.xml.h:5
 #: ../libgda-ui/gdaui-server-operation.c:754
@@ -733,7 +733,7 @@ msgstr "Veri kaynağı yapılandırma hatası: sağlayıcı belirtilmemiş"
 #: ../tools/browser/auth-dialog.c:419 ../tools/common/t-connection.c:779
 #, c-format
 msgid "Malformed connection string '%s'"
-msgstr "Kusur bağlantı karakter dizisi '%s'"
+msgstr "Kusurlu bağlantı dizgesi '%s'"
 
 #: ../libgda/gda-connection.c:1210
 msgid "No database driver specified"
@@ -745,7 +745,7 @@ msgstr "Sağlayıcı belirtilmemiş"
 
 #: ../libgda/gda-connection.c:1424 ../libgda/gda-connection.c:1426
 msgid "No DSN or connection string specified"
-msgstr "Her hangi bir DSN ya da bağlantı karakter dizisi belirtilmemiş"
+msgstr "Her hangi bir DSN ya da bağlantı dizgesi belirtilmemiş"
 
 #: ../libgda/gda-connection.c:1522
 msgid "Connection is already opened"
@@ -1075,7 +1075,7 @@ msgstr "Veri modeli, satır kaldırmayı desteklemiyor"
 #: ../libgda/gda-data-model.c:1180
 #, c-format
 msgid "The '%s' parameter must hold a string value, ignored."
-msgstr "'%s' parametresi bir karakter dizisi değeri tutmalıdır, yok sayıldı."
+msgstr "'%s' parametresi bir dizge değeri tutmalıdır, yok sayıldı."
 
 #: ../libgda/gda-data-model.c:1189 ../libgda/gda-data-model.c:1199
 #: ../libgda/gda-data-model.c:1209 ../libgda/gda-data-model.c:1251
@@ -1238,7 +1238,7 @@ msgstr "DSN"
 #: ../libgda/gda-data-model-dsn-list.c:119
 #: ../libgda/gda-data-model-dsn-list.c:120 ../tools/common/t-config-info.c:430
 msgid "Connection string"
-msgstr "Bağlantı dizisi"
+msgstr "Bağlantı dizgesi"
 
 #: ../libgda/gda-data-model-dsn-list.c:131
 #: ../libgda/gda-data-model-dsn-list.c:132
@@ -1256,7 +1256,7 @@ msgstr "\"options\" özelliği bir GdaSet nesnesi değil"
 #: ../libgda/gda-data-model-import.c:698
 #, c-format
 msgid "The %s option must hold a string value, ignored."
-msgstr "%s seçeneği bir karakter dizisi değeri olmalıdır, yok sayıldı."
+msgstr "%s seçeneği bir dizge değeri olmalıdır, yok sayıldı."
 
 #: ../libgda/gda-data-model-import.c:714
 #, c-format
@@ -1284,7 +1284,7 @@ msgstr "ayrıntı yok"
 #: ../libgda/gda-data-model-import.c:1066
 #, c-format
 msgid "Could not convert string '%s' to a '%s' value"
-msgstr "'%s' değeri '%s' değerine dönüştürülemedi"
+msgstr "'%s' dizgesi '%s' değerine dönüştürülemedi"
 
 #: ../libgda/gda-data-model-import.c:1124
 #, c-format
@@ -1856,7 +1856,7 @@ msgstr "'g-type' özelliği değiştirilmiş olamaz"
 #: ../libgda/gda-holder.c:945
 #, c-format
 msgid "Unable to convert string to '%s' type"
-msgstr "Karakter dizisi '%s' türüne dönüştürülemiyor"
+msgstr "Dizge '%s' türüne dönüştürülemiyor"
 
 #: ../libgda/gda-holder.c:1013
 #, c-format
@@ -2857,11 +2857,11 @@ msgstr "Sayısal gösterim"
 
 #: ../libgda/handlers/gda-handler-string.c:204
 msgid "Strings representation"
-msgstr "Karakter dizisi gösterimi"
+msgstr "Dizge gösterimi"
 
 #: ../libgda/handlers/gda-handler-text.c:207
 msgid "Large String representation"
-msgstr "Büyük Dize gösterimi"
+msgstr "Büyük Dizge gösterimi"
 
 #. To translators: DD represents a place holder in a date string. For example in the "YYYY-MM-DD" format, one knows that she has to replace DD by a day number
 #: ../libgda/handlers/gda-handler-time.c:475
@@ -3080,7 +3080,7 @@ msgstr ""
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
 msgstr ""
-"Bağlantı dizge sinin DB_DIR kısmı, geçerli bir dizini göstermek zorundadır"
+"Bağlantı dizgesinin DB_DIR kısmı, geçerli bir dizini göstermek zorundadır"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1241
 msgid "Wrong encryption passphrase"
@@ -3882,7 +3882,7 @@ msgstr "Bilfi ve durum değiştirici aktif olabilir"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:376
 msgid "string truncated because too long"
-msgstr "karakter dizisi kesilmiş çünkü çok uzun"
+msgstr "dizge kesilmiş çünkü çok uzun"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:402
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:274
@@ -4158,7 +4158,7 @@ msgstr "Kayan Noktalı Sayı"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:5
 msgid "String"
-msgstr "Karakter dizisi"
+msgstr "Dizge"
 
 #: ../libgda-ui/data-entries/plugins/gda-sql.lang.h:6
 msgid "Keyword"
@@ -4286,7 +4286,7 @@ msgstr "Gösterilecek veri yok"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:2
 msgid "Encoding used to convert binary data to the string"
-msgstr "İkili veriyi karakter dizisine dönüştürmek için kullanılan kodlama"
+msgstr "İkili veriyi dizgesine dönüştürmek için kullanılan kodlama"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:3
 msgid "Base 64"
@@ -4464,7 +4464,7 @@ msgstr ""
 #: ../libgda-ui/gdaui-cloud.c:209 ../libgda-ui/gdaui-cloud.c:956
 #, c-format
 msgid "Wrong column type for label: expecting a string and got a %s"
-msgstr "Etiket için yanlış sütun türü: beklenen karakter dizisi, gelen %s"
+msgstr "Etiket için yanlış sütun türü: beklenen dizge, gelen %s"
 
 #: ../libgda-ui/gdaui-cloud.c:1050 ../tools/browser/objects-cloud.c:459
 msgid "Find:"
@@ -4766,11 +4766,11 @@ msgstr "Diğer seçenekler"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1841
 msgid "Empty string when NULL?"
-msgstr "NULL olduğunda karakter dizisini boşalt?"
+msgstr "NULL olduğunda dizgeyi boşalt?"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1844 ../libgda-ui/gdaui-raw-grid.c:1849
 msgid "Export NULL values as an empty \"\" string"
-msgstr "NULL değerlerini boş \"\" karakter dizisi olarak dışarı aktar"
+msgstr "NULL değerlerini boş \"\" dizge olarak dışarı aktar"
 
 #: ../libgda-ui/gdaui-raw-grid.c:1851
 msgid "Invalid data as NULL?"
@@ -7259,11 +7259,11 @@ msgstr "PostgreSQL ikili gösterimi"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:166
 msgid "Insufficient memory to convert binary buffer to string"
-msgstr "İkili tamponu karakter dizisine çevirmek için yetersiz bellek"
+msgstr "İkili tamponu dizgeye dönüştürmek için yetersiz bellek"
 
 #: ../providers/postgres/gda-postgres-handler-bin.c:206
 msgid "Insufficient memory to convert string to binary buffer"
-msgstr "Karakter dizisini ikili tampona çevirmek için yetersiz bellek"
+msgstr "Dizgeyi ikili tampona dönüştürmek için yetersiz bellek"
 
 #: ../providers/postgres/gda-postgres-provider.c:483
 msgid "Could not determine the default date format"
