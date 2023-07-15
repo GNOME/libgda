@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2023-04-17 16:22+0000\n"
-"PO-Revision-Date: 2023-05-12 14:33+0300\n"
+"POT-Creation-Date: 2023-05-20 06:55+0000\n"
+"PO-Revision-Date: 2023-05-31 03:51+0300\n"
 "Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -2150,7 +2150,7 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:4528
 msgid "Could not parse XML description of custom database object to add"
-msgstr "Eklenecek veritanı nesnesinin XML tanımlaması ayrıştırılamadı"
+msgstr "Eklenecek veri tabanı nesnesinin XML tanımlaması ayrıştırılamadı"
 
 #: ../libgda/gda-meta-store.c:4541
 msgid "Missing custom database object name"
@@ -5161,7 +5161,7 @@ msgstr "-"
 
 #: ../providers/bdb/libmain.c:76
 msgid "Provider for Berkeley databases"
-msgstr "Berkeley veritabanları için sağlayıcı"
+msgstr "Berkeley veri tabanları için sağlayıcı"
 
 #: ../providers/bdbsql/bdbsql_specs_add_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:1
@@ -5954,7 +5954,7 @@ msgstr "libdb_sql-5 bulunamıyor."
 
 #: ../providers/bdbsql/libmain.c:93
 msgid "Provider for Berkeley DB SQL databases"
-msgstr "Berkeley DB SQL veritabanları için sağlayıcı"
+msgstr "Berkeley DB SQL veri tabanları için sağlayıcı"
 
 #: ../providers/firebird/firebird_specs_dsn_emb.xml.in.h:2
 msgid "The name of a database to connect to (without the .fdb)"
@@ -5962,11 +5962,11 @@ msgstr "Bağlanılacak veri tabanının adı (.fdb olmadan)"
 
 #: ../providers/firebird/libmain-client.c:69
 msgid "Provider for Firebird databases"
-msgstr "Firebird veritabanları için sağlayıcı"
+msgstr "Firebird veri tabanları için sağlayıcı"
 
 #: ../providers/firebird/libmain-embed.c:70
 msgid "Provider for embedded Firebird databases"
-msgstr "Gömülü Firebir veritabanları için Sağlayıcı"
+msgstr "Gömülü Firebird veri tabanları için sağlayıcı"
 
 #: ../providers/jdbc/GdaInputStream.c:48 ../providers/jdbc/GdaInputStream.c:124
 #: ../providers/jdbc/GdaJValue.c:207 ../providers/jdbc/GdaJValue.c:247
@@ -6235,7 +6235,7 @@ msgstr "LDAP sunucusunun çalıştığı makine"
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:6
 msgid "Database server port (leave this field empty to use the default port)"
 msgstr ""
-"Veritabananı sunucu bağlantı noktası (öntanımlı bağlantı noktasını kullanmak "
+"Veri tabanı sunucu bağlantı noktası (öntanımlı bağlantı noktasını kullanmak "
 "için, bu alanı boş bırakın)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:7
@@ -6487,7 +6487,7 @@ msgstr "%s eşleşmiyor, %s değeri için"
 
 #: ../providers/mysql/libmain.c:70
 msgid "Provider for MySQL databases"
-msgstr "MySQL veritabanları için sağlayıcı"
+msgstr "MySQL veri tabanları için sağlayıcı"
 
 #: ../providers/mysql/mysql_specs_add_column.xml.in.h:5
 msgid "As first column"
@@ -7351,7 +7351,7 @@ msgstr "Geçersiz ikili dizge gösterimi '%s ...'"
 
 #: ../providers/postgres/libmain.c:69
 msgid "Provider for PostgreSQL databases"
-msgstr "PostgreSQL veritabanları için sağlayıcı"
+msgstr "PostgreSQL veri tabanları için sağlayıcı"
 
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:4
 msgid "Ignore descendants"
@@ -8056,7 +8056,7 @@ msgstr "Şifreleme parola metni"
 
 #: ../providers/sqlite/libmain.c:70
 msgid "Provider for SQLite databases"
-msgstr "SQLite veritabanları için sağlayıcı"
+msgstr "SQLite veri tabanları için sağlayıcı"
 
 #: ../providers/web/gda-web-provider.c:269 ../providers/web/gda-web-util.c:219
 #: ../providers/web/gda-web-util.c:337 ../providers/web/gda-web-util.c:481
@@ -9588,7 +9588,7 @@ msgstr "Yok"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:1
 msgid "View the schema and data of databases"
-msgstr "Veritabanlarının şema ve verilerini görüntüle"
+msgstr "Veri tabanlarının şema ve verilerini görüntüle"
 
 #: ../tools/browser/org.gnome.gda.Browser.appdata.xml.in.h:2
 msgid ""
