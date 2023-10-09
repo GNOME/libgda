@@ -77,7 +77,7 @@ gthread_dep = dependency('gthread-2.0', version : req_ver_glib)
 gmodule_no_export_dep = dependency('gmodule-no-export-2.0', version : req_ver_glib)
 libxml_dep = dependency('libxml-2.0')
 
-goocanvas_dep = dependency('goocanvas-2.0', required : false)
+goocanvas_dep = dependency('goocanvas-2.0', required: get_option('goocanvas'))
 graphviz_dep = dependency('libgvc', required : false)
 libxslt_dep = dependency('libxslt', required: false)
 jsonglib_dep = dependency('json-glib-1.0',required : false)
@@ -347,12 +347,11 @@ gtk_dep = dependency('gtk+-3.0', required: false)
 enable_ui = get_option('ui') and gtk_dep.found() and get_option('experimental')
 if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
-	glade_dep = dependency('gladeui-2.0', required : false)
-	goocanvas_dep = dependency('goocanvas-2.0', required: false)
+	glade_dep = dependency('gladeui-2.0', required : get_option('glade'))
 	if goocanvas_dep.found()
 		math_dep = compiler.find_library('m')
 	endif
-	gtksourceview_dep = dependency('gtksourceview-3.0')
+	gtksourceview_dep = dependency('gtksourceview-3.0', required: get_option('gtksourceview'))
 	graphviz_dep = dependency('libgvc', required: false)
 	graphviz_cargs = []
 	if get_option('graphviz') and graphviz_dep.found()
