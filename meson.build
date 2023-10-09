@@ -256,10 +256,10 @@ endif
 
 
 iso_codes_dep = dependency('iso-codes')
-icodes = iso_codes_dep.get_pkgconfig_variable('domains')
+icodes = iso_codes_dep.get_variable('domains')
 iso_codes_prefix = ''
 if icodes.contains('4217')
-iso_codes_prefix = iso_codes_dep.get_pkgconfig_variable('prefix')
+iso_codes_prefix = iso_codes_dep.get_variable('prefix')
 endif
 iso_codes_cargs = [
 	'-DISO_CODES_PREFIX="'+iso_codes_prefix+'"'
@@ -312,11 +312,7 @@ endforeach
 
 sqlite_xml_inf = files(sqlite_xml_fnamesext)
 
-
-intlmerge = find_program('intltool-merge')
-
 found_jdbc = false
-
 
 dates = compiler.run('''
 #include<glib.h>
@@ -376,13 +372,13 @@ int main() {
                 if option_glade_catalog != ''
                         glade_catalog = option_glade_catalog
                 else
-		        glade_catalog = glade_dep.get_pkgconfig_variable('catalogdir')
+		        glade_catalog = glade_dep.get_variable('catalogdir')
                 endif
 
                 if option_glade_pixmap != ''
                         glade_pixmap = option_glade_pixmap
                 else
-		        glade_pixmap = glade_dep.get_pkgconfig_variable('pixmapdir')
+		        glade_pixmap = glade_dep.get_variable('pixmapdir')
                 endif
 	endif
 	subdir('libgda-ui')
