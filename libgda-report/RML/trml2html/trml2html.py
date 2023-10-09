@@ -24,7 +24,7 @@ import io
 import xml.dom.minidom
 import copy
 
-from . import utils
+import utils
 
 class _flowable(object):
 	def __init__(self, template, doc):
@@ -343,16 +343,16 @@ def parseString(data, fout=None):
 		r.render(fp)
 		return fp.getvalue()
 
-def trml2pdf_help():
-	print('Usage: trml2pdf input.rml >output.html')
-	print('Render the standard input (RML) and output a PDF file')
+def trml2html_help():
+	print('Usage: trml2html input.rml >output.html')
+	print('Render the standard input (RML) and output an HTML file')
 	sys.exit(0)
 
 if __name__=="__main__":
 	if len(sys.argv)>1:
 		if sys.argv[1]=='--help':
-			trml2pdf_help()
+			trml2html_help()
 		print(parseString(file(sys.argv[1], 'r').read()), end=' ')
 	else:
-		print('Usage: trml2pdf input.rml >output.pdf')
-		print('Try \'trml2pdf --help\' for more information.')
+		print('Usage: trml2html input.rml >output.html')
+		print('Try \'trml2html --help\' for more information.')
