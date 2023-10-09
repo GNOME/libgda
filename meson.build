@@ -265,9 +265,9 @@ iso_codes_cargs = [
 	'-DISO_CODES_PREFIX="'+iso_codes_prefix+'"'
 	]
 
-libcryp_config = find_program('libcryp-config', required : false)
-if libcryp_config.found()
-  conf.set('HAVE_LIBCRYPT_CONFIG', 1)
+libgcrypt_config = find_program('libgcrypt-config', required : false)
+if libgcrypt_config.found()
+  conf.set('HAVE_LIBGCRYPT', 1)
 endif
 
 libcrypto_dep = dependency('libcrypto', version : '>=1.1', required: false)
