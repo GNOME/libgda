@@ -52,7 +52,7 @@ sqlite_path = ''
 
 sqlite_deps = []
 
-sqlite_path = sqlite_dep.get_pkgconfig_variable('libdir')
+sqlite_path = sqlite_dep.get_variable('libdir')
 sqlite_cargs += ['-DHAVE_SQLITE']
 sqlite_deps += sqlite_dep
 

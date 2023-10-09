@@ -10,7 +10,7 @@ tbc = executable('check-db-catalog',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -34,7 +34,7 @@ dbtb = executable('check_db_base',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -60,7 +60,7 @@ dbtc = executable('check_db_column',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -84,7 +84,7 @@ dbtv = executable('check_db_view',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -107,7 +107,7 @@ dbfkey = executable('check_db_fkey',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -130,7 +130,7 @@ dbcreate = executable('check_db_create',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
@@ -161,7 +161,7 @@ tcpg = executable('check-db-catalog-postgresql',
 	c_args: [
 		'-include',
 		join_paths(gda_top_build, 'config.h'),
-		'-DCHECK_FILES="'+meson.source_root()+'"',
+		'-DCHECK_FILES="'+meson.project_source_root()+'"',
 		'-DTOP_BUILD_DIR="'+gda_top_build+'"'
 		],
 	link_with: libgda,
