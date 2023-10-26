@@ -273,7 +273,7 @@ gda_default_unescape_string (const gchar *string)
 		return NULL;
 	
 	total = strlen (string);
-	retval = g_memdup (string, total+1);
+	retval = g_memdup2 (string, total+1);
 	ptr = (gchar *) retval;
 	while (offset < total) {
 		/* we accept the "''" as a synonym of "\'" */
@@ -3251,7 +3251,7 @@ _parse_iso8601_time (const gchar *value, gchar sep, glong timezone, const char *
 	tz = g_time_zone_new_utc ();
 	if (stz != NULL) {
 		g_time_zone_unref (tz);
-		tz = g_time_zone_new (stz);
+		tz = g_time_zone_new_identifier (stz);
 		if (tz == NULL) {
 			tz = g_time_zone_new_utc ();
 		}
@@ -3369,7 +3369,7 @@ gda_parse_formatted_timestamp (const gchar *value,
 	stz = g_strdup_printf ("%s%02d:%02d:%02d",
 																gda_time_get_timezone (timegda) >= 0 ? "+" : "-",
 																h, m, s);
-  GTimeZone* tz = g_time_zone_new (stz);
+  GTimeZone* tz = g_time_zone_new_identifier (stz);
 	g_free (stz);
 	if (tz == NULL)
 		return NULL;

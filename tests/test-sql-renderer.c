@@ -42,7 +42,7 @@ string_equal_to_template (const gchar *str, const gchar *tmpl)
 }
 
 GDateTime* create_timestamp (void) {
-	GTimeZone *tz = g_time_zone_new ("+02");
+	GTimeZone *tz = g_time_zone_new_identifier ("+02");
 	return g_date_time_new (tz, 2013, 8, 28, 17, 10, 23.0);
 }
 

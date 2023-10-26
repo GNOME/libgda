@@ -5,6 +5,7 @@ project('libgda', 'c',
         default_options: [
                         'c_std=gnu11',
                         'warning_level=2',
+                        'werror=true'
                         ],
 )
 

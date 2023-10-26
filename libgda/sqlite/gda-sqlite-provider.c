@@ -3682,7 +3682,7 @@ gda_sqlite_provider_statement_execute (GdaServerProvider *provider, GdaConnectio
 			if (g_date_time_get_utc_offset (timestamp) != 0) { // FIXME: This should be supported now
 				/* SQLite cant' store timezone information, so if timezone information is
 				 * provided, we do our best and convert it to UTC */
-				GTimeZone *tz = g_time_zone_new ("Z");
+				GTimeZone *tz = g_time_zone_new_identifier ("Z");
 				timestamp = g_date_time_to_timezone (timestamp, tz);
 				tofree = TRUE;
 			}
@@ -4365,7 +4365,7 @@ gda_sqlite_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider, 
 		return NULL;
 
 	total = strlen (string);
-	retval = g_memdup (string, total+1);
+	retval = g_memdup2 (string, total+1);
 	ptr = (gchar *) retval;
 	while (offset < total) {
 		if (*ptr == '\'') {
