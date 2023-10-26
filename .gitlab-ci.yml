@@ -2,9 +2,9 @@ image: ubuntu:23.10
 
 services:
   - postgres:15
-  - mysql:8
-  - jacobalberty/firebird:3.0
-  - mariadb:10
+#  - mysql:8
+#  - jacobalberty/firebird:3.0
+#  - mariadb:10
 
 stages:
   - build
