@@ -48,7 +48,7 @@
         {
                 "name": "browser",
                 "config-opts": [
-                        "-Denable-tools=true"
+                        "-Dtools=true"
                         ],
                 "builddir": true,
                 "sources": [
