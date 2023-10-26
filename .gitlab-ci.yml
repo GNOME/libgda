@@ -27,7 +27,6 @@ variables:
                 libgtksourceview-3.0-dev
                 libgdk-pixbuf2.0-dev
                 libgraphviz-dev
-                libisocodes-dev
                 libsoup2.4-dev
                 libxslt1-dev
                 libjson-glib-dev
