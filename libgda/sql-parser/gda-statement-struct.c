@@ -298,8 +298,7 @@ gda_sql_statement_serialize (GdaSqlStatement *stmt)
 		TO_IMPLEMENT;
 
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
 }

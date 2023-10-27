@@ -257,8 +257,7 @@ gda_sql_param_spec_serialize (GdaSqlParamSpec *pspec)
 	g_string_append_printf (string, ",\"is_param\":%s", pspec->is_param ? "true" : "false");
 	g_string_append_printf (string, ",\"nullok\":%s", pspec->nullok ? "true" : "false");
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 

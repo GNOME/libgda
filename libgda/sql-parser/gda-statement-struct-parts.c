@@ -221,8 +221,7 @@ gda_sql_expr_serialize (GdaSqlExpr *expr)
 	}
 
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -550,8 +549,7 @@ gda_sql_function_serialize (GdaSqlFunction *function)
 		else
 			g_string_append (string, "null");
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -698,8 +696,7 @@ gda_sql_operation_serialize (GdaSqlOperation *operation)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1003,8 +1000,7 @@ gda_sql_case_serialize (GdaSqlCase *sc)
 		g_free (str);
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1127,8 +1123,7 @@ gda_sql_select_field_serialize (GdaSqlSelectField *field)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1300,8 +1295,7 @@ gda_sql_select_target_serialize (GdaSqlSelectTarget *target)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1514,8 +1508,7 @@ gda_sql_select_join_serialize (GdaSqlSelectJoin *join)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1649,8 +1642,7 @@ gda_sql_select_from_serialize (GdaSqlSelectFrom *from)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }
@@ -1787,8 +1779,7 @@ gda_sql_select_order_serialize (GdaSqlSelectOrder *order)
 		}
 
 		g_string_append_c (string, '}');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		return str;
 	}
 }

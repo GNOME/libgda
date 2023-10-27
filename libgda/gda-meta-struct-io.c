@@ -213,8 +213,7 @@ create_table_object (GdaMetaStruct *mstruct, const GValue *catalog, const gchar 
 	dbobj->obj_schema = table_schema ? g_strdup ((gchar *) table_schema) : 
 		(schema ? g_value_dup_string (schema) : NULL);
 	dbobj->obj_name = g_strdup ((gchar *) table_name);
-	dbobj->obj_full_name = full_table_name->str;
-	g_string_free (full_table_name, FALSE);
+	dbobj->obj_full_name = g_string_free (full_table_name, FALSE);
 	dbobj = _gda_meta_struct_add_db_object (mstruct, dbobj, error);
 	if (!dbobj)
 		goto onerror;

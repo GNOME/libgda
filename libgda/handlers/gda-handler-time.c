@@ -439,8 +439,7 @@ gda_handler_time_get_format (GdaHandlerTime *dh, GType type)
 	if ((type == GDA_TYPE_TIME) || (type == G_TYPE_DATE_TIME) || (type == G_TYPE_DATE_TIME))
 		g_string_append (string, "00:00:00");
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -499,8 +498,7 @@ gda_handler_time_get_hint (GdaHandlerTime *dh, GType type)
 		/* To translators: HH:MM:SS represents a time format. For example in the "HH:MM:SS" format, one knows that she has to replace HH by a number of hours, and so on */
 		g_string_append (string, "HH:MM:SS");
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -684,8 +682,7 @@ render_date_locale (const GDate *date, LocaleSetting *locale)
 		}
 	}
 
-	retval = string->str;
-	g_string_free (string, FALSE);
+	retval = g_string_free (string, FALSE);
 	return retval;
 }
 

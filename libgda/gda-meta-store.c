@@ -448,8 +448,7 @@ gda_meta_context_stringify (GdaMetaContext *ctx)
 	if (i == 0)
 		g_string_append (string, "no constraints in context");
 	g_string_append (string, "}}");
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -2508,8 +2507,7 @@ complement_db_objects (GSList *objects, G_GNUC_UNUSED GHashTable *hash, GError *
 
 			/* fix TableFKey->fk_fields_cond */
 			g_assert (cond);
-			tfk->fk_fields_cond = cond->str;
-			g_string_free (cond, FALSE);
+			tfk->fk_fields_cond = g_string_free (cond, FALSE);
 
 			/* fix TableInfo->reverse_fk_list,
 			 * but we don't want the "_tables"-->"_views" reverse dependency */

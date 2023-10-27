@@ -349,8 +349,7 @@ get_user_obj_name (const GValue *catalog, const GValue *schema, const GValue *na
 		else
 			string = g_string_new (g_value_get_string (name));
 	}
-	ret = string->str;
-	g_string_free (string, FALSE);
+	ret = g_string_free (string, FALSE);
 	return ret;
 }
 
@@ -2027,8 +2026,7 @@ gda_meta_struct_dump_as_graph (GdaMetaStruct *mstruct, GdaMetaGraphInfo info, G_
 	}
 	g_string_append_c (string, '}');
 
-	result = string->str;
-	g_string_free (string, FALSE);
+	result = g_string_free (string, FALSE);
 	return result;
 }
 

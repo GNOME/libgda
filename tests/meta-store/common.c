@@ -85,8 +85,7 @@ stringify_a_change (GdaMetaStoreChange *ac)
 		g_free (hd);
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 

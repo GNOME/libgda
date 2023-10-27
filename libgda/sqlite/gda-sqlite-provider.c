@@ -2315,8 +2315,7 @@ sqlite_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *c
 		}
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -2480,8 +2479,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 		}
 		if (add_p)
 			g_string_append_c (string, ')');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
     string = NULL;
 		break;
 	}
@@ -2534,8 +2532,7 @@ sqlite_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, G
 					g_string_append (string, SQL_OPERAND (list->data)->sql);
 			}
 		}
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 	}
 
  out:
@@ -2736,8 +2733,7 @@ sqlite_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean 
 		g_string_append (string, str);
 	g_free (str);
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -4117,8 +4113,7 @@ scalar_gda_hex_func (sqlite3_context *context, int argc, sqlite3_value **argv)
 		g_string_append_printf (string, "%02x", data [i]);
 	}
 
-	(s3r->sqlite3_result_text) (context, string->str, -1, g_free);
-	g_string_free (string, FALSE);
+	(s3r->sqlite3_result_text) (context, g_string_free (string, FALSE), -1, g_free);
 }
 
 static void
@@ -4153,8 +4148,7 @@ scalar_gda_hex_func2 (sqlite3_context *context, int argc, sqlite3_value **argv)
 
 	if (string->len > size)
 		string->str[size] = 0;
-	(s3r->sqlite3_result_text) (context, string->str, -1, g_free);
-	g_string_free (string, FALSE);
+	(s3r->sqlite3_result_text) (context, g_string_free (string, FALSE), -1, g_free);
 }
 
 static void
@@ -4242,9 +4236,9 @@ scalar_regexp_func (sqlite3_context *context, int argc, sqlite3_value **argv)
 			re_hash = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_regex_unref);
 		}
 		/*g_print ("ADDED new GRegex %p as [%s]\n", regex, sig->str);*/
-		g_hash_table_insert (re_hash, sig->str, regex);
-		g_array_prepend_val (re_array, sig->str);
-		g_string_free (sig, FALSE);
+		gchar *str = g_string_free (sig, FALSE);
+    g_hash_table_insert (re_hash, str, regex);
+		g_array_prepend_val (re_array, str);
 		if (re_array->len > MAX_DEFINED_REGEX) {
 			/* get rid of the 'oldest' GRexex */
 			gchar *osig;

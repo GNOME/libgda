@@ -365,8 +365,7 @@ _gda_sqlite_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc
 		return NULL;
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 #ifdef GDA_DEBUG
 	g_print ("Renderer SQL for SQLite: %s\n", sql);
 #endif
@@ -398,8 +397,7 @@ _gda_sqlite_render_DROP_TABLE (G_GNUC_UNUSED GdaServerProvider *provider, GdaCon
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -432,8 +430,7 @@ _gda_sqlite_render_RENAME_TABLE (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -507,8 +504,7 @@ _gda_sqlite_render_ADD_COLUMN (G_GNUC_UNUSED GdaServerProvider *provider, GdaCon
 		}
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -601,8 +597,7 @@ _gda_sqlite_render_CREATE_INDEX (G_GNUC_UNUSED GdaServerProvider *provider, GdaC
 
 	g_string_append (string, ")");
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -631,8 +626,7 @@ _gda_sqlite_render_DROP_INDEX (G_GNUC_UNUSED GdaServerProvider *provider, GdaCon
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -674,8 +668,7 @@ _gda_sqlite_render_CREATE_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaCo
 	}
 
 	if (allok) {
-		sql = string->str;
-		g_string_free (string, FALSE);
+		sql = g_string_free (string, FALSE);
 	}
 	else {
 		sql = NULL;
@@ -709,8 +702,7 @@ _gda_sqlite_render_DROP_VIEW (G_GNUC_UNUSED GdaServerProvider *provider, GdaConn
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -762,8 +754,7 @@ _gda_sqlite_render_RENAME_COLUMN  (GdaServerProvider *provider,
   g_string_append (string, tmp);
   g_free (tmp);
 
-  sql = string->str;
-  g_string_free (string, FALSE);
+  sql = g_string_free (string, FALSE);
 
 #ifdef GDA_DEBUG
 	g_print ("Renderer SQL for SQLite: %s\n", sql);

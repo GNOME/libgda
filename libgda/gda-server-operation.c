@@ -468,8 +468,7 @@ node_get_complete_path (G_GNUC_UNUSED GdaServerOperation *op, Node *node)
 		g_string_prepend_c (string, '/');
 	}
 
-	retval = string->str;
-	g_string_free (string, FALSE);
+	retval = g_string_free (string, FALSE);
 
 	/*g_print ("%s(%p) => %s\n", __FUNCTION__, node, retval);*/
 	return retval;

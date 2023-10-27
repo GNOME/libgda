@@ -433,8 +433,7 @@ gda_statement_serialize (GdaStatement *stmt)
 		g_string_append (string, "null");
 	g_string_append_c (string, '}');
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -877,8 +876,7 @@ default_render_unknown (GdaSqlStatementUnknown *stmt, GdaSqlRenderingContext *co
 		g_free (str);
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -965,8 +963,7 @@ default_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *cont
 			g_string_append (string, " DEFAULT VALUES");
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1000,8 +997,7 @@ default_render_delete (GdaSqlStatementDelete *stmt, GdaSqlRenderingContext *cont
 		g_free (str);
 	}	
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1067,8 +1063,7 @@ default_render_update (GdaSqlStatementUpdate *stmt, GdaSqlRenderingContext *cont
 		g_free (str);
 	}	
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1136,8 +1131,7 @@ default_render_compound (GdaSqlStatementCompound *stmt, GdaSqlRenderingContext *
 		}
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1292,8 +1286,7 @@ default_render_select (GdaSqlStatementSelect *stmt, GdaSqlRenderingContext *cont
 		}
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1466,8 +1459,7 @@ default_render_param_spec (GdaSqlParamSpec *pspec, GdaSqlExpr *expr, GdaSqlRende
 	}
 
  out:
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1648,8 +1640,7 @@ default_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean
 		g_string_append (string, str);
 	g_free (str);
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1741,8 +1732,7 @@ default_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, 
 	}
 	g_string_append_c (string, ')');
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1895,8 +1885,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 		}
 		if (add_p)
 			g_string_append_c (string, ')');
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		break;
 	}
 	case GDA_SQL_OPERATOR_TYPE_CONCAT:
@@ -1948,8 +1937,7 @@ default_render_operation (GdaSqlOperation *op, GdaSqlRenderingContext *context, 
 					g_string_append (string, SQL_OPERAND (list->data)->sql);
 			}
 		}
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 	}
 
  out:
@@ -2012,8 +2000,7 @@ default_render_case (GdaSqlCase *case_s, GdaSqlRenderingContext *context, GError
 
 	g_string_append (string, " END");
 	
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -2065,8 +2052,7 @@ default_render_select_field (GdaSqlSelectField *field, GdaSqlRenderingContext *c
 			g_string_append_printf (string, " AS %s", field->as);
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -2119,8 +2105,7 @@ default_render_select_target (GdaSqlSelectTarget *target, GdaSqlRenderingContext
 			g_string_append_printf (string, " AS %s", target->as);
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -2224,8 +2209,7 @@ default_render_select_join (GdaSqlSelectJoin *join, GdaSqlRenderingContext *cont
 		g_string_append_c (string, ')');
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -2289,8 +2273,7 @@ default_render_select_from (GdaSqlSelectFrom *from, GdaSqlRenderingContext *cont
 		}
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -2324,8 +2307,7 @@ default_render_select_order (GdaSqlSelectOrder *order, GdaSqlRenderingContext *c
 	else
 		g_string_append (string, " DESC");
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:

@@ -671,10 +671,8 @@ raw_ddl_creator_get_sql (RawDDLCreator *ddlc, GError **error)
 		g_object_unref (op);
 	}
 
-	sql = string->str;
-	g_print ("SQL: %s\n", sql);
-	g_string_free (string, FALSE);
-	return sql;
+	g_print ("SQL: %s\n", string->str);
+	return g_string_free (string, FALSE);
 }
 
 /**

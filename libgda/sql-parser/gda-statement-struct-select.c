@@ -235,8 +235,7 @@ _gda_sql_statement_select_serialize (gpointer stmt)
 	}
 
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;	
 }
 

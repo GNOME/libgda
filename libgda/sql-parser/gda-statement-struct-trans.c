@@ -244,8 +244,7 @@ gda_sql_statement_trans_serialize (gpointer stmt)
 		g_string_append (string, "null");
 
         g_string_append_c (string, '}');
-        str = string->str;
-        g_string_free (string, FALSE);
+        str = g_string_free (string, FALSE);
         return str;
 }
 

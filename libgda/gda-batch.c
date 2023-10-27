@@ -315,9 +315,7 @@ gda_batch_serialize (GdaBatch *batch)
 		g_string_append (string, "null");
 	g_string_append_c (string, '}');
 
-	str = string->str;
-	g_string_free (string, FALSE);
-	return str;
+	return g_string_free (string, FALSE);
 }
 
 /**

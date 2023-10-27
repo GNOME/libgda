@@ -91,8 +91,7 @@ tests_common_holder_serialize (GdaHolder *h)
 	g_string_append_printf (string, gda_holder_get_not_null (h) ? "\"TRUE\"" : "\"FALSE\"");
 
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 
@@ -219,8 +218,7 @@ tests_common_set_serialize (GdaSet *set)
 	}
 
 	g_string_append_c (string, '}');
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 }
 

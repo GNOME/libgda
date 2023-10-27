@@ -2856,8 +2856,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 	g_free (cols_is_num);
 
 	if (allok) {
-		str = string->str;
-		g_string_free (string, FALSE);
+		str = g_string_free (string, FALSE);
 		if (max_width > 0) {
 			/* truncate all lines */
 			GString *ns;
@@ -2892,8 +2891,7 @@ real_gda_data_model_dump_as_string (GdaDataModel *model, gboolean dump_attribute
 				}
 			}
 			g_free (str);
-			str = ns->str;
-			g_string_free (ns, FALSE);
+			str = g_string_free (ns, FALSE);
 		}
 	}
 	else {
