@@ -901,7 +901,7 @@ new_row_from_mysql_stmt (GdaMysqlRecordset *imodel, G_GNUC_UNUSED gint rownum, G
 				g_value_take_boxed (value, date);
 			}
 			else if (type == G_TYPE_DATE_TIME) {
-				GTimeZone *tz = g_time_zone_new ("Z"); /* UTC */
+				GTimeZone *tz = g_time_zone_new_identifier ("Z"); /* UTC */
 				GDateTime *timestamp = g_date_time_new (tz,
 																								bvalue.year,
 																								bvalue.month,

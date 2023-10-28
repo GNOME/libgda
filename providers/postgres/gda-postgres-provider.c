@@ -2795,7 +2795,7 @@ gda_postgres_provider_unescape_string (G_GNUC_UNUSED GdaServerProvider *provider
 		return NULL;
 
 	total = strlen (string);
-	retval = g_memdup (string, total+1);
+	retval = g_memdup2 (string, total+1);
 	ptr = (gchar *) retval;
 	while (offset < total) {
 		if (*ptr == '\'') {
