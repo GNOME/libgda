@@ -1993,7 +1993,7 @@ static gboolean do_test_modifs_persistance (void)
 	if (!check_data_model_value (proxy, 74, 3, G_TYPE_STRING, "Tigre")) goto out;
 	if (!check_data_model_value (proxy, 74, 5, G_TYPE_STRING, "296226")) goto out;
 
-	//gda_data_model_dump (proxy, NULL);
+	gda_data_model_dump (proxy, NULL);
 
 	g_print ("Setting proxied data model to model_2\n");
 	g_object_set (G_OBJECT (proxy), "model", model_2, NULL);

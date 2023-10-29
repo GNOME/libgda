@@ -77,7 +77,7 @@ library:
   stage: build
   image: ubuntu:23.10
   script:
-  - meson --prefix=/usr --buildtype=debug --werror _build
+  - meson setup --prefix=/usr --buildtype=debug --werror _build
   - cd _build
   - ninja
   - ninja test

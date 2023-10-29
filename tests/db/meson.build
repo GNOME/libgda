@@ -149,6 +149,7 @@ test('dbcreate', dbcreate,
 		]
 	)
 
+if postgres_dep.found() and get_option('postgres')
 db_catalog_pg_sources = files([
 	'check-db-catalog-postgresql.c',
 	'../test-cnc-utils.c',
@@ -179,3 +180,4 @@ test('dbcatalog-postgresql', tcpg,
 		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
+endif
