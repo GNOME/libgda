@@ -1,64 +1,61 @@
-image: ubuntu:23.10
+default:
+  image: ubuntu:23.10
+  services:
+    - postgres:15
+  #  - mysql:8
+  #  - jacobalberty/firebird:3.0
+  #  - mariadb:10
 
-services:
-#  - postgres:15
-#  - mysql:8
-#  - jacobalberty/firebird:3.0
-#  - mariadb:10
+  variables:
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: test1
+    POSTGRES_HOST: postgres
+    MYSQL_DATABASE: test
+    MYSQL_ROOT_PASSWORD: test1
+    MYSQL_HOST: mysql
+    G_MESSAGES_DEBUG: all
+    DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
+                  meson ninja-build
+                  libgtk-3-dev libxml2-dev gnome-common
+                  libsqlite3-dev
+                  gobject-introspection libssl-dev libmysqlclient-dev
+                  libldap2-dev libpq-dev
+                  libgtksourceview-3.0-dev
+                  libgdk-pixbuf2.0-dev
+                  libgraphviz-dev
+                  libsoup2.4-dev
+                  libxslt1-dev
+                  libjson-glib-dev
+                  libgcrypt20-dev
+                  libssl-dev
+                  libldap2-dev
+                  libgoocanvas-2.0-dev
+                  libhsqldb1.8.0-java
+                  yelp-tools
+                  iso-codes
+                  libgirepository1.0-dev
+                  libgee-0.8-dev
+                  valadoc
+                  libgladeui-dev
+                  postgresql-client
+                  postgresql-client-common
+                  libsqlcipher-dev
 
-stages:
-  - build
-  - deploy
+    GIT_SUBMODULE_STRATEGY: normal
+    SQLITE_DBCREATE_PARAMS: "DB_DIR=."
+    SQLITE_CNC_PARAMS: "DB_DIR=."
+    POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
+    POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+    POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+    MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
+    MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
+    SQLITE_SO_DDL: "DB_DIR=.;DB_NAME=ci_test_db.db"
 
-variables:
-  POSTGRES_USER: test
-  POSTGRES_PASSWORD: test1
-  POSTGRES_HOST: postgres
-  MYSQL_DATABASE: test
-  MYSQL_ROOT_PASSWORD: test1
-  MYSQL_HOST: mysql
-  G_MESSAGES_DEBUG: all
-  DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
-                meson ninja-build
-                libgtk-3-dev libxml2-dev gnome-common
-                libsqlite3-dev
-                gobject-introspection libssl-dev libmysqlclient-dev
-                libldap2-dev libpq-dev
-                libgtksourceview-3.0-dev
-                libgdk-pixbuf2.0-dev
-                libgraphviz-dev
-                libsoup2.4-dev
-                libxslt1-dev
-                libjson-glib-dev
-                libgcrypt20-dev
-                libssl-dev
-                libldap2-dev
-                libgoocanvas-2.0-dev
-                libhsqldb1.8.0-java
-                yelp-tools
-                iso-codes
-                libgirepository1.0-dev
-                libgee-0.8-dev
-                valadoc
-                libgladeui-dev
-                postgresql-client
-                postgresql-client-common
-                libsqlcipher-dev
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt update
+    - apt -y install $DEPENDENCIES
 
-  GIT_SUBMODULE_STRATEGY: normal
-  SQLITE_DBCREATE_PARAMS: "DB_DIR=."
-  SQLITE_CNC_PARAMS: "DB_DIR=."
-  POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
-  POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
-  POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
-  MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
-  MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
-  SQLITE_SO_DDL: "DB_DIR=.;DB_NAME=ci_test_db.db"
-
-before_script:
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt update
-  - apt -y install $DEPENDENCIES
 
 build:
   stage: build
@@ -81,27 +78,27 @@ build:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
-paralel_build:
-  stage: build
-  script:
-  - export PGPASSWORD=$POSTGRES_PASSWORD
-  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - meson --prefix=/usr --buildtype=debug --werror _build
-  - cd _build
-  - ninja
-  - broadwayd &
-  - GDK_BACKEND=broadway meson test
-  - ninja install
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/meson-logs/testlog.txt
-    - _build/meson-logs/meson-log.txt
-    - _build/doc/C/libgda/html
-    - _build/doc/C/libgdaui/html
-    - _build/doc/Gda-6.0
-    - _build/doc/Gdaui-6.0
-    expire_in: 1 week
+#paralel_build:
+#  stage: build
+#  script:
+#  - export PGPASSWORD=$POSTGRES_PASSWORD
+#  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+#  - meson --prefix=/usr --buildtype=debug --werror _build
+#  - cd _build
+#  - ninja
+#  - broadwayd &
+#  - GDK_BACKEND=broadway meson test
+#  - ninja install
+#  artifacts:
+#    when: on_failure
+#    paths:
+#    - _build/meson-logs/testlog.txt
+#    - _build/meson-logs/meson-log.txt
+#    - _build/doc/C/libgda/html
+#    - _build/doc/C/libgdaui/html
+#    - _build/doc/Gda-6.0
+#    - _build/doc/Gdaui-6.0
+#    expire_in: 1 week
 
 pages:
   stage: deploy
