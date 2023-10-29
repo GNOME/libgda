@@ -483,8 +483,7 @@ gda_mysql_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 			g_free (str);
 		}
 	}
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 	
 	return sql;
 }
@@ -526,8 +525,7 @@ gda_mysql_render_DROP_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 		g_string_append (string, g_value_get_string (value));
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -561,8 +559,7 @@ gda_mysql_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -594,8 +591,7 @@ gda_mysql_render_COMMENT_TABLE (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, g_value_get_string (value));
 	g_string_append (string, "'");
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -713,8 +709,7 @@ gda_mysql_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 		}
 	}
 		
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -748,8 +743,7 @@ gda_mysql_render_DROP_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -804,11 +798,10 @@ gda_mysql_render_COMMENT_COLUMN (GdaServerProvider *provider, GdaConnection *cnc
 	GdaSqlParser *parser = gda_connection_create_parser (cnc);
 	if (parser == NULL)        /* @cnc does not provide its own parser. Use default one */
 		parser = gda_sql_parser_new ();
-	GdaStatement *statement = gda_sql_parser_parse_string (parser,
-							       tmp_string->str,
+  	sql = g_string_free (tmp_string, FALSE);
+        GdaStatement *statement = gda_sql_parser_parse_string (parser,
+							       sql,
 							       NULL, NULL);
-	g_string_free (tmp_string, FALSE);
-
 	GdaDataModel *model;
 	GError *gerror = NULL;
 	model = gda_connection_statement_execute_select (cnc, statement,
@@ -836,8 +829,7 @@ gda_mysql_render_COMMENT_COLUMN (GdaServerProvider *provider, GdaConnection *cnc
 	g_string_append (string, g_value_get_string (value));
 	g_string_append (string, "'");
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -922,8 +914,7 @@ gda_mysql_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 
 	g_string_append (string, ")");
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -957,8 +948,7 @@ gda_mysql_render_DROP_INDEX (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -1027,8 +1017,7 @@ gda_mysql_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	}
 
 	if (allok) {
-		sql = string->str;
-		g_string_free (string, FALSE);
+		sql = g_string_free (string, FALSE);
 	}
 	else {
 		sql = NULL;
@@ -1063,8 +1052,7 @@ gda_mysql_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }

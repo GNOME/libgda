@@ -74,8 +74,7 @@ gda_postgres_render_CREATE_DB (GdaServerProvider *provider, GdaConnection *cnc,
 		g_string_append (string, g_value_get_string (value));
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;	
 }
@@ -94,8 +93,7 @@ gda_postgres_render_DROP_DB (GdaServerProvider *provider, GdaConnection *cnc,
 	if (value && G_VALUE_HOLDS (value, G_TYPE_STRING) && g_value_get_string(value))
 		g_string_append (string, g_value_get_string (value));
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;	
 }
@@ -404,8 +402,7 @@ gda_postgres_render_CREATE_TABLE (GdaServerProvider *provider, GdaConnection *cn
 		return NULL;
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 #ifdef GDA_DEBUG
 	g_print ("Renderer SQL for PostgreSQL: %s\n", sql);
@@ -434,8 +431,7 @@ gda_postgres_render_DROP_TABLE   (GdaServerProvider *provider, GdaConnection *cn
 		g_string_append (string, g_value_get_string (value));
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -469,8 +465,7 @@ gda_postgres_render_RENAME_TABLE (GdaServerProvider *provider, GdaConnection *cn
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -566,8 +561,7 @@ gda_postgres_render_ADD_COLUMN (GdaServerProvider *provider, GdaConnection *cnc,
 		}
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -610,8 +604,7 @@ gda_postgres_render_DROP_COLUMN  (GdaServerProvider *provider, GdaConnection *cn
 		}
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -719,8 +712,7 @@ gda_postgres_render_CREATE_INDEX (GdaServerProvider *provider, GdaConnection *cn
 		g_string_append (string, g_value_get_string (value));
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -751,8 +743,7 @@ gda_postgres_render_DROP_INDEX   (GdaServerProvider *provider, GdaConnection *cn
 		g_string_append (string, g_value_get_string (value));
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -821,8 +812,7 @@ gda_postgres_render_CREATE_VIEW (GdaServerProvider *provider, GdaConnection *cnc
 	g_string_append (string, " AS ");
 	g_string_append (string, g_value_get_string (value));
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -858,8 +848,7 @@ gda_postgres_render_DROP_VIEW (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append_c (string, ' ');
 	g_string_append (string, g_value_get_string (value));
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -1108,8 +1097,7 @@ gda_postgres_render_CREATE_USER (GdaServerProvider *provider, GdaConnection *cnc
 		}
 	}
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }
@@ -1153,8 +1141,7 @@ gda_postgres_render_DROP_USER (GdaServerProvider *provider, GdaConnection *cnc,
 	g_string_append (string, tmp);
 	g_free (tmp);
 
-	sql = string->str;
-	g_string_free (string, FALSE);
+	sql = g_string_free (string, FALSE);
 
 	return sql;
 }

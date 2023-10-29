@@ -1482,8 +1482,7 @@ mysql_render_insert (GdaSqlStatementInsert *stmt, GdaSqlRenderingContext *contex
 			g_string_append (string, " () VALUES ()");
 	}
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1516,8 +1515,7 @@ mysql_render_function (GdaSqlFunction *func, GdaSqlRenderingContext *context, GE
 	}
 	g_string_append_c (string, ')');
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
@@ -1704,8 +1702,7 @@ mysql_render_expr (GdaSqlExpr *expr, GdaSqlRenderingContext *context, gboolean *
 		g_string_append (string, str);
 	g_free (str);
 
-	str = string->str;
-	g_string_free (string, FALSE);
+	str = g_string_free (string, FALSE);
 	return str;
 
  err:
