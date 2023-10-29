@@ -14,33 +14,52 @@ variables:
   G_MESSAGES_DEBUG: all
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
-                libgtk-3-dev libxml2-dev gnome-common
-                libsqlite3-dev
-                gobject-introspection libssl-dev libmysqlclient-dev
-                libldap2-dev libpq-dev
-                libgtksourceview-3.0-dev
-                libgdk-pixbuf2.0-dev
-                libgraphviz-dev
+                libxml2-dev gnome-common
+                gobject-introspection libssl-dev
                 libisocodes-dev
                 libsoup2.4-dev
                 libxslt1-dev
                 libjson-glib-dev
                 libgcrypt20-dev
                 libssl-dev
-                libldap2-dev
-                libgoocanvas-2.0-dev
-                libhsqldb1.8.0-java
                 yelp-tools
                 iso-codes
                 libgirepository1.0-dev
                 libgee-0.8-dev
                 valadoc
-                libgladeui-dev
+  
+  DEPENDENCIES_SQLITE:
+                libsqlite3-dev
+  
+  DEPENDENCIES_SQLITECIPHER:
+                libsqlcipher-dev
+  
+  DEPENDENCIES_POSTGRES:
                 postgresql-client
                 postgresql-client-common
-                libsqlcipher-dev
+                libpq-dev
+  
+  DEPENDENCIES_MYSQL:
+                libmysqlclient-dev
+  
+  DEPENDENCIES_FIREBIRD:
+
+  DEPENDENCIES_UI:
+                libgtk-3-dev
+                libgtksourceview-3.0-dev
+                libgdk-pixbuf2.0-dev
+                libgraphviz-dev
+                libgoocanvas-2.0-dev
+                libgladeui-dev
+  
+  DEPENDENCIES_LDAP:
+                libldap2-dev
+  
+  DEPENDENCIES_HSQL:
+                libhsqldb1.8.0-java
 
   GIT_SUBMODULE_STRATEGY: normal
+  
   SQLITE_DBCREATE_PARAMS: "DB_DIR=."
   SQLITE_CNC_PARAMS: "DB_DIR=."
   POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
@@ -55,15 +74,34 @@ before_script:
   - apt update
   - apt -y install $DEPENDENCIES
 
-build:
+library:
+  stage: build
+  script:
+  - meson --prefix=/usr --buildtype=debug --werror _build
+  - cd _build
+  - ninja
+  - ninja test
+  - ninja install
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
+    - _build/doc/C/libgda/html
+    - _build/doc/C/libgdaui/html
+    - _build/doc/Gda-6.0
+    - _build/doc/Gdaui-6.0
+    expire_in: 1 week
+
+
+postgres:
   stage: build
   services:
-    - postgres:15
-#    - mysql:8
-#    - jacobalberty/firebird:3.0
-#    - mariadb:10
+    - postgres
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
+  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+  - apt -y install $DEPENDENCIES_POSTGRES
   - meson --prefix=/usr --buildtype=debug --werror _build
   - cd _build
   - ninja
@@ -81,7 +119,7 @@ build:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
-#paralel_build:
+#ui:
 #  stage: build
 #  services:
 #    - postgres:15
@@ -89,8 +127,6 @@ build:
 #    - jacobalberty/firebird:3.0
 #    - mariadb:10
 #  script:
-#  - export PGPASSWORD=$POSTGRES_PASSWORD
-#  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
 #  - meson --prefix=/usr --buildtype=debug --werror _build
 #  - cd _build
 #  - ninja
