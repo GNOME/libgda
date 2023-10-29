@@ -1,4 +1,3 @@
-image: ubuntu:23.10
 
 stages:
   - build
@@ -15,8 +14,8 @@ variables:
   DEPENDENCIES: gcc gettext gtk-doc-tools make autoconf
                 meson ninja-build
                 libxml2-dev gnome-common
-                gobject-introspection libssl-dev
-                libisocodes-dev
+                gobject-introspection
+                libssl-dev
                 libsoup2.4-dev
                 libxslt1-dev
                 libjson-glib-dev
@@ -76,6 +75,7 @@ before_script:
 
 library:
   stage: build
+  image: ubuntu:23.10
   script:
   - meson --prefix=/usr --buildtype=debug --werror _build
   - cd _build
@@ -93,31 +93,6 @@ library:
     - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
-
-postgres:
-  stage: build
-  services:
-    - postgres
-  script:
-  - export PGPASSWORD=$POSTGRES_PASSWORD
-  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-  - apt -y install $DEPENDENCIES_POSTGRES
-  - meson --prefix=/usr --buildtype=debug --werror _build
-  - cd _build
-  - ninja
-  - broadwayd &
-  - GDK_BACKEND=broadway ninja test
-  - ninja install
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/meson-logs/testlog.txt
-    - _build/meson-logs/meson-log.txt
-    - _build/doc/C/libgda/html
-    - _build/doc/C/libgdaui/html
-    - _build/doc/Gda-6.0
-    - _build/doc/Gdaui-6.0
-    expire_in: 1 week
 
 #ui:
 #  stage: build
