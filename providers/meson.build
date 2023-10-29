@@ -10,7 +10,7 @@ if sqlcipher_dep.found() and get_option('sqlcipher')
 subdir('sqlcipher')
 endif
 
-if postgres_dep.found()
+if postgres_dep.found() and get_option('postgres')
 subdir('postgres')
 endif
 
@@ -26,7 +26,7 @@ if lbdb_found and get_option('experimental')
 subdir('bdb')
 endif
 
-if mysql_dep.found()
+if mysql_dep.found() and get_option('mysql')
 subdir('mysql')
 endif
 

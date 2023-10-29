@@ -56,6 +56,7 @@ test('MetaStoreSqlite', tchkmstsqlite,
 		]
 	)
 
+if postgres_dep.found() and get_option('postgres')
 tchkmstspg = executable('check_meta_store_postgresql',
 	['check_meta_store_postgresql.c'] + meta_store_common_sources,
 	c_args: [
@@ -105,6 +106,9 @@ test('MetaStorePostgresNew', tchkmstspg_new,
 		]
 	)
 
+endif
+
+if mysql_dep.found() and get_option('mysql')
 tchkmstsmysql = executable('check_meta_store_mysql',
 	['check_meta_store_mysql.c'] + meta_store_common_sources,
 	c_args: [
@@ -128,3 +132,4 @@ test('MetaStoreMySQL', tchkmstsmysql,
 		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
+endif

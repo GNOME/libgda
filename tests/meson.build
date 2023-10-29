@@ -225,6 +225,7 @@ test('SqlRenderer', tsqlr,
 		]
 	)
 
+if postgres_dep.found() and get_option('postgres')
 tsop = executable('test-server-operation-postgresql',
 	['test-server-operation-postgresql.c',
 	'test-cnc-utils.h',
@@ -254,7 +255,7 @@ test('ServerOperationPostgreSQL', tsop,
 		'GDA_TOP_BUILD_DIR='+gda_top_build
 		]
 	)
-
+endif
 tso = executable('test-server-operation-sqlite',
 	['test-server-operation-sqlite.c'] ,
 	c_args: [

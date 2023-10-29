@@ -18,3 +18,5 @@ option('ldap', type : 'boolean', value : false, description : 'Enable experiment
 option('web', type : 'boolean', value : false, description : 'Enable experimental WEB provider')
 option('flatpak', type : 'boolean', value : false, description : 'Build Flatpak')
 option('vapi', type : 'boolean', value : true, description : 'Enable Vala bindings and documentation')
+option('postgres', type : 'boolean', value : true, description : 'Native PostgresSQL provider')
+option('mysql', type : 'boolean', value : true, description : 'Native MySQL provider')

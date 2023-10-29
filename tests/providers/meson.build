@@ -55,7 +55,7 @@ test('ProviderSQLCipher', tchksqlcipher,
 	)
 endif
 
-if postgres_dep.found ()
+if postgres_dep.found () and get_option('postgres')
 
 tchkpg = executable('check_postgres',
 	['check_postgres.c']+providers_common_sources+common_sources+tests_sources,
@@ -159,7 +159,7 @@ test('ProviderMetaPartialUpdate2PostgreSQL', tchkpg_mu2,
 
 endif
 
-if mysql_dep.found ()
+if mysql_dep.found () and get_option('mysql')
 tchkmysql = executable('check_mysql',
 	['check_mysql.c']+providers_common_sources+common_sources+tests_sources,
 	c_args: [
