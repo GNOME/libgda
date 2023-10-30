@@ -2617,8 +2617,10 @@ chunk_sync_idle (GdaDataProxy *proxy)
 			finished = TRUE;
 	}
 
-	if (iter)
+	if (iter && G_IS_OBJECT (iter)) {
 		g_object_unref (iter);
+    iter = NULL;
+  }
 
 	if (finished) {
 		if (priv->chunk_sync_idle_id) {
