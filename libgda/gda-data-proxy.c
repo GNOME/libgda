@@ -834,7 +834,8 @@ clean_proxy (GdaDataProxy *proxy)
 	}
 
 	if (priv->filter_vcnc) {
-		g_object_unref (priv->filter_vcnc);
+    if (G_IS_OBJECT (priv->filter_vcnc))
+      g_object_unref (priv->filter_vcnc);
 		priv->filter_vcnc = NULL;
 	}
 
@@ -844,12 +845,14 @@ clean_proxy (GdaDataProxy *proxy)
 	}
 
 	if (priv->filter_stmt) {
-		g_object_unref (priv->filter_stmt);
+		if (G_IS_OBJECT (priv->filter_stmt))
+      g_object_unref (priv->filter_stmt);
 		priv->filter_stmt = NULL;
 	}
 
 	if (priv->filtered_rows) {
-		g_object_unref (priv->filtered_rows);
+		if (G_IS_OBJECT (priv->filtered_rows))
+      g_object_unref (priv->filtered_rows);
 		priv->filtered_rows = NULL;
 	}
 
@@ -870,8 +873,10 @@ clean_proxy (GdaDataProxy *proxy)
 
 	if (priv->columns) {
 		gint i;
-		for (i = 0; i < 2 * priv->model_nb_cols; i++)
-			g_object_unref (G_OBJECT (priv->columns[i]));
+		for (i = 0; i < 2 * priv->model_nb_cols; i++) {
+			if (G_IS_OBJECT (priv->columns[i]))
+				g_object_unref (G_OBJECT (priv->columns[i]));
+		}
 		g_free (priv->columns);
 		priv->columns = NULL;
 	}
