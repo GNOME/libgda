@@ -961,7 +961,8 @@ gda_data_proxy_set_property (GObject *object,
 
 				do_init (proxy);
 				already_set = TRUE;
-				g_object_unref (priv->model);
+				if (priv->model && G_IS_OBJECT (priv->model))
+					g_object_unref (priv->model);
 				priv->model = NULL;
 			}
 

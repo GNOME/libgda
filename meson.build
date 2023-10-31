@@ -11,7 +11,8 @@ project('libgda', 'c',
 
 enable_vala = get_option('vapi')
 if enable_vala
-	enable_vala = add_languages('vala')
+	enable_vala = add_languages('vala',
+			native: true)
 endif
 
 project_version = meson.project_version()

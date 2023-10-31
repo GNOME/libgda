@@ -76,7 +76,7 @@ foreach xt : mysql_xml_fnames
 		input: xt+'.xml.in',
 		output: xt+'.xml.in.h',
 		type: 'xml',
-		po_dir: join_paths(meson.build_root(),'po')
+		po_dir: join_paths(meson.project_build_root(),'po')
 		)
 	mysql_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
