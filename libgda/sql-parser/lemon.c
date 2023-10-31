@@ -1577,8 +1577,7 @@ int main(G_GNUC_UNUSED int argc, char **argv)
 /*
 ** Return a pointer to the next structure in the linked list.
 */
-// #define NEXT(A) (*(char**)(((unsigned long)A)+offset))
-#define NEXT(A) (*(uintptr_t *)(((uintptr_t)A)+offset))
+#define NEXT(A) (*(char**)(((unsigned long)A)+offset))
 
 /*
 ** Inputs:
