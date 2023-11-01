@@ -77,7 +77,9 @@ struct _GdaDataProxyClass
  * @stability: Stable
  * @see_also: #GdaDataModel
  *
- * This object stores modifications to be made to a #GdaDataModel object which is proxied until the modifications are actually
+ *  This object, is no thread save, so use with care.
+ *
+ *  This object stores modifications to be made to a #GdaDataModel object which is proxied until the modifications are actually
  *  written to the #GdaDataModel, it can also filter the proxied data model to show only a subset (a defined number of continuous
  *  rows or by a filter to apply).
  *
