@@ -94,30 +94,27 @@ library:
     expire_in: 1 week
 
 
-#ui:
-#  stage: build
-#  services:
-#    - postgres:15
-#    - mysql:8
-#    - jacobalberty/firebird:3.0
-#    - mariadb:10
-#  script:
-#  - meson --prefix=/usr --buildtype=debug --werror _build
-#  - cd _build
-#  - ninja
-#  - broadwayd &
-#  - GDK_BACKEND=broadway meson test
-#  - ninja install
-#  artifacts:
-#    when: on_failure
-#    paths:
-#    - _build/meson-logs/testlog.txt
-#    - _build/meson-logs/meson-log.txt
-#    - _build/doc/C/libgda/html
-#    - _build/doc/C/libgdaui/html
-#    - _build/doc/Gda-6.0
-#    - _build/doc/Gdaui-6.0
-#    expire_in: 1 week
+ui:
+  stage: build
+  image: ubuntu:23.10
+  script:
+  - apt -y install $DEPENDENCIES_UI
+  - meson setup --prefix=/usr --buildtype=debug --werror _build
+  - cd _build
+  - ninja
+  - broadwayd &
+  - GDK_BACKEND=broadway ninja test
+  - ninja install
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
+    - _build/doc/C/libgda/html
+    - _build/doc/C/libgdaui/html
+    - _build/doc/Gda-6.0
+    - _build/doc/Gdaui-6.0
+    expire_in: 1 week
 
 pages:
   stage: deploy
