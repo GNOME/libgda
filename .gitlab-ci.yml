@@ -121,6 +121,7 @@ library:
 
 pages:
   stage: deploy
+  image: ubuntu:23.10
   script:
   - meson _build --prefix=/usr -Ddoc=true -Dexperimental=true -Dtools=true -Dldap=true
   - cd _build
