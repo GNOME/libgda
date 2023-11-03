@@ -14,6 +14,9 @@ if enable_vala
 	enable_vala = add_languages('vala')
 endif
 
+i18n = import('i18n')
+intlmerge = find_program('intltool-merge', required: false)
+
 project_version = meson.project_version()
 version_split = project_version.split('.')
 MAJOR_VERSION = version_split[0]
@@ -341,7 +344,7 @@ subdir('libgda')
 subdir('providers')
 
 gtk_dep = dependency('gtk+-3.0', required: false)
-enable_ui = get_option('ui') and gtk_dep.found() and get_option('experimental')
+enable_ui = get_option('ui') and gtk_dep.found() and get_option('experimental') and intlmerge.found()
 if enable_ui
 	gdkpixbuf_dep = dependency('gdk-pixbuf-2.0')
 	glade_dep = dependency('gladeui-2.0', required : get_option('glade'))

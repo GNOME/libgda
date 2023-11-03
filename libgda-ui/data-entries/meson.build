@@ -104,6 +104,7 @@ endforeach
 
 int_xmlf = []
 foreach xt : data_entries_xmlin_names
+	i18n.
 	int_xmlf += custom_target(xt+'.xml',
 		command: [intlmerge,
 			'-u', '-x',
