@@ -4,9 +4,6 @@ stages:
   - deploy
 
 variables:
-  POSTGRES_USER: test
-  POSTGRES_PASSWORD: test1
-  POSTGRES_HOST: postgres
   MYSQL_DATABASE: test
   MYSQL_ROOT_PASSWORD: test1
   MYSQL_HOST: mysql
@@ -32,12 +29,19 @@ variables:
   
   DEPENDENCIES_SQLITECIPHER:
                 libsqlcipher-dev
-  
+  # Variables to setup a PostgreSQL test environment
   DEPENDENCIES_POSTGRES:
                 postgresql-client
                 postgresql-client-common
                 libpq-dev
   
+  POSTGRES_USER: test
+  POSTGRES_PASSWORD: test1
+  POSTGRES_HOST: localhost
+  POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
+  POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+  POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
+
   DEPENDENCIES_MYSQL:
                 libmysqlclient-dev
   
@@ -61,9 +65,6 @@ variables:
   
   SQLITE_DBCREATE_PARAMS: "DB_DIR=."
   SQLITE_CNC_PARAMS: "DB_DIR=."
-  POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
-  POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
-  POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
   MYSQL_CNC_PARAMS: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
   MYSQL_META_CNC: "DB_NAME=$MYSQL_DATABASE;HOST=$MYSQL_HOST;USERNAME=root;PASSWORD=$MYSQL_ROOT_PASSWORD"
   SQLITE_SO_DDL: "DB_DIR=.;DB_NAME=ci_test_db.db"
@@ -77,6 +78,24 @@ library:
   stage: build
   image: ubuntu:23.10
   script:
+  - meson setup --prefix=/usr --buildtype=debug --werror _build
+  - cd _build
+  - ninja
+  - ninja test
+  - ninja install
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
+    expire_in: 1 week
+
+postgres:
+  stage: build
+  image: postgres
+  script:
+  - export PGPASSWORD=$POSTGRES_PASSWORD
+  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   - meson setup --prefix=/usr --buildtype=debug --werror _build
   - cd _build
   - ninja
