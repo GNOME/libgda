@@ -13,7 +13,7 @@ foreach xt : capi_xml_fnames
 		input: xt+'.xml.in',
 		output: xt+'.xml',
 		type: 'xml',
-		po_dir: join_paths(meson.build_root(),'po')
+		po_dir: join_paths(meson.project_build_root(),'po')
 		)
 	capi_xml_res += custom_target(xt+'.raw.xml',
 		command: [raw_spec,
@@ -28,7 +28,7 @@ endforeach
 capi_resourcesc = custom_target('capi_resourcesc',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','capi'),
+		'--sourcedir='+join_paths(meson.project_source_root(),'providers','capi'),
 		'--generate-source',
 		'--target', '@OUTPUT@',
 		'--internal',
@@ -43,7 +43,7 @@ capi_resourcesc = custom_target('capi_resourcesc',
 capi_resourcesh = custom_target('capi_resourcesh',
 	command: [compile_resources,
 		'--sourcedir='+meson.current_build_dir(),
-		'--sourcedir='+join_paths(meson.source_root(),'providers','capi'),
+		'--sourcedir='+join_paths(meson.project_source_root(),'providers','capi'),
 		'--generate-header',
 		'--target', '@OUTPUT@',
 		'--internal',

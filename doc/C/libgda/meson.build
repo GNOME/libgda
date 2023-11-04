@@ -74,7 +74,7 @@ contentf += files([
 # endif
 
 libgda_doc_dep = declare_dependency(link_with: [libgda])
-glib_prefix = glib_dep.get_pkgconfig_variable('prefix')
+glib_prefix = glib_dep.get_variable('prefix')
 glib_docpath = join_paths(glib_prefix, 'share', 'gtk-doc', 'html')
 
 
@@ -83,7 +83,7 @@ gnome_module.gtkdoc(
         main_xml: project_package+'-docs.xml',
         namespace: 'gda',
         mode: 'none',
-        src_dir: [meson.source_root()/'libgda', meson.build_root()/'libgda'],
+        src_dir: [meson.project_source_root()/'libgda', meson.project_build_root()/'libgda'],
         dependencies: [libgda_doc_dep, libgda_dep],
         scan_args: [
                 '--deprecated-guards="GDA_DISABLE_DEPRECATED"',
