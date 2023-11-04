@@ -101,13 +101,6 @@ ui:
   - broadwayd &
   - GDK_BACKEND=broadway ninja test
   - ninja install
-  allow_failure: true
-  when: manual
-  artifacts:
-    when: on_failure
-    paths:
-    - _build/meson-logs/testlog.txt
-    - _build/meson-logs/meson-log.txt
   - mkdir ../public/C/libgdaui
   - mv doc/C/libgdaui/html/* ../public/C/libgdaui/
   - mkdir ../public/vala
@@ -115,6 +108,13 @@ ui:
   - cp libgda/libgda-6.0.vapi ../public/vala
   - mv doc/Gdaui-6.0 ../public/vala
   - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
+  allow_failure: true
+  when: manual
+  artifacts:
+    when: on_failure
+    paths:
+    - _build/meson-logs/testlog.txt
+    - _build/meson-logs/meson-log.txt
     expire_in: 1 week
 
 pages:
