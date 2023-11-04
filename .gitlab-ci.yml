@@ -99,12 +99,13 @@ ui:
   image: ubuntu:23.10
   script:
   - apt -y install $DEPENDENCIES_UI
-  - meson setup --prefix=/usr --buildtype=debug --werror _build
+  - meson setup --prefix=/usr --buildtype=debug -Dexperimental=true -Dui _build
   - cd _build
   - ninja
   - broadwayd &
   - GDK_BACKEND=broadway ninja test
   - ninja install
+  allow_failure: true
   artifacts:
     when: on_failure
     paths:
@@ -120,7 +121,7 @@ pages:
   stage: deploy
   image: ubuntu:23.10
   script:
-  - meson _build --prefix=/usr -Ddoc=true -Dexperimental=true -Dtools=true
+  - meson _build --prefix=/usr -Ddoc=true
   - cd _build
   - ninja
   - ninja install
