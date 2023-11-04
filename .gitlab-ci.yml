@@ -87,34 +87,34 @@ library:
     paths:
     - _build/meson-logs/testlog.txt
     - _build/meson-logs/meson-log.txt
-    - _build/doc/C/libgda/html
-    - _build/doc/C/libgdaui/html
-    - _build/doc/Gda-6.0
-    - _build/doc/Gdaui-6.0
     expire_in: 1 week
 
-
+# This requires to promote UI as non-experimental in order to run it automatically
 ui:
   stage: build
   image: ubuntu:23.10
   script:
   - apt -y install $DEPENDENCIES_UI
-  - meson setup --prefix=/usr --buildtype=debug -Dexperimental=true -Dui _build
+  - meson setup --prefix=/usr --buildtype=debug -Dexperimental=true -Dui  -Ddoc=true _build
   - cd _build
   - ninja
   - broadwayd &
   - GDK_BACKEND=broadway ninja test
   - ninja install
   allow_failure: true
+  when: manual
   artifacts:
     when: on_failure
     paths:
     - _build/meson-logs/testlog.txt
     - _build/meson-logs/meson-log.txt
-    - _build/doc/C/libgda/html
-    - _build/doc/C/libgdaui/html
-    - _build/doc/Gda-6.0
-    - _build/doc/Gdaui-6.0
+  - mkdir ../public/C/libgdaui
+  - mv doc/C/libgdaui/html/* ../public/C/libgdaui/
+  - mkdir ../public/vala
+  - mv doc/Gda-6.0 ../public/vala
+  - cp libgda/libgda-6.0.vapi ../public/vala
+  - mv doc/Gdaui-6.0 ../public/vala
+  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
     expire_in: 1 week
 
 pages:
@@ -130,13 +130,9 @@ pages:
   - mkdir ../public/C
   - mkdir ../public/C/libgda
   - mv doc/C/libgda/html/* ../public/C/libgda/
-  - mkdir ../public/C/libgdaui
-  - mv doc/C/libgdaui/html/* ../public/C/libgdaui/
   - mkdir ../public/vala
   - mv doc/Gda-6.0 ../public/vala
   - cp libgda/libgda-6.0.vapi ../public/vala
-  - mv doc/Gdaui-6.0 ../public/vala
-  - cp libgda-ui/libgdaui-6.0.vapi ../public/vala
   allow_failure: true
   artifacts:
     paths:
