@@ -95,7 +95,7 @@ postgres:
   image: postgres
   script:
   - export PGPASSWORD=$POSTGRES_PASSWORD
-  - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
+  - psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   - meson setup --prefix=/usr --buildtype=debug --werror _build
   - cd _build
   - ninja
