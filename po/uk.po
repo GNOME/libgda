@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2023-01-28 13:14+0000\n"
-"PO-Revision-Date: 2023-01-28 20:37+0200\n"
+"POT-Creation-Date: 2023-02-27 19:14+0000\n"
+"PO-Revision-Date: 2023-11-19 09:27+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3134,12 +3134,14 @@ msgid ""
 "to the database file) and DB_NAME (the database file without the '%s' at the "
 "end)."
 msgstr ""
+"Змінено формат рядка з'єднання: замініть адресу DB_DIR (шляхом до файла бази"
+" даних) і DB_NAME (файлом бази даних без «%s» наприкінці)."
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1176
 #: ../providers/mdb/gda-mdb-provider.c:317
 msgid ""
 "The DB_DIR part of the connection string must point to a valid directory"
-msgstr ""
+msgstr "Частина DB_DIR рядка з'єднання має вказувати на коректний каталог"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1236
 msgid "Wrong encryption passphrase"
@@ -3150,6 +3152,9 @@ msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
 msgstr ""
+"ПОПЕРЕДЖЕННЯ ЩОДО ЗАХИСТУ: увімкнено завантаження розширень для команд SQL;"
+" це означає, що зловмисник може отримати доступ до можливостей завантаження"
+" розширень"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1298
 #, c-format
@@ -3263,6 +3268,9 @@ msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
+"Не вдалося отримати дескриптор BLOB SQLite (повідомленим типом є «%s»), будь"
+" ласка, повідомте про цю ваду на сторінці"
+" http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3275
 msgid "Can't identify the ROWID of the blob to fill"
@@ -3636,10 +3644,14 @@ msgid ""
 "Join can't at the same time specify a join condition and a list of fields to "
 "join on"
 msgstr ""
+"При об'єднанні не можна одночасно вказувати умову об'єднання та список полів"
+" для об'єднання"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1171
 msgid "Cross join can't have a join condition or a list of fields to join on"
 msgstr ""
+"Для перехресного об'єднання не можна вказувати умову об'єднання або список"
+" полів для об'єднання"
 
 #: ../libgda/sql-parser/gda-statement-struct.c:1180
 msgid "Empty FROM clause"
@@ -3755,6 +3767,9 @@ msgid ""
 "any thread, you may expect some undesired behaviours, use "
 "g_main_context_acquire()"
 msgstr ""
+"Передане значення GMainContext при виклику gda_signal_connect() не належить"
+" жодному потоку обробки; можливо, результати будуть небажаними —"
+" скористайтеся g_main_context_acquire()"
 
 #: ../libgda/thread-wrapper/gda-connect.c:280
 #, c-format
@@ -3961,6 +3976,8 @@ msgid ""
 "Data cell renderer's specified type (%s) differs from actual value to "
 "display type (%s)"
 msgstr ""
+"Вказати тип для обробника комірки (%s) відрізняється від справжнього"
+" значення для показу типу (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:409
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:280
@@ -3973,7 +3990,7 @@ msgstr ""
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
 msgid "<non-printable>"
-msgstr ""
+msgstr "<непридатне до показу>"
 
 #: ../libgda-ui/data-entries/gdaui-entry-bin.c:138
 #: ../libgda-ui/data-entries/plugins/common-pict.c:46
@@ -4089,6 +4106,9 @@ msgid ""
 "Widget of class '%s' does not have any associated GdaDataHandler, (to be set "
 "using the 'handler' property) expect some mis-behaviours"
 msgstr ""
+"Віджет класу «%s» не пов'язано із жодним GdaDataHandler (має бути"
+" встановлено за допомогою властивості «handler»); результати можуть бути"
+" неочікуваними"
 
 #: ../libgda-ui/data-entries/gdaui-entry-string.xml.in.h:1
 msgid "Maximum length"
@@ -4320,6 +4340,9 @@ msgid ""
 "Writing mask for corresponding characters in format ('_': writable, '-':"
 "writable, removed from actual value, ' ': not writable)"
 msgstr ""
+"Запис маски для відповідних символів у форматі ('_': придатний до запису,"
+" '-': придатний до запису, вилучено зі справжнього значення, ' ':"
+" непридатний до запису)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -5056,6 +5079,7 @@ msgstr "Невідомий номер стовпчика %d"
 #, c-format
 msgid "Type mismatch: expected a value of type %s and got of type %s"
 msgstr ""
+"Невідповідність типів: мало бути значення типу %s, маємо значення типу %s"
 
 #: ../libgda-ui/internal/gdaui-provider-auth-editor.c:426
 msgid "Can't set authentification string: no authentication is needed"
@@ -6264,6 +6288,8 @@ msgid ""
 "User name, as a DN or simple user name, for Active Directory may be "
 "username@DOMAIN or DOMAIN\\username"
 msgstr ""
+"Ім'я користувача у форматі DN або просте ім'я користувача, для Active"
+" Directory може бути користувач@ДОМЕН або ДОМЕН\\користувач"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:1
 msgid "Base name"
@@ -7187,8 +7213,8 @@ msgstr ""
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:6
 msgid "Refuse to drop the table if any objects depend on it (RESTRICT)"
 msgstr ""
-"Відмовляти у скиданні таблиці, якщо від неї залежить хоч якийсь об'єкт"
-" (RESTRICT)"
+"Відмовляти у скиданні таблиці, якщо від неї залежить хоч якийсь об'єкт "
+"(RESTRICT)"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:11
 msgid "Compress"
@@ -7201,7 +7227,6 @@ msgstr "Використати протокол зі стисканням"
 #: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
-#| msgid "Table to delete"
 msgid "Table to ALTER"
 msgstr "Таблиця для ALTER"
 
@@ -7215,14 +7240,12 @@ msgstr "Стовпчик"
 #: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
 #: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
 #: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
-#| msgid "Column out of range"
 msgid "Column to rename"
 msgstr "Стовпчик для перейменування"
 
 #: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
 #: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
 #: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
-#| msgid "column name"
 msgid "New column name"
 msgstr "Нова назва стовпчика"
 
@@ -10258,8 +10281,8 @@ msgstr "Символ-роздільник для формату CSV"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "Визначає, як обробляється стовпчик DN для LDAP, у якому виконується пошук "
 "(варіанти — \"dn\", \"rdn\" і \"none\")"
@@ -10299,8 +10322,8 @@ msgstr "%s [<ТИП МЕТАДАНИХ>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr ""
 "Примусово прочитати метадані бази даних (або частину метаданих, приклад:"
 "\"tables\")"
