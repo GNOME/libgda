@@ -84,6 +84,7 @@ postgres:
                 libpq-dev"
 
     POSTGRES_USER: "test"
+    POSTGRES_DB: "test"
     POSTGRES_PASSWORD: "test1"
     POSTGRES_HOST: "localhost"
     POSTGRES_HOST_AUTH_METHOD: "trust"
