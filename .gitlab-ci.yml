@@ -77,7 +77,8 @@ library:
 postgres:
   stage: build
   variables:
-    DEPENDENCIES_POSTGRES: "postgresql
+    DEPENDENCIES_POSTGRES:
+                "postgresql
                 postgresql-client
                 postgresql-client-common
                 libpq-dev"
@@ -89,8 +90,15 @@ postgres:
     POSTGRESQL_DBCREATE_PARAMS: "HOST=$POSTGRES_HOST;ADM_LOGIN=$POSTGRES_USER;ADM_PASSWORD=$POSTGRES_PASSWORD"
     POSTGRESQL_CNC_PARAMS: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
     POSTGRESQL_META_CNC: "HOST=$POSTGRES_HOST;USERNAME=$POSTGRES_USER;PASSWORD=$POSTGRES_PASSWORD"
-  image: postgres
+  image: ubuntu:23.10
   script:
+  - apt -y install $DEPENDENCIES_POSTGRES
+  - service postgresql start
+  - su postgres -c 'until psql -c "\l"; do echo "PostgreSQL is starting up"; sleep 1; done'
+  - echo "PostgreSQL is ready"
+  - touch setup.sql
+  - echo -e "CREATE USER $POSTGRES_USER WITH PASSWORD '$POSTGRES_PASSWORD' CREATEDB;\nCREATE DATABASE $POSTGRES_DB OWNER $POSTGRES_USER;\n\q\n" >> setup.sql
+  - su postgres -c "psql -d template1 < setup.sql"
   - export PGPASSWORD=$POSTGRES_PASSWORD
   - psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
   - meson setup --prefix=/usr --buildtype=debug --werror _build
