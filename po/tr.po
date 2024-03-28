@@ -14,10 +14,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2024-01-30 09:44+0000\n"
-"PO-Revision-Date: 2024-02-08 01:57+0300\n"
-"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
+"POT-Creation-Date: 2024-02-10 11:09+0000\n"
+"PO-Revision-Date: 2024-03-25 17:33+0300\n"
+"Last-Translator: Sabri Ünal <yakushabb@gmail.com>\n"
 "Language-Team: Turkish <Türkçe gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -10670,7 +10670,7 @@ msgstr "Kaynak için bellekte tutulan tüm veri kümelerini listeler"
 #: ../tools/common/t-app.c:1303
 #, c-format
 msgid "%s <DATASET NAME> <PATTERN>"
-msgstr "%s <VERİKÜMESİ_ADI> <DESEN>"
+msgstr "%s <VERİKÜMESİ_ADI> <ÖRÜNTÜ>"
 
 #: ../tools/common/t-app.c:1304
 msgid "Show a dataset's contents where lines match a regular expression"
