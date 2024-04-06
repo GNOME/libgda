@@ -7,11 +7,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2024-01-19 20:39+0000\n"
-"PO-Revision-Date: 2024-02-22 15:06+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
+"POT-Creation-Date: 2024-02-22 13:07+0000\n"
+"PO-Revision-Date: 2024-04-06 19:25+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+"Language-Team: Ukrainian\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6421,7 +6421,7 @@ msgstr "Не вдається відкрити файл \"%s\""
 #: ../providers/mdb/gda-mdb-provider.c:372
 #, c-format
 msgid "Could not map table '%s': %s"
-msgstr ""
+msgstr "Не вдалося відобразити таблицю «%s»: %s"
 
 #: ../providers/mdb/libmain.c:73
 msgid "Provider for Microsoft Access files"
@@ -6433,7 +6433,7 @@ msgstr "Назва бази даних, якою слід скористатис
 
 #: ../providers/mysql/gda-mysql-handler-boolean.c:80
 msgid "MySQL boolean representation"
-msgstr ""
+msgstr "Булеве представлення MySQL"
 
 #: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
@@ -6457,7 +6457,7 @@ msgstr ""
 
 #: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
-msgstr ""
+msgstr "Рядок з'єднання має містити значення DB_NAME"
 
 #: ../providers/mysql/gda-mysql-provider.c:624
 #: ../providers/mysql/gda-mysql-provider.c:678
@@ -6468,12 +6468,16 @@ msgstr "Немає опису"
 #: ../providers/mysql/gda-mysql-provider.c:1764
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
+"У приготованій інструкції не можна використовувати безіменного параметра"
+" інструкції."
 
 #: ../providers/mysql/gda-mysql-provider.c:1985
 #: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
+"Не вдалося виконати інструкцію SELECT для отримання останнього вставленого"
+" рядка: %s"
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2515
@@ -6493,6 +6497,8 @@ msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
 msgstr ""
+"Не вдалося скористатися CURSOR. Потрібна версія Mysql принаймні 5.0. Попри"
+" це скористаємося випадковим доступом."
 
 #: ../providers/mysql/gda-mysql-recordset.c:152
 msgid ""
@@ -7950,8 +7956,8 @@ msgstr "Ідентифікатор користувача"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:9
 msgid "Can be used to choose the PostgreSQL user ID of the new user"
 msgstr ""
-"Можна використовувати для вибору ідентифікатора користувача PostgreSQL"
-" нового користувача"
+"Можна використовувати для вибору ідентифікатора користувача PostgreSQL "
+"нового користувача"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:11
 msgid "Set to TRUE if the user is allowed to create databases"
