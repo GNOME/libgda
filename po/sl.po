@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
 "POT-Creation-Date: 2024-01-19 20:39+0000\n"
-"PO-Revision-Date: 2024-05-02 23:01+0200\n"
+"PO-Revision-Date: 2024-05-02 23:42+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -431,7 +431,7 @@ msgstr "_Prekliči"
 msgid ""
 "Define the name of the new data source which will be created as a copy of "
 "'%s':"
-msgstr ""
+msgstr "Določite ime novega vira podatkov, ki bo ustvarjen kot kopija »%s«:"
 
 #: ../control-center/gdaui-dsn-editor.c:472
 #, c-format
@@ -1375,7 +1375,7 @@ msgstr "Vrsta v vrstici %d nima dovolj vrednosti; in te so prezrte"
 
 #: ../libgda/gda-data-model-iter.c:194
 msgid "Iter has an invalid/non-existent reference to a data model"
-msgstr ""
+msgstr "Iterator ima neveljaven/neobstoječ sklic na podatkovni model"
 
 #: ../libgda/gda-data-model-iter.c:198
 msgid "Referenced data model in iterator doesn't belong to given data model"
@@ -1633,7 +1633,7 @@ msgstr "Ni mogoče pridobiti naslednje vrstice: %s"
 #: ../libgda/gda-data-select.c:2220
 #, c-format
 msgid "Can't move back iter at row: %s"
-msgstr ""
+msgstr "Iteratorja ni mogoče premakniti nazaj v vrstico: %s"
 
 #: ../libgda/gda-data-select.c:2229
 msgid "Internal error: No fetch_prev() method implementation for data model"
@@ -1646,10 +1646,9 @@ msgid "Can't fetch previous row: %s"
 msgstr "Prejšnje vrstice ni mogoče pridobiti: %s"
 
 #: ../libgda/gda-data-select.c:2276
-#, fuzzy, c-format
-#| msgid "Can't open pipe '%s': %s"
+#, c-format
 msgid "Can't move iter at row '%d': %s"
-msgstr "Ni mogoče odpreti cevi '%s': %s"
+msgstr "Iteratorja ni mogoče premakniti v vrstico »%d«: %s"
 
 #: ../libgda/gda-data-select.c:2295
 #, c-format
@@ -1837,9 +1836,8 @@ msgstr ""
 #: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
 #: ../libgda/gda-db-view.c:734
 #, fuzzy, c-format
-#| msgid "Provider error: %s method not implemented for provider %s"
 msgid "Operation is not implemented for the used provider"
-msgstr "Napaka ponudnika: %s metoda ni podprta za ponudnika %s"
+msgstr "Operacija se ne izvaja za uporabljenega ponudnika"
 
 #: ../libgda/gda-db-table.c:750
 #, c-format
@@ -1974,6 +1972,7 @@ msgstr "Notranje povezave GdaMetaStore ni mogoče ustvariti: %s"
 msgid ""
 "Internal error while trying to render operation in MetaStore creation: %s"
 msgstr ""
+"Notranja napaka med poskusom izrisa operacije v ustvarjanju MetaStore: %s"
 
 #: ../libgda/gda-meta-store.c:1354 ../libgda/gda-meta-store.c:1362
 #: ../libgda/gda-row.c:276
@@ -1983,15 +1982,15 @@ msgstr "Napaka ni bila nastavljena"
 #: ../libgda/gda-meta-store.c:1360
 #, c-format
 msgid "Internal Error. Couldn't create MetaStore table '%s': %s"
-msgstr ""
+msgstr "Notranja napaka. Tabele »%s« MetaStore ni bilo mogoče ustvariti: %s"
 
 #: ../libgda/gda-meta-store.c:1377
-#, fuzzy
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not set the internal schema's version. No prepared statement's "
 "parameters were found"
-msgstr "Ni mogoče določiti različice sheme"
+msgstr ""
+"Različice notranje sheme ni bilo mogoče nastaviti. Parametri pripravljene "
+"izjave niso bili najdeni"
 
 #: ../libgda/gda-meta-store.c:1386
 #, fuzzy
@@ -2002,7 +2001,7 @@ msgstr "Ni mogoče določiti različice sheme"
 #: ../libgda/gda-meta-store.c:1590
 #, c-format
 msgid "Internal error: no information schema was found: %s"
-msgstr ""
+msgstr "Notranja napaka: ni bila najdena nobena informacijska shema: %s"
 
 #: ../libgda/gda-meta-store.c:1598
 #, fuzzy, c-format
@@ -2058,19 +2057,18 @@ msgid "Foreign key column '%s' not found in table '%s'"
 msgstr "Tujega ključa stolpca '%s' v razpredelnici '%s' ni mogoče najti"
 
 #: ../libgda/gda-meta-store.c:2611
-#, fuzzy
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not update the internal schema's version. No prepared statement's "
 "parameters were found"
-msgstr "Ni mogoče določiti različice sheme"
+msgstr ""
+"Različice notranje sheme ni bilo mogoče posodobiti. Parametri pripravljene "
+"izjave niso bili najdeni"
 
 #: ../libgda/gda-meta-store.c:2620
-#, fuzzy
-#| msgid "Could not set the internal schema's version"
 msgid ""
 "Could not update the internal schema's version. Statement execution fails"
-msgstr "Ni mogoče določiti različice sheme"
+msgstr ""
+"Različice notranje sheme ni bilo mogoče posodobiti. Izvedba izjave spodleti"
 
 #: ../libgda/gda-meta-store.c:2667 ../libgda/gda-meta-store.c:2698
 #, c-format
@@ -2118,6 +2116,8 @@ msgid ""
 "Internal error, while updating internal meta store table '%s': Parameter "
 "value type error: %s"
 msgstr ""
+"Notranja napaka pri posodabljanju notranje tabele meta shrambe »%s«: napaka "
+"vrste vrednosti parametra: %s"
 
 #: ../libgda/gda-meta-store.c:3784
 msgid "Data models should have the same number of columns"
@@ -2281,7 +2281,7 @@ msgstr ""
 #: ../libgda/gda-meta-struct.c:1723
 #, c-format
 msgid "No meta struct was provided for object sorting"
-msgstr ""
+msgstr "Za razvrščanje predmetov ni bila predvidena nobena meta struktura"
 
 #: ../libgda/gda-meta-struct.c:2528
 msgid "Missing object name in GdaMetaDbObject structure"
@@ -2448,6 +2448,8 @@ msgid ""
 "Could not find operation's associated provider, did you use "
 "gda_server_operation_prepare_create_database() ?"
 msgstr ""
+"Ni bilo mogoče najti povezanega ponudnika operacije, ali ste uporabili "
+"gda_server_operation_prepare_create_database()?"
 
 #: ../libgda/gda-server-provider.c:1021
 #, c-format
@@ -2917,6 +2919,8 @@ msgid ""
 "Time data handler can create an SQL representation of a value not holding "
 "time type."
 msgstr ""
+"Rutina za obravnavo časovnih podatkov lahko ustvari predstavitev vrednosti "
+"SQL, ki ne vsebuje vrste časa."
 
 #: ../libgda/handlers/gda-handler-time.c:1061
 msgid "Time, Date and TimeStamp representation"
@@ -3957,7 +3961,7 @@ msgid "Invalid UTF-8 format!"
 msgstr "neveljaven zapis UTF-8!"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:439
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Expected format is %s\n"
 "Time is relative to local time (%s)"
@@ -3966,12 +3970,18 @@ msgstr ""
 "Čas je relativen glede na krajevni čas (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
+#, fuzzy
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
+"Vrednosti ni mogoče nastaviti na vnos: neveljavna vrsta podatkov za čas "
+"preloma vnosa"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
+#, fuzzy
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
+"Vrednosti iz vnosa ni mogoče pridobiti: neveljavna vrsta podatkov za čas "
+"preloma vnosa"
 
 #: ../libgda-ui/data-entries/gdaui-entry-integer.xml.in.h:1
 #: ../libgda-ui/data-entries/gdaui-entry-number.xml.in.h:1
