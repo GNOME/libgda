@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
 "POT-Creation-Date: 2024-01-19 20:39+0000\n"
-"PO-Revision-Date: 2024-05-02 23:42+0200\n"
+"PO-Revision-Date: 2024-05-03 09:23+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -1533,6 +1533,8 @@ msgid ""
 "INTERNAL implementation error: unknown number of columns in GdaPStmt, \n"
 "set number of columns before using with GdaDataSelect"
 msgstr ""
+"NOTRANJA napaka pri implementaciji: neznano število stolpcev v GdaPStmt, \n"
+"nastavite število stolpcev pred uporabo z GdaDataSelect"
 
 #: ../libgda/gda-data-select.c:1073
 msgid "Incorrect SQL expression, only one modification statement is accepted"
@@ -1728,6 +1730,8 @@ msgid ""
 "Internal error: GdaDataSelect has %d GdaColumns, and SELECT statement has %d "
 "expressions"
 msgstr ""
+"Notranja napaka: GdaDataSelect ima %d stolpcev GdaColumns, izjava SELECT pa "
+"%d izraz/a/e/ov"
 
 #: ../libgda/gda-data-select.c:3762
 #, c-format
@@ -1835,7 +1839,7 @@ msgstr ""
 
 #: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
 #: ../libgda/gda-db-view.c:734
-#, fuzzy, c-format
+#, c-format
 msgid "Operation is not implemented for the used provider"
 msgstr "Operacija se ne izvaja za uporabljenega ponudnika"
 
@@ -1993,10 +1997,9 @@ msgstr ""
 "izjave niso bili najdeni"
 
 #: ../libgda/gda-meta-store.c:1386
-#, fuzzy
-#| msgid "Could not set the internal schema's version"
 msgid "Could not set the internal schema's version. Statement execution fails"
-msgstr "Ni mogoče določiti različice sheme"
+msgstr ""
+"Različice notranje sheme ni bilo mogoče nastaviti. Izvedba izjave ne uspe"
 
 #: ../libgda/gda-meta-store.c:1590
 #, c-format
@@ -2004,10 +2007,9 @@ msgid "Internal error: no information schema was found: %s"
 msgstr "Notranja napaka: ni bila najdena nobena informacijska shema: %s"
 
 #: ../libgda/gda-meta-store.c:1598
-#, fuzzy, c-format
-#| msgid "Internal error: can't get the prepared statement's actual statement"
+#, c-format
 msgid "Internal error: can't read information schema: %s"
-msgstr "Notranja napaka: ni mogoče pridobiti pripravljene dejanske izjave"
+msgstr "Notranja napaka: ni mogoče prebrati informacijske sheme: %s"
 
 #: ../libgda/gda-meta-store.c:1772
 msgid "Missing view name from <view> node"
@@ -3083,11 +3085,9 @@ msgid "Binding a BLOB for this type of statement is not supported"
 msgstr "Povezovanje predmeta BLOB za to vrsto stavka ni podprto"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:957
-#, fuzzy
-#| msgid "Set to TRUE if the role is allowed to create databases"
 msgid "Set to TRUE if the provider is the internal default"
 msgstr ""
-"Izbrana možnost določa, da je z vlogo mogoče ustvarjati podatkovne zbirke"
+"Nastavite na TRUE, če je ponudnik privzeta notranja privzeta nastavitev"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:979
 msgid "Can't find libsqlite3."
@@ -3122,10 +3122,13 @@ msgid "Wrong encryption passphrase"
 msgstr "Napačno šifrirno geslo"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1284
+#, fuzzy
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
 msgstr ""
+"VARNOSTNO OPOZORILO: Razširitev obremenitve je omogočena za ukaze SQL, kar "
+"pomeni, da lahko napadalec dostopa do zmogljivosti nalaganja razširitev"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1303
 #, c-format
@@ -3397,10 +3400,9 @@ msgid "There is already a namespace named '%s' in use with another connection"
 msgstr "Z drugo povezavo je že v uporabi imenski prostor z imenom »%s«"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:147
-#, fuzzy, c-format
-#| msgid "Connection string for the internal connection to use"
+#, c-format
 msgid "Connection was not added to virtual connection because it is closed"
-msgstr "Niz povezave za uporabo notranje povezave"
+msgstr "Povezava ni bila dodana navidezni povezavi, ker je zaprta"
 
 #: ../libgda/sqlite/virtual/gda-vconnection-hub.c:188
 msgid "Connection was not represented in hub"
@@ -3445,6 +3447,7 @@ msgstr "Notranja napaka: neveljaven upravljalnik ponudnika"
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
 msgstr ""
+"Napaka pri notranji implementaciji: noben način zapiranja povezave ni določen"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
@@ -3893,6 +3896,9 @@ msgid ""
 "Could not find icon file bin-attachment.png in resources please report error "
 "to https://gitlab.gnome.org/GNOME/libgda/issues. Error message: %s"
 msgstr ""
+"V virih ni bilo mogoče najti datoteke bin-attachment.png z ikonami, "
+"sporočite napako https://gitlab.gnome.org/GNOME/libgda/issues. Sporočilo o "
+"napaki: %s"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-boolean.c:139
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-pict.c:196
@@ -3973,14 +3979,14 @@ msgstr ""
 #, fuzzy
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
-"Vrednosti ni mogoče nastaviti na vnos: neveljavna vrsta podatkov za čas "
+"Vnosu vrednosti ni mogoče nastaviti: neveljavna vrsta podatkov za čas "
 "preloma vnosa"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
 #, fuzzy
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
-"Vrednosti iz vnosa ni mogoče pridobiti: neveljavna vrsta podatkov za čas "
+"Vrednosti vnosa ni mogoče pridobiti: neveljavna vrsta podatkov za čas "
 "preloma vnosa"
 
 #: ../libgda-ui/data-entries/gdaui-entry-integer.xml.in.h:1
@@ -4486,10 +4492,10 @@ msgstr "Prikazani vnosi podatkov"
 #, c-format
 msgid "There are more entries than expected in group. Found %d"
 msgid_plural "There are more entries than expected in group. Found %d"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "V skupini je več vnosov, kot je bilo pričakovano. Najdenih %d"
+msgstr[1] "V skupini je več vnosov, kot je bilo pričakovano. Najden %d"
+msgstr[2] "V skupini je več vnosov, kot je bilo pričakovano. Najdena %d"
+msgstr[3] "V skupini je več vnosov, kot je bilo pričakovano. Najdeni %d"
 
 #: ../libgda-ui/gdaui-basic-form.c:1843
 msgid "Can't find data entry for GdaHolder"
@@ -5030,9 +5036,9 @@ msgid "Request section header to be hidden if there is only one section"
 msgstr "Zahtevaj skrivanje glave odseka, kadar je na voljo le ena glava."
 
 #: ../libgda-ui/gdaui-server-operation.c:369
-#, fuzzy, c-format
+#, c-format
 msgid "Mal formed Server Operation. No Node at path: '%s'"
-msgstr "Mal je oblikoval operacijo strežnika. Brez vozlišča na poti: »%s«"
+msgstr "Nepravilno oblikovana operacija strežnika. Brez vozlišča na poti: »%s«"
 
 #: ../libgda-ui/gdaui-server-operation.c:442
 msgid "Add a new field"
@@ -6490,16 +6496,13 @@ msgstr "Ni mogoče prebrati celotnega BLOB v pomnilnik"
 
 #. there is an error here
 #: ../providers/mysql/gda-mysql-provider.c:2562
-#, fuzzy, c-format
-#| msgid ""
-#| "Unhandled data type '%s', please report this bug to http://bugzilla.gnome."
-#| "org/ for the \"libgda\" product."
+#, c-format
 msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 msgstr ""
-"Podatkovna vrsta '%s' ni podprta. Pošljite poročilo o napaki na http://"
-"bugzilla.gnome.org/ for the \"libgda\"."
+"Podatkovna vrsta »%s« ni podprta. Pošljite poročilo o napaki na http://"
+"gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../providers/mysql/gda-mysql-provider.c:2608
 msgid ""
@@ -7243,13 +7246,12 @@ msgid "Interactive"
 msgstr "Interaktivno"
 
 #: ../providers/mysql/mysql_specs_dsn.xml.in.h:14
-#, fuzzy
 msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
 msgstr ""
-" Časovna omejitev čakanja seje odjemalca, nastavljena na vrednost seje "
-"interactive_timeout spremenljivko."
+" Časovna omejitev čakanja seje odjemalca, nastavljena na vrednost "
+"spremenljivke seje interactive_timeout."
 
 #: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
@@ -8822,10 +8824,9 @@ msgid "column number %d ("
 msgstr "številka stolpca %d ("
 
 #: ../tools/browser/data-manager/analyser.c:210
-#, fuzzy, c-format
-#| msgid "List referencing data in "
+#, c-format
 msgid "List referencing data in %s."
-msgstr "Sklicni seznam podatkov v"
+msgstr "Sklicni seznam podatkov v %s."
 
 #: ../tools/browser/data-manager/analyser.c:276
 #, c-format
@@ -9942,8 +9943,8 @@ msgid ""
 "   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
 msgstr ""
 "Vnesite kodo SQL za izvedbo\n"
-"(baza podatkov mora razumeti tako, da:\n"
-"ki se odpre povezava, razen definicije spremenljivk)\n"
+"(zbirka podatkov jo mora razumeti tako, da:\n"
+"ko se odpre povezava, razen definicije spremenljivk)\n"
 "Dovoljene so naslednje bližnjice:\n"
 "   <small><b>CTRL - l</b></small> , da počistite urejevalnik\n"
 "   <small><b>CTRL - ENTER</b></small> za izvedbo SQL\n"
@@ -11456,16 +11457,12 @@ msgstr ""
 "dan\n"
 
 #: ../tools/common/t-connection.c:942
-#, fuzzy
-#| msgid ""
-#| "Format of the date used for by connection, where YYYY is the year, MM the "
-#| "month and DD the day"
 msgid ""
 "Format of the date used for the connection, where YYYY is the year, MM the "
 "month and DD the day"
 msgstr ""
-"Zapis datuma, uporabljena za povezavo, kjer je YYYY letnica, MM mesec in DD "
-"dan."
+"Zapis datuma, uporabljenega za povezavo, kjer je YYYY letnica, MM mesec in "
+"DD dan."
 
 #: ../tools/common/t-connection.c:1075
 msgid "Data source"
@@ -11536,10 +11533,10 @@ msgid "Can't initialize dictionary to store favorites"
 msgstr "Ni mogoče začeti slovarja za shranjevanje priljubljenih poizvedb"
 
 #: ../tools/common/t-favorites.c:185
-#, fuzzy, c-format
-#| msgid "Can't initialize dictionary to store favorites"
+#, c-format
 msgid "Can't initialize dictionary to store favorites :%s"
-msgstr "Ni mogoče začeti slovarja za shranjevanje priljubljenih poizvedb"
+msgstr ""
+"Ni mogoče inicializirati slovarja za shranjevanje priljubljenih poizvedb: %s"
 
 #: ../tools/common/t-term-context.c:523
 #, c-format
