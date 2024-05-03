@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libgda master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
 "POT-Creation-Date: 2024-01-19 20:39+0000\n"
-"PO-Revision-Date: 2024-05-03 09:23+0200\n"
+"PO-Revision-Date: 2024-05-03 19:09+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -2098,9 +2098,9 @@ msgid "Parameter '%s' is not present in statement"
 msgstr "Parametra '%s' v izjavi ni mogoče najti"
 
 #: ../libgda/gda-meta-store.c:3066
-#, fuzzy, c-format
+#, c-format
 msgid "While extracting data from Meta Store: %s"
-msgstr "Pri pridobivanju metapodatkov iz meta shrambe: %s"
+msgstr "Pri pridobivanju metapodatkov iz shrambe Meta Store: %s"
 
 #: ../libgda/gda-meta-store.c:3078 ../libgda/gda-meta-store.c:3198
 #, c-format
@@ -3122,7 +3122,6 @@ msgid "Wrong encryption passphrase"
 msgstr "Napačno šifrirno geslo"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1284
-#, fuzzy
 msgid ""
 "SECURITY WARNING: Load Extension is enable for SQL commands, this means an "
 "attacker can access extension load capabilities"
@@ -3233,16 +3232,13 @@ msgid "Can't write to SQLite's BLOB"
 msgstr "Ni mogoče pisati v SQLite's predmet BLOB"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3251
-#, fuzzy, c-format
-#| msgid ""
-#| "Can't obtain SQLite BLOB handle (reported type is '%s'), please report "
-#| "this bug to http://bugzilla.gnome.org/ for the \"libgda\" product."
+#, c-format
 msgid ""
 "Can't obtain SQLite BLOB handle (reported type is '%s'), please report this "
 "bug to http://gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
-"Ni mogoče pridobiti ročnika SQLite BLOB (poročana napaka je '%s'). O napaki "
-"pošljite poročilo na http://bugzilla.gnome.org/ za paket \"libgda\"."
+"Ni mogoče pridobiti ročnika SQLite BLOB (poročana napaka je »%s«). O napaki "
+"pošljite poročilo na http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3276
 msgid "Can't identify the ROWID of the blob to fill"
@@ -3976,14 +3972,12 @@ msgstr ""
 "Čas je relativen glede na krajevni čas (%s)"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:574
-#, fuzzy
 msgid "Can't set value to entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Vnosu vrednosti ni mogoče nastaviti: neveljavna vrsta podatkov za čas "
 "preloma vnosa"
 
 #: ../libgda-ui/data-entries/gdaui-entry-common-time.c:670
-#, fuzzy
 msgid "Can't get value from entry: Invalid Data Type for Entry Wrapper Time"
 msgstr ""
 "Vrednosti vnosa ni mogoče pridobiti: neveljavna vrsta podatkov za čas "
@@ -4426,19 +4420,7 @@ msgid "Libgda-ui Code Demos"
 msgstr "Demo libgda-UI kode"
 
 #: ../libgda-ui/demos/main.c:865
-#, fuzzy, c-format
-#| msgid ""
-#| "<b><big>Note:\n"
-#| "</big></b>Many of the demonstrated items use an opened connection to the "
-#| "SQLite using the '%s' file.\n"
-#| "\n"
-#| "In the source code shown here, the <i>demo_cnc</i> and <i>demo_parser</i> "
-#| "objects are created by the framework and made available to all the "
-#| "demonstrated items.\n"
-#| "\n"
-#| "To illustrate that calls are non blocking, there is a spinner at the top "
-#| "(which must never stop spinning), and a 1 second delay has been added "
-#| "whenever the connection is used."
+#, c-format
 msgid ""
 "<b><big>Note:\n"
 "</big></b>Many of the demonstrated items use an opened connection to the "
@@ -4456,11 +4438,12 @@ msgstr ""
 "</big></b>Predmeti lahko uporabljajo odprto povezavo s SQLite preko datoteke "
 "'%s'.\n"
 "\n"
-"V prikazani predstavitvi <i>demo_cnc</i> in <i>demo_parser</i> predmetov so "
-"na voljo povezave pri vseh teh predmetih.\n"
+"V prikazani izvorni kodi se predmeta <i>demo_cnc</i> in <i>demo_parser</i> "
+"ustvarita v ogrodju in sta na voljo za demonstracijske elemente.\n"
 "\n"
-"Za prikaz delovanja klicev je na vrhu vrteča ikona (ki ne sme biti pri "
-"miru), dodan pa je tudi 1 sekundni zami, kadar je povezava v uporabi."
+"Za prikaz, da klici niso blokirani, je na vrhu ikona vrtavke (ki ne sme "
+"nikoli biti pri miru), dodan pa je tudi 1-sekundni zamik, kadar je povezava "
+"v uporabi."
 
 #: ../libgda-ui/gdaui-basic-form.c:267
 msgid ""
@@ -5059,7 +5042,6 @@ msgid "Server operation specification"
 msgstr "Določilo opravil strežnika"
 
 #: ../libgda-ui/gdaui-set.c:730
-#, fuzzy
 msgid "No group exists for Set"
 msgstr "Za nabor ni nobene skupine"
 
@@ -9200,10 +9182,6 @@ msgid "Declare a foreign key for table '%s'"
 msgstr "Napovej tuj ključ za razpredelnico '%s'"
 
 #: ../tools/browser/fk-declare.c:186
-#, fuzzy
-#| msgid ""
-#| "define which table is references, which columns are part of the foreign "
-#| "key, and which column each one references"
 msgid ""
 "define which table is referenced, which columns are part of the foreign key, "
 "and which column each one references"
@@ -9928,7 +9906,6 @@ msgstr[2] "pred %lu dnevoma\n"
 msgstr[3] "pred %lu dnevi\n"
 
 #: ../tools/browser/query-exec/query-editor.h:34
-#, fuzzy
 msgid ""
 "Enter SQL code to execute\n"
 "(must be understood by the database to\n"
@@ -9942,17 +9919,17 @@ msgid ""
 "history\n"
 "   <small><b>CTRL - SPACE</b></small> to obtain a completion list"
 msgstr ""
-"Vnesite kodo SQL za izvedbo\n"
-"(zbirka podatkov jo mora razumeti tako, da:\n"
+"Vnesite kodo SQL za izvajanje\n"
+"(zbirka podatkov jo mora razumeti,\n"
 "ko se odpre povezava, razen definicije spremenljivk)\n"
 "Dovoljene so naslednje bližnjice:\n"
 "   <small><b>CTRL - l</b></small> , da počistite urejevalnik\n"
-"   <small><b>CTRL - ENTER</b></small> za izvedbo SQL\n"
-"   <small><b>CTRL - Do</b></small> premika na prejšnji izvedeni SQL v "
+"   <small><b>CTRL - VNAŠALKA</b></small> za izvedbo SQL\n"
+"   <small><b>CTRL - Gor</b></small> premika na prejšnji izvedeni SQL v "
 "zgodovini\n"
 "   <small><b>CTRL - Dol</b></small> , da se premaknete na naslednji izveden "
 "SQL v zgodovini\n"
-"   <small><b>CTRL - PRESLEDEK</b></small> za pridobitev seznama dokončanj"
+"   <small><b>CTRL - PRESLEDNICA</b></small> za pridobitev seznama dokončanj"
 
 #: ../tools/browser/query-exec/query-exec-perspective.c:339
 msgid "New query execution tab"
