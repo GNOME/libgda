@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
 "POT-Creation-Date: 2020-08-13 02:38+0000\n"
-"PO-Revision-Date: 2020-08-13 05:38+0000\n"
+"PO-Revision-Date: 2024-05-18 05:38+0000\n"
 "Last-Translator: Ma. Teresa Guix <maite.guix@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/"
 "ca/)\n"
@@ -4351,7 +4351,7 @@ msgid ""
 "alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
 "character will be left unmodified)"
 msgstr ""
-"Caràcters permesos en cada posició («0»:digit, «9»: digit excepte 0, «@»:"
+"Caràcters permesos en cada posició («0»:dígit, «9»: dígit excepte 0, «@»:"
 "alpha, «^»:majúscules, «#»:alphanumeric, «*»:qualsevol caràcter; qualsevol "
 "altre caràcter es deixarà sense modificar)"
 
@@ -4919,7 +4919,7 @@ msgstr "Heu d’especificar el nom del fitxer"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2061
 msgid "Got empty file while converting the data"
-msgstr "EL fitxer està buit mentre es converteixen les dades"
+msgstr "El fitxer està buit mentre es converteixen les dades"
 
 #: ../libgda-ui/gdaui-raw-grid.c:2074
 #, c-format
@@ -6710,7 +6710,7 @@ msgid ""
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
-"Explicita un protocol de connexió a utilitzar. És util quan la resta de "
+"Explicita un protocol de connexió a utilitzar. És útil quan la resta de "
 "paràmetres de connexió solen fer que s'utilitzi un protocol diferent del que "
 "voleu"
 
@@ -8287,7 +8287,7 @@ msgstr "Error de sintaxi després de '\\'"
 #: ../tools/base/base-tool-command.c:354
 #, c-format
 msgid "Unbalanced usage of quotes"
-msgstr "Ús de quotes no balancejat"
+msgstr "Ús de cometes no equilibrat"
 
 #: ../tools/base/base-tool-help.c:219
 msgid "Usage"
