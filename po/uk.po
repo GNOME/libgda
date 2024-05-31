@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
-"POT-Creation-Date: 2024-02-22 13:07+0000\n"
-"PO-Revision-Date: 2024-04-06 19:25+0300\n"
+"POT-Creation-Date: 2024-05-18 16:53+0000\n"
+"PO-Revision-Date: 2024-05-31 20:39+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -6372,6 +6372,8 @@ msgid ""
 "Time limit after which a search operation should be terminated by the server "
 "(leave undefined or 0 for unlimited)"
 msgstr ""
+"Обмеження за часом, коли дію з пошуку має бути перервано сервером (не"
+" визначайте або встановіть значення 0, якщо не слід обмежувати)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
@@ -6384,7 +6386,7 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:19
 msgid "Never: certificate not requested or checked"
-msgstr ""
+msgstr "Ніколи: без запиту сертифіката або перевірений"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
@@ -6396,13 +6398,15 @@ msgstr ""
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
-msgstr ""
+msgstr "Вимога: потрібен сертифікат, сертифікат перевірено"
 
 #: ../providers/ldap/libmain.c:70
 msgid ""
 "Provider for database where tables are based on data contained in an LDAP "
 "directory"
 msgstr ""
+"Надавач бази даних, де таблиці засновано на датах, що містяться у каталозі"
+" LDAP"
 
 #: ../providers/mdb/gda-mdb-provider.c:302
 #: ../providers/mdb/gda-mdb-provider.c:309
@@ -6437,7 +6441,7 @@ msgstr "Булеве представлення MySQL"
 
 #: ../providers/mysql/gda-mysql-provider.c:450
 msgid "Cannot give a UNIX SOCKET if you also provide either a HOST or a PORT"
-msgstr ""
+msgstr "Не можна надати СОКЕТ UNIX, якщо ви також надаєте ВУЗОЛ або ПОРТ"
 
 #: ../providers/mysql/gda-mysql-provider.c:458
 msgid "Invalid port number"
@@ -6454,6 +6458,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
+"Не вдалося встановити для клієнта набір символів UTF8. Використовуємо %s."
+" Будуть проблеми з символами поза UTF-8"
 
 #: ../providers/mysql/gda-mysql-provider.c:587
 msgid "The connection string must contain the DB_NAME values"
@@ -6468,16 +6474,16 @@ msgstr "Немає опису"
 #: ../providers/mysql/gda-mysql-provider.c:1764
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
-"У приготованій інструкції не можна використовувати безіменного параметра"
-" інструкції."
+"У приготованій інструкції не можна використовувати безіменного параметра "
+"інструкції."
 
 #: ../providers/mysql/gda-mysql-provider.c:1985
 #: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
-"Не вдалося виконати інструкцію SELECT для отримання останнього вставленого"
-" рядка: %s"
+"Не вдалося виконати інструкцію SELECT для отримання останнього вставленого "
+"рядка: %s"
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2515
@@ -6491,20 +6497,25 @@ msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 msgstr ""
+"Непридатний до обробки тип даних «%s», будь ласка, повідомте про цю ваду на"
+" сторінці http://gitlab.gnome.org/"
+"GNOME/libgda/issues"
 
 #: ../providers/mysql/gda-mysql-provider.c:2608
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
 msgstr ""
-"Не вдалося скористатися CURSOR. Потрібна версія Mysql принаймні 5.0. Попри"
-" це скористаємося випадковим доступом."
+"Не вдалося скористатися CURSOR. Потрібна версія Mysql принаймні 5.0. Попри "
+"це скористаємося випадковим доступом."
 
 #: ../providers/mysql/gda-mysql-recordset.c:152
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
 msgstr ""
+"Не вдалося скористатися CURSOR. Потрібна принаймні Mysql 5.0. Розмір"
+" фрагмента проігноровано."
 
 #: ../providers/mysql/gda-mysql-recordset.c:240
 #: ../providers/postgres/gda-postgres-recordset.c:147
@@ -7029,7 +7040,7 @@ msgstr "Об'єднання"
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:93
 msgid "tbl_name[,tbl_name]...: only with MERGE engine"
-msgstr ""
+msgstr "назва_таблиці[,назва_таблиці]...: лише з рушієм MERGE"
 
 #. other table options
 #: ../providers/mysql/mysql_specs_create_table.xml.in.h:95
@@ -7345,6 +7356,8 @@ msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
 msgstr ""
+"Формат рядка з'єднання було змінено: замініть DATABASE на DB_NAME із тим"
+" самим вмістом"
 
 #: ../providers/postgres/gda-postgres-provider.c:683
 #, c-format
@@ -7493,7 +7506,7 @@ msgstr "Простір таблиці"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:27
 msgid ""
 "The name of the tablespace that will be associated with the new database"
-msgstr ""
+msgstr "Назва простору таблиць, який буде пов'язано із новою базою даних"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:29
@@ -7754,7 +7767,7 @@ msgstr "Можна створити бази даних"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:55
 msgid "Set to TRUE if the role is allowed to create databases"
-msgstr ""
+msgstr "Встановіть значення TRUE, якщо ролі дозволено створення баз даних"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7770,7 +7783,7 @@ msgstr "Можна створити ролі"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:65
 msgid "Set to TRUE if the role is allowed to create roles"
-msgstr ""
+msgstr "Встановіть значення TRUE, якщо ролі дозволено створення ролей"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7789,6 +7802,8 @@ msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
 msgstr ""
+"Встановіть значення TRUE, якщо створена роль успадковує права доступу ролей,"
+" учасником яких вона є"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
