@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
-"POT-Creation-Date: 2024-05-03 17:11+0000\n"
-"PO-Revision-Date: 2024-05-30 16:58+0300\n"
+"POT-Creation-Date: 2024-08-15 05:10+0000\n"
+"PO-Revision-Date: 2024-11-24 19:18+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3986,6 +3986,8 @@ msgid ""
 "Data cell renderer asked to display values of different data types, at least "
 "%s and %s, which means the data model has some incoherencies"
 msgstr ""
+"Обробнику комірки даних наказано показати значення у різних типах даних,"
+" принаймні %s і %s, що означає, що у моделі даних є певні неузгодженості"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
@@ -5138,6 +5140,8 @@ msgid ""
 "As no transaction was used, only a part of the valid data\n"
 "has been written, and the remaining modification have been discarded."
 msgstr ""
+"Оскільки не було використано жодних операцій, було записано лише\n"
+"частину коректних даних, а решту змін було відкинуто."
 
 #: ../libgda-ui/internal/utility.c:433
 msgid "Discard modified data"
@@ -6361,6 +6365,8 @@ msgid ""
 "Use a cache to store some static server data (the cached files are in the "
 "user's cache directory), default is TRUE"
 msgstr ""
+"Використовувати кеш для зберігання певних статичних даних сервера (кешовані"
+" файли зберігаються у каталозі кешу користувача), типовим є значення TRUE"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Time limit"
@@ -6371,8 +6377,8 @@ msgid ""
 "Time limit after which a search operation should be terminated by the server "
 "(leave undefined or 0 for unlimited)"
 msgstr ""
-"Обмеження за часом, коли дію з пошуку має бути перервано сервером (не"
-" визначайте або встановіть значення 0, якщо не слід обмежувати)"
+"Обмеження за часом, коли дію з пошуку має бути перервано сервером (не "
+"визначайте або встановіть значення 0, якщо не слід обмежувати)"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:17
 msgid "Size limit"
@@ -6390,10 +6396,14 @@ msgstr "Ніколи: без запиту сертифіката або пере
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
 msgstr ""
+"Дозволити: надіслано запит щодо сертифікації, прийнятними є варіанти без"
+" сертифіката або з помилковим сертифікатом."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:21
 msgid "Try: certificate requested, none accepted, otherwise checked."
 msgstr ""
+"Спробувати: надіслано запит щодо сертифікації, прийнятний варіант без"
+" сертифікації, якщо вказано сертифікат, його буде перевірено."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
@@ -6404,8 +6414,8 @@ msgid ""
 "Provider for database where tables are based on data contained in an LDAP "
 "directory"
 msgstr ""
-"Надавач бази даних, де таблиці засновано на датах, що містяться у каталозі"
-" LDAP"
+"Надавач бази даних, де таблиці засновано на датах, що містяться у каталозі "
+"LDAP"
 
 #: ../providers/mdb/gda-mdb-provider.c:302
 #: ../providers/mdb/gda-mdb-provider.c:309
@@ -6457,8 +6467,8 @@ msgid ""
 "Could not set client charset to UTF8. Using %s. It'll be problems with non "
 "UTF-8 characters"
 msgstr ""
-"Не вдалося встановити для клієнта набір символів UTF8. Використовуємо %s."
-" Будуть проблеми з символами поза UTF-8"
+"Не вдалося встановити для клієнта набір символів UTF8. Використовуємо %s. "
+"Будуть проблеми з символами поза UTF-8"
 
 #: ../providers/mysql/gda-mysql-provider.c:584
 msgid "The connection string must contain the DB_NAME values"
@@ -6473,16 +6483,16 @@ msgstr "Немає опису"
 #: ../providers/mysql/gda-mysql-provider.c:1757
 msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr ""
-"У приготованій інструкції не можна використовувати параметр інструкції без"
-" назви."
+"У приготованій інструкції не можна використовувати параметр інструкції без "
+"назви."
 
 #: ../providers/mysql/gda-mysql-provider.c:1978
 #: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr ""
-"Не вдалося виконати інструкцію SELECT для отримання останнього вставленого"
-" рядка: %s"
+"Не вдалося виконати інструкцію SELECT для отримання останнього вставленого "
+"рядка: %s"
 
 #. force reading the complete BLOB into memory
 #: ../providers/mysql/gda-mysql-provider.c:2508
@@ -6496,25 +6506,24 @@ msgid ""
 "Unhandled data type '%s', please report this bug to http://gitlab.gnome.org/"
 "GNOME/libgda/issues"
 msgstr ""
-"Непридатний до обробки тип даних «%s», будь ласка, повідомте про цю ваду на"
-" сторінці http://gitlab.gnome.org/"
-"GNOME/libgda/issues"
+"Непридатний до обробки тип даних «%s», будь ласка, повідомте про цю ваду на "
+"сторінці http://gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../providers/mysql/gda-mysql-provider.c:2601
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Using random "
 "access anyway."
 msgstr ""
-"Не вдалося скористатися CURSOR. Потрібна принаймні Mysql 5.0. Користуємося"
-" випадковим доступом попри це."
+"Не вдалося скористатися CURSOR. Потрібна принаймні Mysql 5.0. Користуємося "
+"випадковим доступом попри це."
 
 #: ../providers/mysql/gda-mysql-recordset.c:152
 msgid ""
 "Could not use CURSOR. Mysql version 5.0 at least is required. Chunk size "
 "ignored."
 msgstr ""
-"Не вдалося скористатися CURSOR. Потрібна принаймні Mysql 5.0. Розмір"
-" фрагмента проігноровано."
+"Не вдалося скористатися CURSOR. Потрібна принаймні Mysql 5.0. Розмір "
+"фрагмента проігноровано."
 
 #: ../providers/mysql/gda-mysql-recordset.c:240
 #: ../providers/postgres/gda-postgres-recordset.c:147
@@ -7345,8 +7354,8 @@ msgid ""
 "The connection string format has changed: replace DATABASE with DB_NAME and "
 "the same contents"
 msgstr ""
-"Формат рядка з'єднання було змінено: замініть DATABASE на DB_NAME із тим"
-" самим вмістом"
+"Формат рядка з'єднання було змінено: замініть DATABASE на DB_NAME із тим "
+"самим вмістом"
 
 #: ../providers/postgres/gda-postgres-provider.c:683
 #, c-format
@@ -7791,8 +7800,8 @@ msgid ""
 "Set to TRUE if the created role inherits the privileges of roles it is a "
 "member of"
 msgstr ""
-"Встановіть значення TRUE, якщо створена роль успадковує права доступу ролей,"
-" учасником яких вона є"
+"Встановіть значення TRUE, якщо створена роль успадковує права доступу ролей, "
+"учасником яких вона є"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7808,7 +7817,7 @@ msgstr "Може входити"
 #.
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:85
 msgid "Set to TRUE if the role is allowed to log in"
-msgstr ""
+msgstr "Встановіть TRUE, якщо ролі дозволено входити"
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7907,7 +7916,7 @@ msgstr ""
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:12
 msgid "Use INHERIT instead of LIKE"
-msgstr ""
+msgstr "Використовувати INHERIT замість LIKE"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:13
 msgid "Copy defaults"
@@ -7920,7 +7929,7 @@ msgstr "Копіювати типові вирази"
 #. foreign key spec
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:62
 msgid "Deferrable"
-msgstr ""
+msgstr "Можлива затримка"
 
 #. To translators: Action of setting a value to its default value
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:73
@@ -7929,7 +7938,7 @@ msgstr "Типове значення"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:74
 msgid "Not deferrable"
-msgstr ""
+msgstr "Неможлива затримка"
 
 #: ../providers/postgres/postgres_specs_create_table.xml.in.h:75
 msgid "Deferrable initially immediate"
@@ -7972,6 +7981,8 @@ msgstr "Можна створити користувачів"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:13
 msgid "Set to TRUE if the user is allowed to create users"
 msgstr ""
+"Встановіть TRUE, якщо користувачеві дозволено створювати облікові записи"
+" користувачів"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:17
 msgid ""
