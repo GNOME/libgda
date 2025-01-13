@@ -3,13 +3,13 @@
 #
 # Yuri Syrota <rasta@renome.rovno.ua>, 1999.
 # Maxim Dziumanenko <mvd@mylinux.com.ua>, 2004.
-# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
-"POT-Creation-Date: 2024-08-15 05:14+0000\n"
-"PO-Revision-Date: 2024-11-25 15:48+0200\n"
+"POT-Creation-Date: 2025-01-13 02:06+0000\n"
+"PO-Revision-Date: 2025-01-13 13:24+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3986,8 +3986,8 @@ msgid ""
 "Data cell renderer asked to display values of different data types, at least "
 "%s and %s, which means the data model has some incoherencies"
 msgstr ""
-"Обробнику комірки даних наказано показати значення у різних типах даних,"
-" принаймні %s і %s, що означає, що у моделі даних є певні неузгодженості"
+"Обробнику комірки даних наказано показати значення у різних типах даних, "
+"принаймні %s і %s, що означає, що у моделі даних є певні неузгодженості"
 
 #: ../libgda-ui/data-entries/gdaui-data-cell-renderer-textual.c:475
 #: ../libgda-ui/data-entries/plugins/gdaui-data-cell-renderer-password.c:299
@@ -6366,8 +6366,8 @@ msgid ""
 "Use a cache to store some static server data (the cached files are in the "
 "user's cache directory), default is TRUE"
 msgstr ""
-"Використовувати кеш для зберігання певних статичних даних сервера (кешовані"
-" файли зберігаються у каталозі кешу користувача), типовим є значення TRUE"
+"Використовувати кеш для зберігання певних статичних даних сервера (кешовані "
+"файли зберігаються у каталозі кешу користувача), типовим є значення TRUE"
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:15
 msgid "Time limit"
@@ -6397,14 +6397,14 @@ msgstr "Ніколи: без запиту сертифіката або пере
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:20
 msgid "Allow: certificate requested, none or a bad one accepted."
 msgstr ""
-"Дозволити: надіслано запит щодо сертифікації, прийнятними є варіанти без"
-" сертифіката або з помилковим сертифікатом."
+"Дозволити: надіслано запит щодо сертифікації, прийнятними є варіанти без "
+"сертифіката або з помилковим сертифікатом."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:21
 msgid "Try: certificate requested, none accepted, otherwise checked."
 msgstr ""
-"Спробувати: надіслано запит щодо сертифікації, прийнятний варіант без"
-" сертифікації, якщо вказано сертифікат, його буде перевірено."
+"Спробувати: надіслано запит щодо сертифікації, прийнятний варіант без "
+"сертифікації, якщо вказано сертифікат, його буде перевірено."
 
 #: ../providers/ldap/ldap_specs_dsn.xml.in.h:22
 msgid "Demand: certificate requested and checked"
@@ -6426,9 +6426,8 @@ msgid ""
 "path to the database file) and DB_NAME (the database file without the '%s' "
 "at the end)."
 msgstr ""
-"Змінено формат рядка з'єднання: замініть FILENAME на DB_DIR (шляхом до файла"
-" бази "
-"даних) і DB_NAME (файлом бази даних без «%s» наприкінці)."
+"Змінено формат рядка з'єднання: замініть FILENAME на DB_DIR (шляхом до файла "
+"бази даних) і DB_NAME (файлом бази даних без «%s» наприкінці)."
 
 #: ../providers/mdb/gda-mdb-provider.c:336
 #, c-format
@@ -7263,6 +7262,8 @@ msgid ""
 " The client's session wait timeout set to the value of the session "
 "interactive_timeout variable."
 msgstr ""
+" Час очікування на сеанс клієнта встановлено за значенням змінної"
+" interactive_timeout."
 
 #: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
@@ -7472,6 +7473,9 @@ msgid ""
 "domain sockets, enter the socket's path (usually /tmp), or leave this field "
 "empty)"
 msgstr ""
+"Вузол, на якому запущено сервер бази даних (для серверів, що працюють на"
+" сокетах домену UNIX, введіть шлях до сокета (зазвичай /tmp), можна не"
+" заповнювати)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:7
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:7
@@ -7480,6 +7484,8 @@ msgid ""
 "Database server port (for servers running on unix domain sockets, enter the "
 "socket's file name extension (usually 5432), or leave this field empty)"
 msgstr ""
+"Порт сервера бази даних (для серверів, що працюють на сокетах домену UNIX,"
+" введіть суфікс назви файла сокета (зазвичай 5432), можна не заповнювати)"
 
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:9
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:9
@@ -7881,7 +7887,7 @@ msgstr "Член"
 msgid ""
 "Existing roles to which the new role will be immediately added as a new "
 "member"
-msgstr ""
+msgstr "Наявні ролі, до яких нову роль буде негайно додано як нового учасника"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:108
 msgid "Role"
@@ -7998,8 +8004,8 @@ msgstr "Можна створити користувачів"
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:13
 msgid "Set to TRUE if the user is allowed to create users"
 msgstr ""
-"Встановіть TRUE, якщо користувачеві дозволено створювати облікові записи"
-" користувачів"
+"Встановіть TRUE, якщо користувачеві дозволено створювати облікові записи "
+"користувачів"
 
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:17
 msgid ""
