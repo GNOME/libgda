@@ -10731,7 +10731,7 @@ msgstr "Context d'execució"
 #: ../tools/common/t-app.c:1256
 #, c-format
 msgid "%s [<NAME> [<VALUE>|_null_]]"
-msgstr "%s [<NAME> [<VALUE>|_nul_]]"
+msgstr "%s [<NAME> [<VALUE>|_null_]]"
 
 #: ../tools/common/t-app.c:1257
 msgid "Set or show internal parameter, or list all if no parameter specified "
