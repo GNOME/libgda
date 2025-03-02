@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
 "POT-Creation-Date: 2020-08-13 02:38+0000\n"
-"PO-Revision-Date: 2024-05-18 05:38+0000\n"
+"PO-Revision-Date: 2025-03-02 05:38+0000\n"
 "Last-Translator: Ma. Teresa Guix <maite.guix@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/softcatala/teams/62837/"
 "ca/)\n"
@@ -286,7 +286,7 @@ msgstr ""
 #: ../control-center/gdaui-dsn-assistant.c:508
 #: ../control-center/gdaui-dsn-editor.c:428
 msgid "Data source name"
-msgstr "Nom de la base de dades"
+msgstr "Nom de l'origen de les dades"
 
 #: ../control-center/gdaui-dsn-assistant.c:522
 msgid "System wide data source:"
@@ -553,7 +553,7 @@ msgstr ""
 #: ../libgda/gda-config.c:1154
 #, c-format
 msgid "Malformed data source name '%s'"
-msgstr "Nom de la font de dades incorrecte «%s»"
+msgstr "Nom de l'origen de les dades incorrecte «%s»"
 
 #: ../libgda/gda-config.c:1180 ../libgda/gda-config.c:1192
 #: ../libgda/gda-config.c:1291
@@ -1129,12 +1129,12 @@ msgstr "S'esperava l'etiqueta <gda_array_data> però s'ha obtingut <%s>"
 
 #: ../libgda/gda-data-model.c:1955
 msgid "Could not get an iterator for source data model"
-msgstr "No s'ha pogut obtenir un iterador pel model de dades font"
+msgstr "No s'ha pogut obtenir un iterador pel model de dades d'origen"
 
 #: ../libgda/gda-data-model.c:1972
 #, c-format
 msgid "Inexistent column in source data model: %d"
-msgstr "No existeix la columna al model de dades font: %d"
+msgstr "No existeix la columna al model de dades d'origen: %d"
 
 #: ../libgda/gda-data-model.c:1986
 #, c-format
@@ -2810,7 +2810,7 @@ msgstr "No es pot obtenir el nom de la taula"
 #: ../libgda/gda-util.c:707
 #, c-format
 msgid "Field number %d not found in source named '%s'"
-msgstr "Número de camp %d no es troba a la font anomenada «%s»"
+msgstr "Número de camp %d no es troba a origen de les dades anomenat «%s»"
 
 #: ../libgda/gda-util.c:882
 msgid "SELECT statement has no FROM part"
@@ -7582,7 +7582,7 @@ msgstr "EUC coreà (base Hangle)"
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:41
 #: ../providers/postgres/postgres_specs_drop_db.xml.in.h:26
 msgid "Taiwan EUC"
-msgstr "EUC tailandès"
+msgstr "EUC taiwanès"
 
 #. To translators: Charset name
 #: ../providers/postgres/postgres_specs_create_db.xml.in.h:43
