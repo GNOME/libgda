@@ -9,17 +9,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues\n"
-"POT-Creation-Date: 2020-11-09 05:23+0000\n"
-"PO-Revision-Date: 2020-11-15 10:25+0100\n"
-"Last-Translator: Marek Černocký <marek@manet.cz>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
+"POT-Creation-Date: 2025-08-10 21:51+0000\n"
+"PO-Revision-Date: 2025-10-22 00:26+0200\n"
+"Last-Translator: Daniel Rusek <mail@asciiwolf.com>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 3.7\n"
 
 #: ../control-center/dsn-config.c:79
 #: ../tools/browser/ldap-browser/ldap-favorite-selector.c:378
@@ -129,8 +129,8 @@ msgstr "Nelze uložit definici DSN: %s"
 #: ../providers/mysql/gda-mysql-provider.c:1964
 #: ../providers/mysql/gda-mysql-provider.c:1979
 #: ../providers/mysql/gda-mysql-util.c:69
-#: ../providers/postgres/gda-postgres-provider.c:1786
-#: ../providers/postgres/gda-postgres-provider.c:1801
+#: ../providers/postgres/gda-postgres-provider.c:1787
+#: ../providers/postgres/gda-postgres-provider.c:1802
 #: ../providers/postgres/gda-postgres-util.c:106
 #: ../providers/postgres/gda-postgres-util.c:109
 #: ../providers/reuseable/postgres/gda-postgres-reuseable.c:194
@@ -1737,23 +1737,6 @@ msgstr "Datový model obsahuje rozsáhlé binární objekty (BLOB)"
 msgid "Can't get the number of rows of data model"
 msgstr "Nelze získat počet řádků v datovém modelu"
 
-#: ../libgda/gda-db-column.c:626
-#, c-format
-msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
-msgstr "Neplatný typ sloupce %s. Viz API pro gda_g_type_from_string().\n"
-
-#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
-#, c-format
-msgid "Internal error: Operation should be prepared, setting a connection data"
-msgstr ""
-"Interní chyba: Operace by měla být připravená, nastavují se údaje připojení"
-
-#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-view.c:734
-#: ../libgda/gda-db-index.c:516
-#, c-format
-msgid "Operation is not implemented for the used provider"
-msgstr "Pro použitého poskytovatele není operace implementována"
-
 #: ../libgda/gda-db-catalog.c:236
 #, c-format
 msgid ""
@@ -1789,6 +1772,8 @@ msgid "xml file '%s' is not valid\n"
 msgstr "Soubor XML „%s“ není platný\n"
 
 #: ../libgda/gda-db-catalog.c:855 ../libgda/gda-db-table.c:742
+#: ../libgda/gda-ddl-modifiable.c:83 ../libgda/gda-ddl-modifiable.c:118
+#: ../libgda/gda-ddl-modifiable.c:154
 #, c-format
 msgid "Connection is not opened"
 msgstr "Připojení není otevřeno"
@@ -1823,16 +1808,35 @@ msgstr "Nezdařilo se vytvořit dokument XML ze souboru: „%s“"
 msgid "XML file is not valid\n"
 msgstr "Soubor XML není platný\n"
 
+#: ../libgda/gda-db-column.c:626
+#, c-format
+msgid "Invalid column type %s. See API for gda_g_type_from_string ().\n"
+msgstr "Neplatný typ sloupce %s. Viz API pro gda_g_type_from_string().\n"
+
+#: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
+#, c-format
+msgid "Internal error: Operation should be prepared, setting a connection data"
+msgstr ""
+"Interní chyba: Operace by měla být připravená, nastavují se údaje připojení"
+
+#: ../libgda/gda-db-column.c:1412 ../libgda/gda-db-index.c:516
+#: ../libgda/gda-db-view.c:734
+#, c-format
+msgid "Operation is not implemented for the used provider"
+msgstr "Pro použitého poskytovatele není operace implementována"
+
 #: ../libgda/gda-db-table.c:750
 #, c-format
 msgid "Empty column list"
 msgstr "Prázdný seznam sloupců"
 
 #: ../libgda/gda-db-view.c:538
+#, c-format
 msgid "View name is not set"
 msgstr "Není nastaven název zobrazení"
 
 #: ../libgda/gda-db-view.c:545
+#, c-format
 msgid "View definition is not set"
 msgstr "Není nastavena definice zobrazení"
 
@@ -2390,11 +2394,11 @@ msgstr "Specifikace GdaServerOperation není v souladu s DTD\n"
 
 #: ../libgda/gda-server-operation.c:1347
 msgid ""
-"Non handled GdaServerOperationType, please report error to http://gitlab."
-"gnome.org/GNOME/libgda/issues"
+"Non handled GdaServerOperationType, please report error to http://"
+"gitlab.gnome.org/GNOME/libgda/issues"
 msgstr ""
-"Neobsluhovaný GdaServerOperationType, nahlaste prosím chybu na http://gitlab."
-"gnome.org/GNOME/libgda/issues"
+"Neobsluhovaný GdaServerOperationType, nahlaste prosím chybu na http://"
+"gitlab.gnome.org/GNOME/libgda/issues"
 
 #: ../libgda/gda-server-operation.c:1612 ../libgda/gda-server-operation.c:1627
 #, c-format
@@ -2644,7 +2648,7 @@ msgstr "Schází parametr „%s“"
 #: ../libgda/gda-statement.c:1363 ../libgda/sqlite/gda-sqlite-provider.c:3472
 #: ../providers/jdbc/gda-jdbc-provider.c:1493
 #: ../providers/mysql/gda-mysql-provider.c:2239
-#: ../providers/postgres/gda-postgres-provider.c:2059
+#: ../providers/postgres/gda-postgres-provider.c:2060
 #: ../providers/web/gda-web-provider.c:1468
 #, c-format
 msgid "Parameter '%s' is invalid"
@@ -2797,7 +2801,7 @@ msgstr "Nelze přepsat příkaz, pokud se nejedná o INSERT nebo UPDATE"
 #: ../libgda/gda-util.c:1872 ../libgda/sqlite/gda-sqlite-provider.c:3453
 #: ../providers/jdbc/gda-jdbc-provider.c:1464
 #: ../providers/mysql/gda-mysql-provider.c:2219
-#: ../providers/postgres/gda-postgres-provider.c:2041
+#: ../providers/postgres/gda-postgres-provider.c:2042
 #: ../providers/web/gda-web-provider.c:1450
 #, c-format
 msgid "Missing parameter '%s' to execute query"
@@ -3125,8 +3129,8 @@ msgid "Missing database name or directory"
 msgstr "Schází název databáze nebo složka"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:1814
-#: ../providers/postgres/gda-postgres-provider.c:1083
 #: ../providers/postgres/gda-postgres-provider.c:1084
+#: ../providers/postgres/gda-postgres-provider.c:1085
 msgid "Transactions are not supported in read-only mode"
 msgstr "Transakce nejsou podporovány v režimu pouze pro čtení"
 
@@ -3154,7 +3158,7 @@ msgstr "Typ operátoru není podporován"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:2951
 #: ../providers/jdbc/gda-jdbc-provider.c:1254
-#: ../providers/postgres/gda-postgres-provider.c:1638
+#: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
 msgstr "Nepojmenovaný parametr není v předpřipraveném příkazu dovolen"
@@ -3162,7 +3166,7 @@ msgstr "Nepojmenovaný parametr není v předpřipraveném příkazu dovolen"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3068
 #: ../libgda/sqlite/gda-sqlite-provider.c:3080
 #: ../providers/mysql/gda-mysql-provider.c:1963
-#: ../providers/postgres/gda-postgres-provider.c:1785
+#: ../providers/postgres/gda-postgres-provider.c:1786
 #, c-format
 msgid "Can't build SELECT statement to get last inserted row: %s"
 msgstr ""
@@ -3170,14 +3174,14 @@ msgstr ""
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3114
 #: ../providers/mysql/gda-mysql-provider.c:1991
-#: ../providers/postgres/gda-postgres-provider.c:1813
+#: ../providers/postgres/gda-postgres-provider.c:1814
 msgid "SELECT statement to get last inserted row did not return any row"
 msgstr ""
 "Příkaz SELECT pro získání posledního vloženého řádku nevrátil žádný řádek"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3118
 #: ../providers/mysql/gda-mysql-provider.c:1995
-#: ../providers/postgres/gda-postgres-provider.c:1817
+#: ../providers/postgres/gda-postgres-provider.c:1818
 #, c-format
 msgid "SELECT statement to get last inserted row returned too many (%d) rows"
 msgstr ""
@@ -3224,8 +3228,8 @@ msgstr "Prázdný příkaz"
 #: ../providers/jdbc/gda-jdbc-provider.c:1433
 #: ../providers/mysql/gda-mysql-provider.c:2194
 #: ../providers/mysql/gda-mysql-provider.c:2197
-#: ../providers/postgres/gda-postgres-provider.c:2017
-#: ../providers/postgres/gda-postgres-provider.c:2020
+#: ../providers/postgres/gda-postgres-provider.c:2018
+#: ../providers/postgres/gda-postgres-provider.c:2021
 #: ../providers/web/gda-web-provider.c:1424
 #: ../providers/web/gda-web-provider.c:1427
 msgid "Missing parameter(s) to execute query"
@@ -3234,7 +3238,7 @@ msgstr "K provedení dotazu schází parametr(y)"
 #: ../libgda/sqlite/gda-sqlite-provider.c:3491
 #: ../providers/jdbc/gda-jdbc-provider.c:1512
 #: ../providers/mysql/gda-mysql-provider.c:2258
-#: ../providers/postgres/gda-postgres-provider.c:2078
+#: ../providers/postgres/gda-postgres-provider.c:2079
 #: ../providers/web/gda-web-provider.c:1491
 msgid "Can't rewrite statement handle default values"
 msgstr "Nelze přepsat příkaz, aby obsluhoval výchozí hodnoty"
@@ -4254,9 +4258,9 @@ msgstr "Formát"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:2
 msgid ""
-"Allowed characters at each position('0':digit, '9': digit except 0, '@':"
-"alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any other "
-"character will be left unmodified)"
+"Allowed characters at each position('0':digit, '9': digit except 0, "
+"'@':alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any "
+"other character will be left unmodified)"
 msgstr ""
 "Povolit znaky na jednotlivých pozicích ('0':číslice; '9': číslice vyjma 0; "
 "'@':písmeno, '^':velké písmeno, '#':písmeno nebo číslice, '*':libovolný "
@@ -4268,11 +4272,11 @@ msgstr "Maska"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:4
 msgid ""
-"Writing mask for corresponding characters in format ('_': writable, '-':"
-"writable, removed from actual value, ' ': not writable)"
+"Writing mask for corresponding characters in format ('_': writable, "
+"'-':writable, removed from actual value, ' ': not writable)"
 msgstr ""
-"Zápis masky pro odpovídající znaky ve formátu ('_': zapisovatelný; '-':"
-"zapisovatelný, odstraněn z aktuální hodnoty; ' ': nezapisovatelný)"
+"Zápis masky pro odpovídající znaky ve formátu ('_': zapisovatelný; "
+"'-':zapisovatelný, odstraněn z aktuální hodnoty; ' ': nezapisovatelný)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-password.xml.in.h:1
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-pict-spec_string.xml.in.h:1
@@ -4509,10 +4513,10 @@ msgstr "libovolný platný výraz SQL"
 
 #: ../libgda-ui/gdaui-data-filter.c:186
 msgid ""
-"Columns can be referenced by their name or more easily using <b><tt>_&lt;"
-"column number&gt;</tt></b>. For example a valid expression can be: <b><tt>_2 "
-"like 'doe%'</tt></b> to filter rows where the 2nd column starts with "
-"<tt>doe</tt>."
+"Columns can be referenced by their name or more easily using "
+"<b><tt>_&lt;column number&gt;</tt></b>. For example a valid expression can "
+"be: <b><tt>_2 like 'doe%'</tt></b> to filter rows where the 2nd column "
+"starts with <tt>doe</tt>."
 msgstr ""
 "Na sloupce se lze odkazovat jejich názvy a nebo jednodušeji pomocí "
 "<b><tt>_&lt;čísla sloupce&gt;</tt></b>. Platným výrazem je například: "
@@ -5203,16 +5207,19 @@ msgstr "Popis sloupce"
 #: ../providers/mysql/mysql_specs_comment_table.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_column.xml.in.h:2
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:1
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:1
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:1
 #: ../providers/postgres/postgres_specs_add_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_column.xml.in.h:2
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:1
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:1
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_add_column.xml.in.h:2
 #: ../providers/sqlcipher/sqlcipher_specs_drop_table.xml.in.h:1
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_add_column.xml.in.h:2
 #: ../providers/sqlite/sqlite_specs_drop_table.xml.in.h:1
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:1
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:1
 #: ../tools/browser/data-manager/data-source-editor.c:174
 #: ../tools/browser/schema-browser/table-info.c:372
@@ -5948,9 +5955,12 @@ msgid "Table to rename"
 msgstr "Tabulka, která se má přejmenovat"
 
 #: ../providers/bdbsql/bdbsql_specs_rename_table.xml.in.h:3
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:5
 #: ../providers/mysql/mysql_specs_rename_table.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:5
 #: ../providers/postgres/postgres_specs_rename_table.xml.in.h:3
 #: ../providers/sqlcipher/sqlcipher_specs_rename_table.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:5
 #: ../providers/sqlite/sqlite_specs_rename_table.xml.in.h:3
 msgid "New name"
 msgstr "Nový název"
@@ -6429,7 +6439,7 @@ msgid "Unnamed statement parameter is not allowed in prepared statement."
 msgstr "V předpřipraveném příkazu není dovolen nepojmenovaný parametr příkazu."
 
 #: ../providers/mysql/gda-mysql-provider.c:1978
-#: ../providers/postgres/gda-postgres-provider.c:1800
+#: ../providers/postgres/gda-postgres-provider.c:1801
 #, c-format
 msgid "Can't execute SELECT statement to get last inserted row: %s"
 msgstr "Nelze provést příkaz SELECT pro získání posledního vloženého řádku: %s"
@@ -7191,6 +7201,31 @@ msgstr "Komprimovat"
 msgid "Use compression protocol"
 msgstr "Použít komprimovaný protokol"
 
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:2
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:2
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:2
+msgid "Table to ALTER"
+msgstr "Tabulka, která se má ZMĚNIT"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:3
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:3
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:3
+#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
+msgid "Column"
+msgstr "Sloupec"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:4
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:4
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:4
+msgid "Column to rename"
+msgstr "Sloupec, který se má přejmenovat"
+
+#: ../providers/mysql/mysql_specs_rename_column.xml.in.h:6
+#: ../providers/postgres/postgres_specs_rename_column.xml.in.h:6
+#: ../providers/sqlite/sqlite_specs_rename_column.xml.in.h:6
+msgid "New column name"
+msgstr "Název nového sloupce"
+
 #: ../providers/oracle/gda-oracle-meta.c:567
 msgid "Could not fetch next row"
 msgstr "Nelze získat následující řádek"
@@ -7283,20 +7318,20 @@ msgstr "Nelze nastavit serach_path (cestu vyhledávání) na %s"
 msgid "Search path %s is invalid"
 msgstr "Cesta vyhledávání %s je neplatná"
 
-#: ../providers/postgres/gda-postgres-provider.c:1094
-#: ../providers/postgres/gda-postgres-provider.c:1096
+#: ../providers/postgres/gda-postgres-provider.c:1095
+#: ../providers/postgres/gda-postgres-provider.c:1097
 msgid "Transactions are not supported in read uncommitted isolation level"
 msgstr "Transakce nejsou podporovány v izolované úrovni čtení nezařazených"
 
-#: ../providers/postgres/gda-postgres-provider.c:1100
-#: ../providers/postgres/gda-postgres-provider.c:1102
+#: ../providers/postgres/gda-postgres-provider.c:1101
+#: ../providers/postgres/gda-postgres-provider.c:1103
 msgid "Transactions are not supported in repeatable read isolation level"
 msgstr "Transakce nejsou podporovány v izolované úrovni opakovatelného čtení"
 
-#: ../providers/postgres/gda-postgres-provider.c:1119
-#: ../providers/postgres/gda-postgres-provider.c:1219
-#: ../providers/postgres/gda-postgres-provider.c:1269
-#: ../providers/postgres/gda-postgres-provider.c:1319
+#: ../providers/postgres/gda-postgres-provider.c:1120
+#: ../providers/postgres/gda-postgres-provider.c:1220
+#: ../providers/postgres/gda-postgres-provider.c:1270
+#: ../providers/postgres/gda-postgres-provider.c:1320
 #: ../providers/postgres/gda-postgres-recordset.c:424
 #: ../providers/postgres/gda-postgres-recordset.c:453
 #: ../providers/postgres/gda-postgres-recordset.c:617
@@ -7304,21 +7339,21 @@ msgstr "Transakce nejsou podporovány v izolované úrovni opakovatelného čten
 msgid "Internal error"
 msgstr "Interní chyba"
 
-#: ../providers/postgres/gda-postgres-provider.c:1225
-#: ../providers/postgres/gda-postgres-provider.c:1275
-#: ../providers/postgres/gda-postgres-provider.c:1325
+#: ../providers/postgres/gda-postgres-provider.c:1226
+#: ../providers/postgres/gda-postgres-provider.c:1276
+#: ../providers/postgres/gda-postgres-provider.c:1326
 #, c-format
 msgid "Wrong savepoint name '%s'"
 msgstr "Nesprávný název „%s“ bodu uložení"
 
-#: ../providers/postgres/gda-postgres-provider.c:2168
-#: ../providers/postgres/gda-postgres-provider.c:2170
+#: ../providers/postgres/gda-postgres-provider.c:2169
+#: ../providers/postgres/gda-postgres-provider.c:2171
 msgid "Cannot start transaction"
 msgstr "Nelze zahájit transakci"
 
-#: ../providers/postgres/gda-postgres-provider.c:2423
-#: ../providers/postgres/gda-postgres-provider.c:2460
-#: ../providers/postgres/gda-postgres-provider.c:2496
+#: ../providers/postgres/gda-postgres-provider.c:2424
+#: ../providers/postgres/gda-postgres-provider.c:2461
+#: ../providers/postgres/gda-postgres-provider.c:2497
 msgid "Could not set the XA transaction ID parameter"
 msgstr "Nelze nastavit parametr ID transakce XA"
 
@@ -10300,8 +10335,8 @@ msgstr "Znak oddělovače pro formát CSV"
 
 #: ../tools/common/t-app.c:277
 msgid ""
-"Defines how the DN column is handled for LDAP searched (among \"dn\", \"rdn"
-"\" and \"none\")"
+"Defines how the DN column is handled for LDAP searched (among \"dn\", "
+"\"rdn\" and \"none\")"
 msgstr ""
 "Definuje, jak je sloupec DN obsluhován při hledání LDAP (na výběr z „dn“, "
 "„rdn“ a „none“)"
@@ -10341,8 +10376,8 @@ msgstr "%s [<TYP_METADAT>]"
 
 #: ../tools/common/t-app.c:949
 msgid ""
-"Force reading the database meta data (or part of the meta data, ex:\"tables"
-"\")"
+"Force reading the database meta data (or part of the meta data, ex:"
+"\"tables\")"
 msgstr "Vynucené čtení metadat databáze (nebo části metadat, např. \"tables\")"
 
 #: ../tools/common/t-app.c:958
@@ -10824,10 +10859,6 @@ msgstr "Seznam schémat"
 #: ../tools/common/t-app.c:1683 ../tools/common/t-app.c:1806
 msgid "No object found"
 msgstr "Nebyl nalezen žádný objekt"
-
-#: ../tools/common/t-app.c:1836 ../tools/common/web-server.c:849
-msgid "Column"
-msgstr "Sloupec"
 
 #: ../tools/common/t-app.c:1838 ../tools/common/web-server.c:851
 msgid "Nullable"
