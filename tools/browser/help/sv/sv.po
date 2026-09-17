@@ -1,14 +1,14 @@
 # Swedish translation for libgda.
-# Copyright © 2019, 2020 libgda's COPYRIGHT HOLDER
+# Copyright © 2019-2026 libgda's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgda package.
 # Sebastian Rasmussen <sebras@gmail.com>, 2019.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2020.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2020, 2026.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libgda master\n"
-"POT-Creation-Date: 2018-10-01 16:51+0000\n"
-"PO-Revision-Date: 2020-11-06 14:36+0100\n"
+"POT-Creation-Date: 2026-09-13 11:59+0000\n"
+"PO-Revision-Date: 2026-09-17 20:48+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.9\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -314,8 +314,8 @@ msgstr "Definiera datakällor"
 msgid ""
 "The simplest data source is a data source which represents all the data from "
 "a table, displayed when executed as a single tabular view, as if one "
-"executed the <code>SELECT * FROM mytable</code> statement in the <link xref="
-"\"query-execution-perspective\"/>."
+"executed the <code>SELECT * FROM mytable</code> statement in the <link "
+"xref=\"query-execution-perspective\"/>."
 msgstr ""
 "Den enklaste datakällan är en datakälla som representerar alla data från en "
 "tabell, som visas som en enstaka tabellvy när den körs, som om man kört "
@@ -350,13 +350,13 @@ msgstr ""
 #. (itstool) path: section/p
 #: C/data-manager-perspective.page:55
 msgid ""
-"Data sources can be defined using an <link xref=\"data-manager-xml-syntax"
-"\">XML syntax</link>, or using the <link xref=\"data-manager-source-editor"
-"\">default interface</link>."
+"Data sources can be defined using an <link xref=\"data-manager-xml-"
+"syntax\">XML syntax</link>, or using the <link xref=\"data-manager-source-"
+"editor\">default interface</link>."
 msgstr ""
 "Datakällor kan definieras via <link xref=\"data-manager-xml-syntax\">XML-"
-"syntax</link>, eller via <link xref=\"data-manager-source-editor"
-"\">standardgränssnittet</link>."
+"syntax</link>, eller via <link xref=\"data-manager-source-"
+"editor\">standardgränssnittet</link>."
 
 #. (itstool) path: figure/title
 #: C/data-manager-perspective.page:60 C/data-manager-perspective.page:65
@@ -441,14 +441,14 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/data-manager-perspective.page:81
 msgid ""
-"<gui>Variables</gui>: shows/hide the <link xref=\"variables-syntax"
-"\">variables</link> panel where you can give values to the variables present "
-"in the SQL code of any data source's definition. The panel is automatically "
-"shown when a variable is detected in the SQL code."
+"<gui>Variables</gui>: shows/hide the <link xref=\"variables-"
+"syntax\">variables</link> panel where you can give values to the variables "
+"present in the SQL code of any data source's definition. The panel is "
+"automatically shown when a variable is detected in the SQL code."
 msgstr ""
-"<gui>Variabler</gui>: visar/döljer panelen <link xref=\"variables-syntax"
-"\">variabler</link> där du kan ange värden för variablerna som finns i SQL-"
-"koden för någon datakällas definition. Panelen visas automatiskt när en "
+"<gui>Variabler</gui>: visar/döljer panelen <link xref=\"variables-"
+"syntax\">variabler</link> där du kan ange värden för variablerna som finns i "
+"SQL-koden för någon datakällas definition. Panelen visas automatiskt när en "
 "variabel detekteras i SQL-koden."
 
 #. (itstool) path: item/p
@@ -480,8 +480,8 @@ msgid ""
 "mode.png\"/> toolbar button or the <gui>Execute</gui> button."
 msgstr ""
 "För att köra en definierad mängd datakällor, växla över till körläge med "
-"hjälp av verktygsfältsknappen <media type=\"image\" mime=\"image/png\" src="
-"\"figures/data-man-mode.png\"/> eller knappen <gui>Kör</gui>."
+"hjälp av verktygsfältsknappen <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/data-man-mode.png\"/> eller knappen <gui>Kör</gui>."
 
 #. (itstool) path: section/p
 #: C/data-manager-perspective.page:96
@@ -933,7 +933,7 @@ msgid ""
 "dashed line instead of a solid line for actual foreign keys"
 msgstr ""
 "Då de visas i diagram representeras deklarerade främmande nycklar med en "
-"streckad linje istället för en hel linje för faktiska främmande nycklar"
+"streckad linje i stället för en hel linje för faktiska främmande nycklar"
 
 #. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
@@ -1093,16 +1093,16 @@ msgstr ""
 #. (itstool) path: section/p
 #: C/declaredfk.page:76
 msgid ""
-"Another way to remove a declared foreign key is in a <link xref=\"diagram"
-"\">diagram</link> page through the contextual menu associated with the "
-"dashed line representing the declared foreign key, selecting the "
+"Another way to remove a declared foreign key is in a <link "
+"xref=\"diagram\">diagram</link> page through the contextual menu associated "
+"with the dashed line representing the declared foreign key, selecting the "
 "<guiseq><gui>Remove this declared foreign key</gui></guiseq> option."
 msgstr ""
-"Ett annat sätt att ta bort en deklarerad främmande nyckel är i en <link xref="
-"\"diagram\">diagram</link>sida genom kontextmenyn som är associerad med den "
-"streckade linjen som representerar den deklarerade främmande nyckeln, genom "
-"att välja alternativet <guiseq><gui>Ta bort denna deklarerade främmande "
-"nyckel</gui></guiseq>."
+"Ett annat sätt att ta bort en deklarerad främmande nyckel är i en <link "
+"xref=\"diagram\">diagram</link>sida genom kontextmenyn som är associerad med "
+"den streckade linjen som representerar den deklarerade främmande nyckeln, "
+"genom att välja alternativet <guiseq><gui>Ta bort denna deklarerade "
+"främmande nyckel</gui></guiseq>."
 
 #. (itstool) path: page/title
 #: C/diagram.page:7
@@ -1269,19 +1269,19 @@ msgstr "Aktiviteter"
 #. (itstool) path: section/p
 #: C/features.page:32
 msgid ""
-"The activities are grouped by theme around the notion of <link type=\"topic"
-"\" xref=\"general-ui\">perspectives</link>, the following are currently "
-"implemented:"
+"The activities are grouped by theme around the notion of <link "
+"type=\"topic\" xref=\"general-ui\">perspectives</link>, the following are "
+"currently implemented:"
 msgstr ""
-"Aktiviteterna grupperas efter tema runt begreppet <link type=\"topic\" xref="
-"\"general-ui\">perspektiv</link>, där följande för närvarande finns "
+"Aktiviteterna grupperas efter tema runt begreppet <link type=\"topic\" "
+"xref=\"general-ui\">perspektiv</link>, där följande för närvarande finns "
 "implementerade:"
 
 #. (itstool) path: item/p
 #: C/features.page:36
 msgid ""
-"analyse the database schema (tables, relations, ...), see the <link xref="
-"\"schema-browser-perspective\">Schema browser perspective</link>"
+"analyse the database schema (tables, relations, ...), see the <link "
+"xref=\"schema-browser-perspective\">Schema browser perspective</link>"
 msgstr ""
 "analysera databasschemat (tabeller, relationer, …), se <link xref=\"schema-"
 "browser-perspective\">schemabläddrarperspektivet</link>"
@@ -1289,20 +1289,20 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/features.page:38
 msgid ""
-"execute SQL commands, see the <link xref=\"query-execution-perspective"
-"\">Query execution perspective</link>"
+"execute SQL commands, see the <link xref=\"query-execution-"
+"perspective\">Query execution perspective</link>"
 msgstr ""
-"exekvera SQL-kommandon, se <link xref=\"query-execution-perspective"
-"\">frågeexekveringsperspektivet</link>"
+"exekvera SQL-kommandon, se <link xref=\"query-execution-"
+"perspective\">frågeexekveringsperspektivet</link>"
 
 #. (itstool) path: item/p
 #: C/features.page:40
 msgid ""
-"analyse the table's contents, see the <link xref=\"data-manager-perspective"
-"\">Data manager perspective</link>"
+"analyse the table's contents, see the <link xref=\"data-manager-"
+"perspective\">Data manager perspective</link>"
 msgstr ""
-"analysera tabellens innehåll, se <link xref=\"data-manager-perspective"
-"\">datahanterarperspektivet</link>"
+"analysera tabellens innehåll, se <link xref=\"data-manager-"
+"perspective\">datahanterarperspektivet</link>"
 
 #. (itstool) path: item/p
 #: C/features.page:42
@@ -1312,8 +1312,8 @@ msgid ""
 "perspective\">LDAP browser perspective</link>"
 msgstr ""
 "för <link xref=\"ldap-connection\">LDAP-anslutningar</link>, hantera "
-"hierarkiska data i LDAP-trädet, se <link xref=\"ldap-browser-perspective"
-"\">LDAP-bläddrarperspektivet</link>"
+"hierarkiska data i LDAP-trädet, se <link xref=\"ldap-browser-"
+"perspective\">LDAP-bläddrarperspektivet</link>"
 
 #. (itstool) path: section/p
 #: C/features.page:45
@@ -1338,12 +1338,12 @@ msgstr ""
 #: C/features.page:53
 msgid ""
 "the general framework is opened enough to add new integrated features; "
-"specifically anyone can develop new <link type=\"topic\" xref=\"general-ui"
-"\">perspectives</link>"
+"specifically anyone can develop new <link type=\"topic\" xref=\"general-"
+"ui\">perspectives</link>"
 msgstr ""
 "det allmänna ramverket är öppet nog för att lägga till nya integrerade "
-"funktioner, mer specifikt så kan vem som helst utveckla nya <link type="
-"\"topic\" xref=\"general-ui\">perspektiv</link>"
+"funktioner, mer specifikt så kan vem som helst utveckla nya <link "
+"type=\"topic\" xref=\"general-ui\">perspektiv</link>"
 
 #. (itstool) path: page/title
 #: C/general-ui.page:8
@@ -1481,24 +1481,24 @@ msgid ""
 "As <app>gda-browser</app> uses the <app>libgda</app> library, it can open "
 "connections to databases for which a database driver (provider) exists in "
 "<app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</link>, <link "
-"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://www."
-"postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
-"\">SQLite</link>, MS Access (through the <link href=\"http://sourceforge.net/"
-"projects/mdbtools/\">MDBTools</link> library), <link href=\"http://en."
-"wikipedia.org/wiki/LDAP\">LDAP</link> and <link href=\"http://java.sun.com/"
-"docs/books/tutorial/jdbc/index.html\">JDBC</link> are supported at the "
-"moment)."
+"href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://"
+"www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://"
+"www.sqlite.org\">SQLite</link>, MS Access (through the <link href=\"http://"
+"sourceforge.net/projects/mdbtools/\">MDBTools</link> library), <link "
+"href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</link> and <link "
+"href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> "
+"are supported at the moment)."
 msgstr ""
 "Eftersom <app>gda-browser</app> använder biblioteket <app>libgda</app> så "
 "kan det öppna anslutningar för vilka en databasdrivrutin (leverantör) "
 "existerar i <app>libgda</app> (<link href=\"http://www.oracle.com\">Oracle</"
 "link>, <link href=\"http://www.mysql.org\">MySQL</link>, <link href=\"http://"
-"www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://www.sqlite.org"
-"\">SQLite</link>, MS Access (genom biblioteket <link href=\"http://"
-"sourceforge.net/projects/mdbtools/\">MDBTools</link>), <link href=\"http://"
-"en.wikipedia.org/wiki/LDAP\">LDAP</link> och <link href=\"http://java.sun."
-"com/docs/books/tutorial/jdbc/index.html\">JDBC</link> har stöd för "
-"tillfället)."
+"www.postgresql.org/\">PostgreSQL</link>, <link href=\"http://"
+"www.sqlite.org\">SQLite</link>, MS Access (genom biblioteket <link "
+"href=\"http://sourceforge.net/projects/mdbtools/\">MDBTools</link>), <link "
+"href=\"http://en.wikipedia.org/wiki/LDAP\">LDAP</link> och <link "
+"href=\"http://java.sun.com/docs/books/tutorial/jdbc/index.html\">JDBC</link> "
+"har stöd för tillfället)."
 
 #. (itstool) path: section/title
 #: C/index.page:29
@@ -1621,8 +1621,8 @@ msgid ""
 "been user defined. Activating a favorite (double clicking) resets the SQL "
 "text area's contents to the selected statement's SQL."
 msgstr ""
-"Vänsterdelen av perspektivet listar favoritsatserna som som har definierats "
-"av användare. Att aktivera en favorit (dubbelklick) återställer SQL-"
+"Vänsterdelen av perspektivet listar favoritsatserna som har definierats av "
+"användare. Att aktivera en favorit (dubbelklick) återställer SQL-"
 "textområdets innehåll till den valda satsens SQL."
 
 #. (itstool) path: page/p
@@ -1721,9 +1721,9 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/query-execution-perspective.page:76
 msgid ""
-"<gui>Variables</gui>: shows or hides the <link xref=\"variables-syntax"
-"\">variables</link> panel where you can give values to the variables present "
-"in the SQL code. The panel is automatically shown when a variable is "
+"<gui>Variables</gui>: shows or hides the <link xref=\"variables-"
+"syntax\">variables</link> panel where you can give values to the variables "
+"present in the SQL code. The panel is automatically shown when a variable is "
 "detected in the SQL code"
 msgstr ""
 "<gui>Variabler</gui>: visar eller döljer panelen <link xref=\"variables-"
@@ -1914,12 +1914,12 @@ msgstr "Flik som visar information om en tabell"
 #: C/schema-browser-perspective.page:45
 msgid ""
 "Example of information displayed for each table, note the difference between "
-"foreign keys implemented in the database and <link xref=\"declared-fk"
-"\">declared foreign keys</link>"
+"foreign keys implemented in the database and <link xref=\"declared-"
+"fk\">declared foreign keys</link>"
 msgstr ""
 "Exempel på information som visas för varje tabell, observera skillnaden "
-"mellan främmande nycklar som är implementerade i databasen och <link xref="
-"\"declared-fk\">deklarerade främmande nycklar</link>"
+"mellan främmande nycklar som är implementerade i databasen och <link "
+"xref=\"declared-fk\">deklarerade främmande nycklar</link>"
 
 #. (itstool) path: figure/media
 #. This is a reference to an external file such as an image or video. When
@@ -1963,11 +1963,11 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/transactions.page:14
 msgid ""
-"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-begin."
-"png\"/> toolbar button to start a transaction"
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"begin.png\"/> toolbar button to start a transaction"
 msgstr ""
-"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" src="
-"\"figures/trans-begin.png\"/> för att starta en transaktion"
+"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-begin.png\"/> för att starta en transaktion"
 
 #. (itstool) path: p/media
 #. This is a reference to an external file such as an image or video. When
@@ -1986,12 +1986,12 @@ msgstr ""
 #. (itstool) path: item/p
 #: C/transactions.page:16
 msgid ""
-"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-commit."
-"png\"/> toolbar button to commit the current transaction (apply all the "
-"changes)"
+"use the <media type=\"image\" mime=\"image/png\" src=\"figures/trans-"
+"commit.png\"/> toolbar button to commit the current transaction (apply all "
+"the changes)"
 msgstr ""
-"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" src="
-"\"figures/trans-commit.png\"/> för att checka in aktuell transaktion "
+"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-commit.png\"/> för att checka in aktuell transaktion "
 "(tillämpa alla ändringarna)"
 
 #. (itstool) path: p/media
@@ -2015,9 +2015,9 @@ msgid ""
 "rollback.png\"/> toolbar button to abort the current transaction (forget all "
 "the changes)"
 msgstr ""
-"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" src="
-"\"figures/trans-rollback.png\"/> för att avbryta aktuell transaktion (glöm "
-"alla ändringar)"
+"använd verktygsfältsknappen <media type=\"image\" mime=\"image/png\" "
+"src=\"figures/trans-rollback.png\"/> för att avbryta aktuell transaktion "
+"(glöm alla ändringar)"
 
 #. (itstool) path: note/p
 #: C/transactions.page:22
@@ -2126,7 +2126,7 @@ msgid ""
 "columns)"
 msgstr ""
 "Blå: betyder att aktuellt värde i datafältet är oanvänt och kolumnens "
-"standardvärde kommer att användas istället (exempelvis användbart för "
+"standardvärde kommer att användas i stället (exempelvis användbart för "
 "automatiskt inkrementerade kolumner)"
 
 #. (itstool) path: item/p
@@ -2605,16 +2605,16 @@ msgstr "SQL som går använda med virtuella anslutningar"
 #. (itstool) path: section/p
 #: C/virtual-connections.page:130
 msgid ""
-"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
-"\">SQLite</link> in any virtual connection. Be aware however that if you "
-"define database objects (outside of the extended SQL presented next "
+"You can use the SQL understood by <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> in any virtual connection. Be aware however that "
+"if you define database objects (outside of the extended SQL presented next "
 "section), they will be lost the next time the virtual connection is opened."
 msgstr ""
-"Du kan använda SQL som förstås av <link href=\"http://sqlite.org/lang.html"
-"\">SQLite</link> i alla virtuella anslutningar. Var dock medveten om att "
-"ifall du definierar databasobjekt (utanför den utökade SQL som presenteras i "
-"nästa avsnitt), så kommer de att gå förlorade nästa gång den virtuella "
-"anslutningen öppnas."
+"Du kan använda SQL som förstås av <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> i alla virtuella anslutningar. Var dock medveten "
+"om att ifall du definierar databasobjekt (utanför den utökade SQL som "
+"presenteras i nästa avsnitt), så kommer de att gå förlorade nästa gång den "
+"virtuella anslutningen öppnas."
 
 # TODO: dead link...
 #. (itstool) path: section/p
@@ -2645,8 +2645,8 @@ msgstr ""
 "lagrats i en LDAP-katalog. För att växla till detta perspektiv, använd menyn "
 "<guiseq><gui>Perspektiv</gui><gui>LDAP-bläddrare</gui></guiseq>, eller "
 "kortkommandot <keyseq><key>Ctrl</key><key>P</key></keyseq>. Detta perspektiv "
-"är förstås bara tillgängligt när den öppnade anslutningen är en <link xref="
-"\"ldap-connection\">LDAP-anslutning</link>."
+"är förstås bara tillgängligt när den öppnade anslutningen är en <link "
+"xref=\"ldap-connection\">LDAP-anslutning</link>."
 
 # TODO: vertical panes
 #. (itstool) path: page/p
@@ -2787,8 +2787,8 @@ msgid ""
 "Links in these tabs (identified by blue and underlined text) open a new tab, "
 "or use the first tab next to the current tab to display information about "
 "the selected link. For example in the figure above illustrating an LDAP "
-"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP classes"
-"\" tab and display the information about that class."
+"entries tab, clicking on the \"inetOrgPerson\" will open a new \"LDAP "
+"classes\" tab and display the information about that class."
 msgstr ""
 "Länkar i dessa flikar (identifierade av blå, understruken text) öppnar en ny "
 "flik, eller använder den första fliken intill den aktuella fliken för att "
@@ -2953,8 +2953,8 @@ msgstr "Mappning av attribut till kolumner"
 msgid ""
 "As mentioned in the previous section, each attribute will be mapped to a "
 "column. The column type is normally automatically determined (string, "
-"number, ...) but can be forced by appending to the attribute name the \"::"
-"&lt;type&gt;\" for the requested type."
+"number, ...) but can be forced by appending to the attribute name the "
+"\"::&lt;type&gt;\" for the requested type."
 msgstr ""
 "Som nämndes i föregående avsnitt så kommer varje attribut att mappas till en "
 "kolumn. Kolumntypen avgörs vanligen automatiskt (sträng, tal, …) men kan "
@@ -2966,13 +2966,13 @@ msgstr ""
 msgid ""
 "Also, because some attributes can have multiple values, the table "
 "construction handles multi-valued attributes in different ways, depending on "
-"each attribute's options. An option can be specified by appending the \"::"
-"&lt;option&gt;\" to the attribute name. Valid options are:"
+"each attribute's options. An option can be specified by appending the "
+"\"::&lt;option&gt;\" to the attribute name. Valid options are:"
 msgstr ""
 "Då vissa attribut även kan ha flera värden, så hanterar tabellkonstruktionen "
 "flervärda attribut på olika sätt, beroende på alternativen för varje "
-"attribut. Ett alternativ kan anges genom att lägga till ”::&lt;"
-"alternativ&gt;” till attributnamnet. Giltiga alternativ är:"
+"attribut. Ett alternativ kan anges genom att lägga "
+"till ”::&lt;alternativ&gt;” till attributnamnet. Giltiga alternativ är:"
 
 #. (itstool) path: item/p
 #: C/ldap-connections.page:74
@@ -3030,15 +3030,16 @@ msgstr "SQL användbar med LDAP-anslutningar"
 #. (itstool) path: section/p
 #: C/ldap-connections.page:88
 msgid ""
-"You can use the SQL understood by <link href=\"http://sqlite.org/lang.html"
-"\">SQLite</link> in any LDAP connection. Be aware however that if you define "
-"database objects (outside of the extended SQL presented next section), they "
-"will be lost the next time the LDAP connection is opened."
+"You can use the SQL understood by <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> in any LDAP connection. Be aware however that if "
+"you define database objects (outside of the extended SQL presented next "
+"section), they will be lost the next time the LDAP connection is opened."
 msgstr ""
-"Du kan använda SQL som förstås av <link href=\"http://sqlite.org/lang.html"
-"\">SQLite</link> i alla LDAP-anslutningar. Var dock medveten om att ifall du "
-"definierar databasobjekt (utanför den utökade SQL som presenteras i nästa "
-"avsnitt), så kommer de att gå förlorade nästa gång LDAP-anslutningen öppnas."
+"Du kan använda SQL som förstås av <link href=\"http://sqlite.org/"
+"lang.html\">SQLite</link> i alla LDAP-anslutningar. Var dock medveten om att "
+"ifall du definierar databasobjekt (utanför den utökade SQL som presenteras i "
+"nästa avsnitt), så kommer de att gå förlorade nästa gång LDAP-anslutningen "
+"öppnas."
 
 #. (itstool) path: section/p
 #: C/ldap-connections.page:93
@@ -3065,12 +3066,12 @@ msgstr "LDAP-tabeller kan skapas med en utökad uppsättning SQL-kommandon:"
 #: C/ldap-connections.page:110
 msgid ""
 "<code>CREATE LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
-"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
-"filter&gt;']</code> to declare a new LDAP virtual table"
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] "
+"[SCOPE='&lt;filter&gt;']</code> to declare a new LDAP virtual table"
 msgstr ""
 "<code>CREATE LDAP TABLE &lt;tabellnamn&gt; [BASE='&lt;bas-dn&gt;'] "
-"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
-"filter&gt;']</code> för att deklarera en ny LDAP-virtuell tabell"
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] "
+"[SCOPE='&lt;filter&gt;']</code> för att deklarera en ny LDAP-virtuell tabell"
 
 #. (itstool) path: item/p
 #: C/ldap-connections.page:111
@@ -3085,14 +3086,14 @@ msgstr ""
 #: C/ldap-connections.page:112
 msgid ""
 "<code>ALTER LDAP TABLE &lt;table_name&gt; [BASE='&lt;base_dn&gt;'] "
-"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
-"filter&gt;']</code> to modify an LDAP virtual table's definition (only the "
-"specified part is actually modified)"
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] "
+"[SCOPE='&lt;filter&gt;']</code> to modify an LDAP virtual table's definition "
+"(only the specified part is actually modified)"
 msgstr ""
 "<code>ALTER LDAP TABLE &lt;tabellnamn&gt; [BASE='&lt;bas-dn&gt;'] "
-"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] [SCOPE='&lt;"
-"filter&gt;']</code> för att ändra en LDAP-virtuell tabells definition "
-"(endast den angivna delen ändras)"
+"[FILTER='&lt;filter&gt;'] [ATTRIBUTES='&lt;filter&gt;'] "
+"[SCOPE='&lt;filter&gt;']</code> för att ändra en LDAP-virtuell tabells "
+"definition (endast den angivna delen ändras)"
 
 #. (itstool) path: item/p
 #: C/ldap-connections.page:113
@@ -3102,8 +3103,8 @@ msgid ""
 "also be used instead."
 msgstr ""
 "<code>DROP LDAP TABLE &lt;tabellnamn&gt;</code> för att ta bort en LDAP-"
-"virtuell tabell. Observera att den vanliga <code>DROP TABLE &lt;"
-"tabellnamn&gt;</code> också kan användas istället."
+"virtuell tabell. Observera att den vanliga <code>DROP TABLE "
+"&lt;tabellnamn&gt;</code> också kan användas i stället."
 
 #. (itstool) path: section/p
 #: C/ldap-connections.page:116
