@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgda\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/libgda/issues/\n"
-"POT-Creation-Date: 2026-09-10 17:31+0000\n"
-"PO-Revision-Date: 2026-09-13 14:57+0300\n"
+"POT-Creation-Date: 2026-10-10 17:12+0000\n"
+"PO-Revision-Date: 2026-10-29 20:16+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>="
-"2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n%10>=2"
+" && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 25.12.1\n"
 
 #: ../control-center/dsn-config.c:79
@@ -864,8 +864,7 @@ msgstr "Некоректний метатип для отримання дани
 #: ../libgda/gda-connection.c:5531
 #, c-format
 msgid "Internal error while creating statement to retrieve data: %s"
-msgstr ""
-"Внутрішня помилка під час створення інструкції для отримання даних: %s"
+msgstr "Внутрішня помилка під час створення інструкції для отримання даних: %s"
 
 #: ../libgda/gda-connection.c:5723 ../libgda/gda-connection.c:5777
 #: ../libgda/gda-connection.c:5822 ../libgda/gda-connection.c:5867
@@ -1465,8 +1464,7 @@ msgstr ""
 
 #: ../libgda/gda-data-proxy.c:973
 msgid "GdaDataProxy can't handle non random access data models"
-msgstr ""
-"GdaDataProxy не може обробляти моделі без випадкового доступу до даних"
+msgstr "GdaDataProxy не може обробляти моделі без випадкового доступу до даних"
 
 #: ../libgda/gda-data-proxy.c:1650 ../libgda/gda-data-proxy.c:4059
 msgid ""
@@ -1579,8 +1577,7 @@ msgstr "Інструкція з внесення змін використову
 
 #: ../libgda/gda-data-select.c:1353
 #, c-format
-msgid ""
-"Modification statement's  '%s' parameter is a %s when it should be a %s"
+msgid "Modification statement's  '%s' parameter is a %s when it should be a %s"
 msgstr ""
 "Параметр «%s» інструкція із внесення змін має значення %s, але він повинен "
 "мати значення %s"
@@ -1845,8 +1842,7 @@ msgstr ""
 
 #: ../libgda/gda-db-column.c:1111 ../libgda/gda-db-column.c:1218
 #, c-format
-msgid ""
-"Internal error: Operation should be prepared, setting a connection data"
+msgid "Internal error: Operation should be prepared, setting a connection data"
 msgstr ""
 "Внутрішня помилка: має бути приготовано дію, встановлення даних з'єднання"
 
@@ -1936,8 +1932,7 @@ msgstr "Не можна пов'язати утримувачі, якщо вон�
 
 #: ../libgda/gda-holder.c:1974
 #, c-format
-msgid ""
-"Could not change GdaHolder to match value change in bound GdaHolder: %s"
+msgid "Could not change GdaHolder to match value change in bound GdaHolder: %s"
 msgstr ""
 "Не вдалося змінити GdaHolder так, щоб він відповідав зміні у межах "
 "GdaHolder: %s"
@@ -2095,8 +2090,7 @@ msgstr ""
 
 #: ../libgda/gda-meta-store.c:2667 ../libgda/gda-meta-store.c:2698
 #, c-format
-msgid ""
-"Schema description does not contain the object '%s', check installation"
+msgid "Schema description does not contain the object '%s', check installation"
 msgstr ""
 "У описі схеми не міститься об'єкта «%s», перевірте, чи встановлено потрібні "
 "компоненти"
@@ -2974,8 +2968,7 @@ msgstr "Не вдалося знайти таблицю стилів XSL DocBook
 
 #: ../libgda-report/DocBook/gda-report-docbook-document.c:350
 msgid "Could not find the DocBook XSL stylesheet for Formatting Objects"
-msgstr ""
-"Не вдалося знайти таблицю стилів XSL DocBook для об'єктів форматування"
+msgstr "Не вдалося знайти таблицю стилів XSL DocBook для об'єктів форматування"
 
 #: ../libgda-report/engine/gda-report-engine.c:314
 #, c-format
@@ -3218,8 +3211,7 @@ msgstr "Підтримки типу оператора не передбачен
 #: ../providers/postgres/gda-postgres-provider.c:1639
 #: ../providers/web/gda-web-provider.c:1223
 msgid "Unnamed parameter is not allowed in prepared statements"
-msgstr ""
-"Не можна використовувати параметр без назви у приготованих інструкціях"
+msgstr "Не можна використовувати параметр без назви у приготованих інструкціях"
 
 #: ../libgda/sqlite/gda-sqlite-provider.c:3069
 #: ../libgda/sqlite/gda-sqlite-provider.c:3081
@@ -3455,8 +3447,7 @@ msgstr "Обмеження на бінарні дані не обробляют�
 #: ../providers/postgres/gda-postgres-recordset.c:625
 #, c-format
 msgid "Invalid time '%s' (time format should be HH:MM:SS[.ms])"
-msgstr ""
-"Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс])"
+msgstr "Некоректний запис часу «%s» (правильним форматуванням є ГГ:ХХ:СС[.мс])"
 
 #: ../libgda/sqlite/virtual/gda-virtual-connection.c:85
 msgid "Provider did not clean its connection data"
@@ -3477,8 +3468,7 @@ msgstr "Внутрішня помилка: некоректний обробни
 
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:441
 msgid "Internal Implementation error: No close connection method is defined"
-msgstr ""
-"Помилка внутрішньої реалізації: не визначено спосіб закриття з'єднання"
+msgstr "Помилка внутрішньої реалізації: не визначено спосіб закриття з'єднання"
 
 #. wrong usage!
 #: ../libgda/sqlite/virtual/gda-vprovider-data-model.c:551
@@ -3703,8 +3693,7 @@ msgstr ""
 "У інструкції INSERT має бути вказано таблицю, до якої слід вставити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-insert.c:361
-msgid ""
-"Can't specify values to insert and SELECT statement in INSERT statement"
+msgid "Can't specify values to insert and SELECT statement in INSERT statement"
 msgstr ""
 "Не можна вказувати значення для вставлення і інструкцію SELECT в інструкції "
 "INSERT"
@@ -3746,8 +3735,7 @@ msgstr "Декілька цілей із назвою або альтернат�
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:289
 msgid "UPDATE statement needs a table to update data"
-msgstr ""
-"В інструкції UPDATE має бути вказано таблицю, у якій слід оновити дані"
+msgstr "В інструкції UPDATE має бути вказано таблицю, у якій слід оновити дані"
 
 #: ../libgda/sql-parser/gda-statement-struct-update.c:295
 msgid ""
@@ -4332,9 +4320,9 @@ msgid ""
 "'@':alpha, '^':upper cased alpha, '#':alphanumeric, '*':any character, any "
 "other character will be left unmodified)"
 msgstr ""
-"Дозволені символи для кожної позиції («0»: цифра; «9»: цифра, крім 0; «@»: лі"
-"тера; «^»: велика літера; «#»: літера або цифра; «*»: будь-який символ; будь-"
-"який інший символ залишається без змін)"
+"Дозволені символи для кожної позиції («0»: цифра; «9»: цифра, крім 0; «@»: "
+"літера; «^»: велика літера; «#»: літера або цифра; «*»: будь-який символ; "
+"будь-який інший символ залишається без змін)"
 
 #: ../libgda-ui/data-entries/plugins/gdaui-entry-format-spec.xml.in.h:3
 msgid "Mask"
@@ -4603,8 +4591,7 @@ msgstr "Зняти фільтрування"
 
 #: ../libgda-ui/gdaui-data-proxy.c:155
 msgid "GdauiAction is not supported by this GdauiDataProxy interface"
-msgstr ""
-"Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
+msgstr "Підтримки GdauiAction у цьому інтерфейсі GdauiDataProxy не передбачено"
 
 #: ../libgda-ui/gdaui-data-proxy-info.c:89
 msgid "Insert new data"
@@ -4968,8 +4955,8 @@ msgstr ""
 "- Просто використовуйте дефіси\n"
 "- І початковий пробіл для відступу\n"
 "\n"
-"Буквальні фрагменти тексту слід розміщувати між трьома подвійними лапками; ро"
-"змітку в них не буде оброблено."
+"Буквальні фрагменти тексту слід розміщувати між трьома подвійними лапками; "
+"розмітку в них не буде оброблено."
 
 #: ../libgda-ui/gdaui-rt-editor.c:169
 msgid "_Bold"
@@ -6195,9 +6182,9 @@ msgid ""
 "then it's likely that there is an installation problem with the LDAP "
 "provider. In any case the GdaDataModelLdap object won't be useable."
 msgstr ""
-"Фіктивний об'єкт GdaDataModelLdap: якщо ви бачите це повідомлення у своїй про"
-"грамі, це, ймовірно, свідчить про проблему з надавачем даних LDAP. У будь-яко"
-"му разі об'єкт GdaDataModelLdap буде непридатним для використання."
+"Фіктивний об'єкт GdaDataModelLdap: якщо ви бачите це повідомлення у своїй "
+"програмі, це, ймовірно, свідчить про проблему з надавачем даних LDAP. У будь-"
+"якому разі об'єкт GdaDataModelLdap буде непридатним для використання."
 
 #: ../providers/ldap/gda-ldap-connection.c:128
 #, c-format
@@ -6698,9 +6685,9 @@ msgid ""
 "other connection parameters normally would cause a protocol to be used other "
 "than the one you want"
 msgstr ""
-"Явно визначає протокол з'єднання, який слід використовувати. Це корисно, коли"
-" інші параметри з'єднання зазвичай призводять до вибору протоколу, відмінного"
-" від того, який вам потрібен."
+"Явно визначає протокол з'єднання, який слід використовувати. Це корисно, "
+"коли інші параметри з'єднання зазвичай призводять до вибору протоколу, "
+"відмінного від того, який вам потрібен."
 
 #. DSN parameters
 #: ../providers/mysql/mysql_specs_create_db.xml.in.h:26
@@ -7267,8 +7254,7 @@ msgstr "Що робити із посиланнями"
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:5
 #: ../providers/postgres/postgres_specs_drop_table.xml.in.h:5
 msgid "Automatically drop objects that depend on the table (CASCADE)"
-msgstr ""
-"Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
+msgstr "Автоматично відкидати об'єкти, які залежать від цієї таблиці (CASCADE)"
 
 #: ../providers/mysql/mysql_specs_drop_table.xml.in.h:10
 #: ../providers/postgres/postgres_specs_drop_index.xml.in.h:6
@@ -7786,9 +7772,9 @@ msgid ""
 "the presented password string is already in MD5-encrypted format, then it is "
 "stored encrypted as-is."
 msgstr ""
-"Визначає, чи зберігається пароль у зашифрованому вигляді в системних каталога"
-"х. Якщо наданий рядок пароля вже має формат MD5-шифрування, він зберігається "
-"зашифрованим у незмінному вигляді."
+"Визначає, чи зберігається пароль у зашифрованому вигляді в системних "
+"каталогах. Якщо наданий рядок пароля вже має формат MD5-шифрування, він "
+"зберігається зашифрованим у незмінному вигляді."
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7892,9 +7878,9 @@ msgid ""
 "If the role is allowed to log in, defines the number of concurrent "
 "connections the role can make (-1 or unset for unlimited)"
 msgstr ""
-"Якщо для ролі дозволено вхід у систему, визначає кількість одночасних з'єднан"
-"ь, які може встановлювати ця роль (-1 або відсутність значення означають необ"
-"межену кількість)."
+"Якщо для ролі дозволено вхід у систему, визначає кількість одночасних "
+"з'єднань, які може встановлювати ця роль (-1 або відсутність значення "
+"означають необмежену кількість)."
 
 #.
 #. This file contains the CREATE ROLE operation's parameters, which is
@@ -7916,6 +7902,9 @@ msgid ""
 "per se: the expiration time is not enforced when logging in using a non-"
 "password-based authentication method)"
 msgstr ""
+"Визначає строк дії лише для пароля (а не для облікового запису користувача як "
+"такого: цей строк дії не застосовується під час входу до системи з використанн"
+"ям не заснованого на паролі способу розпізнавання)"
 
 #: ../providers/postgres/postgres_specs_create_role.xml.in.h:106
 #: ../providers/postgres/postgres_specs_create_user.xml.in.h:16
@@ -10605,8 +10594,7 @@ msgstr "Вивести ТЕКСТ або порожній рядок до ста
 
 #: ../tools/common/t-app.c:1129
 msgid "Send TEXT or an empty line to current output stream"
-msgstr ""
-"Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
+msgstr "Надіслати ТЕКСТ або порожній рядок до поточного потоку виведення даних"
 
 #: ../tools/common/t-app.c:1142
 #, c-format
@@ -10649,8 +10637,7 @@ msgstr "Буфер запитів і вибрані записи запитів"
 
 #: ../tools/common/t-app.c:1180
 msgid "Edit the query buffer (or file) with external editor"
-msgstr ""
-"Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
+msgstr "Редагувати буфер запитів (або файл) за допомогою зовнішнього редактора"
 
 #: ../tools/common/t-app.c:1187
 msgid "Reset the query buffer (or load file into query buffer)"
@@ -10712,8 +10699,7 @@ msgstr "%s [<НАЗВА>|<ТАБЛИЦЯ> <СТОВПЧИК> <УМОВА_РЯД�
 
 #: ../tools/common/t-app.c:1250
 msgid "Export internal parameter or table's value to the FILE file"
-msgstr ""
-"Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
+msgstr "Експортувати значення внутрішнього параметра або таблиці до файла ФАЙЛ"
 
 #: ../tools/common/t-app.c:1255 ../tools/common/t-app.c:1265
 #: ../tools/common/t-app.c:1275 ../tools/common/t-app.c:1282
